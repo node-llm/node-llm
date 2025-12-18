@@ -50,4 +50,35 @@ export class Chat {
 
     return response.content;
   }
+
+  /**
+   * Streams the model's response to a user question.
+   * @param content The user's question to send to the model.
+   * @returns An async generator yielding chunks of the assistant's response as strings.
+   */
+  async *stream(content: string) {
+    this.messages.push({ role: "user", content });
+
+    if (!this.provider.stream) {
+      throw new Error("Streaming not supported by provider");
+    }
+
+    let full = "";
+
+    for await (const chunk of this.provider.stream({
+      model: this.model,
+      messages: this.messages,
+    })) {
+      if (chunk.content) {
+        full += chunk.content;
+        yield chunk.content;
+      }
+    }
+
+    this.messages.push({
+      role: "assistant",
+      content: full,
+    });
+  }
+
 }
