@@ -10,10 +10,18 @@
       "default": "./dist/index.js"
     }
   },
+  "description": "A provider-agnostic LLM core for Node.js, inspired by ruby-llm.",
+  "author": "node-llm contributors",
+  "license": "MIT",
+  "files": [
+    "dist",
+    "README.md"
+  ],
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "dev": "tsc -w",
-    "test": "vitest"
+    "test": "vitest",
+    "prepublishOnly": "npm run build"
   },
   "dependencies": {
     "zod": "^3.23.8"
