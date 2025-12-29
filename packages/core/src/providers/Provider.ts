@@ -1,5 +1,6 @@
 import { Message } from "../chat/Message.js";
 import { Tool, ToolCall } from "../chat/Tool.js";
+import { MessageContent } from "../chat/Content.js";
 
 export interface ChatRequest {
   model: string;

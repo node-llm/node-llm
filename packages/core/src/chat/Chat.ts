@@ -1,3 +1,5 @@
+import { promises as fs } from "fs";
+import * as path from "path";
 import { Message } from "./Message.js";
 import { ChatOptions } from "./ChatOptions.js";
 import { Provider } from "../providers/Provider.js";
@@ -41,10 +43,37 @@ export class Chat {
   /**
    * Ask the model a question
    */
-  async ask(content: string): Promise<string> {
+  async ask(content: string, options?: { images?: string[] }): Promise<string> {
+    let messageContent: any = content;
+
+    if (options?.images && options.images.length > 0) {
+      const processedImages = await Promise.all(options.images.map(async (img) => {
+        if (img.startsWith("http") || img.startsWith("data:")) {
+          return img;
+        }
+        try {
+          const data = await fs.readFile(img);
+          const ext = path.extname(img).slice(1).toLowerCase();
+          const mime = ext === "jpg" ? "jpeg" : ext;
+          return `data:image/${mime};base64,${data.toString("base64")}`;
+        } catch (e) {
+          // If read fails, assume it might be a URL without http protocol or let the provider handle the error
+          return img;
+        }
+      }));
+
+      messageContent = [
+        { type: "text", text: content },
+        ...processedImages.map((url) => ({
+          type: "image_url",
+          image_url: { url },
+        })),
+      ];
+    }
+
     this.messages.push({
       role: "user",
-      content,
+      content: messageContent,
     });
 
     let response = await this.executor.executeChat({

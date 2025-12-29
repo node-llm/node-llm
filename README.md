@@ -137,6 +137,19 @@ console.log(reply);
 
 ---
 
+## Vision Support
+
+You can send images to models that support vision (like `gpt-4o`) by passing an `images` array in the options.
+
+```ts
+const reply = await chat.ask("What's in this image?", {
+  images: ["https://example.com/image.jpg"]
+});
+console.log(reply);
+```
+
+---
+
 ## Retry Support
 
 Retries are applied before chat execution, not inside providers.
