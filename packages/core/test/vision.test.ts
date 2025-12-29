@@ -17,7 +17,7 @@ describe("Chat Vision Support", () => {
     const chat = new Chat(provider, "gpt-4-vision-preview");
 
     await chat.ask("Describe this image", {
-      images: ["https://example.com/cat.jpg"],
+      files: ["https://example.com/cat.jpg"],
     });
 
     // The provider receives the request *before* adding the assistant reply to history,
@@ -59,7 +59,7 @@ describe("Chat Vision Support", () => {
     const chat = new Chat(provider, "gpt-4-vision-preview");
 
     await chat.ask("Compare these", {
-      images: ["img1.jpg", "img2.jpg"],
+      files: ["https://example.com/img1.jpg", "https://example.com/img2.jpg"],
     });
 
     const content = provider.lastRequest?.messages.at(-1)?.content;
@@ -68,11 +68,11 @@ describe("Chat Vision Support", () => {
       expect(content).toHaveLength(3); // 1 text + 2 images
       expect(content[1]).toEqual({ 
         type: "image_url", 
-        image_url: { url: "img1.jpg" } 
+        image_url: { url: "https://example.com/img1.jpg" } 
       });
       expect(content[2]).toEqual({ 
         type: "image_url", 
-        image_url: { url: "img2.jpg" } 
+        image_url: { url: "https://example.com/img2.jpg" } 
       });
     }
   });
@@ -105,4 +105,5 @@ describe("Chat Vision Support", () => {
       await fs.unlink(dummyPath);
     }
   });
+
 });

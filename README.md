@@ -137,15 +137,25 @@ console.log(reply);
 
 ---
 
-## Vision Support
+## File & Vision Support
 
-You can send images to models that support vision (like `gpt-4o`) by passing an `images` array in the options.
+You can send files (images, text, etc.) to models that support them. The library automatically handles local file reading and formatting.
 
 ```ts
-const reply = await chat.ask("What's in this image?", {
-  images: ["https://example.com/image.jpg"]
+// Local files (automatically read & converted)
+await chat.ask("Analyze this image", {
+  files: ["./image.jpg"]
 });
-console.log(reply);
+
+// Remote URLs (passed through)
+await chat.ask("Describe this", {
+  files: ["https://example.com/photo.png"]
+});
+
+// Multiple files (mixed types)
+await chat.ask("Compare these", {
+  files: ["./chart.png", "./data.csv"]
+});
 ```
 
 ---

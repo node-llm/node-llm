@@ -70,11 +70,24 @@ try {
   // Using a placeholder image URL for testing structure
   // In a real run, this URL needs to be accessible by OpenAI
   const visionReply = await visionChat.ask("What is in this image?", {
-    images: ["https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Gfp-wisconsin-madison-the-nature-boardwalk.jpg/2560px-Gfp-wisconsin-madison-the-nature-boardwalk.jpg"]
+    files: ["https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Gfp-wisconsin-madison-the-nature-boardwalk.jpg/2560px-Gfp-wisconsin-madison-the-nature-boardwalk.jpg"]
   });
   console.log("Vision Reply:", visionReply);
+
+  console.log("\n\n--- FILE TEST (TEXT) ---");
+  // Create a temporary text file
+  const fs = await import("fs/promises");
+  await fs.writeFile("test-note.txt", "This is a secret note about Project X.");
+  
+  const fileReply = await visionChat.ask("What is in this note?", {
+    files: ["./test-note.txt"]
+  });
+  console.log("File Reply:", fileReply);
+  
+  await fs.unlink("test-note.txt");
+
 } catch (e) {
-  console.log("Vision test skipped or failed (model might not support vision):", e.message);
+  console.log("Vision/File test skipped or failed:", e.message);
 }
 
 
