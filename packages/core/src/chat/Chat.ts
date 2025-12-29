@@ -11,7 +11,7 @@ export class Chat {
   constructor(
     private readonly provider: Provider,
     private readonly model: string,
-    options: ChatOptions = {}
+    private readonly options: ChatOptions = {}
   ) {
 
     this.executor = new Executor(
@@ -47,17 +47,64 @@ export class Chat {
       content,
     });
 
-    const response = await this.executor.executeChat({
+    let response = await this.executor.executeChat({
       model: this.model,
       messages: this.messages,
+      tools: this.options.tools,
     });
 
     this.messages.push({
       role: "assistant",
       content: response.content,
+      tool_calls: response.tool_calls,
     });
 
-    return response.content;
+    while (response.tool_calls && response.tool_calls.length > 0) {
+      for (const toolCall of response.tool_calls) {
+        const tool = this.options.tools?.find(
+          (t) => t.function.name === toolCall.function.name
+        );
+
+        if (tool?.handler) {
+          try {
+            const args = JSON.parse(toolCall.function.arguments);
+            const result = await tool.handler(args);
+
+            this.messages.push({
+              role: "tool",
+              tool_call_id: toolCall.id,
+              content: result,
+            });
+          } catch (error: any) {
+            this.messages.push({
+              role: "tool",
+              tool_call_id: toolCall.id,
+              content: `Error executing tool: ${error.message}`,
+            });
+          }
+        } else {
+          this.messages.push({
+            role: "tool",
+            tool_call_id: toolCall.id,
+            content: "Error: Tool not found or no handler provided",
+          });
+        }
+      }
+
+      response = await this.executor.executeChat({
+        model: this.model,
+        messages: this.messages,
+        tools: this.options.tools,
+      });
+
+      this.messages.push({
+        role: "assistant",
+        content: response.content,
+        tool_calls: response.tool_calls,
+      });
+    }
+
+    return response.content ?? "";
   }
 
   /**

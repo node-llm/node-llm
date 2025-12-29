@@ -14,16 +14,22 @@ export class OpenAIProvider implements Provider {
   }
 
   async chat(request: ChatRequest): Promise<ChatResponse> {
+    const body: any = {
+      model: request.model,
+      messages: request.messages,
+    };
+
+    if (request.tools) {
+      body.tools = request.tools;
+    }
+
     const response = await fetch(`${this.baseUrl}/chat/completions`, {
       method: "POST",
       headers: {
         "Authorization": `Bearer ${this.options.apiKey}`,
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        model: request.model,
-        messages: request.messages,
-      }),
+      body: JSON.stringify(body),
     });
 
     if (!response.ok) {
@@ -35,13 +41,15 @@ export class OpenAIProvider implements Provider {
 
     const json = (await response.json()) as OpenAIChatResponse;
 
-    const content = json.choices[0]?.message?.content;
+    const message = json.choices[0]?.message;
+    const content = message?.content ?? null;
+    const tool_calls = message?.tool_calls;
 
-    if (!content) {
+    if (!content && !tool_calls) {
       throw new Error("OpenAI returned empty response");
     }
 
-    return { content };
+    return { content, tool_calls };
   }
 
   async *stream(request: ChatRequest) {

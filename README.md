@@ -17,11 +17,10 @@ This is a core library, not a framework.
 - Provider-agnostic chat API
 - Ruby-LLM-style configuration
 - Streaming responses using AsyncIterator
+- Tool calling (function calling) support
 - Retry support (pre-chat execution layer)
 - Strict ESM and TypeScript
 - Testable core with fake providers
-
-Tool and function calling is planned but not yet released.
 
 ---
 
@@ -93,6 +92,48 @@ Streaming behavior:
 - Tokens arrive progressively
 - Final assistant message is stored in chat history
 - No SDKs or frameworks required
+
+---
+
+## Tool Calling
+
+You can define tools and pass them to the chat instance. The model will decide when to call them, and the library handles the execution loop automatically.
+
+```ts
+import { LLM, Tool } from "@node-llm/core";
+
+// 1. Define a tool
+const weatherTool: Tool = {
+  type: 'function',
+  function: {
+    name: 'get_weather',
+    description: 'Get the current weather for a location',
+    parameters: {
+      type: 'object',
+      properties: {
+        location: { type: 'string', description: 'The city and state, e.g. San Francisco, CA' },
+        unit: { type: 'string', enum: ['celsius', 'fahrenheit'] }
+      },
+      required: ['location']
+    }
+  },
+  // 2. Implement the handler
+  handler: async ({ location, unit = 'celsius' }) => {
+    // Call your real API here
+    return JSON.stringify({ location, temperature: 22, unit, condition: "Sunny" });
+  }
+};
+
+// 3. Initialize chat with tools
+const chat = LLM.chat("gpt-4o-mini", {
+  tools: [weatherTool]
+});
+
+// 4. Ask a question
+const reply = await chat.ask("What is the weather in London?");
+console.log(reply); 
+// Output: "The weather in London is currently 22°C and sunny."
+```
 
 ---
 

@@ -9,7 +9,15 @@ export interface OpenAIChatResponse {
   choices: Array<{
     message: {
       role: string;
-      content: string;
+      content: string | null;
+      tool_calls?: Array<{
+        id: string;
+        type: 'function';
+        function: {
+          name: string;
+          arguments: string;
+        };
+      }>;
     };
     finish_reason: string;
   }>;

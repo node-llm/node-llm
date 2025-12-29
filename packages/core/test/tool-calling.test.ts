@@ -1,0 +1,135 @@
+import { describe, it, expect, vi } from "vitest";
+import { Chat } from "../src/chat/Chat.js";
+import { Provider, ChatRequest, ChatResponse } from "../src/providers/Provider.js";
+import { Tool } from "../src/chat/Tool.js";
+
+class MockToolProvider implements Provider {
+  // Sequence of responses to return
+  private responses: ChatResponse[] = [];
+  public requests: ChatRequest[] = [];
+
+  constructor(responses: ChatResponse[]) {
+    this.responses = responses;
+  }
+
+  async chat(request: ChatRequest): Promise<ChatResponse> {
+    // Clone messages to capture state at this point in time
+    this.requests.push({
+      ...request,
+      messages: [...request.messages],
+    });
+    const response = this.responses.shift();
+    if (!response) {
+      throw new Error("No more responses configured in MockToolProvider");
+    }
+    return response;
+  }
+}
+
+describe("Chat Tool Calling", () => {
+  it("should execute a tool and return the final response", async () => {
+    const weatherTool: Tool = {
+      type: "function",
+      function: {
+        name: "get_weather",
+        description: "Get weather",
+        parameters: { type: "object", properties: {} },
+      },
+      handler: async (args) => {
+        return JSON.stringify({ temperature: 25, condition: "Sunny" });
+      },
+    };
+
+    // 1. First response: Request the tool
+    const toolCallResponse: ChatResponse = {
+      content: null,
+      tool_calls: [
+        {
+          id: "call_123",
+          type: "function",
+          function: {
+            name: "get_weather",
+            arguments: "{}",
+          },
+        },
+      ],
+    };
+
+    // 2. Second response: Final answer after tool execution
+    const finalResponse: ChatResponse = {
+      content: "The weather is Sunny with 25 degrees.",
+    };
+
+    const provider = new MockToolProvider([toolCallResponse, finalResponse]);
+    
+    const chat = new Chat(provider, "test-model", {
+      tools: [weatherTool],
+    });
+
+    const response = await chat.ask("What is the weather?");
+
+    // Assertions
+    expect(response).toBe("The weather is Sunny with 25 degrees.");
+    
+    // Verify provider received 2 requests
+    expect(provider.requests).toHaveLength(2);
+
+    // First request: User prompt
+    expect(provider.requests[0].messages).toHaveLength(1);
+    expect(provider.requests[0].messages[0].role).toBe("user");
+
+    // Second request: History should include:
+    // 1. User prompt
+    // 2. Assistant tool call
+    // 3. Tool result
+    const history = provider.requests[1].messages;
+    expect(history).toHaveLength(3);
+    expect(history[0].role).toBe("user");
+    expect(history[1].role).toBe("assistant");
+    expect(history[1].tool_calls).toBeDefined();
+    expect(history[2].role).toBe("tool");
+    expect(history[2].content).toContain("Sunny");
+  });
+
+  it("should handle tool execution errors gracefully", async () => {
+    const errorTool: Tool = {
+      type: "function",
+      function: {
+        name: "fail_tool",
+        parameters: {},
+      },
+      handler: async () => {
+        throw new Error("Something went wrong");
+      },
+    };
+
+    const toolCallResponse: ChatResponse = {
+      content: null,
+      tool_calls: [
+        {
+          id: "call_fail",
+          type: "function",
+          function: {
+            name: "fail_tool",
+            arguments: "{}",
+          },
+        },
+      ],
+    };
+
+    const finalResponse: ChatResponse = {
+      content: "I could not get the info.",
+    };
+
+    const provider = new MockToolProvider([toolCallResponse, finalResponse]);
+    const chat = new Chat(provider, "test-model", {
+      tools: [errorTool],
+    });
+
+    await chat.ask("Trigger error");
+
+    const history = provider.requests[1].messages;
+    const toolMessage = history.find(m => m.role === "tool");
+    expect(toolMessage?.content).toContain("Error executing tool: Something went wrong");
+  });
+});

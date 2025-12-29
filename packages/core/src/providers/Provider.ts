@@ -1,8 +1,10 @@
 import { Message } from "../chat/Message.js";
+import { Tool, ToolCall } from "../chat/Tool.js";
 
 export interface ChatRequest {
   model: string;
   messages: Message[];
+  tools?: Tool[];
 }
 
 export interface ChatChunk {
@@ -11,7 +13,8 @@ export interface ChatChunk {
 }
 
 export interface ChatResponse {
-  content: string;
+  content: string | null;
+  tool_calls?: ToolCall[];
 }
 
 export interface Provider {
