@@ -4,6 +4,14 @@ import { ChatOptions } from "./ChatOptions.js";
 import { Provider } from "../providers/Provider.js";
 import { Executor } from "../executor/Executor.js";
 import { LLM } from "../llm.js";
+import { Stream } from "./Stream.js";
+
+export interface AskOptions {
+  images?: string[];
+  files?: string[];
+  temperature?: number;
+  maxTokens?: number;
+}
 
 export class Chat {
   private messages: Message[] = [];
@@ -14,7 +22,6 @@ export class Chat {
     private readonly model: string,
     private readonly options: ChatOptions = {}
   ) {
-
     this.executor = new Executor(
       provider,
       LLM.getRetryConfig()
@@ -53,7 +60,7 @@ export class Chat {
   /**
    * Ask the model a question
    */
-  async ask(content: string, options?: { images?: string[]; files?: string[]; temperature?: number; maxTokens?: number }): Promise<string> {
+  async ask(content: string, options?: AskOptions): Promise<string> {
     let messageContent: any = content;
     const files = [...(options?.images ?? []), ...(options?.files ?? [])];
 
@@ -148,32 +155,10 @@ export class Chat {
 
   /**
    * Streams the model's response to a user question.
-   * @param content The user's question to send to the model.
-   * @returns An async generator yielding chunks of the assistant's response as strings.
    */
   async *stream(content: string) {
-    this.messages.push({ role: "user", content });
-
-    if (!this.provider.stream) {
-      throw new Error("Streaming not supported by provider");
-    }
-
-    let full = "";
-
-    for await (const chunk of this.provider.stream({
-      model: this.model,
-      messages: this.messages,
-    })) {
-      if (chunk.content) {
-        full += chunk.content;
-        yield chunk.content;
-      }
-    }
-
-    this.messages.push({
-      role: "assistant",
-      content: full,
-    });
+    const streamer = new Stream(this.provider, this.model, this.options, this.messages);
+    yield* streamer.stream(content);
   }
-
 }
+

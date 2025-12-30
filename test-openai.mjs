@@ -23,16 +23,16 @@ console.log("First model example:", JSON.stringify(models[0], null, 2));
 
 
 // 🔥 STREAMING TEST
-// let full = "";
+let full = "";
 
-// for await (const token of chat.stream("Explain HTTP in one sentence")) {
-//   process.stdout.write(token);
-//   full += token;
-// }
+for await (const token of chat.stream("Explain HTTP in one sentence")) {
+  process.stdout.write(token);
+  full += token;
+}
 
-// console.log("\n\n---");
-// console.log("Final message stored in chat history:");
-// console.log(chat.history.at(-1));
+console.log("\n\n---");
+console.log("Final message stored in chat history:");
+console.log(chat.history.at(-1));
 
 console.log("\n\n--- TOOL CALLING TEST ---");
 

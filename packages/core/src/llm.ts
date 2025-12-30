@@ -1,4 +1,5 @@
 import { Chat } from "./chat/Chat.js";
+import { Stream } from "./chat/Stream.js";
 import { ChatOptions } from "./chat/ChatOptions.js";
 import { Provider } from "./providers/Provider.js";
 import { providerRegistry } from "./providers/registry.js";
