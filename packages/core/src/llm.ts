@@ -54,9 +54,23 @@ class LLMCore {
       throw new Error("LLM provider not configured");
     }
     if (!this.provider.listModels) {
-      throw new Error(`Provider ${typeof this.provider} does not support listModels`);
+      throw new Error(`Provider does not support listModels`);
     }
     return this.provider.listModels();
+  }
+
+  async paint(prompt: string, options?: { model?: string; size?: string; quality?: string }) {
+    if (!this.provider) {
+      throw new Error("LLM provider not configured");
+    }
+    if (!this.provider.paint) {
+      throw new Error(`Provider does not support paint`);
+    }
+
+    return this.provider.paint({
+      prompt,
+      ...options,
+    });
   }
 
   getRetryConfig() {

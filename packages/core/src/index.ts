@@ -11,4 +11,5 @@ export { providerRegistry } from "./providers/registry.js";
 
 export { OpenAIProvider } from "./providers/openai/OpenAIProvider.js";
 export { registerOpenAIProvider } from "./providers/openai/index.js";
+export type { ImageRequest, ImageResponse } from "./providers/Provider.js";
 

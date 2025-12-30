@@ -40,9 +40,23 @@ export interface ModelInfo {
   metadata?: Record<string, any>;
 }
 
+export interface ImageRequest {
+  model?: string;
+  prompt: string;
+  size?: string;
+  quality?: string;
+  n?: number;
+}
+
+export interface ImageResponse {
+  url: string;
+  revised_prompt?: string;
+}
+
 export interface Provider {
   chat(request: ChatRequest): Promise<ChatResponse>;
   stream?(request: ChatRequest): AsyncIterable<ChatChunk>;
   listModels?(): Promise<ModelInfo[]>;
+  paint?(request: ImageRequest): Promise<ImageResponse>;
   capabilities?: ProviderCapabilities;
 }

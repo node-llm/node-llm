@@ -1,8 +1,9 @@
-import { Provider, ChatRequest, ChatResponse, ModelInfo, ChatChunk } from "../Provider.js";
+import { Provider, ChatRequest, ChatResponse, ModelInfo, ChatChunk, ImageRequest, ImageResponse } from "../Provider.js";
 import { Capabilities } from "./Capabilities.js";
 import { OpenAIChat } from "./Chat.js";
 import { OpenAIStreaming } from "./Streaming.js";
 import { OpenAIModels } from "./Models.js";
+import { OpenAIImage } from "./Image.js";
 
 export interface OpenAIProviderOptions {
   apiKey: string;
@@ -14,6 +15,7 @@ export class OpenAIProvider implements Provider {
   private readonly chatHandler: OpenAIChat;
   private readonly streamingHandler: OpenAIStreaming;
   private readonly modelsHandler: OpenAIModels;
+  private readonly imageHandler: OpenAIImage;
 
   public capabilities = {
     supportsVision: (model: string) => Capabilities.supportsVision(model),
@@ -27,6 +29,7 @@ export class OpenAIProvider implements Provider {
     this.chatHandler = new OpenAIChat(this.baseUrl, options.apiKey);
     this.streamingHandler = new OpenAIStreaming(this.baseUrl, options.apiKey);
     this.modelsHandler = new OpenAIModels(this.baseUrl, options.apiKey);
+    this.imageHandler = new OpenAIImage(this.baseUrl, options.apiKey);
   }
 
   async chat(request: ChatRequest): Promise<ChatResponse> {
@@ -39,5 +42,9 @@ export class OpenAIProvider implements Provider {
 
   async listModels(): Promise<ModelInfo[]> {
     return this.modelsHandler.execute();
+  }
+
+  async paint(request: ImageRequest): Promise<ImageResponse> {
+    return this.imageHandler.execute(request);
   }
 }

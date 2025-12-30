@@ -65,6 +65,19 @@ for await (const token of chat.stream("Write a short poem about Node.js")) {
 }
 ```
 
+### 4. Image Generation (Paint)
+
+Generate images directly using DALL-E or other supported models.
+
+```ts
+const image = await LLM.paint("a sunset over mountains in watercolor style", {
+  model: "dall-e-3",
+  size: "1024x1024"
+});
+
+console.log(`Generated Image URL: ${image.url}`);
+```
+
 ---
 
 ## 🔌 Advanced Usage
@@ -121,7 +134,7 @@ await chat.ask("Explain this code", {
 
 | Provider | Status | Notes |
 | :--- | :--- | :--- |
-| **OpenAI** | ✅ Supported | Chat, Streaming, Tools, Vision, Audio |
+| **OpenAI** | ✅ Supported | Chat, Streaming, Tools, Vision, Audio, Images (DALL-E) |
 | **Anthropic** | 🏗️ Roadmap | Coming soon |
 | **Azure OpenAI** | 🏗️ Roadmap | Coming soon |
 

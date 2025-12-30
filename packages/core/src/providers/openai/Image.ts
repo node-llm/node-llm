@@ -1,0 +1,41 @@
+import { ImageRequest, ImageResponse } from "../Provider.js";
+
+export class OpenAIImage {
+  constructor(private readonly baseUrl: string, private readonly apiKey: string) {}
+
+  async execute(request: ImageRequest): Promise<ImageResponse> {
+    const body: any = {
+      model: request.model || "dall-e-3",
+      prompt: request.prompt,
+      size: request.size || "1024x1024",
+      quality: request.quality || "standard",
+      n: request.n || 1,
+    };
+
+    const response = await fetch(`${this.baseUrl}/images/generations`, {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${this.apiKey}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(body),
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`OpenAI Image error (${response.status}): ${errorText}`);
+    }
+
+    const json = await response.json();
+    const data = json.data?.[0];
+
+    if (!data) {
+      throw new Error("OpenAI returned empty image response");
+    }
+
+    return {
+      url: data.url,
+      revised_prompt: data.revised_prompt,
+    };
+  }
+}
