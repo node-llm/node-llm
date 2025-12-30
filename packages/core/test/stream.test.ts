@@ -6,11 +6,11 @@ it("streams tokens and stores final assistant message", async () => {
   const stream = new Stream(new FakeStreamingProvider(), "test");
 
   let result = "";
-
-  for await (const token of stream.stream("Hi")) {
-    result += token;
+ 
+  for await (const chunk of stream.stream("Hi")) {
+    result += chunk.content;
   }
-
+ 
   expect(result).toBe("Hello world");
   expect(stream.history.at(-1)?.content).toBe("Hello world");
 });

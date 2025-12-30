@@ -14,7 +14,7 @@ describe("LLM.configure", () => {
     const chat = LLM.chat("test-model");
     const reply = await chat.ask("Hello");
 
-    expect(reply).toBe("fake reply");
+    expect(String(reply)).toBe("fake reply");
   });
 
   it("throws error when provider is not configured", () => {

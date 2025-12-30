@@ -57,8 +57,8 @@ export class Stream {
     })) {
       if (chunk.content) {
         full += chunk.content;
-        yield chunk.content;
       }
+      yield chunk;
     }
 
     this.messages.push({

@@ -33,7 +33,7 @@ async function main() {
     .withTool(weatherTool)
     .ask("What is the weather in London?");
 
-  console.log("LLM Reply:", reply);
+  console.log("LLM Reply:", reply.content);
 }
 
 main();

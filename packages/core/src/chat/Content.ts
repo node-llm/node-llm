@@ -4,4 +4,4 @@ export type ContentPart =
   | { type: "input_audio"; input_audio: { data: string; format: string } }
   | { type: "video_url"; video_url: { url: string } };
 
-export type MessageContent = string | ContentPart[];
+export type MessageContent = string | String | ContentPart[];

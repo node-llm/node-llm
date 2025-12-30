@@ -2,8 +2,10 @@ import fs from "fs/promises";
 import { Readable } from "stream";
 import { ImageResponse } from "../providers/Provider.js";
 
-export class GeneratedImage {
-  constructor(private readonly response: ImageResponse) {}
+export class GeneratedImage extends String {
+  constructor(private readonly response: ImageResponse) {
+    super(response.url || "");
+  }
 
   get url(): string | undefined {
     return this.response.url;
@@ -60,5 +62,9 @@ export class GeneratedImage {
     const buffer = await this.toBuffer();
     await fs.writeFile(path, buffer);
     return path;
+  }
+
+  toString() {
+    return this.valueOf();
   }
 }

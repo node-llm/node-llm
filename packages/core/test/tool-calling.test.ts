@@ -67,7 +67,7 @@ describe("Chat Tool Calling", () => {
     const response = await chat.withTool(weatherTool).ask("What is the weather?");
 
     // Assertions
-    expect(response).toBe("The weather is Sunny with 25 degrees.");
+    expect(String(response)).toBe("The weather is Sunny with 25 degrees.");
     
     // Verify provider received 2 requests
     expect(provider.requests).toHaveLength(2);

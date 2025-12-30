@@ -46,10 +46,17 @@ export class OpenAIChat {
     const content = message?.content ?? null;
     const tool_calls = message?.tool_calls;
 
+    const usage = json.usage ? {
+      input_tokens: json.usage.prompt_tokens,
+      output_tokens: json.usage.completion_tokens,
+      total_tokens: json.usage.total_tokens,
+      cached_tokens: json.usage.prompt_tokens_details?.cached_tokens,
+    } : undefined;
+
     if (!content && !tool_calls) {
       throw new Error("OpenAI returned empty response");
     }
 
-    return { content, tool_calls };
+    return { content, tool_calls, usage };
   }
 }

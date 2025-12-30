@@ -15,7 +15,8 @@ async function main() {
     });
     
     console.log("✅ Concept Art Generated!");
-    console.log("URL:", image.url);
+    console.log("URL:", image.url); // Use .url for explicit clean print
+    console.log("Revised Prompt:", image.revisedPrompt);
   } catch (e) {
     console.error("Paint failed:", e.message);
   }

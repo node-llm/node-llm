@@ -15,9 +15,17 @@ export interface ChatChunk {
   done?: boolean;
 }
 
+export interface Usage {
+  input_tokens: number;
+  output_tokens: number;
+  total_tokens: number;
+  cached_tokens?: number;
+}
+
 export interface ChatResponse {
   content: string | null;
   tool_calls?: ToolCall[];
+  usage?: Usage;
 }
 
 export interface ProviderCapabilities {

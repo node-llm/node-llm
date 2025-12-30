@@ -1,7 +1,7 @@
 import { FileLoader } from "../utils/FileLoader.js";
 import { Message } from "./Message.js";
 import { ChatOptions } from "./ChatOptions.js";
-import { Provider } from "../providers/Provider.js";
+import { Provider, Usage } from "../providers/Provider.js";
 import { Executor } from "../executor/Executor.js";
 import { LLM } from "../llm.js";
 import { Stream } from "./Stream.js";
@@ -11,6 +11,37 @@ export interface AskOptions {
   files?: string[];
   temperature?: number;
   maxTokens?: number;
+}
+
+/**
+ * Enhanced string that includes token usage metadata.
+ * Behaves like a regular string but has .usage and .input_tokens etc.
+ */
+export class ChatResponseString extends String {
+  constructor(
+    content: string,
+    public readonly usage: Usage,
+    public readonly model: string
+  ) {
+    super(content);
+  }
+
+  get input_tokens() { return this.usage.input_tokens; }
+  get output_tokens() { return this.usage.output_tokens; }
+  get total_tokens() { return this.usage.total_tokens; }
+  get cached_tokens() { return this.usage.cached_tokens; }
+
+  get content(): string {
+    return this.valueOf();
+  }
+
+  get model_id(): string {
+    return this.model;
+  }
+
+  toString() {
+    return this.valueOf();
+  }
 }
 
 export class Chat {
@@ -47,6 +78,24 @@ export class Chat {
   }
 
   /**
+   * Aggregate usage across the entire conversation
+   */
+  get totalUsage(): Usage {
+    return this.messages.reduce(
+      (acc, msg) => {
+        if (msg.usage) {
+          acc.input_tokens += msg.usage.input_tokens;
+          acc.output_tokens += msg.usage.output_tokens;
+          acc.total_tokens += msg.usage.total_tokens;
+          acc.cached_tokens = (acc.cached_tokens ?? 0) + (msg.usage.cached_tokens ?? 0);
+        }
+        return acc;
+      },
+      { input_tokens: 0, output_tokens: 0, total_tokens: 0, cached_tokens: 0 }
+    );
+  }
+
+  /**
    * Add a tool to the chat session (fluent API)
    */
   withTool(tool: any): this {
@@ -60,7 +109,7 @@ export class Chat {
   /**
    * Ask the model a question
    */
-  async ask(content: string, options?: AskOptions): Promise<string> {
+  async ask(content: string, options?: AskOptions): Promise<ChatResponseString> {
     let messageContent: any = content;
     const files = [...(options?.images ?? []), ...(options?.files ?? [])];
 
@@ -97,12 +146,26 @@ export class Chat {
       max_tokens: options?.maxTokens ?? this.options.maxTokens,
     };
 
+    let totalUsage: Usage = { input_tokens: 0, output_tokens: 0, total_tokens: 0 };
+    const trackUsage = (u?: Usage) => {
+      if (u) {
+        totalUsage.input_tokens += u.input_tokens;
+        totalUsage.output_tokens += u.output_tokens;
+        totalUsage.total_tokens += u.total_tokens;
+        if (u.cached_tokens) {
+          totalUsage.cached_tokens = (totalUsage.cached_tokens ?? 0) + u.cached_tokens;
+        }
+      }
+    };
+
     let response = await this.executor.executeChat(executeOptions);
+    trackUsage(response.usage);
 
     this.messages.push({
       role: "assistant",
-      content: response.content,
+      content: new ChatResponseString(response.content ?? "", response.usage ?? { input_tokens: 0, output_tokens: 0, total_tokens: 0 }, this.model),
       tool_calls: response.tool_calls,
+      usage: response.usage,
     });
 
     while (response.tool_calls && response.tool_calls.length > 0) {
@@ -142,15 +205,17 @@ export class Chat {
         messages: this.messages,
         tools: this.options.tools,
       });
+      trackUsage(response.usage);
 
       this.messages.push({
         role: "assistant",
-        content: response.content,
+        content: new ChatResponseString(response.content ?? "", response.usage ?? { input_tokens: 0, output_tokens: 0, total_tokens: 0 }, this.model),
         tool_calls: response.tool_calls,
+        usage: response.usage,
       });
     }
 
-    return response.content ?? "";
+    return new ChatResponseString(response.content ?? "", totalUsage, this.model);
   }
 
   /**

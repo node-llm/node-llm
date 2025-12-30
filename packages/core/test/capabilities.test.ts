@@ -48,6 +48,6 @@ describe("Chat Capabilities Validation", () => {
       files: ["../../README.md"] 
     });
 
-    expect(response).toBe("ok");
+    expect(String(response)).toBe("ok");
   });
 });

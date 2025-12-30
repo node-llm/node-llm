@@ -9,8 +9,8 @@ async function main() {
   const chat = LLM.chat("gpt-4o-mini");
 
   console.log("Streaming response...");
-  for await (const token of chat.stream("Write a short poem about Node.js")) {
-    process.stdout.write(token);
+  for await (const chunk of chat.stream("Write a short poem about Node.js")) {
+    process.stdout.write(chunk.content);
   }
   console.log("\nDone.");
 }

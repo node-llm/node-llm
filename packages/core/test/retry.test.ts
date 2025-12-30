@@ -24,6 +24,6 @@ it("retries provider failures", async () => {
 
   const result = await chat.ask("hi");
 
-  expect(result).toBe("ok");
+  expect(String(result)).toBe("ok");
   expect(calls).toBe(3);
 });

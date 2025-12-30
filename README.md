@@ -53,29 +53,54 @@ const chat = LLM.chat("gpt-4o-mini", {
   systemPrompt: "You are a helpful assistant."
 });
 
-const reply = await chat.ask("What is the speed of light?");
-console.log(reply);
+const response = await chat.ask("What is Node.js?");
+
+// Use as a string directly
+console.log(response);
+
+// Or access metadata (RubyLLM style)
+console.log(response.content);
+console.log(`Model: ${response.model_id}`);
+console.log(`Tokens: ${response.input_tokens} in, ${response.output_tokens} out`);
 ```
 
 ### 3. Streaming Responses
 
 ```ts
-for await (const token of chat.stream("Write a short poem about Node.js")) {
-  process.stdout.write(token);
+for await (const chunk of chat.stream("Write a poem")) {
+  process.stdout.write(chunk.content);
 }
 ```
 
 ### 4. Image Generation (Paint)
 
-Generate images directly using DALL-E or other supported models.
+Generate images and interact with them using a rich API.
 
 ```ts
-const image = await LLM.paint("a sunset over mountains in watercolor style", {
-  model: "dall-e-3",
-  size: "1024x1024"
+const image = await LLM.paint("a sunset over mountains", {
+  model: "dall-e-3"
 });
 
-console.log(`Generated Image URL: ${image.url}`);
+// Use as a URL string
+console.log(`URL: ${image}`);
+
+// Or use rich methods
+await image.save("sunset.png");
+console.log(`Format: ${image.mimeType}`);
+```
+
+### 5. Token Usage Tracking
+
+Track tokens for individual turns or the entire conversation.
+
+```ts
+const response = await chat.ask("Hello!");
+
+console.log(response.input_tokens);  // 10
+console.log(response.output_tokens); // 5
+
+// Access aggregated usage for the whole session
+console.log(chat.totalUsage.total_tokens);
 ```
 
 ---
@@ -94,6 +119,7 @@ Check the [examples](./examples) directory for focused scripts organized by prov
 | [List Models](./examples/openai/05-list-models.mjs) | Enumerate available models |
 | [Paint](./examples/openai/06-paint.mjs) | Image generation with DALL-E |
 | [Image Features](./examples/openai/07-image-features.mjs) | Saving and processing generated images |
+| [Token Usage](./examples/openai/08-token-usage.mjs) | Detailed stats for turns and conversations |
 
 To run an example:
 ```bash

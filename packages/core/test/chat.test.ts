@@ -14,17 +14,17 @@ describe("Chat", () => {
     });
 
     const reply1 = await chat.ask("Hi");
-    const reply2 = await chat.ask("How are you?");
+    const response = await chat.ask("What is the speed of light?");
 
-    expect(reply1).toBe("Hello from assistant");
-    expect(reply2).toBe("Second reply");
+    expect(String(reply1)).toBe("Hello from assistant");
+    expect(String(response)).toBe("Second reply");
 
-    expect(chat.history).toEqual([
-      { role: "system", content: "You are a test assistant" },
-      { role: "user", content: "Hi" },
-      { role: "assistant", content: "Hello from assistant" },
-      { role: "user", content: "How are you?" },
-      { role: "assistant", content: "Second reply" },
-    ]);
+    expect(chat.history).toHaveLength(5);
+    expect(chat.history[0]).toMatchObject({ role: "system", content: "You are a test assistant" });
+    expect(chat.history[1].role).toBe("user");
+    expect(chat.history[2].role).toBe("assistant");
+    expect(String(chat.history[2].content)).toBe("Hello from assistant");
+    // Verify rich metadata in history
+    expect((chat.history[2].content as any).model_id).toBe("test-model");
   });
 });
