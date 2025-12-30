@@ -3,7 +3,7 @@ import { Stream } from "./chat/Stream.js";
 import { ChatOptions } from "./chat/ChatOptions.js";
 import { Provider } from "./providers/Provider.js";
 import { providerRegistry } from "./providers/registry.js";
-import { ensureOpenAIRegistered } from "./providers/openai/register.js";
+import { ensureOpenAIRegistered } from "./providers/openai/index.js";
 import { GeneratedImage } from "./image/GeneratedImage.js";
 
 export interface RetryOptions {
