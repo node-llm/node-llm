@@ -36,6 +36,7 @@ export class OpenAIImage {
     return {
       url: data.url,
       revised_prompt: data.revised_prompt,
+      mime_type: "image/png",
     };
   }
 }

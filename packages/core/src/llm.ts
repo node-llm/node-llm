@@ -4,6 +4,7 @@ import { ChatOptions } from "./chat/ChatOptions.js";
 import { Provider } from "./providers/Provider.js";
 import { providerRegistry } from "./providers/registry.js";
 import { ensureOpenAIRegistered } from "./providers/openai/register.js";
+import { GeneratedImage } from "./image/GeneratedImage.js";
 
 export interface RetryOptions {
   attempts?: number;
@@ -59,7 +60,7 @@ class LLMCore {
     return this.provider.listModels();
   }
 
-  async paint(prompt: string, options?: { model?: string; size?: string; quality?: string }) {
+  async paint(prompt: string, options?: { model?: string; size?: string; quality?: string }): Promise<GeneratedImage> {
     if (!this.provider) {
       throw new Error("LLM provider not configured");
     }
@@ -67,10 +68,12 @@ class LLMCore {
       throw new Error(`Provider does not support paint`);
     }
 
-    return this.provider.paint({
+    const response = await this.provider.paint({
       prompt,
       ...options,
     });
+
+    return new GeneratedImage(response);
   }
 
   getRetryConfig() {

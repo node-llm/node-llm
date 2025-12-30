@@ -1,5 +1,6 @@
 export { Chat } from "./chat/Chat.js";
 export { Stream } from "./chat/Stream.js";
+export { GeneratedImage } from "./image/GeneratedImage.js";
 export type { Message } from "./chat/Message.js";
 export type { Role } from "./chat/Role.js";
 export type { ChatOptions } from "./chat/ChatOptions.js";

@@ -49,7 +49,9 @@ export interface ImageRequest {
 }
 
 export interface ImageResponse {
-  url: string;
+  url?: string;
+  data?: string; // base64
+  mime_type?: string;
   revised_prompt?: string;
 }
 
