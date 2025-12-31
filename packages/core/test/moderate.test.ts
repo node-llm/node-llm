@@ -31,6 +31,15 @@ describe("Moderation Unit Tests", () => {
     });
   });
 
+  it("should use defaultModerationModel if configured", async () => {
+    LLM.configure({ provider: mockProvider, defaultModerationModel: "default-mod" });
+    await LLM.moderate("hello world");
+    expect(mockProvider.moderate).toHaveBeenCalledWith({
+      input: "hello world",
+      model: "default-mod"
+    });
+  });
+
   it("should return a Moderation object with correct properties", async () => {
     const result = await LLM.moderate("safe text");
     expect(result.id).toBe("mod-123");

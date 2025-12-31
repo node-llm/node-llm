@@ -2,14 +2,23 @@ import "dotenv/config";
 import { LLM } from "../../packages/core/dist/index.js";
 
 async function main() {
-  LLM.configure({ provider: "openai" });
+  // Configure a default moderation model globally
+  LLM.configure({ 
+    provider: "openai",
+    defaultModerationModel: "omni-moderation-latest" 
+  });
 
   const input = "I want to hurt someone and steal their money";
-  console.log(`Moderating: "${input}"`);
+  console.log(`Moderating with global default: "${input}"`);
   
-  const result = await LLM.moderate(input);
+  // 1. Use the specifically requested model (overriding any default)
+  console.log(`\nModerating with specific model override: "${input}"`);
+  const result = await LLM.moderate(input, { 
+    model: "omni-moderation-latest" 
+  });
+  console.log(`Model used: ${result.model}`);
 
-  // 1. Check overall flagging status
+  // 2. Check overall flagging status
   if (result.flagged) {
     console.log(`❌ Content was flagged for: ${result.flaggedCategories.join(", ")}`);
   } else {

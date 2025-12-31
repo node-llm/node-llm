@@ -43,7 +43,8 @@ import "dotenv/config";
 
 LLM.configure({
   provider: "openai", // Uses OPENAI_API_KEY from env
-  retry: { attempts: 3, delayMs: 500 }
+  retry: { attempts: 3, delayMs: 500 },
+  defaultModerationModel: "text-moderation-latest"
 });
 ```
 

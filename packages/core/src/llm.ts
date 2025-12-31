@@ -21,13 +21,14 @@ export interface RetryOptions {
 }
 
 type LLMConfig =
-  | { provider: Provider; retry?: RetryOptions; defaultTranscriptionModel?: string }
-  | { provider: string; retry?: RetryOptions; defaultTranscriptionModel?: string };
+  | { provider: Provider; retry?: RetryOptions; defaultTranscriptionModel?: string; defaultModerationModel?: string }
+  | { provider: string; retry?: RetryOptions; defaultTranscriptionModel?: string; defaultModerationModel?: string };
 
 class LLMCore {
   public readonly models: ModelRegistry = models;
   private provider?: Provider;
-  private defaultModel?: string;
+  private defaultTranscriptionModelId?: string;
+  private defaultModerationModelId?: string;
    
   private retry: Required<RetryOptions> = {
     attempts: 1,
@@ -36,7 +37,11 @@ class LLMCore {
 
   configure(config: LLMConfig) {
     if (config.defaultTranscriptionModel) {
-      this.defaultModel = config.defaultTranscriptionModel;
+      this.defaultTranscriptionModelId = config.defaultTranscriptionModel;
+    }
+
+    if (config.defaultModerationModel) {
+      this.defaultModerationModelId = config.defaultModerationModel;
     }
 
     if (config.retry) {
@@ -110,7 +115,7 @@ class LLMCore {
 
     const response = await this.provider.transcribe({
       file,
-      model: options?.model || this.defaultModel,
+      model: options?.model || this.defaultTranscriptionModelId,
       ...options,
     });
 
@@ -118,7 +123,11 @@ class LLMCore {
   }
 
   get defaultTranscriptionModel(): string | undefined {
-    return this.defaultModel;
+    return this.defaultTranscriptionModelId;
+  }
+
+  get defaultModerationModel(): string | undefined {
+    return this.defaultModerationModelId;
   }
 
   getRetryConfig() {
@@ -135,6 +144,7 @@ class LLMCore {
 
     const response = await this.provider.moderate({
       input,
+      model: options?.model || this.defaultModerationModelId,
       ...options,
     });
 
