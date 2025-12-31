@@ -31,11 +31,14 @@ export interface ChatResponse {
 }
 
 export interface ProviderCapabilities {
-  supportsVision: (model: string) => boolean;
-  supportsTools: (model: string) => boolean;
-  supportsStructuredOutput: (model: string) => boolean;
-  supportsEmbeddings: (model: string) => boolean;
-  getContextWindow: (model: string) => number | null;
+  supportsVision(modelId: string): boolean;
+  supportsTools(modelId: string): boolean;
+  supportsStructuredOutput(modelId: string): boolean;
+  supportsEmbeddings(modelId: string): boolean;
+  supportsImageGeneration(modelId: string): boolean;
+  supportsTranscription(modelId: string): boolean;
+  supportsModeration(modelId: string): boolean;
+  getContextWindow(modelId: string): number | null;
 }
 
 export interface ModelInfo {

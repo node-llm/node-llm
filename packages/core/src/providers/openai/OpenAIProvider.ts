@@ -30,6 +30,9 @@ export class OpenAIProvider implements Provider {
     supportsTools: (model: string) => Capabilities.supportsTools(model),
     supportsStructuredOutput: (model: string) => Capabilities.supportsStructuredOutput(model),
     supportsEmbeddings: (model: string) => Capabilities.supportsEmbeddings(model),
+    supportsImageGeneration: (model: string) => Capabilities.supportsImageGeneration(model),
+    supportsTranscription: (model: string) => Capabilities.supportsTranscription(model),
+    supportsModeration: (model: string) => Capabilities.supportsModeration(model),
     getContextWindow: (model: string) => Capabilities.getContextWindow(model),
   };
 

@@ -96,6 +96,11 @@ class LLMCore {
   async paint(prompt: string, options?: { model?: string; size?: string; quality?: string }): Promise<GeneratedImage> {
     const provider = this.ensureProviderSupport("paint");
 
+    const model = options?.model || DEFAULT_MODELS.IMAGE;
+    if (provider.capabilities && !provider.capabilities.supportsImageGeneration(model)) {
+      throw new Error(`Model ${model} does not support image generation.`);
+    }
+
     const response = await provider.paint({
       prompt,
       ...options,
@@ -115,6 +120,11 @@ class LLMCore {
     }
   ): Promise<Transcription> {
     const provider = this.ensureProviderSupport("transcribe");
+
+    const model = options?.model || this.defaultTranscriptionModelId || DEFAULT_MODELS.TRANSCRIPTION;
+    if (provider.capabilities && !provider.capabilities.supportsTranscription(model)) {
+      throw new Error(`Model ${model} does not support transcription.`);
+    }
 
     const response = await provider.transcribe({
       file,
@@ -143,6 +153,11 @@ class LLMCore {
 
   async moderate(input: string | string[], options?: { model?: string }): Promise<Moderation> {
     const provider = this.ensureProviderSupport("moderate");
+
+    const model = options?.model || this.defaultModerationModelId || DEFAULT_MODELS.MODERATION;
+    if (provider.capabilities && !provider.capabilities.supportsModeration(model)) {
+      throw new Error(`Model ${model} does not support moderation.`);
+    }
 
     const response = await provider.moderate({
       input,
