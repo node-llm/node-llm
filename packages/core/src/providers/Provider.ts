@@ -1,6 +1,7 @@
 import { Message } from "../chat/Message.js";
 import { Tool, ToolCall } from "../chat/Tool.js";
 import { MessageContent } from "../chat/Content.js";
+import { EmbeddingRequest, EmbeddingResponse } from "./Embedding.js";
 
 export interface ChatRequest {
   model: string;
@@ -33,6 +34,7 @@ export interface ProviderCapabilities {
   supportsVision: (model: string) => boolean;
   supportsTools: (model: string) => boolean;
   supportsStructuredOutput: (model: string) => boolean;
+  supportsEmbeddings: (model: string) => boolean;
   getContextWindow: (model: string) => number | null;
 }
 
@@ -113,5 +115,6 @@ export interface Provider {
   paint?(request: ImageRequest): Promise<ImageResponse>;
   transcribe?(request: TranscriptionRequest): Promise<TranscriptionResponse>;
   moderate?(request: ModerationRequest): Promise<ModerationResponse>;
+  embed?(request: EmbeddingRequest): Promise<EmbeddingResponse>;
   capabilities?: ProviderCapabilities;
 }

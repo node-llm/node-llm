@@ -44,7 +44,9 @@ import "dotenv/config";
 LLM.configure({
   provider: "openai", // Uses OPENAI_API_KEY from env
   retry: { attempts: 3, delayMs: 500 },
-  defaultModerationModel: "text-moderation-latest"
+  defaultModerationModel: "text-moderation-latest",
+  defaultTranscriptionModel: "whisper-1",
+  defaultEmbeddingModel: "text-embedding-3-small"
 });
 ```
 
@@ -103,9 +105,40 @@ console.log(response.output_tokens); // 5
 
 // Access aggregated usage for the whole session
 console.log(chat.totalUsage.total_tokens);
+console.log(chat.totalUsage.total_tokens);
 ```
 
-### 6. Audio Transcription (Transcribe)
+### 6. Embeddings
+
+Generate vector representations of text for semantic search, clustering, and similarity comparisons.
+
+```ts
+// Single text embedding
+const embedding = await LLM.embed("Ruby is a programmer's best friend");
+
+console.log(embedding.vector);        // Array of floats (e.g., 1536 dimensions)
+console.log(embedding.dimensions);    // 1536
+console.log(embedding.model);         // "text-embedding-3-small"
+console.log(embedding.input_tokens);  // Token count
+
+// Batch embeddings
+const embeddings = await LLM.embed([
+  "First text",
+  "Second text",
+  "Third text"
+]);
+
+console.log(embeddings.vectors);      // Array of vectors
+console.log(embeddings.vectors.length); // 3
+
+// Custom model and dimensions
+const customEmbedding = await LLM.embed("Semantic search text", {
+  model: "text-embedding-3-large",
+  dimensions: 256  // Reduce dimensions for faster processing
+});
+```
+
+### 7. Audio Transcription (Transcribe)
 
 Convert audio files to text using specialized models like Whisper.
 

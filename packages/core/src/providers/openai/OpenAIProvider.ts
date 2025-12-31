@@ -6,7 +6,9 @@ import { OpenAIModels } from "./Models.js";
 import { OpenAIImage } from "./Image.js";
 import { OpenAITranscription } from "./Transcription.js";
 import { OpenAIModeration } from "./Moderation.js";
+import { OpenAIEmbedding } from "./Embedding.js";
 import { TranscriptionRequest, TranscriptionResponse } from "../Provider.js";
+import { EmbeddingRequest, EmbeddingResponse } from "../Embedding.js";
 
 export interface OpenAIProviderOptions {
   apiKey: string;
@@ -21,11 +23,13 @@ export class OpenAIProvider implements Provider {
   private readonly imageHandler: OpenAIImage;
   private readonly transcriptionHandler: OpenAITranscription;
   private readonly moderationHandler: OpenAIModeration;
+  private readonly embeddingHandler: OpenAIEmbedding;
 
   public capabilities = {
     supportsVision: (model: string) => Capabilities.supportsVision(model),
     supportsTools: (model: string) => Capabilities.supportsTools(model),
     supportsStructuredOutput: (model: string) => Capabilities.supportsStructuredOutput(model),
+    supportsEmbeddings: (model: string) => Capabilities.supportsEmbeddings(model),
     getContextWindow: (model: string) => Capabilities.getContextWindow(model),
   };
 
@@ -37,6 +41,7 @@ export class OpenAIProvider implements Provider {
     this.imageHandler = new OpenAIImage(this.baseUrl, options.apiKey);
     this.transcriptionHandler = new OpenAITranscription(this.baseUrl, options.apiKey);
     this.moderationHandler = new OpenAIModeration(this.baseUrl, options.apiKey);
+    this.embeddingHandler = new OpenAIEmbedding(this.baseUrl, options.apiKey);
   }
 
   async chat(request: ChatRequest): Promise<ChatResponse> {
@@ -61,5 +66,9 @@ export class OpenAIProvider implements Provider {
 
   async moderate(request: ModerationRequest): Promise<ModerationResponse> {
     return this.moderationHandler.execute(request);
+  }
+
+  async embed(request: EmbeddingRequest): Promise<EmbeddingResponse> {
+    return this.embeddingHandler.execute(request);
   }
 }
