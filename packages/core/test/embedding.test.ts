@@ -16,7 +16,10 @@ const mockProvider = {
 describe("LLM Embeddings", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    LLM.configure({ provider: mockProvider as any });
+    LLM.configure({ 
+      provider: mockProvider as any,
+      defaultEmbeddingModel: "text-embedding-3-small"
+    });
   });
 
   it("should call provider.embed with correct arguments", async () => {
