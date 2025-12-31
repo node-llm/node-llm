@@ -63,3 +63,24 @@ export interface GeminiGenerateContentResponse {
   };
   modelVersion?: string;
 }
+
+export interface GeminiModel {
+  name: string;
+  version: string;
+  displayName: string;
+  description: string;
+  inputTokenLimit: number;
+  outputTokenLimit: number;
+  supportedGenerationMethods: string[];
+  temperature?: number;
+  topP?: number;
+  topK?: number;
+}
+
+export interface GeminiListModelsResponse {
+  models: GeminiModel[];
+  nextPageToken?: string;
+}
+
+
+

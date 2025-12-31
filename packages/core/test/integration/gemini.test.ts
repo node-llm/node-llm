@@ -48,4 +48,31 @@ describe("Gemini Integration (VCR)", { timeout: 30000 }, () => {
     expect(String(response)).toContain("Berlin");
     expect(response.usage.input_tokens).toBeGreaterThan(0);
   });
+
+  it("should support streaming", async ({ task }) => {
+    polly = setupVCR(task.name, "gemini");
+
+    LLM.configure({ provider: "gemini" });
+    const chat = LLM.chat("gemini-2.0-flash");
+
+    let fullText = "";
+    for await (const chunk of chat.stream("Say 'Stream Test'")) {
+      fullText += chunk.content;
+    }
+
+    expect(fullText).toContain("Stream Test");
+  });
+
+  it("should list available models", async ({ task }) => {
+    polly = setupVCR(task.name, "gemini");
+
+    LLM.configure({ provider: "gemini" });
+    const models = await LLM.listModels();
+
+    expect(models.length).toBeGreaterThan(0);
+    const flash = models.find(m => m.id.includes("flash"));
+    expect(flash).toBeDefined();
+    expect(flash?.provider).toBe("gemini");
+    expect(flash?.capabilities).toContain("streaming");
+  });
 });
