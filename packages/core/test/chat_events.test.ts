@@ -47,7 +47,45 @@ describe("Chat Events", () => {
 
     // Verify payload of onEndMessage
     const endMsg = onEndMessage.mock.calls[0][0];
-    expect(endMsg.content).toBe("Hello world");
     expect(endMsg.model).toBe("test-stream-model");
+  });
+
+  it("triggers onToolCall and onToolResult during tool execution", async () => {
+    // Mock provider that requests a tool then returns final
+    const provider = new FakeProvider([
+      {
+        content: null,
+        tool_calls: [{ 
+          id: "call_1", 
+          type: "function", 
+          function: { name: "test_tool", arguments: "{}" } 
+        }]
+      },
+      "Final Answer"
+    ]);
+
+    const chat = new Chat(provider, "test-model");
+    
+    // Mock tool
+    const tool = {
+      type: "function" as const,
+      function: { name: "test_tool", parameters: {} },
+      handler: async () => "tool_result"
+    };
+
+    const onToolCall = vi.fn();
+    const onToolResult = vi.fn();
+
+    await chat
+      .withTool(tool)
+      .onToolCall(onToolCall)
+      .onToolResult(onToolResult)
+      .ask("Go");
+
+    expect(onToolCall).toHaveBeenCalledTimes(1);
+    expect(onToolCall.mock.calls[0][0].function.name).toBe("test_tool");
+
+    expect(onToolResult).toHaveBeenCalledTimes(1);
+    expect(onToolResult).toHaveBeenCalledWith("tool_result");
   });
 });

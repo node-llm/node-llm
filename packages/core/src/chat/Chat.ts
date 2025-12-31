@@ -5,6 +5,7 @@ import { Provider, Usage } from "../providers/Provider.js";
 import { Executor } from "../executor/Executor.js";
 import { LLM } from "../llm.js";
 import { Stream } from "./Stream.js";
+import { Tool } from "./Tool.js";
 
 export interface AskOptions {
   images?: string[];
@@ -22,7 +23,7 @@ export class Chat {
 
   constructor(
     private readonly provider: Provider,
-    private readonly model: string,
+    private model: string,
     private readonly options: ChatOptions = {}
   ) {
     this.executor = new Executor(
@@ -69,12 +70,44 @@ export class Chat {
 
   /**
    * Add a tool to the chat session (fluent API)
+   * Supports passing a tool instance or a tool class (which will be instantiated).
    */
   withTool(tool: any): this {
+    return this.withTools([tool]);
+  }
+
+  /**
+   * Add multiple tools to the chat session.
+   * Supports passing tool instances or classes (which will be instantiated).
+   * Can replace existing tools if options.replace is true.
+   * 
+   * @example
+   * chat.withTools([WeatherTool, new CalculatorTool()], { replace: true });
+   */
+  withTools(tools: (Tool | any)[], options?: { replace?: boolean }): this {
+    if (options?.replace) {
+      this.options.tools = [];
+    }
+
     if (!this.options.tools) {
       this.options.tools = [];
     }
-    this.options.tools.push(tool);
+
+    for (const tool of tools) {
+      if (typeof tool === "function") {
+        try {
+          // Attempt to instantiate if it's a class
+          this.options.tools.push(new tool());
+        } catch (e) {
+          // If instantiation fails, it might be a function tool or require args? 
+          // For now, assuming classes with no-arg constructors as per convention.
+          console.warn("Attempted to instantiate tool class but failed, adding as-is", e);
+          this.options.tools.push(tool);
+        }
+      } else {
+        this.options.tools.push(tool);
+      }
+    }
     return this;
   }
 
@@ -115,6 +148,14 @@ export class Chat {
    */
   withTemperature(temp: number): this {
     this.options.temperature = temp;
+    return this;
+  }
+
+  /**
+   * Switch the model used for this chat session.
+   */
+  withModel(model: string): this {
+    this.model = model;
     return this;
   }
 

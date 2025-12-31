@@ -13,7 +13,10 @@ describe("Transcription Unit Tests", () => {
         model: "whisper-1",
         duration: 10,
         segments: [{ id: 0, start: 0, end: 10, text: "Mock transcription" }]
-      })
+      }),
+      capabilities: {
+        supportsTranscription: vi.fn().mockReturnValue(true),
+      } as any
     };
     LLM.configure({ provider: mockProvider });
   });
@@ -112,5 +115,10 @@ describe("Transcription Unit Tests", () => {
       speakerNames: ["Alice", "Bob"],
       speakerReferences: ["alice.wav", "bob.wav"]
     }));
+  });
+
+  it("should throw if model does not support transcription", async () => {
+    (mockProvider.capabilities!.supportsTranscription as any).mockReturnValue(false);
+    await expect(LLM.transcribe("test.mp3", { model: "gpt-4" })).rejects.toThrow("does not support transcription");
   });
 });

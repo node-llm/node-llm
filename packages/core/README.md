@@ -168,6 +168,7 @@ Hook into the chat lifecycle for logging, UI updates, or auditing.
 
 ```ts
 chat
+  .withTool(weatherTool)
   .onNewMessage(() => console.log("AI started typing..."))
   .onToolCall((tool) => console.log(`Calling ${tool.function.name}...`))
   .onToolResult((result) => console.log(`Tool returned: ${result}`))
@@ -262,6 +263,15 @@ const weatherTool = {
 const reply = await chat
   .withTool(weatherTool)
   .ask("What is the weather in London?");
+
+// Add multiple tools, including classes (auto-instantiated)
+chat.withTools([weatherTool, CalculatorTool]);
+
+// Replace existing tools
+chat.withTools([NewTool], { replace: true });
+
+// Clear all tools
+chat.withTools([], { replace: true });
 ```
 
 ### Multi-modal & File Support

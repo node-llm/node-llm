@@ -44,6 +44,20 @@ export class Capabilities {
     return this.getDefinition(modelId).type === "embedding";
   }
 
+  static supportsImageGeneration(modelId: string): boolean {
+    return this.getDefinition(modelId).type === "image";
+  }
+
+  static supportsTranscription(modelId: string): boolean {
+     // Transcription is supported by audio models or specific models like gpt-4o-audio
+     const def = this.getDefinition(modelId);
+     return def.type === "audio" || (def.type === "chat" && /audio|transcribe/.test(modelId));
+  }
+
+  static supportsModeration(modelId: string): boolean {
+    return this.getDefinition(modelId).type === "moderation";
+  }
+
   static getInputPrice(modelId: string): number {
     const prices = this.getDefinition(modelId).pricing;
     return prices.input || prices.price || 0.5;
