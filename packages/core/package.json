@@ -1,6 +1,6 @@
 {
   "name": "@node-llm/core",
-  "version": "0.2.3",
+  "version": "0.3.0",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -13,6 +13,9 @@
   "description": "A provider-agnostic LLM core for Node.js, inspired by ruby-llm.",
   "author": "node-llm contributors",
   "license": "MIT",
+  "engines": {
+    "node": ">=20.0.0"
+  },
   "files": [
     "dist",
     "README.md"
@@ -20,6 +23,7 @@
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "dev": "tsc -w",
+    "lint": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
     "prepublishOnly": "npm run build"

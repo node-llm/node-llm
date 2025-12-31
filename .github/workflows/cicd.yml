@@ -1,0 +1,132 @@
+name: CI/CD
+
+on:
+  push:
+    branches: ["**"]  # Run on all branches
+    paths:
+      - 'packages/**'
+      - 'examples/**'
+      - 'package.json'
+      - 'pnpm-lock.yaml'
+      - 'tsconfig.base.json'
+      - '.github/workflows/cicd.yml'
+  pull_request:
+    branches: ["main"]
+    paths:
+      - 'packages/**'
+      - 'examples/**'
+      - 'package.json'
+      - 'pnpm-lock.yaml'
+      - 'tsconfig.base.json'
+      - '.github/workflows/cicd.yml'
+  workflow_call:
+
+# Define default permissions for this workflow
+permissions:
+  contents: write  # Needed for creating releases
+  packages: write  # Needed for publishing to npm
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: ['20.x', '22.x']
+    
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup pnpm
+      uses: pnpm/action-setup@v2
+      with:
+        version: 8
+
+    - name: Setup Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'pnpm'
+
+    - name: Install dependencies
+      run: pnpm install
+
+    - name: Build
+      run: pnpm run build
+
+    - name: Lint
+      run: |
+        cd packages/core
+        pnpm run lint || echo "Linting not configured yet"
+
+    - name: Run tests
+      run: |
+        cd packages/core
+        pnpm test
+      env:
+        # VCR mode - use recorded cassettes
+        VCR_MODE: replay
+
+  publish:
+    name: Build + Publish
+    needs: test
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup pnpm
+      uses: pnpm/action-setup@v2
+      with:
+        version: 8
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '22.x'
+        cache: 'pnpm'
+        registry-url: 'https://registry.npmjs.org'
+
+    - name: Install dependencies
+      run: pnpm install
+
+    - name: Build
+      run: pnpm run build
+
+    - name: Check if version needs publishing
+      id: check_version
+      run: |
+        cd packages/core
+        PACKAGE_VERSION=$(node -p "require('./package.json').version")
+        PACKAGE_NAME=$(node -p "require('./package.json').name")
+        
+        echo "Local version: $PACKAGE_VERSION"
+        echo "Package name: $PACKAGE_NAME"
+        
+        # Check if version exists on npm
+        if npm view "$PACKAGE_NAME@$PACKAGE_VERSION" version 2>/dev/null; then
+          echo "Version $PACKAGE_VERSION already published"
+          echo "version_changed=false" >> $GITHUB_OUTPUT
+        else
+          echo "Version $PACKAGE_VERSION not published yet"
+          echo "version_changed=true" >> $GITHUB_OUTPUT
+        fi
+
+    - name: Publish to npm
+      if: steps.check_version.outputs.version_changed == 'true'
+      run: |
+        cd packages/core
+        pnpm publish --access public --no-git-checks
+      env:
+        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+    - name: Create GitHub Release
+      if: steps.check_version.outputs.version_changed == 'true'
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: v${{ steps.check_version.outputs.version }}
+        release_name: Release v${{ steps.check_version.outputs.version }}
+        draft: false
+        prerelease: false
