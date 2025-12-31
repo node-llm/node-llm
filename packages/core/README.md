@@ -127,6 +127,8 @@ if (result.flagged) {
 }
 ```
 
+Learn how to implement [custom risk thresholds](https://github.com/eshaiju/node-llm/blob/main/examples/openai/12-risk-assessment.mjs) for more granular control.
+
 ---
 
 ## 📚 Examples
@@ -147,6 +149,7 @@ Check the [examples](./examples) directory for focused scripts organized by prov
 | [Transcribe](https://github.com/eshaiju/node-llm/blob/main/examples/openai/09-transcribe.mjs) | Audio to text transcription |
 | [Capabilities](https://github.com/eshaiju/node-llm/blob/main/examples/openai/10-capabilities.mjs) | Dynamic model specs and pricing |
 | [Moderate](https://github.com/eshaiju/node-llm/blob/main/examples/openai/11-moderate.mjs) | Content safety moderation |
+| [Risk Assessment](https://github.com/eshaiju/node-llm/blob/main/examples/openai/12-risk-assessment.mjs) | Custom thresholds and risk levels |
 
 To run an example (from the project root):
 ```bash
