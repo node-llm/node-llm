@@ -1,6 +1,7 @@
 import { EmbeddingRequest, EmbeddingResponse } from "../Embedding.js";
 import { handleOpenAIError } from "./Errors.js";
 import { Capabilities } from "./Capabilities.js";
+import { DEFAULT_MODELS } from "../../constants.js";
 
 export class OpenAIEmbedding {
   constructor(
@@ -9,7 +10,7 @@ export class OpenAIEmbedding {
   ) {}
 
   async execute(request: EmbeddingRequest): Promise<EmbeddingResponse> {
-    const model = request.model || "text-embedding-3-small";
+    const model = request.model || DEFAULT_MODELS.EMBEDDING;
 
     // Validate that the model is an embedding model
     if (Capabilities.getModelType(model) !== "embedding") {
@@ -39,7 +40,7 @@ export class OpenAIEmbedding {
     });
 
     if (!response.ok) {
-      await handleOpenAIError(response, request.model || "text-embedding-3-small");
+      await handleOpenAIError(response, request.model || DEFAULT_MODELS.EMBEDDING);
     }
 
     const json = await response.json();

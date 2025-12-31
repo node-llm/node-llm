@@ -1,12 +1,13 @@
 import { TranscriptionRequest, TranscriptionResponse } from "../Provider.js";
 import { handleOpenAIError } from "./Errors.js";
 import { AudioUtils } from "../../utils/audio.js";
+import { DEFAULT_MODELS } from "../../constants.js";
 
 export class OpenAITranscription {
   constructor(private readonly baseUrl: string, private readonly apiKey: string) {}
 
   async execute(request: TranscriptionRequest): Promise<TranscriptionResponse> {
-    const model = request.model || "whisper-1";
+    const model = request.model || DEFAULT_MODELS.TRANSCRIPTION;
 
     if (model.startsWith("gpt-4o")) {
       return this.transcribeViaChat(request);
@@ -22,7 +23,7 @@ export class OpenAITranscription {
     const mimeType = fileName.endsWith(".wav") ? "audio/wav" : "audio/mpeg";
     const file = new File([data] as any, fileName, { type: mimeType });
     formData.append("file", file);
-    formData.append("model", request.model || "whisper-1");
+    formData.append("model", request.model || DEFAULT_MODELS.TRANSCRIPTION);
     formData.append("response_format", "verbose_json");
     
     if (request.prompt) {
@@ -42,13 +43,13 @@ export class OpenAITranscription {
     });
 
     if (!response.ok) {
-      await handleOpenAIError(response, request.model || "whisper-1");
+      await handleOpenAIError(response, request.model || DEFAULT_MODELS.TRANSCRIPTION);
     }
 
     const json = (await response.json()) as { text: string; model: string; duration?: number; segments?: any[] };
     return { 
       text: json.text,
-      model: json.model || request.model || "whisper-1",
+      model: json.model || request.model || DEFAULT_MODELS.TRANSCRIPTION,
       duration: json.duration || estimatedDuration,
       segments: json.segments?.map(s => ({
         id: s.id,

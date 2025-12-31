@@ -94,7 +94,7 @@ describe("LLM Embeddings", () => {
 
   it("should throw if provider does not support embed", async () => {
     LLM.configure({ provider: {} as any });
-    await expect(LLM.embed("test")).rejects.toThrow("Provider does not support embeddings");
+    await expect(LLM.embed("test")).rejects.toThrow("Provider does not support embed");
   });
 
   it("should throw if model does not support embeddings", async () => {

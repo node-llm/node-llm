@@ -227,7 +227,8 @@ Check the [examples](./examples) directory for focused scripts organized by prov
 | [System Prompts](./examples/openai/15-system-prompts.mjs) | Dynamic system instructions |
 | [Temperature](./examples/openai/16-temperature.mjs) | Control creativity vs determinism |
 | [Multi-File](./examples/openai/17-multi-file.mjs) | Analyze multiple files at once |
-| [Embeddings](./examples/openai/19-embeddings.mjs) | Generate vector embeddings for semantic search |
+| [Embeddings](./examples/openai/18-embeddings.mjs) | Generate vector embeddings for semantic search |
+
 
 To run an example:
 ```bash

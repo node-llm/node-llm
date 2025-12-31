@@ -228,6 +228,7 @@ Check the [examples](./examples) directory for focused scripts organized by prov
 | [System Prompts](https://github.com/eshaiju/node-llm/blob/main/examples/openai/15-system-prompts.mjs) | Dynamic system instructions |
 | [Temperature](https://github.com/eshaiju/node-llm/blob/main/examples/openai/16-temperature.mjs) | Control creativity vs determinism |
 | [Multi-File](https://github.com/eshaiju/node-llm/blob/main/examples/openai/17-multi-file.mjs) | Analyze multiple files at once |
+| [Embeddings](https://github.com/eshaiju/node-llm/blob/main/examples/openai/18-embeddings.mjs) | Generate vector embeddings |
 
 To run an example (from the project root):
 ```bash
