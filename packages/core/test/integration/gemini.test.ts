@@ -92,4 +92,16 @@ describe("Gemini Integration (VCR)", { timeout: 30000 }, () => {
     expect(String(response).toLowerCase()).toContain("red");
     expect(response.usage.input_tokens).toBeGreaterThan(0);
   });
+
+  it("should generate an image (Paint)", async ({ task }) => {
+    polly = setupVCR(task.name, "gemini");
+
+    LLM.configure({ provider: "gemini" });
+    const response = await LLM.paint("A sunset over the mountains", { 
+      model: "imagen-4.0-generate-001" 
+    });
+
+    expect(response.data).toBeDefined();
+    expect(response.mimeType).toBe("image/png");
+  });
 });

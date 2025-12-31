@@ -1,8 +1,9 @@
-import { Provider, ChatRequest, ChatResponse, ModelInfo, ChatChunk } from "../Provider.js";
+import { Provider, ChatRequest, ChatResponse, ModelInfo, ChatChunk, ImageRequest, ImageResponse } from "../Provider.js";
 import { Capabilities } from "./Capabilities.js";
 import { GeminiChat } from "./Chat.js";
 import { GeminiStreaming } from "./Streaming.js";
 import { GeminiModels } from "./Models.js";
+import { GeminiImage } from "./Image.js";
 
 export interface GeminiProviderOptions {
   apiKey: string;
@@ -14,6 +15,7 @@ export class GeminiProvider implements Provider {
   private readonly chatHandler: GeminiChat;
   private readonly streamingHandler: GeminiStreaming;
   private readonly modelsHandler: GeminiModels;
+  private readonly imageHandler: GeminiImage;
 
   public capabilities = {
     supportsVision: (model: string) => Capabilities.supportsVision(model),
@@ -31,6 +33,7 @@ export class GeminiProvider implements Provider {
     this.chatHandler = new GeminiChat(this.baseUrl, options.apiKey);
     this.streamingHandler = new GeminiStreaming(this.baseUrl, options.apiKey);
     this.modelsHandler = new GeminiModels(this.baseUrl, options.apiKey);
+    this.imageHandler = new GeminiImage(this.baseUrl, options.apiKey);
   }
 
   async chat(request: ChatRequest): Promise<ChatResponse> {
@@ -43,5 +46,9 @@ export class GeminiProvider implements Provider {
 
   async listModels(): Promise<ModelInfo[]> {
     return this.modelsHandler.execute();
+  }
+
+  async paint(request: ImageRequest): Promise<ImageResponse> {
+    return this.imageHandler.execute(request);
   }
 }

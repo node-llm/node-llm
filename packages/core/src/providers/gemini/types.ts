@@ -81,6 +81,21 @@ export interface GeminiListModelsResponse {
   models: GeminiModel[];
   nextPageToken?: string;
 }
+export interface GeminiImageRequest {
+  prompt: string;
+  numberOfImages?: number;
+  aspectRatio?: string;
+  safetySetting?: Array<{
+    category: string;
+    threshold: string;
+  }>;
+}
 
-
-
+export interface GeminiImageResponse {
+  images: Array<{
+    image: {
+      mimeType: string;
+      data: string; // base64
+    };
+  }>;
+}
