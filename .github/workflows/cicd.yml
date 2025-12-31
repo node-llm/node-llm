@@ -110,6 +110,7 @@ jobs:
         else
           echo "Version $PACKAGE_VERSION not published yet"
           echo "version_changed=true" >> $GITHUB_OUTPUT
+          echo "version=$PACKAGE_VERSION" >> $GITHUB_OUTPUT
         fi
 
     - name: Publish to npm
@@ -122,11 +123,11 @@ jobs:
 
     - name: Create GitHub Release
       if: steps.check_version.outputs.version_changed == 'true'
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      uses: softprops/action-gh-release@v1
       with:
         tag_name: v${{ steps.check_version.outputs.version }}
-        release_name: Release v${{ steps.check_version.outputs.version }}
+        name: Release v${{ steps.check_version.outputs.version }}
         draft: false
         prerelease: false
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
