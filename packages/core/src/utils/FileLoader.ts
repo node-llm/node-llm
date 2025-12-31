@@ -15,6 +15,8 @@ const MIME_TYPES: Record<string, string> = {
   ".mp3": "audio/mpeg",
   ".json": "application/json",
   ".js": "text/javascript",
+  ".mjs": "text/javascript",
+  ".cjs": "text/javascript",
   ".ts": "text/typescript",
   ".rb": "text/x-ruby",
   ".py": "text/x-python",
@@ -25,10 +27,19 @@ const MIME_TYPES: Record<string, string> = {
   ".xml": "text/xml",
   ".yml": "text/yaml",
   ".yaml": "text/yaml",
+  ".csv": "text/csv",
+  ".go": "text/x-go",
+  ".java": "text/x-java",
+  ".c": "text/x-c",
+  ".cpp": "text/x-c++",
+  ".rs": "text/x-rust",
+  ".swift": "text/x-swift",
+  ".kt": "text/x-kotlin",
 };
 
 const TEXT_EXTENSIONS = new Set([
-  ".json", ".js", ".ts", ".rb", ".py", ".txt", ".md", ".html", ".css", ".xml", ".yml", ".yaml", ".env"
+  ".json", ".js", ".mjs", ".cjs", ".ts", ".rb", ".py", ".txt", ".md", ".html", ".css", ".xml", ".yml", ".yaml", ".env",
+  ".csv", ".go", ".java", ".c", ".cpp", ".rs", ".swift", ".kt"
 ]);
 
 export class FileLoader {

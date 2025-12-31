@@ -166,10 +166,26 @@ export class Chat {
         throw new Error(`Model ${this.model} does not support vision/binary files.`);
       }
 
-      messageContent = [
-        { type: "text", text: content },
-        ...processedFiles
-      ];
+      // Separate text files from binary files
+      const textFiles = processedFiles.filter(p => p.type === "text");
+      const binaryFiles = processedFiles.filter(p => p.type !== "text");
+
+      // Concatenate text files into the main content
+      let fullText = content;
+      if (textFiles.length > 0) {
+        fullText += "\n" + textFiles.map(f => f.text).join("\n");
+      }
+
+      // If we have binary files, create multimodal content
+      if (binaryFiles.length > 0) {
+        messageContent = [
+          { type: "text", text: fullText },
+          ...binaryFiles
+        ];
+      } else {
+        // Only text files, keep as string
+        messageContent = fullText;
+      }
     }
 
     if (this.options.tools && this.options.tools.length > 0) {

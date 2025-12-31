@@ -194,6 +194,7 @@ Check the [examples](./examples) directory for focused scripts organized by prov
 | [Chat Events](./examples/openai/13-chat-events.mjs) | Lifecycle hooks (onNewMessage, onToolCall etc) |
 | [System Prompts](./examples/openai/15-system-prompts.mjs) | Dynamic system instructions |
 | [Temperature](./examples/openai/16-temperature.mjs) | Control creativity vs determinism |
+| [Multi-File](./examples/openai/17-multi-file.mjs) | Analyze multiple files at once |
 
 To run an example:
 ```bash
@@ -231,7 +232,15 @@ const reply = await chat
 
 ### Multi-modal & File Support
 
-Pass local paths or URLs directly. The library handles reading, MIME detection, and encoding.
+Pass local paths or URLs directly. The library handles reading, MIME detection, and encoding for a wide variety of file types.
+
+**Supported File Types:**
+- **Images**: `.jpg`, `.jpeg`, `.png`, `.gif`, `.webp`
+- **Videos**: `.mp4`, `.mpeg`, `.mov`
+- **Audio**: `.wav`, `.mp3`
+- **Documents**: `.csv`, `.json`
+- **Code**: `.js`, `.mjs`, `.cjs`, `.ts`, `.py`, `.rb`, `.go`, `.java`, `.c`, `.cpp`, `.rs`, `.swift`, `.kt`
+- **Text**: `.txt`, `.md`, `.html`, `.css`, `.xml`, `.yml`, `.yaml`
 
 ```ts
 // Vision
@@ -244,9 +253,14 @@ await chat.ask("Transcribe this", {
   files: ["./meeting.mp3"]
 });
 
-// Text/Code Analysis
+// Code Analysis
 await chat.ask("Explain this code", {
   files: ["./app.ts"]
+});
+
+// Multiple files at once
+await chat.ask("Analyze these files", {
+  files: ["diagram.png", "data.json", "notes.txt"]
 });
 ```
 
