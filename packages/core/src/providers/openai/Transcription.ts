@@ -1,7 +1,6 @@
 import { TranscriptionRequest, TranscriptionResponse } from "../Provider.js";
 import { handleOpenAIError } from "./Errors.js";
-import fs from "fs";
-import path from "path";
+import { AudioUtils } from "../../utils/audio.js";
 
 export class OpenAITranscription {
   constructor(private readonly baseUrl: string, private readonly apiKey: string) {}
@@ -9,7 +8,6 @@ export class OpenAITranscription {
   async execute(request: TranscriptionRequest): Promise<TranscriptionResponse> {
     const model = request.model || "whisper-1";
 
-    // Handle GPT-4o specialized transcription models
     if (model.startsWith("gpt-4o")) {
       return this.transcribeViaChat(request);
     }
@@ -19,9 +17,9 @@ export class OpenAITranscription {
 
   private async transcribeViaWhisper(request: TranscriptionRequest): Promise<TranscriptionResponse> {
     const formData = new FormData();
-    const { data, fileName } = await this.loadFileData(request.file);
+    const { data, fileName, duration: estimatedDuration } = await AudioUtils.load(request.file);
     
-    const mimeType = request.file.endsWith(".wav") ? "audio/wav" : "audio/mpeg";
+    const mimeType = fileName.endsWith(".wav") ? "audio/wav" : "audio/mpeg";
     const file = new File([data] as any, fileName, { type: mimeType });
     formData.append("file", file);
     formData.append("model", request.model || "whisper-1");
@@ -51,7 +49,7 @@ export class OpenAITranscription {
     return { 
       text: json.text,
       model: json.model || request.model || "whisper-1",
-      duration: json.duration,
+      duration: json.duration || estimatedDuration,
       segments: json.segments?.map(s => ({
         id: s.id,
         start: s.start,
@@ -62,14 +60,11 @@ export class OpenAITranscription {
   }
 
   private async transcribeViaChat(request: TranscriptionRequest): Promise<TranscriptionResponse> {
-    const { data } = await this.loadFileData(request.file);
+    const { data, fileName, duration: estimatedDuration } = await AudioUtils.load(request.file);
     const base64Audio = Buffer.from(data).toString("base64");
     const model = request.model || "gpt-4o";
     
-    // Map specialized model names to actual OpenAI models
-    // GPT-4o audio specifically requires gpt-4o-audio-preview
     let actualModel = "gpt-4o-audio-preview";
-    
     let defaultPrompt = "Transcribe the audio exactly. Return only the transcription text.";
     let isDiarization = false;
 
@@ -77,7 +72,7 @@ export class OpenAITranscription {
       isDiarization = true;
       const names = request.speakerNames?.join(", ") || "Speaker A, Speaker B";
       defaultPrompt = `Transcribe the audio and identify different speakers. 
-      Use the following names if possible: ${names}.
+      I will provide reference clips for specific voices. Please map the voices in the main audio to these names: ${names}.
       Return the output as a JSON array of objects, each with 'speaker', 'text', 'start', and 'end' (in seconds).
       Example: [{"speaker": "Alice", "text": "Hello", "start": 0.5, "end": 1.2}]`;
     }
@@ -95,14 +90,13 @@ export class OpenAITranscription {
       }
     ];
 
-    // Add speaker reference clips if provided
     if (request.speakerReferences && request.speakerNames) {
       for (let i = 0; i < request.speakerReferences.length; i++) {
         const refFile = request.speakerReferences[i];
         if (!refFile) continue;
         
         const name = request.speakerNames[i] || `Speaker ${i + 1}`;
-        const { data: refData } = await this.loadFileData(refFile);
+        const { data: refData } = await AudioUtils.load(refFile);
         const refBase64 = Buffer.from(refData).toString("base64");
         
         messagesContent.push({
@@ -127,7 +121,7 @@ export class OpenAITranscription {
       type: "input_audio",
       input_audio: {
         data: base64Audio,
-        format: request.file.endsWith(".wav") ? "wav" : "mp3"
+        format: fileName.endsWith(".wav") ? "wav" : "mp3"
       }
     });
 
@@ -138,8 +132,7 @@ export class OpenAITranscription {
           role: "user",
           content: messagesContent
         }
-      ],
-      response_format: isDiarization ? { type: "json_object" } : undefined
+      ]
     };
 
     const response = await fetch(`${this.baseUrl}/chat/completions`, {
@@ -175,7 +168,6 @@ export class OpenAITranscription {
           text = segments.map(s => `${s.speaker}: ${s.text}`).join("\n");
         }
       } catch (e) {
-        // Fallback if parsing fails
         text = content;
       }
     }
@@ -183,29 +175,8 @@ export class OpenAITranscription {
     return {
       text,
       model,
+      duration: estimatedDuration || 0,
       segments
     };
-  }
-
-  private async loadFileData(filePath: string): Promise<{ data: Uint8Array; fileName: string }> {
-    let data: Uint8Array;
-    let fileName: string;
-
-    if (filePath.startsWith("http")) {
-      const response = await fetch(filePath);
-      if (!response.ok) {
-        throw new Error(`Failed to fetch remote audio file: ${response.statusText}`);
-      }
-      const arrayBuffer = await response.arrayBuffer();
-      data = new Uint8Array(arrayBuffer);
-      const urlPath = new URL(filePath).pathname;
-      fileName = path.basename(urlPath) || "audio.mp3";
-    } else {
-      const buffer = fs.readFileSync(filePath);
-      data = new Uint8Array(buffer.buffer, buffer.byteOffset, buffer.length);
-      fileName = path.basename(filePath);
-    }
-
-    return { data, fileName };
   }
 }
