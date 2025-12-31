@@ -83,4 +83,21 @@ describe("Transcription Unit Tests", () => {
 
     await expect(LLM.transcribe("test.mp3")).rejects.toThrow("Provider does not support transcribe");
   });
+
+  it("should handle segments with speaker labels", async () => {
+    mockProvider.transcribe = vi.fn().mockResolvedValue({
+      text: "A: Hi\nB: Hello",
+      model: "gpt-4o-transcribe-diarize",
+      segments: [
+        { id: 0, start: 0.5, end: 1.2, text: "Hi", speaker: "A" },
+        { id: 1, start: 2.8, end: 3.5, text: "Hello", speaker: "B" }
+      ]
+    });
+
+    const result = await LLM.transcribe("test.mp3", { model: "gpt-4o-transcribe-diarize" });
+
+    expect(result.segments[0].speaker).toBe("A");
+    expect(result.segments[1].speaker).toBe("B");
+    expect(result.segments[0].start).toBe(0.5);
+  });
 });

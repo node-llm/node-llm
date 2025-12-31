@@ -23,7 +23,8 @@ async function main() {
     console.log(`Duration: ${transcription.duration}s`);
     console.log("--- Transcription segments ---");
     transcription.segments.forEach(segment => {
-      console.log(`${segment.start.toFixed(2)}s - ${segment.end.toFixed(2)}s: ${segment.text}`);
+      const speakerPrefix = segment.speaker ? `${segment.speaker}: ` : "";
+      console.log(`${segment.start.toFixed(2)}s - ${segment.end.toFixed(2)}s: ${speakerPrefix}${segment.text}`);
     });
     console.log("------------------------------");
     

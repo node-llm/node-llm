@@ -71,8 +71,13 @@ export class OpenAITranscription {
     let actualModel = "gpt-4o-audio-preview";
     
     let defaultPrompt = "Transcribe the audio exactly. Return only the transcription text.";
+    let isDiarization = false;
+
     if (model.includes("diarize")) {
-      defaultPrompt = "Transcribe the audio and identify different speakers (e.g., Speaker A, Speaker B). Return only the transcript.";
+      isDiarization = true;
+      defaultPrompt = `Transcribe the audio and identify different speakers (e.g., Speaker A, Speaker B). 
+      Return the output as a JSON array of objects, each with 'speaker', 'text', 'start', and 'end' (in seconds).
+      Example: [{"speaker": "A", "text": "Hello", "start": 0.5, "end": 1.2}]`;
     }
 
     if (request.language) {
@@ -100,7 +105,8 @@ export class OpenAITranscription {
             }
           ]
         }
-      ]
+      ],
+      response_format: isDiarization ? { type: "json_object" } : undefined
     };
 
     const response = await fetch(`${this.baseUrl}/chat/completions`, {
@@ -117,12 +123,34 @@ export class OpenAITranscription {
     }
 
     const json = await response.json();
-    const text = json.choices[0]?.message?.content || "";
+    const content = json.choices[0]?.message?.content || "";
+    
+    let text = content;
+    let segments: any[] = [];
+
+    if (isDiarization) {
+      try {
+        const parsed = JSON.parse(content);
+        if (Array.isArray(parsed)) {
+          segments = parsed.map((s, i) => ({
+            id: i,
+            start: s.start || 0,
+            end: s.end || 0,
+            text: s.text || "",
+            speaker: s.speaker
+          }));
+          text = segments.map(s => `${s.speaker}: ${s.text}`).join("\n");
+        }
+      } catch (e) {
+        // Fallback if parsing fails
+        text = content;
+      }
+    }
 
     return {
       text,
       model,
-      segments: [] // GPT-4o chat doesn't return segments easily
+      segments
     };
   }
 
