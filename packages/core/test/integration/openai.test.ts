@@ -117,4 +117,16 @@ describe("OpenAI Integration (VCR)", { timeout: 30000 }, () => {
     expect(transcription.segments.length).toBeGreaterThan(0);
     expect(transcription.duration).toBeGreaterThan(0);
   });
+
+  it("should transcribe audio using gpt-4o-transcribe", async ({ task }) => {
+    polly = setupVCR(task.name);
+
+    LLM.configure({ provider: "openai" });
+    const transcription = await LLM.transcribe("../../examples/audio/sample-0.mp3", {
+      model: "gpt-4o-transcribe"
+    });
+
+    expect(transcription.text).toBeDefined();
+    expect(transcription.model).toBe("gpt-4o-transcribe");
+  });
 });

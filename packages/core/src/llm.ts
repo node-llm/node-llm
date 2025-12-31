@@ -26,6 +26,10 @@ export class Transcription {
     return this.response.text;
   }
 
+  get model(): string {
+    return this.response.model;
+  }
+
   get segments(): TranscriptionSegment[] {
     return this.response.segments || [];
   }

@@ -81,6 +81,7 @@ export interface TranscriptionSegment {
 
 export interface TranscriptionResponse {
   text: string;
+  model: string;
   duration?: number;
   segments?: TranscriptionSegment[];
 }

@@ -17,9 +17,10 @@ async function main() {
 
   try {
     console.log(`Transcribing ${audioFile}...`);
-    const transcription = await LLM.transcribe(audioFile);
+    const transcription = await LLM.transcribe(audioFile, { model: "gpt-4o-transcribe" });
     
-    console.log(`\nDuration: ${transcription.duration}s`);
+    console.log(`\nModel: ${transcription.model}`);
+    console.log(`Duration: ${transcription.duration}s`);
     console.log("--- Transcription segments ---");
     transcription.segments.forEach(segment => {
       console.log(`${segment.start.toFixed(2)}s - ${segment.end.toFixed(2)}s: ${segment.text}`);
