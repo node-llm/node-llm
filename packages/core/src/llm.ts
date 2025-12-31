@@ -14,6 +14,8 @@ import { GeneratedImage } from "./image/GeneratedImage.js";
 import { models, ModelRegistry } from "./models/ModelRegistry.js";
 import { Transcription } from "./transcription/Transcription.js";
 import { Moderation } from "./moderation/Moderation.js";
+import { Embedding } from "./embedding/Embedding.js";
+import { EmbeddingRequest } from "./providers/Embedding.js";
 
 export interface RetryOptions {
   attempts?: number;
@@ -21,14 +23,15 @@ export interface RetryOptions {
 }
 
 type LLMConfig =
-  | { provider: Provider; retry?: RetryOptions; defaultTranscriptionModel?: string; defaultModerationModel?: string }
-  | { provider: string; retry?: RetryOptions; defaultTranscriptionModel?: string; defaultModerationModel?: string };
+  | { provider: Provider; retry?: RetryOptions; defaultTranscriptionModel?: string; defaultModerationModel?: string; defaultEmbeddingModel?: string }
+  | { provider: string; retry?: RetryOptions; defaultTranscriptionModel?: string; defaultModerationModel?: string; defaultEmbeddingModel?: string };
 
 class LLMCore {
   public readonly models: ModelRegistry = models;
   private provider?: Provider;
   private defaultTranscriptionModelId?: string;
   private defaultModerationModelId?: string;
+  private defaultEmbeddingModelId?: string;
    
   private retry: Required<RetryOptions> = {
     attempts: 1,
@@ -42,6 +45,10 @@ class LLMCore {
 
     if (config.defaultModerationModel) {
       this.defaultModerationModelId = config.defaultModerationModel;
+    }
+
+    if (config.defaultEmbeddingModel) {
+      this.defaultEmbeddingModelId = config.defaultEmbeddingModel;
     }
 
     if (config.retry) {
@@ -130,6 +137,10 @@ class LLMCore {
     return this.defaultModerationModelId;
   }
 
+  get defaultEmbeddingModel(): string | undefined {
+    return this.defaultEmbeddingModelId;
+  }
+
   getRetryConfig() {
     return this.retry;
   }
@@ -150,8 +161,33 @@ class LLMCore {
 
     return new Moderation(response);
   }
+
+  async embed(
+    input: string | string[],
+    options?: { model?: string; dimensions?: number }
+  ): Promise<Embedding> {
+    if (!this.provider) {
+      throw new Error("LLM provider not configured");
+    }
+    if (!(this.provider as any).embed) {
+      throw new Error(`Provider does not support embeddings`);
+    }
+
+    const request: EmbeddingRequest = {
+      input,
+      model: options?.model || this.defaultEmbeddingModelId || "text-embedding-3-small",
+      dimensions: options?.dimensions,
+    };
+
+    if (this.provider.capabilities && !this.provider.capabilities.supportsEmbeddings(request.model!)) {
+      throw new Error(`Model ${request.model} does not support embeddings.`);
+    }
+
+    const response = await (this.provider as any).embed(request);
+    return new Embedding(response);
+  }
 }
 
-export { Transcription, Moderation };
+export { Transcription, Moderation, Embedding };
 
 export const LLM = new LLMCore();

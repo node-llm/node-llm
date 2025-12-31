@@ -243,6 +243,10 @@ export class Capabilities {
     return this.supportsStructuredOutput(modelId);
   }
 
+  static supportsEmbeddings(modelId: string): boolean {
+    return this.getModelType(modelId) === "embedding";
+  }
+
   static getInputPrice(modelId: string): number {
     const family = this.getFamily(modelId);
     const prices = PRICES[family] || { input: 0.5 };
