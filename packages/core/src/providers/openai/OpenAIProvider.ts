@@ -4,6 +4,8 @@ import { OpenAIChat } from "./Chat.js";
 import { OpenAIStreaming } from "./Streaming.js";
 import { OpenAIModels } from "./Models.js";
 import { OpenAIImage } from "./Image.js";
+import { OpenAITranscription } from "./Transcription.js";
+import { TranscriptionRequest, TranscriptionResponse } from "../Provider.js";
 
 export interface OpenAIProviderOptions {
   apiKey: string;
@@ -16,6 +18,7 @@ export class OpenAIProvider implements Provider {
   private readonly streamingHandler: OpenAIStreaming;
   private readonly modelsHandler: OpenAIModels;
   private readonly imageHandler: OpenAIImage;
+  private readonly transcriptionHandler: OpenAITranscription;
 
   public capabilities = {
     supportsVision: (model: string) => Capabilities.supportsVision(model),
@@ -30,6 +33,7 @@ export class OpenAIProvider implements Provider {
     this.streamingHandler = new OpenAIStreaming(this.baseUrl, options.apiKey);
     this.modelsHandler = new OpenAIModels(this.baseUrl, options.apiKey);
     this.imageHandler = new OpenAIImage(this.baseUrl, options.apiKey);
+    this.transcriptionHandler = new OpenAITranscription(this.baseUrl, options.apiKey);
   }
 
   async chat(request: ChatRequest): Promise<ChatResponse> {
@@ -46,5 +50,9 @@ export class OpenAIProvider implements Provider {
 
   async paint(request: ImageRequest): Promise<ImageResponse> {
     return this.imageHandler.execute(request);
+  }
+
+  async transcribe(request: TranscriptionRequest): Promise<TranscriptionResponse> {
+    return this.transcriptionHandler.execute(request);
   }
 }

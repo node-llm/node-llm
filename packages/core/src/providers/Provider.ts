@@ -63,10 +63,33 @@ export interface ImageResponse {
   revised_prompt?: string;
 }
 
+export interface TranscriptionRequest {
+  model?: string;
+  file: string;
+  prompt?: string;
+  language?: string;
+}
+
+export interface TranscriptionSegment {
+  id: number;
+  start: number;
+  end: number;
+  text: string;
+  speaker?: string;
+  [key: string]: any;
+}
+
+export interface TranscriptionResponse {
+  text: string;
+  duration?: number;
+  segments?: TranscriptionSegment[];
+}
+
 export interface Provider {
   chat(request: ChatRequest): Promise<ChatResponse>;
   stream?(request: ChatRequest): AsyncIterable<ChatChunk>;
   listModels?(): Promise<ModelInfo[]>;
   paint?(request: ImageRequest): Promise<ImageResponse>;
+  transcribe?(request: TranscriptionRequest): Promise<TranscriptionResponse>;
   capabilities?: ProviderCapabilities;
 }

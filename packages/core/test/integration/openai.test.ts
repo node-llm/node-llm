@@ -101,4 +101,20 @@ describe("OpenAI Integration (VCR)", { timeout: 30000 }, () => {
 
     expect(fullText).toContain("Stream Test");
   });
+
+  it("should transcribe audio", async ({ task }) => {
+    polly = setupVCR(task.name);
+
+    LLM.configure({ 
+      provider: "openai",
+      defaultTranscriptionModel: "whisper-1"
+    });
+    
+    // Relative to packages/core where tests run
+    const transcription = await LLM.transcribe("../../examples/audio/sample-0.mp3");
+
+    expect(transcription.text).toBeDefined();
+    expect(transcription.segments.length).toBeGreaterThan(0);
+    expect(transcription.duration).toBeGreaterThan(0);
+  });
 });

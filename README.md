@@ -103,6 +103,15 @@ console.log(response.output_tokens); // 5
 console.log(chat.totalUsage.total_tokens);
 ```
 
+### 6. Audio Transcription (Transcribe)
+
+Convert audio files to text using specialized models like Whisper.
+
+```ts
+const text = await LLM.transcribe("meeting.mp3");
+console.log(text);
+```
+
 ---
 
 ## 📚 Examples
@@ -120,6 +129,7 @@ Check the [examples](./examples) directory for focused scripts organized by prov
 | [Paint](./examples/openai/06-paint.mjs) | Image generation with DALL-E |
 | [Image Features](./examples/openai/07-image-features.mjs) | Saving and processing generated images |
 | [Token Usage](./examples/openai/08-token-usage.mjs) | Detailed stats for turns and conversations |
+| [Transcribe](./examples/openai/09-transcribe.mjs) | Audio to text transcription |
 
 To run an example:
 ```bash
@@ -182,7 +192,7 @@ await chat.ask("Explain this code", {
 
 | Provider | Status | Notes |
 | :--- | :--- | :--- |
-| **OpenAI** | ✅ Supported | Chat, Streaming, Tools, Vision, Audio, Images (DALL-E) |
+| **OpenAI** | ✅ Supported | Chat, Streaming, Tools, Vision, Audio, Images, Transcription |
 | **Anthropic** | 🏗️ Roadmap | Coming soon |
 | **Azure OpenAI** | 🏗️ Roadmap | Coming soon |
 

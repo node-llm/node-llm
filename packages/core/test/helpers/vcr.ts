@@ -32,6 +32,7 @@ export function setupVCR(recordingName: string) {
       headers: {
         exclude: ["authorization", "openai-organization", "openai-project", "user-agent"],
       },
+      body: false,
     },
     mode: mode,
     recordIfMissing: process.env.VCR_MODE === "record",
