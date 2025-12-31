@@ -27,4 +27,17 @@ describe("Chat", () => {
     // Verify rich metadata in history
     expect((chat.history[2].content as any).model_id).toBe("test-model");
   });
+
+  it("allows switching models mid-conversation", async () => {
+    const provider = new FakeProvider(["Reply 1", "Reply 2"]);
+    const chat = new Chat(provider, "model-1");
+
+    await chat.ask("Q1");
+    expect((chat.history[1].content as any).model_id).toBe("model-1");
+
+    chat.withModel("model-2");
+    await chat.ask("Q2");
+    
+    expect((chat.history[3].content as any).model_id).toBe("model-2");
+  });
 });

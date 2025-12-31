@@ -22,7 +22,7 @@ export class Chat {
 
   constructor(
     private readonly provider: Provider,
-    private readonly model: string,
+    private model: string,
     private readonly options: ChatOptions = {}
   ) {
     this.executor = new Executor(
@@ -115,6 +115,14 @@ export class Chat {
    */
   withTemperature(temp: number): this {
     this.options.temperature = temp;
+    return this;
+  }
+
+  /**
+   * Switch the model used for this chat session.
+   */
+  withModel(model: string): this {
+    this.model = model;
     return this;
   }
 
