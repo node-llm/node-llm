@@ -53,11 +53,8 @@ export class Capabilities {
   }
 
   static supportsStructuredOutput(modelId: string): boolean {
-    const id = this.normalizeModelId(modelId);
-    if (id.match(/text-embedding|embedding-001|aqa|imagen|gemini-2\.0-flash-lite|gemini-2\.5-pro-exp-03-25/)) {
-      return false;
-    }
-    return !!id.match(/gemini|pro|flash/);
+    // Explicitly disabled until implementation is validated
+    return false;
   }
 
   static supportsJsonMode(modelId: string): boolean {

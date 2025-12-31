@@ -28,6 +28,10 @@ export class OpenAIChat {
       body.tools = request.tools;
     }
 
+    if (request.response_format) {
+      body.response_format = request.response_format;
+    }
+
     const response = await fetch(`${this.baseUrl}/chat/completions`, {
       method: "POST",
       headers: {

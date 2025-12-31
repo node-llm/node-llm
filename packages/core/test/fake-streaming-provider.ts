@@ -1,4 +1,4 @@
-import { Provider, ChatChunk } from "../src/providers/Provider.js";
+import { Provider, ChatChunk } from "../../src/providers/Provider.js";
 
 export class FakeStreamingProvider implements Provider {
   async chat() {

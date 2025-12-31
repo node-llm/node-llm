@@ -29,4 +29,16 @@ export class ChatResponseString extends String {
   toString() {
     return this.valueOf();
   }
+
+  /**
+   * Attempt to parse the content as JSON.
+   * Returns the parsed object or null if parsing fails.
+   */
+  get parsed(): any {
+    try {
+      return JSON.parse(this.valueOf());
+    } catch (e) {
+      return null;
+    }
+  }
 }

@@ -42,7 +42,7 @@ import { LLM } from "@node-llm/core";
 import "dotenv/config";
 
 LLM.configure({
-  provider: "openai", // Uses OPENAI_API_KEY from env
+  provider: "openai", // or "gemini" (Uses GEMINI_API_KEY)
   retry: { attempts: 3, delayMs: 500 },
   defaultModerationModel: "text-moderation-latest",
   defaultTranscriptionModel: "whisper-1",
@@ -105,7 +105,6 @@ console.log(response.output_tokens); // 5
 
 // Access aggregated usage for the whole session
 console.log(chat.totalUsage.total_tokens);
-console.log(chat.totalUsage.total_tokens);
 ```
 
 ### 6. Embeddings
@@ -160,7 +159,7 @@ if (result.flagged) {
 }
 ```
 
-Learn how to implement [custom risk thresholds](https://github.com/eshaiju/node-llm/blob/main/examples/openai/12-risk-assessment.mjs) for more granular control.
+Learn how to implement [custom risk thresholds](../../examples/openai/12-risk-assessment.mjs) for more granular control.
 
 ### 8. Chat Event Handlers
 
@@ -168,7 +167,6 @@ Hook into the chat lifecycle for logging, UI updates, or auditing.
 
 ```ts
 chat
-  .withTool(weatherTool)
   .onNewMessage(() => console.log("AI started typing..."))
   .onToolCall((tool) => console.log(`Calling ${tool.function.name}...`))
   .onToolResult((result) => console.log(`Tool returned: ${result}`))
@@ -208,30 +206,76 @@ const creative = LLM.chat("gpt-4o").withTemperature(0.9);
 
 ## 📚 Examples
 
-Check the [examples](./examples) directory for focused scripts organized by provider:
+Check the [examples](../../examples) directory for focused scripts organized by provider:
 
 ### OpenAI Examples
+
+#### 💬 Chat
 | Example | Description |
 | :--- | :--- |
-| [Basic Chat](https://github.com/eshaiju/node-llm/blob/main/examples/openai/01-basic-chat.mjs) | Simple completion request |
-| [Streaming](https://github.com/eshaiju/node-llm/blob/main/examples/openai/02-streaming.mjs) | Real-time token streaming |
-| [Tool Calling](https://github.com/eshaiju/node-llm/blob/main/examples/openai/03-tool-calling.mjs) | Automatic tool execution loop |
-| [Vision](https://github.com/eshaiju/node-llm/blob/main/examples/openai/04-vision.mjs) | Image analysis |
-| [List Models](https://github.com/eshaiju/node-llm/blob/main/examples/openai/05-list-models.mjs) | Enumerate available models |
-| [Paint](https://github.com/eshaiju/node-llm/blob/main/examples/openai/06-paint.mjs) | Image generation with DALL-E |
-| [Image Features](https://github.com/eshaiju/node-llm/blob/main/examples/openai/07-image-features.mjs) | Saving and processing generated images |
-| [Token Usage](https://github.com/eshaiju/node-llm/blob/main/examples/openai/08-token-usage.mjs) | Detailed stats for turns and conversations |
-| [Transcribe](https://github.com/eshaiju/node-llm/blob/main/examples/openai/09-transcribe.mjs) | Audio to text transcription |
-| [Capabilities](https://github.com/eshaiju/node-llm/blob/main/examples/openai/10-capabilities.mjs) | Dynamic model specs and pricing |
-| [Moderate](https://github.com/eshaiju/node-llm/blob/main/examples/openai/11-moderate.mjs) | Content safety moderation |
-| [Risk Assessment](https://github.com/eshaiju/node-llm/blob/main/examples/openai/12-risk-assessment.mjs) | Custom thresholds and risk levels |
-| [Chat Events](https://github.com/eshaiju/node-llm/blob/main/examples/openai/13-chat-events.mjs) | Lifecycle hooks (onNewMessage, onToolCall etc) |
-| [System Prompts](https://github.com/eshaiju/node-llm/blob/main/examples/openai/15-system-prompts.mjs) | Dynamic system instructions |
-| [Temperature](https://github.com/eshaiju/node-llm/blob/main/examples/openai/16-temperature.mjs) | Control creativity vs determinism |
-| [Multi-File](https://github.com/eshaiju/node-llm/blob/main/examples/openai/17-multi-file.mjs) | Analyze multiple files at once |
-| [Embeddings](https://github.com/eshaiju/node-llm/blob/main/examples/openai/18-embeddings.mjs) | Generate vector embeddings |
+| [Basic & Streaming](../../examples/openai/chat/basic.mjs) | Standard completions and real-time streaming |
+| [System Instructions](../../examples/openai/chat/instructions.mjs) | Tuning behavior with system prompts and temperature |
+| [Tool Calling](../../examples/openai/chat/tools.mjs) | Automatic execution of model-requested functions |
+| [Parallel Tool Calling](../../examples/openai/chat/parallel-tools.mjs) | Executing multiple tools in a single turn |
+| [Lifecycle Events](../../examples/openai/chat/events.mjs) | Hooks for specific chat events (onNewMessage, onToolCall) |
+| [Token Usage](../../examples/openai/chat/usage.mjs) | Tracking costs and token counts |
+| [Max Tokens](../../examples/openai/chat/max-tokens.mjs) | Limiting response length with `maxTokens` |
 
-To run an example (from the project root):
+#### 🖼️ Multimodal
+| Example | Description |
+| :--- | :--- |
+| [Vision Analysis](../../examples/openai/multimodal/vision.mjs) | Analyzing images via URLs |
+| [Multi-Image Analysis](../../examples/openai/multimodal/multi-image.mjs) | Comparing multiple images in one request |
+| [File Context](../../examples/openai/multimodal/files.mjs) | Reading and analyzing local project files |
+| [Audio Transcription](../../examples/openai/multimodal/transcribe.mjs) | Converting audio files to text (Whisper) |
+
+#### 🎨 Images
+| Example | Description |
+| :--- | :--- |
+| [Generate & Save](../../examples/openai/images/generate.mjs) | Creating images with DALL-E 3 and saving to disk |
+
+#### 🛡️ Safety
+| Example | Description |
+| :--- | :--- |
+| [Moderation](../../examples/openai/safety/moderation.mjs) | Content safety checks and risk assessment |
+
+#### 🧠 Discovery
+| Example | Description |
+| :--- | :--- |
+| [Models & Capabilities](../../examples/openai/discovery/models.mjs) | Listing models and inspecting their specs |
+| [Embeddings](../../examples/openai/embeddings/create.mjs) | Generating semantic vector embeddings |
+
+### Gemini Examples
+
+#### 💬 Chat
+| Example | Description |
+| :--- | :--- |
+| [Basic & Streaming](../../examples/gemini/chat/basic.mjs) | Standard completions and real-time streaming |
+| [System Instructions](../../examples/gemini/chat/instructions.mjs) | Behavior tuning and creativity control |
+| [Tool Calling](../../examples/gemini/chat/tools.mjs) | Function calling with automatic execution |
+| [Lifecycle Events](../../examples/gemini/chat/events.mjs) | Event hooks for chat interactions |
+| [Token Usage](../../examples/gemini/chat/usage.mjs) | Tracking conversation costs |
+
+#### 🖼️ Multimodal
+| Example | Description |
+| :--- | :--- |
+| [Vision Analysis](../../examples/gemini/multimodal/vision.mjs) | Understanding images |
+| [File Context](../../examples/gemini/multimodal/files.mjs) | Reading multiple local files |
+| [Audio Transcription](../../examples/gemini/multimodal/transcribe.mjs) | Native audio understanding |
+
+#### 🎨 Images
+| Example | Description |
+| :--- | :--- |
+| [Generate & Save](../../examples/gemini/images/generate.mjs) | Creating images with Imagen |
+
+#### 🧠 Discovery
+| Example | Description |
+| :--- | :--- |
+| [Models & Capabilities](../../examples/gemini/discovery/models.mjs) | Listing models and capabilities |
+| [Embeddings](../../examples/gemini/embeddings/create.mjs) | Creating vector embeddings |
+
+
+To run an example:
 ```bash
 node examples/openai/01-basic-chat.mjs
 ```
@@ -263,16 +307,65 @@ const weatherTool = {
 const reply = await chat
   .withTool(weatherTool)
   .ask("What is the weather in London?");
-
-// Add multiple tools, including classes (auto-instantiated)
-chat.withTools([weatherTool, CalculatorTool]);
-
-// Replace existing tools
-chat.withTools([NewTool], { replace: true });
-
-// Clear all tools
-chat.withTools([], { replace: true });
 ```
+
+### Structured Output (Schemas)
+
+Ensure the AI returns data exactly matching a specific structure. Supports strict schema validation using Zod.
+
+**Using Zod (Recommended):**
+
+```ts
+import { z } from "zod";
+
+const personSchema = z.object({
+  name: z.string(),
+  age: z.number(),
+  hobbies: z.array(z.string())
+});
+
+const response = await chat
+  .withSchema(personSchema)
+  .ask("Generate a person named Alice who likes hiking");
+
+// Type-safe access to parsed data
+const person = response.parsed;
+console.log(person.name); // "Alice"
+```
+
+**Using Manual JSON Schema:**
+
+```ts
+const schema = {
+  type: "object",
+  properties: {
+    name: { type: "string" },
+    age: { type: "integer" }
+  },
+  required: ["name", "age"],
+  additionalProperties: false // Required for strict mode in OpenAI
+};
+
+const response = await chat
+  .withSchema(schema)
+  .ask("Generate a person");
+
+console.log(response.parsed); // { name: "...", age: ... }
+```
+
+### JSON Mode
+
+Guarantee valid JSON output without enforcing a strict schema.
+
+```ts
+chat.withRequestOptions({
+  responseFormat: { type: "json_object" }
+});
+
+const response = await chat.ask("Generate a JSON object with a greeting");
+console.log(response.parsed); // { greeting: "..." }
+```
+
 
 ### Multi-modal & File Support
 
@@ -321,6 +414,21 @@ chat.withRequestOptions({
 });
 ```
 
+### Model Capabilities & Pricing
+
+Get up-to-date information about context windows, pricing, and capabilities directly from the Parsera API.
+
+```javascript
+// Refresh model information from the API
+await LLM.models.refresh();
+
+// Use the data programmatically
+const model = LLM.models.find("gpt-4o-mini");
+console.log(model.context_window);    // => 128000
+console.log(model.capabilities);      // => ["function_calling", "structured_output", "streaming", "batch"]
+console.log(model.pricing.text_tokens.standard.input_per_million); // => 0.15
+```
+
 ---
 
 ## 📋 Supported Providers
@@ -328,6 +436,7 @@ chat.withRequestOptions({
 | Provider | Status | Notes |
 | :--- | :--- | :--- |
 | **OpenAI** | ✅ Supported | Chat, Streaming, Tools, Vision, Audio, Images, Transcription, Moderation |
+| **Gemini** | ✅ Supported | Chat, Streaming, Tools, Vision, Audio, Video, Embeddings, Transcription |
 | **Anthropic** | 🏗️ Roadmap | Coming soon |
 | **Azure OpenAI** | 🏗️ Roadmap | Coming soon |
 
@@ -345,8 +454,6 @@ chat.withRequestOptions({
 ## 🧪 Testing
 
 `node-llm` uses VCR-style testing (via Polly.js) for robust, deterministic integration tests. This allows us to record real LLM provider interactions once and replay them during tests without making actual API calls.
-
-### Running Tests
 
 - **Replay Mode (Default)**: Runs tests using recorded cassettes. Fast, deterministic, and requires no API keys.
   ```bash

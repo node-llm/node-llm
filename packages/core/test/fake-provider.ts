@@ -1,4 +1,4 @@
-import { Provider, ChatRequest, ChatResponse } from "../src/providers/Provider.js";
+import { Provider, ChatRequest, ChatResponse } from "../../src/providers/Provider.js";
 
 export class FakeProvider implements Provider {
   private replies: (string | ChatResponse)[];

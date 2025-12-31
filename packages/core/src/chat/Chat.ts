@@ -6,6 +6,9 @@ import { Executor } from "../executor/Executor.js";
 import { LLM } from "../llm.js";
 import { Stream } from "./Stream.js";
 import { Tool } from "./Tool.js";
+import { Schema } from "../schema/Schema.js";
+import { toJsonSchema } from "../schema/to-json-schema.js";
+import { z } from "zod";
 
 export interface AskOptions {
   images?: string[];
@@ -163,9 +166,32 @@ export class Chat {
    * Set custom headers for the chat session.
    * Merges with existing headers.
    */
-  withRequestOptions(options: { headers?: Record<string, string> }): this {
+  withRequestOptions(options: { headers?: Record<string, string>; responseFormat?: any }): this {
     if (options.headers) {
       this.options.headers = { ...this.options.headers, ...options.headers };
+    }
+    if (options.responseFormat) {
+      this.options.responseFormat = options.responseFormat;
+    }
+    return this;
+  }
+
+  /**
+   * Enforce a specific schema for the output.
+   * Can accept a Schema object or a Zod schema/JSON Schema directly.
+   */
+  withSchema(schema: Schema | z.ZodType<any> | Record<string, any> | null): this {
+    if (schema === null) {
+      this.options.schema = undefined;
+      return this;
+    }
+
+    if (schema instanceof Schema) {
+      this.options.schema = schema;
+    } else if (schema instanceof z.ZodType) {
+      this.options.schema = Schema.fromZod("output", schema);
+    } else {
+      this.options.schema = Schema.fromJson("output", schema as Record<string, any>);
     }
     return this;
   }
@@ -239,6 +265,27 @@ export class Chat {
       role: "user",
       content: messageContent,
     });
+    
+    // Process Schema/Structured Output
+    let responseFormat: any = this.options.responseFormat;
+    
+    if (this.options.schema) {
+      if (this.provider.capabilities && !this.provider.capabilities.supportsStructuredOutput(this.model)) {
+        throw new Error(`Model ${this.model} does not support structured output.`);
+      }
+      
+      const jsonSchema = toJsonSchema(this.options.schema.definition.schema);
+      
+      responseFormat = {
+        type: "json_schema",
+        json_schema: {
+          name: this.options.schema.definition.name,
+          description: this.options.schema.definition.description,
+          strict: this.options.schema.definition.strict ?? true,
+          schema: jsonSchema,
+        }
+      };
+    }
 
     const executeOptions = {
       model: this.model,
@@ -247,6 +294,7 @@ export class Chat {
       temperature: options?.temperature ?? this.options.temperature,
       max_tokens: options?.maxTokens ?? this.options.maxTokens,
       headers: { ...this.options.headers, ...options?.headers },
+      response_format: responseFormat, // Pass to provider
     };
 
     let totalUsage: Usage = { input_tokens: 0, output_tokens: 0, total_tokens: 0 };

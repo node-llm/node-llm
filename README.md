@@ -42,7 +42,7 @@ import { LLM } from "@node-llm/core";
 import "dotenv/config";
 
 LLM.configure({
-  provider: "openai", // Uses OPENAI_API_KEY from env
+  provider: "openai", // or "gemini" (Uses GEMINI_API_KEY)
   retry: { attempts: 3, delayMs: 500 },
   defaultModerationModel: "text-moderation-latest",
   defaultTranscriptionModel: "whisper-1",
@@ -308,6 +308,64 @@ const reply = await chat
   .withTool(weatherTool)
   .ask("What is the weather in London?");
 ```
+
+### Structured Output (Schemas)
+
+Ensure the AI returns data exactly matching a specific structure. Supports strict schema validation using Zod.
+
+**Using Zod (Recommended):**
+
+```ts
+import { z } from "zod";
+
+const personSchema = z.object({
+  name: z.string(),
+  age: z.number(),
+  hobbies: z.array(z.string())
+});
+
+const response = await chat
+  .withSchema(personSchema)
+  .ask("Generate a person named Alice who likes hiking");
+
+// Type-safe access to parsed data
+const person = response.parsed;
+console.log(person.name); // "Alice"
+```
+
+**Using Manual JSON Schema:**
+
+```ts
+const schema = {
+  type: "object",
+  properties: {
+    name: { type: "string" },
+    age: { type: "integer" }
+  },
+  required: ["name", "age"],
+  additionalProperties: false // Required for strict mode in OpenAI
+};
+
+const response = await chat
+  .withSchema(schema)
+  .ask("Generate a person");
+
+console.log(response.parsed); // { name: "...", age: ... }
+```
+
+### JSON Mode
+
+Guarantee valid JSON output without enforcing a strict schema.
+
+```ts
+chat.withRequestOptions({
+  responseFormat: { type: "json_object" }
+});
+
+const response = await chat.ask("Generate a JSON object with a greeting");
+console.log(response.parsed); // { greeting: "..." }
+```
+
 
 ### Multi-modal & File Support
 

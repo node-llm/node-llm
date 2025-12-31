@@ -1,6 +1,6 @@
 {
   "name": "@node-llm/core",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -29,7 +29,8 @@
     "prepublishOnly": "npm run build"
   },
   "dependencies": {
-    "zod": "^3.23.8"
+    "zod": "^3.23.8",
+    "zod-to-json-schema": "^3.25.1"
   },
   "devDependencies": {
     "@pollyjs/adapter-fetch": "^6.0.7",
