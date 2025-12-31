@@ -67,6 +67,15 @@ export function setupVCR(recordingName: string, subDir?: string) {
       recording.request.url = recording.request.url.replace(/key=[^&]+/, 'key=[REDACTED]');
     }
 
+    // Scrub key from Query String
+    if (recording.request.queryString) {
+      recording.request.queryString.forEach((param: any) => {
+        if (param.name === 'key') {
+          param.value = '[REDACTED]';
+        }
+      });
+    }
+
     // Scrub sensitive headers from responses
     if (recording.response.headers) {
       recording.response.headers.forEach((header: any) => {
