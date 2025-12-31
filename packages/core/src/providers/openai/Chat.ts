@@ -33,6 +33,7 @@ export class OpenAIChat {
       headers: {
         "Authorization": `Bearer ${this.apiKey}`,
         "Content-Type": "application/json",
+        ...request.headers,
       },
       body: JSON.stringify(body),
     });

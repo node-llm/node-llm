@@ -250,6 +250,19 @@ await chat.ask("Explain this code", {
 });
 ```
 
+### Custom HTTP Headers (Proxies/Observability)
+
+Inject custom headers into requests, useful for tools like Helicone or Portkey.
+
+```ts
+chat.withRequestOptions({
+  headers: {
+    "Helicone-Auth": "Bearer my-key",
+    "X-Custom-Trace": "123"
+  }
+});
+```
+
 ---
 
 ## 📋 Supported Providers

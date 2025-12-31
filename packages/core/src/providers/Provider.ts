@@ -8,6 +8,7 @@ export interface ChatRequest {
   tools?: Tool[];
   temperature?: number;
   max_tokens?: number;
+  headers?: Record<string, string>;
 }
 
 export interface ChatChunk {

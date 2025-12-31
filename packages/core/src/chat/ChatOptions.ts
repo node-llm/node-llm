@@ -11,4 +11,5 @@ export interface ChatOptions {
   onEndMessage?: (message: any) => void;
   onToolCall?: (toolCall: any) => void;
   onToolResult?: (result: any) => void;
+  headers?: Record<string, string>;
 }

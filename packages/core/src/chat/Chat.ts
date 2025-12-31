@@ -11,6 +11,7 @@ export interface AskOptions {
   files?: string[];
   temperature?: number;
   maxTokens?: number;
+  headers?: Record<string, string>;
 }
 
 import { ChatResponseString } from "./ChatResponse.js";
@@ -117,6 +118,17 @@ export class Chat {
     return this;
   }
 
+  /**
+   * Set custom headers for the chat session.
+   * Merges with existing headers.
+   */
+  withRequestOptions(options: { headers?: Record<string, string> }): this {
+    if (options.headers) {
+      this.options.headers = { ...this.options.headers, ...options.headers };
+    }
+    return this;
+  }
+
   // --- Event Handlers ---
 
   onNewMessage(handler: () => void): this {
@@ -177,6 +189,7 @@ export class Chat {
       tools: this.options.tools,
       temperature: options?.temperature ?? this.options.temperature,
       max_tokens: options?.maxTokens ?? this.options.maxTokens,
+      headers: { ...this.options.headers, ...options?.headers },
     };
 
     let totalUsage: Usage = { input_tokens: 0, output_tokens: 0, total_tokens: 0 };
@@ -252,6 +265,7 @@ export class Chat {
         model: this.model,
         messages: this.messages,
         tools: this.options.tools,
+        headers: this.options.headers,
       });
       trackUsage(response.usage);
 
