@@ -101,15 +101,15 @@ export class AnthropicProvider implements Provider {
 
   // Unsupported methods
   async paint(_request: ImageRequest): Promise<ImageResponse> {
-    throw new Error("Image generation not supported by Anthropic");
+    throw new Error("Anthropic doesn't support image generation");
   }
 
   async transcribe(_request: TranscriptionRequest): Promise<TranscriptionResponse> {
-    throw new Error("Transcription not supported by Anthropic");
+    throw new Error("Anthropic doesn't support transcription");
   }
 
   async moderate(_request: ModerationRequest): Promise<ModerationResponse> {
-    throw new Error("Moderation not supported by Anthropic");
+    throw new Error("Anthropic doesn't support moderation");
   }
 
   async embed(_request: EmbeddingRequest): Promise<EmbeddingResponse> {
