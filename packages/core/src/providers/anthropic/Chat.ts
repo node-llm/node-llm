@@ -81,6 +81,7 @@ export class AnthropicChat {
       output_tokens: json.usage.output_tokens,
       total_tokens: json.usage.input_tokens + json.usage.output_tokens,
       cached_tokens: json.usage.cache_read_input_tokens,
+      cache_creation_tokens: json.usage.cache_creation_input_tokens,
     } : undefined;
 
     return { content, usage, tool_calls: toolCalls.length > 0 ? toolCalls : undefined };

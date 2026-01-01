@@ -41,25 +41,62 @@ export class AnthropicProvider implements Provider {
   }
 
   async listModels(): Promise<ModelInfo[]> {
-    return Object.entries(ANTHROPIC_MODELS).filter(([key]) => key !== "other").map(([key, def]) => {
-      // Create a representative model ID from the pattern if possible, or use the key name
-      // This is a bit tricky since pattern is regex. 
-      // We will map known keys to standard IDs.
-      let id = key.replace(/_/g, "-");
-      if (key === 'claude3_7_sonnet') id = 'claude-3-7-sonnet-latest'; // Example mapping
+    try {
+      const response = await fetch(`${this.baseUrl}/models`, {
+        method: "GET",
+        headers: {
+          "x-api-key": this.options.apiKey,
+          "anthropic-version": "2023-06-01",
+          "content-type": "application/json",
+        },
+      });
 
-      return {
-        id: id,
-        name: id, // TODO: Humanize
-        provider: "anthropic",
-        family: Capabilities.getFamily(id),
-        context_window: def.contextWindow,
-        max_output_tokens: def.maxOutputTokens,
-        modalities: Capabilities.getModalities(id),
-        capabilities: Capabilities.getCapabilities(id),
-        pricing: Capabilities.getPricing(id)
-      };
-    });
+      if (!response.ok) {
+        // Fallback to static list if API fails
+        throw new Error(`Failed to list models: ${response.statusText}`);
+      }
+
+      const data = await response.json();
+      const models = data.data || [];
+
+      return models.map((model: any) => {
+        const id = model.id;
+        const createdAt = new Date(model.created_at);
+
+        return {
+          id: id,
+          name: model.display_name || id,
+          provider: "anthropic",
+          family: Capabilities.getFamily(id),
+          context_window: Capabilities.getContextWindow(id),
+          max_output_tokens: Capabilities.getMaxOutputTokens(id),
+          modalities: Capabilities.getModalities(id),
+          capabilities: Capabilities.getCapabilities(id),
+          pricing: Capabilities.getPricing(id),
+          created_at: createdAt
+        };
+      });
+    } catch (error) {
+       // Fallback to currently defined static models if API list fails (or not supported/authorized)
+       return Object.entries(ANTHROPIC_MODELS).filter(([key]) => key !== "other").map(([key, def]) => {
+        let id = key.replace(/_/g, "-");
+        // Simple heuristic mapping for static fallback
+        if (id.includes("claude-3-5")) id = "claude-3-5-sonnet-20240620";
+        else if (id.includes("claude-3-haiku")) id = "claude-3-haiku-20240307";
+
+        return {
+          id: id,
+          name: id,
+          provider: "anthropic",
+          family: Capabilities.getFamily(id),
+          context_window: def.contextWindow,
+          max_output_tokens: def.maxOutputTokens,
+          modalities: Capabilities.getModalities(id),
+          capabilities: Capabilities.getCapabilities(id),
+          pricing: Capabilities.getPricing(id)
+        };
+      });
+    }
   }
 
   // Unsupported methods
@@ -76,6 +113,6 @@ export class AnthropicProvider implements Provider {
   }
 
   async embed(_request: EmbeddingRequest): Promise<EmbeddingResponse> {
-    throw new Error("Embeddings not supported by Anthropic");
+    throw new Error("Anthropic doesn't support embeddings");
   }
 }

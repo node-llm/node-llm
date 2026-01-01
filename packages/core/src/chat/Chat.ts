@@ -64,6 +64,7 @@ export class Chat {
           acc.output_tokens += msg.usage.output_tokens;
           acc.total_tokens += msg.usage.total_tokens;
           acc.cached_tokens = (acc.cached_tokens ?? 0) + (msg.usage.cached_tokens ?? 0);
+          acc.cache_creation_tokens = (acc.cache_creation_tokens ?? 0) + (msg.usage.cache_creation_tokens ?? 0);
         }
         return acc;
       },
