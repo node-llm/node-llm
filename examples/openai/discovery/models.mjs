@@ -12,7 +12,6 @@ async function main() {
 
   // 2. Inspect Specific Model Capabilities
   console.log("\n--- Checking 'gpt-4o' ---");
-  await LLM.models.refresh(); // Ensure fresh data
   const model = LLM.models.find("gpt-4o");
 
   if (model) {

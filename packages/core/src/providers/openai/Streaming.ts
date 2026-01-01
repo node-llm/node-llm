@@ -21,6 +21,10 @@ export class OpenAIStreaming {
       body.max_tokens = request.max_tokens;
     }
 
+    if (request.response_format) {
+      body.response_format = request.response_format;
+    }
+
     const response = await fetch(`${this.baseUrl}/chat/completions`, {
       method: "POST",
       headers: {

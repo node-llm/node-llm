@@ -1,9 +1,10 @@
-import { ChatRequest, ChatResponse } from "../Provider.js";
+import { ChatRequest, ChatResponse, Usage } from "../Provider.js";
 import { AnthropicMessageRequest, AnthropicMessage, AnthropicContentBlock, AnthropicMessageResponse } from "./types.js";
 import { Capabilities } from "./Capabilities.js";
 import { handleAnthropicError } from "./Errors.js";
 import { Message } from "../../chat/Message.js";
 import { ContentPart } from "../../chat/Content.js";
+import { ModelRegistry } from "../../models/ModelRegistry.js";
 
 import { formatSystemPrompt, formatMessages } from "./Utils.js";
 
@@ -108,7 +109,9 @@ export class AnthropicChat {
       cache_creation_tokens: json.usage.cache_creation_input_tokens,
     } : undefined;
 
-    return { content, usage, tool_calls: toolCalls.length > 0 ? toolCalls : undefined };
+    const calculatedUsage = usage ? ModelRegistry.calculateCost(usage, model, "anthropic") : undefined;
+
+    return { content, usage: calculatedUsage, tool_calls: toolCalls.length > 0 ? toolCalls : undefined };
   }
 
 

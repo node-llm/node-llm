@@ -61,24 +61,6 @@ describe("OpenAI Multi-modal Integration (VCR)", { timeout: 30000 }, () => {
     const path = await import("path");
     const { fileURLToPath } = await import("url");
     const __dirname = path.dirname(fileURLToPath(import.meta.url));
-    // ../../../../../ reaches packages/core/test/integration/openai/multimodal
-    // Need to reach project root first:
-    // ../../../../../.. reaches /packages/core
-    // ../../../../../../../ reaches /packages
-    // ../../../../../../../../ reaches root
-    // But examples is at root/examples
-    
-    // Correct relative path from packages/core/test/integration/openai/multimodal/vision.test.ts
-    // to examples/audio/sample-0.mp3
-    // level 1: multimodal
-    // level 2: openai
-    // level 3: integration
-    // level 4: test
-    // level 5: core
-    // level 6: packages
-    // level 7: root
-    
-    // Wait, let's just use path.resolve with known relative path from this file
     const audioPath = path.resolve(__dirname, "../../../../../../examples/audio/sample-0.mp3");
 
     const transcription = await LLM.transcribe(audioPath);

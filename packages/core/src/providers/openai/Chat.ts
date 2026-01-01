@@ -1,7 +1,8 @@
-import { ChatRequest, ChatResponse } from "../Provider.js";
+import { ChatRequest, ChatResponse, Usage } from "../Provider.js";
 import { OpenAIChatResponse } from "./types.js";
 import { Capabilities } from "./Capabilities.js";
 import { handleOpenAIError } from "./Errors.js";
+import { ModelRegistry } from "../../models/ModelRegistry.js";
 
 export class OpenAIChat {
   constructor(private readonly baseUrl: string, private readonly apiKey: string) {}
@@ -56,6 +57,8 @@ export class OpenAIChat {
       throw new Error("OpenAI returned empty response");
     }
 
-    return { content, tool_calls, usage };
+    const calculatedUsage = usage ? ModelRegistry.calculateCost(usage, model, "openai") : undefined;
+
+    return { content, tool_calls, usage: calculatedUsage };
   }
 }

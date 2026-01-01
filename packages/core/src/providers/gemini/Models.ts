@@ -1,40 +1,62 @@
 import { ModelInfo } from "../Provider.js";
 import { Capabilities } from "./Capabilities.js";
-import { GeminiListModelsResponse } from "./types.js";
+import { ModelRegistry } from "../../models/ModelRegistry.js";
+import { handleGeminiError } from "./Errors.js";
 
 export class GeminiModels {
   constructor(private readonly baseUrl: string, private readonly apiKey: string) {}
 
   async execute(): Promise<ModelInfo[]> {
-    const url = `${this.baseUrl}/models?key=${this.apiKey}`;
-    const response = await fetch(url);
+    try {
+      const response = await fetch(`${this.baseUrl}/models?key=${this.apiKey}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
-    if (!response.ok) {
-      const errorText = await response.text();
-      throw new Error(`Gemini error (${response.status}): ${errorText}`);
+      if (response.ok) {
+        const { models } = await response.json() as { models: any[] };
+        
+        return models.map(m => {
+          const modelId = m.name.replace("models/", "");
+          const registryModel = ModelRegistry.find(modelId, "gemini");
+          
+          const info: ModelInfo = {
+            id: modelId,
+            name: registryModel?.name || m.displayName || modelId,
+            provider: "gemini",
+            family: registryModel?.family || modelId,
+            context_window: registryModel?.context_window || Capabilities.getContextWindow(modelId),
+            max_output_tokens: registryModel?.max_output_tokens || Capabilities.getMaxOutputTokens(modelId),
+            modalities: registryModel?.modalities || Capabilities.getModalities(modelId),
+            capabilities: Capabilities.getCapabilities(modelId),
+            pricing: registryModel?.pricing || Capabilities.getPricing(modelId),
+            metadata: {
+              ...(registryModel?.metadata || {}),
+              description: m.description,
+              input_token_limit: m.inputTokenLimit,
+              output_token_limit: m.outputTokenLimit,
+              supported_generation_methods: m.supportedGenerationMethods
+            }
+          };
+          
+          return info;
+        });
+      }
+    } catch (_error) {
+      // Fallback
     }
 
-    const json = (await response.json()) as GeminiListModelsResponse;
-    
-    return json.models
-      .filter(m => m.supportedGenerationMethods.includes("generateContent"))
-      .map((model: any) => {
-        const id = model.name.replace("models/", "");
-        return {
-          id: id,
-          name: model.displayName || Capabilities.formatDisplayName(id),
-          provider: "gemini",
-          family: Capabilities.getFamily(id),
-          context_window: model.inputTokenLimit || Capabilities.getContextWindow(id),
-          max_output_tokens: model.outputTokenLimit || Capabilities.getMaxOutputTokens(id),
-          modalities: Capabilities.getModalities(id),
-          capabilities: Capabilities.getCapabilities(id),
-          pricing: Capabilities.getPricing(id),
-          metadata: {
-            description: model.description,
-            version: model.version,
-          },
-        };
-      });
+    return ModelRegistry.all()
+      .filter(m => m.provider === "gemini")
+      .map(m => ({
+          ...m,
+          capabilities: Capabilities.getCapabilities(m.id)
+      })) as unknown as ModelInfo[]; 
+  }
+
+  find(modelId: string) {
+    return ModelRegistry.find(modelId, "gemini");
   }
 }

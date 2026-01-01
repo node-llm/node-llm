@@ -6,8 +6,8 @@ async function main() {
 
   const chat = LLM.chat("gpt-4o");
 
-  const img1 = "https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Gnome-face-smile.svg/1200px-Gnome-face-smile.svg.png";
-  const img2 = "https://upload.wikimedia.org/wikipedia/commons/4/47/PNG_transparency_demonstration_1.png";
+  const img1 = "https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png";
+  const img2 = "https://www.w3.org/People/mimasa/test/imgformat/img/w3c_home.png";
 
   console.log("Analyzing two images at once...");
   

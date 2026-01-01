@@ -6,7 +6,7 @@ async function main() {
     provider: "gemini",
   });
 
-  const chat = LLM.chat("gemini-1.5-flash");
+  const chat = LLM.chat("gemini-2.0-flash");
 
   console.log("Asking with maxTokens: 10...");
 

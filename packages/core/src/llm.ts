@@ -13,7 +13,7 @@ import { ensureOpenAIRegistered } from "./providers/openai/index.js";
 import { registerGeminiProvider } from "./providers/gemini/index.js";
 import { registerAnthropicProvider } from "./providers/anthropic/index.js";
 import { GeneratedImage } from "./image/GeneratedImage.js";
-import { models, ModelRegistry } from "./models/ModelRegistry.js";
+import { ModelRegistry } from "./models/ModelRegistry.js";
 import { Transcription } from "./transcription/Transcription.js";
 import { Moderation } from "./moderation/Moderation.js";
 import { Embedding } from "./embedding/Embedding.js";
@@ -30,7 +30,7 @@ type LLMConfig =
   | { provider: string; retry?: RetryOptions; defaultTranscriptionModel?: string; defaultModerationModel?: string; defaultEmbeddingModel?: string };
 
 class LLMCore {
-  public readonly models: ModelRegistry = models;
+  public readonly models = ModelRegistry;
   private provider?: Provider;
   private defaultTranscriptionModelId?: string;
   private defaultModerationModelId?: string;

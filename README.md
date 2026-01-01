@@ -66,6 +66,7 @@ console.log(response);
 console.log(response.content);
 console.log(`Model: ${response.model_id}`);
 console.log(`Tokens: ${response.input_tokens} in, ${response.output_tokens} out`);
+console.log(`Cost: $${response.cost}`);
 ```
 
 ### 3. Streaming Responses
@@ -102,9 +103,11 @@ const response = await chat.ask("Hello!");
 
 console.log(response.input_tokens);  // 10
 console.log(response.output_tokens); // 5
+console.log(response.cost);          // 0.000185
 
 // Access aggregated usage for the whole session
 console.log(chat.totalUsage.total_tokens);
+console.log(chat.totalUsage.cost);
 ```
 
 ### 6. Embeddings
@@ -476,15 +479,13 @@ chat.withRequestOptions({
 
 Get up-to-date information about context windows, pricing, and capabilities directly from the Parsera API.
 
-```javascript
-// Refresh model information from the API
-await LLM.models.refresh();
-
 // Use the data programmatically
 const model = LLM.models.find("gpt-4o-mini");
-console.log(model.context_window);    // => 128000
-console.log(model.capabilities);      // => ["function_calling", "structured_output", "streaming", "batch"]
-console.log(model.pricing.text_tokens.standard.input_per_million); // => 0.15
+if (model) {
+  console.log(model.context_window);    // => 128000
+  console.log(model.capabilities);      // => ["function_calling", "structured_output", "streaming", "batch", "json_mode"]
+  console.log(model.pricing.text_tokens.standard.input_per_million); // => 0.15
+}
 ```
 
 ---

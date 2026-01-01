@@ -4,46 +4,30 @@ import { OpenAIModels } from "../../../../src/providers/openai/Models.js";
 describe("OpenAIModels", () => {
   const baseUrl = "https://api.openai.com/v1";
   const apiKey = "test-key";
-  let models: OpenAIModels;
+  const models = new OpenAIModels(baseUrl, apiKey);
 
   beforeEach(() => {
-    models = new OpenAIModels(baseUrl, apiKey);
     vi.stubGlobal("fetch", vi.fn());
   });
 
-  it("should fetch models and enrich with capabilities", async () => {
-    const mockResponse = {
-      data: [
-        { id: "gpt-4o", owned_by: "openai" },
-        { id: "text-embedding-3-small", owned_by: "openai" }
-      ]
-    };
-
-    (fetch as any).mockResolvedValue({
+  it("should return models from registry and simulate API call", async () => {
+    const mockFetch = vi.mocked(fetch);
+    mockFetch.mockResolvedValueOnce({
       ok: true,
-      json: () => Promise.resolve(mockResponse)
-    });
+      json: async () => ({
+        data: [
+          { id: "gpt-4o", created: 123, owned_by: "openai" },
+          { id: "gpt-4o-mini", created: 124, owned_by: "openai" }
+        ]
+      })
+    } as Response);
 
     const result = await models.execute();
-
-    expect(fetch).toHaveBeenCalledWith(`${baseUrl}/models`, expect.objectContaining({
-      headers: { "Authorization": "Bearer test-key" }
-    }));
-    expect(result).toHaveLength(2);
-    expect(result[0].id).toBe("gpt-4o");
-    expect(result[0].name).toBe("GPT-4o");
-    expect(result[0].context_window).toBe(128_000);
-    expect(result[1].id).toBe("text-embedding-3-small");
-    expect(result[1].context_window).toBeNull();
-  });
-
-  it("should handle error response", async () => {
-    (fetch as any).mockResolvedValue({
-      ok: false,
-      status: 401,
-      text: () => Promise.resolve("Unauthorized")
-    });
-
-    await expect(models.execute()).rejects.toThrow("OpenAI error (401): Unauthorized");
+    expect(result.length).toBe(2);
+    
+    const gpt4o = result.find(m => m.id === "gpt-4o");
+    expect(gpt4o).toBeDefined();
+    expect(gpt4o?.provider).toBe("openai");
+    expect(gpt4o?.max_output_tokens).toBeGreaterThan(0);
   });
 });

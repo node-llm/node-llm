@@ -65,10 +65,11 @@ export class Chat {
           acc.total_tokens += msg.usage.total_tokens;
           acc.cached_tokens = (acc.cached_tokens ?? 0) + (msg.usage.cached_tokens ?? 0);
           acc.cache_creation_tokens = (acc.cache_creation_tokens ?? 0) + (msg.usage.cache_creation_tokens ?? 0);
+          acc.cost = (acc.cost ?? 0) + (msg.usage.cost ?? 0);
         }
         return acc;
       },
-      { input_tokens: 0, output_tokens: 0, total_tokens: 0, cached_tokens: 0, cache_creation_tokens: 0 }
+      { input_tokens: 0, output_tokens: 0, total_tokens: 0, cached_tokens: 0, cache_creation_tokens: 0, cost: 0 }
     );
   }
 
@@ -316,6 +317,9 @@ export class Chat {
         totalUsage.total_tokens += u.total_tokens;
         if (u.cached_tokens) {
           totalUsage.cached_tokens = (totalUsage.cached_tokens ?? 0) + u.cached_tokens;
+        }
+        if (u.cost !== undefined) {
+          totalUsage.cost = (totalUsage.cost ?? 0) + u.cost;
         }
       }
     };

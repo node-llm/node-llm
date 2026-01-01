@@ -1,8 +1,9 @@
-import { ChatRequest, ChatResponse } from "../Provider.js";
+import { ChatRequest, ChatResponse, Usage } from "../Provider.js";
 import { GeminiGenerateContentRequest, GeminiGenerateContentResponse } from "./types.js";
 import { Capabilities } from "./Capabilities.js";
 import { handleGeminiError } from "./Errors.js";
 import { GeminiChatUtils } from "./ChatUtils.js";
+import { ModelRegistry } from "../../models/ModelRegistry.js";
 
 export class GeminiChat {
   constructor(private readonly baseUrl: string, private readonly apiKey: string) {}
@@ -17,15 +18,6 @@ export class GeminiChat {
       temperature: temperature ?? undefined,
       maxOutputTokens: request.max_tokens,
     };
-
-    if (request.response_format?.type === "json_object") {
-      generationConfig.responseMimeType = "application/json";
-    } else if (request.response_format?.type === "json_schema") {
-      generationConfig.responseMimeType = "application/json";
-      if (request.response_format.json_schema?.schema) {
-        generationConfig.responseSchema = request.response_format.json_schema.schema;
-      }
-    }
 
     if (request.response_format?.type === "json_object") {
       generationConfig.responseMimeType = "application/json";
@@ -100,7 +92,9 @@ export class GeminiChat {
       total_tokens: json.usageMetadata.totalTokenCount,
     } : undefined;
 
-    return { content, tool_calls, usage };
+    const calculatedUsage = usage ? ModelRegistry.calculateCost(usage, request.model, "gemini") : undefined;
+
+    return { content, tool_calls, usage: calculatedUsage };
   }
 
   private sanitizeSchema(schema: any): any {

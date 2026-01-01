@@ -13,7 +13,7 @@ async function main() {
   console.log("Analyzing local project files with Gemini context...");
   const response = await chat.ask("Summarize these files.", {
     files: [
-      path.resolve(__dirname, "../../README.md"),
+      path.resolve(__dirname, "../../../README.md"),
       path.resolve(__dirname, "../chat/basic.mjs")
     ]
   });

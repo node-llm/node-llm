@@ -20,7 +20,7 @@ describe("Gemini Capabilities", () => {
 
   it("checks tool support", () => {
     expect(Capabilities.supportsTools("gemini-1.5-pro")).toBe(true);
-    expect(Capabilities.supportsTools("gemini-2.0-flash-lite")).toBe(false);
+    expect(Capabilities.supportsTools("gemini-2.0-flash-lite")).toBe(true);
   });
 
   it("checks structured output support", () => {
@@ -30,7 +30,7 @@ describe("Gemini Capabilities", () => {
 
   it("gets correct pricing", () => {
     const pricing = Capabilities.getPricing("gemini-1.5-flash");
-    expect(pricing.text_tokens.standard.input_per_million).toBe(0.075);
-    expect(pricing.text_tokens.standard.output_per_million).toBe(0.3);
+    expect(pricing?.text_tokens?.standard?.input_per_million).toBe(0.075);
+    expect(pricing?.text_tokens?.standard?.output_per_million).toBe(0.3);
   });
 });

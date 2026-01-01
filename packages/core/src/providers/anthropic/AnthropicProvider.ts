@@ -16,11 +16,10 @@ export class AnthropicProvider implements Provider {
   private readonly streamHandler: AnthropicStreaming;
   private readonly modelsHandler: AnthropicModels;
 
-  // Capabilities Interface Implementation
   public capabilities = {
     supportsVision: (model: string) => Capabilities.supportsVision(model),
     supportsTools: (model: string) => Capabilities.supportsTools(model),
-    supportsStructuredOutput: (model: string) => Capabilities.supportsJsonMode(model), // Mapping JsonMode to StructuredOutput approximation
+    supportsStructuredOutput: (model: string) => Capabilities.supportsJsonMode(model),
     supportsEmbeddings: (_model: string) => false,
     supportsImageGeneration: (_model: string) => false,
     supportsTranscription: (_model: string) => false,
@@ -47,7 +46,6 @@ export class AnthropicProvider implements Provider {
     return this.modelsHandler.execute();
   }
 
-  // Unsupported methods
   async paint(_request: ImageRequest): Promise<ImageResponse> {
     throw new Error("Anthropic doesn't support image generation");
   }

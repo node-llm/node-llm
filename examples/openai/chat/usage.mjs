@@ -17,6 +17,7 @@ async function main() {
   console.log(`Input Tokens:  ${chat.totalUsage.input_tokens}`);
   console.log(`Output Tokens: ${chat.totalUsage.output_tokens}`);
   console.log(`Total Tokens:  ${chat.totalUsage.total_tokens}`);
+  console.log(`Session Cost:  $${chat.totalUsage.cost?.toFixed(6) || "0.000000"}`);
 }
 
 main().catch(console.error);

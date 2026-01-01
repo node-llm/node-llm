@@ -14,11 +14,21 @@ export class AnthropicStreaming {
     const systemPrompt = formatSystemPrompt(request.messages);
     const messages = formatMessages(request.messages);
 
+    let system = systemPrompt;
+    if (request.response_format) {
+      let schemaText = "";
+      if (request.response_format.type === "json_schema" && request.response_format.json_schema?.schema) {
+        schemaText = "\nSchema:\n" + JSON.stringify(request.response_format.json_schema.schema, null, 2);
+      }
+      const instruction = `CRITICAL: Respond ONLY with a valid JSON object matching the requested schema.${schemaText}\n\nDo not include any other text or explanation.`;
+      system = system ? `${system}\n\n${instruction}` : instruction;
+    }
+
     const body: AnthropicMessageRequest = {
       model: model,
       messages: messages,
       max_tokens: maxTokens,
-      system: systemPrompt,
+      system: system,
       stream: true,
     };
 

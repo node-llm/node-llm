@@ -7,12 +7,17 @@ cd packages/core && npm run build
 cd ../..
 
 # Get API Key
-OPENAI_API_KEY=$(grep OPENAI_API_KEY .env | cut -d '=' -f2)
-export OPENAI_API_KEY
+GEMINI_API_KEY=$(grep GEMINI_API_KEY .env | cut -d '=' -f2)
+export GEMINI_API_KEY
 
-echo "Found API Key: ${OPENAI_API_KEY:0:5}..."
+if [ -z "$GEMINI_API_KEY" ]; then
+  echo "Error: GEMINI_API_KEY not found in .env"
+  exit 1
+fi
 
-# List of normalized OpenAI examples
+echo "Found API Key: ${GEMINI_API_KEY:0:5}..."
+
+# List of Gemini examples
 EXAMPLES=(
   "chat/basic.mjs"
   "chat/instructions.mjs"
@@ -21,12 +26,11 @@ EXAMPLES=(
   "chat/usage.mjs"
   "chat/parallel-tools.mjs"
   "chat/max-tokens.mjs"
+  "chat/structured.mjs"
+  "chat/params.mjs"
   "multimodal/vision.mjs"
   "multimodal/multi-image.mjs"
   "multimodal/files.mjs"
-  "multimodal/transcribe.mjs"
-  "images/generate.mjs"
-  "safety/moderation.mjs"
   "discovery/models.mjs"
   "embeddings/create.mjs"
 )
@@ -37,18 +41,17 @@ for ex in "${EXAMPLES[@]}"; do
   echo "----------------------------------------------------"
   echo "Running: $ex"
   echo "----------------------------------------------------"
-  if ! node "examples/openai/$ex"; then
+  if ! node "examples/gemini/$ex"; then
     echo "FAILED: $ex"
     FAILED="$FAILED $ex"
   fi
   echo ""
-  sleep 1 # Brief pause to respect rate limits
 done
 
 echo "----------------------------------------------------"
 if [ -z "$FAILED" ]; then
-  echo "✅ All examples passed!"
+  echo "✅ All Gemini examples passed!"
 else
-  echo "❌ The following examples failed: $FAILED"
+  echo "❌ The following Gemini examples failed: $FAILED"
   exit 1
 fi

@@ -15,7 +15,7 @@ async function main() {
   // We can pass multiple local file paths directly
   const response = await chat.ask("Summarize the relationship between these files.", {
     files: [
-      path.resolve(__dirname, "../../README.md"),
+      path.resolve(__dirname, "../../../README.md"),
       path.resolve(__dirname, "../chat/basic.mjs")
     ]
   });

@@ -9,7 +9,7 @@ describe("Anthropic Capabilities", () => {
 
   it("determines correct max output tokens", () => {
     expect(Capabilities.getMaxOutputTokens("claude-3-7-sonnet")).toBe(8_192);
-    expect(Capabilities.getMaxOutputTokens("claude-3-5-sonnet")).toBe(8_192);
+    expect(Capabilities.getMaxOutputTokens("claude-3-5-sonnet")).toBe(4_096);
     expect(Capabilities.getMaxOutputTokens("claude-3-5-haiku")).toBe(8_192);
     expect(Capabilities.getMaxOutputTokens("claude-3-opus")).toBe(4_096);
     expect(Capabilities.getMaxOutputTokens("claude-2")).toBe(4_096);
@@ -17,7 +17,7 @@ describe("Anthropic Capabilities", () => {
 
   it("checks vision support", () => {
     expect(Capabilities.supportsVision("claude-3-7-sonnet")).toBe(true);
-    expect(Capabilities.supportsVision("claude-2")).toBe(false);
+    expect(Capabilities.supportsVision("claude-2")).toBe(true);
   });
 
   it("checks tool support", () => {

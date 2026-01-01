@@ -1,39 +1,44 @@
-import { OPENAI_MODELS, ModelFamilyDefinition } from "./ModelDefinitions.js";
+import { ModelRegistry } from "../../models/ModelRegistry.js";
 
 export class Capabilities {
-  static getFamily(modelId: string): string {
-    for (const [key, def] of Object.entries(OPENAI_MODELS)) {
-      if (key === "other") continue;
-      if (def.pattern.test(modelId)) {
-        return key;
-      }
-    }
-    return "other";
-  }
-
-  static getDefinition(modelId: string): ModelFamilyDefinition {
-    const family = this.getFamily(modelId);
-    return OPENAI_MODELS[family]!;
-  }
-
   static getContextWindow(modelId: string): number | null {
-    return this.getDefinition(modelId).contextWindow;
+    const val = ModelRegistry.getContextWindow(modelId, "openai");
+    if (val) return val;
+
+    if (/gpt-4.*(preview|turbo|vision|o)/.test(modelId) || /o1|o3/.test(modelId)) return 128_000;
+    if (/gpt-4/.test(modelId)) return 8_192;
+    if (/gpt-3\.5/.test(modelId)) return 16_385;
+    return 128_000;
   }
 
   static getMaxOutputTokens(modelId: string): number | null {
-    return this.getDefinition(modelId).maxOutputTokens;
+    const val = ModelRegistry.getMaxOutputTokens(modelId, "openai");
+    if (val) return val;
+
+    if (/o1.*(pro|mini)|o3/.test(modelId)) return 65_536;
+    if (/gpt-4o/.test(modelId)) return 16_384;
+    return 4_096;
   }
 
   static supportsVision(modelId: string): boolean {
-    return !!this.getDefinition(modelId).features.vision;
+    const model = ModelRegistry.find(modelId, "openai");
+    if (model?.modalities?.input?.includes("image")) return true;
+    
+    return /gpt-4(?!-3)|o1/.test(modelId) && !/audio|realtime|voice/.test(modelId);
   }
 
   static supportsTools(modelId: string): boolean {
-    return !!this.getDefinition(modelId).features.tools;
+    const model = ModelRegistry.find(modelId, "openai");
+    if (model?.capabilities?.includes("function_calling")) return true;
+    
+    return !/embedding|moderation|dall-e|tts|whisper/.test(modelId);
   }
 
   static supportsStructuredOutput(modelId: string): boolean {
-    return !!this.getDefinition(modelId).features.structuredOutput;
+    const model = ModelRegistry.find(modelId, "openai");
+    if (model?.capabilities?.includes("structured_output")) return true;
+    
+    return /gpt-4|o1|o3/.test(modelId);
   }
 
   static supportsJsonMode(modelId: string): boolean {
@@ -41,140 +46,105 @@ export class Capabilities {
   }
 
   static supportsEmbeddings(modelId: string): boolean {
-    return this.getDefinition(modelId).type === "embedding";
+    const model = ModelRegistry.find(modelId, "openai");
+    if (model?.modalities?.output?.includes("embeddings")) return true;
+    
+    return /embedding/.test(modelId);
   }
 
   static supportsImageGeneration(modelId: string): boolean {
-    return this.getDefinition(modelId).type === "image";
+    const model = ModelRegistry.find(modelId, "openai");
+    if (model?.capabilities?.includes("image_generation") || model?.modalities?.output?.includes("image")) return true;
+    
+    return /dall-e|image/.test(modelId);
   }
 
   static supportsTranscription(modelId: string): boolean {
-     // Transcription is supported by audio models or specific models like gpt-4o-audio
-     const def = this.getDefinition(modelId);
-     return def.type === "audio" || (def.type === "chat" && /audio|transcribe/.test(modelId));
+    const model = ModelRegistry.find(modelId, "openai");
+    if (model?.modalities?.input?.includes("audio")) return true;
+
+    return /whisper|audio|transcribe/.test(modelId);
   }
 
   static supportsModeration(modelId: string): boolean {
-    return this.getDefinition(modelId).type === "moderation";
+    const model = ModelRegistry.find(modelId, "openai");
+    if (model?.modalities?.output?.includes("moderation")) return true;
+    
+    return /moderation/.test(modelId);
   }
 
-  static getInputPrice(modelId: string): number {
-    const prices = this.getDefinition(modelId).pricing;
-    return prices.input || prices.price || 0.5;
-  }
-
-  static getCachedInputPrice(modelId: string): number | undefined {
-    return this.getDefinition(modelId).pricing.cached_input;
-  }
-
-  static getOutputPrice(modelId: string): number {
-    const prices = this.getDefinition(modelId).pricing;
-    return prices.output || prices.price || 1.5;
-  }
-
-  static getModelType(modelId: string): "embedding" | "audio" | "moderation" | "image" | "chat" {
-    return this.getDefinition(modelId).type;
-  }
-
-  static formatDisplayName(modelId: string): string {
-    const humanized = modelId.replace(/-/g, " ").split(" ").map(s => s.charAt(0).toUpperCase() + s.slice(1)).join(" ");
-    return this.applySpecialFormatting(humanized);
-  }
-
-  private static applySpecialFormatting(name: string): string {
-    return name
-      .replace(/(\d{4}) (\d{2}) (\d{2})/, "$1$2$3")
-      .replace(/^(?:Gpt|Chatgpt|Tts|Dall E) /g, (m) => this.specialPrefixFormat(m.trim()))
-      .replace(/^O([13]) /g, "O$1-")
-      .replace(/^O[13] Mini/g, (m) => m.replace(" ", "-"))
-      .replace(/\d\.\d /g, (m) => m.replace(" ", "-"))
-      .replace(/4o (?=Mini|Preview|Turbo|Audio|Realtime|Transcribe|Tts)/g, "4o-")
-      .replace(/\bHd\b/g, "HD")
-      .replace(/(?:Omni|Text) Moderation/g, (m) => m.replace(" ", "-"))
-      .replace("Text Embedding", "text-embedding-");
-  }
-
-  private static specialPrefixFormat(prefix: string): string {
-    switch (prefix) {
-      case "Gpt": return "GPT-";
-      case "Chatgpt": return "ChatGPT-";
-      case "Tts": return "TTS-";
-      case "Dall E": return "DALL-E-";
-      default: return prefix + "-";
-    }
-  }
-
-  static normalizeTemperature(temperature: number | undefined, modelId: string): number | undefined | null {
-    if (/^(o\d|gpt-5)/.test(modelId)) {
-      return 1.0;
-    }
-    if (/-search/.test(modelId)) {
-      return null;
-    }
-    return temperature;
+  static getModelType(modelId: string): "embedding" | "audio" | "moderation" | "image" | "chat" | "audio_transcription" | "audio_speech" {
+     if (/moderation/.test(modelId)) return "moderation";
+     if (/embedding/.test(modelId)) return "embedding";
+     if (/dall-e|image/.test(modelId)) return "image";
+     if (/whisper|transcribe/.test(modelId)) return "audio_transcription";
+     if (/tts|speech/.test(modelId)) return "audio_speech";
+     if (/audio/.test(modelId)) return "audio";
+     return "chat";
   }
 
   static getModalities(modelId: string): { input: string[]; output: string[] } {
-    const type = this.getModelType(modelId);
-    const features = this.getDefinition(modelId).features;
+    const input = ["text"];
+    const output = ["text"];
+    
+    const model = ModelRegistry.find(modelId, "openai");
+    if (model?.modalities) return model.modalities;
 
-    const modalities = {
-      input: ["text"],
-      output: ["text"]
-    };
-
-    if (features.vision) modalities.input.push("image", "pdf");
-    if (type === "audio") {
-      modalities.input.push("audio");
-      modalities.output.push("audio");
-    }
-    if (type === "image") modalities.output.push("image");
-    if (type === "embedding") modalities.output.push("embeddings");
-    if (type === "moderation") modalities.output.push("moderation");
-
-    return modalities;
+    if (this.supportsVision(modelId)) input.push("image", "pdf");
+    if (this.supportsTranscription(modelId)) input.push("audio");
+    
+    if (this.supportsImageGeneration(modelId)) output.push("image");
+    if (this.supportsEmbeddings(modelId)) output.push("embeddings");
+    if (this.supportsModeration(modelId)) output.push("moderation");
+    
+    return { input, output };
   }
 
   static getCapabilities(modelId: string): string[] {
-    const capabilities: string[] = [];
-    const type = this.getModelType(modelId);
-    const features = this.getDefinition(modelId).features;
-
-    if (type !== "moderation" && type !== "embedding") capabilities.push("streaming");
-    if (features.tools) capabilities.push("function_calling");
-    if (features.structuredOutput) capabilities.push("structured_output");
-    if (type === "embedding") capabilities.push("batch");
-    if (/o\d|gpt-5|codex/.test(modelId)) capabilities.push("reasoning");
-
-    if (type === "image") capabilities.push("image_generation");
-    if (type === "audio") capabilities.push("speech_generation", "transcription");
-
-    return capabilities;
-  }
-
-  static getPricing(modelId: string) {
-    const standardPricing = {
-      input_per_million: this.getInputPrice(modelId),
-      output_per_million: this.getOutputPrice(modelId)
-    };
-
-    const cachedPrice = this.getCachedInputPrice(modelId);
-    const pricing: any = { 
-      text_tokens: { 
-        standard: {
-          ...standardPricing,
-          ...(cachedPrice ? { cached_input_per_million: cachedPrice } : {})
-        } 
-      } 
-    };
-
-    if (this.getModelType(modelId) === "embedding") {
-      pricing.text_tokens.batch = {
-        input_per_million: standardPricing.input_per_million * 0.5,
-        output_per_million: standardPricing.output_per_million * 0.5
-      };
+    const caps = ["streaming"];
+    const model = ModelRegistry.find(modelId, "openai");
+    
+    if (model) {
+         model.capabilities.forEach(c => { if(!caps.includes(c)) caps.push(c); });
+         return caps;
     }
 
-    return pricing;
+    if (this.supportsTools(modelId)) caps.push("function_calling");
+    if (this.supportsStructuredOutput(modelId)) caps.push("structured_output");
+    if (this.supportsEmbeddings(modelId)) caps.push("batch");
+    if (/o\d|gpt-5/.test(modelId)) caps.push("reasoning");
+    
+    if (this.supportsImageGeneration(modelId)) caps.push("image_generation");
+    if (this.supportsTranscription(modelId)) caps.push("transcription");
+
+    return caps;
+  }
+
+  static normalizeTemperature(temperature: number | undefined, modelId: string): number | undefined | null {
+    if (/^(o\d|gpt-5)/.test(modelId)) return 1.0;
+    if (/-search/.test(modelId)) return null;
+    return temperature;
+  }
+
+  static formatDisplayName(modelId: string): string {
+    const model = ModelRegistry.find(modelId, "openai");
+    if (model?.name && model.name !== modelId) return model.name;
+
+    return modelId.replace(/-/g, " ").replace(/\b\w/g, c => c.toUpperCase());
+  }
+
+  static getPricing(modelId: string): any {
+    const model = ModelRegistry.find(modelId, "openai");
+    if (model?.pricing) return model.pricing;
+
+    let input = 2.5, output = 10.0;
+    if (/gpt-3/.test(modelId)) { input=0.5; output=1.5; }
+    if (/mini/.test(modelId)) { input=0.15; output=0.6; }
+    
+    return {
+      text_tokens: {
+        standard: { input_per_million: input, output_per_million: output }
+      }
+    };
   }
 }

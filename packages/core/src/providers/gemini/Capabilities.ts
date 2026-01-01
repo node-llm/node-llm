@@ -1,5 +1,10 @@
+import { ModelRegistry } from "../../models/ModelRegistry.js";
+
 export class Capabilities {
   static getContextWindow(modelId: string): number | null {
+    const val = ModelRegistry.getContextWindow(modelId, "gemini");
+    if (val !== undefined && val !== null) return val;
+
     const id = this.normalizeModelId(modelId);
     if (id.match(/gemini-2\.5-pro-exp-03-25|gemini-2\.0-flash|gemini-2\.0-flash-lite|gemini-1\.5-flash|gemini-1\.5-flash-8b/)) {
       return 1_048_576;
@@ -20,6 +25,9 @@ export class Capabilities {
   }
 
   static getMaxOutputTokens(modelId: string): number | null {
+    const val = ModelRegistry.getMaxOutputTokens(modelId, "gemini");
+    if (val !== undefined && val !== null) return val;
+
     const id = this.normalizeModelId(modelId);
     if (id.match(/gemini-2\.5-pro-exp-03-25/)) {
       return 64_000;
@@ -37,6 +45,9 @@ export class Capabilities {
   }
 
   static supportsVision(modelId: string): boolean {
+    const model = ModelRegistry.find(modelId, "gemini");
+    if (model?.modalities?.input?.includes("image")) return true;
+
     const id = this.normalizeModelId(modelId);
     if (id.match(/text-embedding|embedding-001|aqa/)) {
       return false;
@@ -45,6 +56,9 @@ export class Capabilities {
   }
 
   static supportsTools(modelId: string): boolean {
+    const model = ModelRegistry.find(modelId, "gemini");
+    if (model?.capabilities?.includes("function_calling")) return true;
+
     const id = this.normalizeModelId(modelId);
     if (id.match(/text-embedding|embedding-001|aqa|flash-lite|imagen|gemini-2\.0-flash-lite/)) {
       return false;
@@ -53,6 +67,9 @@ export class Capabilities {
   }
 
   static supportsStructuredOutput(modelId: string): boolean {
+    const model = ModelRegistry.find(modelId, "gemini");
+    if (model?.capabilities?.includes("structured_output")) return true;
+
     const id = this.normalizeModelId(modelId);
     if (id.match(/text-embedding|embedding-001|aqa|imagen/)) {
       return false;
@@ -60,42 +77,44 @@ export class Capabilities {
     return true;
   }
 
+  static supportsSystemInstructions(modelId: string): boolean {
+    return true;
+  }
+
   static supportsJsonMode(modelId: string): boolean {
-    return this.supportsStructuredOutput(modelId);
+     return this.supportsStructuredOutput(modelId);
   }
 
   static supportsEmbeddings(modelId: string): boolean {
+    const model = ModelRegistry.find(modelId, "gemini");
+    if (model?.modalities?.output?.includes("embeddings")) return true;
+
     const id = this.normalizeModelId(modelId);
     return !!id.match(/text-embedding|embedding|gemini-embedding/);
   }
 
   static supportsImageGeneration(modelId: string): boolean {
+    const model = ModelRegistry.find(modelId, "gemini");
+    if (model?.capabilities?.includes("image_generation") || model?.modalities?.output?.includes("image")) return true;
+
     const id = this.normalizeModelId(modelId);
     return !!id.match(/imagen/);
   }
-
+  
   static supportsTranscription(modelId: string): boolean {
+     const model = ModelRegistry.find(modelId, "gemini");
+     if (model?.modalities?.input?.includes("audio")) return true;
+
     const id = this.normalizeModelId(modelId);
     return !!id.match(/gemini|flash|pro/);
   }
-
+  
   static supportsModeration(modelId: string): boolean {
-    return false;
+     return false;
   }
 
-  static normalizeTemperature(temperature: number | undefined, _modelId: string): number | undefined | null {
+  static normalizeTemperature(temperature: number | undefined, model: string): number | undefined {
     return temperature;
-  }
-
-  static getFamily(modelId: string): string {
-    const id = this.normalizeModelId(modelId);
-    if (id.startsWith("gemini-1.5-pro")) return "gemini-1.5-pro";
-    if (id.startsWith("gemini-1.5-flash")) return "gemini-1.5-flash";
-    if (id.startsWith("gemini-2.0-flash")) return "gemini-2.0-flash";
-    if (id.startsWith("gemini-2.0-flash-lite")) return "gemini-2.0-flash-lite";
-    if (id.startsWith("text-embedding")) return "text-embedding";
-    if (id.startsWith("imagen")) return "imagen";
-    return "other";
   }
 
   static getModalities(modelId: string): { input: string[]; output: string[] } {
@@ -121,6 +140,9 @@ export class Capabilities {
   }
 
   static getPricing(modelId: string) {
+    const model = ModelRegistry.find(modelId, "gemini");
+    if (model?.pricing) return model.pricing;
+
     const id = this.normalizeModelId(modelId);
     let input = 0;
     let output = 0;
@@ -144,10 +166,6 @@ export class Capabilities {
         }
       }
     };
-  }
-
-  static formatDisplayName(modelId: string): string {
-    return modelId.replace("models/", "").replace(/-/g, " ").replace(/\b\w/g, l => l.toUpperCase());
   }
 
   private static normalizeModelId(modelId: string): string {

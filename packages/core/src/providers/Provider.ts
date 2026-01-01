@@ -25,6 +25,9 @@ export interface Usage {
   total_tokens: number;
   cached_tokens?: number;
   cache_creation_tokens?: number;
+  cost?: number;
+  input_cost?: number;
+  output_cost?: number;
 }
 
 export interface ChatResponse {

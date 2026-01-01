@@ -1,62 +1,81 @@
-import { ModelInfo } from "../providers/Provider.js";
+import { Model } from "./types.js";
+import { modelsData } from "./models.js";
 
 export class ModelRegistry {
-  private models: Map<string, ModelInfo> = new Map();
-  private static readonly API_URL = "https://api.parsera.org/v1/llm-specs";
+    private static models: Model[] = modelsData as unknown as Model[];
 
-  /**
-   * Refresh model information from the Parsera API
-   */
-  async refresh(): Promise<void> {
-    try {
-      const response = await fetch(ModelRegistry.API_URL);
-      if (!response.ok) {
-        throw new Error(`Failed to refresh models: ${response.statusText}`);
-      }
-
-      const specs = await response.json();
-      this.models.clear();
-
-      for (const spec of specs) {
-        this.models.set(spec.id, {
-          id: spec.id,
-          name: spec.name || spec.id,
-          provider: spec.provider,
-          family: spec.family || spec.provider,
-          context_window: spec.context_window,
-          max_output_tokens: spec.max_output_tokens,
-          modalities: spec.modalities || { input: ["text"], output: ["text"] },
-          capabilities: spec.capabilities || [],
-          pricing: spec.pricing || {},
-          metadata: spec.metadata || {}
-        });
-      }
-    } catch (error) {
-      console.error("Error refreshing model registry:", error);
-      throw error;
+    /**
+     * Find a model by its ID.
+     */
+    static find(modelId: string, provider?: string): Model | undefined {
+        return this.models.find(m => 
+            (m.id === modelId || m.family === modelId) && (!provider || m.provider === provider)
+        );
     }
-  }
 
-  /**
-   * Find a model by ID
-   */
-  find(id: string): ModelInfo | undefined {
-    return this.models.get(id);
-  }
+    /**
+     * Get all available models.
+     */
+    static all(): Model[] {
+        return this.models;
+    }
 
-  /**
-   * List all known models
-   */
-  all(): ModelInfo[] {
-    return Array.from(this.models.values());
-  }
+    /**
+     * Get output tokens limit for a model.
+     */
+    static getMaxOutputTokens(modelId: string, provider: string): number | undefined {
+        const model = this.find(modelId, provider);
+        return model?.max_output_tokens ?? undefined;
+    }
+  
+    /**
+     * Check if a model supports a capability.
+     */
+    static supports(modelId: string, capability: string, provider: string): boolean {
+        const model = this.find(modelId, provider);
+        return model?.capabilities.includes(capability) ?? false;
+    }
 
-  /**
-   * Filter models by provider
-   */
-  byProvider(provider: string): ModelInfo[] {
-    return this.all().filter(m => m.provider === provider);
-  }
+    /**
+     * Get context window size.
+     */
+    static getContextWindow(modelId: string, provider: string): number | undefined {
+        const model = this.find(modelId, provider);
+        return model?.context_window ?? undefined;
+    }
+
+    /**
+     * Calculate cost for usage.
+     */
+    static calculateCost(usage: { input_tokens: number; output_tokens: number; total_tokens: number; cached_tokens?: number; reasoning_tokens?: number }, modelId: string, provider: string) {
+        const model = this.find(modelId, provider);
+        if (!model || !model.pricing?.text_tokens?.standard) {
+            return usage;
+        }
+
+        const prices = model.pricing.text_tokens.standard;
+        const inputPrice = prices.input_per_million || 0;
+        const outputPrice = prices.output_per_million || 0;
+        const reasoningPrice = prices.reasoning_output_per_million || outputPrice;
+
+        const cachedPrice = prices.cached_input_per_million ?? (inputPrice / 2);
+
+        const inputCost = ((usage.input_tokens - (usage.cached_tokens || 0)) / 1_000_000) * inputPrice +
+                          ((usage.cached_tokens || 0) / 1_000_000) * cachedPrice;
+        
+        const outputTokens = usage.output_tokens - (usage.reasoning_tokens || 0);
+        const reasoningTokens = usage.reasoning_tokens || 0;
+
+        const outputCost = (outputTokens / 1_000_000) * outputPrice +
+                           (reasoningTokens / 1_000_000) * reasoningPrice;
+
+        const totalCost = inputCost + outputCost;
+
+        return {
+            ...usage,
+            input_cost: Number(inputCost.toFixed(6)),
+            output_cost: Number(outputCost.toFixed(6)),
+            cost: Number(totalCost.toFixed(6))
+        };
+    }
 }
-
-export const models = new ModelRegistry();

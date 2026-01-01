@@ -4,7 +4,7 @@ import { LLM } from "../../../packages/core/dist/index.js";
 async function main() {
   LLM.configure({ provider: "openai" });
 
-  const imageUrl = "https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Gnome-face-smile.svg/1200px-Gnome-face-smile.svg.png";
+  const imageUrl = "https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png";
 
   console.log("Analyzing image from URL...");
   const response = await LLM.chat("gpt-4o").ask("What is in this image?", {
