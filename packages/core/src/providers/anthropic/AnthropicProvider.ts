@@ -2,6 +2,7 @@ import { Provider, ChatRequest, ChatResponse, ModelInfo, ChatChunk, ImageRequest
 import { EmbeddingRequest, EmbeddingResponse } from "../Embedding.js";
 import { Capabilities, ANTHROPIC_MODELS } from "./Capabilities.js";
 import { AnthropicChat } from "./Chat.js";
+import { AnthropicStreaming } from "./Streaming.js";
 
 export interface AnthropicProviderOptions {
   apiKey: string;
@@ -11,6 +12,7 @@ export interface AnthropicProviderOptions {
 export class AnthropicProvider implements Provider {
   private readonly baseUrl: string;
   private readonly chatHandler: AnthropicChat;
+  private readonly streamHandler: AnthropicStreaming;
 
   // Capabilities Interface Implementation
   public capabilities = {
@@ -27,15 +29,15 @@ export class AnthropicProvider implements Provider {
   constructor(private readonly options: AnthropicProviderOptions) {
     this.baseUrl = options.baseUrl ?? "https://api.anthropic.com/v1";
     this.chatHandler = new AnthropicChat(this.baseUrl, options.apiKey);
+    this.streamHandler = new AnthropicStreaming(this.baseUrl, options.apiKey);
   }
 
   async chat(request: ChatRequest): Promise<ChatResponse> {
     return this.chatHandler.execute(request);
   }
 
-  // Not implemented yet
-  async *stream(_request: ChatRequest): AsyncGenerator<ChatChunk> {
-    throw new Error("Streaming not yet implemented for Anthropic");
+  async *stream(request: ChatRequest): AsyncGenerator<ChatChunk> {
+    yield* this.streamHandler.execute(request);
   }
 
   async listModels(): Promise<ModelInfo[]> {

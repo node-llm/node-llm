@@ -1,0 +1,111 @@
+import { ChatRequest, ChatChunk } from "../Provider.js";
+import { Capabilities } from "./Capabilities.js";
+import { handleAnthropicError } from "./Errors.js";
+import { formatSystemPrompt, formatMessages } from "./Utils.js";
+import { AnthropicMessageRequest } from "./types.js";
+
+export class AnthropicStreaming {
+  constructor(private readonly baseUrl: string, private readonly apiKey: string) {}
+
+  async *execute(request: ChatRequest): AsyncGenerator<ChatChunk> {
+    const model = request.model;
+    const maxTokens = request.max_tokens || Capabilities.getMaxOutputTokens(model) || 4096;
+    
+    const systemPrompt = formatSystemPrompt(request.messages);
+    const messages = formatMessages(request.messages);
+
+    const body: AnthropicMessageRequest = {
+      model: model,
+      messages: messages,
+      max_tokens: maxTokens,
+      system: systemPrompt,
+      stream: true,
+    };
+
+    if (request.temperature !== undefined) {
+      body.temperature = request.temperature;
+    }
+
+    if (request.tools && request.tools.length > 0) {
+        body.tools = request.tools.map(tool => ({
+          name: tool.function.name,
+          description: tool.function.description,
+          input_schema: tool.function.parameters
+        }));
+    }
+
+    const response = await fetch(`${this.baseUrl}/messages`, {
+      method: "POST",
+      headers: {
+        "x-api-key": this.apiKey,
+        "anthropic-version": "2023-06-01",
+        "content-type": "application/json",
+        ...request.headers,
+      },
+      body: JSON.stringify(body),
+    });
+
+    if (!response.ok) {
+        await handleAnthropicError(response, model);
+    }
+
+    if (!response.body) {
+      throw new Error("No response body for streaming");
+    }
+
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder();
+    let buffer = "";
+
+    while (true) {
+        const { value, done } = await reader.read();
+        if (done) break;
+
+        const chunk = decoder.decode(value, { stream: true });
+        buffer += chunk;
+
+        const lines = buffer.split("\n\n");
+        buffer = lines.pop() || "";
+
+        for (const line of lines) {
+            const trimmed = line.trim();
+            if (!trimmed.startsWith("event: ")) continue;
+            
+            // Format is:
+            // event: type
+            // data: json
+            
+            const parts = trimmed.split("\n");
+            const eventLine = parts[0];
+            const dataLine = parts.find(p => p.startsWith("data: "));
+            
+            if (!dataLine || !eventLine) continue;
+
+            const eventType = eventLine.replace("event: ", "").trim();
+            const dataStr = dataLine.replace("data: ", "").trim();
+
+            try {
+                const data = JSON.parse(dataStr);
+                
+                // Handle different event types from Anthropic
+                if (eventType === "content_block_delta") {
+                   if (data.delta && data.delta.type === "text_delta") {
+                       yield { content: data.delta.text };
+                   }
+                }
+                else if (eventType === "message_start") {
+                    // Could extract initial usage here
+                }
+                else if (eventType === "message_delta") {
+                    // Update usage or stop reason
+                }
+                else if (eventType === "error") {
+                    throw new Error(`Stream error: ${data.error?.message}`);
+                }
+            } catch (e) {
+                // console.warn("Parse error", e);
+            }
+        }
+    }
+  }
+}

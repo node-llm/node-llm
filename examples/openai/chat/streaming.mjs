@@ -6,10 +6,11 @@ async function main() {
 
   const chat = LLM.chat("gpt-4o-mini");
 
-  // 1. Standard Request
-  console.log("--- Standard Request ---");
-  const response = await chat.ask("What is Node.js?");
-  console.log(response.content);
+  console.log("--- Streaming Request ---");
+  for await (const chunk of chat.stream("Write a one-sentence summary of LLMs.")) {
+    process.stdout.write(chunk.content || "");
+  }
+  console.log("\nDone.");
 }
 
 main().catch(console.error);
