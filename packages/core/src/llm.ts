@@ -11,6 +11,7 @@ import {
 import { providerRegistry } from "./providers/registry.js";
 import { ensureOpenAIRegistered } from "./providers/openai/index.js";
 import { registerGeminiProvider } from "./providers/gemini/index.js";
+import { registerAnthropicProvider } from "./providers/anthropic/index.js";
 import { GeneratedImage } from "./image/GeneratedImage.js";
 import { models, ModelRegistry } from "./models/ModelRegistry.js";
 import { Transcription } from "./transcription/Transcription.js";
@@ -67,6 +68,10 @@ class LLMCore {
 
       if (config.provider === "gemini") {
         registerGeminiProvider();
+      }
+
+      if (config.provider === "anthropic") {
+        registerAnthropicProvider();
       }
 
       this.provider = providerRegistry.resolve(config.provider);
