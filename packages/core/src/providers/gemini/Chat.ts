@@ -36,9 +36,15 @@ export class GeminiChat {
       }
     }
 
-    const payload: GeminiGenerateContentRequest = {
+    const { model: _model, messages: _messages, tools: _tools, temperature: _temp, max_tokens: _max, response_format: _format, headers: _headers, ...rest } = request;
+
+    const payload: any = {
       contents,
-      generationConfig,
+      generationConfig: {
+        ...generationConfig,
+        ...(rest.generationConfig || {})
+      },
+      ...rest
     };
 
     if (systemInstructionParts.length > 0) {

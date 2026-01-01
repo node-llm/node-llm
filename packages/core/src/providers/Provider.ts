@@ -11,6 +11,7 @@ export interface ChatRequest {
   max_tokens?: number;
   response_format?: any;
   headers?: Record<string, string>;
+  [key: string]: any;
 }
 
 export interface ChatChunk {

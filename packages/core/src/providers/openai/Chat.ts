@@ -9,27 +9,21 @@ export class OpenAIChat {
   async execute(request: ChatRequest): Promise<ChatResponse> {
     const temperature = Capabilities.normalizeTemperature(request.temperature, request.model);
     
+    const { model, messages, tools, temperature: _, max_tokens, response_format, headers, ...rest } = request;
+
     const body: any = {
-      model: request.model,
-      messages: request.messages,
+      model,
+      messages,
+      ...rest
     };
 
-    if (temperature !== undefined) {
-      if (temperature !== null) {
-        body.temperature = temperature;
-      }
-    }
+    if (temperature !== undefined && temperature !== null) body.temperature = temperature;
+    if (max_tokens) body.max_tokens = max_tokens;
+    if (tools) body.tools = tools;
+    if (response_format) body.response_format = response_format;
 
-    if (request.max_tokens) {
-      body.max_tokens = request.max_tokens;
-    }
-
-    if (request.tools) {
-      body.tools = request.tools;
-    }
-
-    if (request.response_format) {
-      body.response_format = request.response_format;
+    if (process.env.NODELLM_DEBUG === "true") {
+      console.log(`[OpenAI Request] ${JSON.stringify(body, null, 2)}`);
     }
 
     const response = await fetch(`${this.baseUrl}/chat/completions`, {

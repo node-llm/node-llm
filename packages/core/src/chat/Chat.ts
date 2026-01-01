@@ -178,6 +178,15 @@ export class Chat {
   }
 
   /**
+   * Set provider-specific parameters.
+   * These will be merged into the final request payload.
+   */
+  withParams(params: Record<string, any>): this {
+    this.options.params = { ...this.options.params, ...params };
+    return this;
+  }
+
+  /**
    * Enforce a specific schema for the output.
    * Can accept a Schema object or a Zod schema/JSON Schema directly.
    */
@@ -296,6 +305,7 @@ export class Chat {
       max_tokens: options?.maxTokens ?? this.options.maxTokens,
       headers: { ...this.options.headers, ...options?.headers },
       response_format: responseFormat, // Pass to provider
+      ...this.options.params,
     };
 
     let totalUsage: Usage = { input_tokens: 0, output_tokens: 0, total_tokens: 0 };

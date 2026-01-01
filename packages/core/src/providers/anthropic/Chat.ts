@@ -27,12 +27,15 @@ export class AnthropicChat {
       system = system ? `${system}\n\n${instruction}` : instruction;
     }
 
-    const body: AnthropicMessageRequest = {
+    const { model: _model, messages: _messages, tools: _tools, temperature: _temp, max_tokens: _max, response_format: _format, headers: _headers, ...rest } = request;
+
+    const body: any = {
       model: model,
       messages: messages,
       max_tokens: maxTokens,
       system: system,
-      stream: false, // For now, no streaming
+      stream: false,
+      ...rest,
     };
 
     if (request.temperature !== undefined) {

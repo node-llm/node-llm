@@ -15,4 +15,5 @@ export interface ChatOptions {
   headers?: Record<string, string>;
   schema?: Schema;
   responseFormat?: { type: "json_object" | "text" };
+  params?: Record<string, any>;
 }

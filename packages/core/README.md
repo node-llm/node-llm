@@ -202,6 +202,44 @@ const factual = LLM.chat("gpt-4o").withTemperature(0.2);
 const creative = LLM.chat("gpt-4o").withTemperature(0.9);
 ```
 
+### 11. Provider-Specific Parameters
+
+Access unique provider features while maintaining the unified interface. Parameters passed via `withParams()` will override any defaults set by the library.
+
+```ts
+// OpenAI: Set seed for deterministic output
+const chat = LLM.chat("gpt-4o-mini")
+  .withParams({ 
+    seed: 42,
+    user: "user-123",
+    presence_penalty: 0.5 
+  });
+
+// Gemini: Configure safety settings and generation params
+const geminiChat = LLM.chat("gemini-2.0-flash")
+  .withParams({
+    generationConfig: { topP: 0.8, topK: 40 },
+    safetySettings: [
+      { category: "HARM_CATEGORY_HARASSMENT", threshold: "BLOCK_LOW_AND_ABOVE" }
+    ]
+  });
+
+// Anthropic: Custom headers or beta features
+const claudeChat = LLM.chat("claude-3-5-sonnet-20241022")
+  .withParams({ 
+    top_k: 50,
+    top_p: 0.9
+  });
+```
+
+**⚠️ Important Notes:**
+- Parameters from `withParams()` take precedence over library defaults
+- Always consult the provider's API documentation for supported parameters
+- The library passes these parameters through without validation
+- Enable debug mode to see the exact request: `process.env.NODELLM_DEBUG = "true"`
+
+See examples: [OpenAI](../../examples/openai/chat/params.mjs) | [Gemini](../../examples/gemini/chat/params.mjs)
+
 ---
 
 ## 📚 Examples
