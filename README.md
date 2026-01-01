@@ -12,13 +12,13 @@ A provider-agnostic LLM core for Node.js, heavily inspired by the elegant design
 
 ## 🚀 Features
 
-- **Provider-Agnostic**: Switch between OpenAI, Anthropic, and others with a single line of config.
+- **Provider-Agnostic**: Switch between OpenAI (GPT-4o), Anthropic (Claude 3.5), and Gemini (2.0) with a single line of config.
 - **Streaming-First**: Native `AsyncIterator` support for real-time token delivery.
-- **Tool Calling**: Automatic execution loop for model-requested functions.
-- **Content Moderation**: Built-in safety checks for user input and model output.
-- **Multi-modal & Smart Files**: Built-in support for Vision (images), Audio, and Text files.
-- **Fluent API**: Chainable methods like `.withTool()` for dynamic registration.
-- **Resilient**: Configurable retry logic at the execution layer.
+- **Tool Calling**: Automatic execution loop for model-requested functions (OpenAI, Anthropic, Gemini).
+- **Structured Output**: Strict Zod-based JSON schema enforcement across all major providers.
+- **Multi-modal & Smart Files**: Built-in support for Vision (images), Audio, and Documents (PDFs for Claude).
+- **Fluent API**: Chainable methods like `.withTool()` and `.withSchema()` for dynamic registration.
+- **Resilient**: Configurable retry logic and detailed error handling for API outages.
 - **Type-Safe**: Written in TypeScript with full ESM support.
 
 ---
@@ -42,7 +42,7 @@ import { LLM } from "@node-llm/core";
 import "dotenv/config";
 
 LLM.configure({
-  provider: "openai", // or "gemini" (Uses GEMINI_API_KEY)
+  provider: "openai", // or "anthropic", "gemini"
   retry: { attempts: 3, delayMs: 500 },
   defaultModerationModel: "text-moderation-latest",
   defaultTranscriptionModel: "whisper-1",
@@ -220,6 +220,7 @@ Check the [examples](./examples) directory for focused scripts organized by prov
 | [Lifecycle Events](./examples/openai/chat/events.mjs) | Hooks for specific chat events (onNewMessage, onToolCall) |
 | [Token Usage](./examples/openai/chat/usage.mjs) | Tracking costs and token counts |
 | [Max Tokens](./examples/openai/chat/max-tokens.mjs) | Limiting response length with `maxTokens` |
+| [Structured Output](./examples/openai/chat/structured.mjs) | Zod-based JSON schema enforcement |
 
 #### 🖼️ Multimodal
 | Example | Description |
@@ -255,6 +256,7 @@ Check the [examples](./examples) directory for focused scripts organized by prov
 | [Tool Calling](./examples/gemini/chat/tools.mjs) | Function calling with automatic execution |
 | [Lifecycle Events](./examples/gemini/chat/events.mjs) | Event hooks for chat interactions |
 | [Token Usage](./examples/gemini/chat/usage.mjs) | Tracking conversation costs |
+| [Structured Output](./examples/gemini/chat/structured.mjs) | Native JSON schema support |
 
 #### 🖼️ Multimodal
 | Example | Description |
@@ -271,8 +273,26 @@ Check the [examples](./examples) directory for focused scripts organized by prov
 #### 🧠 Discovery
 | Example | Description |
 | :--- | :--- |
-| [Models & Capabilities](./examples/gemini/discovery/models.mjs) | Listing models and capabilities |
-| [Embeddings](./examples/gemini/embeddings/create.mjs) | Creating vector embeddings |
+| [Models & Capabilities](./examples/gemini/discovery/models.mjs) | Listing models and inspecting their specs |
+| [Embeddings](./examples/gemini/embeddings/create.mjs) | Generating semantic vector embeddings |
+
+### Anthropic Examples
+
+#### 💬 Chat
+| Example | Description |
+| :--- | :--- |
+| [Basic & Streaming](./examples/anthropic/chat/basic.mjs) | Chatting with Claude 3.5 Models |
+| [Tool Calling](./examples/anthropic/chat/tools.mjs) | Native tool use with automatic execution |
+| [Parallel Tools](./examples/anthropic/chat/parallel-tools.mjs) | Handling multiple tool requests in one turn |
+| [Token Usage](./examples/anthropic/chat/usage.mjs) | Tracking Claude-specific token metrics |
+| [Structured Output](./examples/anthropic/chat/structured.mjs) | Prompt-based JSON schema enforcement |
+
+#### 🖼️ Multimodal
+| Example | Description |
+| :--- | :--- |
+| [Vision Analysis](./examples/anthropic/multimodal/vision.mjs) | Analyzing images with Claude Vision |
+| [PDF Analysis](./examples/anthropic/multimodal/pdf.mjs) | Native PDF document processing |
+| [File Context](./examples/anthropic/multimodal/files.mjs) | Passing local file contents to Claude |
 
 
 To run an example:
@@ -316,7 +336,7 @@ Ensure the AI returns data exactly matching a specific structure. Supports stric
 **Using Zod (Recommended):**
 
 ```ts
-import { z } from "zod";
+import { LLM, z } from "@node-llm/core";
 
 const personSchema = z.object({
   name: z.string(),
@@ -437,7 +457,7 @@ console.log(model.pricing.text_tokens.standard.input_per_million); // => 0.15
 | :--- | :--- | :--- |
 | **OpenAI** | ✅ Supported | Chat, Streaming, Tools, Vision, Audio, Images, Transcription, Moderation |
 | **Gemini** | ✅ Supported | Chat, Streaming, Tools, Vision, Audio, Video, Embeddings, Transcription |
-| **Anthropic** | 🏗️ Roadmap | Coming soon |
+| **Anthropic** | ✅ Supported | Chat, Streaming, Tools, Vision, PDF Support, Structured Output |
 | **Azure OpenAI** | 🏗️ Roadmap | Coming soon |
 
 ---
@@ -451,19 +471,22 @@ console.log(model.pricing.text_tokens.standard.input_per_million); // => 0.15
 
 ---
 
-## 🧪 Testing
+`node-llm` features a comprehensive test suite including high-level integration tests and granular unit tests.
 
-`node-llm` uses VCR-style testing (via Polly.js) for robust, deterministic integration tests. This allows us to record real LLM provider interactions once and replay them during tests without making actual API calls.
-
-- **Replay Mode (Default)**: Runs tests using recorded cassettes. Fast, deterministic, and requires no API keys.
+- **Unit Tests**: Test core logic and provider handlers in isolation without hitting any APIs.
   ```bash
-  npm test
+  npm run test:unit
   ```
 
-- **Record Mode**: Hits real APIs and updates cassettes. Requires a valid API key.
-  ```bash
-  VCR_MODE=record OPENAI_API_KEY=your_key npm test
-  ```
+- **Integration Tests (VCR)**: Uses Polly.js to record and replay real LLM interactions.
+  - **Replay Mode (Default)**: Runs against recorded cassettes. Fast and requires no API keys.
+    ```bash
+    npm run test:integration
+    ```
+  - **Record Mode**: Update cassettes by hitting real APIs (requires API keys).
+    ```bash
+    VCR_MODE=record npm run test:integration
+    ```
 
 *All recordings are automatically scrubbed of sensitive data (API keys, org IDs) before being saved to disk.*
 

@@ -64,10 +64,11 @@ export class Chat {
           acc.output_tokens += msg.usage.output_tokens;
           acc.total_tokens += msg.usage.total_tokens;
           acc.cached_tokens = (acc.cached_tokens ?? 0) + (msg.usage.cached_tokens ?? 0);
+          acc.cache_creation_tokens = (acc.cache_creation_tokens ?? 0) + (msg.usage.cache_creation_tokens ?? 0);
         }
         return acc;
       },
-      { input_tokens: 0, output_tokens: 0, total_tokens: 0, cached_tokens: 0 }
+      { input_tokens: 0, output_tokens: 0, total_tokens: 0, cached_tokens: 0, cache_creation_tokens: 0 }
     );
   }
 
@@ -221,7 +222,7 @@ export class Chat {
   /**
    * Ask the model a question
    */
-  async ask(content: string, options?: AskOptions): Promise<ChatResponseString> {
+  async ask(content: string | any[], options?: AskOptions): Promise<ChatResponseString> {
     let messageContent: any = content;
     const files = [...(options?.images ?? []), ...(options?.files ?? [])];
 

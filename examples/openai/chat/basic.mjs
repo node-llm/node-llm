@@ -10,13 +10,6 @@ async function main() {
   console.log("--- Standard Request ---");
   const response = await chat.ask("What is Node.js?");
   console.log(response.content);
-
-  // 2. Streaming Request
-  console.log("\n--- Streaming Request ---");
-  for await (const chunk of chat.stream("Write a one-sentence summary of LLMs.")) {
-    process.stdout.write(chunk.content || "");
-  }
-  console.log("\nDone.");
 }
 
 main().catch(console.error);

@@ -13,12 +13,23 @@ export class GeminiStreaming {
 
     const { contents, systemInstructionParts } = await GeminiChatUtils.convertMessages(request.messages);
 
+    const generationConfig: any = {
+      temperature: temperature ?? undefined,
+      maxOutputTokens: request.max_tokens,
+    };
+
+    if (request.response_format?.type === "json_object") {
+      generationConfig.responseMimeType = "application/json";
+    } else if (request.response_format?.type === "json_schema") {
+      generationConfig.responseMimeType = "application/json";
+      if (request.response_format.json_schema?.schema) {
+        generationConfig.responseSchema = this.sanitizeSchema(request.response_format.json_schema.schema);
+      }
+    }
+
     const payload: any = {
       contents,
-      generationConfig: {
-        temperature: temperature ?? undefined,
-        maxOutputTokens: request.max_tokens,
-      },
+      generationConfig,
     };
 
     if (systemInstructionParts.length > 0) {
@@ -74,5 +85,30 @@ export class GeminiStreaming {
         }
       }
     }
+  }
+
+  private sanitizeSchema(schema: any): any {
+    if (typeof schema !== "object" || schema === null) return schema;
+    
+    const sanitized = { ...schema };
+    
+    // Remove unsupported fields
+    delete sanitized.additionalProperties;
+    delete sanitized.$schema;
+    delete sanitized.$id;
+    delete sanitized.definitions;
+    
+    // Recursively sanitize
+    if (sanitized.properties) {
+      for (const key in sanitized.properties) {
+        sanitized.properties[key] = this.sanitizeSchema(sanitized.properties[key]);
+      }
+    }
+    
+    if (sanitized.items) {
+      sanitized.items = this.sanitizeSchema(sanitized.items);
+    }
+    
+    return sanitized;
   }
 }

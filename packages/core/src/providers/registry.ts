@@ -10,7 +10,7 @@ class ProviderRegistry {
    */
   register(name: string, factory: ProviderFactory): void {
     if (this.providers.has(name)) {
-      throw new Error(`Provider '${name}' is already registered`);
+      return;
     }
 
     this.providers.set(name, factory);

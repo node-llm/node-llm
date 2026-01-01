@@ -35,6 +35,7 @@ const MIME_TYPES: Record<string, string> = {
   ".rs": "text/x-rust",
   ".swift": "text/x-swift",
   ".kt": "text/x-kotlin",
+  ".pdf": "application/pdf",
 };
 
 const TEXT_EXTENSIONS = new Set([

@@ -53,8 +53,11 @@ export class Capabilities {
   }
 
   static supportsStructuredOutput(modelId: string): boolean {
-    // Explicitly disabled until implementation is validated
-    return false;
+    const id = this.normalizeModelId(modelId);
+    if (id.match(/text-embedding|embedding-001|aqa|imagen/)) {
+      return false;
+    }
+    return true;
   }
 
   static supportsJsonMode(modelId: string): boolean {

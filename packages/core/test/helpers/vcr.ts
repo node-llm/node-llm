@@ -21,6 +21,7 @@ export function setupVCR(recordingName: string, subDir?: string) {
   if (mode === "replay") {
     if (!process.env.OPENAI_API_KEY) process.env.OPENAI_API_KEY = "sk-dummy-key-for-vcr-replay";
     if (!process.env.GEMINI_API_KEY) process.env.GEMINI_API_KEY = "dummy-key-for-vcr-replay";
+    if (!process.env.ANTHROPIC_API_KEY) process.env.ANTHROPIC_API_KEY = "dummy-key-for-vcr-replay";
   }
 
   const polly = new Polly(recordingName, {
@@ -33,7 +34,7 @@ export function setupVCR(recordingName: string, subDir?: string) {
     },
     matchRequestsBy: {
       headers: {
-        exclude: ["authorization", "openai-organization", "openai-project", "user-agent"],
+        exclude: ["authorization", "openai-organization", "openai-project", "user-agent", "x-api-key"],
       },
       url: {
         query: (query: any) => {
@@ -52,7 +53,7 @@ export function setupVCR(recordingName: string, subDir?: string) {
 
   server.any().on('beforePersist', (req: any, recording: any) => {
     // Scrub sensitive headers from requests
-    const sensitiveHeaders = ['authorization', 'openai-organization', 'openai-project', 'api-key'];
+    const sensitiveHeaders = ['authorization', 'openai-organization', 'openai-project', 'api-key', 'x-api-key'];
     
     if (recording.request.headers) {
       recording.request.headers.forEach((header: any) => {

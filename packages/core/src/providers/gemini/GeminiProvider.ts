@@ -1,4 +1,16 @@
-import { Provider, ChatRequest, ChatResponse, ModelInfo, ChatChunk, ImageRequest, ImageResponse, TranscriptionRequest, TranscriptionResponse } from "../Provider.js";
+import { 
+  Provider, 
+  ChatRequest, 
+  ChatResponse, 
+  ModelInfo, 
+  ChatChunk, 
+  ImageRequest, 
+  ImageResponse, 
+  TranscriptionRequest, 
+  TranscriptionResponse,
+  ModerationRequest,
+  ModerationResponse 
+} from "../Provider.js";
 import { Capabilities } from "./Capabilities.js";
 import { GeminiChat } from "./Chat.js";
 import { GeminiStreaming } from "./Streaming.js";
@@ -65,5 +77,9 @@ export class GeminiProvider implements Provider {
 
   async transcribe(request: TranscriptionRequest): Promise<TranscriptionResponse> {
     return this.transcriptionHandler.execute(request);
+  }
+
+  async moderate(_request: ModerationRequest): Promise<ModerationResponse> {
+    throw new Error("Gemini doesn't support moderation");
   }
 }
