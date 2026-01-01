@@ -1,6 +1,7 @@
 import { ChatRequest, ChatChunk } from "../Provider.js";
 import { Capabilities } from "./Capabilities.js";
 import { handleOpenAIError } from "./Errors.js";
+import { buildUrl } from "./utils.js";
 
 export class OpenAIStreaming {
   constructor(private readonly baseUrl: string, private readonly apiKey: string) {}
@@ -25,7 +26,7 @@ export class OpenAIStreaming {
       body.response_format = request.response_format;
     }
 
-    const response = await fetch(`${this.baseUrl}/chat/completions`, {
+    const response = await fetch(buildUrl(this.baseUrl, '/chat/completions'), {
       method: "POST",
       headers: {
         "Authorization": `Bearer ${this.apiKey}`,

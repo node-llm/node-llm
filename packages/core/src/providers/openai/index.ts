@@ -12,12 +12,13 @@ export function registerOpenAIProvider() {
 
   providerRegistry.register("openai", () => {
     const apiKey = process.env.OPENAI_API_KEY;
+    const baseUrl = process.env.OPENAI_API_BASE;
 
     if (!apiKey) {
       throw new Error("OPENAI_API_KEY is not set");
     }
 
-    return new OpenAIProvider({ apiKey });
+    return new OpenAIProvider({ apiKey, baseUrl });
   });
 
   registered = true;

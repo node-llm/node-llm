@@ -2,6 +2,7 @@ import { TranscriptionRequest, TranscriptionResponse } from "../Provider.js";
 import { handleOpenAIError } from "./Errors.js";
 import { AudioUtils } from "../../utils/audio.js";
 import { DEFAULT_MODELS } from "../../constants.js";
+import { buildUrl } from "./utils.js";
 
 export class OpenAITranscription {
   constructor(private readonly baseUrl: string, private readonly apiKey: string) {}
@@ -34,7 +35,7 @@ export class OpenAITranscription {
       formData.append("language", request.language);
     }
 
-    const response = await fetch(`${this.baseUrl}/audio/transcriptions`, {
+    const response = await fetch(buildUrl(this.baseUrl, '/audio/transcriptions'), {
       method: "POST",
       headers: {
         "Authorization": `Bearer ${this.apiKey}`,
@@ -136,7 +137,7 @@ export class OpenAITranscription {
       ]
     };
 
-    const response = await fetch(`${this.baseUrl}/chat/completions`, {
+    const response = await fetch(buildUrl(this.baseUrl, '/chat/completions'), {
       method: "POST",
       headers: {
         "Authorization": `Bearer ${this.apiKey}`,

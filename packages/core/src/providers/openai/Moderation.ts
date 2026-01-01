@@ -1,12 +1,13 @@
 import { ModerationRequest, ModerationResponse } from "../Provider.js";
 import { handleOpenAIError } from "./Errors.js";
 import { DEFAULT_MODELS } from "../../constants.js";
+import { buildUrl } from "./utils.js";
 
 export class OpenAIModeration {
   constructor(private readonly baseUrl: string, private readonly apiKey: string) {}
 
   async execute(request: ModerationRequest): Promise<ModerationResponse> {
-    const response = await fetch(`${this.baseUrl}/moderations`, {
+    const response = await fetch(buildUrl(this.baseUrl, '/moderations'), {
       method: "POST",
       headers: {
         "Authorization": `Bearer ${this.apiKey}`,

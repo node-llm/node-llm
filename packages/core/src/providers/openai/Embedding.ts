@@ -2,6 +2,7 @@ import { EmbeddingRequest, EmbeddingResponse } from "../Embedding.js";
 import { handleOpenAIError } from "./Errors.js";
 import { Capabilities } from "./Capabilities.js";
 import { DEFAULT_MODELS } from "../../constants.js";
+import { buildUrl } from "./utils.js";
 
 export class OpenAIEmbedding {
   constructor(
@@ -30,7 +31,7 @@ export class OpenAIEmbedding {
       body.user = request.user;
     }
 
-    const response = await fetch(`${this.baseUrl}/embeddings`, {
+    const response = await fetch(buildUrl(this.baseUrl, '/embeddings'), {
       method: "POST",
       headers: {
         "Authorization": `Bearer ${this.apiKey}`,

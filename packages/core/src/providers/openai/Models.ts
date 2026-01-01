@@ -2,13 +2,14 @@ import { ModelInfo } from "../Provider.js";
 import { Capabilities } from "./Capabilities.js";
 import { ModelRegistry } from "../../models/ModelRegistry.js";
 import { handleOpenAIError } from "./Errors.js";
+import { buildUrl } from "./utils.js";
 
 export class OpenAIModels {
   constructor(private readonly baseUrl: string, private readonly apiKey: string) {}
 
   async execute(): Promise<ModelInfo[]> {
     try {
-      const response = await fetch(`${this.baseUrl}/models`, {
+      const response = await fetch(buildUrl(this.baseUrl, '/models'), {
         method: "GET",
         headers: {
           "Authorization": `Bearer ${this.apiKey}`,

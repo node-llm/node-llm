@@ -3,6 +3,7 @@ import { OpenAIChatResponse } from "./types.js";
 import { Capabilities } from "./Capabilities.js";
 import { handleOpenAIError } from "./Errors.js";
 import { ModelRegistry } from "../../models/ModelRegistry.js";
+import { buildUrl } from "./utils.js";
 
 export class OpenAIChat {
   constructor(private readonly baseUrl: string, private readonly apiKey: string) {}
@@ -27,7 +28,7 @@ export class OpenAIChat {
       console.log(`[OpenAI Request] ${JSON.stringify(body, null, 2)}`);
     }
 
-    const response = await fetch(`${this.baseUrl}/chat/completions`, {
+    const response = await fetch(buildUrl(this.baseUrl, '/chat/completions'), {
       method: "POST",
       headers: {
         "Authorization": `Bearer ${this.apiKey}`,

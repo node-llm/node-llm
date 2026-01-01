@@ -497,7 +497,46 @@ if (model) {
 | **OpenAI** | ✅ Supported | Chat, Streaming, Tools, Vision, Audio, Images, Transcription, Moderation |
 | **Gemini** | ✅ Supported | Chat, Streaming, Tools, Vision, Audio, Video, Embeddings, Transcription |
 | **Anthropic** | ✅ Supported | Chat, Streaming, Tools, Vision, PDF Support, Structured Output |
-| **Azure OpenAI** | 🏗️ Roadmap | Coming soon |
+
+---
+
+## 🌐 Custom OpenAI-Compatible Endpoints
+
+Use Azure OpenAI, LiteLLM, Ollama, or any OpenAI-compatible endpoint by setting the `OPENAI_API_BASE` environment variable:
+
+```bash
+# Azure OpenAI
+export OPENAI_API_KEY="your-azure-key"
+export OPENAI_API_BASE="https://YOUR_RESOURCE.openai.azure.com/openai/deployments/YOUR_DEPLOYMENT"
+
+# Or LiteLLM
+export OPENAI_API_KEY="your-litellm-key"
+export OPENAI_API_BASE="https://your-proxy.litellm.ai/v1"
+
+# Or local Ollama
+export OPENAI_API_KEY="not-needed"
+export OPENAI_API_BASE="http://localhost:11434/v1"
+```
+
+Then use it like normal:
+
+```typescript
+import { LLM } from '@node-llm/core';
+
+LLM.configure({ provider: 'openai' });
+
+const chat = LLM.chat('gpt-4');
+const response = await chat.ask('Hello!');
+```
+
+**Supported Endpoints:**
+- **Azure OpenAI** - Enterprise Azure deployment
+- **LiteLLM** - Proxy for 100+ LLM providers
+- **Ollama** - Local model serving
+- **LM Studio** - Local model UI
+- **Any OpenAI-compatible endpoint**
+
+See [`examples/custom-endpoints-example.ts`](./examples/custom-endpoints-example.ts) for more examples.
 
 ---
 

@@ -1,5 +1,6 @@
 import { ImageRequest, ImageResponse } from "../Provider.js";
 import { handleOpenAIError } from "./Errors.js";
+import { buildUrl } from "./utils.js";
 
 export class OpenAIImage {
   constructor(private readonly baseUrl: string, private readonly apiKey: string) {}
@@ -13,7 +14,7 @@ export class OpenAIImage {
       n: request.n || 1,
     };
 
-    const response = await fetch(`${this.baseUrl}/images/generations`, {
+    const response = await fetch(buildUrl(this.baseUrl, '/images/generations'), {
       method: "POST",
       headers: {
         "Authorization": `Bearer ${this.apiKey}`,
