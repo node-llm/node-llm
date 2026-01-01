@@ -502,41 +502,81 @@ if (model) {
 
 ## 🌐 Custom OpenAI-Compatible Endpoints
 
-Use Azure OpenAI, LiteLLM, Ollama, or any OpenAI-compatible endpoint by setting the `OPENAI_API_BASE` environment variable:
+Connect to any OpenAI-compatible service (Azure, LiteLLM, Ollama) by configuring the base URL.
+
+### Generic Configuration
+
+Set `OPENAI_API_BASE` to your custom endpoint:
 
 ```bash
-# Azure OpenAI
-export OPENAI_API_KEY="your-azure-key"
-export OPENAI_API_BASE="https://YOUR_RESOURCE.openai.azure.com/openai/deployments/YOUR_DEPLOYMENT"
-
-# Or LiteLLM
+# LiteLLM
 export OPENAI_API_KEY="your-litellm-key"
 export OPENAI_API_BASE="https://your-proxy.litellm.ai/v1"
 
-# Or local Ollama
+# Ollama (Local)
 export OPENAI_API_KEY="not-needed"
 export OPENAI_API_BASE="http://localhost:11434/v1"
 ```
 
-Then use it like normal:
+### Azure OpenAI
+
+For Azure, point `OPENAI_API_BASE` to your specific deployment URL. The library correctly handles URL construction even with query parameters.
+
+```bash
+export OPENAI_API_KEY="your-azure-key"
+# Include the full path to your deployment
+export OPENAI_API_BASE="https://YOUR_RESOURCE.openai.azure.com/openai/deployments/YOUR_DEPLOYMENT?api-version=2024-08-01-preview"
+```
+
+Then, pass the `api-key` header manually when creating the chat instance:
 
 ```typescript
 import { LLM } from '@node-llm/core';
 
 LLM.configure({ provider: 'openai' });
 
-const chat = LLM.chat('gpt-4');
-const response = await chat.ask('Hello!');
+const chat = LLM.chat('gpt-4').withRequestOptions({
+  headers: { 'api-key': process.env.OPENAI_API_KEY }
+});
+
+const response = await chat.ask('Hello Azure!');
 ```
 
-**Supported Endpoints:**
-- **Azure OpenAI** - Enterprise Azure deployment
-- **LiteLLM** - Proxy for 100+ LLM providers
-- **Ollama** - Local model serving
-- **LM Studio** - Local model UI
-- **Any OpenAI-compatible endpoint**
+See [`examples/custom-endpoints-example.mjs`](./examples/custom-endpoints-example.mjs) for a complete reference.
 
-See [`examples/custom-endpoints-example.ts`](./examples/custom-endpoints-example.ts) for more examples.
+---
+
+## 🛠️ Using Custom Models (assumeModelExists)
+
+If you use a model ID not in the built-in registry (e.g., custom Azure names or new models), use `assumeModelExists: true` to bypass validation.
+
+```typescript
+const chat = LLM.chat('my-company-gpt-4', {
+  assumeModelExists: true,
+  // Provider is typically required if not already configured globally
+  provider: 'openai' 
+});
+
+await chat.ask("Hello");
+```
+
+This flag is available on all major methods:
+
+```typescript
+// Embeddings
+await LLM.embed('text', {
+  model: 'custom-embedder',
+  assumeModelExists: true
+});
+
+// Image Generation
+await LLM.paint('prompt', {
+  model: 'custom-dalle',
+  assumeModelExists: true
+});
+```
+
+**Note:** When using this flag, strict capability checks (e.g., whether a model supports vision) are skipped. You are responsible for ensuring the model supports the requested features.
 
 ---
 

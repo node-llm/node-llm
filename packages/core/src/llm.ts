@@ -103,11 +103,13 @@ class LLMCore {
     return provider.listModels();
   }
 
-  async paint(prompt: string, options?: { model?: string; size?: string; quality?: string }): Promise<GeneratedImage> {
+  async paint(prompt: string, options?: { model?: string; size?: string; quality?: string; assumeModelExists?: boolean }): Promise<GeneratedImage> {
     const provider = this.ensureProviderSupport("paint");
 
     const model = options?.model;
-    if (model && provider.capabilities && !provider.capabilities.supportsImageGeneration(model)) {
+    if (options?.assumeModelExists) {
+      console.warn(`[NodeLLM] Skipping validation for model ${model}`);
+    } else if (model && provider.capabilities && !provider.capabilities.supportsImageGeneration(model)) {
       throw new Error(`Model ${model} does not support image generation.`);
     }
 
@@ -127,12 +129,15 @@ class LLMCore {
       language?: string;
       speakerNames?: string[];
       speakerReferences?: string[];
+      assumeModelExists?: boolean;
     }
   ): Promise<Transcription> {
     const provider = this.ensureProviderSupport("transcribe");
 
     const model = options?.model || this.defaultTranscriptionModelId;
-    if (model && provider.capabilities && !provider.capabilities.supportsTranscription(model)) {
+    if (options?.assumeModelExists) {
+       console.warn(`[NodeLLM] Skipping validation for model ${model}`);
+    } else if (model && provider.capabilities && !provider.capabilities.supportsTranscription(model)) {
       throw new Error(`Model ${model} does not support transcription.`);
     }
 
@@ -161,11 +166,13 @@ class LLMCore {
     return this.retry;
   }
 
-  async moderate(input: string | string[], options?: { model?: string }): Promise<Moderation> {
+  async moderate(input: string | string[], options?: { model?: string; assumeModelExists?: boolean }): Promise<Moderation> {
     const provider = this.ensureProviderSupport("moderate");
 
     const model = options?.model || this.defaultModerationModelId;
-    if (model && provider.capabilities && !provider.capabilities.supportsModeration(model)) {
+    if (options?.assumeModelExists) {
+      console.warn(`[NodeLLM] Skipping validation for model ${model}`);
+    } else if (model && provider.capabilities && !provider.capabilities.supportsModeration(model)) {
       throw new Error(`Model ${model} does not support moderation.`);
     }
 
@@ -180,7 +187,7 @@ class LLMCore {
 
   async embed(
     input: string | string[],
-    options?: { model?: string; dimensions?: number }
+    options?: { model?: string; dimensions?: number; assumeModelExists?: boolean }
   ): Promise<Embedding> {
     const provider = this.ensureProviderSupport("embed");
 
@@ -192,7 +199,9 @@ class LLMCore {
       dimensions: options?.dimensions,
     };
 
-    if (request.model && provider.capabilities && !provider.capabilities.supportsEmbeddings(request.model)) {
+    if (options?.assumeModelExists) {
+      console.warn(`[NodeLLM] Skipping validation for model ${request.model}`);
+    } else if (request.model && provider.capabilities && !provider.capabilities.supportsEmbeddings(request.model)) {
       throw new Error(`Model ${request.model} does not support embeddings.`);
     }
 

@@ -128,11 +128,31 @@ async function modelsExample() {
   console.log('First 3 models:', models.slice(0, 3).map(m => m.id));
 }
 
+async function assumeModelExistsExample() {
+  console.log('\n=== Assume Model Exists Example ===\n');
+  
+  process.env.OPENAI_API_KEY = process.env.AZURE_OPENAI_API_KEY;
+  process.env.OPENAI_API_BASE = process.env.AZURE_OPENAI_API_BASE_ENDPOINT;
+  
+  LLM.configure({ provider: 'openai' });
+
+  // We use the flag to demonstrate bypassing validation.
+  // Useful for custom deployments like 'my-company-gpt-4'
+  const chat = LLM.chat('gpt-4', {
+    assumeModelExists: true,
+    headers: { 'api-key': process.env.AZURE_OPENAI_API_KEY }
+  });
+  
+  const response = await chat.ask('This request skips model validation!');
+  console.log('Response:', response.toString().substring(0, 100) + '...');
+}
+
 async function main() {
   try {
     await chatExample();
     await streamingExample();
     await embeddingExample();
+    await assumeModelExistsExample();
     // await imageExample();        // Uncomment if DALL-E is deployed
     // await moderationExample();   // Uncomment if moderation is available
     // await transcriptionExample(); // Uncomment if you have audio files

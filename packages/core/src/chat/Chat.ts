@@ -240,8 +240,12 @@ export class Chat {
       const processedFiles = await Promise.all(files.map(f => FileLoader.load(f)));
       
       const hasBinary = processedFiles.some(p => p.type === "image_url" || p.type === "input_audio" || p.type === "video_url");
-      if (hasBinary && this.provider.capabilities && !this.provider.capabilities.supportsVision(this.model)) {
+      if (hasBinary && !this.options.assumeModelExists && this.provider.capabilities && !this.provider.capabilities.supportsVision(this.model)) {
         throw new Error(`Model ${this.model} does not support vision/binary files.`);
+      }
+      
+      if (hasBinary && this.options.assumeModelExists) {
+        console.warn(`[NodeLLM] Skipping vision capability validation for model ${this.model}`);
       }
 
       // Separate text files from binary files
@@ -267,8 +271,11 @@ export class Chat {
     }
 
     if (this.options.tools && this.options.tools.length > 0) {
-      if (this.provider.capabilities && !this.provider.capabilities.supportsTools(this.model)) {
+      if (!this.options.assumeModelExists && this.provider.capabilities && !this.provider.capabilities.supportsTools(this.model)) {
         throw new Error(`Model ${this.model} does not support tool calling.`);
+      }
+      if (this.options.assumeModelExists) {
+        console.warn(`[NodeLLM] Skipping tool capability validation for model ${this.model}`);
       }
     }
 
@@ -281,8 +288,11 @@ export class Chat {
     let responseFormat: any = this.options.responseFormat;
     
     if (this.options.schema) {
-      if (this.provider.capabilities && !this.provider.capabilities.supportsStructuredOutput(this.model)) {
+      if (!this.options.assumeModelExists && this.provider.capabilities && !this.provider.capabilities.supportsStructuredOutput(this.model)) {
         throw new Error(`Model ${this.model} does not support structured output.`);
+      }
+      if (this.options.assumeModelExists) {
+        console.warn(`[NodeLLM] Skipping structured output capability validation for model ${this.model}`);
       }
       
       const jsonSchema = toJsonSchema(this.options.schema.definition.schema);

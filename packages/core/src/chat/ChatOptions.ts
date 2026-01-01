@@ -16,4 +16,6 @@ export interface ChatOptions {
   schema?: Schema;
   responseFormat?: { type: "json_object" | "text" };
   params?: Record<string, any>;
+  assumeModelExists?: boolean;
+  provider?: string;
 }
