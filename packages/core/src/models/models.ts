@@ -7023,5 +7023,55 @@ export const modelsData =
       "object": "model",
       "owned_by": "openai-internal"
     }
+  },
+  {
+    "id": "deepseek-chat",
+    "name": "DeepSeek V3",
+    "provider": "deepseek",
+    "family": "deepseek-chat",
+    "created_at": null,
+    "context_window": 64000,
+    "max_output_tokens": 8192,
+    "knowledge_cutoff": null,
+    "modalities": {
+      "input": ["text"],
+      "output": ["text"]
+    },
+    "capabilities": ["chat", "streaming", "prefix_caching", "function_calling"],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 0.27,
+          "output_per_million": 1.10,
+          "cached_input_per_million": 0.07
+        }
+      }
+    },
+    "metadata": {}
+  },
+  {
+    "id": "deepseek-reasoner",
+    "name": "DeepSeek R1",
+    "provider": "deepseek",
+    "family": "deepseek-reasoner",
+    "created_at": null,
+    "context_window": 64000,
+    "max_output_tokens": 8192,
+    "knowledge_cutoff": null,
+    "modalities": {
+      "input": ["text"],
+      "output": ["text"]
+    },
+    "capabilities": ["chat", "streaming", "reasoning", "prefix_caching"],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 0.55,
+          "output_per_million": 2.19,
+          "cached_input_per_million": 0.14
+        }
+      }
+    },
+    "metadata": {}
   }
 ];

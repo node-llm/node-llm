@@ -12,6 +12,7 @@ import { providerRegistry } from "./providers/registry.js";
 import { ensureOpenAIRegistered } from "./providers/openai/index.js";
 import { registerGeminiProvider } from "./providers/gemini/index.js";
 import { registerAnthropicProvider } from "./providers/anthropic/index.js";
+import { registerDeepSeekProvider } from "./providers/deepseek/index.js";
 import { GeneratedImage } from "./image/GeneratedImage.js";
 import { ModelRegistry } from "./models/ModelRegistry.js";
 import { Transcription } from "./transcription/Transcription.js";
@@ -72,6 +73,10 @@ class LLMCore {
 
       if (config.provider === "anthropic") {
         registerAnthropicProvider();
+      }
+
+      if (config.provider === "deepseek") {
+        registerDeepSeekProvider();
       }
 
       this.provider = providerRegistry.resolve(config.provider);
