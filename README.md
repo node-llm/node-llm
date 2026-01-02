@@ -41,8 +41,12 @@ LLM.configure((config) => {
 
 LLM.configure({ provider: "openai" });
 
-// Chat with streaming
+// Basic Chat
 const chat = LLM.chat("gpt-4o");
+const response = await chat.ask("Explain Node.js");
+console.log(response.content);
+
+// Streaming
 for await (const chunk of chat.stream("Explain Node.js")) {
   process.stdout.write(chunk.content);
 }
@@ -77,7 +81,7 @@ LLM.configure({
 });
 ```
 
-**[View Full Configuration Guide →](docs/CONFIGURATION.md)**
+**[View Full Configuration Guide →](docs/getting_started/configuration.md)**
 
 ---
 

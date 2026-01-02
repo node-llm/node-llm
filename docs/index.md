@@ -41,8 +41,12 @@ import { LLM } from "@node-llm/core";
 // 1. Configure once
 LLM.configure({ provider: "openai" });
 
-// 2. Chat with streaming
+// 2. Basic Chat
 const chat = LLM.chat("gpt-4o");
+const response = await chat.ask("Explain Node.js");
+console.log(response.content);
+
+// 3. Streaming
 for await (const chunk of chat.stream("Explain Node.js")) {
   process.stdout.write(chunk.content);
 }
