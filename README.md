@@ -5,7 +5,24 @@
 # @node-llm/core
 **One unified interface for OpenAI, Anthropic, Gemini, DeepSeek, and local models.**
 
-`node-llm` abstracts away the chaos of vendor-specific SDKs. It gives you a clean, streaming-first API with built-in support for Vision, Tools, and Structured Outputs.
+**node-llm** abstracts away the chaos of vendor-specific SDKs. It gives you a clean, streaming-first API with built-in support for Vision, Tools, and Structured Outputs.
+
+<br/>
+
+<p align="left">
+  <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/openai.svg" height="28" />
+  <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/openai-text.svg" height="22" />
+  &nbsp;&nbsp;&nbsp;&nbsp;
+  <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/anthropic-text.svg" height="18" />
+  &nbsp;&nbsp;&nbsp;&nbsp;
+  <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/gemini-color.svg" height="28" />
+  <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/gemini-text.svg" height="20" />
+  &nbsp;&nbsp;&nbsp;&nbsp;
+  <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/deepseek-color.svg" height="28" />
+  <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/deepseek-text.svg" height="20" />
+</p>
+
+<br/>
 
 [![npm version](https://img.shields.io/npm/v/@node-llm/core.svg)](https://www.npmjs.com/package/@node-llm/core)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -85,7 +102,18 @@ await LLM.transcribe("meeting-recording.wav");
 
 ---
 
-## 🚀 Why use this over official SDKs?
+## � Supported Providers
+
+| Provider | Supported Features |
+| :--- | :--- |
+| <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/openai.svg" height="18"> <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/openai-text.svg" height="18"> | Chat, Streaming, Tools, Vision, Audio, Images, Transcription |
+| <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/gemini-color.svg" height="18"> <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/gemini-text.svg" height="14"> | Chat, Streaming, Tools, Vision, Audio, Video, Embeddings |
+| <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/anthropic-text.svg" height="12"> | Chat, Streaming, Tools, Vision, PDF Support, Structured Output |
+| <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/deepseek-color.svg" height="18"> <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/deepseek-text.svg" height="14"> | Chat (V3), Reasoning (R1), Tools, Streaming, Structured Output |
+
+---
+
+## �🚀 Why use this over official SDKs?
 
 | Feature | node-llm | Official SDKs |
 | :--- | :--- | :--- |
@@ -103,7 +131,7 @@ await LLM.transcribe("meeting-recording.wav");
 npm install @node-llm/core
 ```
 
-**[View Full Documentation ↗](https://eshaiju.github.io/node-llm/)**
+**[View Full Documentation ↗](https://node-llm.eshaiju.com/)**
 
 ---
 

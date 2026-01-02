@@ -505,7 +505,7 @@
   },"72": {
     "doc": "Home",
     "title": "📋 Supported Providers",
-    "content": "| Provider | Supported Features | . | OpenAI | Chat, Streaming, Tools, Vision, Audio, Images, Transcription | . | Gemini | Chat, Streaming, Tools, Vision, Audio, Video, Embeddings | . | Anthropic | Chat, Streaming, Tools, Vision, PDF Support, Structured Output | . | DeepSeek | Chat (V3), Reasoning (R1), Tools, Streaming, Structured Output | . ",
+    "content": "| Provider | Supported Features | . | | Chat, Streaming, Tools, Vision, Audio, Images, Transcription | . | | Chat, Streaming, Tools, Vision, Audio, Video, Embeddings | . | | Chat, Streaming, Tools, Vision, PDF Support, Structured Output | . | | Chat (V3), Reasoning (R1), Tools, Streaming, Structured Output | . ",
     "url": "/#-supported-providers",
     
     "relUrl": "/#-supported-providers"
