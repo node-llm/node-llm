@@ -39,6 +39,7 @@ const chat = LLM.chat("gpt-4o")
 - **Models**: `gpt-4o`, `gpt-4o-mini`, `gpt-4-turbo`, etc.
 - **Vision**: specific models like `gpt-4o` support image analysis.
 - **Tools**: Fully supported, including parallel tool execution.
+- **Reasoning**: Automatic tracking of reasoning tokens and costs for `o1` and `o3` models.
 - **Structured Output**: Supports strict schema validation via `json_schema`.
 
 ## Custom Endpoints

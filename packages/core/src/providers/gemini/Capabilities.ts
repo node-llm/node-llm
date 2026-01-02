@@ -113,14 +113,6 @@ export class Capabilities {
      return false;
   }
 
-  static supportsReasoning(modelId: string): boolean {
-    const model = ModelRegistry.find(modelId, "gemini");
-    if (model?.capabilities?.includes("reasoning")) return true;
-
-    const id = this.normalizeModelId(modelId);
-    return !!id.match(/thinking/);
-  }
-
   static normalizeTemperature(temperature: number | undefined, model: string): number | undefined {
     return temperature;
   }

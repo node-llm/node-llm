@@ -1,4 +1,4 @@
-import { LLM } from "@node-llm/core";
+import { LLM } from "../../../packages/core/dist/index.js";
 import "dotenv/config";
 
 async function main() {

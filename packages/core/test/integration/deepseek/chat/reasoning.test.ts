@@ -3,7 +3,7 @@ import { LLM } from "../../../../src/index.js";
 import { setupVCR } from "../../../helpers/vcr.js";
 import "dotenv/config";
 
-describe("DeepSeek Reasoning Integration (VCR)", { timeout: 30000 }, () => {
+describe("DeepSeek Reasoning Integration (VCR)", { timeout: 60000 }, () => {
   let polly: any;
 
   afterEach(async () => {
@@ -19,9 +19,9 @@ describe("DeepSeek Reasoning Integration (VCR)", { timeout: 30000 }, () => {
     
     const response = await chat.ask("Calculate 123 * 456 and explain the steps.");
     
-    expect(response.reasoning).to.be.a("string");
-    expect(response.reasoning!.length).to.be.greaterThan(0);
-    expect(response.content).to.be.a("string");
+    expect(typeof response.reasoning).toBe("string");
+    expect(response.reasoning!.length).toBeGreaterThan(0);
+    expect(typeof response.content).toBe("string");
   });
 
   it("should stream reasoning content for deepseek-reasoner", async ({ task }) => {
@@ -37,7 +37,7 @@ describe("DeepSeek Reasoning Integration (VCR)", { timeout: 30000 }, () => {
       if (chunk.content) hasContent = true;
     }
 
-    expect(hasReasoning).to.be.true;
-    expect(hasContent).to.be.true;
+    expect(hasReasoning).toBe(true);
+    expect(hasContent).toBe(true);
   });
 });

@@ -28,6 +28,7 @@ EXAMPLES=(
   "chat/params.mjs"
   "chat/structured.mjs"
   "chat/tools.mjs"
+  "chat/reasoning.mjs"
   "chat/usage.mjs"
   "embeddings/basic.mjs"
   "images/generate.mjs"

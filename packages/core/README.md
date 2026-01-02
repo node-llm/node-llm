@@ -102,16 +102,27 @@ await LLM.paint("A cyberpunk city in rain");
 await LLM.transcribe("meeting-recording.wav");
 ```
 
+### 🧠 Deep Reasoning
+Access the thought process of models like **DeepSeek R1** or **OpenAI o1/o3** using the `.reasoning` field.
+
+```ts
+const chat = LLM.chat("deepseek-reasoner");
+const res = await chat.ask("Solve a complex puzzle");
+
+console.log(res.reasoning); // Output the model's inner thought process
+console.log(res.content);   // Output the final answer
+```
+
 ---
 
 ## 📋 Supported Providers
 
 | Provider | Supported Features |
 | :--- | :--- |
-| <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/openai.svg" height="18"> <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/openai-text.svg" height="18"> | Chat, Streaming, Tools, Vision, Audio, Images, Transcription |
+| <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/openai.svg" height="18"> <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/openai-text.svg" height="18"> | Chat, Streaming, Tools, Vision, Audio, Images, Transcription, **Reasoning** |
 | <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/gemini-color.svg" height="18"> <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/gemini-text.svg" height="14"> | Chat, Streaming, Tools, Vision, Audio, Video, Embeddings |
 | <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/anthropic-text.svg" height="12"> | Chat, Streaming, Tools, Vision, PDF Support, Structured Output |
-| <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/deepseek-color.svg" height="18"> <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/deepseek-text.svg" height="14"> | Chat (V3), Reasoning (R1), Tools, Streaming, Structured Output |
+| <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/deepseek-color.svg" height="18"> <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/deepseek-text.svg" height="14"> | Chat (V3), **Reasoning (R1)**, Tools, Streaming, Structured Output |
 
 ---
 
