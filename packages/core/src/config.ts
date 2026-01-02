@@ -11,6 +11,7 @@ export interface NodeLLMConfig {
   geminiApiBase?: string;
   deepseekApiKey?: string;
   deepseekApiBase?: string;
+  ollamaApiBase?: string;
   [key: string]: any;
 }
 
@@ -23,6 +24,7 @@ class Configuration implements NodeLLMConfig {
   public geminiApiBase?: string = process.env.GEMINI_API_BASE?.trim();
   public deepseekApiKey?: string = process.env.DEEPSEEK_API_KEY?.trim();
   public deepseekApiBase?: string = process.env.DEEPSEEK_API_BASE?.trim();
+  public ollamaApiBase?: string = process.env.OLLAMA_API_BASE?.trim() || "http://localhost:11434/v1";
 
   [key: string]: any;
 }

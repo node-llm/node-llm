@@ -65,6 +65,7 @@ LLM.configure((config) => {
   config.anthropicApiKey = process.env.ANTHROPIC_API_KEY;
   config.geminiApiKey = process.env.GEMINI_API_KEY;
   config.deepseekApiKey = process.env.DEEPSEEK_API_KEY;
+  config.ollamaApiBase = process.env.OLLAMA_API_BASE;
 });
 
 // Object style (quick provider switching)
@@ -160,6 +161,7 @@ console.log(res.content);   // Output the final answer
 | <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/gemini-color.svg" height="18"> <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/gemini-text.svg" height="14"> | Chat, Streaming, Tools, Vision, Audio, Video, Embeddings |
 | <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/anthropic-text.svg" height="12"> | Chat, Streaming, Tools, Vision, PDF Support, Structured Output |
 | <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/deepseek-color.svg" height="18"> <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/deepseek-text.svg" height="14"> | Chat (V3), **Reasoning (R1)**, Tools, Streaming, Structured Output |
+| 🦙 **Ollama** | **Local Inference**, Chat, Streaming, Tools, Vision, Embeddings |
 
 ---
 

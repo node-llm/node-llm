@@ -5,7 +5,11 @@ import { handleOpenAIError } from "./Errors.js";
 import { buildUrl } from "./utils.js";
 
 export class OpenAIModels {
-  constructor(private readonly baseUrl: string, private readonly apiKey: string) {}
+  constructor(
+    private readonly baseUrl: string, 
+    private readonly apiKey: string,
+    private readonly providerName: string = "openai"
+  ) {}
 
   async execute(): Promise<ModelInfo[]> {
     try {
@@ -22,13 +26,13 @@ export class OpenAIModels {
         
         return data.map(m => {
           const modelId = m.id;
-          const registryModel = ModelRegistry.find(modelId, "openai");
+          const registryModel = ModelRegistry.find(modelId, this.providerName);
           
           const info: ModelInfo = {
             id: modelId,
             name: registryModel?.name || Capabilities.formatDisplayName(modelId),
-            provider: "openai",
-            family: registryModel?.family || modelId,
+            provider: this.providerName,
+            family: registryModel?.family || (this.providerName === 'ollama' ? 'ollama' : modelId),
             context_window: registryModel?.context_window || Capabilities.getContextWindow(modelId),
             max_output_tokens: registryModel?.max_output_tokens || Capabilities.getMaxOutputTokens(modelId),
             modalities: registryModel?.modalities || Capabilities.getModalities(modelId),
@@ -45,12 +49,12 @@ export class OpenAIModels {
         });
       }
     } catch (_error) {
-      // Fallback to registry if API call fails (e.g. in tests without network)
+      // Fallback to registry if API call fails
     }
 
     // Fallback to registry data
     return ModelRegistry.all()
-      .filter(m => m.provider === "openai")
+      .filter(m => m.provider === this.providerName)
       .map(m => ({
           ...m,
           capabilities: Capabilities.getCapabilities(m.id)
@@ -58,6 +62,6 @@ export class OpenAIModels {
   }
 
   find(modelId: string) {
-    return ModelRegistry.find(modelId, "openai");
+    return ModelRegistry.find(modelId, this.providerName);
   }
 }

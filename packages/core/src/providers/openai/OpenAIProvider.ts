@@ -13,6 +13,7 @@ import { EmbeddingRequest, EmbeddingResponse } from "../Embedding.js";
 export interface OpenAIProviderOptions {
   apiKey: string;
   baseUrl?: string;
+  providerName?: string;
 }
 
 export class OpenAIProvider implements Provider {
@@ -39,9 +40,10 @@ export class OpenAIProvider implements Provider {
 
   constructor(private readonly options: OpenAIProviderOptions) {
     this.baseUrl = options.baseUrl ?? "https://api.openai.com/v1";
+    const providerName = options.providerName ?? "openai";
     this.chatHandler = new OpenAIChat(this.baseUrl, options.apiKey);
     this.streamingHandler = new OpenAIStreaming(this.baseUrl, options.apiKey);
-    this.modelsHandler = new OpenAIModels(this.baseUrl, options.apiKey);
+    this.modelsHandler = new OpenAIModels(this.baseUrl, options.apiKey, providerName);
     this.imageHandler = new OpenAIImage(this.baseUrl, options.apiKey);
     this.transcriptionHandler = new OpenAITranscription(this.baseUrl, options.apiKey);
     this.moderationHandler = new OpenAIModeration(this.baseUrl, options.apiKey);
