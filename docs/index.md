@@ -1,16 +1,17 @@
-<p align="left">
-  <img src="../../docs/assets/images/logo.jpg" alt="node-llm logo" width="300" />
-</p>
+---
+layout: default
+title: Home
+nav_order: 1
+permalink: /
+---
 
 # @node-llm/core
-
-[![npm version](https://img.shields.io/npm/v/@node-llm/core.svg)](https://www.npmjs.com/package/@node-llm/core)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue.svg)](https://www.typescriptlang.org/)
 
 **One unified interface for OpenAI, Anthropic, Gemini, and local models.**
 
 `node-llm` abstracts away the chaos of vendor-specific SDKs. It gives you a clean, streaming-first API with built-in support for Vision, Tools, and Structured Outputs.
+
+[Get Started](/getting-started/overview){: .btn .btn-primary .fs-5 .mb-4 .mb-md-0 .mr-2 } [View on GitHub](https://github.com/eshaiju/node-llm){: .btn .fs-5 .mb-4 .mb-md-0 }
 
 ---
 
@@ -99,22 +100,16 @@ await LLM.transcribe("meeting-recording.wav");
 
 ---
 
-## 📚 Documentation & Installation
+## 📋 Supported Providers
 
-```bash
-npm install @node-llm/core
-```
-
-**[View Full Documentation ↗](https://eshaiju.github.io/node-llm/)**
+| Provider | Supported Features |
+| :--- | :--- |
+| **OpenAI** | Chat, Streaming, Tools, Vision, Audio, Images, Transcription |
+| **Gemini** | Chat, Streaming, Tools, Vision, Audio, Video, Embeddings |
+| **Anthropic** | Chat, Streaming, Tools, Vision, PDF Support, Structured Output |
 
 ---
 
 ## 🫶 Credits
 
 Heavily inspired by the elegant design of [RubyLLM](https://rubyllm.com/).
-
----
-
-## 📄 License
-
-MIT © [node-llm contributors]

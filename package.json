@@ -8,7 +8,8 @@
   ],
   "scripts": {
     "test": "npm test --workspaces --if-present",
-    "build": "npm run build --workspaces --if-present"
+    "build": "npm run build --workspaces --if-present",
+    "docs": "cd docs && bundle install && bundle exec jekyll serve"
   },
   "keywords": [],
   "author": "",
