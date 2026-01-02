@@ -175,6 +175,14 @@ console.log(res.content);   // Output the final answer
 | **Files** | Path string or URL | Base64 buffers / distinct types |
 | **Retries** | Built-in & Configurable | Varies by SDK |
 
+## 🚀 Explore Examples
+
+Check out the `examples/` directory for ready-to-use code:
+
+- **Ollama**: [Basic Chat](examples/ollama/chat/basic.mjs), [Streaming](examples/ollama/chat/streaming.mjs), [Vision](examples/ollama/multimodal/vision.mjs), [Tools](examples/ollama/chat/tools.mjs), [List Models](examples/ollama/discovery/list.mjs)
+- **OpenAI**: [Reasoning](examples/openai/chat/reasoning.mjs), [Structured Output](examples/openai/chat/structured.mjs)
+- **Configurations**: [Custom Endpoints, Callbacks, Env Vars](examples/configuration-example.mjs)
+
 ---
 
 ## 📚 Documentation & Installation

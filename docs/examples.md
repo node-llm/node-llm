@@ -39,3 +39,25 @@ A comprehensive list of runnable examples available in the [examples/](https://g
 | `examples/anthropic/chat/tool_use.mjs` | Tool calling with Claude |
 | `examples/anthropic/multimodal/pdf.mjs` | Native PDF analysis |
 | `examples/anthropic/multimodal/vision.mjs` | Image understanding |
+
+## Ollama Examples
+
+| Example | Description |
+| :--- | :--- |
+| `examples/ollama/chat/basic.mjs` | Local model chat |
+| `examples/ollama/chat/streaming.mjs` | Streaming local inference |
+| `examples/ollama/chat/tools.mjs` | Function calling with Llama 3.1 |
+| `examples/ollama/multimodal/vision.mjs` | Multi-modal local analysis |
+| `examples/ollama/embeddings/similarity.mjs` | Vector similarity search |
+| `examples/ollama/discovery/list.mjs` | Inspecting local model library |
+
+## DeepSeek Examples
+
+| Example | Description |
+| :--- | :--- |
+| `examples/deepseek/chat/basic.mjs` | Basic chat with DeepSeek |
+| `examples/deepseek/chat/reasoning.mjs` | DeepSeek-R1 reasoning tracking |
+| `examples/deepseek/chat/streaming.mjs` | Streaming chat responses |
+| `examples/deepseek/chat/tools.mjs` | Function calling with DeepSeek |
+| `examples/deepseek/chat/structured.mjs` | Structured JSON output |
+| `examples/deepseek/embeddings/basic.mjs` | Generating embeddings |

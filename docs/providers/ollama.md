@@ -1,8 +1,8 @@
 ---
 layout: default
 title: Ollama
-parent: Providers
 nav_order: 5
+parent: Providers
 ---
 
 # Ollama Provider
@@ -16,7 +16,7 @@ Standard configuration for local inference (defaults to `http://localhost:11434/
 ```javascript
 import { LLM } from "@node-llm/core";
 
-// Simplest setup (defaults to localhost)
+// Defaults to http://localhost:11434/v1
 LLM.configure({
   provider: "ollama",
 });
@@ -24,7 +24,7 @@ LLM.configure({
 
 ### Custom URL
 
-If your Ollama instance is running elsewhere:
+If your Ollama instance is running on a different machine or port:
 
 ```javascript
 LLM.configure({
@@ -33,34 +33,51 @@ LLM.configure({
 });
 ```
 
-## Features
+## Specific Parameters
 
-Since `node-llm` interacts with Ollama's OpenAI-compatible API, most features are supported out-of-the-box.
-
-### Chat & Streaming
+You can pass Ollama/OpenAI-compatible parameters using `.withParams()`.
 
 ```javascript
-const chat = LLM.chat("llama3");
-const response = await chat.ask("Hello from local model!");
-console.log(response.content);
+const chat = LLM.chat("llama3")
+  .withParams({ 
+    temperature: 0.7,
+    seed: 42,
+    num_ctx: 8192, // Ollama specific context size
+  });
 ```
 
-### Vision (Multimodal)
+## Features
 
-Use vision-capable models like `llava` or `llama3.2-vision`.
+- **Models**: Supports any model pulled via `ollama pull`.
+- **Vision**: Use vision-capable models like `llama3.2-vision` or `llava`.
+- **Tools**: Fully supported for models with tool-calling capabilities (e.g., `llama3.1`).
+- **Embeddings**: High-performance local vector generation.
+- **Model Discovery**: Inspect your local library and model metadata via `LLM.listModels()`.
+
+### Multimodal (Vision)
 
 ```javascript
-const chat = LLM.chat("llama3.2-vision");
 const response = await chat.ask("Describe this image", {
   files: ["./image.png"]
 });
 ```
 
-### Tools (Function Calling)
+### Model Discovery
 
-Ollama models that support tool calling (like `llama3.1`) work automatically with `node-llm`'s unified tool system.
+List all models currently pulled in your Ollama library to inspect their context windows and features:
 
 ```javascript
-// ... define tools ...
-await chat.withTools(tools).ask("What's the weather?");
+const models = await LLM.listModels();
+console.table(models);
 ```
+
+## Limitations
+
+The following features are **not** supported natively by Ollama's OpenAI-compatible API:
+
+*   **Transcription** (Whisper): Not available via the `/v1/audio` endpoint.
+*   **Image Generation**: Not available via the `/v1/images` endpoint.
+*   **Moderation**: Not supported.
+
+For full feature parity locally, consider using [LocalAI](https://localai.io/) and connecting via the [OpenAI Provider](./openai.md) with a custom `openaiApiBase`.
+

@@ -6,17 +6,24 @@ import { buildUrl } from "./utils.js";
 
 export class OpenAIEmbedding {
   constructor(
-    private readonly baseUrl: string,
-    private readonly apiKey: string
+    protected readonly baseUrl: string,
+    protected readonly apiKey: string
   ) {}
+
+  protected getProviderName(): string {
+    return "openai";
+  }
+
+  protected validateModel(model: string): void {
+    if (Capabilities.getModelType(model) !== "embeddings") {
+      throw new Error(`Model ${model} does not support embeddings.`);
+    }
+  }
 
   async execute(request: EmbeddingRequest): Promise<EmbeddingResponse> {
     const model = request.model || DEFAULT_MODELS.EMBEDDING;
 
-    // Validate that the model is an embedding model
-    if (Capabilities.getModelType(model) !== "embedding") {
-      throw new Error(`Model ${model} does not support embeddings.`);
-    }
+    this.validateModel(model);
 
     const body: any = {
       input: request.input,
@@ -44,15 +51,15 @@ export class OpenAIEmbedding {
       await handleOpenAIError(response, request.model || DEFAULT_MODELS.EMBEDDING);
     }
 
-    const json = await response.json();
+    const { data, model: responseModel, usage } = await response.json();
 
     // Extract vectors from the response
-    const vectors = json.data.map((item: any) => item.embedding);
+    const vectors = data.map((item: any) => item.embedding);
 
     return {
       vectors,
-      model: json.model,
-      input_tokens: json.usage.prompt_tokens,
+      model: responseModel,
+      input_tokens: usage.prompt_tokens,
       dimensions: vectors[0]?.length || 0,
     };
   }

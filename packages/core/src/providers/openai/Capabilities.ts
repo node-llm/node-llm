@@ -29,7 +29,7 @@ export class Capabilities {
 
   static supportsTools(modelId: string): boolean {
     const model = ModelRegistry.find(modelId, "openai");
-    if (model?.capabilities?.includes("function_calling")) return true;
+    if (model?.capabilities?.includes("function_calling") || model?.capabilities?.includes("tools")) return true;
     
     return !/embedding|moderation|dall-e|tts|whisper/.test(modelId);
   }
@@ -80,9 +80,10 @@ export class Capabilities {
     return /o\d|gpt-5/.test(modelId);
   }
 
-  static getModelType(modelId: string): "embedding" | "audio" | "moderation" | "image" | "chat" | "audio_transcription" | "audio_speech" {
+  static getModelType(modelId: string): "embeddings" | "audio" | "moderation" | "image" | "chat" | "audio_transcription" | "audio_speech" {
+     if (this.supportsEmbeddings(modelId)) return "embeddings";
      if (/moderation/.test(modelId)) return "moderation";
-     if (/embedding/.test(modelId)) return "embedding";
+     if (/embedding/.test(modelId)) return "embeddings";
      if (/dall-e|image/.test(modelId)) return "image";
      if (/whisper|transcribe/.test(modelId)) return "audio_transcription";
      if (/tts|speech/.test(modelId)) return "audio_speech";

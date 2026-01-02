@@ -13,18 +13,17 @@ import { EmbeddingRequest, EmbeddingResponse } from "../Embedding.js";
 export interface OpenAIProviderOptions {
   apiKey: string;
   baseUrl?: string;
-  providerName?: string;
 }
 
 export class OpenAIProvider implements Provider {
-  private readonly baseUrl: string;
-  private readonly chatHandler: OpenAIChat;
-  private readonly streamingHandler: OpenAIStreaming;
-  private readonly modelsHandler: OpenAIModels;
-  private readonly imageHandler: OpenAIImage;
-  private readonly transcriptionHandler: OpenAITranscription;
-  private readonly moderationHandler: OpenAIModeration;
-  private readonly embeddingHandler: OpenAIEmbedding;
+  protected baseUrl: string;
+  protected chatHandler: OpenAIChat;
+  protected streamingHandler: OpenAIStreaming;
+  protected modelsHandler: OpenAIModels;
+  protected imageHandler: OpenAIImage;
+  protected transcriptionHandler: OpenAITranscription;
+  protected moderationHandler: OpenAIModeration;
+  protected embeddingHandler: OpenAIEmbedding;
 
   public capabilities = {
     supportsVision: (model: string) => Capabilities.supportsVision(model),
@@ -35,15 +34,14 @@ export class OpenAIProvider implements Provider {
     supportsTranscription: (model: string) => Capabilities.supportsTranscription(model),
     supportsModeration: (model: string) => Capabilities.supportsModeration(model),
     supportsReasoning: (model: string) => Capabilities.supportsReasoning(model),
-    getContextWindow: (model: string) => Capabilities.getContextWindow(model),
+    getContextWindow: (model: string) => Capabilities.getContextWindow(model) || null,
   };
 
-  constructor(private readonly options: OpenAIProviderOptions) {
+  constructor(protected readonly options: OpenAIProviderOptions) {
     this.baseUrl = options.baseUrl ?? "https://api.openai.com/v1";
-    const providerName = options.providerName ?? "openai";
     this.chatHandler = new OpenAIChat(this.baseUrl, options.apiKey);
     this.streamingHandler = new OpenAIStreaming(this.baseUrl, options.apiKey);
-    this.modelsHandler = new OpenAIModels(this.baseUrl, options.apiKey, providerName);
+    this.modelsHandler = new OpenAIModels(this.baseUrl, options.apiKey);
     this.imageHandler = new OpenAIImage(this.baseUrl, options.apiKey);
     this.transcriptionHandler = new OpenAITranscription(this.baseUrl, options.apiKey);
     this.moderationHandler = new OpenAIModeration(this.baseUrl, options.apiKey);

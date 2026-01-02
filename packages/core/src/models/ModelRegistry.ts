@@ -4,9 +4,6 @@ import { modelsData } from "./models.js";
 export class ModelRegistry {
     private static models: Model[] = modelsData as unknown as Model[];
 
-    /**
-     * Find a model by its ID.
-     */
     static find(modelId: string, provider?: string): Model | undefined {
         return this.models.find(m => 
             (m.id === modelId || m.family === modelId) && (!provider || m.provider === provider)

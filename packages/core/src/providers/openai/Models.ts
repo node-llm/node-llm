@@ -1,17 +1,49 @@
 import { ModelInfo } from "../Provider.js";
 import { Capabilities } from "./Capabilities.js";
 import { ModelRegistry } from "../../models/ModelRegistry.js";
-import { handleOpenAIError } from "./Errors.js";
 import { buildUrl } from "./utils.js";
 
 export class OpenAIModels {
   constructor(
-    private readonly baseUrl: string, 
-    private readonly apiKey: string,
-    private readonly providerName: string = "openai"
+    protected readonly baseUrl: string, 
+    protected readonly apiKey: string
   ) {}
 
+  protected getProviderName(): string {
+    return "openai";
+  }
+
+  protected formatDisplayName(modelId: string): string {
+    const model = ModelRegistry.find(modelId, this.getProviderName());
+    if (model?.name && model.name !== modelId) return model.name;
+    return Capabilities.formatDisplayName(modelId);
+  }
+
+  protected getContextWindow(modelId: string): number | null {
+    return ModelRegistry.getContextWindow(modelId, this.getProviderName()) || Capabilities.getContextWindow(modelId) || null;
+  }
+
+  protected getMaxOutputTokens(modelId: string): number | null {
+    return ModelRegistry.getMaxOutputTokens(modelId, this.getProviderName()) || Capabilities.getMaxOutputTokens(modelId) || null;
+  }
+
+  protected getModalities(modelId: string) {
+    const model = ModelRegistry.find(modelId, this.getProviderName());
+    return model?.modalities || Capabilities.getModalities(modelId);
+  }
+
+  protected getCapabilities(modelId: string): string[] {
+    const model = ModelRegistry.find(modelId, this.getProviderName());
+    return model?.capabilities || Capabilities.getCapabilities(modelId);
+  }
+
+  protected getPricing(modelId: string) {
+    const model = ModelRegistry.find(modelId, this.getProviderName());
+    return model?.pricing || Capabilities.getPricing(modelId);
+  }
+
   async execute(): Promise<ModelInfo[]> {
+    const provider = this.getProviderName();
     try {
       const response = await fetch(buildUrl(this.baseUrl, '/models'), {
         method: "GET",
@@ -26,26 +58,24 @@ export class OpenAIModels {
         
         return data.map(m => {
           const modelId = m.id;
-          const registryModel = ModelRegistry.find(modelId, this.providerName);
+          const registryModel = ModelRegistry.find(modelId, provider);
           
-          const info: ModelInfo = {
+          return {
             id: modelId,
-            name: registryModel?.name || Capabilities.formatDisplayName(modelId),
-            provider: this.providerName,
-            family: registryModel?.family || (this.providerName === 'ollama' ? 'ollama' : modelId),
-            context_window: registryModel?.context_window || Capabilities.getContextWindow(modelId),
-            max_output_tokens: registryModel?.max_output_tokens || Capabilities.getMaxOutputTokens(modelId),
-            modalities: registryModel?.modalities || Capabilities.getModalities(modelId),
-            capabilities: Capabilities.getCapabilities(modelId),
-            pricing: registryModel?.pricing || Capabilities.getPricing(modelId),
+            name: this.formatDisplayName(modelId),
+            provider: provider,
+            family: registryModel?.family || modelId,
+            context_window: this.getContextWindow(modelId),
+            max_output_tokens: this.getMaxOutputTokens(modelId),
+            modalities: this.getModalities(modelId),
+            capabilities: this.getCapabilities(modelId),
+            pricing: this.getPricing(modelId),
             metadata: {
               ...(registryModel?.metadata || {}),
               created: m.created,
               owned_by: m.owned_by
             }
           };
-          
-          return info;
         });
       }
     } catch (_error) {
@@ -54,14 +84,21 @@ export class OpenAIModels {
 
     // Fallback to registry data
     return ModelRegistry.all()
-      .filter(m => m.provider === this.providerName)
-      .map(m => ({
-          ...m,
-          capabilities: Capabilities.getCapabilities(m.id)
+      .filter((m: any) => m.provider === provider)
+      .map((m: any) => ({
+        id: m.id,
+        name: m.name,
+        family: m.family || m.id,
+        provider: provider,
+        context_window: m.context_window ?? null,
+        capabilities: m.capabilities,
+        modalities: m.modalities,
+        max_output_tokens: m.max_output_tokens ?? null,
+        pricing: m.pricing || {}
       })) as unknown as ModelInfo[]; 
   }
 
   find(modelId: string) {
-    return ModelRegistry.find(modelId, this.providerName);
+    return ModelRegistry.find(modelId, this.getProviderName());
   }
 }
