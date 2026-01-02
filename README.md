@@ -3,7 +3,7 @@
 </p>
 
 # @node-llm/core
-**One unified interface for OpenAI, Anthropic, Gemini, and local models.**
+**One unified interface for OpenAI, Anthropic, Gemini, DeepSeek, and local models.**
 
 `node-llm` abstracts away the chaos of vendor-specific SDKs. It gives you a clean, streaming-first API with built-in support for Vision, Tools, and Structured Outputs.
 

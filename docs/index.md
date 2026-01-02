@@ -7,7 +7,7 @@ permalink: /
 
 # @node-llm/core
 
-**One unified interface for OpenAI, Anthropic, Gemini, and local models.**
+**One unified interface for OpenAI, Anthropic, Gemini, DeepSeek, and local models.**
 
 `node-llm` abstracts away the chaos of vendor-specific SDKs. It gives you a clean, streaming-first API with built-in support for Vision, Tools, and Structured Outputs.
 
@@ -107,6 +107,7 @@ await LLM.transcribe("meeting-recording.wav");
 | **OpenAI** | Chat, Streaming, Tools, Vision, Audio, Images, Transcription |
 | **Gemini** | Chat, Streaming, Tools, Vision, Audio, Video, Embeddings |
 | **Anthropic** | Chat, Streaming, Tools, Vision, PDF Support, Structured Output |
+| **DeepSeek** | Chat (V3), Reasoning (R1), Tools, Streaming, Structured Output |
 
 ---
 
