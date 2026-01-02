@@ -3,9 +3,9 @@
 </p>
 
 # @node-llm/core
-**One unified interface for OpenAI, Anthropic, Gemini, DeepSeek, and local models.**
+**An opinionated architectural layer for using Large Language Models in Node.js.**
 
-**node-llm** abstracts away the chaos of vendor-specific SDKs. It gives you a clean, streaming-first API with built-in support for Vision, Tools, and Structured Outputs.
+Build chatbots, autonomous agents, and RAG pipelines without the SDK fatigue. node-llm provides a unified, production-oriented API for interacting with multiple LLM providers (OpenAI, Gemini, Anthropic, DeepSeek, Ollama, etc.) without coupling your application to any single SDK.
 
 <br/>
 
@@ -30,107 +30,115 @@
 [![npm version](https://img.shields.io/npm/v/@node-llm/core.svg)](https://www.npmjs.com/package/@node-llm/core)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue.svg)](https://www.typescriptlang.org/)
+
 ---
 
-## ⚡ Quick Example
+## ⚡ The Golden Path
 
 ```ts
 import { LLM } from "@node-llm/core";
 
-// Configure your provider
-LLM.configure((config) => {
-  config.openaiApiKey = process.env.OPENAI_API_KEY;
-});
-
+// 1. Configure once
 LLM.configure({ provider: "openai" });
 
-// Basic Chat
+// 2. Chat (High-level request/response)
 const chat = LLM.chat("gpt-4o");
-const response = await chat.ask("Explain Node.js");
+const response = await chat.ask("Explain event-driven architecture");
 console.log(response.content);
 
-// Streaming
-for await (const chunk of chat.stream("Explain Node.js")) {
+// 3. Streaming (Standard AsyncIterator)
+for await (const chunk of chat.stream("Explain event-driven architecture")) {
   process.stdout.write(chunk.content);
 }
 ```
 
 ---
 
-## 🔧 Configuration
+## Why node-llm?
 
-`node-llm` provides a flexible configuration system:
+Most AI integrations today are provider-specific, SDK-driven, and leaky at abstraction boundaries. This creates long-term architectural risk. Switching models should not mean a total rewrite of your business logic.
+
+node-llm exists to solve **architectural problems**, not just provide API access.
+
+### Strategic Goals
+
+- **Provider Isolation**: Your application logic never touches a provider-specific SDK.
+- **Unified Mental Model**: Chat, streaming, tools, and structured outputs feel identical across providers.
+- **Production-Ready**: Streaming, retries, and errors are first-class concerns. 
+- **The "Standard Library" Voice**: It provides a beautiful, native-feeling API for modern Node.js.
+
+### Non-Goals
+
+- It is **not** a thin wrapper that mirrors every provider's unique API knobs.
+- It is **not** a UI framework or a simple chatbot builder.
+- It prioritizes **architectural clarity** over raw SDK convenience.
+
+---
+
+## 🔧 Strategic Configuration
+
+node-llm provides a flexible configuration system designed for enterprise usage:
 
 ```ts
-// Callback style (recommended for multiple providers)
+// Recommended for multi-provider pipelines
 LLM.configure((config) => {
   config.openaiApiKey = process.env.OPENAI_API_KEY;
   config.anthropicApiKey = process.env.ANTHROPIC_API_KEY;
-  config.geminiApiKey = process.env.GEMINI_API_KEY;
-  config.deepseekApiKey = process.env.DEEPSEEK_API_KEY;
   config.ollamaApiBase = process.env.OLLAMA_API_BASE;
 });
 
-// Object style (quick provider switching)
-LLM.configure({
-  openaiApiKey: "sk-...",
-  provider: "openai"
-});
+// Switch providers at the framework level
+LLM.configure({ provider: "anthropic" });
 
-// Custom endpoints (e.g., Azure OpenAI)
+// Support for Custom Endpoints (e.g., Azure or LocalAI)
 LLM.configure({
-  openaiApiKey: process.env.AZURE_OPENAI_API_KEY,
-  openaiApiBase: process.env.AZURE_OPENAI_API_BASE_ENDPOINT,
-  provider: "openai"
+  openaiApiKey: process.env.AZURE_KEY,
+  openaiApiBase: "https://your-resource.openai.azure.com/openai/deployments/...",
 });
 ```
 
-**[View Full Configuration Guide →](docs/getting_started/configuration.md)**
+**[Full Configuration Guide →](docs/getting_started/configuration.md)**
+
+---
 
 ---
 
 ## 🔮 Capabilities
 
 ### 💬 Unified Chat
-Stop rewriting code for every provider. `node-llm` normalizes inputs and outputs.
-
+Stop rewriting code for every provider. `node-llm` normalizes inputs and outputs into a single, predictable mental model.
 ```ts
 const chat = LLM.chat(); // Defaults to GPT-4o
 await chat.ask("Hello world");
 ```
 
 ### 👁️ Smart Vision & Files
-Pass images, PDFs, or audio files directly. We handle the base64 encoding and MIME types.
-
+Pass images, PDFs, or audio files directly. We handle the heavy lifting: fetching remote URLs, base64 encoding, and MIME type mapping.
 ```ts
 await chat.ask("Analyze this interface", { 
-  files: ["./screenshot.png", "./specs.pdf"] 
+  files: ["./screenshot.png", "https://example.com/spec.pdf"] 
 });
 ```
 
 ### 🛠️ Auto-Executing Tools
-Define tools once, and the library manages the execution loop for you.
-
+Define tools once; node-llm manages the recursive execution loop for you, keeping your controller logic clean.
 ```ts
 const tools = [{
-  type: 'function',
-  function: { name: 'get_weather', ... },
-  handler: async ({ loc }) => `Sunny in ${loc}`
+  handler: async ({ loc }) => `Sunny in ${loc}`,
+  function: { name: 'get_weather', description: 'Get current weather', parameters: { ... } }
 }];
 
 await chat.withTools(tools).ask("Weather in Tokyo?");
 ```
 
 ### ✨ Structured Output
-Get type-safe JSON back using **Zod** schemas.
-
+Get type-safe, validated JSON back using **Zod** schemas.
 ```ts
 import { z } from "zod";
-
 const Product = z.object({ name: z.string(), price: z.number() });
-const res = await chat.withSchema(Product).ask("Generate a gadget");
 
-console.log(res.parsed.name); // Type-safe access
+const res = await chat.withSchema(Product).ask("Generate a gadget");
+console.log(res.parsed.name); // Full type-safety
 ```
 
 ### 🎨 Image Generation
@@ -144,47 +152,36 @@ await LLM.transcribe("meeting-recording.wav");
 ```
 
 ### 🧠 Deep Reasoning
-Access the thought process of models like **DeepSeek R1** or **OpenAI o1/o3** using the `.reasoning` field.
-
+Direct access to the thought process of models like **DeepSeek R1** or **OpenAI o1/o3** using the `.reasoning` field.
 ```ts
-const chat = LLM.chat("deepseek-reasoner");
-const res = await chat.ask("Solve a complex puzzle");
-
-console.log(res.reasoning); // Output the model's inner thought process
-console.log(res.content);   // Output the final answer
+const res = await LLM.chat("deepseek-reasoner").ask("Solve this logical puzzle");
+console.log(res.reasoning); // Chain-of-thought
 ```
 
 ---
+---
 
-## � Supported Providers
+## 🚀 Why use this over official SDKs?
 
-| Provider | Supported Features |
-| :--- | :--- |
-| <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/openai.svg" height="18"> <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/openai-text.svg" height="18"> | Chat, Streaming, Tools, Vision, Audio, Images, Transcription, **Reasoning** |
-| <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/gemini-color.svg" height="18"> <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/gemini-text.svg" height="14"> | Chat, Streaming, Tools, Vision, Audio, Video, Embeddings |
-| <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/anthropic-text.svg" height="12"> | Chat, Streaming, Tools, Vision, PDF Support, Structured Output |
-| <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/deepseek-color.svg" height="18"> <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/deepseek-text.svg" height="14"> | Chat (V3), **Reasoning (R1)**, Tools, Streaming, Structured Output |
-| <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/ollama.svg" height="18"> <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/ollama-text.svg" height="12"> | **Local Inference**, Chat, Streaming, Tools, Vision, Embeddings |
+| Feature | node-llm | Official SDKs | Architectural Impact |
+| :--- | :--- | :--- | :--- |
+| **Provider Logic** | Transparently Handled | Exposed to your code | **Low Coupling** |
+| **Streaming** | Standard `AsyncIterator` | Vendor-specific Events | **Predictable Data Flow** |
+| **Tool Loops** | Automated Recursion | Manual implementation | **Reduced Boilerplate** |
+| **Files/Vision** | Intelligent Path/URL handling | Base64/Buffer management | **Cleaner Service Layer** |
+| **Configuration** | Centralized & Global | Per-instance initialization | **Easier Lifecycle Mgmt** |
 
 ---
 
-## �🚀 Why use this over official SDKs?
+## 📋 Supported Providers
 
-| Feature | node-llm | Official SDKs |
-| :--- | :--- | :--- |
-| **API Style** | Consistent across all providers | Different for everyone |
-| **Streaming** | Standard `AsyncIterator` | Callbacks/Events/Streams mixed |
-| **Tools** | Automatic Execution Loop | Manual parsing & recursion |
-| **Files** | Path string or URL | Base64 buffers / distinct types |
-| **Retries** | Built-in & Configurable | Varies by SDK |
-
-## 🚀 Explore Examples
-
-Check out the `examples/` directory for ready-to-use code:
-
-- **Ollama**: [Basic Chat](examples/ollama/chat/basic.mjs), [Streaming](examples/ollama/chat/streaming.mjs), [Vision](examples/ollama/multimodal/vision.mjs), [Tools](examples/ollama/chat/tools.mjs), [List Models](examples/ollama/discovery/list.mjs)
-- **OpenAI**: [Reasoning](examples/openai/chat/reasoning.mjs), [Structured Output](examples/openai/chat/structured.mjs)
-- **Configurations**: [Custom Endpoints, Callbacks, Env Vars](examples/configuration-example.mjs)
+| Provider | Supported Features |
+| :--- | :--- |
+| <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/openai.svg" height="18"> **OpenAI** | Chat, Streaming, Tools, Vision, Audio, Images, Transcription, **Reasoning** |
+| <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/gemini-color.svg" height="18"> **Gemini** | Chat, Streaming, Tools, Vision, Audio, Video, Embeddings |
+| <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/anthropic-text.svg" height="12"> **Anthropic** | Chat, Streaming, Tools, Vision, PDF, Structured Output |
+| <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/deepseek-color.svg" height="18"> **DeepSeek** | Chat (V3), **Reasoning (R1)**, Tools, Streaming |
+| <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/ollama.svg" height="18"> **Ollama** | **Local Inference**, Chat, Streaming, Tools, Vision, Embeddings |
 
 ---
 
