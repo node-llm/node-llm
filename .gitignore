@@ -42,3 +42,10 @@ yarn-error.log*
 # =========================
 coverage/
 run_all_examples.sh
+
+# =========================
+# Documentation Site
+# =========================
+docs/_site/
+docs/.jekyll-cache/
+docs/.jekyll-metadata

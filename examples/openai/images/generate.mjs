@@ -3,6 +3,10 @@ import { LLM } from "../../../packages/core/dist/index.js";
 import fs from "fs/promises";
 
 async function main() {
+  LLM.configure((config) => {
+    config.openaiApiKey = process.env.OPENAI_API_KEY;
+  });
+  
   LLM.configure({ provider: "openai" });
 
   console.log("🎨 Generating image...");

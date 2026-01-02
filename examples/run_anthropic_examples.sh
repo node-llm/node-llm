@@ -7,7 +7,7 @@ cd packages/core && npm run build
 cd ../..
 
 # Get API Key
-ANTHROPIC_API_KEY=$(grep ANTHROPIC_API_KEY .env | cut -d '=' -f2)
+ANTHROPIC_API_KEY=$(grep "^ANTHROPIC_API_KEY=" .env | cut -d '=' -f2)
 export ANTHROPIC_API_KEY
 
 if [ -z "$ANTHROPIC_API_KEY" ]; then

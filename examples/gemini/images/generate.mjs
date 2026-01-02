@@ -3,6 +3,10 @@ import { LLM } from "../../../packages/core/dist/index.js";
 import fs from "fs/promises";
 
 async function main() {
+  LLM.configure((config) => {
+    config.geminiApiKey = process.env.GEMINI_API_KEY;
+  });
+  
   LLM.configure({ provider: "gemini" });
 
   try {

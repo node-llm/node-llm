@@ -7,7 +7,7 @@ cd packages/core && npm run build
 cd ../..
 
 # Get API Key
-OPENAI_API_KEY=$(grep OPENAI_API_KEY .env | cut -d '=' -f2)
+OPENAI_API_KEY=$(grep "^OPENAI_API_KEY=" .env | cut -d '=' -f2)
 export OPENAI_API_KEY
 
 echo "Found API Key: ${OPENAI_API_KEY:0:5}..."

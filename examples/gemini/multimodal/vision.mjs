@@ -2,6 +2,10 @@ import "dotenv/config";
 import { LLM } from "../../../packages/core/dist/index.js";
 
 async function main() {
+  LLM.configure((config) => {
+    config.geminiApiKey = process.env.GEMINI_API_KEY;
+  });
+  
   LLM.configure({ provider: "gemini" });
 
   const imageUrl = "https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Gnome-face-smile.svg/1200px-Gnome-face-smile.svg.png";

@@ -34,15 +34,50 @@
 ```ts
 import { LLM } from "@node-llm/core";
 
-// 1. Configure once
+// Configure your provider
+LLM.configure((config) => {
+  config.openaiApiKey = process.env.OPENAI_API_KEY;
+});
+
 LLM.configure({ provider: "openai" });
 
-// 2. Chat with streaming
+// Chat with streaming
 const chat = LLM.chat("gpt-4o");
 for await (const chunk of chat.stream("Explain Node.js")) {
   process.stdout.write(chunk.content);
 }
 ```
+
+---
+
+## 🔧 Configuration
+
+`node-llm` provides a flexible configuration system:
+
+```ts
+// Callback style (recommended for multiple providers)
+LLM.configure((config) => {
+  config.openaiApiKey = process.env.OPENAI_API_KEY;
+  config.anthropicApiKey = process.env.ANTHROPIC_API_KEY;
+  config.geminiApiKey = process.env.GEMINI_API_KEY;
+  config.deepseekApiKey = process.env.DEEPSEEK_API_KEY;
+});
+
+// Object style (quick provider switching)
+LLM.configure({
+  openaiApiKey: "sk-...",
+  provider: "openai"
+});
+
+// Custom endpoints (e.g., Azure OpenAI)
+LLM.configure({
+  openaiApiKey: process.env.AZURE_OPENAI_API_KEY,
+  openaiApiBase: process.env.AZURE_OPENAI_API_BASE_ENDPOINT,
+  provider: "openai"
+});
+```
+
+**[View Full Configuration Guide →](docs/CONFIGURATION.md)**
 
 ---
 

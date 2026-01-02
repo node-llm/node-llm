@@ -15,7 +15,10 @@ describe("DeepSeek Discovery Integration (VCR)", { timeout: 30000 }, () => {
   it("should list models", async ({ task }) => {
     polly = setupVCR(task.name, "deepseek");
 
-    LLM.configure({ provider: "deepseek" });
+    LLM.configure({
+      deepseekApiKey: process.env.DEEPSEEK_API_KEY,
+      provider: "deepseek",
+    });
     const models = await LLM.listModels();
 
     expect(models.length).toBeGreaterThan(0);

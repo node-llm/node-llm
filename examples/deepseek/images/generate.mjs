@@ -2,6 +2,10 @@ import "dotenv/config";
 import { LLM } from "../../../packages/core/dist/index.js";
 
 async function main() {
+  LLM.configure((config) => {
+    config.deepseekApiKey = process.env.DEEPSEEK_API_KEY;
+  });
+  
   LLM.configure({ provider: "deepseek" });
   
   console.log("Attempting to generate image with DeepSeek...");

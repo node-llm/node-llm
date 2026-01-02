@@ -16,7 +16,7 @@ import { LLM } from "@node-llm/core";
 
 LLM.configure({
   provider: "openai",
-  apiKey: process.env.OPENAI_API_KEY, // Optional if set in env
+  openaiApiKey: process.env.OPENAI_API_KEY, // Optional if set in env
 });
 ```
 

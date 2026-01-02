@@ -15,7 +15,10 @@ describe("Anthropic Models Integration (VCR)", { timeout: 30000 }, () => {
   it("should list available models", async ({ task }) => {
     polly = setupVCR(task.name, "anthropic");
 
-    LLM.configure({ provider: "anthropic" });
+    LLM.configure({
+      anthropicApiKey: process.env.ANTHROPIC_API_KEY,
+      provider: "anthropic",
+    });
     const models = await LLM.listModels();
 
     expect(models).toBeDefined();

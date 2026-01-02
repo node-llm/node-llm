@@ -14,8 +14,10 @@ describe("Gemini Parameters Integration (VCR)", { timeout: 30000 }, () => {
 
   it("should respect max_tokens parameter", async ({ task }) => {
     polly = setupVCR(task.name, "gemini");
-
-    LLM.configure({ provider: "gemini" });
+    LLM.configure({
+      geminiApiKey: process.env.GEMINI_API_KEY,
+      provider: "gemini",
+    });
     const chat = LLM.chat("gemini-2.0-flash");
 
     const response = await chat.ask("Write a long poem about the sea.", {

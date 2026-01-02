@@ -4,10 +4,11 @@ import 'dotenv/config';
 async function chatExample() {
   console.log('=== Chat Example ===\n');
   
-  process.env.OPENAI_API_KEY = process.env.AZURE_OPENAI_API_KEY;
-  process.env.OPENAI_API_BASE = process.env.AZURE_OPENAI_API_BASE_ENDPOINT;
-  
-  LLM.configure({ provider: 'openai' });
+  LLM.configure({ 
+    provider: 'openai',
+    openaiApiKey: process.env.AZURE_OPENAI_API_KEY,
+    openaiApiBase: process.env.AZURE_OPENAI_API_BASE_ENDPOINT
+  });
 
   const chat = LLM.chat('gpt-4').withRequestOptions({
     headers: { 'api-key': process.env.AZURE_OPENAI_API_KEY }
@@ -21,10 +22,11 @@ async function chatExample() {
 async function streamingExample() {
   console.log('\n=== Streaming Example ===\n');
   
-  process.env.OPENAI_API_KEY = process.env.AZURE_OPENAI_API_KEY;
-  process.env.OPENAI_API_BASE = process.env.AZURE_OPENAI_API_BASE_ENDPOINT;
-  
-  LLM.configure({ provider: 'openai' });
+  LLM.configure({ 
+    provider: 'openai',
+    openaiApiKey: process.env.AZURE_OPENAI_API_KEY,
+    openaiApiBase: process.env.AZURE_OPENAI_API_BASE_ENDPOINT
+  });
 
   const chat = LLM.chat('gpt-4').withRequestOptions({
     headers: { 'api-key': process.env.AZURE_OPENAI_API_KEY }
@@ -45,10 +47,11 @@ async function embeddingExample() {
     return;
   }
   
-  process.env.OPENAI_API_KEY = process.env.EMBEDDING_API_KEY;
-  process.env.OPENAI_API_BASE = process.env.EMBEDDING_API_ENDPOINT;
-  
-  LLM.configure({ provider: 'openai' });
+  LLM.configure({ 
+    provider: 'openai',
+    openaiApiKey: process.env.EMBEDDING_API_KEY,
+    openaiApiBase: process.env.EMBEDDING_API_ENDPOINT
+  });
 
   const model = process.env.EMBEDDING_MODEL;
 
@@ -65,10 +68,11 @@ async function embeddingExample() {
 async function imageExample() {
   console.log('\n=== Image Generation Example ===\n');
   
-  process.env.OPENAI_API_KEY = process.env.AZURE_OPENAI_API_KEY;
-  process.env.OPENAI_API_BASE = process.env.AZURE_OPENAI_API_BASE_ENDPOINT;
-  
-  LLM.configure({ provider: 'openai' });
+  LLM.configure({ 
+    provider: 'openai',
+    openaiApiKey: process.env.AZURE_OPENAI_API_KEY,
+    openaiApiBase: process.env.AZURE_OPENAI_API_BASE_ENDPOINT
+  });
 
   const image = await LLM.paint('A sunset over mountains', {
     model: 'dall-e-3',
@@ -82,10 +86,11 @@ async function imageExample() {
 async function moderationExample() {
   console.log('\n=== Moderation Example ===\n');
   
-  process.env.OPENAI_API_KEY = process.env.AZURE_OPENAI_API_KEY;
-  process.env.OPENAI_API_BASE = process.env.AZURE_OPENAI_API_BASE_ENDPOINT;
-  
-  LLM.configure({ provider: 'openai' });
+  LLM.configure({ 
+    provider: 'openai',
+    openaiApiKey: process.env.AZURE_OPENAI_API_KEY,
+    openaiApiBase: process.env.AZURE_OPENAI_API_BASE_ENDPOINT
+  });
 
   const result = await LLM.moderate('This is a friendly message', {
     headers: { 'api-key': process.env.AZURE_OPENAI_API_KEY }
@@ -98,10 +103,11 @@ async function moderationExample() {
 async function transcriptionExample() {
   console.log('\n=== Transcription Example ===\n');
   
-  process.env.OPENAI_API_KEY = process.env.AZURE_OPENAI_API_KEY;
-  process.env.OPENAI_API_BASE = process.env.AZURE_OPENAI_API_BASE_ENDPOINT;
-  
-  LLM.configure({ provider: 'openai' });
+  LLM.configure({ 
+    provider: 'openai',
+    openaiApiKey: process.env.AZURE_OPENAI_API_KEY,
+    openaiApiBase: process.env.AZURE_OPENAI_API_BASE_ENDPOINT
+  });
 
   // Note: You need an actual audio file for this to work
   // const result = await LLM.transcribe('path/to/audio.mp3', {
@@ -115,10 +121,11 @@ async function transcriptionExample() {
 async function modelsExample() {
   console.log('\n=== List Models Example ===\n');
   
-  process.env.OPENAI_API_KEY = process.env.AZURE_OPENAI_API_KEY;
-  process.env.OPENAI_API_BASE = process.env.AZURE_OPENAI_API_BASE_ENDPOINT;
-  
-  LLM.configure({ provider: 'openai' });
+  LLM.configure({ 
+    provider: 'openai',
+    openaiApiKey: process.env.AZURE_OPENAI_API_KEY,
+    openaiApiBase: process.env.AZURE_OPENAI_API_BASE_ENDPOINT
+  });
 
   const models = await LLM.models({
     headers: { 'api-key': process.env.AZURE_OPENAI_API_KEY }
@@ -131,10 +138,11 @@ async function modelsExample() {
 async function assumeModelExistsExample() {
   console.log('\n=== Assume Model Exists Example ===\n');
   
-  process.env.OPENAI_API_KEY = process.env.AZURE_OPENAI_API_KEY;
-  process.env.OPENAI_API_BASE = process.env.AZURE_OPENAI_API_BASE_ENDPOINT;
-  
-  LLM.configure({ provider: 'openai' });
+  LLM.configure({ 
+    provider: 'openai',
+    openaiApiKey: process.env.AZURE_OPENAI_API_KEY,
+    openaiApiBase: process.env.AZURE_OPENAI_API_BASE_ENDPOINT
+  });
 
   // We use the flag to demonstrate bypassing validation.
   // Useful for custom deployments like 'my-company-gpt-4'

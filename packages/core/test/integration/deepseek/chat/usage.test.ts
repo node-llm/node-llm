@@ -14,7 +14,10 @@ describe("DeepSeek Chat Usage Integration (VCR)", { timeout: 30000 }, () => {
 
   it("should track token usage", async ({ task }) => {
     polly = setupVCR(task.name, "deepseek");
-    LLM.configure({ provider: "deepseek" });
+    LLM.configure({
+      deepseekApiKey: process.env.DEEPSEEK_API_KEY,
+      provider: "deepseek",
+    });
     const chat = LLM.chat("deepseek-chat");
 
     const response = await chat.ask("Hello");

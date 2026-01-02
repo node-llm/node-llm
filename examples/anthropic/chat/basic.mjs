@@ -1,9 +1,12 @@
 import "dotenv/config";
 import { LLM } from "../../../packages/core/dist/index.js";
 
-// Ensure ANTHROPIC_API_KEY is set in your environment
-// export ANTHROPIC_API_KEY=sk-ant-...
+// Configure provider - Callback style (recommended)
+LLM.configure((config) => {
+  config.anthropicApiKey = process.env.ANTHROPIC_API_KEY;
+});
 
+// Alternative: LLM.configure({ anthropicApiKey: "sk-ant-...", provider: "anthropic" });
 LLM.configure({
   provider: "anthropic",
 });

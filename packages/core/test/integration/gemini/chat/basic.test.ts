@@ -14,8 +14,10 @@ describe("Gemini Chat Integration (VCR)", { timeout: 30000 }, () => {
 
   it("should perform a basic chat completion", async ({ task }) => {
     polly = setupVCR(task.name, "gemini");
-
-    LLM.configure({ provider: "gemini" });
+    LLM.configure({
+      geminiApiKey: process.env.GEMINI_API_KEY,
+      provider: "gemini",
+    });
     const chat = LLM.chat("gemini-2.0-flash");
 
     const response = await chat.ask("What is the capital of Japan?");

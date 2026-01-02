@@ -16,7 +16,7 @@ import { LLM } from "@node-llm/core";
 
 LLM.configure({
   provider: "anthropic",
-  apiKey: process.env.ANTHROPIC_API_KEY, // Optional if set in env
+  anthropicApiKey: process.env.ANTHROPIC_API_KEY, // Optional if set in env
 });
 ```
 

@@ -21,17 +21,24 @@ import { Embedding } from "./embedding/Embedding.js";
 import { EmbeddingRequest } from "./providers/Embedding.js";
 import { DEFAULT_MODELS } from "./constants.js";
 
+import { config, NodeLLMConfig } from "./config.js";
+
 export interface RetryOptions {
   attempts?: number;
   delayMs?: number;
 }
 
-type LLMConfig =
-  | { provider: Provider; retry?: RetryOptions; defaultTranscriptionModel?: string; defaultModerationModel?: string; defaultEmbeddingModel?: string }
-  | { provider: string; retry?: RetryOptions; defaultTranscriptionModel?: string; defaultModerationModel?: string; defaultEmbeddingModel?: string };
+type LLMConfig = {
+  provider?: Provider | string;
+  retry?: RetryOptions;
+  defaultTranscriptionModel?: string;
+  defaultModerationModel?: string;
+  defaultEmbeddingModel?: string;
+} & Partial<NodeLLMConfig>;
 
 class LLMCore {
   public readonly models = ModelRegistry;
+  public readonly config = config;
   private provider?: Provider;
   private defaultTranscriptionModelId?: string;
   private defaultModerationModelId?: string;
@@ -42,46 +49,68 @@ class LLMCore {
     delayMs: 0,
   };
 
-  configure(config: LLMConfig) {
-    if (config.defaultTranscriptionModel) {
-      this.defaultTranscriptionModelId = config.defaultTranscriptionModel;
+  configure(configOrCallback: LLMConfig | ((config: NodeLLMConfig) => void)) {
+    // Callback style: for setting API keys
+    if (typeof configOrCallback === "function") {
+      configOrCallback(this.config);
+      return;
     }
 
-    if (config.defaultModerationModel) {
-      this.defaultModerationModelId = config.defaultModerationModel;
+    // Object style: for setting provider and other options
+    const options = configOrCallback;
+
+    // Extract known control keys
+    const { 
+      provider, 
+      retry, 
+      defaultTranscriptionModel, 
+      defaultModerationModel, 
+      defaultEmbeddingModel, 
+      ...apiConfig 
+    } = options;
+
+    // Merge API keys into global config
+    Object.assign(this.config, apiConfig);
+    
+    if (defaultTranscriptionModel) {
+      this.defaultTranscriptionModelId = defaultTranscriptionModel;
     }
 
-    if (config.defaultEmbeddingModel) {
-      this.defaultEmbeddingModelId = config.defaultEmbeddingModel;
+    if (defaultModerationModel) {
+      this.defaultModerationModelId = defaultModerationModel;
     }
 
-    if (config.retry) {
+    if (defaultEmbeddingModel) {
+      this.defaultEmbeddingModelId = defaultEmbeddingModel;
+    }
+
+    if (retry) {
       this.retry = {
-        attempts: config.retry.attempts ?? 1,
-        delayMs: config.retry.delayMs ?? 0,
+        attempts: retry.attempts ?? 1,
+        delayMs: retry.delayMs ?? 0,
       };
     }
 
-    if (typeof config.provider === "string") {
-      if (config.provider === "openai") {
+    if (typeof provider === "string") {
+      if (provider === "openai") {
         ensureOpenAIRegistered();
       }
 
-      if (config.provider === "gemini") {
+      if (provider === "gemini") {
         registerGeminiProvider();
       }
 
-      if (config.provider === "anthropic") {
+      if (provider === "anthropic") {
         registerAnthropicProvider();
       }
 
-      if (config.provider === "deepseek") {
+      if (provider === "deepseek") {
         registerDeepSeekProvider();
       }
 
-      this.provider = providerRegistry.resolve(config.provider);
-    } else {
-      this.provider = config.provider;
+      this.provider = providerRegistry.resolve(provider);
+    } else if (provider) {
+      this.provider = provider;
     }
   }
 

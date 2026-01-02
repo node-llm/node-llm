@@ -7,7 +7,7 @@ cd packages/core && npm run build
 cd ../..
 
 # Get API Key
-GEMINI_API_KEY=$(grep GEMINI_API_KEY .env | cut -d '=' -f2)
+GEMINI_API_KEY=$(grep "^GEMINI_API_KEY=" .env | cut -d '=' -f2)
 export GEMINI_API_KEY
 
 if [ -z "$GEMINI_API_KEY" ]; then

@@ -14,7 +14,10 @@ describe("DeepSeek Chat Params Integration (VCR)", { timeout: 30000 }, () => {
 
   it("should support context window param adjustment", async ({ task }) => {
     polly = setupVCR(task.name, "deepseek");
-    LLM.configure({ provider: "deepseek" });
+    LLM.configure({
+      deepseekApiKey: process.env.DEEPSEEK_API_KEY,
+      provider: "deepseek",
+    });
     const chat = LLM.chat("deepseek-chat");
 
     // Ask for a very short response but with specific max tokens

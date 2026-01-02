@@ -15,7 +15,10 @@ describe("OpenAI Embedding Integration (VCR)", { timeout: 30000 }, () => {
   it("should generate embeddings", async ({ task }) => {
     polly = setupVCR(task.name, "openai");
 
-    LLM.configure({ provider: "openai" });
+    LLM.configure({
+      openaiApiKey: process.env.OPENAI_API_KEY,
+      provider: "openai",
+    });
     const response = await LLM.embed("Hello world", { model: "text-embedding-3-small" });
 
     expect(response.vectors.length).toBe(1);

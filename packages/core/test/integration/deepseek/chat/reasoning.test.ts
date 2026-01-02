@@ -14,7 +14,10 @@ describe("DeepSeek Reasoning Integration (VCR)", { timeout: 60000 }, () => {
 
   it("should capture reasoning content for deepseek-reasoner", async ({ task }) => {
     polly = setupVCR(task.name, "deepseek");
-    LLM.configure({ provider: "deepseek" });
+    LLM.configure({
+      deepseekApiKey: process.env.DEEPSEEK_API_KEY,
+      provider: "deepseek",
+    });
     const chat = LLM.chat("deepseek-reasoner");
     
     const response = await chat.ask("Calculate 123 * 456 and explain the steps.");

@@ -14,8 +14,10 @@ describe("OpenAI Discovery Integration (VCR)", { timeout: 30000 }, () => {
 
   it("should list available models", async ({ task }) => {
     polly = setupVCR(task.name, "openai");
-
-    LLM.configure({ provider: "openai" });
+    LLM.configure({
+      openaiApiKey: process.env.OPENAI_API_KEY,
+      provider: "openai",
+    });
     const models = await LLM.listModels();
 
     expect(models.length).toBeGreaterThan(0);

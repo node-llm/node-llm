@@ -15,7 +15,10 @@ describe("Gemini Multi-modal Integration (VCR)", { timeout: 30000 }, () => {
   it("should analyze images (Vision)", async ({ task }) => {
     polly = setupVCR(task.name, "gemini");
 
-    LLM.configure({ provider: "gemini" });
+    LLM.configure({
+      geminiApiKey: process.env.GEMINI_API_KEY,
+      provider: "gemini",
+    });
     const chat = LLM.chat("gemini-2.0-flash");
 
     // A small 1x1 red PNG dot
@@ -32,7 +35,10 @@ describe("Gemini Multi-modal Integration (VCR)", { timeout: 30000 }, () => {
   it("should transcribe audio", async ({ task }) => {
     polly = setupVCR(task.name, "gemini");
 
-    LLM.configure({ provider: "gemini" });
+    LLM.configure({
+      geminiApiKey: process.env.GEMINI_API_KEY,
+      provider: "gemini",
+    });
     
     const path = await import("path");
     const { fileURLToPath } = await import("url");

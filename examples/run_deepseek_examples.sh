@@ -7,7 +7,7 @@ cd packages/core && npm run build
 cd ../..
 
 # Get API Key
-DEEPSEEK_API_KEY=$(grep DEEPSEEK_API_KEY .env | cut -d '=' -f2)
+DEEPSEEK_API_KEY=$(grep "^DEEPSEEK_API_KEY=" .env | cut -d '=' -f2)
 export DEEPSEEK_API_KEY
 
 if [ -z "$DEEPSEEK_API_KEY" ]; then

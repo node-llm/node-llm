@@ -14,7 +14,10 @@ describe("OpenAI Manual Schema (VCR)", { timeout: 30000 }, () => {
 
   it("should support structured output with manual JSON schema", async ({ task }) => {
     polly = setupVCR(task.name, "openai");
-    LLM.configure({ provider: "openai" });
+    LLM.configure({
+      openaiApiKey: process.env.OPENAI_API_KEY,
+      provider: "openai",
+    });
     const chat = LLM.chat("gpt-4o-mini");
 
     // The user's exact manual schema example

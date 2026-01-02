@@ -16,7 +16,7 @@ import { LLM } from "@node-llm/core";
 
 LLM.configure({
   provider: "deepseek",
-  apiKey: process.env.DEEPSEEK_API_KEY, // Optional if set in env
+  deepseekApiKey: process.env.DEEPSEEK_API_KEY, // Optional if set in env
 });
 ```
 

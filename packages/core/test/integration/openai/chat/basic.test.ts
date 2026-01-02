@@ -14,8 +14,10 @@ describe("OpenAI Chat Integration (VCR)", { timeout: 30000 }, () => {
 
   it("should perform a basic chat completion", async ({ task }) => {
     polly = setupVCR(task.name, "openai");
-
-    LLM.configure({ provider: "openai" });
+    LLM.configure({
+      openaiApiKey: process.env.OPENAI_API_KEY,
+      provider: "openai",
+    });
     const chat = LLM.chat("gpt-4o-mini");
 
     const response = await chat.ask("What is the capital of France?");

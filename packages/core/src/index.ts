@@ -9,6 +9,8 @@ export type { MessageContent, ContentPart } from "./chat/Content.js";
 
 export { z } from "zod";
 export { LLM, Transcription, Moderation, Embedding } from "./llm.js";
+export { config } from "./config.js";
+export type { NodeLLMConfig } from "./config.js";
 export { providerRegistry } from "./providers/registry.js";
 
 export { OpenAIProvider } from "./providers/openai/OpenAIProvider.js";

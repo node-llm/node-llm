@@ -14,7 +14,10 @@ describe("DeepSeek Chat Tools Integration (VCR)", { timeout: 30000 }, () => {
 
   it("should support tool calling", async ({ task }) => {
     polly = setupVCR(task.name, "deepseek");
-    LLM.configure({ provider: "deepseek" });
+    LLM.configure({
+      deepseekApiKey: process.env.DEEPSEEK_API_KEY,
+      provider: "deepseek",
+    });
     
     const weatherTool = {
         type: 'function',

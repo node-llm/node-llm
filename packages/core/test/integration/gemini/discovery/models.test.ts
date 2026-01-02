@@ -15,7 +15,10 @@ describe("Gemini Discovery Integration (VCR)", { timeout: 30000 }, () => {
   it("should list available models", async ({ task }) => {
     polly = setupVCR(task.name, "gemini");
 
-    LLM.configure({ provider: "gemini" });
+    LLM.configure({
+      geminiApiKey: process.env.GEMINI_API_KEY,
+      provider: "gemini",
+    });
     const models = await LLM.listModels();
 
     expect(models.length).toBeGreaterThan(0);

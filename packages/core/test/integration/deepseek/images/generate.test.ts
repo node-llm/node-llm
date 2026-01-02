@@ -14,7 +14,10 @@ describe("DeepSeek Images Integration (VCR)", { timeout: 30000 }, () => {
 
     it("should throw error for image generation", async ({ task }) => {
         polly = setupVCR(task.name, "deepseek");
-        LLM.configure({ provider: "deepseek" });
+        LLM.configure({
+      deepseekApiKey: process.env.DEEPSEEK_API_KEY,
+      provider: "deepseek",
+    });
         await expect(LLM.paint({ prompt: "test" })).rejects.toThrow(/does not support paint/i);
     });
 });

@@ -1,7 +1,12 @@
 import "dotenv/config";
 import { LLM } from "../../../packages/core/dist/index.js";
 
-// Configure with DeepSeek
+// Configure provider - Callback style (recommended)
+LLM.configure((config) => {
+  config.deepseekApiKey = process.env.DEEPSEEK_API_KEY;
+});
+
+// Alternative: LLM.configure({ deepseekApiKey: "...", provider: "deepseek" });
 LLM.configure({
   provider: "deepseek",
 });

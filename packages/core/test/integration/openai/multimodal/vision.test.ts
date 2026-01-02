@@ -15,7 +15,10 @@ describe("OpenAI Multi-modal Integration (VCR)", { timeout: 30000 }, () => {
   it("should analyze images (Vision)", async ({ task }) => {
     polly = setupVCR(task.name, "openai");
 
-    LLM.configure({ provider: "openai" });
+    LLM.configure({
+      openaiApiKey: process.env.OPENAI_API_KEY,
+      provider: "openai",
+    });
     const chat = LLM.chat("gpt-4o-mini");
 
     const response = await chat.ask("What's in this image?", {
@@ -30,7 +33,10 @@ describe("OpenAI Multi-modal Integration (VCR)", { timeout: 30000 }, () => {
   it("should analyze multiple images (Multi-Image Vision)", async ({ task }) => {
     polly = setupVCR(task.name, "openai");
 
-    LLM.configure({ provider: "openai" });
+    LLM.configure({
+      openaiApiKey: process.env.OPENAI_API_KEY,
+      provider: "openai",
+    });
     const chat = LLM.chat("gpt-4o-mini");
 
     // Two differing images (Base64 1x1 pixels to avoid download errors)
@@ -51,10 +57,14 @@ describe("OpenAI Multi-modal Integration (VCR)", { timeout: 30000 }, () => {
 
   it("should transcribe audio", async ({ task }) => {
     polly = setupVCR(task.name, "openai");
+    
+    LLM.configure((config) => {
+      config.openaiApiKey = process.env.OPENAI_API_KEY;
+    });
 
     LLM.configure({ 
       provider: "openai",
-      defaultTranscriptionModel: "whisper-1"
+      defaultTranscriptionModel: "whisper-1",
     });
     
     // Using absolute path resolved from test file location
@@ -73,7 +83,10 @@ describe("OpenAI Multi-modal Integration (VCR)", { timeout: 30000 }, () => {
   it("should transcribe audio using gpt-4o-transcribe", async ({ task }) => {
     polly = setupVCR(task.name, "openai");
 
-    LLM.configure({ provider: "openai" });
+    LLM.configure({
+      openaiApiKey: process.env.OPENAI_API_KEY,
+      provider: "openai",
+    });
     
     const path = await import("path");
     const { fileURLToPath } = await import("url");

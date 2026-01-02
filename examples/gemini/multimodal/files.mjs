@@ -6,6 +6,10 @@ import { fileURLToPath } from "url";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 async function main() {
+  LLM.configure((config) => {
+    config.geminiApiKey = process.env.GEMINI_API_KEY;
+  });
+  
   LLM.configure({ provider: "gemini" });
 
   const chat = LLM.chat("gemini-2.0-flash");

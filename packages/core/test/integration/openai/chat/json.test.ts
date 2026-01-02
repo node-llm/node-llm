@@ -14,8 +14,10 @@ describe("OpenAI JSON Mode Integration (VCR)", { timeout: 30000 }, () => {
 
   it("should support JSON mode", async ({ task }) => {
     polly = setupVCR(task.name, "openai");
-
-    LLM.configure({ provider: "openai" });
+    LLM.configure({
+      openaiApiKey: process.env.OPENAI_API_KEY,
+      provider: "openai",
+    });
     const chat = LLM.chat("gpt-4o-mini");
 
     chat.withRequestOptions({

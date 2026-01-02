@@ -15,7 +15,10 @@ describe("Anthropic Models Integration (VCR)", { timeout: 30000 }, () => {
   it("should support vision with image input", async ({ task }) => {
     polly = setupVCR(task.name, "anthropic");
 
-    LLM.configure({ provider: "anthropic" });
+    LLM.configure({
+      anthropicApiKey: process.env.ANTHROPIC_API_KEY,
+      provider: "anthropic",
+    });
     const chat = LLM.chat("claude-3-haiku-20240307");
 
     // A small 1x1 transparent GIF base64

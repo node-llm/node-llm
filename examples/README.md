@@ -23,6 +23,26 @@ This directory contains examples demonstrating how to use various providers with
     npm run build --workspace=packages/core
     ```
 
+## Configuration Example
+
+Learn how to configure `node-llm`:
+
+```bash
+### Configuration
+
+The examples use `LLM.configure` to set up the provider. You can pass your API key directly in the configuration object:
+
+```javascript
+LLM.configure({
+  openaiApiKey: process.env.OPENAI_API_KEY,
+  provider: "openai" 
+});
+```
+
+See [CONFIGURATION.md](../docs/CONFIGURATION.md) for full details.
+
+---
+
 ## OpenAI Examples (Primary)
 
 OpenAI is the most feature-complete provider in `node-llm`.

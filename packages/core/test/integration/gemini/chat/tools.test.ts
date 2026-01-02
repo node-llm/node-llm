@@ -14,8 +14,10 @@ describe("Gemini Tool Calling Integration (VCR)", { timeout: 30000 }, () => {
 
   it("should handle tool calling", async ({ task }) => {
     polly = setupVCR(task.name, "gemini");
-
-    LLM.configure({ provider: "gemini" });
+    LLM.configure({
+      geminiApiKey: process.env.GEMINI_API_KEY,
+      provider: "gemini",
+    });
 
     const weatherTool = {
       type: 'function',

@@ -15,7 +15,10 @@ describe("OpenAI Tool Calling Integration (VCR)", { timeout: 30000 }, () => {
   it("should handle tool calling", async ({ task }) => {
     polly = setupVCR(task.name, "openai");
 
-    LLM.configure({ provider: "openai" });
+    LLM.configure({
+      openaiApiKey: process.env.OPENAI_API_KEY,
+      provider: "openai",
+    });
 
     const weatherTool = {
       type: 'function',

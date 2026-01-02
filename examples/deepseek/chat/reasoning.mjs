@@ -2,6 +2,10 @@ import { LLM } from "../../../packages/core/dist/index.js";
 import "dotenv/config";
 
 async function main() {
+  LLM.configure((config) => {
+    config.deepseekApiKey = process.env.DEEPSEEK_API_KEY;
+  });
+  
   LLM.configure({ provider: "deepseek" });
 
   const chat = LLM.chat("deepseek-reasoner");

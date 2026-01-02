@@ -1,3 +1,4 @@
+import { config } from "../../config.js";
 import { providerRegistry } from "../registry.js";
 import { OpenAIProvider } from "./OpenAIProvider.js";
 
@@ -11,11 +12,11 @@ export function registerOpenAIProvider() {
   if (registered) return;
 
   providerRegistry.register("openai", () => {
-    const apiKey = process.env.OPENAI_API_KEY;
-    const baseUrl = process.env.OPENAI_API_BASE;
+    const apiKey = config.openaiApiKey;
+    const baseUrl = config.openaiApiBase;
 
     if (!apiKey) {
-      throw new Error("OPENAI_API_KEY is not set");
+      throw new Error("openaiApiKey is not set in config or OPENAI_API_KEY environment variable");
     }
 
     return new OpenAIProvider({ apiKey, baseUrl });

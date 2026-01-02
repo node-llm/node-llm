@@ -2,7 +2,15 @@ import "dotenv/config";
 import { LLM } from "../../../packages/core/dist/index.js";
 
 async function main() {
-  LLM.configure({ provider: "openai" });
+  // Configure provider - Callback style (recommended)
+  // LLM.configure((config) => {
+  //   config.openaiApiKey = process.env.OPENAI_API_KEY;
+  // });
+  
+  // // Alternative: 
+   LLM.configure({ openaiApiKey: process.env.OPENAI_API_KEY, provider: "openai" });
+
+  // LLM.configure({ provider: "openai" });
 
   const chat = LLM.chat("gpt-4o-mini");
 

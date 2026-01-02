@@ -32,7 +32,7 @@ Global settings for API keys and defaults.
 ```ts
 LLM.configure({
   openaiApiKey: "sk-...",
-  defaultModel: "gpt-4o"
+  provider: "openai"
 });
 ```
 

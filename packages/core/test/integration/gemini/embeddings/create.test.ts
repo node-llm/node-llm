@@ -15,7 +15,10 @@ describe("Gemini Embedding Integration (VCR)", { timeout: 30000 }, () => {
   it("should generate embeddings", async ({ task }) => {
     polly = setupVCR(task.name, "gemini");
 
-    LLM.configure({ provider: "gemini" });
+    LLM.configure({
+      geminiApiKey: process.env.GEMINI_API_KEY,
+      provider: "gemini",
+    });
     const response = await LLM.embed("Hello world", { model: "text-embedding-004" });
 
     expect(response.vectors.length).toBe(1);

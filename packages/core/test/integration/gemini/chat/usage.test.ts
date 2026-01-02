@@ -15,7 +15,10 @@ describe("Gemini Usage Integration (VCR)", { timeout: 30000 }, () => {
   it("should track total token usage", async ({ task }) => {
     polly = setupVCR(task.name, "gemini");
 
-    LLM.configure({ provider: "gemini" });
+    LLM.configure({
+      geminiApiKey: process.env.GEMINI_API_KEY,
+      provider: "gemini",
+    });
     const chat = LLM.chat("gemini-2.0-flash");
 
     await chat.ask("Hello");

@@ -15,7 +15,10 @@ describe("OpenAI Usage Integration (VCR)", { timeout: 30000 }, () => {
   it("should track total token usage", async ({ task }) => {
     polly = setupVCR(task.name, "openai");
 
-    LLM.configure({ provider: "openai" });
+    LLM.configure({
+      openaiApiKey: process.env.OPENAI_API_KEY,
+      provider: "openai",
+    });
     const chat = LLM.chat("gpt-4o-mini");
 
     await chat.ask("Hello");

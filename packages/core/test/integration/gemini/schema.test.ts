@@ -15,7 +15,11 @@ describe("Gemini Structured Output (VCR)", { timeout: 30000 }, () => {
 
   it("should support structured output with Zod schema", async ({ task }) => {
     polly = setupVCR(task.name, "gemini");
-    LLM.configure({ provider: "gemini" });
+    
+    LLM.configure({
+      geminiApiKey: process.env.GEMINI_API_KEY,
+      provider: "gemini",
+    });
     const chat = LLM.chat("gemini-2.0-flash");
 
     const schema = z.object({

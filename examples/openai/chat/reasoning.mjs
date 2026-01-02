@@ -3,6 +3,10 @@ import "dotenv/config";
 
 async function main() {
   // Configure OpenAI
+  LLM.configure((config) => {
+    config.openaiApiKey = process.env.OPENAI_API_KEY;
+  });
+  
   LLM.configure({ provider: "openai" });
 
   // Use the o3-mini or o1 model

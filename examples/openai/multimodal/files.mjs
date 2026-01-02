@@ -6,6 +6,10 @@ import { fileURLToPath } from "url";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 async function main() {
+  LLM.configure((config) => {
+    config.openaiApiKey = process.env.OPENAI_API_KEY;
+  });
+  
   LLM.configure({ provider: "openai" });
 
   const chat = LLM.chat("gpt-4o");

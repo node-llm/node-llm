@@ -1,3 +1,4 @@
+import { config } from "../../config.js";
 import { providerRegistry } from "../registry.js";
 import { GeminiProvider } from "./GeminiProvider.js";
 
@@ -11,10 +12,10 @@ export function registerGeminiProvider() {
   if (registered) return;
 
   providerRegistry.register("gemini", () => {
-    const apiKey = process.env.GEMINI_API_KEY;
+    const apiKey = config.geminiApiKey;
 
     if (!apiKey) {
-      throw new Error("GEMINI_API_KEY is not set");
+      throw new Error("geminiApiKey is not set in config or GEMINI_API_KEY environment variable");
     }
 
     return new GeminiProvider({ apiKey });

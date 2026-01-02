@@ -16,7 +16,7 @@ import { LLM } from "@node-llm/core";
 
 LLM.configure({
   provider: "gemini",
-  apiKey: process.env.GEMINI_API_KEY, // Optional if set in env
+  geminiApiKey: process.env.GEMINI_API_KEY, // Optional if set in env
 });
 ```
 

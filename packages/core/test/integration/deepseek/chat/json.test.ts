@@ -14,7 +14,10 @@ describe("DeepSeek Chat Structured Output Integration (VCR)", { timeout: 30000 }
 
     it("should support structured output with Zod", async ({ task }) => {
         polly = setupVCR(task.name, "deepseek");
-        LLM.configure({ provider: "deepseek" });
+        LLM.configure({
+      deepseekApiKey: process.env.DEEPSEEK_API_KEY,
+      provider: "deepseek",
+    });
         const chat = LLM.chat("deepseek-chat");
 
         const recipeSchema = z.object({

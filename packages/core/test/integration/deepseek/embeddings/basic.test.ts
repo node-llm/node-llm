@@ -14,7 +14,10 @@ describe("DeepSeek Embeddings Integration (VCR)", { timeout: 30000 }, () => {
 
   it("should throw error for embeddings", async ({ task }) => {
     polly = setupVCR(task.name, "deepseek");
-    LLM.configure({ provider: "deepseek" });
+    LLM.configure({
+      deepseekApiKey: process.env.DEEPSEEK_API_KEY,
+      provider: "deepseek",
+    });
     await expect(LLM.embed({ input: "test" })).rejects.toThrow(/does not support embed/i);
   });
 });

@@ -2,6 +2,10 @@ import "dotenv/config";
 import { LLM, z } from "../../../packages/core/dist/index.js";
 
 async function main() {
+  LLM.configure((config) => {
+    config.anthropicApiKey = process.env.ANTHROPIC_API_KEY;
+  });
+  
   LLM.configure({ provider: "anthropic" });
 
   const chat = LLM.chat("claude-3-haiku-20240307");

@@ -15,7 +15,10 @@ describe("Anthropic Usage Integration (VCR)", { timeout: 30000 }, () => {
   it("should return token usage statistics", async ({ task }) => {
     polly = setupVCR(task.name, "anthropic");
 
-    LLM.configure({ provider: "anthropic" });
+    LLM.configure({
+      anthropicApiKey: process.env.ANTHROPIC_API_KEY,
+      provider: "anthropic",
+    });
     const chat = LLM.chat("claude-3-haiku-20240307");
 
     const response = await chat.ask("Calculate 2 + 2");
