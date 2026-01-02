@@ -64,6 +64,29 @@ describe("DeepSeekChat", () => {
         });
     });
 
+    it("should capture reasoning_content if present", async () => {
+        const mockResponse = {
+            choices: [{
+                message: { 
+                    content: "Answer",
+                    reasoning_content: "Thought process"
+                },
+                finish_reason: "stop"
+            }],
+            usage: { prompt_tokens: 10, completion_tokens: 10, total_tokens: 20 }
+        };
+
+        (global.fetch as any).mockResolvedValue({
+            ok: true,
+            json: async () => mockResponse
+        });
+
+        const response = await chat.execute({ model: "deepseek-reasoner", messages: [] } as any);
+
+        expect(response.content).toBe("Answer");
+        expect(response.reasoning).toBe("Thought process");
+    });
+
     it("should handle API errors", async () => {
         (global.fetch as any).mockResolvedValue({
             ok: false,

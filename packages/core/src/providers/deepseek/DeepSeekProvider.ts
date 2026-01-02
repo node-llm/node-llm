@@ -23,6 +23,7 @@ export class DeepSeekProvider implements Provider {
     supportsImageGeneration: (model: string) => Capabilities.supportsImageGeneration(model),
     supportsTranscription: (model: string) => Capabilities.supportsTranscription(model),
     supportsModeration: (model: string) => Capabilities.supportsModeration(model),
+    supportsReasoning: (model: string) => Capabilities.supportsReasoning(model),
     getContextWindow: (model: string) => Capabilities.getContextWindow(model),
   };
 

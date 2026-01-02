@@ -39,6 +39,7 @@ const chat = LLM.chat("deepseek-chat")
     - `deepseek-chat`: Optimized for speed and proficiency in broad tasks (DeepSeek-V3).
     - `deepseek-reasoner`: Optimized for complex reasoning and problem solving (DeepSeek-R1).
 - **Tools**: Supported on `deepseek-chat`.
+- **Reasoning**: Access inner thought process text from `deepseek-reasoner`.
 - **Streaming**: Full streaming support for all models.
 - **Structured Output**: Supported via automated prompt engineering and `json_object` mode transitions.
 

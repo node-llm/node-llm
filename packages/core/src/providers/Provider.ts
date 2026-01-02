@@ -16,6 +16,7 @@ export interface ChatRequest {
 
 export interface ChatChunk {
   content: string;
+  reasoning?: string;
   done?: boolean;
 }
 
@@ -32,6 +33,7 @@ export interface Usage {
 
 export interface ChatResponse {
   content: string | null;
+  reasoning?: string | null;
   tool_calls?: ToolCall[];
   usage?: Usage;
 }
@@ -44,6 +46,7 @@ export interface ProviderCapabilities {
   supportsImageGeneration(modelId: string): boolean;
   supportsTranscription(modelId: string): boolean;
   supportsModeration(modelId: string): boolean;
+  supportsReasoning(modelId: string): boolean;
   getContextWindow(modelId: string): number | null;
 }
 

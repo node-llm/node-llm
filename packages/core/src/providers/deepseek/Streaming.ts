@@ -60,10 +60,14 @@ export class DeepSeekStreaming {
 
         try {
           const json = JSON.parse(data);
-          const delta = json.choices?.[0]?.delta?.content;
+          const deltaContent = json.choices?.[0]?.delta?.content;
+          const deltaReasoning = json.choices?.[0]?.delta?.reasoning_content;
           
-          if (delta) {
-            yield { content: delta };
+          if (deltaContent || deltaReasoning) {
+            yield { 
+                content: deltaContent || "",
+                reasoning: deltaReasoning || "" 
+            };
           }
         } catch (e) {
              // ignore

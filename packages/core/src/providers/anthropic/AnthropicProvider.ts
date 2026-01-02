@@ -24,6 +24,7 @@ export class AnthropicProvider implements Provider {
     supportsImageGeneration: (_model: string) => false,
     supportsTranscription: (_model: string) => false,
     supportsModeration: (_model: string) => false,
+    supportsReasoning: (_model: string) => false,
     getContextWindow: (model: string) => Capabilities.getContextWindow(model),
   };
 

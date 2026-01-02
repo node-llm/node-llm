@@ -38,10 +38,11 @@ const chat = LLM.chat("claude-3-5-sonnet-20241022")
 
 ## Features
 
-- **Models**: `claude-3-5-sonnet`, `claude-3-opus`, `claude-3-haiku`.
+- **Models**: `claude-3-7-sonnet`, `claude-3-5-sonnet`, `claude-3-opus`, `claude-3-haiku`.
 - **Vision**: Analyzes images.
 - **PDF Support**: Can read and analyze PDF documents natively.
 - **Tools**: Fully supported.
+- **Reasoning**: Support for Extended Thinking and token-based pricing for `claude-3-7`.
 
 ## PDF Support
 

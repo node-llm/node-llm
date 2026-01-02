@@ -342,7 +342,8 @@ export class Chat {
     const firstAssistantMessage = new ChatResponseString(
       response.content ?? "", 
       response.usage ?? { input_tokens: 0, output_tokens: 0, total_tokens: 0 }, 
-      this.model
+      this.model,
+      response.reasoning
     );
 
     this.messages.push({
@@ -402,7 +403,8 @@ export class Chat {
       const assistantMessage = new ChatResponseString(
         response.content ?? "", 
         response.usage ?? { input_tokens: 0, output_tokens: 0, total_tokens: 0 }, 
-        this.model
+        this.model,
+        response.reasoning
       );
 
       this.messages.push({
@@ -417,7 +419,9 @@ export class Chat {
       }
     }
 
-    return new ChatResponseString(response.content ?? "", totalUsage, this.model);
+    // For the final return, we might want to aggregate reasoning too if it happened in multiple turns? 
+    // Usually reasoning only happens once or we just want the last one.
+    return new ChatResponseString(response.content ?? "", totalUsage, this.model, response.reasoning);
   }
 
   /**

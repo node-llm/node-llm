@@ -59,4 +59,8 @@ export class Capabilities {
   static supportsModeration(modelId: string): boolean {
     return false;
   }
+
+  static supportsReasoning(modelId: string): boolean {
+    return /deepseek-reasoner/.test(modelId);
+  }
 }

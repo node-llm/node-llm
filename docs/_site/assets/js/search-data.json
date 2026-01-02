@@ -22,7 +22,7 @@
   },"3": {
     "doc": "Anthropic",
     "title": "Features",
-    "content": ". | Models: claude-3-5-sonnet, claude-3-opus, claude-3-haiku. | Vision: Analyzes images. | PDF Support: Can read and analyze PDF documents natively. | Tools: Fully supported. | . ",
+    "content": ". | Models: claude-3-7-sonnet, claude-3-5-sonnet, claude-3-opus, claude-3-haiku. | Vision: Analyzes images. | PDF Support: Can read and analyze PDF documents natively. | Tools: Fully supported. | Reasoning: Support for Extended Thinking and token-based pricing for claude-3-7. | . ",
     "url": "/providers/anthropic.html#features",
     
     "relUrl": "/providers/anthropic.html#features"
@@ -176,7 +176,7 @@
   },"25": {
     "doc": "Chat",
     "title": "Next Steps",
-    "content": ". | Multi-modal Capabilities (Images, Audio, Files) | Structured Output (JSON Schemas, Zod) | Tool Calling | . ",
+    "content": ". | Multi-modal Capabilities (Images, Audio, Files) | Structured Output (JSON Schemas, Zod) | Tool Calling | Reasoning (DeepSeek R1, OpenAI o1/o3) | . ",
     "url": "/core_features/chat.html#next-steps",
     
     "relUrl": "/core_features/chat.html#next-steps"
@@ -267,7 +267,7 @@
   },"38": {
     "doc": "DeepSeek",
     "title": "Features",
-    "content": ". | Models: . | deepseek-chat: Optimized for speed and proficiency in broad tasks (DeepSeek-V3). | deepseek-reasoner: Optimized for complex reasoning and problem solving (DeepSeek-R1). | . | Tools: Supported on deepseek-chat. | Streaming: Full streaming support for all models. | Structured Output: Supported via automated prompt engineering and json_object mode transitions. | . ",
+    "content": ". | Models: . | deepseek-chat: Optimized for speed and proficiency in broad tasks (DeepSeek-V3). | deepseek-reasoner: Optimized for complex reasoning and problem solving (DeepSeek-R1). | . | Tools: Supported on deepseek-chat. | Reasoning: Access inner thought process text from deepseek-reasoner. | Streaming: Full streaming support for all models. | Structured Output: Supported via automated prompt engineering and json_object mode transitions. | . ",
     "url": "/providers/deepseek.html#features",
     
     "relUrl": "/providers/deepseek.html#features"
@@ -491,7 +491,7 @@
   },"70": {
     "doc": "Home",
     "title": "🔮 Capabilities",
-    "content": "💬 Unified Chat . Stop rewriting code for every provider. node-llm normalizes inputs and outputs. const chat = LLM.chat(); // Defaults to GPT-4o await chat.ask(\"Hello world\"); . 👁️ Smart Vision &amp; Files . Pass images, PDFs, or audio files directly. We handle the base64 encoding and MIME types. await chat.ask(\"Analyze this interface\", { files: [\"./screenshot.png\", \"./specs.pdf\"] }); . 🛠️ Auto-Executing Tools . Define tools once, and the library manages the execution loop for you. const tools = [{ type: 'function', function: { name: 'get_weather', ... }, handler: async ({ loc }) =&gt; `Sunny in ${loc}` }]; await chat.withTools(tools).ask(\"Weather in Tokyo?\"); . ✨ Structured Output . Get type-safe JSON back using Zod schemas. import { z } from \"zod\"; const Product = z.object({ name: z.string(), price: z.number() }); const res = await chat.withSchema(Product).ask(\"Generate a gadget\"); console.log(res.parsed.name); // Type-safe access . 🎨 Image Generation . await LLM.paint(\"A cyberpunk city in rain\"); . 🎤 Audio Transcription . await LLM.transcribe(\"meeting-recording.wav\"); . ",
+    "content": "💬 Unified Chat . Stop rewriting code for every provider. node-llm normalizes inputs and outputs. const chat = LLM.chat(); // Defaults to GPT-4o await chat.ask(\"Hello world\"); . 👁️ Smart Vision &amp; Files . Pass images, PDFs, or audio files directly. We handle the base64 encoding and MIME types. await chat.ask(\"Analyze this interface\", { files: [\"./screenshot.png\", \"./specs.pdf\"] }); . 🛠️ Auto-Executing Tools . Define tools once, and the library manages the execution loop for you. const tools = [{ type: 'function', function: { name: 'get_weather', ... }, handler: async ({ loc }) =&gt; `Sunny in ${loc}` }]; await chat.withTools(tools).ask(\"Weather in Tokyo?\"); . ✨ Structured Output . Get type-safe JSON back using Zod schemas. import { z } from \"zod\"; const Product = z.object({ name: z.string(), price: z.number() }); const res = await chat.withSchema(Product).ask(\"Generate a gadget\"); console.log(res.parsed.name); // Type-safe access . 🎨 Image Generation . await LLM.paint(\"A cyberpunk city in rain\"); . 🎤 Audio Transcription . await LLM.transcribe(\"meeting-recording.wav\"); . 🧠 Deep Reasoning . Access the thought process of models like DeepSeek R1 or OpenAI o1/o3 using the .reasoning field. const chat = LLM.chat(\"deepseek-reasoner\"); const res = await chat.ask(\"Solve a complex puzzle\"); console.log(res.reasoning); // Output the model's inner thought process console.log(res.content); // Output the final answer . ",
     "url": "/#-capabilities",
     
     "relUrl": "/#-capabilities"
@@ -505,7 +505,7 @@
   },"72": {
     "doc": "Home",
     "title": "📋 Supported Providers",
-    "content": "| Provider | Supported Features | . | | Chat, Streaming, Tools, Vision, Audio, Images, Transcription | . | | Chat, Streaming, Tools, Vision, Audio, Video, Embeddings | . | | Chat, Streaming, Tools, Vision, PDF Support, Structured Output | . | | Chat (V3), Reasoning (R1), Tools, Streaming, Structured Output | . ",
+    "content": "| Provider | Supported Features | . | | Chat, Streaming, Tools, Vision, Audio, Images, Transcription, Reasoning | . | | Chat, Streaming, Tools, Vision, Audio, Video, Embeddings | . | | Chat, Streaming, Tools, Vision, PDF Support, Structured Output | . | | Chat (V3), Reasoning (R1), Tools, Streaming, Structured Output | . ",
     "url": "/#-supported-providers",
     
     "relUrl": "/#-supported-providers"
@@ -708,7 +708,7 @@
   },"101": {
     "doc": "OpenAI",
     "title": "Features",
-    "content": ". | Models: gpt-4o, gpt-4o-mini, gpt-4-turbo, etc. | Vision: specific models like gpt-4o support image analysis. | Tools: Fully supported, including parallel tool execution. | Structured Output: Supports strict schema validation via json_schema. | . ",
+    "content": ". | Models: gpt-4o, gpt-4o-mini, gpt-4-turbo, etc. | Vision: specific models like gpt-4o support image analysis. | Tools: Fully supported, including parallel tool execution. | Reasoning: Automatic tracking of reasoning tokens and costs for o1 and o3 models. | Structured Output: Supports strict schema validation via json_schema. | . ",
     "url": "/providers/openai.html#features",
     
     "relUrl": "/providers/openai.html#features"
@@ -755,181 +755,209 @@
     
     "relUrl": "/getting_started/overview.html#how-it-works"
   },"108": {
+    "doc": "Reasoning",
+    "title": "Reasoning",
+    "content": "node-llm provides a unified way to access the “thinking” or “reasoning” process of models like DeepSeek R1 or OpenAI o1/o3. Some models expose their internal chain of thought before providing the final answer. ",
+    "url": "/core_features/reasoning.html",
+    
+    "relUrl": "/core_features/reasoning.html"
+  },"109": {
+    "doc": "Reasoning",
+    "title": "Accessing Reasoning Content",
+    "content": "For models that support it (like deepseek-reasoner), you can access the reasoning text via the .reasoning property on the response object. import { LLM } from \"@node-llm/core\"; const chat = LLM.chat(\"deepseek-reasoner\"); const response = await chat.ask(\"Prove that the square root of 2 is irrational.\"); // Show the inner thought process console.log(\"Thinking:\", response.reasoning); // Show the final answer console.log(\"Answer:\", response.content); . Streaming Reasoning . When using .stream(), reasoning content is emitted as chunks, just like regular content. You can distinguish them by checking chunk.reasoning. const chat = LLM.chat(\"deepseek-reasoner\"); for await (const chunk of chat.stream(\"Explain quantum entanglement\")) { if (chunk.reasoning) { process.stdout.write(`[Thinking] ${chunk.reasoning}`); } if (chunk.content) { process.stdout.write(chunk.content); } } . The final response object in the onEndMessage callback or returned by the stream will also contain the full aggregated reasoning string. ",
+    "url": "/core_features/reasoning.html#accessing-reasoning-content",
+    
+    "relUrl": "/core_features/reasoning.html#accessing-reasoning-content"
+  },"110": {
+    "doc": "Reasoning",
+    "title": "OpenAI o1/o3 Support",
+    "content": "OpenAI models like o3-mini do not expose the reasoning text directly (in a separate field), but they use “reasoning tokens” during generation. node-llm automatically tracks these tokens and includes them in the usage and cost calculations. const chat = LLM.chat(\"o3-mini\"); const response = await chat.ask(\"Write a complex algorithm\"); console.log(`Reasoning tokens used: ${response.usage.output_tokens}`); console.log(`Total cost: $${response.cost}`); . ",
+    "url": "/core_features/reasoning.html#openai-o1o3-support",
+    
+    "relUrl": "/core_features/reasoning.html#openai-o1o3-support"
+  },"111": {
+    "doc": "Reasoning",
+    "title": "Supported Models",
+    "content": "Currently, the following models have enhanced reasoning support in node-llm: . | Model ID | Provider | Feature | . | deepseek-reasoner | DeepSeek | Full thinking text extraction | . | o1-preview, o1-mini, o3-mini | OpenAI | Reasoning token &amp; cost tracking | . ",
+    "url": "/core_features/reasoning.html#supported-models",
+    
+    "relUrl": "/core_features/reasoning.html#supported-models"
+  },"112": {
     "doc": "Stream Responses",
     "title": "Stream Responses",
     "content": "For real-time interactions, node-llm supports streaming responses via standard JavaScript AsyncIterators. This allows you to display text to the user as it’s being generated, reducing perceived latency. ",
     "url": "/core_features/streaming.html",
     
     "relUrl": "/core_features/streaming.html"
-  },"109": {
+  },"113": {
     "doc": "Stream Responses",
     "title": "Basic Streaming",
     "content": "Use the stream() method on a chat instance to get an iterator. const chat = LLM.chat(\"gpt-4o\"); process.stdout.write(\"Assistant: \"); for await (const chunk of chat.stream(\"Write a haiku about code.\")) { // Most chunks contain content if (chunk.content) { process.stdout.write(chunk.content); } } // =&gt; Code flows like water // Logic builds a new world now // Bugs swim in the stream . ",
     "url": "/core_features/streaming.html#basic-streaming",
     
     "relUrl": "/core_features/streaming.html#basic-streaming"
-  },"110": {
+  },"114": {
     "doc": "Stream Responses",
     "title": "Understanding Chunks",
     "content": "Each chunk passed to your loop contains partial information about the response. | content: The text fragment for this specific chunk. Can be empty contextually. | role: Usually “assistant”. | model: The model ID. | usage: (Optional) Token usage stats. Usually only present in the final chunk (provider dependent). | . for await (const chunk of chat.stream(\"Hello\")) { console.log(chunk); // { content: \"He\", role: \"assistant\", ... } // { content: \"llo\", role: \"assistant\", ... } } . ",
     "url": "/core_features/streaming.html#understanding-chunks",
     
     "relUrl": "/core_features/streaming.html#understanding-chunks"
-  },"111": {
+  },"115": {
     "doc": "Stream Responses",
     "title": "Streaming with Tools",
     "content": "When tools are involved, node-llm handles the complexity for you. The stream will: . | Initial Text: Stream any text preceding the tool call. | Pause: Pause (yield nothing) while the tool executes automatically. | Resume: Resume streaming the model’s response after it sees the tool result. | . You don’t need to manually handle tool execution loops during streaming; the iterator abstracts this away. ",
     "url": "/core_features/streaming.html#streaming-with-tools",
     
     "relUrl": "/core_features/streaming.html#streaming-with-tools"
-  },"112": {
+  },"116": {
     "doc": "Stream Responses",
     "title": "Error Handling",
     "content": "Stream interruptions (network failure, rate limits) will throw an error within the for await loop. Always wrap in a try/catch block. try { for await (const chunk of chat.stream(\"Generate a long story...\")) { process.stdout.write(chunk.content); } } catch (error) { console.error(\"\\n[Stream Error]\", error.message); } . ",
     "url": "/core_features/streaming.html#error-handling",
     
     "relUrl": "/core_features/streaming.html#error-handling"
-  },"113": {
+  },"117": {
     "doc": "Stream Responses",
     "title": "Web Application Integration",
     "content": "Streaming is essential for modern web apps. Here is a simple example using Express: . import express from 'express'; import { LLM } from '@node-llm/core'; const app = express(); app.get('/chat', async (req, res) =&gt; { // Set headers for streaming text res.setHeader('Content-Type', 'text/plain; charset=utf-8'); res.setHeader('Transfer-Encoding', 'chunked'); const chat = LLM.chat(\"gpt-4o-mini\"); try { for await (const chunk of chat.stream(req.query.q as string)) { if (chunk.content) { res.write(chunk.content); } } res.end(); } catch (error) { res.write(`\\nError: ${error.message}`); res.end(); } }); . ",
     "url": "/core_features/streaming.html#web-application-integration",
     
     "relUrl": "/core_features/streaming.html#web-application-integration"
-  },"114": {
+  },"118": {
     "doc": "Structured Output",
     "title": "Structured Output",
     "content": "Ensure the AI returns data exactly matching a specific structure. node-llm supports strict schema validation using Zod (recommended) or manual JSON schemas. This feature abstracts the provider-specific implementations (like OpenAI’s json_schema, Gemini’s responseSchema, or Anthropic’s tool-use workarounds) into a single, unified API. ",
     "url": "/core_features/structured_output.html",
     
     "relUrl": "/core_features/structured_output.html"
-  },"115": {
+  },"119": {
     "doc": "Structured Output",
     "title": "Using Zod (Recommended)",
     "content": "The easiest way to define schemas is with Zod. import { LLM, z } from \"@node-llm/core\"; // Define a schema using Zod const personSchema = z.object({ name: z.string().describe(\"Person's full name\"), age: z.number().describe(\"Person's age in years\"), hobbies: z.array(z.string()).describe(\"List of hobbies\") }); const chat = LLM.chat(\"gpt-4o-mini\"); // Use .withSchema() to enforce the structure const response = await chat .withSchema(personSchema) .ask(\"Generate a person named Alice who likes hiking and coding\"); // The response is strictly validated and parsed const person = response.parsed; console.log(person.name); // \"Alice\" console.log(person.age); // e.g. 25 console.log(person.hobbies); // [\"hiking\", \"coding\"] . ",
     "url": "/core_features/structured_output.html#using-zod-recommended",
     
     "relUrl": "/core_features/structured_output.html#using-zod-recommended"
-  },"116": {
+  },"120": {
     "doc": "Structured Output",
     "title": "Manual JSON Schemas",
     "content": "You can also provide a raw JSON schema object if you prefer not to use Zod. Note for OpenAI: You must strictly follow OpenAI’s requirements, such as setting additionalProperties: false. const schema = { type: \"object\", properties: { name: { type: \"string\" }, age: { type: \"integer\" } }, required: [\"name\", \"age\"], additionalProperties: false // Required for strict mode in OpenAI }; const response = await chat .withSchema(schema) .ask(\"Generate a person\"); console.log(response.parsed); // { name: \"...\", age: ... } . ",
     "url": "/core_features/structured_output.html#manual-json-schemas",
     
     "relUrl": "/core_features/structured_output.html#manual-json-schemas"
-  },"117": {
+  },"121": {
     "doc": "Structured Output",
     "title": "JSON Mode",
     "content": "If you just need valid JSON but don’t want to enforce a rigid schema, you can enable JSON mode. This instructs the model to return valid JSON but gives it more freedom with the structure. chat.withRequestOptions({ responseFormat: { type: \"json_object\" } }); const response = await chat.ask(\"Generate a JSON object with a greeting\"); console.log(response.parsed); // { greeting: \"...\" } or whatever keys it chose . ",
     "url": "/core_features/structured_output.html#json-mode",
     
     "relUrl": "/core_features/structured_output.html#json-mode"
-  },"118": {
+  },"122": {
     "doc": "Structured Output",
     "title": "Provider Support",
     "content": "| Provider | Method Used | Notes | . | OpenAI | response_format: { type: \"json_schema\" } | Fully supported with strict adherence. | . | Gemini | responseSchema | Supported natively. | . | Anthropic | Tool Use (Mock) | node-llm automatically creates a tool definition and forces the model to use it to simulate structured output. | . ",
     "url": "/core_features/structured_output.html#provider-support",
     
     "relUrl": "/core_features/structured_output.html#provider-support"
-  },"119": {
+  },"123": {
     "doc": "Structured Output",
     "title": "Nested Schemas",
     "content": "Complex nested schemas are fully supported via Zod. const companySchema = z.object({ name: z.string(), employees: z.array(z.object({ name: z.string(), role: z.enum([\"developer\", \"designer\", \"manager\"]), skills: z.array(z.string()) })), metadata: z.object({ founded: z.number(), industry: z.string() }) }); const response = await chat .withSchema(companySchema) .ask(\"Generate a small tech startup\"); . ",
     "url": "/core_features/structured_output.html#nested-schemas",
     
     "relUrl": "/core_features/structured_output.html#nested-schemas"
-  },"120": {
+  },"124": {
     "doc": "Testing",
     "title": "Testing",
     "content": "node-llm features a comprehensive test suite including high-level integration tests and granular unit tests. ",
     "url": "/advanced/testing.html",
     
     "relUrl": "/advanced/testing.html"
-  },"121": {
+  },"125": {
     "doc": "Testing",
     "title": "Running Tests",
     "content": "Unit Tests . Test core logic and provider handlers in isolation without hitting any APIs. npm run test:unit . Integration Tests (VCR) . Uses Polly.js to record and replay real LLM interactions. Replay Mode (Default): Runs against recorded cassettes. Fast and requires no API keys. npm run test:integration . Record Mode: Update cassettes by hitting real APIs (requires API keys). VCR_MODE=record npm run test:integration . All recordings are automatically scrubbed of sensitive data (API keys, org IDs) before being saved to disk. ",
     "url": "/advanced/testing.html#running-tests",
     
     "relUrl": "/advanced/testing.html#running-tests"
-  },"122": {
+  },"126": {
     "doc": "Token Usage",
     "title": "Token Usage Tracking",
     "content": "Track tokens for individual turns or the entire conversation to monitor costs and usage. ",
     "url": "/advanced/token_usage.html#token-usage-tracking",
     
     "relUrl": "/advanced/token_usage.html#token-usage-tracking"
-  },"123": {
+  },"127": {
     "doc": "Token Usage",
     "title": "Per-Response Usage",
     "content": "Every response object contains usage metadata for that specific interaction. const response = await chat.ask(\"Hello!\"); console.log(response.input_tokens); // e.g. 10 console.log(response.output_tokens); // e.g. 5 console.log(response.cost); // Estimated cost in USD . ",
     "url": "/advanced/token_usage.html#per-response-usage",
     
     "relUrl": "/advanced/token_usage.html#per-response-usage"
-  },"124": {
+  },"128": {
     "doc": "Token Usage",
     "title": "Session Totals",
     "content": "The Chat instance maintains a running total of usage for the life of that object. // Access aggregated usage for the whole session console.log(chat.totalUsage.total_tokens); console.log(chat.totalUsage.cost); . ",
     "url": "/advanced/token_usage.html#session-totals",
     
     "relUrl": "/advanced/token_usage.html#session-totals"
-  },"125": {
+  },"129": {
     "doc": "Token Usage",
     "title": "Token Usage",
     "content": " ",
     "url": "/advanced/token_usage.html",
     
     "relUrl": "/advanced/token_usage.html"
-  },"126": {
+  },"130": {
     "doc": "Tool Calling",
     "title": "Tool Calling",
     "content": "node-llm simplifies function calling (tool use) by handling the execution loop automatically. You define the tools, and the library invokes them when the model requests it. ",
     "url": "/core_features/tools.html",
     
     "relUrl": "/core_features/tools.html"
-  },"127": {
+  },"131": {
     "doc": "Tool Calling",
     "title": "Defining a Tool",
     "content": "Tools are defined as standard objects with a type, function definition, and a handler. const weatherTool = { type: 'function', function: { name: 'get_weather', description: 'Get the current weather for a location', parameters: { type: 'object', properties: { location: { type: 'string', description: 'City and state' } }, required: ['location'] } }, handler: async ({ location }) =&gt; { // This function is executed when the model calls the tool const weather = await fetchWeatherAPI(location); // Return a string or serializable object return JSON.stringify({ location, temp: 22, unit: 'celsius', condition: 'Sunny' }); } }; . ",
     "url": "/core_features/tools.html#defining-a-tool",
     
     "relUrl": "/core_features/tools.html#defining-a-tool"
-  },"128": {
+  },"132": {
     "doc": "Tool Calling",
     "title": "Using Tools in Chat",
     "content": "Use the fluent .withTool() API to register tools for a chat session. const chat = LLM.chat(\"gpt-4o\") .withTool(weatherTool); const reply = await chat.ask(\"What is the weather in London?\"); console.log(reply.content); // The model will use the info from the tool to answer: // \"The weather in London is currently 22°C and sunny.\" . ",
     "url": "/core_features/tools.html#using-tools-in-chat",
     
     "relUrl": "/core_features/tools.html#using-tools-in-chat"
-  },"129": {
+  },"133": {
     "doc": "Tool Calling",
     "title": "Parallel Tool Calling",
     "content": "If the provider supports it (like OpenAI and Anthropic), the model can call multiple tools in a single turn. node-llm handles the concurrent execution of these tools automatically. See examples/openai/chat/parallel-tools.mjs for a demo. ",
     "url": "/core_features/tools.html#parallel-tool-calling",
     
     "relUrl": "/core_features/tools.html#parallel-tool-calling"
-  },"130": {
+  },"134": {
     "doc": "Tool Calling",
     "title": "Advanced Tool Metadata",
     "content": "Some providers support additional metadata in tool definitions, such as Anthropic’s Prompt Caching. You can include these fields in your tool definition, and node-llm will pass them through. const cachedTool = { type: 'function', function: { name: 'get_history', // ... params ... }, // Provider-specific metadata key (like 'cache_control' for Anthropic) cache_control: { type: 'ephemeral' }, handler: async () =&gt; { ... } }; . ",
     "url": "/core_features/tools.html#advanced-tool-metadata",
     
     "relUrl": "/core_features/tools.html#advanced-tool-metadata"
-  },"131": {
+  },"135": {
     "doc": "Tool Calling",
     "title": "Error Handling in Tools",
     "content": "How you handle errors in your handler affects the conversation flow: . | Recoverable Errors: Return a JSON string describing the error. The model can often see this error and try to correct itself (e.g., retrying with different parameters). handler: async ({ id }) =&gt; { if (!id) return JSON.stringify({ error: \"Missing ID\" }); // ... } . | Fatal Errors: If you throw an exception inside a tool handler, node-llm catches it and feeds the error message back to the model as a “Tool Error”. This allows the model to apologize to the user or attempt a different strategy. | . ",
     "url": "/core_features/tools.html#error-handling-in-tools",
     
     "relUrl": "/core_features/tools.html#error-handling-in-tools"
-  },"132": {
+  },"136": {
     "doc": "Tool Calling",
     "title": "Security Considerations",
     "content": "Treat arguments passed to your handler as untrusted user input. | Validate: Always validate parameter types and ranges using libraries like zod inside the handler if critical. | Sanitize: Sanitize strings before using them in database queries or shell commands. | Avoid Eval: Never use eval() on inputs provided by the model. | . ",
     "url": "/core_features/tools.html#security-considerations",
     
     "relUrl": "/core_features/tools.html#security-considerations"
-  },"133": {
+  },"137": {
     "doc": "Tool Calling",
     "title": "Debugging Tools",
     "content": "To see exactly what the model is calling and what your tool is returning, enable debug mode: . export NODELLM_DEBUG=true . You will see logs like: [NodeLLM] Tool call: get_weather { location: \"Paris\" } [NodeLLM] Tool result: { temp: 15 } . ",

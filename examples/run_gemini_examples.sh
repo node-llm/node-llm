@@ -24,6 +24,7 @@ EXAMPLES=(
   "chat/tools.mjs"
   "chat/events.mjs"
   "chat/usage.mjs"
+  "chat/reasoning.mjs"
   "chat/parallel-tools.mjs"
   "chat/max-tokens.mjs"
   "chat/structured.mjs"

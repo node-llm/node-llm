@@ -17,6 +17,12 @@ describe("OpenAI Capabilities", () => {
     expect(Capabilities.supportsTools("text-embedding-3-small")).toBe(false);
   });
 
+  it("checks reasoning support", () => {
+    expect(Capabilities.supportsReasoning("o1-preview")).toBe(true);
+    expect(Capabilities.supportsReasoning("o3-mini")).toBe(true);
+    expect(Capabilities.supportsReasoning("gpt-4o")).toBe(false);
+  });
+
   it("formats display names correctly", () => {
     expect(Capabilities.formatDisplayName("gpt-4o")).toBe("GPT-4o");
     expect(Capabilities.formatDisplayName("dall-e-3")).toBe("DALL·E 3");

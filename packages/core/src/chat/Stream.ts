@@ -49,6 +49,7 @@ export class Stream {
     }
 
     let full = "";
+    let fullReasoning = "";
     let isFirst = true;
 
     for await (const chunk of this.provider.stream({
@@ -65,19 +66,25 @@ export class Stream {
       if (chunk.content) {
         full += chunk.content;
       }
+      if (chunk.reasoning) {
+        fullReasoning += chunk.reasoning;
+      }
       yield chunk;
     }
 
     this.messages.push({
       role: "assistant",
       content: full,
+      // @ts-ignore
+      reasoning: fullReasoning || undefined
     });
 
     if (this.options.onEndMessage) {
       this.options.onEndMessage(new ChatResponseString(
         full,
         { input_tokens: 0, output_tokens: 0, total_tokens: 0 },
-        this.model
+        this.model,
+        fullReasoning || undefined
       ));
     }
   }

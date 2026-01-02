@@ -73,6 +73,13 @@ export class Capabilities {
     return /moderation/.test(modelId);
   }
 
+  static supportsReasoning(modelId: string): boolean {
+    const model = ModelRegistry.find(modelId, "openai");
+    if (model?.capabilities?.includes("reasoning")) return true;
+    
+    return /o\d|gpt-5/.test(modelId);
+  }
+
   static getModelType(modelId: string): "embedding" | "audio" | "moderation" | "image" | "chat" | "audio_transcription" | "audio_speech" {
      if (/moderation/.test(modelId)) return "moderation";
      if (/embedding/.test(modelId)) return "embedding";

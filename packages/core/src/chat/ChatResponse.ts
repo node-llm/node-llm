@@ -8,7 +8,8 @@ export class ChatResponseString extends String {
   constructor(
     content: string,
     public readonly usage: Usage,
-    public readonly model: string
+    public readonly model: string,
+    public readonly reasoning?: string | null
   ) {
     super(content);
   }

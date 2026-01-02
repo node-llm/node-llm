@@ -7,6 +7,7 @@ interface DeepSeekChatResponse {
   choices: Array<{
     message: {
       content: string | null;
+      reasoning_content?: string | null;
       tool_calls?: any[];
     };
     finish_reason: string;
@@ -83,6 +84,7 @@ export class DeepSeekChat {
     const json = (await response.json()) as DeepSeekChatResponse;
     const message = json.choices[0]?.message;
     const content = message?.content ?? null;
+    const reasoning = message?.reasoning_content ?? null;
 
     const usage: Usage = {
       input_tokens: json.usage.prompt_tokens,
@@ -99,13 +101,13 @@ export class DeepSeekChat {
         }
     }));
 
-    if (!content && (!toolCalls || toolCalls.length === 0)) {
+    if (!content && !reasoning && (!toolCalls || toolCalls.length === 0)) {
       throw new Error("DeepSeek returned empty response");
     }
 
     // deepseek cost calculation if needed, otherwise just return usage
     const calculatedUsage = ModelRegistry.calculateCost(usage, model, "deepseek");
 
-    return { content, usage: calculatedUsage, tool_calls: toolCalls };
+    return { content, reasoning, usage: calculatedUsage, tool_calls: toolCalls };
   }
 }
