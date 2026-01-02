@@ -49,9 +49,36 @@ permalink: /available-models
 | **Gemini 1.5** | | | |
 | `gemini-1.5-pro` | 2M | $1.25 / $5 | Massive context window |
 | `gemini-1.5-flash` | 1M | $0.075 / $0.30 | High volume tasks |
+| `gemini-1.5-flash-8b` | 1M | $0.0375 / $0.1125 | Ultra-fast, optimized for high scale |
 | **Embedding** | | | |
 | `text-embedding-004` | - | - | Semantic search |
 
+## DeepSeek
+
+| Model ID | Context | Cost (In/Out) | Notes |
+| :--- | :--- | :--- | :--- |
+| **DeepSeek V3** | | | |
+| `deepseek-chat` | 64k | $0.27 / $1.10 | Extremely cost-effective flagship |
+| **DeepSeek R1** | | | |
+| `deepseek-reasoner` | 64k | $0.55 / $2.19 | Advanced reasoning (R1) |
+
+## Ollama (Local)
+
+Ollama models are run locally on your machine. Costs are typically free (local compute).
+
+| Model ID | Context | Cost | Notes |
+| :--- | :--- | :--- | :--- |
+| **Llama 3.2** | | | |
+| `llama3.2` | 128k | Free | Vision, tools, small and fast |
+| `llama3.2:1b` | 128k | Free | Ultra-lightweight |
+| **Llama 3.1** | | | |
+| `llama3.1` | 128k | Free | Tools support, balanced |
+| `llama3.1:70b` | 128k | Free | Powerful open model |
+| **Mistral** | | | |
+| `mistral` | 32k | Free | Reliable, tools support |
+| **Embeddings** | | | |
+| `nomic-embed-text` | 8k | Free | High quality embeddings |
+| `mxbai-embed-large` | 512 | Free | Popular for RAG |
 
 
 ## Programmatic Access

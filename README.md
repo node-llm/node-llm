@@ -20,6 +20,9 @@
   &nbsp;&nbsp;&nbsp;&nbsp;
   <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/deepseek-color.svg" height="28" />
   <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/deepseek-text.svg" height="20" />
+  &nbsp;&nbsp;&nbsp;&nbsp;
+  <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/ollama.svg" height="28" />
+  <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/ollama-text.svg" height="18" />
 </p>
 
 <br/>
@@ -161,7 +164,7 @@ console.log(res.content);   // Output the final answer
 | <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/gemini-color.svg" height="18"> <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/gemini-text.svg" height="14"> | Chat, Streaming, Tools, Vision, Audio, Video, Embeddings |
 | <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/anthropic-text.svg" height="12"> | Chat, Streaming, Tools, Vision, PDF Support, Structured Output |
 | <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/deepseek-color.svg" height="18"> <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/deepseek-text.svg" height="14"> | Chat (V3), **Reasoning (R1)**, Tools, Streaming, Structured Output |
-| 🦙 **Ollama** | **Local Inference**, Chat, Streaming, Tools, Vision, Embeddings |
+| <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/ollama.svg" height="18"> <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/ollama-text.svg" height="12"> | **Local Inference**, Chat, Streaming, Tools, Vision, Embeddings |
 
 ---
 
