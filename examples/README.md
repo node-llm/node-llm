@@ -7,6 +7,7 @@ This directory contains examples demonstrating how to use various providers with
 - **OpenAI**: `examples/openai/`
 - **Anthropic**: `examples/anthropic/`
 - **Gemini**: `examples/gemini/`
+- **OpenRouter**: `examples/openrouter/`
 
 ## Prerequisites
 
@@ -16,6 +17,7 @@ This directory contains examples demonstrating how to use various providers with
     DEEPSEEK_API_KEY=your_deepseek_api_key
     ANTHROPIC_API_KEY=your_anthropic_api_key
     GEMINI_API_KEY=your_gemini_api_key
+    OPENROUTER_API_KEY=your_openrouter_api_key
     ```
 
 2.  **Build**: Before running examples, make sure the core package is built:

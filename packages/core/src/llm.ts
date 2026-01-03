@@ -8,12 +8,15 @@ import {
   ModerationResponse,
   ModerationResult,
 } from "./providers/Provider.js";
-import { providerRegistry } from "./providers/registry.js";
-import { ensureOpenAIRegistered } from "./providers/openai/index.js";
-import { registerGeminiProvider } from "./providers/gemini/index.js";
-import { registerAnthropicProvider } from "./providers/anthropic/index.js";
-import { registerDeepSeekProvider } from "./providers/deepseek/index.js";
-import { registerOllamaProvider } from "./providers/ollama/index.js";
+import {
+  providerRegistry,
+  ensureOpenAIRegistered,
+  registerAnthropicProvider,
+  registerGeminiProvider,
+  registerDeepSeekProvider,
+  registerOllamaProvider,
+  registerOpenRouterProvider,
+} from "./providers/registry.js";
 import { GeneratedImage } from "./image/GeneratedImage.js";
 import { ModelRegistry } from "./models/ModelRegistry.js";
 import { Transcription } from "./transcription/Transcription.js";
@@ -49,6 +52,7 @@ const PROVIDER_REGISTRARS: Record<string, () => void> = {
   anthropic: registerAnthropicProvider,
   deepseek: registerDeepSeekProvider,
   ollama: registerOllamaProvider,
+  openrouter: registerOpenRouterProvider,
 };
 
 class LLMCore {
@@ -142,7 +146,12 @@ class LLMCore {
 
   async listModels(): Promise<ModelInfo[]> {
     const provider = this.ensureProviderSupport("listModels");
-    return provider.listModels();
+    const models = await provider.listModels();
+    
+    // Dynamically update the model registry with the fetched info
+    ModelRegistry.save(models as any);
+    
+    return models;
   }
 
   async paint(prompt: string, options?: { model?: string; size?: string; quality?: string; assumeModelExists?: boolean }): Promise<GeneratedImage> {

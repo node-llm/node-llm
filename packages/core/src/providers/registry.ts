@@ -1,4 +1,10 @@
 import { Provider } from "./Provider.js";
+import { registerOpenAIProvider } from "./openai/index.js";
+import { registerAnthropicProvider } from "./anthropic/index.js";
+import { registerGeminiProvider } from "./gemini/index.js";
+import { registerDeepSeekProvider } from "./deepseek/index.js";
+import { registerOllamaProvider } from "./ollama/index.js";
+import { registerOpenRouterProvider } from "./openrouter/index.js";
 
 type ProviderFactory = () => Provider;
 
@@ -30,6 +36,13 @@ class ProviderRegistry {
   }
 
   /**
+   * Check if a provider is registered
+   */
+  has(name: string): boolean {
+    return this.providers.has(name);
+  }
+
+  /**
    * Introspection / debugging
    */
   list(): string[] {
@@ -39,3 +52,13 @@ class ProviderRegistry {
 
 export const providerRegistry = new ProviderRegistry();
 
+// Exported registration functions (delegates to provider-specific index files)
+export { 
+  registerOpenAIProvider as ensureOpenAIRegistered,
+  registerOpenAIProvider,
+  registerAnthropicProvider,
+  registerGeminiProvider,
+  registerDeepSeekProvider,
+  registerOllamaProvider,
+  registerOpenRouterProvider
+};

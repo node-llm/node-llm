@@ -18,6 +18,8 @@ export { OpenAIProvider } from "./providers/openai/OpenAIProvider.js";
 export { registerOpenAIProvider } from "./providers/openai/index.js";
 export { registerAnthropicProvider } from "./providers/anthropic/index.js";
 export { registerOllamaProvider, OllamaProvider } from "./providers/ollama/index.js";
+export { OpenRouterProvider } from "./providers/openrouter/OpenRouterProvider.js";
+export { registerOpenRouterProvider } from "./providers/registry.js";
 export type { ImageRequest, ImageResponse } from "./providers/Provider.js";
 export * from "./errors/index.js";
 

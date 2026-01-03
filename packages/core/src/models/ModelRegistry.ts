@@ -11,6 +11,22 @@ export class ModelRegistry {
     }
 
     /**
+     * Add or update models in the registry.
+     */
+    static save(models: Model | Model[]): void {
+        const toAdd = Array.isArray(models) ? models : [models];
+        
+        toAdd.forEach(newModel => {
+            const index = this.models.findIndex(m => m.id === newModel.id && m.provider === newModel.provider);
+            if (index >= 0) {
+                this.models[index] = newModel;
+            } else {
+                this.models.push(newModel);
+            }
+        });
+    }
+
+    /**
      * Get all available models.
      */
     static all(): Model[] {
