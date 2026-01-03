@@ -15,7 +15,7 @@ permalink: /available-models
 | Model ID | Context | Cost (In/Out) | Notes |
 | :--- | :--- | :--- | :--- |
 | **Flagship** | | | |
-| `gpt-4o` | 128k | $5 / $15 | High intelligence, native multimodal |
+| `gpt-4o` | 128k | $2.50 / $10 | High intelligence, native multimodal |
 | `gpt-4o-mini` | 128k | $0.15 / $0.60 | Fast, cheap replacement for GPT-3.5 |
 | **Reasoning** | | | |
 | `o1-preview` | 128k | $15 / $60 | Advanced reasoning, slower |
@@ -58,9 +58,9 @@ permalink: /available-models
 | Model ID | Context | Cost (In/Out) | Notes |
 | :--- | :--- | :--- | :--- |
 | **DeepSeek V3** | | | |
-| `deepseek-chat` | 64k | $0.27 / $1.10 | Extremely cost-effective flagship |
+| `deepseek-chat` | 128k | $0.27 / $1.10 | Extremely cost-effective flagship |
 | **DeepSeek R1** | | | |
-| `deepseek-reasoner` | 64k | $0.55 / $2.19 | Advanced reasoning (R1) |
+| `deepseek-reasoner` | 128k | $0.55 / $2.19 | Advanced reasoning (R1) |
 
 ## OpenRouter
 

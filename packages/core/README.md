@@ -10,7 +10,30 @@
 
 **An opinionated architectural layer for using Large Language Models in Node.js.**
 
-node-llm provides a unified, production-oriented API for interacting with multiple LLM providers (OpenAI, Gemini, Anthropic, DeepSeek, OpenRouter, Ollama, etc.) without coupling your application to any single SDK.
+node-llm provides a unified, production-oriented API for interacting with over **540+ models** across multiple providers (OpenAI, Gemini, Anthropic, DeepSeek, OpenRouter, Ollama, etc.) without coupling your application to any single SDK.
+
+---
+
+## ⚡ The Golden Path
+
+```ts
+import { LLM } from "@node-llm/core";
+
+// 1. Configure once
+LLM.configure({ provider: "openai" });
+
+// 2. Chat (High-level request/response)
+const chat = LLM.chat("gpt-4o");
+const response = await chat.ask("Explain event-driven architecture");
+console.log(response.content);
+
+// 3. Streaming (Standard AsyncIterator)
+for await (const chunk of chat.stream("Explain event-driven architecture")) {
+  process.stdout.write(chunk.content);
+}
+```
+
+---
 
 ### Why node-llm?
 
@@ -98,27 +121,6 @@ Direct access to the thought process of models like **DeepSeek R1** or **OpenAI 
 ```ts
 const res = await LLM.chat("deepseek-reasoner").ask("Solve this logical puzzle");
 console.log(res.reasoning); // Chain-of-thought
-```
-
----
-
-## ⚡ The Golden Path
-
-```ts
-import { LLM } from "@node-llm/core";
-
-// 1. Configure once
-LLM.configure({ provider: "openai" });
-
-// 2. Chat (High-level request/response)
-const chat = LLM.chat("gpt-4o");
-const response = await chat.ask("Explain event-driven architecture");
-console.log(response.content);
-
-// 3. Streaming (Standard AsyncIterator)
-for await (const chunk of chat.stream("Explain event-driven architecture")) {
-  process.stdout.write(chunk.content);
-}
 ```
 
 ---

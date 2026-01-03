@@ -5,7 +5,7 @@
 # @node-llm/core
 **An opinionated architectural layer for using Large Language Models in Node.js.**
 
-Build chatbots, autonomous agents, and RAG pipelines without the SDK fatigue. node-llm provides a unified, production-oriented API for interacting with multiple LLM providers (OpenAI, Gemini, Anthropic, DeepSeek, OpenRouter, Ollama, etc.) without coupling your application to any single SDK.
+Build chatbots, autonomous agents, and RAG pipelines without the SDK fatigue. node-llm provides a unified, production-oriented API for interacting with over **540+ models** across multiple providers (OpenAI, Gemini, Anthropic, DeepSeek, OpenRouter, Ollama, etc.) without coupling your application to any single SDK.
 
 <br/>
 

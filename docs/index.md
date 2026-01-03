@@ -78,27 +78,6 @@ node-llm exists to solve **architectural problems**, not just provide API access
 
 ---
 
-## ⚡ The Golden Path
-
-```ts
-import { LLM } from "@node-llm/core";
-
-// 1. Configure once
-LLM.configure({ provider: "openai" });
-
-// 2. Chat (High-level request/response)
-const chat = LLM.chat("gpt-4o");
-const response = await chat.ask("Explain event-driven architecture");
-console.log(response.content);
-
-// 3. Streaming (Standard AsyncIterator)
-for await (const chunk of chat.stream("Explain event-driven architecture")) {
-  process.stdout.write(chunk.content);
-}
-```
-
----
-
 ## 🔧 Strategic Configuration
 
 node-llm provides a flexible configuration system designed for enterprise usage:
@@ -200,6 +179,7 @@ console.log(res.reasoning); // Chain-of-thought
 | <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/gemini-color.svg" height="18"> **Gemini** | Chat, Streaming, Tools, Vision, Audio, Video, Embeddings |
 | <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/anthropic-text.svg" height="12"> **Anthropic** | Chat, Streaming, Tools, Vision, PDF, Structured Output |
 | <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/deepseek-color.svg" height="18"> **DeepSeek** | Chat (V3), **Reasoning (R1)**, Tools, Streaming |
+| <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/openrouter.svg" height="18"> **OpenRouter** | **Aggregator**, Chat, Streaming, Tools, Vision, Embeddings, **Reasoning** |
 | <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/ollama.svg" height="18"> **Ollama** | **Local Inference**, Chat, Streaming, Tools, Vision, Embeddings |
 
 ---
