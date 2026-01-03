@@ -1,10 +1,11 @@
 import { FileLoader } from "../utils/FileLoader.js";
 import { Message } from "./Message.js";
 import { ChatOptions } from "./ChatOptions.js";
-import { Provider, Usage } from "../providers/Provider.js";
+import { Provider, Usage, ChatChunk } from "../providers/Provider.js";
 import { Executor } from "../executor/Executor.js";
 import { LLM } from "../llm.js";
-import { Stream } from "./Stream.js";
+import { ChatStream } from "./ChatStream.js";
+import { Stream } from "../streaming/Stream.js";
 import { Tool } from "./Tool.js";
 import { Schema } from "../schema/Schema.js";
 import { toJsonSchema } from "../schema/to-json-schema.js";
@@ -427,9 +428,9 @@ export class Chat {
   /**
    * Streams the model's response to a user question.
    */
-  async *stream(content: string) {
-    const streamer = new Stream(this.provider, this.model, this.options, this.messages);
-    yield* streamer.stream(content);
+  stream(content: string): Stream<ChatChunk> {
+    const streamer = new ChatStream(this.provider, this.model, this.options, this.messages);
+    return streamer.create(content);
   }
 }
 

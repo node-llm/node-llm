@@ -7,7 +7,11 @@ import { AnthropicMessageRequest } from "./types.js";
 export class AnthropicStreaming {
   constructor(private readonly baseUrl: string, private readonly apiKey: string) {}
 
-  async *execute(request: ChatRequest): AsyncGenerator<ChatChunk> {
+  async *execute(
+    request: ChatRequest,
+    controller?: AbortController
+  ): AsyncGenerator<ChatChunk> {
+    const abortController = controller || new AbortController();
     const model = request.model;
     const maxTokens = request.max_tokens || Capabilities.getMaxOutputTokens(model) || 4096;
     
@@ -60,27 +64,32 @@ export class AnthropicStreaming {
       headers["anthropic-beta"] = "pdfs-2024-09-25";
     }
 
-    const response = await fetch(`${this.baseUrl}/messages`, {
-      method: "POST",
-      headers: headers,
-      body: JSON.stringify(body),
-    });
 
-    if (!response.ok) {
+    let done = false;
+
+    try {
+      const response = await fetch(`${this.baseUrl}/messages`, {
+        method: "POST",
+        headers: headers,
+        body: JSON.stringify(body),
+        signal: abortController.signal,
+      });
+
+      if (!response.ok) {
         await handleAnthropicError(response, model);
-    }
+      }
 
-    if (!response.body) {
-      throw new Error("No response body for streaming");
-    }
+      if (!response.body) {
+        throw new Error("No response body for streaming");
+      }
 
-    const reader = response.body.getReader();
-    const decoder = new TextDecoder();
-    let buffer = "";
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+      let buffer = "";
 
-    while (true) {
-        const { value, done } = await reader.read();
-        if (done) break;
+      while (true) {
+        const { value, done: readerDone } = await reader.read();
+        if (readerDone) break;
 
         const chunk = decoder.decode(value, { stream: true });
         buffer += chunk;
@@ -89,44 +98,65 @@ export class AnthropicStreaming {
         buffer = lines.pop() || "";
 
         for (const line of lines) {
-            const trimmed = line.trim();
-            if (!trimmed.startsWith("event: ")) continue;
-            
-            // Format is:
-            // event: type
-            // data: json
-            
-            const parts = trimmed.split("\n");
-            const eventLine = parts[0];
-            const dataLine = parts.find(p => p.startsWith("data: "));
-            
-            if (!dataLine || !eventLine) continue;
+          let trimmed = line.trim();
+          
+          // Handle carriage returns
+          if (trimmed.endsWith('\r')) {
+            trimmed = trimmed.substring(0, trimmed.length - 1);
+          }
 
-            const eventType = eventLine.replace("event: ", "").trim();
-            const dataStr = dataLine.replace("data: ", "").trim();
+          if (!trimmed.startsWith("event: ")) continue;
+          
+          // Format is:
+          // event: type
+          // data: json
+          
+          const parts = trimmed.split("\n");
+          const eventLine = parts[0];
+          const dataLine = parts.find(p => p.startsWith("data: "));
+          
+          if (!dataLine || !eventLine) continue;
 
-            try {
-                const data = JSON.parse(dataStr);
-                
-                // Handle different event types from Anthropic
-                if (eventType === "content_block_delta") {
-                   if (data.delta && data.delta.type === "text_delta") {
-                       yield { content: data.delta.text };
-                   }
-                }
-                else if (eventType === "message_start") {
-                    // Could extract initial usage here
-                }
-                else if (eventType === "message_delta") {
-                    // Update usage or stop reason
-                }
-                else if (eventType === "error") {
-                    throw new Error(`Stream error: ${data.error?.message}`);
-                }
-            } catch (e) {
-                // console.warn("Parse error", e);
+          const eventType = eventLine.replace("event: ", "").trim();
+          const dataStr = dataLine.replace("data: ", "").trim();
+
+          try {
+            const data = JSON.parse(dataStr);
+            
+            // Handle different event types from Anthropic
+            if (eventType === "content_block_delta") {
+              if (data.delta && data.delta.type === "text_delta") {
+                yield { content: data.delta.text };
+              }
             }
+            else if (eventType === "message_start") {
+              // Could extract initial usage here
+            }
+            else if (eventType === "message_delta") {
+              // Update usage or stop reason
+            }
+            else if (eventType === "error") {
+              throw new Error(`Stream error: ${data.error?.message}`);
+            }
+          } catch (e) {
+            // Re-throw errors
+            if (e instanceof Error && e.message.startsWith("Stream error")) throw e;
+            // Ignore parse errors
+          }
         }
+      }
+      done = true;
+    } catch (e) {
+      // Graceful exit on abort
+      if (e instanceof Error && e.name === 'AbortError') {
+        return;
+      }
+      throw e;
+    } finally {
+      // Cleanup: abort if user breaks early
+      if (!done) {
+        abortController.abort();
+      }
     }
   }
 }

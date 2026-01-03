@@ -7,7 +7,11 @@ import { GeminiChatUtils } from "./ChatUtils.js";
 export class GeminiStreaming {
   constructor(private readonly baseUrl: string, private readonly apiKey: string) {}
 
-  async *execute(request: ChatRequest): AsyncGenerator<ChatChunk> {
+  async *execute(
+    request: ChatRequest,
+    controller?: AbortController
+  ): AsyncGenerator<ChatChunk> {
+    const abortController = controller || new AbortController();
     const temperature = Capabilities.normalizeTemperature(request.temperature, request.model);
     const url = `${this.baseUrl}/models/${request.model}:streamGenerateContent?alt=sse&key=${this.apiKey}`;
 
@@ -36,53 +40,75 @@ export class GeminiStreaming {
       payload.systemInstruction = { parts: systemInstructionParts };
     }
 
-    const response = await fetch(url, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(payload),
-    });
+    let done = false;
 
-    if (!response.ok) {
-      await handleGeminiError(response, request.model);
-    }
+    try {
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+        signal: abortController.signal,
+      });
 
-    if (!response.body) {
-      throw new Error("No response body for streaming");
-    }
+      if (!response.ok) {
+        await handleGeminiError(response, request.model);
+      }
 
-    const reader = response.body.getReader();
-    const decoder = new TextDecoder();
-    let buffer = "";
+      if (!response.body) {
+        throw new Error("No response body for streaming");
+      }
 
-    while (true) {
-      const { value, done } = await reader.read();
-      if (done) break;
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+      let buffer = "";
 
-      buffer += decoder.decode(value, { stream: true });
+      while (true) {
+        const { value, done: readerDone } = await reader.read();
+        if (readerDone) break;
 
-      let lineEnd;
-      while ((lineEnd = buffer.indexOf("\n")) !== -1) {
-        const line = buffer.substring(0, lineEnd).trim();
-        buffer = buffer.substring(lineEnd + 1);
+        buffer += decoder.decode(value, { stream: true });
 
-        if (line.startsWith("data: ")) {
-          const data = line.substring(6).trim();
-          if (!data) continue;
+        let lineEnd;
+        while ((lineEnd = buffer.indexOf("\n")) !== -1) {
+          let line = buffer.substring(0, lineEnd).trim();
+          buffer = buffer.substring(lineEnd + 1);
 
-          try {
-            const json = JSON.parse(data) as GeminiGenerateContentResponse;
-            const parts = json.candidates?.[0]?.content?.parts || [];
-            for (const part of parts) {
-              if (part.text) {
-                yield { content: part.text };
+          // Handle carriage returns
+          if (line.endsWith('\r')) {
+            line = line.substring(0, line.length - 1);
+          }
+
+          if (line.startsWith("data: ")) {
+            const data = line.substring(6).trim();
+            if (!data) continue;
+
+            try {
+              const json = JSON.parse(data) as GeminiGenerateContentResponse;
+              const parts = json.candidates?.[0]?.content?.parts || [];
+              for (const part of parts) {
+                if (part.text) {
+                  yield { content: part.text };
+                }
               }
+            } catch (e) {
+              // Ignore parse errors
             }
-          } catch (e) {
-            // Ignore parse errors
           }
         }
+      }
+      done = true;
+    } catch (e) {
+      // Graceful exit on abort
+      if (e instanceof Error && e.name === 'AbortError') {
+        return;
+      }
+      throw e;
+    } finally {
+      // Cleanup: abort if user breaks early
+      if (!done) {
+        abortController.abort();
       }
     }
   }
