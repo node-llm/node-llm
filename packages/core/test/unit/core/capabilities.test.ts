@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi, beforeEach } from "vitest";
 import { Chat } from "../../../src/chat/Chat.js";
 import { Provider, ChatRequest, ChatResponse } from "../../../src/providers/Provider.js";
 import path from "path";
@@ -16,6 +16,7 @@ class MockLimitedProvider implements Provider {
     supportsImageGeneration: () => false,
     supportsTranscription: () => false,
     supportsModeration: () => false,
+    supportsReasoning: () => false,
     getContextWindow: () => 4096,
   };
 
@@ -25,6 +26,13 @@ class MockLimitedProvider implements Provider {
 }
 
 describe("Chat Capabilities Validation", () => {
+  beforeEach(() => {
+    vi.stubGlobal("fetch", vi.fn(async () => ({
+      ok: true,
+      arrayBuffer: async () => new ArrayBuffer(8),
+      headers: { get: () => "image/jpeg" }
+    })));
+  });
   it("should throw error if vision is used on a model that doesn't support it", async () => {
     const provider = new MockLimitedProvider();
     const chat = new Chat(provider, "limited-model");

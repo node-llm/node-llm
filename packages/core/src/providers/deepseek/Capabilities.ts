@@ -20,7 +20,7 @@ export class Capabilities {
     if (val) return val;
     
     if (/deepseek-(?:chat|reasoner)/.test(modelId)) {
-        return 64_000;
+        return 128_000;
     }
     return 32_768;
   }

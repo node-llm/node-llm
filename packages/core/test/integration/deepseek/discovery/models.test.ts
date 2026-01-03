@@ -28,6 +28,6 @@ describe("DeepSeek Discovery Integration (VCR)", { timeout: 30000 }, () => {
     
     const chatModel = models.find(m => m.id === "deepseek-chat");
     expect(chatModel?.provider).toBe("deepseek");
-    expect(chatModel?.context_window).toBe(64000);
+    expect(chatModel?.context_window).toBe(128000);
   });
 });

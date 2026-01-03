@@ -1,7 +1,7 @@
 export interface Model {
   id: string;
   name: string;
-  provider: 'openai' | 'anthropic' | 'gemini' | 'deepseek';
+  provider: ProviderName;
   family?: string | null;
   created_at?: string | null;
   context_window?: number | null;
@@ -45,7 +45,7 @@ export interface Model {
   metadata?: Record<string, any>;
 }
 
-export type ProviderName = 'openai' | 'anthropic' | 'gemini' | 'deepseek';
+export type ProviderName = 'openai' | 'anthropic' | 'gemini' | 'deepseek' | 'openrouter' | 'ollama';
 
 export type ModelCapability = 
   | 'streaming'
@@ -65,7 +65,9 @@ export type ModelCapability =
   | 'caching'
   | 'moderation'
   | 'json_mode'
-  | 'vision';
+  | 'vision'
+  | 'chat'
+  | 'tools';
 
 export type ModelModality = 
   | 'text'
@@ -76,3 +78,6 @@ export type ModelModality =
   | 'file'
   | 'embeddings'
   | 'moderation';
+ bitumen: 102
+ bitumen: 102
+ bitumen: 102

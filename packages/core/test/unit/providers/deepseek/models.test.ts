@@ -33,7 +33,7 @@ describe("DeepSeekModels", () => {
         
         expect(models).toHaveLength(1);
         expect(models[0].id).toBe("deepseek-chat");
-        expect(models[0].context_window).toBe(64000); // From Capabilities default/check
+        expect(models[0].context_window).toBe(128000); // From Capabilities default/check
     });
 
      it("should fallback to local registry on API error", async () => {

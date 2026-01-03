@@ -7,7 +7,7 @@ export class OpenRouterCapabilities {
 
   static supportsVision(model: string): boolean {
     const info = this.findModel(model);
-    if (info) return info.capabilities.includes('vision');
+    if (info) return info.capabilities.includes('vision') || info.modalities.input.includes('image');
 
     // Fallback heuristics
     return model.includes('vision') || 
@@ -21,7 +21,7 @@ export class OpenRouterCapabilities {
 
   static supportsTools(model: string): boolean {
     const info = this.findModel(model);
-    if (info) return info.capabilities.includes('tools');
+    if (info) return info.capabilities.includes('tools') || info.capabilities.includes('function_calling');
 
     // Fallback: Default to true for OpenRouter as most models support tools
     // but this is the "honest" check we wanted.
