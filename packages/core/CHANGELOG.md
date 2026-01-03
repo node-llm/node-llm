@@ -1,5 +1,79 @@
 # Changelog
 
+## 1.1.0 (2026-01-03)
+
+🎉 ** Official Release of @node-llm/core**
+
+This is the first **recommended** stable release of `@node-llm/core`, a production-ready, provider-agnostic LLM library for Node.js.
+
+> **Note**: Version `1.0.0` was an early experimental release. `1.1.0` is the first version recommended for production use.
+
+### Core Features
+
+*   **Unified API Across 6 Providers:**
+    *   OpenAI (GPT-4o, o1, o3, DALL-E 3, Whisper, etc.)
+    *   Anthropic (Claude 3.7 Sonnet, Claude 3.5 Sonnet, Claude 3 Haiku)
+    *   Google Gemini (Gemini 1.5 Pro, Flash, etc.)
+    *   DeepSeek (Chat V3, Reasoning R1)
+    *   OpenRouter (540+ models aggregator)
+    *   Ollama (Local inference)
+
+*   **Chat & Streaming:**
+    *   Standardized `chat()` and `stream()` APIs across all providers.
+    *   Full conversation history management.
+    *   Support for system prompts, temperature, max tokens.
+
+*   **Multimodal Support:**
+    *   Vision: Images (URLs, base64, local files)
+    *   Audio: Transcription via Whisper
+    *   Video: Gemini video analysis
+    *   PDF: Claude 3.5 PDF analysis
+    *   Intelligent file loading with automatic MIME type detection
+
+*   **Tool Calling:**
+    *   Automatic recursive tool execution loop.
+    *   Provider-agnostic tool definition format.
+    *   Support for multiple tools per request.
+
+*   **Structured Output:**
+    *   Zod schema validation with `.withSchema()`
+    *   Automatic JSON parsing into `response.parsed`
+    *   Support for OpenAI's strict mode
+
+*   **Advanced Capabilities:**
+    *   **Reasoning Models:** Direct access to chain-of-thought via `.reasoning` property (DeepSeek R1, OpenAI o1/o3)
+    *   **Image Generation:** `NodeLLM.paint()` for DALL-E 3
+    *   **Embeddings:** `NodeLLM.embed()` for semantic search
+    *   **Moderation:** `NodeLLM.moderate()` for content safety
+    *   **Model Discovery:** `NodeLLM.listModels()` for dynamic model enumeration
+
+*   **Enterprise Features:**
+    *   Custom endpoint support (Azure OpenAI, LiteLLM, LocalAI)
+    *   `assumeModelExists` flag for private deployments
+    *   Flexible configuration system (callback or object-based)
+    *   Comprehensive retry logic
+
+### Architecture
+
+*   **Provider Isolation:** Zero coupling to vendor SDKs
+*   **Type Safety:** Full TypeScript support with strict typing
+*   **Standard Streams:** AsyncIterator-based streaming (no vendor-specific events)
+*   **Capability Detection:** Runtime model capability validation
+
+### Documentation
+
+*   Full documentation site: [node-llm.eshaiju.com](https://node-llm.eshaiju.com)
+*   Comprehensive examples for all providers and features
+*   Migration guides and configuration references
+
+### Testing
+
+*   258+ passing tests (unit + integration)
+*   VCR-based integration tests for deterministic CI
+*   Full coverage of all providers and features
+
+---
+
 ## 0.7.0 (2025-01-02)
 
 ### Features
@@ -61,8 +135,8 @@
     *   Enhanced `response.parsed` to automatically handle response parsing for all supported providers.
 
 *   **Simplified API Exports:**
-    *   Added `z` (Zod) as a direct export from `@nodellm/core` to simplify downstream dependency management.
-    *   Users can now import `z` directly: `import { NodeLLM, z } from "@nodellm/core"`.
+    *   Added `z` (Zod) as a direct export from `@node-llm/core` to simplify downstream dependency management.
+    *   Users can now import `z` directly: `import { NodeLLM, z } from "@node-llm/core"`.
 
 ### Improvements
 
