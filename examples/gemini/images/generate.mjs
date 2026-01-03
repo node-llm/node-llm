@@ -1,17 +1,17 @@
 import "dotenv/config";
-import { LLM } from "../../../packages/core/dist/index.js";
+import { NodeLLM } from "../../../packages/core/dist/index.js";
 import fs from "fs/promises";
 
 async function main() {
-  LLM.configure((config) => {
+  NodeLLM.configure((config) => {
     config.geminiApiKey = process.env.GEMINI_API_KEY;
   });
   
-  LLM.configure({ provider: "gemini" });
+  NodeLLM.configure({ provider: "gemini" });
 
   try {
     console.log("🎨 Generatig with Imagen...");
-    const image = await LLM.paint("a futuristic space station", {
+    const image = await NodeLLM.paint("a futuristic space station", {
       model: "imagen-3.0-generate-001",
     });
     

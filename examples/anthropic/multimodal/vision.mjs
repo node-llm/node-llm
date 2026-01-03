@@ -1,12 +1,12 @@
 import "dotenv/config";
-import { LLM } from "../../../packages/core/dist/index.js";
+import { NodeLLM } from "../../../packages/core/dist/index.js";
 
 async function main() {
-  LLM.configure({
+  NodeLLM.configure({
     provider: "anthropic",
   });
 
-  const chat = LLM.chat("claude-3-haiku-20240307");
+  const chat = NodeLLM.chat("claude-3-haiku-20240307");
 
   console.log("Analyzing image...");
 

@@ -1,14 +1,14 @@
 
-import { LLM } from "../../../packages/core/dist/index.js";
+import { NodeLLM } from "../../../packages/core/dist/index.js";
 
 async function main() {
   console.log("🦙 Ollama Vision Example");
   console.log("Note: Requires a vision-capable model (e.g., 'llama3.2-vision' or 'llava')");
   console.log("Run: ollama pull llama3.2-vision\n");
   
-  LLM.configure({ provider: "ollama" });
+  NodeLLM.configure({ provider: "ollama" });
 
-  const chat = LLM.chat("llama3.2-vision");
+  const chat = NodeLLM.chat("llama3.2-vision");
 
   const imageUrl = "https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Gfp-wisconsin-madison-the-nature-boardwalk.jpg/2560px-Gfp-wisconsin-madison-the-nature-boardwalk.jpg";
   

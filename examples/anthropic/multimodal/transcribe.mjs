@@ -1,15 +1,15 @@
 import "dotenv/config";
-import { LLM } from "../../../packages/core/dist/index.js";
+import { NodeLLM } from "../../../packages/core/dist/index.js";
 
 async function main() {
-  LLM.configure({
+  NodeLLM.configure({
     provider: "anthropic",
   });
 
   console.log("Attempting to transcribe audio with Anthropic...");
 
   try {
-    await LLM.transcribe({
+    await NodeLLM.transcribe({
       file: "dummy.mp3",
     });
   } catch (error) {

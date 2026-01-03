@@ -1,5 +1,5 @@
 import { describe, it, expect, afterEach } from "vitest";
-import { LLM } from "../../../../src/index.js";
+import { NodeLLM } from "../../../../src/index.js";
 import { setupVCR } from "../../../helpers/vcr.js";
 import path from "path";
 import dotenv from "dotenv";
@@ -17,12 +17,12 @@ describe("OpenRouter Multi-modal Integration (VCR)", { timeout: 30000 }, () => {
   it("should analyze images (Vision)", async ({ task }) => {
     polly = setupVCR(task.name, "openrouter");
 
-    LLM.configure({
+    NodeLLM.configure({
       openrouterApiKey: process.env.OPENROUTER_API_KEY,
       provider: "openrouter",
     });
     // Use a vision-capable model
-    const chat = LLM.chat("google/gemini-2.0-flash-exp:free");
+    const chat = NodeLLM.chat("google/gemini-2.0-flash-exp:free");
 
     const response = await chat.ask("What's in this image?", {
       files: ["https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Gfp-wisconsin-madison-the-nature-boardwalk.jpg/2560px-Gfp-wisconsin-madison-the-nature-boardwalk.jpg"]

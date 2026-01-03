@@ -1,6 +1,5 @@
 import { Message } from "../chat/Message.js";
 import { Tool, ToolCall } from "../chat/Tool.js";
-import { MessageContent } from "../chat/Content.js";
 
 export interface ChatRequest {
   model: string;
@@ -138,12 +137,8 @@ export interface EmbeddingResponse {
   dimensions: number;
 }
 
-export interface EmbeddingProvider {
-  embed(request: EmbeddingRequest): Promise<EmbeddingResponse>;
-}
-
 export interface Provider {
-  id: string;
+  id: string; // "openai", "anthropic", "gemini", etc.
   chat(request: ChatRequest): Promise<ChatResponse>;
   stream?(request: ChatRequest): AsyncIterable<ChatChunk>;
   listModels?(): Promise<ModelInfo[]>;

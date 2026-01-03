@@ -1,15 +1,15 @@
 import "dotenv/config";
-import { LLM } from "../../../packages/core/dist/index.js";
+import { NodeLLM } from "../../../packages/core/dist/index.js";
 
 async function main() {
-  LLM.configure((config) => {
+  NodeLLM.configure((config) => {
     config.deepseekApiKey = process.env.DEEPSEEK_API_KEY;
   });
   
-  LLM.configure({ provider: "deepseek" });
+  NodeLLM.configure({ provider: "deepseek" });
 
   console.log("Fetching DeepSeek models...");
-  const models = await LLM.listModels();
+  const models = await NodeLLM.listModels();
   
   if (models.length === 0) {
       console.log("No models found.");

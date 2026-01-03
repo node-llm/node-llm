@@ -1,18 +1,18 @@
 import "dotenv/config";
-import { LLM } from "../../../packages/core/dist/index.js";
+import { NodeLLM } from "../../../packages/core/dist/index.js";
 import path from "path";
 import { fileURLToPath } from "url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 async function main() {
-  LLM.configure((config) => {
+  NodeLLM.configure((config) => {
     config.openaiApiKey = process.env.OPENAI_API_KEY;
   });
   
-  LLM.configure({ provider: "openai" });
+  NodeLLM.configure({ provider: "openai" });
 
-  const chat = LLM.chat("gpt-4o");
+  const chat = NodeLLM.chat("gpt-4o");
 
   console.log("Analyzing multiple project files (README + code)...\n");
   

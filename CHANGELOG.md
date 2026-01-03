@@ -20,7 +20,7 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 - **Ollama Provider**: Native support for local inference via Ollama.
-- **Model Discovery**: Ability to list and inspect local models using `LLM.listModels()`.
+- **Model Discovery**: Ability to list and inspect local models using `NodeLLM.listModels()`.
 - **DeepSeek V3 and R1**: Full support for DeepSeek's latest chat and reasoning models.
 - **Enhanced Model Registry**: Now includes Gemini 1.5 Flash 8B and popular local models with accurate pricing and capabilities.
 - **Rich Documentation**: New guides and examples for local integration, vision, and tool-calling.
@@ -28,7 +28,7 @@ All notable changes to this project will be documented in this file.
 ## [0.7.0] - 2026-01-02
 
 ### Added
-- Unified configuration system via `LLM.configure`.
+- Unified configuration system via `NodeLLM.configure`.
 - Better support for custom endpoints.
 
 ## [0.6.0] - 2026-01-01

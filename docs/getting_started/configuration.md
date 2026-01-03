@@ -14,10 +14,10 @@ parent: Getting Started
 The simplest configuration sets your API keys and the active provider:
 
 ```typescript
-import { LLM } from "@node-llm/core";
+import { NodeLLM } from "@node-llm/core";
 
 // Configure OpenAI
-LLM.configure({
+NodeLLM.configure({
   provider: "openai",
   openaiApiKey: process.env.OPENAI_API_KEY,
 });
@@ -31,7 +31,7 @@ You can switch providers at any time by calling `configure` again.
 
 ```typescript
 // Switch to Anthropic
-LLM.configure({
+NodeLLM.configure({
   provider: "anthropic",
   anthropicApiKey: process.env.ANTHROPIC_API_KEY,
 });
@@ -44,7 +44,7 @@ LLM.configure({
 Configure API keys in the configuration object.
 
 ```typescript
-LLM.configure({
+NodeLLM.configure({
   openaiApiKey: process.env.OPENAI_API_KEY,
   anthropicApiKey: process.env.ANTHROPIC_API_KEY,
   geminiApiKey: process.env.GEMINI_API_KEY,
@@ -58,7 +58,7 @@ LLM.configure({
 Override the default API endpoints for custom deployments (e.g., Azure OpenAI):
 
 ```typescript
-LLM.configure({
+NodeLLM.configure({
   provider: "openai",
   openaiApiKey: process.env.AZURE_OPENAI_API_KEY,
   openaiApiBase: process.env.AZURE_OPENAI_API_BASE_ENDPOINT,
@@ -85,7 +85,7 @@ LLM.configure({
 You can inspect the current internal configuration at any time.
 
 ```typescript
-console.log(LLM.config.openaiApiKey);
+console.log(NodeLLM.config.openaiApiKey);
 ```
 
 ## Error Handling
@@ -94,7 +94,7 @@ Attempting to use an unconfigured provider will raise a clear error:
 
 ```typescript
 // If API key is not set
-LLM.configure({ provider: "openai" });
+NodeLLM.configure({ provider: "openai" });
 // Error: openaiApiKey is not set in config...
 ```
 
@@ -107,7 +107,7 @@ By default, `node-llm` automatically loads configuration from environment variab
 // OPENAI_API_KEY=sk-env-key
 
 // Override programmatically
-LLM.configure({
+NodeLLM.configure({
   openaiApiKey: "sk-programmatic-key" // This wins
 });
 ```
@@ -117,15 +117,15 @@ LLM.configure({
 1. **Use dotenv for local development**:
    ```typescript
    import "dotenv/config";
-   import { LLM } from "@node-llm/core";
+   import { NodeLLM } from "@node-llm/core";
    
-   LLM.configure({ provider: "openai" });
+   NodeLLM.configure({ provider: "openai" });
    ```
 
 2. **Configure once at startup**:
    ```typescript
    // app.ts
-   LLM.configure({
+   NodeLLM.configure({
      openaiApiKey: process.env.OPENAI_API_KEY,
      anthropicApiKey: process.env.ANTHROPIC_API_KEY
    });
@@ -134,10 +134,10 @@ LLM.configure({
 3. **Switch providers dynamically**:
    ```typescript
    // Use OpenAI for one task
-   LLM.configure({ provider: "openai" });
-   const chat1 = LLM.chat("gpt-4o");
+   NodeLLM.configure({ provider: "openai" });
+   const chat1 = NodeLLM.chat("gpt-4o");
    
    // Switch to Anthropic for another
-   LLM.configure({ provider: "anthropic" });
-   const chat2 = LLM.chat("claude-3-5-sonnet-20241022");
+   NodeLLM.configure({ provider: "anthropic" });
+   const chat2 = NodeLLM.chat("claude-3-5-sonnet-20241022");
    ```

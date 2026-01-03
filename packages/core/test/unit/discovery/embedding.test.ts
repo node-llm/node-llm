@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { LLM } from "../../../src/llm.js";
+import { NodeLLM } from "../../../src/llm.js";
 import { EmbeddingRequest, EmbeddingResponse } from "../../../src/providers/Embedding.js";
 
 // Mock Provider
@@ -13,10 +13,10 @@ const mockProvider = {
   },
 };
 
-describe("LLM Embeddings", () => {
+describe("NodeLLM Embeddings", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    LLM.configure({ 
+    NodeLLM.configure({ 
       provider: mockProvider as any,
       defaultEmbeddingModel: "text-embedding-3-small"
     });
@@ -31,7 +31,7 @@ describe("LLM Embeddings", () => {
     });
 
     const input = "test input";
-    const response = await LLM.embed(input);
+    const response = await NodeLLM.embed(input);
 
     expect(mockEmbed).toHaveBeenCalledWith({
       input,
@@ -54,7 +54,7 @@ describe("LLM Embeddings", () => {
     });
 
     const input = ["test1", "test2"];
-    await LLM.embed(input);
+    await NodeLLM.embed(input);
 
     expect(mockEmbed).toHaveBeenCalledWith(expect.objectContaining({
       input,
@@ -64,7 +64,7 @@ describe("LLM Embeddings", () => {
   it("should allow overriding model and dimensions", async () => {
     mockEmbed.mockResolvedValue({});
 
-    await LLM.embed("test", { model: "custom-model", dimensions: 128 });
+    await NodeLLM.embed("test", { model: "custom-model", dimensions: 128 });
 
     expect(mockEmbed).toHaveBeenCalledWith({
       input: "test",
@@ -74,13 +74,13 @@ describe("LLM Embeddings", () => {
   });
 
   it("should use defaultEmbeddingModel if configured", async () => {
-    LLM.configure({
+    NodeLLM.configure({
       provider: mockProvider as any,
       defaultEmbeddingModel: "configured-default",
     });
 
     mockEmbed.mockResolvedValue({});
-    await LLM.embed("test");
+    await NodeLLM.embed("test");
 
     expect(mockEmbed).toHaveBeenCalledWith({
       input: "test",
@@ -91,18 +91,18 @@ describe("LLM Embeddings", () => {
 
   it("should throw if provider not configured", async () => {
     // @ts-ignore - hacking private property for test
-    LLM["provider"] = undefined;
-    await expect(LLM.embed("test")).rejects.toThrow("LLM provider not configured");
+    NodeLLM["provider"] = undefined;
+    await expect(NodeLLM.embed("test")).rejects.toThrow("LLM provider not configured");
   });
 
   it("should throw if provider does not support embed", async () => {
-    LLM.configure({ provider: {} as any });
-    await expect(LLM.embed("test")).rejects.toThrow("Provider does not support embed");
+    NodeLLM.configure({ provider: {} as any });
+    await expect(NodeLLM.embed("test")).rejects.toThrow("Provider does not support embed");
   });
 
   it("should throw if model does not support embeddings", async () => {
     mockSupportsEmbeddings.mockReturnValueOnce(false);
-    await expect(LLM.embed("test", { model: "chat-model" }))
+    await expect(NodeLLM.embed("test", { model: "chat-model" }))
       .rejects.toThrow("Model chat-model does not support embeddings");
   });
 });

@@ -8,7 +8,7 @@ let registered = false;
 
 /**
  * Idempotent registration of the OpenRouter provider.
- * Automatically called by LLM.configure({ provider: 'openrouter' })
+ * Automatically called by NodeLLM.configure({ provider: 'openrouter' })
  */
 export function registerOpenRouterProvider() {
   if (registered) return;

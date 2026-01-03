@@ -47,13 +47,13 @@ Build chatbots, autonomous agents, and RAG pipelines without the SDK fatigue. no
 ## ⚡ The Golden Path
 
 ```ts
-import { LLM } from "@node-llm/core";
+import { NodeLLM } from "@node-llm/core";
 
 // 1. Configure once
-LLM.configure({ provider: "openai" });
+NodeLLM.configure({ provider: "openai" });
 
 // 2. Chat (High-level request/response)
-const chat = LLM.chat("gpt-4o");
+const chat = NodeLLM.chat("gpt-4o");
 const response = await chat.ask("Explain event-driven architecture");
 console.log(response.content);
 
@@ -84,17 +84,17 @@ node-llm provides a flexible configuration system designed for enterprise usage:
 
 ```ts
 // Recommended for multi-provider pipelines
-LLM.configure((config) => {
+NodeLLM.configure((config) => {
   config.openaiApiKey = process.env.OPENAI_API_KEY;
   config.anthropicApiKey = process.env.ANTHROPIC_API_KEY;
   config.ollamaApiBase = process.env.OLLAMA_API_BASE;
 });
 
 // Switch providers at the framework level
-LLM.configure({ provider: "anthropic" });
+NodeLLM.configure({ provider: "anthropic" });
 
 // Support for Custom Endpoints (e.g., Azure or LocalAI)
-LLM.configure({
+NodeLLM.configure({
   openaiApiKey: process.env.AZURE_KEY,
   openaiApiBase: "https://your-resource.openai.azure.com/openai/deployments/...",
 });
@@ -107,7 +107,7 @@ LLM.configure({
 ### 💬 Unified Chat
 Stop rewriting code for every provider. `node-llm` normalizes inputs and outputs into a single, predictable mental model.
 ```ts
-const chat = LLM.chat(); // Defaults to GPT-4o
+const chat = NodeLLM.chat(); // Defaults to GPT-4o
 await chat.ask("Hello world");
 ```
 
@@ -142,18 +142,18 @@ console.log(res.parsed.name); // Full type-safety
 
 ### 🎨 Image Generation
 ```ts
-await LLM.paint("A cyberpunk city in rain");
+await NodeLLM.paint("A cyberpunk city in rain");
 ```
 
 ### 🎤 Audio Transcription
 ```ts
-await LLM.transcribe("meeting-recording.wav");
+await NodeLLM.transcribe("meeting-recording.wav");
 ```
 
 ### 🧠 Deep Reasoning
 Direct access to the thought process of models like **DeepSeek R1** or **OpenAI o1/o3** using the `.reasoning` field.
 ```ts
-const res = await LLM.chat("deepseek-reasoner").ask("Solve this logical puzzle");
+const res = await NodeLLM.chat("deepseek-reasoner").ask("Solve this logical puzzle");
 console.log(res.reasoning); // Chain-of-thought
 ```
 

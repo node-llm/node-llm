@@ -1,9 +1,9 @@
 import "dotenv/config";
-import { LLM } from "../../../packages/core/dist/index.js";
+import { NodeLLM } from "../../../packages/core/dist/index.js";
 
 // Ensure ANTHROPIC_API_KEY is set in your environment
 
-LLM.configure({
+NodeLLM.configure({
   provider: "anthropic",
 });
 
@@ -11,7 +11,7 @@ async function main() {
   console.log("Creating chat with Max Tokens limit...");
   
   // Set max tokens in options
-  const chat = LLM.chat("claude-3-haiku-20240307");
+  const chat = NodeLLM.chat("claude-3-haiku-20240307");
 
   console.log("Asking for a long story but limiting to 20 tokens...");
   const response = await chat.ask("Write a very long story about a space adventure.", {

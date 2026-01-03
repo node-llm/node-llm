@@ -40,11 +40,11 @@ export OPENAI_API_BASE="https://YOUR_RESOURCE.openai.azure.com/openai/deployment
 Then, pass the `api-key` header manually when creating the chat instance:
 
 ```typescript
-import { LLM } from '@node-llm/core';
+import { NodeLLM } from '@node-llm/core';
 
-LLM.configure({ provider: 'openai' });
+NodeLLM.configure({ provider: 'openai' });
 
-const chat = LLM.chat('gpt-4').withRequestOptions({
+const chat = NodeLLM.chat('gpt-4').withRequestOptions({
   headers: { 'api-key': process.env.OPENAI_API_KEY }
 });
 
@@ -56,7 +56,7 @@ const response = await chat.ask('Hello Azure!');
 If you use a model ID not in the built-in registry (e.g., custom Azure names or new models), use `assumeModelExists: true` to bypass validation.
 
 ```typescript
-const chat = LLM.chat('my-company-gpt-4', {
+const chat = NodeLLM.chat('my-company-gpt-4', {
   assumeModelExists: true,
   // Provider is typically required if not already configured globally
   provider: 'openai' 
@@ -69,13 +69,13 @@ This flag is available on all major methods:
 
 ```typescript
 // Embeddings
-await LLM.embed('text', {
+await NodeLLM.embed('text', {
   model: 'custom-embedder',
   assumeModelExists: true
 });
 
 // Image Generation
-await LLM.paint('prompt', {
+await NodeLLM.paint('prompt', {
   model: 'custom-dalle',
   assumeModelExists: true
 });

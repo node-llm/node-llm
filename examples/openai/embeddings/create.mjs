@@ -1,20 +1,20 @@
 import "dotenv/config";
-import { LLM } from "../../../packages/core/dist/index.js";
+import { NodeLLM } from "../../../packages/core/dist/index.js";
 
 async function main() {
-  LLM.configure((config) => {
+  NodeLLM.configure((config) => {
     config.openaiApiKey = process.env.OPENAI_API_KEY;
   });
   
-  LLM.configure({ provider: "openai" });
+  NodeLLM.configure({ provider: "openai" });
 
   console.log("--- Single Item Embedding ---");
-  const single = await LLM.embed("Node-LLM makes AI easy!");
+  const single = await NodeLLM.embed("NodeLLM makes AI easy!");
   console.log(`Vector length: ${single.vector.length}`);
 
   console.log("\n--- Batch Embedding ---");
   // Some providers optimize batch requests
-  const batch = await LLM.embed([
+  const batch = await NodeLLM.embed([
     "JavaScript is awesome",
     "OpenAI models are powerful"
   ]);

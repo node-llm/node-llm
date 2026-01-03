@@ -1,16 +1,16 @@
 import "dotenv/config";
-import { LLM } from "../../../packages/core/dist/index.js";
+import { NodeLLM } from "../../../packages/core/dist/index.js";
 
 async function main() {
-  LLM.configure((config) => {
+  NodeLLM.configure((config) => {
     config.deepseekApiKey = process.env.DEEPSEEK_API_KEY;
   });
   
-  LLM.configure({ provider: "deepseek" });
+  NodeLLM.configure({ provider: "deepseek" });
 
   // 1. Behavior Tuning with System Prompts
   console.log("--- System Instructions ---");
-  const chat = LLM.chat("deepseek-chat").withInstructions(
+  const chat = NodeLLM.chat("deepseek-chat").withInstructions(
     "You are a strictly professional assistant. Keep answers under 20 words."
   );
 
@@ -20,8 +20,8 @@ async function main() {
   // 2. Creativity Control with Temperature
   console.log("\n--- Creative vs Deterministic ---");
   
-  const factual = LLM.chat("deepseek-chat").withTemperature(0.1);
-  const creative = LLM.chat("deepseek-chat").withTemperature(0.9);
+  const factual = NodeLLM.chat("deepseek-chat").withTemperature(0.1);
+  const creative = NodeLLM.chat("deepseek-chat").withTemperature(0.9);
 
   console.log("Factual (Temp 0.1):");
   console.log((await factual.ask("Suggest a Name for a new Coffee Shop.")).content);

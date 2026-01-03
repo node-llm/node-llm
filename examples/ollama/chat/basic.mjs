@@ -1,5 +1,5 @@
 
-import { LLM } from "../../../packages/core/dist/index.js";
+import { NodeLLM } from "../../../packages/core/dist/index.js";
 
 // PREREQUISITE:
 // Ensure you have Ollama running and reachable.
@@ -9,14 +9,14 @@ async function main() {
   console.log("🦙 Running Ollama Basic Chat Example");
 
   // 1. Configure provider
-  LLM.configure({
+  NodeLLM.configure({
     provider: "ollama",
     // ollamaApiBase: "http://localhost:11434/v1" // Default
   });
 
   // 2. Create Chat (specifying the model ID)
   // Ensure 'llama3' is installed via `ollama list`
-  const chat = LLM.chat("llama3");
+  const chat = NodeLLM.chat("llama3");
 
   console.log("User: Why is the sky blue?");
   

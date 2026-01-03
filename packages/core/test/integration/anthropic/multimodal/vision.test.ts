@@ -1,5 +1,5 @@
 import { describe, it, expect, afterEach } from "vitest";
-import { LLM } from "../../../../src/index.js";
+import { NodeLLM } from "../../../../src/index.js";
 import { setupVCR } from "../../../helpers/vcr.js";
 import "dotenv/config";
 
@@ -15,11 +15,11 @@ describe("Anthropic Models Integration (VCR)", { timeout: 30000 }, () => {
   it("should support vision with image input", async ({ task }) => {
     polly = setupVCR(task.name, "anthropic");
 
-    LLM.configure({
+    NodeLLM.configure({
       anthropicApiKey: process.env.ANTHROPIC_API_KEY,
       provider: "anthropic",
     });
-    const chat = LLM.chat("claude-3-haiku-20240307");
+    const chat = NodeLLM.chat("claude-3-haiku-20240307");
 
     // A small 1x1 transparent GIF base64
     const base64Image = "R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
@@ -37,8 +37,8 @@ describe("Anthropic Models Integration (VCR)", { timeout: 30000 }, () => {
   it("should support PDF document input", async ({ task }) => {
     polly = setupVCR(task.name, "anthropic");
 
-    LLM.configure({ provider: "anthropic" });
-    const chat = LLM.chat("claude-3-5-haiku-20241022");
+    NodeLLM.configure({ provider: "anthropic" });
+    const chat = NodeLLM.chat("claude-3-5-haiku-20241022");
 
     const path = await import("path");
     const { fileURLToPath } = await import("url");

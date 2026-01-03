@@ -1,5 +1,5 @@
 
-import { LLM } from "../../../packages/core/dist/index.js";
+import { NodeLLM } from "../../../packages/core/dist/index.js";
 
 // Tool Definition
 const weatherTool = {
@@ -32,9 +32,9 @@ async function main() {
   console.log("Note: Requires a tool-capable model (e.g., 'llama3.1')");
   console.log("Run: ollama pull llama3.1\n");
 
-  LLM.configure({ provider: "ollama" });
+  NodeLLM.configure({ provider: "ollama" });
   
-  const chat = LLM.chat("llama3.1");
+  const chat = NodeLLM.chat("llama3.1");
 
   console.log("User: What is the weather in San Francisco?");
   try {

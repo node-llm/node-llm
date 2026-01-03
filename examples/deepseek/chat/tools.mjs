@@ -1,12 +1,12 @@
 import "dotenv/config";
-import { LLM } from "../../../packages/core/dist/index.js";
+import { NodeLLM } from "../../../packages/core/dist/index.js";
 
 async function main() {
-  LLM.configure((config) => {
+  NodeLLM.configure((config) => {
     config.deepseekApiKey = process.env.DEEPSEEK_API_KEY;
   });
   
-  LLM.configure({ provider: "deepseek" });
+  NodeLLM.configure({ provider: "deepseek" });
 
   const weatherTool = {
     type: 'function',
@@ -26,7 +26,7 @@ async function main() {
     }
   };
 
-  const chat = LLM.chat("deepseek-chat").withTool(weatherTool);
+  const chat = NodeLLM.chat("deepseek-chat").withTool(weatherTool);
 
   console.log("Asking a question that requires a function call...");
   const response = await chat.ask("What is the weather in London?");

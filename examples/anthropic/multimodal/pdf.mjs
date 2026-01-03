@@ -1,5 +1,5 @@
 import "dotenv/config";
-import { LLM } from "../../../packages/core/dist/index.js";
+import { NodeLLM } from "../../../packages/core/dist/index.js";
 import path from "path";
 import fs from "fs";
 import { fileURLToPath } from "url";
@@ -14,10 +14,10 @@ async function main() {
     process.exit(1);
   }
   // Use Claude 3.5 Sonnet for PDF support
-  LLM.configure({
+  NodeLLM.configure({
       provider: "anthropic",
   });
-  const chat = LLM.chat("claude-3-5-haiku-20241022");
+  const chat = NodeLLM.chat("claude-3-5-haiku-20241022");
 
   console.log("Analyzing PDF...");
   

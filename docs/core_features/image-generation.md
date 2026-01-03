@@ -11,11 +11,11 @@ Generate images from text descriptions using models like DALL-E, Imagen, and oth
 
 ## Basic Usage
 
-The simplest way is using `LLM.paint(prompt)`.
+The simplest way is using `NodeLLM.paint(prompt)`.
 
 ```ts
 // Uses default model (e.g. dall-e-3)
-const image = await LLM.paint("A red panda coding");
+const image = await NodeLLM.paint("A red panda coding");
 
 console.log(`Image URL: ${image}`); // Acts as a string URL
 ```
@@ -25,7 +25,7 @@ console.log(`Image URL: ${image}`); // Acts as a string URL
 Customize the model and dimensions.
 
 ```ts
-const image = await LLM.paint("A red panda coding", {
+const image = await NodeLLM.paint("A red panda coding", {
   model: "dall-e-3",
   size: "1024x1792", // Portrait
   quality: "hd"      // DALL-E 3 specific
@@ -39,7 +39,7 @@ Supported sizes vary by model. Check your provider's documentation.
 The return value is a `GeneratedImage` object which behaves like a URL string but contains rich metadata and helper methods.
 
 ```ts
-const image = await LLM.paint("A landscape");
+const image = await NodeLLM.paint("A landscape");
 
 // Metadata
 console.log(image.url);           // "https://..."

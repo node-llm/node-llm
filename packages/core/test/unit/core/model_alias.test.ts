@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { LLM } from "../../../src/llm.js";
+import { NodeLLM } from "../../../src/llm.js";
 import { providerRegistry } from "../../../src/providers/registry.js";
 import { FakeProvider } from "../../fake-provider.js";
 import { Provider } from "../../../src/providers/Provider.js";
@@ -55,11 +55,11 @@ describe("Model Alias Resolution", () => {
     vi.spyOn(provider, "embed");
 
     providerRegistry.register("fake", () => provider);
-    LLM.configure({ provider: "fake" });
+    NodeLLM.configure({ provider: "fake" });
   });
 
   it("resolves alias in paint()", async () => {
-    await LLM.paint("prompt", { model: "test-alias" });
+    await NodeLLM.paint("prompt", { model: "test-alias" });
     
     expect(provider.paint).toHaveBeenCalledWith(expect.objectContaining({
       model: "resolved-model-id"
@@ -67,7 +67,7 @@ describe("Model Alias Resolution", () => {
   });
 
   it("resolves alias in transcribe()", async () => {
-    await LLM.transcribe("file.mp3", { model: "test-alias" });
+    await NodeLLM.transcribe("file.mp3", { model: "test-alias" });
 
     expect(provider.transcribe).toHaveBeenCalledWith(expect.objectContaining({
       model: "resolved-model-id"
@@ -75,7 +75,7 @@ describe("Model Alias Resolution", () => {
   });
 
   it("resolves alias in moderate()", async () => {
-    await LLM.moderate("text", { model: "test-alias" });
+    await NodeLLM.moderate("text", { model: "test-alias" });
 
     expect(provider.moderate).toHaveBeenCalledWith(expect.objectContaining({
       model: "resolved-model-id"
@@ -101,8 +101,8 @@ describe("Real-world Alias Examples", () => {
   });
 
   it("resolves gpt-4o for openai provider", async () => {
-    LLM.configure({ provider: "openai" });
-    await LLM.paint("image prompt", { model: "gpt-4o" });
+    NodeLLM.configure({ provider: "openai" });
+    await NodeLLM.paint("image prompt", { model: "gpt-4o" });
 
     expect(openaiProvider.paint).toHaveBeenCalledWith(expect.objectContaining({
       model: "gpt-4o"
@@ -110,9 +110,9 @@ describe("Real-world Alias Examples", () => {
   });
 
   it("resolves claude-3-5-sonnet for anthropic provider", async () => {
-    LLM.configure({ provider: "anthropic" });
+    NodeLLM.configure({ provider: "anthropic" });
     // Using transcribe as a generic method call for testing
-    await LLM.transcribe("audio.mp3", { model: "claude-3-5-sonnet" });
+    await NodeLLM.transcribe("audio.mp3", { model: "claude-3-5-sonnet" });
 
     expect(anthropicProvider.transcribe).toHaveBeenCalledWith(expect.objectContaining({
       model: "claude-3-5-sonnet-20241022"
@@ -121,7 +121,7 @@ describe("Real-world Alias Examples", () => {
 });
 
   it("resolves alias in embed()", async () => {
-    await LLM.embed("text", { model: "test-alias" });
+    await NodeLLM.embed("text", { model: "test-alias" });
 
     expect(provider.embed).toHaveBeenCalledWith(expect.objectContaining({
       model: "resolved-model-id"

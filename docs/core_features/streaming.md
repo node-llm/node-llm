@@ -14,7 +14,7 @@ For real-time interactions, `node-llm` supports streaming responses via standard
 Use the `stream()` method on a chat instance to get an iterator.
 
 ```ts
-const chat = LLM.chat("gpt-4o");
+const chat = NodeLLM.chat("gpt-4o");
 
 process.stdout.write("Assistant: ");
 
@@ -76,7 +76,7 @@ Streaming is essential for modern web apps. Here is a simple example using **Exp
 
 ```ts
 import express from 'express';
-import { LLM } from '@node-llm/core';
+import { NodeLLM } from '@node-llm/core';
 
 const app = express();
 
@@ -85,7 +85,7 @@ app.get('/chat', async (req, res) => {
   res.setHeader('Content-Type', 'text/plain; charset=utf-8');
   res.setHeader('Transfer-Encoding', 'chunked');
 
-  const chat = LLM.chat("gpt-4o-mini");
+  const chat = NodeLLM.chat("gpt-4o-mini");
 
   try {
     for await (const chunk of chat.stream(req.query.q as string)) {

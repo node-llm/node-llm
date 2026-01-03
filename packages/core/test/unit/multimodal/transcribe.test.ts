@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { LLM } from "../../../src/llm.js";
+import { NodeLLM } from "../../../src/llm.js";
 import { Provider } from "../../../src/providers/Provider.js";
 
 describe("Transcription Unit Tests", () => {
@@ -19,11 +19,11 @@ describe("Transcription Unit Tests", () => {
         supportsTranscription: vi.fn().mockReturnValue(true),
       } as any
     };
-    LLM.configure({ provider: mockProvider });
+    NodeLLM.configure({ provider: mockProvider });
   });
 
   it("should call provider.transcribe with correct arguments", async () => {
-    await LLM.transcribe("test.mp3", { language: "en", prompt: "Test prompt" });
+    await NodeLLM.transcribe("test.mp3", { language: "en", prompt: "Test prompt" });
 
     expect(mockProvider.transcribe).toHaveBeenCalledWith({
       file: "test.mp3",
@@ -35,7 +35,7 @@ describe("Transcription Unit Tests", () => {
 
   it("should support technical domain prompts", async () => {
     const prompt = "Discussion about Ruby, Rails, PostgreSQL, and Redis.";
-    await LLM.transcribe("test.mp3", { prompt });
+    await NodeLLM.transcribe("test.mp3", { prompt });
 
     expect(mockProvider.transcribe).toHaveBeenCalledWith(expect.objectContaining({
       prompt: prompt
@@ -43,12 +43,12 @@ describe("Transcription Unit Tests", () => {
   });
 
   it("should use global default model if provided", async () => {
-    LLM.configure({ 
+    NodeLLM.configure({ 
       provider: mockProvider,
       defaultTranscriptionModel: "gpt-4o-transcribe"
     });
 
-    await LLM.transcribe("test.mp3");
+    await NodeLLM.transcribe("test.mp3");
 
     expect(mockProvider.transcribe).toHaveBeenCalledWith(expect.objectContaining({
       model: "gpt-4o-transcribe"
@@ -56,12 +56,12 @@ describe("Transcription Unit Tests", () => {
   });
 
   it("should override global default model with local option", async () => {
-    LLM.configure({ 
+    NodeLLM.configure({ 
       provider: mockProvider,
       defaultTranscriptionModel: "gpt-4o-transcribe"
     });
 
-    await LLM.transcribe("test.mp3", { model: "whisper-1" });
+    await NodeLLM.transcribe("test.mp3", { model: "whisper-1" });
 
     expect(mockProvider.transcribe).toHaveBeenCalledWith(expect.objectContaining({
       model: "whisper-1"
@@ -69,7 +69,7 @@ describe("Transcription Unit Tests", () => {
   });
 
   it("should return a Transcription object with correct properties", async () => {
-    const result = await LLM.transcribe("test.mp3");
+    const result = await NodeLLM.transcribe("test.mp3");
 
     expect(result.text).toBe("Mock transcription");
     expect(result.model).toBe("whisper-1");
@@ -84,9 +84,9 @@ describe("Transcription Unit Tests", () => {
       id: "limited-provider",
       chat: vi.fn()
     };
-    LLM.configure({ provider: limitedProvider });
+    NodeLLM.configure({ provider: limitedProvider });
 
-    await expect(LLM.transcribe("test.mp3")).rejects.toThrow("Provider does not support transcribe");
+    await expect(NodeLLM.transcribe("test.mp3")).rejects.toThrow("Provider does not support transcribe");
   });
 
   it("should handle segments with speaker labels", async () => {
@@ -99,7 +99,7 @@ describe("Transcription Unit Tests", () => {
       ]
     });
 
-    const result = await LLM.transcribe("test.mp3", { model: "gpt-4o-transcribe-diarize" });
+    const result = await NodeLLM.transcribe("test.mp3", { model: "gpt-4o-transcribe-diarize" });
 
     expect(result.segments[0].speaker).toBe("A");
     expect(result.segments[1].speaker).toBe("B");
@@ -107,7 +107,7 @@ describe("Transcription Unit Tests", () => {
   });
 
   it("should support known speaker identification", async () => {
-    await LLM.transcribe("meeting.wav", {
+    await NodeLLM.transcribe("meeting.wav", {
       model: "gpt-4o-transcribe-diarize",
       speakerNames: ["Alice", "Bob"],
       speakerReferences: ["alice.wav", "bob.wav"]
@@ -121,6 +121,6 @@ describe("Transcription Unit Tests", () => {
 
   it("should throw if model does not support transcription", async () => {
     (mockProvider.capabilities!.supportsTranscription as any).mockReturnValue(false);
-    await expect(LLM.transcribe("test.mp3", { model: "gpt-4" })).rejects.toThrow("does not support transcription");
+    await expect(NodeLLM.transcribe("test.mp3", { model: "gpt-4" })).rejects.toThrow("does not support transcription");
   });
 });

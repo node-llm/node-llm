@@ -4,9 +4,8 @@ import {
   Provider,
   ModelInfo,
   TranscriptionResponse,
-  TranscriptionSegment,
   ModerationResponse,
-  ModerationResult,
+  EmbeddingResponse
 } from "./providers/Provider.js";
 import {
   providerRegistry,
@@ -23,7 +22,6 @@ import { Transcription } from "./transcription/Transcription.js";
 import { Moderation } from "./moderation/Moderation.js";
 import { Embedding } from "./embedding/Embedding.js";
 import { EmbeddingRequest } from "./providers/Provider.js";
-import { DEFAULT_MODELS } from "./constants.js";
 import { 
   ProviderNotConfiguredError, 
   UnsupportedFeatureError,
@@ -56,7 +54,7 @@ const PROVIDER_REGISTRARS: Record<string, () => void> = {
   openrouter: registerOpenRouterProvider,
 };
 
-class LLMCore {
+class NodeLLMCore {
   public readonly models = ModelRegistry;
   public readonly config = config;
   private provider?: Provider;
@@ -144,7 +142,7 @@ class LLMCore {
 
     // Resolve model alias based on the current provider
     const resolvedModel = resolveModelAlias(model, this.provider.id);
-    return new Chat(this.provider, resolvedModel, options);
+    return new Chat(this.provider, resolvedModel, options, this.retry);
   }
 
   async listModels(): Promise<ModelInfo[]> {
@@ -273,4 +271,4 @@ class LLMCore {
 
 export { Transcription, Moderation, Embedding };
 
-export const LLM = new LLMCore();
+export const NodeLLM = new NodeLLMCore();

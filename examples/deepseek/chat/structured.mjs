@@ -1,14 +1,14 @@
 import "dotenv/config";
-import { LLM, z } from "../../../packages/core/dist/index.js";
+import { NodeLLM, z } from "../../../packages/core/dist/index.js";
 
 async function main() {
-  LLM.configure((config) => {
+  NodeLLM.configure((config) => {
     config.deepseekApiKey = process.env.DEEPSEEK_API_KEY;
   });
   
-  LLM.configure({ provider: "deepseek" });
+  NodeLLM.configure({ provider: "deepseek" });
 
-  const chat = LLM.chat("deepseek-chat");
+  const chat = NodeLLM.chat("deepseek-chat");
 
   // --- Example 1: Using Zod (Recommended) ---
   const recipeSchema = z.object({

@@ -1,5 +1,5 @@
 import { describe, it, expect, afterEach } from "vitest";
-import { LLM } from "../../../../src/index.js";
+import { NodeLLM } from "../../../../src/index.js";
 import { setupVCR } from "../../../helpers/vcr.js";
 import "dotenv/config";
 
@@ -14,11 +14,11 @@ describe("OpenAI Discovery Integration (VCR)", { timeout: 30000 }, () => {
 
   it("should list available models", async ({ task }) => {
     polly = setupVCR(task.name, "openai");
-    LLM.configure({
+    NodeLLM.configure({
       openaiApiKey: process.env.OPENAI_API_KEY,
       provider: "openai",
     });
-    const models = await LLM.listModels();
+    const models = await NodeLLM.listModels();
 
     expect(models.length).toBeGreaterThan(0);
     const gpt4 = models.find(m => m.id.includes("gpt-4"));

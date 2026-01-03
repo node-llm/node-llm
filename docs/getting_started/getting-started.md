@@ -21,14 +21,14 @@ pnpm add @node-llm/core
 Configure your providers once at the entry point of your app.
 
 ```ts
-import { LLM } from "@node-llm/core";
+import { NodeLLM } from "@node-llm/core";
 import "dotenv/config";
 
 // 1. Ensure keys are in process.env (e.g. via dotenv)
 // process.env.OPENAI_API_KEY = "sk-..."
 
 // 2. Configure defaults
-LLM.configure({
+NodeLLM.configure({
   provider: "openai",
   defaultModel: "gpt-4o",
 });
@@ -38,7 +38,7 @@ LLM.configure({
 
 ### 1. Chat
 ```ts
-const chat = LLM.chat(); // Uses default model
+const chat = NodeLLM.chat(); // Uses default model
 const response = await chat.ask("Explain quantum computing in 5 words.");
 console.log(response.content);
 // => "Computing using quantum mechanical phenomena."
@@ -46,13 +46,13 @@ console.log(response.content);
 
 ### 2. Generate Images
 ```ts
-const image = await LLM.paint("A cyberpunk city with neon rain");
+const image = await NodeLLM.paint("A cyberpunk city with neon rain");
 console.log(image.url);
 ```
 
 ### 3. Create Embeddings
 ```ts
-const embedding = await LLM.embed("Semantic search is powerful.");
+const embedding = await NodeLLM.embed("Semantic search is powerful.");
 console.log(`Vector dimensions: ${embedding.dimensions}`);
 ```
 

@@ -1,13 +1,13 @@
 import "dotenv/config";
-import { LLM } from "../../../packages/core/dist/index.js";
+import { NodeLLM } from "../../../packages/core/dist/index.js";
 
 async function main() {
-  LLM.configure({ 
+  NodeLLM.configure({ 
     openrouterApiKey: process.env.OPENROUTER_API_KEY, 
     provider: "openrouter" 
   });
 
-  const chat = LLM.chat("deepseek/deepseek-r1");
+  const chat = NodeLLM.chat("deepseek/deepseek-r1");
 
   console.log("--- Reasoning Request ---");
   const response = await chat.ask("Solve this puzzle: If I have 3 apples and you take 2, how many apples do YOU have?");

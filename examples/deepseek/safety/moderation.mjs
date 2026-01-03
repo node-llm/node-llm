@@ -1,16 +1,16 @@
 import "dotenv/config";
-import { LLM } from "../../../packages/core/dist/index.js";
+import { NodeLLM } from "../../../packages/core/dist/index.js";
 
 async function main() {
-  LLM.configure((config) => {
+  NodeLLM.configure((config) => {
     config.deepseekApiKey = process.env.DEEPSEEK_API_KEY;
   });
   
-  LLM.configure({ provider: "deepseek" });
+  NodeLLM.configure({ provider: "deepseek" });
   
   console.log("Attempting moderation request with DeepSeek...");
   try {
-    await LLM.moderate({ input: "Some content" });
+    await NodeLLM.moderate({ input: "Some content" });
   } catch (error) {
     console.log("✅ Correctly caught unsupported operation error:");
     console.error(error.message);

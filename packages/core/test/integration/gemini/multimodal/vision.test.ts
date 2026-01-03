@@ -1,5 +1,5 @@
 import { describe, it, expect, afterEach } from "vitest";
-import { LLM } from "../../../../src/index.js";
+import { NodeLLM } from "../../../../src/index.js";
 import { setupVCR } from "../../../helpers/vcr.js";
 import "dotenv/config";
 
@@ -15,11 +15,11 @@ describe("Gemini Multi-modal Integration (VCR)", { timeout: 30000 }, () => {
   it("should analyze images (Vision)", async ({ task }) => {
     polly = setupVCR(task.name, "gemini");
 
-    LLM.configure({
+    NodeLLM.configure({
       geminiApiKey: process.env.GEMINI_API_KEY,
       provider: "gemini",
     });
-    const chat = LLM.chat("gemini-2.0-flash");
+    const chat = NodeLLM.chat("gemini-2.0-flash");
 
     // A small 1x1 red PNG dot
     const base64Image = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==";
@@ -35,7 +35,7 @@ describe("Gemini Multi-modal Integration (VCR)", { timeout: 30000 }, () => {
   it("should transcribe audio", async ({ task }) => {
     polly = setupVCR(task.name, "gemini");
 
-    LLM.configure({
+    NodeLLM.configure({
       geminiApiKey: process.env.GEMINI_API_KEY,
       provider: "gemini",
     });
@@ -45,7 +45,7 @@ describe("Gemini Multi-modal Integration (VCR)", { timeout: 30000 }, () => {
     const __dirname = path.dirname(fileURLToPath(import.meta.url));
     const audioPath = path.resolve(__dirname, "../../../../../../examples/audio/sample-0.mp3");
     
-    const response = await LLM.transcribe(audioPath, { model: "gemini-2.0-flash" });
+    const response = await NodeLLM.transcribe(audioPath, { model: "gemini-2.0-flash" });
 
     expect(response.text).toBeDefined();
     expect(response.text.length).toBeGreaterThan(0);

@@ -1,14 +1,14 @@
 import "dotenv/config";
-import { LLM, z } from "../../../packages/core/dist/index.js";
+import { NodeLLM, z } from "../../../packages/core/dist/index.js";
 
 async function main() {
-  LLM.configure((config) => {
+  NodeLLM.configure((config) => {
     config.geminiApiKey = process.env.GEMINI_API_KEY;
   });
   
-  LLM.configure({ provider: "gemini" });
+  NodeLLM.configure({ provider: "gemini" });
 
-  const chat = LLM.chat("gemini-2.0-flash");
+  const chat = NodeLLM.chat("gemini-2.0-flash");
 
   // --- Example 1: Using Zod (Recommended) ---
   const movieSchema = z.object({

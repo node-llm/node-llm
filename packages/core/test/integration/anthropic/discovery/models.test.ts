@@ -1,5 +1,5 @@
 import { describe, it, expect, afterEach } from "vitest";
-import { LLM } from "../../../../src/index.js";
+import { NodeLLM } from "../../../../src/index.js";
 import { setupVCR } from "../../../helpers/vcr.js";
 import "dotenv/config";
 
@@ -15,11 +15,11 @@ describe("Anthropic Models Integration (VCR)", { timeout: 30000 }, () => {
   it("should list available models", async ({ task }) => {
     polly = setupVCR(task.name, "anthropic");
 
-    LLM.configure({
+    NodeLLM.configure({
       anthropicApiKey: process.env.ANTHROPIC_API_KEY,
       provider: "anthropic",
     });
-    const models = await LLM.listModels();
+    const models = await NodeLLM.listModels();
 
     expect(models).toBeDefined();
     expect(models.length).toBeGreaterThan(0);

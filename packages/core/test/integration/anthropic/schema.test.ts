@@ -1,5 +1,5 @@
 import { describe, it, expect, afterEach } from "vitest";
-import { LLM } from "../../../src/index.js";
+import { NodeLLM } from "../../../src/index.js";
 import { setupVCR } from "../../helpers/vcr.js";
 import { z } from "zod";
 import "dotenv/config";
@@ -15,11 +15,11 @@ describe("Anthropic Structured Output (VCR)", { timeout: 30000 }, () => {
 
   it("should support structured output with Zod schema", async ({ task }) => {
     polly = setupVCR(task.name, "anthropic");
-    LLM.configure({
+    NodeLLM.configure({
       anthropicApiKey: process.env.ANTHROPIC_API_KEY,
       provider: "anthropic",
     });
-    const chat = LLM.chat("claude-3-haiku-20240307");
+    const chat = NodeLLM.chat("claude-3-haiku-20240307");
 
     const schema = z.object({
       name: z.string(),

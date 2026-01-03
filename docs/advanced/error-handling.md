@@ -27,10 +27,10 @@ parent: Advanced
 You can catch specific errors to implement custom logic.
 
 ```ts
-import { LLM, RateLimitError, CapabilityError } from "@node-llm/core";
+import { NodeLLM, RateLimitError, CapabilityError } from "@node-llm/core";
 
 try {
-  await LLM.chat("text-only-model").ask("Analyze", {
+  await NodeLLM.chat("text-only-model").ask("Analyze", {
     files: ["image.png"]
   });
 } catch (error) {
@@ -67,7 +67,7 @@ try {
 `node-llm` automatically retries transient errors (Rate Limits, 5xx Server Errors) using an exponential backoff strategy. You can configure this globally.
 
 ```ts
-LLM.configure({
+NodeLLM.configure({
   retry: {
     attempts: 3,      // Max retries (default: 3)
     delayMs: 1000,    // Initial delay (default: 1000ms)

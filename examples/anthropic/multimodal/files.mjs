@@ -1,18 +1,18 @@
 import "dotenv/config";
-import { LLM } from "../../../packages/core/dist/index.js";
+import { NodeLLM } from "../../../packages/core/dist/index.js";
 import path from "path";
 import { fileURLToPath } from "url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 async function main() {
-  LLM.configure((config) => {
+  NodeLLM.configure((config) => {
     config.anthropicApiKey = process.env.ANTHROPIC_API_KEY;
   });
   
-  LLM.configure({ provider: "anthropic" });
+  NodeLLM.configure({ provider: "anthropic" });
 
-  const chat = LLM.chat("claude-3-haiku-20240307");
+  const chat = NodeLLM.chat("claude-3-haiku-20240307");
 
   console.log("Analyzing multiple project files (README + code)...\n");
   

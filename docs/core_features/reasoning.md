@@ -14,9 +14,9 @@ nav_order: 10
 For models that support it (like `deepseek-reasoner`), you can access the reasoning text via the `.reasoning` property on the response object.
 
 ```ts
-import { LLM } from "@node-llm/core";
+import { NodeLLM } from "@node-llm/core";
 
-const chat = LLM.chat("deepseek-reasoner");
+const chat = NodeLLM.chat("deepseek-reasoner");
 const response = await chat.ask("Prove that the square root of 2 is irrational.");
 
 // Show the inner thought process
@@ -31,7 +31,7 @@ console.log("Answer:", response.content);
 When using `.stream()`, reasoning content is emitted as chunks, just like regular content. You can distinguish them by checking `chunk.reasoning`.
 
 ```ts
-const chat = LLM.chat("deepseek-reasoner");
+const chat = NodeLLM.chat("deepseek-reasoner");
 
 for await (const chunk of chat.stream("Explain quantum entanglement")) {
   if (chunk.reasoning) {
@@ -50,7 +50,7 @@ The final response object in the `onEndMessage` callback or returned by the stre
 OpenAI models like `o3-mini` do not expose the reasoning text directly (in a separate field), but they use "reasoning tokens" during generation. `node-llm` automatically tracks these tokens and includes them in the usage and cost calculations.
 
 ```ts
-const chat = LLM.chat("o3-mini");
+const chat = NodeLLM.chat("o3-mini");
 const response = await chat.ask("Write a complex algorithm");
 
 console.log(`Reasoning tokens used: ${response.usage.output_tokens}`);

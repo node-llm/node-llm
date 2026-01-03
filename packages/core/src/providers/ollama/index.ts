@@ -8,7 +8,7 @@ let registered = false;
 
 /**
  * Idempotent registration of the Ollama provider.
- * Automatically called by LLM.configure({ provider: 'ollama' })
+ * Automatically called by NodeLLM.configure({ provider: 'ollama' })
  */
 export function registerOllamaProvider() {
   if (registered) return;

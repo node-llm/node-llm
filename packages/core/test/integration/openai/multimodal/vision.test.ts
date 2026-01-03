@@ -1,5 +1,5 @@
 import { describe, it, expect, afterEach } from "vitest";
-import { LLM } from "../../../../src/index.js";
+import { NodeLLM } from "../../../../src/index.js";
 import { setupVCR } from "../../../helpers/vcr.js";
 import "dotenv/config";
 
@@ -15,11 +15,11 @@ describe("OpenAI Multi-modal Integration (VCR)", { timeout: 30000 }, () => {
   it("should analyze images (Vision)", async ({ task }) => {
     polly = setupVCR(task.name, "openai");
 
-    LLM.configure({
+    NodeLLM.configure({
       openaiApiKey: process.env.OPENAI_API_KEY,
       provider: "openai",
     });
-    const chat = LLM.chat("gpt-4o-mini");
+    const chat = NodeLLM.chat("gpt-4o-mini");
 
     const response = await chat.ask("What's in this image?", {
       files: ["https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Gfp-wisconsin-madison-the-nature-boardwalk.jpg/2560px-Gfp-wisconsin-madison-the-nature-boardwalk.jpg"]
@@ -33,11 +33,11 @@ describe("OpenAI Multi-modal Integration (VCR)", { timeout: 30000 }, () => {
   it("should analyze multiple images (Multi-Image Vision)", async ({ task }) => {
     polly = setupVCR(task.name, "openai");
 
-    LLM.configure({
+    NodeLLM.configure({
       openaiApiKey: process.env.OPENAI_API_KEY,
       provider: "openai",
     });
-    const chat = LLM.chat("gpt-4o-mini");
+    const chat = NodeLLM.chat("gpt-4o-mini");
 
     // Two differing images (Base64 1x1 pixels to avoid download errors)
     // Red dot
@@ -58,11 +58,11 @@ describe("OpenAI Multi-modal Integration (VCR)", { timeout: 30000 }, () => {
   it("should transcribe audio", async ({ task }) => {
     polly = setupVCR(task.name, "openai");
     
-    LLM.configure((config) => {
+    NodeLLM.configure((config) => {
       config.openaiApiKey = process.env.OPENAI_API_KEY;
     });
 
-    LLM.configure({ 
+    NodeLLM.configure({ 
       provider: "openai",
       defaultTranscriptionModel: "whisper-1",
     });
@@ -73,7 +73,7 @@ describe("OpenAI Multi-modal Integration (VCR)", { timeout: 30000 }, () => {
     const __dirname = path.dirname(fileURLToPath(import.meta.url));
     const audioPath = path.resolve(__dirname, "../../../../../../examples/audio/sample-0.mp3");
 
-    const transcription = await LLM.transcribe(audioPath);
+    const transcription = await NodeLLM.transcribe(audioPath);
     
     expect(transcription.text).toBeDefined();
     expect(transcription.segments.length).toBeGreaterThan(0);
@@ -83,7 +83,7 @@ describe("OpenAI Multi-modal Integration (VCR)", { timeout: 30000 }, () => {
   it("should transcribe audio using gpt-4o-transcribe", async ({ task }) => {
     polly = setupVCR(task.name, "openai");
 
-    LLM.configure({
+    NodeLLM.configure({
       openaiApiKey: process.env.OPENAI_API_KEY,
       provider: "openai",
     });
@@ -93,7 +93,7 @@ describe("OpenAI Multi-modal Integration (VCR)", { timeout: 30000 }, () => {
     const __dirname = path.dirname(fileURLToPath(import.meta.url));
     const audioPath = path.resolve(__dirname, "../../../../../../examples/audio/sample-0.mp3");
 
-    const transcription = await LLM.transcribe(audioPath, {
+    const transcription = await NodeLLM.transcribe(audioPath, {
       model: "gpt-4o-transcribe"
     });
 

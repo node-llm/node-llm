@@ -1,5 +1,5 @@
 import { describe, it, expect, afterEach } from "vitest";
-import { LLM } from "../../../../src/index.js";
+import { NodeLLM } from "../../../../src/index.js";
 import { setupVCR } from "../../../helpers/vcr.js";
 import "dotenv/config";
 
@@ -14,11 +14,11 @@ describe("DeepSeek Reasoning Integration (VCR)", { timeout: 60000 }, () => {
 
   it("should capture reasoning content for deepseek-reasoner", async ({ task }) => {
     polly = setupVCR(task.name, "deepseek");
-    LLM.configure({
+    NodeLLM.configure({
       deepseekApiKey: process.env.DEEPSEEK_API_KEY,
       provider: "deepseek",
     });
-    const chat = LLM.chat("deepseek-reasoner");
+    const chat = NodeLLM.chat("deepseek-reasoner");
     
     const response = await chat.ask("Calculate 123 * 456 and explain the steps.");
     
@@ -29,8 +29,8 @@ describe("DeepSeek Reasoning Integration (VCR)", { timeout: 60000 }, () => {
 
   it("should stream reasoning content for deepseek-reasoner", async ({ task }) => {
     polly = setupVCR(task.name, "deepseek");
-    LLM.configure({ provider: "deepseek" });
-    const chat = LLM.chat("deepseek-reasoner");
+    NodeLLM.configure({ provider: "deepseek" });
+    const chat = NodeLLM.chat("deepseek-reasoner");
     
     let hasReasoning = false;
     let hasContent = false;

@@ -12,9 +12,9 @@ The DeepSeek provider offers high-performance chat and reasoning models with com
 ## Configuration
 
 ```ts
-import { LLM } from "@node-llm/core";
+import { NodeLLM } from "@node-llm/core";
 
-LLM.configure({
+NodeLLM.configure({
   provider: "deepseek",
   deepseekApiKey: process.env.DEEPSEEK_API_KEY, // Optional if set in env
 });
@@ -25,7 +25,7 @@ LLM.configure({
 You can pass DeepSeek-specific parameters using `.withParams()`.
 
 ```ts
-const chat = LLM.chat("deepseek-chat")
+const chat = NodeLLM.chat("deepseek-chat")
   .withParams({ 
     presence_penalty: 0.5,
     frequency_penalty: 0.5,

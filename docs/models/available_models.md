@@ -95,17 +95,17 @@ Ollama models are run locally on your machine. Costs are typically free (local c
 You can access this data programmatically using the registry:
 
 ```ts
-import { LLM } from "@node-llm/core";
+import { NodeLLM } from "@node-llm/core";
 
 // Get metadata for a specific model
-const model = await LLM.model("gpt-4o");
+const model = await NodeLLM.model("gpt-4o");
 
 console.log(model.context_window); // 128000
 console.log(model.pricing.text_tokens.standard.input_per_million); // 2.5
 console.log(model.capabilities); // ["vision", "function_calling", ...]
 
 // Get all models in the registry
-const allModels = await LLM.listModels();
+const allModels = await NodeLLM.listModels();
 ```
 
 ## Finding Models
@@ -113,7 +113,7 @@ const allModels = await LLM.listModels();
 Use the registry to find models dynamically based on capabilities:
 
 ```ts
-const allModels = await LLM.listModels();
+const allModels = await NodeLLM.listModels();
 
 // Find a model that supports vision and tools
 const visionModel = allModels.find(m => 
@@ -134,17 +134,17 @@ Aliases abstract away the specific model ID strings required by different provid
 - **OpenRouter**: `anthropic/claude-3.5-sonnet`
 - **Bedrock**: `anthropic.claude-3-5-sonnet-20241022-v2:0`
 
-When you call a method like `LLM.chat("claude-3-5-sonnet")`, `node-llm` checks the configured provider and automatically resolves the alias.
+When you call a method like `NodeLLM.chat("claude-3-5-sonnet")`, `node-llm` checks the configured provider and automatically resolves the alias.
 
 ```ts
 // If configured with Anthropic
-LLM.configure({ provider: "anthropic" });
-const chat = LLM.chat("claude-3-5-sonnet"); 
+NodeLLM.configure({ provider: "anthropic" });
+const chat = NodeLLM.chat("claude-3-5-sonnet"); 
 // Resolves internally to "claude-3-5-sonnet-20241022" (or latest stable version)
 
 // If configured with Bedrock
-LLM.configure({ provider: "bedrock" });
-const chat = LLM.chat("claude-3-5-sonnet");
+NodeLLM.configure({ provider: "bedrock" });
+const chat = NodeLLM.chat("claude-3-5-sonnet");
 // Resolves internally to "anthropic.claude-3-5-sonnet-20241022-v2:0"
 ```
 

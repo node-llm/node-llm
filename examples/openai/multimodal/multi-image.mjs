@@ -1,14 +1,14 @@
 import "dotenv/config";
-import { LLM } from "../../../packages/core/dist/index.js";
+import { NodeLLM } from "../../../packages/core/dist/index.js";
 
 async function main() {
-  LLM.configure((config) => {
+  NodeLLM.configure((config) => {
     config.openaiApiKey = process.env.OPENAI_API_KEY;
   });
   
-  LLM.configure({ provider: "openai" });
+  NodeLLM.configure({ provider: "openai" });
 
-  const chat = LLM.chat("gpt-4o");
+  const chat = NodeLLM.chat("gpt-4o");
 
   const img1 = "https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png";
   const img2 = "https://www.w3.org/People/mimasa/test/imgformat/img/w3c_home.png";

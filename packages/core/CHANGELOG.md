@@ -18,7 +18,7 @@
 
 *   **Standardized Configuration:**
     *   Renamed configuration properties to `camelCase` (e.g., `openaiApiKey`) for better TypeScript/JavaScript alignment.
-    *   Refactored `LLM.configure` to enforce this single, idiomatic standard.
+    *   Refactored `NodeLLM.configure` to enforce this single, idiomatic standard.
     *   Updated all documentation, examples, and tests to reflect this cleaner API.
 
 *   **DeepSeek Integration Logic:**
@@ -61,8 +61,8 @@
     *   Enhanced `response.parsed` to automatically handle response parsing for all supported providers.
 
 *   **Simplified API Exports:**
-    *   Added `z` (Zod) as a direct export from `@node-llm/core` to simplify downstream dependency management.
-    *   Users can now import `z` directly: `import { LLM, z } from "@node-llm/core"`.
+    *   Added `z` (Zod) as a direct export from `@nodellm/core` to simplify downstream dependency management.
+    *   Users can now import `z` directly: `import { NodeLLM, z } from "@nodellm/core"`.
 
 ### Improvements
 

@@ -16,7 +16,7 @@ This feature abstracts the provider-specific implementations (like OpenAI's `jso
 The easiest way to define schemas is with Zod.
 
 ```ts
-import { LLM, z } from "@node-llm/core";
+import { NodeLLM, z } from "@node-llm/core";
 
 // Define a schema using Zod
 const personSchema = z.object({
@@ -25,7 +25,7 @@ const personSchema = z.object({
   hobbies: z.array(z.string()).describe("List of hobbies")
 });
 
-const chat = LLM.chat("gpt-4o-mini");
+const chat = NodeLLM.chat("gpt-4o-mini");
 
 // Use .withSchema() to enforce the structure
 const response = await chat

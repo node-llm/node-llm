@@ -1,5 +1,5 @@
 import { describe, it, expect, afterEach } from "vitest";
-import { LLM } from "../../../../src/index.js";
+import { NodeLLM } from "../../../../src/index.js";
 import { setupVCR } from "../../../helpers/vcr.js";
 import path from "path";
 import dotenv from "dotenv";
@@ -16,12 +16,12 @@ describe("OpenRouter Embeddings Integration (VCR)", { timeout: 30000 }, () => {
 
   it("should create embeddings", async ({ task }) => {
     polly = setupVCR(task.name, "openrouter");
-    LLM.configure({
+    NodeLLM.configure({
       openrouterApiKey: process.env.OPENROUTER_API_KEY,
       provider: "openrouter",
     });
 
-    const response = await LLM.embed("Hello, world!", {
+    const response = await NodeLLM.embed("Hello, world!", {
       model: "text-embedding-3-small", // Common embedding model on OpenRouter
     });
 
@@ -33,12 +33,12 @@ describe("OpenRouter Embeddings Integration (VCR)", { timeout: 30000 }, () => {
 
   it("should create multiple embeddings", async ({ task }) => {
     polly = setupVCR(task.name, "openrouter");
-    LLM.configure({
+    NodeLLM.configure({
       openrouterApiKey: process.env.OPENROUTER_API_KEY,
       provider: "openrouter",
     });
 
-    const response = await LLM.embed(["Hello", "World"], {
+    const response = await NodeLLM.embed(["Hello", "World"], {
       model: "text-embedding-3-small",
     });
 

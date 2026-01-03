@@ -1,5 +1,5 @@
 import { describe, it, expect, afterEach } from "vitest";
-import { LLM } from "../../../../src/index.js";
+import { NodeLLM } from "../../../../src/index.js";
 import { setupVCR } from "../../../helpers/vcr.js";
 import "dotenv/config";
 
@@ -15,11 +15,11 @@ describe("Gemini Discovery Integration (VCR)", { timeout: 30000 }, () => {
   it("should list available models", async ({ task }) => {
     polly = setupVCR(task.name, "gemini");
 
-    LLM.configure({
+    NodeLLM.configure({
       geminiApiKey: process.env.GEMINI_API_KEY,
       provider: "gemini",
     });
-    const models = await LLM.listModels();
+    const models = await NodeLLM.listModels();
 
     expect(models.length).toBeGreaterThan(0);
     const flash = models.find(m => m.id.includes("flash"));

@@ -14,10 +14,10 @@ parent: Getting Started
 Understanding these components will help you use the framework effectively.
 
 ### 1. Chat
-The primary interface for conversational AI. `LLM.chat()` creates a stateful object that manages conversation history.
+The primary interface for conversational AI. `NodeLLM.chat()` creates a stateful object that manages conversation history.
 
 ```ts
-const chat = LLM.chat("gpt-4o");
+const chat = NodeLLM.chat("gpt-4o");
 ```
 
 ### 2. Providers
@@ -30,7 +30,7 @@ Functions that the AI can execute. You define the schema and the handler, and `n
 Global settings for API keys and defaults.
 
 ```ts
-LLM.configure({
+NodeLLM.configure({
   openaiApiKey: "sk-...",
   provider: "openai"
 });
@@ -45,7 +45,7 @@ Every provider works differently. `node-llm` normalizes inputs (messages, images
 AI responses are slow. `node-llm` is built around `AsyncIterator` to make streaming text to the user as easy as a `for await` loop.
 
 ### Progressive Disclosure
-Start simple with `LLM.chat().ask("Hello")`. As your needs grow, you can access advanced features like raw API responses, custom headers, and token usage tracking without breaking your initial code.
+Start simple with `NodeLLM.chat().ask("Hello")`. As your needs grow, you can access advanced features like raw API responses, custom headers, and token usage tracking without breaking your initial code.
 
 ## How it Works
 

@@ -1,15 +1,15 @@
 import "dotenv/config";
-import { LLM } from "../../../packages/core/dist/index.js";
+import { NodeLLM } from "../../../packages/core/dist/index.js";
 
 async function main() {
-  LLM.configure({
+  NodeLLM.configure({
     provider: "anthropic",
   });
 
   console.log("Attempting to create embeddings with Anthropic...");
 
   try {
-    await LLM.embed({
+    await NodeLLM.embed({
       input: "Hello, world!",
     });
   } catch (error) {

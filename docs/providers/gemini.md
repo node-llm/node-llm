@@ -12,9 +12,9 @@ Google's Gemini provider offers multimodal capabilities including native video a
 ## Configuration
 
 ```ts
-import { LLM } from "@node-llm/core";
+import { NodeLLM } from "@node-llm/core";
 
-LLM.configure({
+NodeLLM.configure({
   provider: "gemini",
   geminiApiKey: process.env.GEMINI_API_KEY, // Optional if set in env
 });
@@ -25,7 +25,7 @@ LLM.configure({
 Gemini uses `generationConfig` and `safetySettings`.
 
 ```ts
-const chat = LLM.chat("gemini-1.5-pro")
+const chat = NodeLLM.chat("gemini-1.5-pro")
   .withParams({
     generationConfig: { 
       topP: 0.8, 

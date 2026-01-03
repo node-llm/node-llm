@@ -1,11 +1,11 @@
 
-import { LLM } from "../../../packages/core/dist/index.js";
+import { NodeLLM } from "../../../packages/core/dist/index.js";
 
 async function main() {
   console.log("🦙 Ollama Streaming Chat Example");
   
-  LLM.configure({ provider: "ollama" });
-  const chat = LLM.chat("llama3");
+  NodeLLM.configure({ provider: "ollama" });
+  const chat = NodeLLM.chat("llama3");
 
   const prompt = "Write a haiku about TypeScript.";
   console.log(`User: ${prompt}`);

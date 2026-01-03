@@ -1,27 +1,16 @@
-export { Chat } from "./chat/Chat.js";
-export { Stream } from "./streaming/Stream.js";
-export { GeneratedImage } from "./image/GeneratedImage.js";
-export type { Message } from "./chat/Message.js";
-export type { Role } from "./chat/Role.js";
-export type { ChatOptions } from "./chat/ChatOptions.js";
-export type { Tool, ToolCall } from "./chat/Tool.js";
-export type { MessageContent, ContentPart } from "./chat/Content.js";
+export * from "./chat/Message.js";
+export * from "./chat/Content.js";
+export * from "./chat/Tool.js";
+export * from "./chat/ChatOptions.js";
+export * from "./chat/ChatResponse.js";
+export * from "./chat/Chat.js";
+export * from "./chat/ChatStream.js";
+export * from "./streaming/Stream.js";
 
 export { z } from "zod";
 import { resolveModelAlias } from "./model_aliases.js";
-export { LLM, Transcription, Moderation, Embedding } from "./llm.js";
+export { NodeLLM, Transcription, Moderation, Embedding } from "./llm.js";
 export { config } from "./config.js";
 export type { NodeLLMConfig } from "./config.js";
 export { providerRegistry } from "./providers/registry.js";
-export { BaseProvider } from "./providers/BaseProvider.js";
-
-export { OpenAIProvider } from "./providers/openai/OpenAIProvider.js";
-export { registerOpenAIProvider } from "./providers/openai/index.js";
-export { registerAnthropicProvider } from "./providers/anthropic/index.js";
-export { registerGeminiProvider, GeminiProvider } from "./providers/gemini/index.js";
-export { registerOllamaProvider, OllamaProvider } from "./providers/ollama/index.js";
-export { OpenRouterProvider } from "./providers/openrouter/OpenRouterProvider.js";
-export { registerOpenRouterProvider } from "./providers/registry.js";
-export type { ImageRequest, ImageResponse } from "./providers/Provider.js";
-export * from "./errors/index.js";
-
+export { Schema } from "./schema/Schema.js";

@@ -1,9 +1,9 @@
 
-import { LLM } from "../../../packages/core/dist/index.js";
+import { NodeLLM } from "../../../packages/core/dist/index.js";
 
 async function main() {
   console.log("🦙 Ollama Embeddings Example");
-  LLM.configure({ provider: "ollama" });
+  NodeLLM.configure({ provider: "ollama" });
   
   // Note: 'nomic-embed-text' is a popular embedding model on Ollama. 
   // You can also use 'llama3', but dedicated models are better for embeddings.
@@ -16,9 +16,9 @@ async function main() {
   const text3 = "The planet Jupiter is a gas giant.";
 
   try {
-      const emb1 = await LLM.embed(text1, { model });
-      const emb2 = await LLM.embed(text2, { model });
-      const emb3 = await LLM.embed(text3, { model });
+      const emb1 = await NodeLLM.embed(text1, { model });
+      const emb2 = await NodeLLM.embed(text2, { model });
+      const emb3 = await NodeLLM.embed(text3, { model });
       
       console.log("Embedding vector length:", emb1.vector.length);
       

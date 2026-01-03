@@ -12,9 +12,9 @@ The OpenAI provider supports the full range of `node-llm` features, including ro
 ## Configuration
 
 ```ts
-import { LLM } from "@node-llm/core";
+import { NodeLLM } from "@node-llm/core";
 
-LLM.configure({
+NodeLLM.configure({
   provider: "openai",
   openaiApiKey: process.env.OPENAI_API_KEY, // Optional if set in env
 });
@@ -25,7 +25,7 @@ LLM.configure({
 You can pass OpenAI-specific parameters using `.withParams()`.
 
 ```ts
-const chat = LLM.chat("gpt-4o")
+const chat = NodeLLM.chat("gpt-4o")
   .withParams({ 
     seed: 42,           // for deterministic output
     user: "user-123",   // for user tracking

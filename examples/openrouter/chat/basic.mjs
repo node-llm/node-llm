@@ -1,14 +1,14 @@
 import "dotenv/config";
-import { LLM } from "../../../packages/core/dist/index.js";
+import { NodeLLM } from "../../../packages/core/dist/index.js";
 
 async function main() {
   // Configure provider
-  LLM.configure({ 
+  NodeLLM.configure({ 
     openrouterApiKey: process.env.OPENROUTER_API_KEY, 
     provider: "openrouter" 
   });
 
-  const chat = LLM.chat("gpt-4o-mini");
+  const chat = NodeLLM.chat("gpt-4o-mini");
 
   // 1. Standard Request
   console.log("--- Standard Request ---");

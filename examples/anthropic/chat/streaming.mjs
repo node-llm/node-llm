@@ -1,16 +1,16 @@
 import "dotenv/config";
-import { LLM } from "../../../packages/core/dist/index.js";
+import { NodeLLM } from "../../../packages/core/dist/index.js";
 
 // Ensure ANTHROPIC_API_KEY is set in your environment
 // export ANTHROPIC_API_KEY=sk-ant-...
 
-LLM.configure({
+NodeLLM.configure({
   provider: "anthropic",
 });
 
 async function main() {
   console.log("Creating chat with Streaming...");
-  const chat = LLM.chat("claude-3-haiku-20240307");
+  const chat = NodeLLM.chat("claude-3-haiku-20240307");
 
   console.log("Streaming response for: 'Write a haiku about code'");
   console.log("\n--- Start of Stream ---\n");

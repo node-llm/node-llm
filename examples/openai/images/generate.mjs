@@ -1,17 +1,17 @@
 import "dotenv/config";
-import { LLM } from "../../../packages/core/dist/index.js";
+import { NodeLLM } from "../../../packages/core/dist/index.js";
 import fs from "fs/promises";
 
 async function main() {
-  LLM.configure((config) => {
+  NodeLLM.configure((config) => {
     config.openaiApiKey = process.env.OPENAI_API_KEY;
   });
   
-  LLM.configure({ provider: "openai" });
+  NodeLLM.configure({ provider: "openai" });
 
   console.log("🎨 Generating image...");
   try {
-    const image = await LLM.paint("a cute robot holding a sign that says NODE-LLM", {
+    const image = await NodeLLM.paint("a cute robot holding a sign that says NODE-NodeLLM", {
       model: "dall-e-3",
       size: "1024x1024" // DALL-E 3 standard
     });

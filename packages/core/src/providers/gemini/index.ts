@@ -6,7 +6,7 @@ let registered = false;
 
 /**
  * Idempotent registration of the Gemini provider.
- * Automatically called by LLM.configure({ provider: 'gemini' })
+ * Automatically called by NodeLLM.configure({ provider: 'gemini' })
  */
 export function registerGeminiProvider() {
   if (registered) return;

@@ -1,4 +1,4 @@
-# Node-LLM Examples
+# LLM Examples
 
 This directory contains examples demonstrating how to use various providers with `node-llm`.
 
@@ -32,10 +32,10 @@ Learn how to configure `node-llm`:
 ```bash
 ### Configuration
 
-The examples use `LLM.configure` to set up the provider. You can pass your API key directly in the configuration object:
+The examples use `NodeLLM.configure` to set up the provider. You can pass your API key directly in the configuration object:
 
 ```javascript
-LLM.configure({
+NodeLLM.configure({
   openaiApiKey: process.env.OPENAI_API_KEY,
   provider: "openai" 
 });

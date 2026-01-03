@@ -1,5 +1,5 @@
 import { describe, it, expect, afterEach } from "vitest";
-import { LLM } from "../../../../src/index.js";
+import { NodeLLM } from "../../../../src/index.js";
 import { setupVCR } from "../../../helpers/vcr.js";
 import "dotenv/config";
 
@@ -15,11 +15,11 @@ describe("DeepSeek Chat Integration (VCR)", { timeout: 30000 }, () => {
   it("should perform a basic chat completion", async ({ task }) => {
     polly = setupVCR(task.name, "deepseek");
 
-    LLM.configure({
+    NodeLLM.configure({
       deepseekApiKey: process.env.DEEPSEEK_API_KEY,
       provider: "deepseek",
     });
-    const chat = LLM.chat("deepseek-chat");
+    const chat = NodeLLM.chat("deepseek-chat");
 
     const response = await chat.ask("What is 2 + 2? Answer with just the number.");
 
@@ -30,8 +30,8 @@ describe("DeepSeek Chat Integration (VCR)", { timeout: 30000 }, () => {
   it("should support streaming", async ({ task }) => {
     polly = setupVCR(task.name, "deepseek");
 
-    LLM.configure({ provider: "deepseek" });
-    const chat = LLM.chat("deepseek-chat");
+    NodeLLM.configure({ provider: "deepseek" });
+    const chat = NodeLLM.chat("deepseek-chat");
 
     let fullText = "";
     for await (const chunk of chat.stream("Count to 3.")) {

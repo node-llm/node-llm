@@ -11,13 +11,13 @@ nav_order: 1
 
 ## Starting a Conversation
 
-The core entry point is `LLM.chat(model_id, options?)`.
+The core entry point is `NodeLLM.chat(model_id, options?)`.
 
 ```ts
-import { LLM } from "@node-llm/core";
+import { NodeLLM } from "@node-llm/core";
 
 // Create a chat instance
-const chat = LLM.chat("gpt-4o-mini");
+const chat = NodeLLM.chat("gpt-4o-mini");
 
 // Ask a question
 const response = await chat.ask("What is the capital of France?");
@@ -43,7 +43,7 @@ Guide the AI's behavior, personality, or constraints using system prompts. You c
 
 ```ts
 // Option 1: Set at initialization
-const chat = LLM.chat("gpt-4o", {
+const chat = NodeLLM.chat("gpt-4o", {
   systemPrompt: "You are a helpful assistant that answers in rhyming couplets."
 });
 
@@ -60,7 +60,7 @@ Some providers offer beta features or require specific headers (like for observa
 
 ```ts
 // Enable Anthropic's beta features
-const chat = LLM.chat("claude-3-5-sonnet")
+const chat = NodeLLM.chat("claude-3-5-sonnet")
   .withRequestOptions({
     headers: {
       "anthropic-beta": "max-tokens-3-5-sonnet-2024-07-15"
@@ -82,22 +82,22 @@ const systemBlock = {
   cache_control: { type: "ephemeral" }
 };
 
-const chat = LLM.chat("claude-3-5-sonnet", {
+const chat = NodeLLM.chat("claude-3-5-sonnet", {
   systemPrompt: systemBlock as any // Cast if strict types complain
 });
 ```
 
 ## Working with Different Models
-To switch providers, you must re-configure the `LLM` instance.
+To switch providers, you must re-configure the `NodeLLM` instance.
 
 ```ts
 // OpenAI
-LLM.configure({ provider: "openai" });
-const gpt = LLM.chat("gpt-4o");
+NodeLLM.configure({ provider: "openai" });
+const gpt = NodeLLM.chat("gpt-4o");
 
 // Anthropic
-LLM.configure({ provider: "anthropic" });
-const claude = LLM.chat("claude-3-5-sonnet-20241022");
+NodeLLM.configure({ provider: "anthropic" });
+const claude = NodeLLM.chat("claude-3-5-sonnet-20241022");
 ```
 
 For advanced multi-provider applications, it is recommended to manage separate `LLMCore` instances or re-configure as needed before requests.
@@ -108,10 +108,10 @@ Adjust the randomness of the model's responses using `.withTemperature(0.0 - 1.0
 
 ```ts
 // Deterministic / Factual (Low Temperature)
-const factual = LLM.chat("gpt-4o").withTemperature(0.0);
+const factual = NodeLLM.chat("gpt-4o").withTemperature(0.0);
 
 // Creative / Random (High Temperature)
-const creative = LLM.chat("gpt-4o").withTemperature(0.9);
+const creative = NodeLLM.chat("gpt-4o").withTemperature(0.9);
 ```
 
 ## Lifecycle Events

@@ -1,13 +1,13 @@
 import "dotenv/config";
-import { LLM } from "../../../packages/core/dist/index.js";
+import { NodeLLM } from "../../../packages/core/dist/index.js";
 
 async function main() {
-  LLM.configure((config) => {
+  NodeLLM.configure((config) => {
     config.deepseekApiKey = process.env.DEEPSEEK_API_KEY;
   });
   
-  LLM.configure({ provider: "deepseek" });
-  const chat = LLM.chat("deepseek-chat");
+  NodeLLM.configure({ provider: "deepseek" });
+  const chat = NodeLLM.chat("deepseek-chat");
 
   console.log("Streaming from DeepSeek:\n");
   

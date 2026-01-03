@@ -1,19 +1,19 @@
 import "dotenv/config";
-import { LLM } from "../../../packages/core/dist/index.js";
+import { NodeLLM } from "../../../packages/core/dist/index.js";
 
 // Configure provider - Callback style (recommended)
-LLM.configure((config) => {
+NodeLLM.configure((config) => {
   config.anthropicApiKey = process.env.ANTHROPIC_API_KEY;
 });
 
-// Alternative: LLM.configure({ anthropicApiKey: "sk-ant-...", provider: "anthropic" });
-LLM.configure({
+// Alternative: NodeLLM.configure({ anthropicApiKey: "sk-ant-...", provider: "anthropic" });
+NodeLLM.configure({
   provider: "anthropic",
 });
 
 async function main() {
   console.log("Creating chat with Claude 3.5 Sonnet...");
-  const chat = LLM.chat("claude-3-haiku");
+  const chat = NodeLLM.chat("claude-3-5-sonnet-20241022");
 
   console.log("Sending message...");
   const response = await chat.ask("Hello, who are you?");

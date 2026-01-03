@@ -14,9 +14,9 @@ parent: Core Features
 You can look up any supported model to check its context window, costs, and features.
 
 ```ts
-import { LLM } from "@node-llm/core";
+import { NodeLLM } from "@node-llm/core";
 
-const model = LLM.models.find("gpt-4o");
+const model = NodeLLM.models.find("gpt-4o");
 
 if (model) {
   console.log(`Provider: ${model.provider}`);
@@ -32,7 +32,7 @@ You can filter the registry to find models that match your requirements.
 
 ### Finding Vision Models
 ```ts
-const visionModels = LLM.models.list().filter(m => 
+const visionModels = NodeLLM.models.list().filter(m => 
   m.capabilities.includes("vision")
 );
 
@@ -42,14 +42,14 @@ visionModels.forEach(m => console.log(m.id));
 
 ### Finding Tool-Use Models
 ```ts
-const toolModels = LLM.models.list().filter(m => 
+const toolModels = NodeLLM.models.list().filter(m => 
   m.capabilities.includes("tools")
 );
 ```
 
 ### Finding Audio Models
 ```ts
-const audioModels = LLM.models.list().filter(m => 
+const audioModels = NodeLLM.models.list().filter(m => 
   m.capabilities.includes("audio_input")
 );
 ```
@@ -72,7 +72,7 @@ This flag tells `node-llm` to bypass the registry check.
 **Important**: You MUST specify the `provider` when using this flag, as the system cannot infer it from the ID.
 
 ```ts
-const chat = LLM.chat("my-custom-deployment", {
+const chat = NodeLLM.chat("my-custom-deployment", {
   provider: "openai", // Mandatory
   assumeModelExists: true
 });
@@ -85,11 +85,11 @@ await chat.ask("Hello");
 To point to a custom URL (like an Azure endpoint or local proxy), configure the base URL globally.
 
 ```ts
-LLM.configure({
+NodeLLM.configure({
   openaiApiBase: "https://my-azure-resource.openai.azure.com",
   openaiApiKey: process.env.AZURE_API_KEY
 });
 
 // Now valid for all OpenAI requests
-const chat = LLM.chat("gpt-4", { provider: "openai" });
+const chat = NodeLLM.chat("gpt-4", { provider: "openai" });
 ```

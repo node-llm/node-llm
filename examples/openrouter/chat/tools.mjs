@@ -1,8 +1,8 @@
 import "dotenv/config";
-import { LLM } from "../../../packages/core/dist/index.js";
+import { NodeLLM } from "../../../packages/core/dist/index.js";
 
 async function main() {
-  LLM.configure({ 
+  NodeLLM.configure({ 
     openrouterApiKey: process.env.OPENROUTER_API_KEY, 
     provider: "openrouter" 
   });
@@ -19,7 +19,7 @@ async function main() {
     }
   };
 
-  const chat = LLM.chat("openai/gpt-4o-mini").withTool(weatherTool);
+  const chat = NodeLLM.chat("openai/gpt-4o-mini").withTool(weatherTool);
 
   console.log("--- Tool Calling Request ---");
   const response = await chat.ask("What is the weather in London?");

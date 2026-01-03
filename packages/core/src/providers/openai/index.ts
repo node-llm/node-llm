@@ -6,7 +6,7 @@ let registered = false;
 
 /**
  * Idempotent registration of the OpenAI provider.
- * Automatically called by LLM.configure({ provider: 'openai' })
+ * Automatically called by NodeLLM.configure({ provider: 'openai' })
  */
 export function registerOpenAIProvider() {
   if (registered) return;

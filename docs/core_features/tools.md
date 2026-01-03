@@ -41,7 +41,7 @@ const weatherTool = {
 Use the fluent `.withTool()` API to register tools for a chat session.
 
 ```ts
-const chat = LLM.chat("gpt-4o")
+const chat = NodeLLM.chat("gpt-4o")
   .withTool(weatherTool);
 
 const reply = await chat.ask("What is the weather in London?");

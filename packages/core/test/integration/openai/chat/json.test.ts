@@ -1,5 +1,5 @@
 import { describe, it, expect, afterEach } from "vitest";
-import { LLM } from "../../../../src/index.js";
+import { NodeLLM } from "../../../../src/index.js";
 import { setupVCR } from "../../../helpers/vcr.js";
 import "dotenv/config";
 
@@ -14,11 +14,11 @@ describe("OpenAI JSON Mode Integration (VCR)", { timeout: 30000 }, () => {
 
   it("should support JSON mode", async ({ task }) => {
     polly = setupVCR(task.name, "openai");
-    LLM.configure({
+    NodeLLM.configure({
       openaiApiKey: process.env.OPENAI_API_KEY,
       provider: "openai",
     });
-    const chat = LLM.chat("gpt-4o-mini");
+    const chat = NodeLLM.chat("gpt-4o-mini");
 
     chat.withRequestOptions({
        headers: { "Content-Type": "application/json" }

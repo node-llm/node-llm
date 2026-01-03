@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { LLM } from "../../../src/llm.js";
+import { NodeLLM } from "../../../src/llm.js";
 import { Provider } from "../../../src/providers/Provider.js";
 
 describe("Moderation Unit Tests", () => {
@@ -20,11 +20,11 @@ describe("Moderation Unit Tests", () => {
         ]
       })
     };
-    LLM.configure({ provider: mockProvider });
+    NodeLLM.configure({ provider: mockProvider });
   });
 
   it("should call provider.moderate with correct arguments", async () => {
-    await LLM.moderate("hello world", { model: "custom-mod" });
+    await NodeLLM.moderate("hello world", { model: "custom-mod" });
     expect(mockProvider.moderate).toHaveBeenCalledWith({
       input: "hello world",
       model: "custom-mod"
@@ -32,8 +32,8 @@ describe("Moderation Unit Tests", () => {
   });
 
   it("should use defaultModerationModel if configured", async () => {
-    LLM.configure({ provider: mockProvider, defaultModerationModel: "default-mod" });
-    await LLM.moderate("hello world");
+    NodeLLM.configure({ provider: mockProvider, defaultModerationModel: "default-mod" });
+    await NodeLLM.moderate("hello world");
     expect(mockProvider.moderate).toHaveBeenCalledWith({
       input: "hello world",
       model: "default-mod"
@@ -41,7 +41,7 @@ describe("Moderation Unit Tests", () => {
   });
 
   it("should return a Moderation object with correct properties", async () => {
-    const result = await LLM.moderate("safe text");
+    const result = await NodeLLM.moderate("safe text");
     expect(result.id).toBe("mod-123");
     expect(result.model).toBe("text-moderation-latest");
     expect(result.flagged).toBe(false);
@@ -61,7 +61,7 @@ describe("Moderation Unit Tests", () => {
       ]
     });
 
-    const result = await LLM.moderate("unsafe text");
+    const result = await NodeLLM.moderate("unsafe text");
     expect(result.flagged).toBe(true);
     expect(result.isFlagged()).toBe(true);
     expect(result.flaggedCategories).toContain("violence");
@@ -76,7 +76,7 @@ describe("Moderation Unit Tests", () => {
       results: [{ flagged: true, categories: { "hate/threatening": true }, category_scores: { "hate/threatening": 0.8 } }]
     });
 
-    const result = await LLM.moderate("threat");
+    const result = await NodeLLM.moderate("threat");
     expect(result.flagged_categories).toContain("hate/threatening");
     expect(result.category_scores["hate/threatening"]).toBe(0.8);
   });
@@ -91,7 +91,7 @@ describe("Moderation Unit Tests", () => {
       ]
     });
 
-    const result = await LLM.moderate(["text1", "text2"]);
+    const result = await NodeLLM.moderate(["text1", "text2"]);
     expect(result.flagged).toBe(true);
     expect(result.flaggedCategories).toContain("violence");
     expect(result.flaggedCategories).toContain("sexual");
@@ -99,7 +99,7 @@ describe("Moderation Unit Tests", () => {
   });
 
   it("should be iterable", async () => {
-    const result = await LLM.moderate("single text");
+    const result = await NodeLLM.moderate("single text");
     const items = [...result];
     expect(items.length).toBe(1);
     expect(items[0].flagged).toBe(false);

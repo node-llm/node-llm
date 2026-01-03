@@ -7,14 +7,14 @@ parent: Core Features
 
 # Content Moderation
 
-Check if text content violates safety policies using `LLM.moderate`. This is crucial for user-facing applications to prevent abuse.
+Check if text content violates safety policies using `NodeLLM.moderate`. This is crucial for user-facing applications to prevent abuse.
 
 ## Basic Usage
 
 The simplest check returns a flagged boolean and categories.
 
 ```ts
-const result = await LLM.moderate("I want to help everyone!");
+const result = await NodeLLM.moderate("I want to help everyone!");
 
 if (result.flagged) {
   console.log(`❌ Flagged for: ${result.flaggedCategories.join(", ")}`);
@@ -32,7 +32,7 @@ The moderation result object provides detailed signals:
 *   `category_scores`: (object) Confidence scores (0.0 - 1.0) for each category.
 
 ```ts
-const result = await LLM.moderate("Some controversial text");
+const result = await NodeLLM.moderate("Some controversial text");
 
 // Check specific categories
 if (result.categories.hate) {
@@ -58,7 +58,7 @@ We recommend validating user input *before* sending it to a Chat model to save c
 
 ```ts
 async function safeChat(input: string) {
-  const mod = await LLM.moderate(input);
+  const mod = await NodeLLM.moderate(input);
 
   if (mod.flagged) {
     throw new Error(`Content Unsafe: ${mod.flaggedCategories.join(', ')}`);
@@ -74,7 +74,7 @@ async function safeChat(input: string) {
 Providers have their own thresholds for "flagging". You can implement stricter (or looser) logic using raw scores.
 
 ```ts
-const result = await LLM.moderate(userInput);
+const result = await NodeLLM.moderate(userInput);
 
 // Custom strict policy: Flag anything with > 0.1 confidence
 const isRisky = Object.entries(result.category_scores)

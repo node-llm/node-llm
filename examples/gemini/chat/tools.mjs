@@ -1,12 +1,12 @@
 import "dotenv/config";
-import { LLM } from "../../../packages/core/dist/index.js";
+import { NodeLLM } from "../../../packages/core/dist/index.js";
 
 async function main() {
-  LLM.configure((config) => {
+  NodeLLM.configure((config) => {
     config.geminiApiKey = process.env.GEMINI_API_KEY;
   });
   
-  LLM.configure({ provider: "gemini" });
+  NodeLLM.configure({ provider: "gemini" });
 
   const weatherTool = {
     type: 'function',
@@ -25,7 +25,7 @@ async function main() {
     }
   };
 
-  const chat = LLM.chat("gemini-2.0-flash").withTool(weatherTool);
+  const chat = NodeLLM.chat("gemini-2.0-flash").withTool(weatherTool);
 
   console.log("Asking: How is the weather in Paris?");
   const response = await chat.ask("How is the weather in Paris?");

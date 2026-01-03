@@ -1,13 +1,13 @@
 import "dotenv/config";
-import { LLM } from "../../../packages/core/dist/index.js";
+import { NodeLLM } from "../../../packages/core/dist/index.js";
 
 async function main() {
-  LLM.configure({
+  NodeLLM.configure({
     provider: "anthropic",
   });
 
   try {
-    const models = await LLM.listModels();
+    const models = await NodeLLM.listModels();
     console.log("Available Models:");
     models.forEach(m => console.log(`- ${m.id}`));
   } catch (error) {

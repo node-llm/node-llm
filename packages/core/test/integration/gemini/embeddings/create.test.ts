@@ -1,5 +1,5 @@
 import { describe, it, expect, afterEach } from "vitest";
-import { LLM } from "../../../../src/index.js";
+import { NodeLLM } from "../../../../src/index.js";
 import { setupVCR } from "../../../helpers/vcr.js";
 import "dotenv/config";
 
@@ -15,11 +15,11 @@ describe("Gemini Embedding Integration (VCR)", { timeout: 30000 }, () => {
   it("should generate embeddings", async ({ task }) => {
     polly = setupVCR(task.name, "gemini");
 
-    LLM.configure({
+    NodeLLM.configure({
       geminiApiKey: process.env.GEMINI_API_KEY,
       provider: "gemini",
     });
-    const response = await LLM.embed("Hello world", { model: "text-embedding-004" });
+    const response = await NodeLLM.embed("Hello world", { model: "text-embedding-004" });
 
     expect(response.vectors.length).toBe(1);
     expect(response.vector.length).toBeGreaterThan(0);
@@ -29,8 +29,8 @@ describe("Gemini Embedding Integration (VCR)", { timeout: 30000 }, () => {
   it("should generate batch embeddings", async ({ task }) => {
     polly = setupVCR(task.name, "gemini");
 
-    LLM.configure({ provider: "gemini" });
-    const response = await LLM.embed(["Hello", "World"], { model: "text-embedding-004" });
+    NodeLLM.configure({ provider: "gemini" });
+    const response = await NodeLLM.embed(["Hello", "World"], { model: "text-embedding-004" });
 
     expect(response.vectors.length).toBe(2);
     expect(response.vectors[0].length).toBeGreaterThan(0);

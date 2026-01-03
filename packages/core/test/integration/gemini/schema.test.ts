@@ -1,5 +1,5 @@
 import { describe, it, expect, afterEach } from "vitest";
-import { LLM } from "../../../src/index.js";
+import { NodeLLM } from "../../../src/index.js";
 import { setupVCR } from "../../helpers/vcr.js";
 import { z } from "zod";
 import "dotenv/config";
@@ -16,11 +16,11 @@ describe("Gemini Structured Output (VCR)", { timeout: 30000 }, () => {
   it("should support structured output with Zod schema", async ({ task }) => {
     polly = setupVCR(task.name, "gemini");
     
-    LLM.configure({
+    NodeLLM.configure({
       geminiApiKey: process.env.GEMINI_API_KEY,
       provider: "gemini",
     });
-    const chat = LLM.chat("gemini-2.0-flash");
+    const chat = NodeLLM.chat("gemini-2.0-flash");
 
     const schema = z.object({
       name: z.string(),

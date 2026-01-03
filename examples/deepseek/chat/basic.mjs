@@ -1,17 +1,17 @@
 import "dotenv/config";
-import { LLM } from "../../../packages/core/dist/index.js";
+import { NodeLLM } from "../../../packages/core/dist/index.js";
 
 // Configure provider - Callback style (recommended)
-LLM.configure((config) => {
+NodeLLM.configure((config) => {
   config.deepseekApiKey = process.env.DEEPSEEK_API_KEY;
 });
 
-// Alternative: LLM.configure({ deepseekApiKey: "...", provider: "deepseek" });
-LLM.configure({
+// Alternative: NodeLLM.configure({ deepseekApiKey: "...", provider: "deepseek" });
+NodeLLM.configure({
   provider: "deepseek",
 });
 
-const chat = LLM.chat("deepseek-chat");
+const chat = NodeLLM.chat("deepseek-chat");
 
 console.log("Chatting with DeepSeek...");
 const response = await chat.ask("Hello! Tell me a one-liner joke.");

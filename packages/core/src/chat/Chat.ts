@@ -3,7 +3,6 @@ import { Message } from "./Message.js";
 import { ChatOptions } from "./ChatOptions.js";
 import { Provider, Usage, ChatChunk } from "../providers/Provider.js";
 import { Executor } from "../executor/Executor.js";
-import { LLM } from "../llm.js";
 import { ChatStream } from "./ChatStream.js";
 import { Stream } from "../streaming/Stream.js";
 import { Tool } from "./Tool.js";
@@ -28,11 +27,12 @@ export class Chat {
   constructor(
     private readonly provider: Provider,
     private model: string,
-    private readonly options: ChatOptions = {}
+    private readonly options: ChatOptions = {},
+    retryConfig: { attempts: number; delayMs: number } = { attempts: 1, delayMs: 0 }
   ) {
     this.executor = new Executor(
       provider,
-      LLM.getRetryConfig()
+      retryConfig
     );
 
     if (options.systemPrompt) {
@@ -433,4 +433,3 @@ export class Chat {
     return streamer.create(content);
   }
 }
-

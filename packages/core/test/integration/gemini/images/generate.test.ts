@@ -1,5 +1,5 @@
 import { describe, it, expect, afterEach } from "vitest";
-import { LLM } from "../../../../src/index.js";
+import { NodeLLM } from "../../../../src/index.js";
 import { setupVCR } from "../../../helpers/vcr.js";
 import "dotenv/config";
 
@@ -15,11 +15,11 @@ describe("Gemini Image Generation Integration (VCR)", { timeout: 30000 }, () => 
   it("should generate an image and support image features (Paint)", async ({ task }) => {
     polly = setupVCR(task.name, "gemini");
 
-    LLM.configure({
+    NodeLLM.configure({
       geminiApiKey: process.env.GEMINI_API_KEY,
       provider: "gemini",
     });
-    const image = await LLM.paint("A sunset over the mountains", { 
+    const image = await NodeLLM.paint("A sunset over the mountains", { 
       model: "imagen-4.0-generate-001" 
     });
 

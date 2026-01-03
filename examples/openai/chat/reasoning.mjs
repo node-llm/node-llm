@@ -1,19 +1,19 @@
-import { LLM } from "../../../packages/core/dist/index.js";
+import { NodeLLM } from "../../../packages/core/dist/index.js";
 import "dotenv/config";
 
 async function main() {
   // Configure OpenAI
-  LLM.configure((config) => {
+  NodeLLM.configure((config) => {
     config.openaiApiKey = process.env.OPENAI_API_KEY;
   });
   
-  LLM.configure({ provider: "openai" });
+  NodeLLM.configure({ provider: "openai" });
 
   // Use the o3-mini or o1 model
   // Note: OpenAI reasoning models (o1/o3) do not currently return the full thinking text 
   // via the API. Instead, they provide "reasoning tokens" in the usage metadata.
   const model = "o3-mini"; 
-  const chat = LLM.chat(model);
+  const chat = NodeLLM.chat(model);
 
   console.log(`--- Reasoning with ${model} ---`);
   const response = await chat.ask("Explain the logic puzzle: if every A is a B, and some B are C, is every A a C?");

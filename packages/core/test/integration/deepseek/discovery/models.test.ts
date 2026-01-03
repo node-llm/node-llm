@@ -1,5 +1,5 @@
 import { describe, it, expect, afterEach } from "vitest";
-import { LLM } from "../../../../src/index.js";
+import { NodeLLM } from "../../../../src/index.js";
 import { setupVCR } from "../../../helpers/vcr.js";
 import "dotenv/config";
 
@@ -15,11 +15,11 @@ describe("DeepSeek Discovery Integration (VCR)", { timeout: 30000 }, () => {
   it("should list models", async ({ task }) => {
     polly = setupVCR(task.name, "deepseek");
 
-    LLM.configure({
+    NodeLLM.configure({
       deepseekApiKey: process.env.DEEPSEEK_API_KEY,
       provider: "deepseek",
     });
-    const models = await LLM.listModels();
+    const models = await NodeLLM.listModels();
 
     expect(models.length).toBeGreaterThan(0);
     const modelIds = models.map((m) => m.id);

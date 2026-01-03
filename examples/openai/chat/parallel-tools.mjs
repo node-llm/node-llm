@@ -1,12 +1,12 @@
 import "dotenv/config";
-import { LLM } from "../../../packages/core/dist/index.js";
+import { NodeLLM } from "../../../packages/core/dist/index.js";
 
 async function main() {
-  LLM.configure((config) => {
+  NodeLLM.configure((config) => {
     config.openaiApiKey = process.env.OPENAI_API_KEY;
   });
   
-  LLM.configure({ provider: "openai" });
+  NodeLLM.configure({ provider: "openai" });
 
   const weatherTool = {
     type: 'function',
@@ -29,7 +29,7 @@ async function main() {
     }
   };
 
-  const chat = LLM.chat("gpt-4o-mini").withTool(weatherTool);
+  const chat = NodeLLM.chat("gpt-4o-mini").withTool(weatherTool);
 
   console.log("User: What is the weather in Tokyo, London, and New York?");
   

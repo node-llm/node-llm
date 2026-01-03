@@ -14,10 +14,10 @@ Allows you to run large language models locally using [Ollama](https://ollama.co
 Standard configuration for local inference (defaults to `http://localhost:11434/v1`):
 
 ```javascript
-import { LLM } from "@node-llm/core";
+import { NodeLLM } from "@node-llm/core";
 
 // Defaults to http://localhost:11434/v1
-LLM.configure({
+NodeLLM.configure({
   provider: "ollama",
 });
 ```
@@ -27,7 +27,7 @@ LLM.configure({
 If your Ollama instance is running on a different machine or port:
 
 ```javascript
-LLM.configure({
+NodeLLM.configure({
   provider: "ollama",
   ollamaApiBase: "http://192.168.1.10:11434/v1", // Note the /v1 suffix
 });
@@ -38,7 +38,7 @@ LLM.configure({
 You can pass Ollama/OpenAI-compatible parameters using `.withParams()`.
 
 ```javascript
-const chat = LLM.chat("llama3")
+const chat = NodeLLM.chat("llama3")
   .withParams({ 
     temperature: 0.7,
     seed: 42,
@@ -52,7 +52,7 @@ const chat = LLM.chat("llama3")
 - **Vision**: Use vision-capable models like `llama3.2-vision` or `llava`.
 - **Tools**: Fully supported for models with tool-calling capabilities (e.g., `llama3.1`).
 - **Embeddings**: High-performance local vector generation.
-- **Model Discovery**: Inspect your local library and model metadata via `LLM.listModels()`.
+- **Model Discovery**: Inspect your local library and model metadata via `NodeLLM.listModels()`.
 
 ### Multimodal (Vision)
 
@@ -67,7 +67,7 @@ const response = await chat.ask("Describe this image", {
 List all models currently pulled in your Ollama library to inspect their context windows and features:
 
 ```javascript
-const models = await LLM.listModels();
+const models = await NodeLLM.listModels();
 console.table(models);
 ```
 

@@ -1,5 +1,5 @@
 import { describe, it, expect, afterEach } from "vitest";
-import { LLM } from "../../../../src/index.js";
+import { NodeLLM } from "../../../../src/index.js";
 import { setupVCR } from "../../../helpers/vcr.js";
 import "dotenv/config";
 
@@ -14,11 +14,11 @@ describe("Anthropic Chat Integration (VCR)", { timeout: 30000 }, () => {
 
   it("should perform a basic chat completion with Claude 3 Haiku", async ({ task }) => {
     polly = setupVCR(task.name, "anthropic");
-    LLM.configure({
+    NodeLLM.configure({
       anthropicApiKey: process.env.ANTHROPIC_API_KEY,
       provider: "anthropic",
     });
-    const chat = LLM.chat("claude-3-haiku-20240307");
+    const chat = NodeLLM.chat("claude-3-haiku-20240307");
 
     const response = await chat.ask("What is the capital of France?");
 
@@ -30,11 +30,11 @@ describe("Anthropic Chat Integration (VCR)", { timeout: 30000 }, () => {
   it("should stream chat completion with Claude 3 Haiku", async ({ task }) => {
     polly = setupVCR(task.name, "anthropic");
 
-    LLM.configure({
+    NodeLLM.configure({
       anthropicApiKey: process.env.ANTHROPIC_API_KEY,
       provider: "anthropic",
     });
-    const chat = LLM.chat("claude-3-haiku-20240307");
+    const chat = NodeLLM.chat("claude-3-haiku-20240307");
 
     let fullResponse = "";
     const stream = chat.stream("What is the capital of France? Answer in one word.");

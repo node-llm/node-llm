@@ -1,14 +1,14 @@
 import "dotenv/config";
-import { LLM, z } from "../../../packages/core/dist/index.js";
+import { NodeLLM, z } from "../../../packages/core/dist/index.js";
 
 async function main() {
-  LLM.configure((config) => {
+  NodeLLM.configure((config) => {
     config.openaiApiKey = process.env.OPENAI_API_KEY;
   });
   
-  LLM.configure({ provider: "openai" });
+  NodeLLM.configure({ provider: "openai" });
 
-  const chat = LLM.chat("gpt-4o-mini");
+  const chat = NodeLLM.chat("gpt-4o-mini");
 
   // --- Example 1: Using Zod (Recommended) ---
   const recipeSchema = z.object({

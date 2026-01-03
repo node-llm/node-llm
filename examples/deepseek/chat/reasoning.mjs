@@ -1,14 +1,14 @@
-import { LLM } from "../../../packages/core/dist/index.js";
+import { NodeLLM } from "../../../packages/core/dist/index.js";
 import "dotenv/config";
 
 async function main() {
-  LLM.configure((config) => {
+  NodeLLM.configure((config) => {
     config.deepseekApiKey = process.env.DEEPSEEK_API_KEY;
   });
   
-  LLM.configure({ provider: "deepseek" });
+  NodeLLM.configure({ provider: "deepseek" });
 
-  const chat = LLM.chat("deepseek-reasoner");
+  const chat = NodeLLM.chat("deepseek-reasoner");
 
   console.log("--- Reasoning (Non-Streaming) ---");
   const response = await chat.ask("What is heavier: 1kg of feathers or 1kg of lead? Explain your reasoning.");

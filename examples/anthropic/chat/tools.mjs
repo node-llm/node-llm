@@ -1,9 +1,9 @@
 import "dotenv/config";
-import { LLM } from "../../../packages/core/dist/index.js";
+import { NodeLLM } from "../../../packages/core/dist/index.js";
 
 // Ensure ANTHROPIC_API_KEY is set in your environment
 
-LLM.configure({
+NodeLLM.configure({
   provider: "anthropic",
 });
 
@@ -41,7 +41,7 @@ const WeatherTool = {
 async function main() {
   console.log("Creating chat with Tools...");
   
-  const chat = LLM.chat("claude-3-haiku-20240307")
+  const chat = NodeLLM.chat("claude-3-haiku-20240307")
     .withTool(WeatherTool);
 
   // Anthropic supports thinking/tool use automatically

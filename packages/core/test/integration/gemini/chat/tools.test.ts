@@ -1,5 +1,5 @@
 import { describe, it, expect, afterEach } from "vitest";
-import { LLM } from "../../../../src/index.js";
+import { NodeLLM } from "../../../../src/index.js";
 import { setupVCR } from "../../../helpers/vcr.js";
 import "dotenv/config";
 
@@ -14,7 +14,7 @@ describe("Gemini Tool Calling Integration (VCR)", { timeout: 30000 }, () => {
 
   it("should handle tool calling", async ({ task }) => {
     polly = setupVCR(task.name, "gemini");
-    LLM.configure({
+    NodeLLM.configure({
       geminiApiKey: process.env.GEMINI_API_KEY,
       provider: "gemini",
     });
@@ -31,7 +31,7 @@ describe("Gemini Tool Calling Integration (VCR)", { timeout: 30000 }, () => {
       }
     };
 
-    const chat = LLM.chat("gemini-2.0-flash").withTool(weatherTool);
+    const chat = NodeLLM.chat("gemini-2.0-flash").withTool(weatherTool);
     const response = await chat.ask("What is the weather in Berlin?");
 
     expect(String(response)).toContain("18");

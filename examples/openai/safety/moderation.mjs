@@ -1,8 +1,8 @@
 import "dotenv/config";
-import { LLM } from "../../../packages/core/dist/index.js";
+import { NodeLLM } from "../../../packages/core/dist/index.js";
 
 async function main() {
-  LLM.configure({ 
+  NodeLLM.configure({ 
     provider: "openai",
     defaultModerationModel: "omni-moderation-latest" 
   });
@@ -11,7 +11,7 @@ async function main() {
   console.log(`Moderating: "${input}"`);
   
   // 1. Basic Check
-  const result = await LLM.moderate(input);
+  const result = await NodeLLM.moderate(input);
   if (result.flagged) {
     console.log(`❌ Flagged for: ${result.flaggedCategories.join(", ")}`);
   } else {

@@ -1,5 +1,5 @@
 import { describe, it, expect, afterEach } from "vitest";
-import { LLM } from "../../../../src/index.js";
+import { NodeLLM } from "../../../../src/index.js";
 import { setupVCR } from "../../../helpers/vcr.js";
 import "dotenv/config";
 
@@ -15,10 +15,10 @@ describe("DeepSeek Safety Integration (VCR)", { timeout: 30000 }, () => {
     it("should throw error for moderation", async ({ task }) => {
         polly = setupVCR(task.name, "deepseek");
         
-        LLM.configure({
+        NodeLLM.configure({
       deepseekApiKey: process.env.DEEPSEEK_API_KEY,
       provider: "deepseek",
     });
-        await expect(LLM.moderate({ input: "test" })).rejects.toThrow(/does not support moderate/i);
+        await expect(NodeLLM.moderate({ input: "test" })).rejects.toThrow(/does not support moderate/i);
     });
 });

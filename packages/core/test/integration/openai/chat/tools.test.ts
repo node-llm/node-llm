@@ -1,5 +1,5 @@
 import { describe, it, expect, afterEach } from "vitest";
-import { LLM } from "../../../../src/index.js";
+import { NodeLLM } from "../../../../src/index.js";
 import { setupVCR } from "../../../helpers/vcr.js";
 import "dotenv/config";
 
@@ -15,7 +15,7 @@ describe("OpenAI Tool Calling Integration (VCR)", { timeout: 30000 }, () => {
   it("should handle tool calling", async ({ task }) => {
     polly = setupVCR(task.name, "openai");
 
-    LLM.configure({
+    NodeLLM.configure({
       openaiApiKey: process.env.OPENAI_API_KEY,
       provider: "openai",
     });
@@ -32,7 +32,7 @@ describe("OpenAI Tool Calling Integration (VCR)", { timeout: 30000 }, () => {
       }
     };
 
-    const chat = LLM.chat("gpt-4o-mini").withTool(weatherTool);
+    const chat = NodeLLM.chat("gpt-4o-mini").withTool(weatherTool);
     const response = await chat.ask("What is the weather in London?");
 
     expect(String(response)).toContain("22");
@@ -44,7 +44,7 @@ describe("OpenAI Tool Calling Integration (VCR)", { timeout: 30000 }, () => {
   it("should handle parallel tool calling", async ({ task }) => {
     polly = setupVCR(task.name, "openai");
 
-    LLM.configure({ provider: "openai" });
+    NodeLLM.configure({ provider: "openai" });
 
     const weatherTool = {
       type: 'function',
@@ -58,7 +58,7 @@ describe("OpenAI Tool Calling Integration (VCR)", { timeout: 30000 }, () => {
       }
     };
 
-    const chat = LLM.chat("gpt-4o-mini").withTool(weatherTool);
+    const chat = NodeLLM.chat("gpt-4o-mini").withTool(weatherTool);
     // Requesting weather for multiple locations triggers parallel calls
     const response = await chat.ask("What is the weather in Paris and London?");
 

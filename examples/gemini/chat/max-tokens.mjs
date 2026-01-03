@@ -1,12 +1,12 @@
 import "dotenv/config";
-import { LLM } from "../../../packages/core/dist/index.js";
+import { NodeLLM } from "../../../packages/core/dist/index.js";
 
 async function main() {
-  LLM.configure({
+  NodeLLM.configure({
     provider: "gemini",
   });
 
-  const chat = LLM.chat("gemini-2.0-flash");
+  const chat = NodeLLM.chat("gemini-2.0-flash");
 
   console.log("Asking with maxTokens: 10...");
 

@@ -1,17 +1,17 @@
 import "dotenv/config";
-import { LLM } from "../../../packages/core/dist/index.js";
+import { NodeLLM } from "../../../packages/core/dist/index.js";
 
 async function main() {
-  LLM.configure((config) => {
+  NodeLLM.configure((config) => {
     config.deepseekApiKey = process.env.DEEPSEEK_API_KEY;
   });
   
-  LLM.configure({ provider: "deepseek" });
+  NodeLLM.configure({ provider: "deepseek" });
   
   console.log("Attempting to generate image with DeepSeek...");
   try {
     // This should fail as image generation is not supported
-    await LLM.paint({ prompt: "A futuristic city" });
+    await NodeLLM.paint({ prompt: "A futuristic city" });
   } catch (error) {
     console.log("✅ Correctly caught unsupported operation error:");
     console.error(error.message);

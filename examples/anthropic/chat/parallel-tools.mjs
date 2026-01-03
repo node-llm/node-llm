@@ -1,5 +1,5 @@
 import "dotenv/config";
-import { LLM } from "../../../packages/core/dist/index.js";
+import { NodeLLM } from "../../../packages/core/dist/index.js";
 
 const weatherTool = {
   type: "function",
@@ -24,11 +24,11 @@ const weatherTool = {
 };
 
 async function main() {
-  LLM.configure({
+  NodeLLM.configure({
     provider: "anthropic",
   });
 
-  const chat = LLM.chat("claude-3-haiku-20240307")
+  const chat = NodeLLM.chat("claude-3-haiku-20240307")
     .withTool(weatherTool);
 
   console.log("Asking about weather in two cities...");
