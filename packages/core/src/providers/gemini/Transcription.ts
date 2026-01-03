@@ -2,6 +2,7 @@ import { TranscriptionRequest, TranscriptionResponse } from "../Provider.js";
 import { handleGeminiError } from "./Errors.js";
 import { BinaryUtils } from "../../utils/Binary.js";
 import { GeminiGenerateContentRequest, GeminiGenerateContentResponse } from "./types.js";
+import { logger } from "../../utils/logger.js";
 
 export class GeminiTranscription {
   private static readonly DEFAULT_PROMPT = "Transcribe the provided audio and respond with only the transcript text.";
@@ -46,6 +47,8 @@ export class GeminiTranscription {
       },
     };
 
+    logger.logRequest("Gemini", "POST", url, payload);
+
     const response = await fetch(url, {
       method: "POST",
       headers: {
@@ -59,6 +62,7 @@ export class GeminiTranscription {
     }
 
     const json = (await response.json()) as GeminiGenerateContentResponse;
+    logger.logResponse("Gemini", response.status, response.statusText, json);
     const text = json.candidates?.[0]?.content?.parts?.map(p => p.text).join("") || "";
 
     return {

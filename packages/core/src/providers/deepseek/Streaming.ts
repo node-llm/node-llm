@@ -1,5 +1,6 @@
 import { ChatRequest, ChatChunk } from "../Provider.js";
 import { APIError } from "../../errors/index.js";
+import { logger } from "../../utils/logger.js";
 
 export class DeepSeekStreaming {
   constructor(private readonly baseUrl: string, private readonly apiKey: string) {}
@@ -25,7 +26,10 @@ export class DeepSeekStreaming {
     let done = false;
 
     try {
-      const response = await fetch(`${this.baseUrl}/chat/completions`, {
+      const url = `${this.baseUrl}/chat/completions`;
+      logger.logRequest("DeepSeek", "POST", url, body);
+
+      const response = await fetch(url, {
         method: "POST",
         headers: {
           "Authorization": `Bearer ${this.apiKey}`,
@@ -40,6 +44,8 @@ export class DeepSeekStreaming {
         const errorText = await response.text();
         throw new Error(`DeepSeek API error: ${response.status} - ${errorText}`);
       }
+
+      logger.debug("DeepSeek streaming started", { status: response.status, statusText: response.statusText });
 
       if (!response.body) {
         throw new Error("No response body for streaming");

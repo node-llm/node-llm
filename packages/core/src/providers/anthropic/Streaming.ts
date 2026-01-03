@@ -3,6 +3,7 @@ import { Capabilities } from "./Capabilities.js";
 import { handleAnthropicError } from "./Errors.js";
 import { formatSystemPrompt, formatMessages } from "./Utils.js";
 import { AnthropicMessageRequest } from "./types.js";
+import { logger } from "../../utils/logger.js";
 
 export class AnthropicStreaming {
   constructor(private readonly baseUrl: string, private readonly apiKey: string) {}
@@ -68,7 +69,10 @@ export class AnthropicStreaming {
     let done = false;
 
     try {
-      const response = await fetch(`${this.baseUrl}/messages`, {
+      const url = `${this.baseUrl}/messages`;
+      logger.logRequest("Anthropic", "POST", url, body);
+
+      const response = await fetch(url, {
         method: "POST",
         headers: headers,
         body: JSON.stringify(body),
@@ -78,6 +82,8 @@ export class AnthropicStreaming {
       if (!response.ok) {
         await handleAnthropicError(response, model);
       }
+
+      logger.debug("Anthropic streaming started", { status: response.status, statusText: response.statusText });
 
       if (!response.body) {
         throw new Error("No response body for streaming");

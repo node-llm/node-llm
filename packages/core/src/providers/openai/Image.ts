@@ -1,6 +1,7 @@
 import { ImageRequest, ImageResponse } from "../Provider.js";
 import { handleOpenAIError } from "./Errors.js";
 import { buildUrl } from "./utils.js";
+import { logger } from "../../utils/logger.js";
 
 export class OpenAIImage {
   constructor(private readonly baseUrl: string, private readonly apiKey: string) {}
@@ -14,7 +15,10 @@ export class OpenAIImage {
       n: request.n || 1,
     };
 
-    const response = await fetch(buildUrl(this.baseUrl, '/images/generations'), {
+    const url = buildUrl(this.baseUrl, '/images/generations');
+    logger.logRequest("OpenAI", "POST", url, body);
+
+    const response = await fetch(url, {
       method: "POST",
       headers: {
         "Authorization": `Bearer ${this.apiKey}`,
@@ -28,6 +32,7 @@ export class OpenAIImage {
     }
 
     const json = await response.json();
+    logger.logResponse("OpenAI", response.status, response.statusText, json);
     const data = json.data?.[0];
 
     if (!data) {

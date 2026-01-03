@@ -13,6 +13,30 @@ class Logger {
     }
   }
 
+  /**
+   * Log HTTP request details for debugging
+   */
+  logRequest(provider: string, method: string, url: string, body?: any): void {
+    if (this.isDebugEnabled()) {
+      console.log(`[NodeLLM] [${provider}] Request: ${method} ${url}`);
+      if (body) {
+        console.log(JSON.stringify(body, null, 2));
+      }
+    }
+  }
+
+  /**
+   * Log HTTP response details for debugging
+   */
+  logResponse(provider: string, status: number, statusText: string, body?: any): void {
+    if (this.isDebugEnabled()) {
+      console.log(`[NodeLLM] [${provider}] Response: ${status} ${statusText}`);
+      if (body) {
+        console.log(JSON.stringify(body, null, 2));
+      }
+    }
+  }
+
   warn(message: string): void {
     console.warn(`[NodeLLM] ${message}`);
   }

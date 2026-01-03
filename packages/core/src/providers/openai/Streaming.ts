@@ -3,6 +3,7 @@ import { Capabilities } from "./Capabilities.js";
 import { handleOpenAIError } from "./Errors.js";
 import { buildUrl } from "./utils.js";
 import { APIError } from "../../errors/index.js";
+import { logger } from "../../utils/logger.js";
 
 export class OpenAIStreaming {
   constructor(private readonly baseUrl: string, private readonly apiKey: string) {}
@@ -35,7 +36,10 @@ export class OpenAIStreaming {
     let done = false;
 
     try {
-      const response = await fetch(buildUrl(this.baseUrl, '/chat/completions'), {
+      const url = buildUrl(this.baseUrl, '/chat/completions');
+      logger.logRequest("OpenAI", "POST", url, body);
+
+      const response = await fetch(url, {
         method: "POST",
         headers: {
           "Authorization": `Bearer ${this.apiKey}`,
@@ -49,6 +53,8 @@ export class OpenAIStreaming {
       if (!response.ok) {
         await handleOpenAIError(response, request.model);
       }
+
+      logger.debug("OpenAI streaming started", { status: response.status, statusText: response.statusText });
 
       if (!response.body) {
         throw new Error("No response body for streaming");

@@ -3,6 +3,7 @@ import { Capabilities } from "./Capabilities.js";
 import { handleGeminiError } from "./Errors.js";
 import { GeminiGenerateContentResponse } from "./types.js";
 import { GeminiChatUtils } from "./ChatUtils.js";
+import { logger } from "../../utils/logger.js";
 
 export class GeminiStreaming {
   constructor(private readonly baseUrl: string, private readonly apiKey: string) {}
@@ -43,6 +44,8 @@ export class GeminiStreaming {
     let done = false;
 
     try {
+      logger.logRequest("Gemini", "POST", url, payload);
+
       const response = await fetch(url, {
         method: "POST",
         headers: {
@@ -55,6 +58,8 @@ export class GeminiStreaming {
       if (!response.ok) {
         await handleGeminiError(response, request.model);
       }
+
+      logger.debug("Gemini streaming started", { status: response.status, statusText: response.statusText });
 
       if (!response.body) {
         throw new Error("No response body for streaming");
