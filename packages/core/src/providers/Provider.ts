@@ -15,6 +15,7 @@ export interface ChatRequest {
 export interface ChatChunk {
   content: string;
   reasoning?: string;
+  tool_calls?: ToolCall[];
   done?: boolean;
 }
 

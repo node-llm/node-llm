@@ -4,6 +4,7 @@ import { Capabilities } from "./Capabilities.js";
 import { handleGeminiError } from "./Errors.js";
 import { GeminiChatUtils } from "./ChatUtils.js";
 import { ModelRegistry } from "../../models/ModelRegistry.js";
+import { logger } from "../../utils/logger.js";
 
 export class GeminiChat {
   constructor(private readonly baseUrl: string, private readonly apiKey: string) {}
@@ -55,6 +56,8 @@ export class GeminiChat {
       ];
     }
 
+    logger.logRequest("Gemini", "POST", url, payload);
+
     const response = await fetch(url, {
       method: "POST",
       headers: {
@@ -68,6 +71,7 @@ export class GeminiChat {
     }
 
     const json = (await response.json()) as GeminiGenerateContentResponse;
+    logger.logResponse("Gemini", response.status, response.statusText, json);
     const candidate = json.candidates?.[0];
     
     const content = candidate?.content?.parts

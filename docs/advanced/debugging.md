@@ -11,7 +11,7 @@ When building LLM applications, understanding what's happening "under the hood" 
 
 ## Debug Mode
 
-You can enable detailed debug logging by setting the `NODELLM_DEBUG` environment variable. This will print the raw payloads sent to and received from the providers.
+You can enable detailed debug logging by setting the `NODELLM_DEBUG` environment variable. This will print the raw HTTP requests and responses for **all API calls** across **every feature and provider**.
 
 ```bash
 export NODELLM_DEBUG=true
@@ -24,14 +24,32 @@ node my-app.js
 [NodeLLM] [OpenAI] Request: POST https://api.openai.com/v1/chat/completions
 {
   "model": "gpt-4o",
-  "messages": [...]
+  "messages": [...],
+  "tools": [...]
 }
 [NodeLLM] [OpenAI] Response: 200 OK
 {
   "id": "chatcmpl-123",
-  ...
+  "choices": [...],
+  "usage": {...}
 }
 ```
+
+### Coverage
+
+Debug logging works for:
+- **Chat** (regular and streaming)
+- **Image Generation** (OpenAI, Gemini)
+- **Embeddings** (OpenAI, Gemini, Ollama)
+- **Transcription** (OpenAI, Gemini)
+- **Moderation** (OpenAI)
+- **All Providers** (OpenAI, Anthropic, Gemini, DeepSeek)
+
+The logs include:
+- HTTP method and full URL
+- Request body (JSON formatted)
+- Response status code and status text
+- Response body (JSON formatted)
 
 ## Lifecycle Handlers
 

@@ -1,5 +1,6 @@
 import { ImageRequest, ImageResponse } from "../Provider.js";
 import { handleGeminiError } from "./Errors.js";
+import { logger } from "../../utils/logger.js";
 
 export class GeminiImage {
   constructor(private readonly baseUrl: string, private readonly apiKey: string) {}
@@ -23,6 +24,8 @@ export class GeminiImage {
       },
     };
 
+    logger.logRequest("Gemini", "POST", url, body);
+
     const response = await fetch(url, {
       method: "POST",
       headers: {
@@ -36,6 +39,7 @@ export class GeminiImage {
     }
 
     const json = await response.json();
+    logger.logResponse("Gemini", response.status, response.statusText, json);
     const imageData = json.predictions?.[0];
 
     if (!imageData || !imageData.bytesBase64Encoded) {

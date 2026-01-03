@@ -1,5 +1,6 @@
 import { ChatRequest, ChatChunk } from "../Provider.js";
 import { APIError } from "../../errors/index.js";
+import { logger } from "../../utils/logger.js";
 
 export class DeepSeekStreaming {
   constructor(private readonly baseUrl: string, private readonly apiKey: string) {}
@@ -23,9 +24,14 @@ export class DeepSeekStreaming {
     if (response_format) body.response_format = response_format;
 
     let done = false;
+    // Track tool calls being built across chunks
+    const toolCallsMap = new Map<number, any>();
 
     try {
-      const response = await fetch(`${this.baseUrl}/chat/completions`, {
+      const url = `${this.baseUrl}/chat/completions`;
+      logger.logRequest("DeepSeek", "POST", url, body);
+
+      const response = await fetch(url, {
         method: "POST",
         headers: {
           "Authorization": `Bearer ${this.apiKey}`,
@@ -40,6 +46,8 @@ export class DeepSeekStreaming {
         const errorText = await response.text();
         throw new Error(`DeepSeek API error: ${response.status} - ${errorText}`);
       }
+
+      logger.debug("DeepSeek streaming started", { status: response.status, statusText: response.statusText });
 
       if (!response.body) {
         throw new Error("No response body for streaming");
@@ -72,6 +80,20 @@ export class DeepSeekStreaming {
           const data = trimmed.replace("data: ", "").trim();
           if (data === "[DONE]") {
             done = true;
+            
+            // Yield final tool calls if any were accumulated
+            if (toolCallsMap.size > 0) {
+              const toolCalls = Array.from(toolCallsMap.values()).map(tc => ({
+                id: tc.id,
+                type: "function" as const,
+                function: {
+                  name: tc.function.name,
+                  arguments: tc.function.arguments
+                }
+              }));
+              yield { content: "", tool_calls: toolCalls, done: true };
+            }
+            
             return;
           }
 
@@ -87,14 +109,42 @@ export class DeepSeekStreaming {
               );
             }
 
-            const deltaContent = json.choices?.[0]?.delta?.content;
-            const deltaReasoning = json.choices?.[0]?.delta?.reasoning_content;
+            const delta = json.choices?.[0]?.delta;
+            const deltaContent = delta?.content;
+            const deltaReasoning = delta?.reasoning_content;
             
             if (deltaContent || deltaReasoning) {
               yield { 
                 content: deltaContent || "",
                 reasoning: deltaReasoning || "" 
               };
+            }
+
+            // Handle tool calls delta
+            if (delta?.tool_calls) {
+              for (const toolCallDelta of delta.tool_calls) {
+                const index = toolCallDelta.index;
+                
+                if (!toolCallsMap.has(index)) {
+                  toolCallsMap.set(index, {
+                    id: toolCallDelta.id || "",
+                    type: "function",
+                    function: {
+                      name: toolCallDelta.function?.name || "",
+                      arguments: toolCallDelta.function?.arguments || ""
+                    }
+                  });
+                } else {
+                  const existing = toolCallsMap.get(index)!;
+                  if (toolCallDelta.id) existing.id = toolCallDelta.id;
+                  if (toolCallDelta.function?.name) {
+                    existing.function.name += toolCallDelta.function.name;
+                  }
+                  if (toolCallDelta.function?.arguments) {
+                    existing.function.arguments += toolCallDelta.function.arguments;
+                  }
+                }
+              }
             }
           } catch (e) {
             // Re-throw APIError

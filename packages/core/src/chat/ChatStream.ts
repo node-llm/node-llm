@@ -62,54 +62,111 @@ export class ChatStream {
         throw new Error("Streaming not supported by provider");
       }
 
-      let full = "";
+      let fullContent = "";
       let fullReasoning = "";
+      let toolCalls: any[] | undefined;
       let isFirst = true;
 
-      try {
-        for await (const chunk of provider.stream({
-          model,
-          messages,
-          temperature: options.temperature,
-          max_tokens: options.maxTokens,
-          signal: abortController.signal,
-        })) {
-          if (isFirst) {
-            if (options.onNewMessage) options.onNewMessage();
-            isFirst = false;
-          }
+      // Main streaming loop - may iterate multiple times for tool calls
+      while (true) {
+        fullContent = "";
+        fullReasoning = "";
+        toolCalls = undefined;
 
-          if (chunk.content) {
-            full += chunk.content;
-          }
-          if (chunk.reasoning) {
-            fullReasoning += chunk.reasoning;
-          }
-          yield chunk;
-        }
-
-        // Finalize history
-        messages.push({
-          role: "assistant",
-          content: full,
-          // @ts-ignore
-          reasoning: fullReasoning || undefined
-        });
-
-        if (options.onEndMessage) {
-          options.onEndMessage(new ChatResponseString(
-            full,
-            { input_tokens: 0, output_tokens: 0, total_tokens: 0 },
+        try {
+          for await (const chunk of provider.stream({
             model,
-            fullReasoning || undefined
-          ));
+            messages,
+            tools: options.tools,
+            temperature: options.temperature,
+            max_tokens: options.maxTokens,
+            signal: abortController.signal,
+          })) {
+            if (isFirst) {
+              if (options.onNewMessage) options.onNewMessage();
+              isFirst = false;
+            }
+
+            if (chunk.content) {
+              fullContent += chunk.content;
+              yield chunk;
+            }
+            
+            if (chunk.reasoning) {
+              fullReasoning += chunk.reasoning;
+              yield { content: "", reasoning: chunk.reasoning };
+            }
+
+            // Accumulate tool calls from the final chunk
+            if (chunk.tool_calls) {
+              toolCalls = chunk.tool_calls;
+            }
+          }
+
+          // Add assistant message to history
+          messages.push({
+            role: "assistant",
+            content: fullContent || null,
+            tool_calls: toolCalls,
+            // @ts-ignore
+            reasoning: fullReasoning || undefined
+          });
+
+          // If no tool calls, we're done
+          if (!toolCalls || toolCalls.length === 0) {
+            if (options.onEndMessage) {
+              options.onEndMessage(new ChatResponseString(
+                fullContent,
+                { input_tokens: 0, output_tokens: 0, total_tokens: 0 },
+                model,
+                fullReasoning || undefined
+              ));
+            }
+            break;
+          }
+
+          // Execute tool calls
+          for (const toolCall of toolCalls) {
+            if (options.onToolCall) options.onToolCall(toolCall);
+
+            const tool = options.tools?.find(
+              (t) => t.function.name === toolCall.function.name
+            );
+
+            if (tool?.handler) {
+              try {
+                const args = JSON.parse(toolCall.function.arguments);
+                const result = await tool.handler(args);
+                if (options.onToolResult) options.onToolResult(result);
+
+                messages.push({
+                  role: "tool",
+                  tool_call_id: toolCall.id,
+                  content: result,
+                });
+              } catch (error: any) {
+                messages.push({
+                  role: "tool",
+                  tool_call_id: toolCall.id,
+                  content: `Error executing tool: ${error.message}`,
+                });
+              }
+            } else {
+              messages.push({
+                role: "tool",
+                tool_call_id: toolCall.id,
+                content: "Error: Tool not found or no handler provided",
+              });
+            }
+          }
+
+          // Continue loop to stream the next response after tool execution
+        } catch (error) {
+          if (error instanceof Error && error.name === 'AbortError') {
+            // Stream was aborted
+          }
+          throw error;
         }
-      } catch (error) {
-        if (error instanceof Error && error.name === 'AbortError') {
-          // Stream was aborted, we might still want to save what we got?
-          // For now just rethrow or handle as needed
-        }
-        throw error;
       }
     };
 

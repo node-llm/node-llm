@@ -51,6 +51,22 @@ console.log(reply.content);
 // "The weather in London is currently 22°C and sunny."
 ```
 
+## Tools Work in Streaming Too! ✨
+
+**NEW:** Tools now work seamlessly with streaming! The same tool execution happens automatically during streaming:
+
+```ts
+const chat = NodeLLM.chat("gpt-4o").withTool(weatherTool);
+
+// Tool is automatically executed during streaming
+for await (const chunk of chat.stream("What's the weather in Paris?")) {
+  process.stdout.write(chunk.content || "");
+}
+// Output streams: "The weather in Paris is currently 22°C and sunny."
+```
+
+See the [Streaming documentation](streaming.html#streaming-with-tools-) for more details.
+
 ## Parallel Tool Calling
 
 If the provider supports it (like OpenAI and Anthropic), the model can call multiple tools in a single turn. `node-llm` handles the concurrent execution of these tools automatically.

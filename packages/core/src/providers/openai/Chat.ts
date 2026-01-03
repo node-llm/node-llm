@@ -4,6 +4,7 @@ import { Capabilities } from "./Capabilities.js";
 import { handleOpenAIError } from "./Errors.js";
 import { ModelRegistry } from "../../models/ModelRegistry.js";
 import { buildUrl } from "./utils.js";
+import { logger } from "../../utils/logger.js";
 
 export class OpenAIChat {
   constructor(private readonly baseUrl: string, private readonly apiKey: string) {}
@@ -24,11 +25,10 @@ export class OpenAIChat {
     if (tools) body.tools = tools;
     if (response_format) body.response_format = response_format;
 
-    if (process.env.NODELLM_DEBUG === "true") {
-      console.log(`[OpenAI Request] ${JSON.stringify(body, null, 2)}`);
-    }
+    const url = buildUrl(this.baseUrl, '/chat/completions');
+    logger.logRequest("OpenAI", "POST", url, body);
 
-    const response = await fetch(buildUrl(this.baseUrl, '/chat/completions'), {
+    const response = await fetch(url, {
       method: "POST",
       headers: {
         "Authorization": `Bearer ${this.apiKey}`,
@@ -43,6 +43,8 @@ export class OpenAIChat {
     }
 
     const json = (await response.json()) as OpenAIChatResponse;
+    logger.logResponse("OpenAI", response.status, response.statusText, json);
+
     const message = json.choices[0]?.message;
     const content = message?.content ?? null;
     const tool_calls = message?.tool_calls;

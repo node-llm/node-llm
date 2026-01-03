@@ -1,6 +1,7 @@
 import { ChatRequest, ChatResponse, Usage } from "../Provider.js";
 import { Capabilities } from "./Capabilities.js";
 import { ModelRegistry } from "../../models/ModelRegistry.js";
+import { logger } from "../../utils/logger.js";
 
 interface DeepSeekChatResponse {
   id: string;
@@ -62,11 +63,10 @@ export class DeepSeekChat {
       }
     }
 
-    if (process.env.NODELLM_DEBUG === "true") {
-      console.log(`[DeepSeek Request] ${JSON.stringify(body, null, 2)}`);
-    }
+    const url = `${this.baseUrl}/chat/completions`;
+    logger.logRequest("DeepSeek", "POST", url, body);
 
-    const response = await fetch(`${this.baseUrl}/chat/completions`, {
+    const response = await fetch(url, {
       method: "POST",
       headers: {
         "Authorization": `Bearer ${this.apiKey}`,
@@ -82,6 +82,8 @@ export class DeepSeekChat {
     }
 
     const json = (await response.json()) as DeepSeekChatResponse;
+    logger.logResponse("DeepSeek", response.status, response.statusText, json);
+
     const message = json.choices[0]?.message;
     const content = message?.content ?? null;
     const reasoning = message?.reasoning_content ?? null;

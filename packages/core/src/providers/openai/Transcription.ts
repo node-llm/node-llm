@@ -3,6 +3,7 @@ import { handleOpenAIError } from "./Errors.js";
 import { AudioUtils } from "../../utils/audio.js";
 import { DEFAULT_MODELS } from "../../constants.js";
 import { buildUrl } from "./utils.js";
+import { logger } from "../../utils/logger.js";
 
 export class OpenAITranscription {
   constructor(private readonly baseUrl: string, private readonly apiKey: string) {}
@@ -35,7 +36,10 @@ export class OpenAITranscription {
       formData.append("language", request.language);
     }
 
-    const response = await fetch(buildUrl(this.baseUrl, '/audio/transcriptions'), {
+    const url = buildUrl(this.baseUrl, '/audio/transcriptions');
+    logger.logRequest("OpenAI", "POST", url, { model: request.model || DEFAULT_MODELS.TRANSCRIPTION, file: fileName });
+
+    const response = await fetch(url, {
       method: "POST",
       headers: {
         "Authorization": `Bearer ${this.apiKey}`,
@@ -48,6 +52,7 @@ export class OpenAITranscription {
     }
 
     const json = (await response.json()) as { text: string; model: string; duration?: number; segments?: any[] };
+    logger.logResponse("OpenAI", response.status, response.statusText, json);
     return { 
       text: json.text,
       model: json.model || request.model || DEFAULT_MODELS.TRANSCRIPTION,
@@ -137,7 +142,10 @@ export class OpenAITranscription {
       ]
     };
 
-    const response = await fetch(buildUrl(this.baseUrl, '/chat/completions'), {
+    const url = buildUrl(this.baseUrl, '/chat/completions');
+    logger.logRequest("OpenAI", "POST", url, body);
+
+    const response = await fetch(url, {
       method: "POST",
       headers: {
         "Authorization": `Bearer ${this.apiKey}`,
@@ -151,6 +159,7 @@ export class OpenAITranscription {
     }
 
     const json = await response.json();
+    logger.logResponse("OpenAI", response.status, response.statusText, json);
     const content = json.choices[0]?.message?.content || "";
     
     let text = content;

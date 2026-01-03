@@ -3,6 +3,7 @@ import { Capabilities } from "./Capabilities.js";
 import { handleGeminiError } from "./Errors.js";
 import { GeminiGenerateContentResponse } from "./types.js";
 import { GeminiChatUtils } from "./ChatUtils.js";
+import { logger } from "../../utils/logger.js";
 
 export class GeminiStreaming {
   constructor(private readonly baseUrl: string, private readonly apiKey: string) {}
@@ -40,9 +41,24 @@ export class GeminiStreaming {
       payload.systemInstruction = { parts: systemInstructionParts };
     }
 
+    if (request.tools && request.tools.length > 0) {
+      payload.tools = [
+        {
+          functionDeclarations: request.tools.map((t) => ({
+            name: t.function.name,
+            description: t.function.description,
+            parameters: t.function.parameters,
+          })),
+        },
+      ];
+    }
+
     let done = false;
+    const toolCalls: any[] = [];
 
     try {
+      logger.logRequest("Gemini", "POST", url, payload);
+
       const response = await fetch(url, {
         method: "POST",
         headers: {
@@ -56,6 +72,8 @@ export class GeminiStreaming {
         await handleGeminiError(response, request.model);
       }
 
+      logger.debug("Gemini streaming started", { status: response.status, statusText: response.statusText });
+
       if (!response.body) {
         throw new Error("No response body for streaming");
       }
@@ -66,7 +84,13 @@ export class GeminiStreaming {
 
       while (true) {
         const { value, done: readerDone } = await reader.read();
-        if (readerDone) break;
+        if (readerDone) {
+          // Yield tool calls if any were collected
+          if (toolCalls.length > 0) {
+            yield { content: "", tool_calls: toolCalls, done: true };
+          }
+          break;
+        }
 
         buffer += decoder.decode(value, { stream: true });
 
@@ -90,6 +114,17 @@ export class GeminiStreaming {
               for (const part of parts) {
                 if (part.text) {
                   yield { content: part.text };
+                }
+                // Handle function calls
+                if (part.functionCall) {
+                  toolCalls.push({
+                    id: part.functionCall.name, // Gemini uses name as ID
+                    type: "function" as const,
+                    function: {
+                      name: part.functionCall.name,
+                      arguments: JSON.stringify(part.functionCall.args || {})
+                    }
+                  });
                 }
               }
             } catch (e) {

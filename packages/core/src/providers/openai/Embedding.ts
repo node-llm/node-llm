@@ -3,6 +3,7 @@ import { handleOpenAIError } from "./Errors.js";
 import { Capabilities } from "./Capabilities.js";
 import { DEFAULT_MODELS } from "../../constants.js";
 import { buildUrl } from "./utils.js";
+import { logger } from "../../utils/logger.js";
 
 export class OpenAIEmbedding {
   constructor(
@@ -38,7 +39,10 @@ export class OpenAIEmbedding {
       body.user = request.user;
     }
 
-    const response = await fetch(buildUrl(this.baseUrl, '/embeddings'), {
+    const url = buildUrl(this.baseUrl, '/embeddings');
+    logger.logRequest("OpenAI", "POST", url, body);
+
+    const response = await fetch(url, {
       method: "POST",
       headers: {
         "Authorization": `Bearer ${this.apiKey}`,
@@ -52,6 +56,7 @@ export class OpenAIEmbedding {
     }
 
     const { data, model: responseModel, usage } = await response.json();
+    logger.logResponse("OpenAI", response.status, response.statusText, { data, model: responseModel, usage });
 
     // Extract vectors from the response
     const vectors = data.map((item: any) => item.embedding);

@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.2.0] - 2026-01-04
+
+### Added
+- **🚀 Streaming with Tool Calling**: Revolutionary feature enabling automatic tool execution during streaming across all providers (OpenAI, Anthropic, Gemini, DeepSeek). Tools are executed transparently and the stream continues with the model's final response.
+- **🔍 Comprehensive Debug Logging**: Added detailed HTTP request/response logging for every feature and provider. Enable with `NODELLM_DEBUG=true` to see method, URL, status, and full payloads.
+  - Coverage: Chat, Streaming, Images, Embeddings, Transcription, Moderation
+  - Providers: OpenAI, Anthropic, Gemini, DeepSeek, Ollama
+- **Enhanced Logger**: New `logRequest()` and `logResponse()` methods for structured logging
+- **Tool Event Handlers in Streaming**: `onToolCall()` and `onToolResult()` now work seamlessly during streaming
+- **Comprehensive Examples**: Added streaming + tools examples for all providers
+
+### Changed
+- Updated `ChatChunk` interface to support `tool_calls` field
+- Enhanced `ChatStream` to handle multi-round tool execution loops
+- All streaming providers now parse and yield tool calls
+
+### Documentation
+- Updated streaming documentation with tool calling examples
+- Enhanced tools documentation to highlight streaming support
+- Improved debugging documentation with comprehensive coverage details
+- Updated README with streaming + tools examples and debug logging section
+
 ## [1.0.0] - 2026-01-03
 
 ### Added

@@ -5,6 +5,7 @@ import { handleAnthropicError } from "./Errors.js";
 import { Message } from "../../chat/Message.js";
 import { ContentPart } from "../../chat/Content.js";
 import { ModelRegistry } from "../../models/ModelRegistry.js";
+import { logger } from "../../utils/logger.js";
 
 import { formatSystemPrompt, formatMessages } from "./Utils.js";
 
@@ -68,7 +69,10 @@ export class AnthropicChat {
       headers["anthropic-beta"] = "pdfs-2024-09-25";
     }
 
-    const response = await fetch(`${this.baseUrl}/messages`, {
+    const url = `${this.baseUrl}/messages`;
+    logger.logRequest("Anthropic", "POST", url, body);
+
+    const response = await fetch(url, {
       method: "POST",
       headers: headers,
       body: JSON.stringify(body),
@@ -79,6 +83,7 @@ export class AnthropicChat {
     }
 
     const json = (await response.json()) as AnthropicMessageResponse;
+    logger.logResponse("Anthropic", response.status, response.statusText, json);
     const contentBlocks = json.content;
     
     // Extract text content and tool calls

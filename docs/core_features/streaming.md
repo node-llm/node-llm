@@ -46,15 +46,64 @@ for await (const chunk of chat.stream("Hello")) {
 }
 ```
 
-## Streaming with Tools
+## Streaming with Tools ✨
 
-When tools are involved, `node-llm` handles the complexity for you. The stream will:
+**NEW:** Tools now work seamlessly with streaming! When a model decides to call a tool during streaming, `node-llm` automatically:
 
-1.  **Initial Text**: Stream any text preceding the tool call.
-2.  **Pause**: Pause (yield nothing) while the tool executes automatically.
-3.  **Resume**: Resume streaming the model's response *after* it sees the tool result.
+1. **Executes the tool** with the provided arguments
+2. **Adds the result** to the conversation history
+3. **Continues streaming** the model's final response
 
-You don't need to manually handle tool execution loops during streaming; the iterator abstracts this away.
+This all happens transparently - you just iterate over chunks as usual!
+
+```ts
+const weatherTool = {
+  type: 'function',
+  function: {
+    name: 'get_weather',
+    description: 'Get current weather',
+    parameters: {
+      type: 'object',
+      properties: {
+        location: { type: 'string' }
+      },
+      required: ['location']
+    }
+  },
+  handler: async ({ location }) => {
+    return JSON.stringify({ location, temp: 22, condition: 'sunny' });
+  }
+};
+
+const chat = NodeLLM.chat("gpt-4o").withTool(weatherTool);
+
+// Tool is automatically executed during streaming!
+for await (const chunk of chat.stream("What's the weather in Paris?")) {
+  process.stdout.write(chunk.content || "");
+}
+// Output: "The weather in Paris is currently 22°C and sunny."
+```
+
+### Tool Events in Streaming
+
+You can also listen to tool execution events:
+
+```ts
+const chat = NodeLLM.chat("gpt-4o")
+  .withTool(weatherTool)
+  .onToolCall((call) => {
+    console.log(`\n[Tool Called: ${call.function.name}]`);
+  })
+  .onToolResult((result) => {
+    console.log(`[Tool Result: ${result}]\n`);
+  });
+
+for await (const chunk of chat.stream("Weather in Tokyo?")) {
+  process.stdout.write(chunk.content || "");
+}
+```
+
+**Supported Providers:** OpenAI, Anthropic, Gemini, DeepSeek
 
 ## Error Handling
 

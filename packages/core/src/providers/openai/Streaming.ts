@@ -3,6 +3,7 @@ import { Capabilities } from "./Capabilities.js";
 import { handleOpenAIError } from "./Errors.js";
 import { buildUrl } from "./utils.js";
 import { APIError } from "../../errors/index.js";
+import { logger } from "../../utils/logger.js";
 
 export class OpenAIStreaming {
   constructor(private readonly baseUrl: string, private readonly apiKey: string) {}
@@ -32,10 +33,19 @@ export class OpenAIStreaming {
       body.response_format = request.response_format;
     }
 
+    if (request.tools && request.tools.length > 0) {
+      body.tools = request.tools;
+    }
+
     let done = false;
+    // Track tool calls being built across chunks
+    const toolCallsMap = new Map<number, any>();
 
     try {
-      const response = await fetch(buildUrl(this.baseUrl, '/chat/completions'), {
+      const url = buildUrl(this.baseUrl, '/chat/completions');
+      logger.logRequest("OpenAI", "POST", url, body);
+
+      const response = await fetch(url, {
         method: "POST",
         headers: {
           "Authorization": `Bearer ${this.apiKey}`,
@@ -49,6 +59,8 @@ export class OpenAIStreaming {
       if (!response.ok) {
         await handleOpenAIError(response, request.model);
       }
+
+      logger.debug("OpenAI streaming started", { status: response.status, statusText: response.statusText });
 
       if (!response.body) {
         throw new Error("No response body for streaming");
@@ -81,6 +93,20 @@ export class OpenAIStreaming {
           const data = trimmed.replace("data: ", "").trim();
           if (data === "[DONE]") {
             done = true;
+            
+            // Yield final tool calls if any were accumulated
+            if (toolCallsMap.size > 0) {
+              const toolCalls = Array.from(toolCallsMap.values()).map(tc => ({
+                id: tc.id,
+                type: "function" as const,
+                function: {
+                  name: tc.function.name,
+                  arguments: tc.function.arguments
+                }
+              }));
+              yield { content: "", tool_calls: toolCalls, done: true };
+            }
+            
             return;
           }
 
@@ -96,10 +122,38 @@ export class OpenAIStreaming {
               );
             }
 
-            const delta = json.choices?.[0]?.delta?.content;
+            const delta = json.choices?.[0]?.delta;
+            
+            // Handle content delta
+            if (delta?.content) {
+              yield { content: delta.content };
+            }
 
-            if (delta) {
-              yield { content: delta };
+            // Handle tool calls delta
+            if (delta?.tool_calls) {
+              for (const toolCallDelta of delta.tool_calls) {
+                const index = toolCallDelta.index;
+                
+                if (!toolCallsMap.has(index)) {
+                  toolCallsMap.set(index, {
+                    id: toolCallDelta.id || "",
+                    type: "function",
+                    function: {
+                      name: toolCallDelta.function?.name || "",
+                      arguments: toolCallDelta.function?.arguments || ""
+                    }
+                  });
+                } else {
+                  const existing = toolCallsMap.get(index)!;
+                  if (toolCallDelta.id) existing.id = toolCallDelta.id;
+                  if (toolCallDelta.function?.name) {
+                    existing.function.name += toolCallDelta.function.name;
+                  }
+                  if (toolCallDelta.function?.arguments) {
+                    existing.function.arguments += toolCallDelta.function.arguments;
+                  }
+                }
+              }
             }
           } catch (e) {
             // Re-throw APIError

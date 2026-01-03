@@ -1,6 +1,7 @@
 import { EmbeddingRequest, EmbeddingResponse } from "../Provider.js";
 import { GeminiBatchEmbedRequest, GeminiBatchEmbedResponse } from "./types.js";
 import { handleGeminiError } from "./Errors.js";
+import { logger } from "../../utils/logger.js";
 
 export class GeminiEmbeddings {
   constructor(private readonly baseUrl: string, private readonly apiKey: string) {}
@@ -25,6 +26,8 @@ export class GeminiEmbeddings {
       })
     };
 
+    logger.logRequest("Gemini", "POST", url, payload);
+
     const response = await fetch(url, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -36,6 +39,7 @@ export class GeminiEmbeddings {
     }
 
     const json = (await response.json()) as GeminiBatchEmbedResponse;
+    logger.logResponse("Gemini", response.status, response.statusText, json);
     const vectors = json.embeddings?.map(e => e.values) || [];
 
     return {
