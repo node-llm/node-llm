@@ -3,6 +3,7 @@ layout: default
 title: Configuration
 nav_order: 3
 parent: Getting Started
+permalink: /getting-started/configuration
 ---
 
 # Configuration Guide
