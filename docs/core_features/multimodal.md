@@ -7,11 +7,11 @@ nav_order: 2
 
 # Multi-modal Capabilities
 
-Modern LLMs can understand more than just text. `node-llm` provides a unified way to pass images, audio, video, and documents to models that support them.
+Modern LLMs can understand more than just text. `NodeLLM` provides a unified way to pass images, audio, video, and documents to models that support them.
 
 ## Smart File Handling
 
-You can pass local paths or URLs directly to the `ask` method using the `files` option. `node-llm` automatically detects the file type and formats it correctly for the specific provider.
+You can pass local paths or URLs directly to the `ask` method using the `files` option. `NodeLLM` automatically detects the file type and formats it correctly for the specific provider.
 
 **Supported File Types:**
 - **Images**: `.jpg`, `.jpeg`, `.png`, `.gif`, `.webp`
@@ -65,7 +65,7 @@ await chat.ask("What was the tone of the speaker?", {
 
 ## Working with Videos
 
-Video analysis is currently supported primarily by Google Gemini and limited OpenAI models. `node-llm` handles the upload and reference process seamlessly.
+Video analysis is currently supported primarily by Google Gemini and limited OpenAI models. `NodeLLM` handles the upload and reference process seamlessly.
 
 ```ts
 const chat = NodeLLM.chat("gemini-1.5-pro");
@@ -80,7 +80,7 @@ await chat.ask("What happens in this video?", {
 You can provide full documents for analysis.
 
 ### Text & Code Files
-For text-based files, `node-llm` reads the content and passes it as text context to the model.
+For text-based files, `NodeLLM` reads the content and passes it as text context to the model.
 
 ```ts
 const chat = NodeLLM.chat("claude-3-5-sonnet");
@@ -93,9 +93,9 @@ await chat.ask("Explain potential bugs in this code", {
 
 ### PDFs
 For PDFs, providers handled differently:
-- **Anthropic**: Supports native PDF blocks (up to 10MB). `node-llm` handles the base64 encoding.
+- **Anthropic**: Supports native PDF blocks (up to 10MB). `NodeLLM` handles the base64 encoding.
 - **Gemini**: Supports PDF via File API.
-- **OpenAI**: Often requires text extraction first (unless using Assistants API, which `node-llm` core interacts with as Chat). *Note: Ensure your provider supports the PDF modality directly or use a text extractor.*
+- **OpenAI**: Often requires text extraction first (unless using Assistants API, which `NodeLLM` core interacts with as Chat). *Note: Ensure your provider supports the PDF modality directly or use a text extractor.*
 
 ```ts
 await chat.ask("Summarize this contract", {
@@ -105,7 +105,7 @@ await chat.ask("Summarize this contract", {
 
 ## Automatic Type Detection
 
-You don't need to specify the file type; `node-llm` infers it from the extension.
+You don't need to specify the file type; `NodeLLM` infers it from the extension.
 
 ```ts
 // Mix and match types

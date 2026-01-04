@@ -46,7 +46,7 @@ const chat = NodeLLM.chat("claude-3-5-sonnet-20241022")
 
 ## PDF Support
 
-Anthropic supports sending PDF files as base64 encoded blocks, which `node-llm` handles automatically.
+Anthropic supports sending PDF files as base64 encoded blocks, which `NodeLLM` handles automatically.
 
 ```ts
 await chat.ask("Summarize this document", {

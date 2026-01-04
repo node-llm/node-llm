@@ -7,7 +7,7 @@ nav_order: 1
 
 # Chat
 
-`node-llm` provides a unified chat interface across all providers (OpenAI, Gemini, Anthropic). It normalizes the differences in their APIs, allowing you to use a single set of methods for interacting with them.
+`NodeLLM` provides a unified chat interface across all providers (OpenAI, Gemini, Anthropic). It normalizes the differences in their APIs, allowing you to use a single set of methods for interacting with them.
 
 ## Starting a Conversation
 
@@ -72,7 +72,7 @@ await chat.ask("Tell me about the weather");
 
 ## Raw Content Blocks (Advanced)
 
-For advanced use cases like **Anthropic Prompt Caching**, you can pass provider-specific content blocks directly. `node-llm` attempts to pass array content through to the provider.
+For advanced use cases like **Anthropic Prompt Caching**, you can pass provider-specific content blocks directly. `NodeLLM` attempts to pass array content through to the provider.
 
 ```ts
 // Example: Anthropic Prompt Caching

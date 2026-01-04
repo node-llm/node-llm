@@ -1,6 +1,6 @@
 # LLM Examples
 
-This directory contains examples demonstrating how to use various providers with `node-llm`.
+This directory contains examples demonstrating how to use various providers with `NodeLLM`.
 
 ## Available Providers
 - **DeepSeek**: `examples/deepseek/`
@@ -27,7 +27,7 @@ This directory contains examples demonstrating how to use various providers with
 
 ## Configuration Example
 
-Learn how to configure `node-llm`:
+Learn how to configure `NodeLLM`:
 
 ```bash
 ### Configuration
@@ -47,7 +47,7 @@ See [CONFIGURATION.md](../docs/CONFIGURATION.md) for full details.
 
 ## OpenAI Examples (Primary)
 
-OpenAI is the most feature-complete provider in `node-llm`.
+OpenAI is the most feature-complete provider in `NodeLLM`.
 
 ### 1. Running All OpenAI Examples
 To run the full suite of OpenAI examples:
@@ -103,7 +103,7 @@ To run all available DeepSeek examples to verify functionality:
 *   **Embeddings**: `node examples/gemini/embeddings/create.mjs`
 
 ### 3. Unsupported Features (Error Handling)
-These scripts demonstrate that `node-llm` correctly raises errors for features not supported by DeepSeek (Multimodal, Embeddings, Image Generation).
+These scripts demonstrate that `NodeLLM` correctly raises errors for features not supported by DeepSeek (Multimodal, Embeddings, Image Generation).
 
 *   `node examples/deepseek/multimodal/vision.mjs`
 *   `node examples/deepseek/embeddings/basic.mjs`

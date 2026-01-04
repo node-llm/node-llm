@@ -7,7 +7,7 @@ parent: Core Features
 
 # Stream Responses
 
-For real-time interactions, `node-llm` supports streaming responses via standard JavaScript `AsyncIterator`s. This allows you to display text to the user as it's being generated, reducing perceived latency.
+For real-time interactions, `NodeLLM` supports streaming responses via standard JavaScript `AsyncIterator`s. This allows you to display text to the user as it's being generated, reducing perceived latency.
 
 ## Basic Streaming
 
@@ -48,7 +48,7 @@ for await (const chunk of chat.stream("Hello")) {
 
 ## Streaming with Tools ✨
 
-**NEW:** Tools now work seamlessly with streaming! When a model decides to call a tool during streaming, `node-llm` automatically:
+**NEW:** Tools now work seamlessly with streaming! When a model decides to call a tool during streaming, `NodeLLM` automatically:
 
 1. **Executes the tool** with the provided arguments
 2. **Adds the result** to the conversation history

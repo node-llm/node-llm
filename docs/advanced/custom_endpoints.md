@@ -7,7 +7,7 @@ parent: Advanced
 
 # Custom Endpoints & Models
 
-`node-llm` is flexible enough to connect to any OpenAI-compatible service and use custom models.
+`NodeLLM` is flexible enough to connect to any OpenAI-compatible service and use custom models.
 
 ## OpenAI-Compatible Endpoints
 

@@ -7,7 +7,7 @@ nav_order: 3
 
 # Debugging & Logging
 
-When building LLM applications, understanding what's happening "under the hood" is critical. `node-llm` provides mechanisms to inspect raw requests and responses.
+When building LLM applications, understanding what's happening "under the hood" is critical. `NodeLLM` provides mechanisms to inspect raw requests and responses.
 
 ## Debug Mode
 

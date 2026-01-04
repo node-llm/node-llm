@@ -7,7 +7,7 @@ parent: Core Features
 
 # Tool Calling
 
-`node-llm` simplifies function calling (tool use) by handling the execution loop automatically. You define the tools, and the library invokes them when the model requests it.
+`NodeLLM` simplifies function calling (tool use) by handling the execution loop automatically. You define the tools, and the library invokes them when the model requests it.
 
 ## Defining a Tool
 
@@ -69,13 +69,13 @@ See the [Streaming documentation](streaming.html#streaming-with-tools-) for more
 
 ## Parallel Tool Calling
 
-If the provider supports it (like OpenAI and Anthropic), the model can call multiple tools in a single turn. `node-llm` handles the concurrent execution of these tools automatically.
+If the provider supports it (like OpenAI and Anthropic), the model can call multiple tools in a single turn. `NodeLLM` handles the concurrent execution of these tools automatically.
 
 See [examples/openai/chat/parallel-tools.mjs](../../examples/openai/chat/parallel-tools.mjs) for a demo.
 
 ## Advanced Tool Metadata
 
-Some providers support additional metadata in tool definitions, such as Anthropic's **Prompt Caching**. You can include these fields in your tool definition, and `node-llm` will pass them through.
+Some providers support additional metadata in tool definitions, such as Anthropic's **Prompt Caching**. You can include these fields in your tool definition, and `NodeLLM` will pass them through.
 
 ```ts
 const cachedTool = {
@@ -102,7 +102,7 @@ How you handle errors in your `handler` affects the conversation flow:
     }
     ```
 
-2.  **Fatal Errors**: If you throw an exception inside a tool handler, `node-llm` catches it and feeds the error message back to the model as a "Tool Error". This allows the model to apologize to the user or attempt a different strategy.
+2.  **Fatal Errors**: If you throw an exception inside a tool handler, `NodeLLM` catches it and feeds the error message back to the model as a "Tool Error". This allows the model to apologize to the user or attempt a different strategy.
 
 ## Security Considerations
 

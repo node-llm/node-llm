@@ -7,7 +7,7 @@ parent: Providers
 
 # OpenRouter Provider
 
-The OpenRouter provider acts as a unified gateway to hundreds of AI models. `node-llm` leverages OpenRouter's standardized API while providing additional capabilities like integrated tool calling and vision.
+The OpenRouter provider acts as a unified gateway to hundreds of AI models. `NodeLLM` leverages OpenRouter's standardized API while providing additional capabilities like integrated tool calling and vision.
 
 ## Configuration
 

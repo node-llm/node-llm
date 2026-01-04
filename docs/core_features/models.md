@@ -7,7 +7,7 @@ parent: Core Features
 
 # Models & Registry
 
-`node-llm` includes a comprehensive, built-in registry of hundreds of models using data from **Parsera**. This allows you to discover models and their capabilities programmatically.
+`NodeLLM` includes a comprehensive, built-in registry of hundreds of models using data from **Parsera**. This allows you to discover models and their capabilities programmatically.
 
 ## Inspecting a Model
 
@@ -67,7 +67,7 @@ The registry includes models from:
 Sometimes you need to use models not in the registry, such as **Azure OpenAI** deployments, **Local Models** (Ollama/LM Studio), or brand new releases.
 
 ### Using `assumeModelExists`
-This flag tells `node-llm` to bypass the registry check.
+This flag tells `NodeLLM` to bypass the registry check.
 
 **Important**: You MUST specify the `provider` when using this flag, as the system cannot infer it from the ID.
 

@@ -1,5 +1,5 @@
 /**
- * Centralized logger for node-llm
+ * Centralized logger for`NodeLLM`
  */
 class Logger {
   private isDebugEnabled(): boolean {

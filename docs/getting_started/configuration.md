@@ -8,7 +8,7 @@ permalink: /getting-started/configuration
 
 # Configuration Guide
 
-`node-llm` uses a simple configuration object to set API keys and active providers.
+`NodeLLM` uses a simple configuration object to set API keys and active providers.
 
 ## Quick Start
 
@@ -24,7 +24,7 @@ NodeLLM.configure({
 });
 ```
 
-That's it. `node-llm` uses sensible defaults for everything else.
+That's it. `NodeLLM` uses sensible defaults for everything else.
 
 ## Switching Providers
 
@@ -101,7 +101,7 @@ NodeLLM.configure({ provider: "openai" });
 
 ## Environment Variables
 
-By default, `node-llm` automatically loads configuration from environment variables. You can override these programmatically:
+By default, `NodeLLM` automatically loads configuration from environment variables. You can override these programmatically:
 
 ```typescript
 // Environment variable takes precedence initially

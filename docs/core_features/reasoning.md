@@ -7,7 +7,7 @@ nav_order: 10
 
 # Reasoning
 
-`node-llm` provides a unified way to access the "thinking" or "reasoning" process of models like **DeepSeek R1** or **OpenAI o1/o3**. Some models expose their internal chain of thought before providing the final answer.
+`NodeLLM` provides a unified way to access the "thinking" or "reasoning" process of models like **DeepSeek R1** or **OpenAI o1/o3**. Some models expose their internal chain of thought before providing the final answer.
 
 ## Accessing Reasoning Content
 
@@ -47,7 +47,7 @@ The final response object in the `onEndMessage` callback or returned by the stre
 
 ## OpenAI o1/o3 Support
 
-OpenAI models like `o3-mini` do not expose the reasoning text directly (in a separate field), but they use "reasoning tokens" during generation. `node-llm` automatically tracks these tokens and includes them in the usage and cost calculations.
+OpenAI models like `o3-mini` do not expose the reasoning text directly (in a separate field), but they use "reasoning tokens" during generation. `NodeLLM` automatically tracks these tokens and includes them in the usage and cost calculations.
 
 ```ts
 const chat = NodeLLM.chat("o3-mini");
@@ -59,7 +59,7 @@ console.log(`Total cost: $${response.cost}`);
 
 ## Supported Models
 
-Currently, the following models have enhanced reasoning support in `node-llm`:
+Currently, the following models have enhanced reasoning support in `NodeLLM`:
 
 | Model ID | Provider | Feature |
 | :--- | :--- | :--- |

@@ -7,7 +7,7 @@ parent: Providers
 
 # OpenAI Provider
 
-The OpenAI provider supports the full range of `node-llm` features, including robust tool calling, vision, and structured outputs.
+The OpenAI provider supports the full range of `NodeLLM` features, including robust tool calling, vision, and structured outputs.
 
 ## Configuration
 

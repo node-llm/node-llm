@@ -1,0 +1,34 @@
+---
+---
+
+/* Custom CSS for`NodeLLM` documentation */
+
+/* Style for the horizontal banner logo */
+.site-header .site-logo img,
+.site-header a.site-title img,
+.site-title img,
+a[href="/"] img {
+  height: 65px !important;
+  width: auto !important;
+  max-width: none !important;
+  max-height: none !important;
+  min-height: 65px !important;
+  object-fit: contain !important;
+  display: inline-block !important;
+}
+
+.site-header .site-logo,
+.site-header a.site-title,
+.site-title,
+a[href="/"] {
+  height: auto !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+/* Adjust header padding for the logo */
+.site-header {
+  padding-top: 0.85rem !important;
+  padding-bottom: 0.85rem !important;
+  min-height: 85px !important;
+}

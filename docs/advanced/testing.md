@@ -7,7 +7,7 @@ parent: Advanced
 
 # Testing
 
-`node-llm` features a comprehensive test suite including high-level integration tests and granular unit tests.
+`NodeLLM` features a comprehensive test suite including high-level integration tests and granular unit tests.
 
 ## Running Tests
 

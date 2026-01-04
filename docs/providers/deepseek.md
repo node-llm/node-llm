@@ -7,7 +7,7 @@ parent: Providers
 
 # DeepSeek Provider
 
-The DeepSeek provider offers high-performance chat and reasoning models with competitive pricing. `node-llm` supports both the DeepSeek-V3 chat model and the DeepSeek-R1 reasoning model.
+The DeepSeek provider offers high-performance chat and reasoning models with competitive pricing. `NodeLLM` supports both the DeepSeek-V3 chat model and the DeepSeek-R1 reasoning model.
 
 ## Configuration
 
@@ -45,4 +45,4 @@ const chat = NodeLLM.chat("deepseek-chat")
 
 ## Usage Details
 
-DeepSeek provides OpenAI-compatible endpoints, but `node-llm` handles the specific capability differences (like reasoning vs tool support) automatically through its internal registry.
+DeepSeek provides OpenAI-compatible endpoints, but `NodeLLM` handles the specific capability differences (like reasoning vs tool support) automatically through its internal registry.

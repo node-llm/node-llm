@@ -29,7 +29,7 @@ async function main() {
   
   // Note: OpenAI includes reasoning tokens inside output_tokens, but some versions 
   // might provide a specific reasoning_tokens field in the raw response.
-  // node-llm tracks this if the provider reports it.
+  // NodeLLM tracks this if the provider reports it.
   if (response.usage.reasoning_tokens) {
     console.log(`Reasoning Tokens: ${response.usage.reasoning_tokens}`);
   }

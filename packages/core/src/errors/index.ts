@@ -1,5 +1,5 @@
 /**
- * Base class for all node-llm errors
+ * Base class for all NodeLLM errors
  */
 export class LLMError extends Error {
   constructor(message: string, public readonly code?: string) {

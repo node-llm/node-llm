@@ -7,7 +7,7 @@ parent: Advanced
 
 # Error Handling
 
-`node-llm` provides a rich exception hierarchy to help you handle failures gracefully. All errors inherit from the base `LLMError` class.
+`NodeLLM` provides a rich exception hierarchy to help you handle failures gracefully. All errors inherit from the base `LLMError` class.
 
 ## Error Hierarchy
 
@@ -64,7 +64,7 @@ try {
 
 ## Automatic Retries
 
-`node-llm` automatically retries transient errors (Rate Limits, 5xx Server Errors) using an exponential backoff strategy. You can configure this globally.
+`NodeLLM` automatically retries transient errors (Rate Limits, 5xx Server Errors) using an exponential backoff strategy. You can configure this globally.
 
 ```ts
 NodeLLM.configure({

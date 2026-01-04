@@ -8,7 +8,7 @@ permalink: /available-models
 
 # Available Models
 
-`node-llm` includes a comprehensive registry of models with metadata for pricing, context windows, and capabilities. Below are the most popular models supported out of the box.
+`NodeLLM` includes a comprehensive registry of models with metadata for pricing, context windows, and capabilities. Below are the most popular models supported out of the box.
 
 ## OpenAI
 
@@ -123,7 +123,7 @@ const visionModel = allModels.find(m =>
 
 ## Model Aliases
 
-`node-llm` uses aliases (defined strictly in `packages/core/src/aliases.json`) for convenience, mapping common names to specific provider-specific versions. This allows you to use a generic name like `"gpt-4o"` or `"claude-3-5-sonnet"` and have it resolve to the correct ID for your configured provider.
+`NodeLLM` uses aliases (defined strictly in `packages/core/src/aliases.json`) for convenience, mapping common names to specific provider-specific versions. This allows you to use a generic name like `"gpt-4o"` or `"claude-3-5-sonnet"` and have it resolve to the correct ID for your configured provider.
 
 ### How It Works
 
@@ -134,7 +134,7 @@ Aliases abstract away the specific model ID strings required by different provid
 - **OpenRouter**: `anthropic/claude-3.5-sonnet`
 - **Bedrock**: `anthropic.claude-3-5-sonnet-20241022-v2:0`
 
-When you call a method like `NodeLLM.chat("claude-3-5-sonnet")`, `node-llm` checks the configured provider and automatically resolves the alias.
+When you call a method like `NodeLLM.chat("claude-3-5-sonnet")`, `NodeLLM` checks the configured provider and automatically resolves the alias.
 
 ```ts
 // If configured with Anthropic
@@ -167,4 +167,4 @@ This ensures your code remains portable across providers without changing the mo
 
 ### Prioritization
 
-`node-llm` prioritizes exact ID matches first (if you pass a specific ID like `"gpt-4-0613"`, it uses it). If no exact match or known ID is found, it attempts to resolve it as an alias.
+`NodeLLM` prioritizes exact ID matches first (if you pass a specific ID like `"gpt-4-0613"`, it uses it). If no exact match or known ID is found, it attempts to resolve it as an alias.

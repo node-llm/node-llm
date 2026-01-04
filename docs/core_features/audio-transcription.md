@@ -7,7 +7,7 @@ parent: Core Features
 
 # Audio Transcription
 
-Convert audio files to text using models like OpenAI's Whisper or Google's Gemini. `node-llm` supports both raw transcription and multimodal chat analysis.
+Convert audio files to text using models like OpenAI's Whisper or Google's Gemini. `NodeLLM` supports both raw transcription and multimodal chat analysis.
 
 ## Basic Transcription
 

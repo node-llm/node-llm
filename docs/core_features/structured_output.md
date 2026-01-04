@@ -7,7 +7,7 @@ nav_order: 3
 
 # Structured Output
 
-Ensure the AI returns data exactly matching a specific structure. `node-llm` supports strict schema validation using **Zod** (recommended) or manual JSON schemas.
+Ensure the AI returns data exactly matching a specific structure. `NodeLLM` supports strict schema validation using **Zod** (recommended) or manual JSON schemas.
 
 This feature abstracts the provider-specific implementations (like OpenAI's `json_schema`, Gemini's `responseSchema`, or Anthropic's tool-use workarounds) into a single, unified API.
 
@@ -83,7 +83,7 @@ console.log(response.parsed); // { greeting: "..." } or whatever keys it chose
 | :--- | :--- | :--- |
 | **OpenAI** | `response_format: { type: "json_schema" }` | Fully supported with strict adherence. |
 | **Gemini** | `responseSchema` | Supported natively. |
-| **Anthropic** | Tool Use (Mock) | `node-llm` automatically creates a tool definition and forces the model to use it to simulate structured output. |
+| **Anthropic** | Tool Use (Mock) | `NodeLLM` automatically creates a tool definition and forces the model to use it to simulate structured output. |
 
 ## Nested Schemas
 

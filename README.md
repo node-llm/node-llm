@@ -1,11 +1,11 @@
 <p align="left">
-  <img src="docs/assets/images/logo.jpg" alt="node-llm logo" width="300" />
+  <img src="docs/assets/images/logo.jpg" alt="NodeLLM logo" width="300" />
 </p>
 
-# node-llm
+# NodeLLM
 **An opinionated architectural layer for using Large Language Models in Node.js.**
 
-Build chatbots, autonomous agents, and RAG pipelines without the SDK fatigue. node-llm provides a unified, production-oriented API for interacting with over **540+ models** across multiple providers (OpenAI, Gemini, Anthropic, DeepSeek, OpenRouter, Ollama, etc.) without coupling your application to any single SDK.
+Build chatbots, autonomous agents, and RAG pipelines without the SDK fatigue. NodeLLM provides a unified, production-oriented API for interacting with over **540+ models** across multiple providers (OpenAI, Gemini, Anthropic, DeepSeek, OpenRouter, Ollama, etc.) without coupling your application to any single SDK.
 
 <br/>
 
@@ -57,11 +57,11 @@ for await (const chunk of chat.stream("Explain event-driven architecture")) {
 
 ---
 
-## Why node-llm?
+## Why NodeLLM?
 
 Most AI integrations today are provider-specific, SDK-driven, and leaky at abstraction boundaries. This creates long-term architectural risk. Switching models should not mean a total rewrite of your business logic.
 
-node-llm exists to solve **architectural problems**, not just provide API access.
+NodeLLM exists to solve **architectural problems**, not just provide API access.
 
 ### Strategic Goals
 
@@ -80,7 +80,7 @@ node-llm exists to solve **architectural problems**, not just provide API access
 
 ## 🔧 Strategic Configuration
 
-node-llm provides a flexible configuration system designed for enterprise usage:
+NodeLLM provides a flexible configuration system designed for enterprise usage:
 
 ```ts
 // Recommended for multi-provider pipelines
@@ -109,7 +109,7 @@ NodeLLM.configure({
 ## 🔮 Capabilities
 
 ### 💬 Unified Chat
-Stop rewriting code for every provider. `node-llm` normalizes inputs and outputs into a single, predictable mental model.
+Stop rewriting code for every provider. `NodeLLM` normalizes inputs and outputs into a single, predictable mental model.
 ```ts
 const chat = NodeLLM.chat(); // Defaults to GPT-4o
 await chat.ask("Hello world");
@@ -124,7 +124,7 @@ await chat.ask("Analyze this interface", {
 ```
 
 ### 🛠️ Auto-Executing Tools
-Define tools once; node-llm manages the recursive execution loop for you, keeping your controller logic clean. **Works seamlessly with both regular chat and streaming!**
+Define tools once; NodeLLM manages the recursive execution loop for you, keeping your controller logic clean. **Works seamlessly with both regular chat and streaming!**
 ```ts
 const tools = [{
   handler: async ({ loc }) => `Sunny in ${loc}`,
@@ -187,7 +187,7 @@ console.log(res.reasoning); // Chain-of-thought
 
 ## 🚀 Why use this over official SDKs?
 
-| Feature | node-llm | Official SDKs | Architectural Impact |
+| Feature | NodeLLM | Official SDKs | Architectural Impact |
 | :--- | :--- | :--- | :--- |
 | **Provider Logic** | Transparently Handled | Exposed to your code | **Low Coupling** |
 | **Streaming** | Standard `AsyncIterator` | Vendor-specific Events | **Predictable Data Flow** |
@@ -229,4 +229,4 @@ Heavily inspired by the elegant design of [RubyLLM](https://rubyllm.com/).
 
 ## 📄 License
 
-MIT © [node-llm contributors]
+MIT © [NodeLLM contributors]

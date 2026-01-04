@@ -7,7 +7,7 @@ nav_order: 3
 
 # Embeddings
 
-Embeddings are vector representations of text used for semantic search, clustering, and similarity comparisons. `node-llm` provides a unified interface for generating embeddings across different providers.
+Embeddings are vector representations of text used for semantic search, clustering, and similarity comparisons. `NodeLLM` provides a unified interface for generating embeddings across different providers.
 
 ## Basic Usage
 
@@ -39,7 +39,7 @@ console.log(embeddings.vectors[0]);     // Vector for "First text"
 
 ## Configuring Models
 
-By default, `node-llm` uses `text-embedding-3-small`. You can change this globally or per request.
+By default, `NodeLLM` uses `text-embedding-3-small`. You can change this globally or per request.
 
 ### Global Configuration
 ```ts
@@ -83,7 +83,7 @@ console.log(embedding.vector.length); // 256
 
 1.  **Batching**: Use `NodeLLM.embed(["text1", "text2"])` instead of serial calls.
 2.  **Caching**: Embeddings are deterministic for a given model and text. Cache them in your database to save costs.
-3.  **COSINE SIMILARITY**: To compare two vectors, calculate the cosine similarity. `node-llm` does not include math utilities to keep the core light, but you can implement it easily:
+3.  **COSINE SIMILARITY**: To compare two vectors, calculate the cosine similarity. `NodeLLM` does not include math utilities to keep the core light, but you can implement it easily:
 
     ```ts
     function cosineSimilarity(A: number[], B: number[]) {

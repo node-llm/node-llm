@@ -11,7 +11,7 @@
     }
   },
   "description": "A provider-agnostic LLM core for Node.js, inspired by ruby-llm.",
-  "author": "node-llm contributors",
+  "author": "NodeLLM contributors",
   "license": "MIT",
   "engines": {
     "node": ">=20.0.0"

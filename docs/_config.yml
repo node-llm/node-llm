@@ -1,7 +1,8 @@
-title: "@node-llm/core"
+title: "NodeLLM"
 description: One beautiful API for OpenAI, Anthropic, Gemini, and more.
 theme: just-the-docs
-logo: assets/images/logo.jpg
+logo: assets/images/logo.png
+favicon_ico: assets/images/favicon.jpg
 
 url: "https://node-llm.eshaiju.com"
 baseurl: ""
@@ -9,6 +10,12 @@ baseurl: ""
 aux_links:
   "GitHub Repository":
     - "//github.com/eshaiju/node-llm"
+
+aux_links_new_tab: true
+
+# Custom CSS for logo sizing
+custom_css:
+  - assets/css/custom.css
 
 heading_anchors: false
 search_enabled: true
