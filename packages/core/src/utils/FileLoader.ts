@@ -51,7 +51,8 @@ export class FileLoader {
         if (!response.ok) throw new Error(`Failed to fetch file: ${response.statusText}`);
         
         const buffer = await response.arrayBuffer();
-        const contentType = response.headers.get("content-type") || "image/jpeg";
+        const contentTypeFull = response.headers.get("content-type") || "image/jpeg";
+        const contentType = (contentTypeFull.split(";")[0] ?? "image/jpeg").trim();
         const base64 = Buffer.from(buffer).toString("base64");
         const dataUri = `data:${contentType};base64,${base64}`;
         
