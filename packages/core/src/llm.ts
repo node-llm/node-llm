@@ -56,7 +56,7 @@ const PROVIDER_REGISTRARS: Record<string, () => void> = {
 
 class NodeLLMCore {
   public readonly models = ModelRegistry;
-  public readonly config = config;
+  public readonly config: NodeLLMConfig;
   private provider?: Provider;
   private defaultTranscriptionModelId?: string;
   private defaultModerationModelId?: string;
@@ -66,6 +66,36 @@ class NodeLLMCore {
     attempts: 1,
     delayMs: 0,
   };
+
+  /**
+   * Create a new LLM instance. Defaults to the global config.
+   */
+  constructor(customConfig?: NodeLLMConfig) {
+    this.config = customConfig || config;
+  }
+
+  /**
+   * Returns a scoped LLM instance configured for a specific provider.
+   * This respects the current global configuration but avoids side effects 
+   * on the main NodeLLM singleton.
+   * 
+   * @example
+   * ```ts
+   * const openai = NodeLLM.withProvider("openai");
+   * const anthropic = NodeLLM.withProvider("anthropic");
+   * 
+   * // These can now run in parallel without race conditions
+   * await Promise.all([
+   *   openai.chat("gpt-4o").ask(prompt),
+   *   anthropic.chat("claude-3-5-sonnet").ask(prompt),
+   * ]);
+   * ```
+   */
+  withProvider(providerName: string): NodeLLMCore {
+    const scoped = new NodeLLMCore({ ...this.config });
+    scoped.configure({ provider: providerName });
+    return scoped;
+  }
 
   configure(configOrCallback: LLMConfig | ((config: NodeLLMConfig) => void)) {
     // Callback style: for setting API keys

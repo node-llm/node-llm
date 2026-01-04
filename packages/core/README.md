@@ -175,6 +175,16 @@ await NodeLLM.paint("A cyberpunk city in rain");
 await NodeLLM.transcribe("meeting-recording.wav");
 ```
 
+### ⚡ Scoped Parallelism
+Run multiple providers in parallel safely without global configuration side effects using isolated contexts.
+```ts
+const [gpt, claude] = await Promise.all([
+  // Each call branch off into its own isolated context
+  NodeLLM.withProvider("openai").chat("gpt-4o").ask(prompt),
+  NodeLLM.withProvider("anthropic").chat("claude-3-5-sonnet").ask(prompt),
+]);
+```
+
 ### 🧠 Deep Reasoning
 Direct access to the thought process of models like **DeepSeek R1** or **OpenAI o1/o3** using the `.reasoning` field.
 ```ts
@@ -182,7 +192,6 @@ const res = await NodeLLM.chat("deepseek-reasoner").ask("Solve this logical puzz
 console.log(res.reasoning); // Chain-of-thought
 ```
 
----
 ---
 
 ## 🚀 Why use this over official SDKs?

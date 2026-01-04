@@ -132,13 +132,19 @@ NodeLLM.configure({
    });
    ```
 
-3. **Switch providers dynamically**:
-   ```typescript
-   // Use OpenAI for one task
-   NodeLLM.configure({ provider: "openai" });
-   const chat1 = NodeLLM.chat("gpt-4o");
-   
-   // Switch to Anthropic for another
-   NodeLLM.configure({ provider: "anthropic" });
-   const chat2 = NodeLLM.chat("claude-3-5-sonnet-20241022");
-   ```
+### Scoped Configuration (Parallel Execution)
+
+By default, `NodeLLM` is a singleton. If you need to use multiple providers in parallel, calling `NodeLLM.configure()` concurrently can lead to race conditions.
+
+Use `.withProvider()` to create a **scoped context**. This returns an isolated instance of `NodeLLM` that shares your global API keys but has its own independent provider state.
+
+Run multiple providers in parallel safely without global configuration side effects:
+
+```ts
+const [gpt, claude] = await Promise.all([
+  NodeLLM.withProvider("openai").chat("gpt-4o").ask(prompt),
+  NodeLLM.withProvider("anthropic").chat("claude-3-5-sonnet").ask(prompt),
+]);
+```
+
+This ensures each parallel call uses the correct provider without interfering with others.
