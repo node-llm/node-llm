@@ -15,6 +15,7 @@ A comprehensive list of runnable examples available in the [examples/](https://g
 | [`examples/openai/chat/basic.mjs`](https://github.com/eshaiju/node-llm/blob/main/examples/openai/chat/basic.mjs) | Basic chat with streaming |
 | [`examples/openai/chat/events.mjs`](https://github.com/eshaiju/node-llm/blob/main/examples/openai/chat/events.mjs) | Lifecycle hooks (onNewMessage, etc) |
 | [`examples/openai/chat/tools.mjs`](https://github.com/eshaiju/node-llm/blob/main/examples/openai/chat/tools.mjs) | Automatic tool execution |
+| [`examples/openai/chat/tool-dsl.mjs`](https://github.com/eshaiju/node-llm/blob/main/examples/openai/chat/tool-dsl.mjs) | Class-based Tool DSL |
 | [`examples/openai/chat/structured.mjs`](https://github.com/eshaiju/node-llm/blob/main/examples/openai/chat/structured.mjs) | Zod schema validation |
 | [`examples/openai/multimodal/vision.mjs`](https://github.com/eshaiju/node-llm/blob/main/examples/openai/multimodal/vision.mjs) | Image analysis via URL |
 | [`examples/openai/multimodal/files.mjs`](https://github.com/eshaiju/node-llm/blob/main/examples/openai/multimodal/files.mjs) | Analyzing local files |

@@ -55,7 +55,7 @@ const PROVIDER_REGISTRARS: Record<string, () => void> = {
   openrouter: registerOpenRouterProvider,
 };
 
-class NodeLLMCore {
+export class NodeLLMCore {
   public readonly models = ModelRegistry;
   public readonly config: NodeLLMConfig;
   private provider?: Provider;
