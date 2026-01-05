@@ -1,11 +1,11 @@
 import { Message } from "./Message.js";
-import { Tool } from "./Tool.js";
+import { ToolDefinition } from "./Tool.js";
 import { Schema } from "../schema/Schema.js";
 
 export interface ChatOptions {
   systemPrompt?: string;
   messages?: Message[];
-  tools?: Tool[];
+  tools?: ToolDefinition[];
   temperature?: number;
   maxTokens?: number;
   onNewMessage?: () => void;

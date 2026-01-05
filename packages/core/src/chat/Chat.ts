@@ -5,7 +5,7 @@ import { Provider, Usage, ChatChunk } from "../providers/Provider.js";
 import { Executor } from "../executor/Executor.js";
 import { ChatStream } from "./ChatStream.js";
 import { Stream } from "../streaming/Stream.js";
-import { Tool } from "./Tool.js";
+import { Tool, ToolDefinition } from "./Tool.js";
 import { Schema } from "../schema/Schema.js";
 import { toJsonSchema } from "../schema/to-json-schema.js";
 import { z } from "zod";
@@ -86,15 +86,15 @@ export class Chat {
     return this.withTools([tool]);
   }
 
-  /**
+    /**
    * Add multiple tools to the chat session.
-   * Supports passing tool instances or classes (which will be instantiated).
+   * Supports passing Tool classes (which will be instantiated) or instances.
    * Can replace existing tools if options.replace is true.
    * 
    * @example
    * chat.withTools([WeatherTool, new CalculatorTool()], { replace: true });
    */
-  withTools(tools: (Tool | any)[], options?: { replace?: boolean }): this {
+  withTools(tools: (Tool | { new(): Tool } | any)[], options?: { replace?: boolean }): this {
     if (options?.replace) {
       this.options.tools = [];
     }
@@ -104,18 +104,26 @@ export class Chat {
     }
 
     for (const tool of tools) {
+      let toolInstance: any;
+
+      // Handle class constructor
       if (typeof tool === "function") {
         try {
-          // Attempt to instantiate if it's a class
-          this.options.tools.push(new tool());
+          toolInstance = new tool();
         } catch (e) {
-          // If instantiation fails, it might be a function tool or require args? 
-          // For now, assuming classes with no-arg constructors as per convention.
-          console.warn("Attempted to instantiate tool class but failed, adding as-is", e);
-          this.options.tools.push(tool);
+          console.error(`[NodeLLM] Failed to instantiate tool class: ${tool.name}`, e);
+          continue;
         }
       } else {
-        this.options.tools.push(tool);
+        toolInstance = tool;
+      }
+
+      // Normalized to standard ToolDefinition interface if it's a Tool class instance
+      if (toolInstance && typeof toolInstance.toLLMTool === "function") {
+        this.options.tools.push(toolInstance.toLLMTool());
+      } else {
+        // Fallback for legacy raw tool objects (defined as objects with type: 'function')
+        this.options.tools.push(toolInstance);
       }
     }
     return this;
