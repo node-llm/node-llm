@@ -124,22 +124,24 @@ await chat.ask("Analyze this interface", {
 ```
 
 ### 🛠️ Auto-Executing Tools
-Define tools once; NodeLLM manages the recursive execution loop for you, keeping your controller logic clean. **Works seamlessly with both regular chat and streaming!**
+Define tools once;`NodeLLM` manages the recursive execution loop for you, keeping your controller logic clean. **Works seamlessly with both regular chat and streaming!**
+
 ```ts
-const tools = [{
-  handler: async ({ loc }) => `Sunny in ${loc}`,
-  function: { name: 'get_weather', description: 'Get current weather', parameters: { ... } }
-}];
-
-// Tools work in regular chat
-await chat.withTools(tools).ask("Weather in Tokyo?");
-
-// Tools also work in streaming! 🎉
-for await (const chunk of chat.withTools(tools).stream("Weather in Tokyo?")) {
-  process.stdout.write(chunk.content);
+// Class-based DSL
+class WeatherTool extends Tool {
+  name = "get_weather";
+  description = "Get current weather";
+  schema = z.object({ location: z.string() });
+  async execute({ location }) { return `Sunny in ${location}`; }
 }
-// Tool is automatically executed and response continues streaming
+
+// Register tools
+chat.withTools([WeatherTool]);
+
+// Now the model can use it automatically
+await chat.ask("What's the weather in Tokyo?");
 ```
+**[Full Tool Calling Guide →](https://node-llm.eshaiju.com/core-features/tool-calling)**
 
 ### 🔍 Comprehensive Debug Logging
 Enable detailed logging for all API requests and responses across every feature and provider:
@@ -158,7 +160,7 @@ process.env.NODELLM_DEBUG = "true";
 ### ✨ Structured Output
 Get type-safe, validated JSON back using **Zod** schemas.
 ```ts
-import { z } from "zod";
+import { z } from "@node-llm/core";
 const Product = z.object({ name: z.string(), price: z.number() });
 
 const res = await chat.withSchema(Product).ask("Generate a gadget");

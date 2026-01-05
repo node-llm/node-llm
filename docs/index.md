@@ -136,7 +136,7 @@ await chat.withTools(tools).ask("Weather in Tokyo?");
 ### ✨ Structured Output
 Get type-safe, validated JSON back using **Zod** schemas.
 ```ts
-import { z } from "zod";
+import { z } from "@node-llm/core";
 const Product = z.object({ name: z.string(), price: z.number() });
 
 const res = await chat.withSchema(Product).ask("Generate a gadget");

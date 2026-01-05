@@ -1,5 +1,5 @@
 import { describe, it, expect, afterEach } from "vitest";
-import { NodeLLM } from "../../../../src/index.js";
+import { NodeLLM, Tool, z } from "../../../../src/index.js";
 import { setupVCR } from "../../../helpers/vcr.js";
 import "dotenv/config";
 
@@ -20,24 +20,20 @@ describe("OpenAI Tool Calling Integration (VCR)", { timeout: 30000 }, () => {
       provider: "openai",
     });
 
-    const weatherTool = {
-      type: 'function',
-      function: {
-        name: 'get_weather',
-        description: 'Get weather',
-        parameters: { type: 'object', properties: { location: { type: 'string' } } }
-      },
-      handler: async ({ location }: { location: string }) => {
-        return JSON.stringify({ location, temperature: 22, condition: "Sunny" });
+    class WeatherTool extends Tool {
+      name = "get_weather";
+      description = "Get weather";
+      schema = z.object({ location: z.string() });
+      async execute({ location }: { location: string }) {
+        return { location, temperature: 22, condition: "Sunny" };
       }
-    };
+    }
 
-    const chat = NodeLLM.chat("gpt-4o-mini").withTool(weatherTool);
+    const chat = NodeLLM.chat("gpt-4o-mini").withTool(WeatherTool);
     const response = await chat.ask("What is the weather in London?");
 
     expect(String(response)).toContain("22");
     expect(String(response)).toContain("London");
-    expect(response.usage.input_tokens).toBeGreaterThan(0);
     expect(response.usage.input_tokens).toBeGreaterThan(0);
   });
 
@@ -46,19 +42,16 @@ describe("OpenAI Tool Calling Integration (VCR)", { timeout: 30000 }, () => {
 
     NodeLLM.configure({ provider: "openai" });
 
-    const weatherTool = {
-      type: 'function',
-      function: {
-        name: 'get_weather',
-        description: 'Get weather',
-        parameters: { type: 'object', properties: { location: { type: 'string' } } }
-      },
-      handler: async ({ location }: { location: string }) => {
-        return JSON.stringify({ location, temperature: 22 });
+    class WeatherTool extends Tool {
+      name = "get_weather";
+      description = "Get weather";
+      schema = z.object({ location: z.string() });
+      async execute({ location }: { location: string }) {
+        return { location, temperature: 22 };
       }
-    };
+    }
 
-    const chat = NodeLLM.chat("gpt-4o-mini").withTool(weatherTool);
+    const chat = NodeLLM.chat("gpt-4o-mini").withTool(WeatherTool);
     // Requesting weather for multiple locations triggers parallel calls
     const response = await chat.ask("What is the weather in Paris and London?");
 

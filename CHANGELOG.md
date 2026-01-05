@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.3.0] - 2026-01-05
+
+### Added
+- **Class-based Tool DSL**: Official documentation and examples for creating tools using a clean, class-based syntax extending `Tool`.
+- **Enhanced Example Library**: Added missing runnable examples to the documentation, covering embeddings, usage tracking, and provider-specific features.
+- **Improved Documentation Navigation**: Fixed internal linking and integrated all examples directly into the documentation site.
+
+### Changed
+- **Documentation Imports**: Updated all documentation and examples to recommend importing `z` directly from `@node-llm/core` instead of `zod`, promoting a more unified API surface.
+- **Example Paths**: Converted all example file paths in the documentation into direct GitHub links for easier access.
+- **Provider Consistency**: Ensured all providers (OpenAI, Gemini, Anthropic, DeepSeek) have a consistent set of documented examples.
+
+
 ## [1.2.0] - 2026-01-04
 
 ### Added

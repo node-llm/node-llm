@@ -1,10 +1,10 @@
 import { Message } from "../chat/Message.js";
-import { Tool, ToolCall } from "../chat/Tool.js";
+import { ToolDefinition, ToolCall } from "../chat/Tool.js";
 
 export interface ChatRequest {
   model: string;
   messages: Message[];
-  tools?: Tool[];
+  tools?: ToolDefinition[];
   temperature?: number;
   max_tokens?: number;
   response_format?: any;
