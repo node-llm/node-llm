@@ -63,6 +63,7 @@ Debug logging works for:
 - **Embeddings** (OpenAI, Gemini, Ollama)
 - **Transcription** (OpenAI, Gemini)
 - **Moderation** (OpenAI)
+- **Model Alias Resolution** (all providers)
 - **All Providers** (OpenAI, Anthropic, Gemini, DeepSeek)
 
 The logs include:
@@ -70,6 +71,18 @@ The logs include:
 - Request body (JSON formatted)
 - Response status code and status text
 - Response body (JSON formatted)
+- Model alias resolution (when using aliases)
+
+### Model Alias Resolution
+
+When debug mode is enabled, you'll see logs showing how model aliases are resolved:
+
+```text
+[NodeLLM Debug] Resolved model alias 'claude-3-5-haiku' → 'claude-3-5-haiku-20241022' for provider 'anthropic'
+[NodeLLM Debug] No alias mapping found for 'custom-model' with provider 'anthropic', using as-is
+```
+
+This is particularly helpful when debugging 404 errors, as it shows the actual model ID being sent to the API.
 
 ## Lifecycle Handlers
 

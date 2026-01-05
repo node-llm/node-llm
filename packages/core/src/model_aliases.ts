@@ -1,7 +1,6 @@
-// This file is auto-generated or manually maintained to map generic model aliases
-// to provider-specific model IDs.
-// @ts-ignore
+// @ts-ignore - Using assert for Node.js compatibility
 import aliases from "./aliases.json" assert { type: "json" };
+import { logger } from "./utils/logger.js";
 
 export type ProviderName = "openai" | "anthropic" | "gemini" | "vertexai" | "openrouter" | "mistral" | "deepseek" | "bedrock" | string;
 
@@ -10,17 +9,16 @@ export function resolveModelAlias(alias: string, provider?: ProviderName): strin
     return alias;
   }
 
-  // Check if the alias exists in our registry
   const aliasEntry = (aliases as Record<string, Record<string, string>>)[alias];
   
   if (aliasEntry) {
-    // Check if there is a specific mapping for this provider
     if (aliasEntry[provider.toLowerCase()]) {
-      return aliasEntry[provider.toLowerCase()] as string;
+      const resolved = aliasEntry[provider.toLowerCase()] as string;
+      logger.debug(`Resolved model alias '${alias}' → '${resolved}' for provider '${provider}'`);
+      return resolved;
     }
   }
 
-  // If no alias found or no mapping for this provider, return the original string
-  // This allows users to pass raw model IDs that aren't in our alias list.
+  logger.debug(`No alias mapping found for '${alias}' with provider '${provider}', using as-is`);
   return alias;
 }
