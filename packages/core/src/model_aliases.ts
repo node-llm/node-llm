@@ -1,4 +1,4 @@
-// @ts-ignore - Using assert for Node.js compatibility
+// @ts-expect-error - Node.js requires 'assert', TypeScript wants 'with'
 import aliases from "./aliases.json" assert { type: "json" };
 import { logger } from "./utils/logger.js";
 

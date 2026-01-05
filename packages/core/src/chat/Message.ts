@@ -10,4 +10,5 @@ export interface Message {
   tool_call_id?: string;
   name?: string;
   usage?: Usage;
+  reasoning?: string;
 }

@@ -168,3 +168,42 @@ This ensures your code remains portable across providers without changing the mo
 ### Prioritization
 
 `NodeLLM` prioritizes exact ID matches first (if you pass a specific ID like `"gpt-4-0613"`, it uses it). If no exact match or known ID is found, it attempts to resolve it as an alias.
+
+### Programmatic Access
+
+You can access the alias mappings programmatically for validation or UI purposes:
+
+```ts
+import { MODEL_ALIASES, resolveModelAlias } from "@node-llm/core";
+
+// Check if an alias exists
+const isValidAlias = "claude-3-5-haiku" in MODEL_ALIASES;
+
+// Get all providers supporting an alias
+const providers = Object.keys(MODEL_ALIASES["claude-3-5-haiku"]);
+// => ["anthropic", "openrouter", "bedrock"]
+
+// Resolve alias for a specific provider
+const resolved = resolveModelAlias("claude-3-5-haiku", "anthropic");
+// => "claude-3-5-haiku-20241022"
+
+// List all available aliases
+const allAliases = Object.keys(MODEL_ALIASES);
+
+// Validate user input
+function validateModel(input, provider) {
+  if (input in MODEL_ALIASES) {
+    if (MODEL_ALIASES[input][provider]) {
+      return { valid: true, resolved: MODEL_ALIASES[input][provider] };
+    }
+    return { valid: false, reason: `Alias not supported for ${provider}` };
+  }
+  return { valid: true, resolved: input };
+}
+```
+
+This is useful for:
+- Building model selection UIs
+- Validating user input before API calls
+- Checking provider compatibility
+- Debugging 404 errors

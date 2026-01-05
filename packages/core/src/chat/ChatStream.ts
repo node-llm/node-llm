@@ -108,7 +108,6 @@ export class ChatStream {
             role: "assistant",
             content: fullContent || null,
             tool_calls: toolCalls,
-            // @ts-ignore
             reasoning: fullReasoning || undefined
           });
 
