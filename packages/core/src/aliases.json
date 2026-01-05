@@ -13,6 +13,12 @@
     "openrouter": "anthropic/claude-3.5-sonnet",
     "bedrock": "anthropic.claude-3-5-sonnet-20240620-v1:0"
   },
+  "claude-sonnet-4-5": {
+    "anthropic": "claude-sonnet-4-5-20250929"
+  },
+  "claude-sonnet-4": {
+    "anthropic": "claude-sonnet-4-20250514"
+  },
   "claude-3-7-sonnet": {
     "anthropic": "claude-3-7-sonnet-20250219",
     "openrouter": "anthropic/claude-3.7-sonnet",

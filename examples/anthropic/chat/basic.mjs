@@ -12,7 +12,7 @@ NodeLLM.configure({
 });
 
 async function main() {
-  // No model specified - defaults to Claude 3.5 Sonnet for Anthropic
+  // No model specified - defaults to Claude 3.5 Haiku for Anthropic
   const chat = NodeLLM.chat();
   console.log(`Using model: ${chat.modelId}`);
 
