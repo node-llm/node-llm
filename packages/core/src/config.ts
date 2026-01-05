@@ -14,6 +14,7 @@ export interface NodeLLMConfig {
   ollamaApiBase?: string;
   openrouterApiKey?: string;
   openrouterApiBase?: string;
+  debug?: boolean;
 }
 
 class Configuration implements NodeLLMConfig {
@@ -28,6 +29,7 @@ class Configuration implements NodeLLMConfig {
   public ollamaApiBase?: string = process.env.OLLAMA_API_BASE?.trim() || "http://localhost:11434/v1";
   public openrouterApiKey?: string = process.env.OPENROUTER_API_KEY?.trim();
   public openrouterApiBase?: string = process.env.OPENROUTER_API_BASE?.trim();
+  public debug?: boolean = process.env.NODELLM_DEBUG === "true";
 }
 
 export const config = new Configuration();

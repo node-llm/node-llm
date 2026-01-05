@@ -11,11 +11,31 @@ When building LLM applications, understanding what's happening "under the hood" 
 
 ## Debug Mode
 
-You can enable detailed debug logging by setting the `NODELLM_DEBUG` environment variable. This will print the raw HTTP requests and responses for **all API calls** across **every feature and provider**.
+You can enable detailed debug logging in two ways:
+
+### 1. Programmatic Configuration (Recommended)
+
+```ts
+import { NodeLLM } from "@node-llm/core";
+
+NodeLLM.configure({ debug: true });
+```
+
+This will print the raw HTTP requests and responses for **all API calls** across **every feature and provider**.
+
+### 2. Environment Variable
 
 ```bash
 export NODELLM_DEBUG=true
 node my-app.js
+```
+
+### Scoped Debug Mode
+
+You can also enable debug mode for specific provider instances:
+
+```ts
+const debugAnthropic = NodeLLM.withProvider("anthropic", { debug: true });
 ```
 
 **Output Example:**

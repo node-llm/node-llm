@@ -1,9 +1,8 @@
-/**
- * Centralized logger for`NodeLLM`
- */
+import { config } from "../config.js";
+
 class Logger {
   private isDebugEnabled(): boolean {
-    return process.env.NODELLM_DEBUG === "true";
+    return process.env.NODELLM_DEBUG === "true" || config.debug === true;
   }
 
   debug(message: string, data?: any): void {
