@@ -87,20 +87,33 @@ const chat = NodeLLM.chat("claude-3-5-sonnet", {
 });
 ```
 
-## Working with Different Models
-To switch providers, you must re-configure the `NodeLLM` instance.
+## Working with Multiple Providers
+
+You can switch providers globally or use scoped instances for parallel execution without side effects.
+
+### Global Switching
+Global configuration affects all subsequent calls.
 
 ```ts
 // OpenAI
 NodeLLM.configure({ provider: "openai" });
 const gpt = NodeLLM.chat("gpt-4o");
 
-// Anthropic
+// Switch to Anthropic
 NodeLLM.configure({ provider: "anthropic" });
-const claude = NodeLLM.chat("claude-3-5-sonnet-20241022");
+const claude = NodeLLM.chat("claude-3-5-sonnet");
 ```
 
-For advanced multi-provider applications, it is recommended to manage separate `LLMCore` instances or re-configure as needed before requests.
+### ⚡ Scoped Parallelism (Recommended)
+Run multiple providers in parallel safely without global configuration side effects using isolated contexts via `withProvider`.
+
+```ts
+const [gpt, claude] = await Promise.all([
+  // Each call branches off into its own isolated context
+  NodeLLM.withProvider("openai").chat("gpt-4o").ask(prompt),
+  NodeLLM.withProvider("anthropic").chat("claude-3-5-sonnet").ask(prompt),
+]);
+```
 
 ## Temperature & Creativity
 
