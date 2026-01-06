@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.4.0] - 2026-01-06
+
+### Added
+- **Plugin System for Custom Providers**: Introduced `NodeLLM.registerProvider()` and exported `BaseProvider`, allowing developers to easily add proprietary or custom LLM services at runtime.
+- **Improved Extensibility Documentation**: Dedicated "Custom Providers" guide with real-world patterns for handling provider-specific configurations and extra fields.
+- **Community Health Patterns**: Added standardized GitHub issue templates (`bug_report.yml`, `feature_request.yml`), contributing guide, and pull request templates.
+
 ## [1.3.0] - 2026-01-05
 
 ### Added
