@@ -57,25 +57,19 @@ for await (const chunk of chat.stream("Hello")) {
 This all happens transparently - you just iterate over chunks as usual!
 
 ```ts
-const weatherTool = {
-  type: 'function',
-  function: {
-    name: 'get_weather',
-    description: 'Get current weather',
-    parameters: {
-      type: 'object',
-      properties: {
-        location: { type: 'string' }
-      },
-      required: ['location']
-    }
-  },
-  handler: async ({ location }) => {
-    return JSON.stringify({ location, temp: 22, condition: 'sunny' });
-  }
-};
+class WeatherTool extends Tool {
+  name = "get_weather";
+  description = "Get current weather";
+  schema = z.object({
+    location: z.string().describe("The city e.g. Paris")
+  });
 
-const chat = NodeLLM.chat("gpt-4o").withTool(weatherTool);
+  async execute({ location }) {
+    return { location, temp: 22, condition: 'sunny' };
+  }
+}
+
+const chat = NodeLLM.chat("gpt-4o").withTool(WeatherTool);
 
 // Tool is automatically executed during streaming!
 for await (const chunk of chat.stream("What's the weather in Paris?")) {
@@ -90,12 +84,12 @@ You can also listen to tool execution events:
 
 ```ts
 const chat = NodeLLM.chat("gpt-4o")
-  .withTool(weatherTool)
+  .withTool(WeatherTool)
   .onToolCall((call) => {
     console.log(`\n[Tool Called: ${call.function.name}]`);
   })
   .onToolResult((result) => {
-    console.log(`[Tool Result: ${result}]\n`);
+    console.log(`[Tool Result: ${JSON.stringify(result)}]\n`);
   });
 
 for await (const chunk of chat.stream("Weather in Tokyo?")) {

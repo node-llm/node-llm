@@ -43,7 +43,7 @@ Build chatbots, autonomous agents, and RAG pipelines without the SDK fatigue. No
 
 <br/>
 
-[Get Started](/getting-started/overview){: .btn .btn-primary .fs-5 .mb-4 .mb-md-0 .mr-2 } [View on GitHub](https://github.com/eshaiju/node-llm){: .btn .fs-5 .mb-4 .mb-md-0 }
+[Get Started](/getting-started/overview){: .btn .btn-primary .fs-5 .mb-4 .mb-md-0 .mr-2 } [View on GitHub](https://github.com/eshaiju/node-llm){: .btn .fs-5 .mb-4 .mb-md-0 .mr-2 } [View on npm](https://www.npmjs.com/package/@node-llm/core){: .btn .fs-5 .mb-4 .mb-md-0 }
 
 ---
 

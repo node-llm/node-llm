@@ -22,6 +22,9 @@ EXAMPLES=(
   "chat/basic.mjs"
   "chat/instructions.mjs"
   "chat/tools.mjs"
+  "chat/raw-json.mjs"
+  "chat/streaming.mjs"
+  "chat/streaming-tools.mjs"
   "chat/events.mjs"
   "chat/usage.mjs"
   "chat/parallel-tools.mjs"
@@ -31,7 +34,12 @@ EXAMPLES=(
   "multimodal/multi-image.mjs"
   "multimodal/pdf.mjs"
   "multimodal/files.mjs"
+  "multimodal/transcribe.mjs"
   "discovery/models.mjs"
+  "discovery/alias-logging.mjs"
+  "discovery/debug-mode.mjs"
+  "discovery/model-aliases.mjs"
+  "discovery/scoped-config.mjs"
 )
 
 # Run each example

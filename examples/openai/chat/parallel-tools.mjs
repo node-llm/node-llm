@@ -1,35 +1,28 @@
 import "dotenv/config";
-import { NodeLLM } from "../../../packages/core/dist/index.js";
+import { NodeLLM, Tool, z } from "../../../packages/core/dist/index.js";
+
+class WeatherTool extends Tool {
+  name = "get_weather";
+  description = "Get the current weather for a specific location";
+  schema = z.object({
+    location: z.string().describe("The city and state, e.g. San Francisco, CA")
+  });
+
+  async execute({ location }) {
+    console.log(`⚡️ [Tool Executing] Fetching weather for: ${location}`);
+    // Simulate network delay
+    await new Promise(r => setTimeout(r, 500));
+    return { location, temperature: 22, condition: "Sunny" };
+  }
+}
 
 async function main() {
-  NodeLLM.configure((config) => {
-    config.openaiApiKey = process.env.OPENAI_API_KEY;
+  NodeLLM.configure({ 
+    provider: "openai",
+    openaiApiKey: process.env.OPENAI_API_KEY
   });
-  
-  NodeLLM.configure({ provider: "openai" });
 
-  const weatherTool = {
-    type: 'function',
-    function: {
-      name: 'get_weather',
-      description: 'Get the current weather for a specific location',
-      parameters: {
-        type: 'object',
-        properties: {
-          location: { type: 'string', description: 'The city and state, e.g. San Francisco, CA' }
-        },
-        required: ['location']
-      }
-    },
-    handler: async ({ location }) => {
-      console.log(`⚡️ [Tool Executing] Fetching weather for: ${location}`);
-      // Simulate network delay
-      await new Promise(r => setTimeout(r, 500));
-      return JSON.stringify({ location, temperature: 22, condition: "Sunny" });
-    }
-  };
-
-  const chat = NodeLLM.chat("gpt-4o-mini").withTool(weatherTool);
+  const chat = NodeLLM.chat("gpt-4o-mini").withTool(WeatherTool);
 
   console.log("User: What is the weather in Tokyo, London, and New York?");
   

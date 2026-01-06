@@ -1,50 +1,35 @@
 import "dotenv/config";
-import { NodeLLM } from "../../../packages/core/dist/index.js";
+import { NodeLLM, Tool, z } from "../../../packages/core/dist/index.js";
 
-// Ensure ANTHROPIC_API_KEY is set in your environment
+class WeatherTool extends Tool {
+  name = "get_weather";
+  description = "Get the current weather for a location";
+  schema = z.object({
+    location: z.string().describe("The city and state, e.g. San Francisco, CA"),
+    unit: z.enum(["celsius", "fahrenheit"]).optional().describe("Temperature unit")
+  });
 
-NodeLLM.configure({
-  provider: "anthropic",
-});
-
-const WeatherTool = {
-  type: "function",
-  function: {
-    name: "get_weather",
-    description: "Get the current weather for a location",
-    parameters: {
-      type: "object",
-      properties: {
-        location: {
-          type: "string",
-          description: "The city and state, e.g. San Francisco, CA"
-        },
-        unit: {
-          type: "string",
-          enum: ["celsius", "fahrenheit"]
-        }
-      },
-      required: ["location"]
-    }
-  },
-  handler: async ({ location, unit }) => {
+  async execute({ location, unit }) {
     console.log(`[WeatherTool] Fetching weather for ${location}...`);
-    return JSON.stringify({
+    return {
       location,
       temperature: 22,
       unit: unit || "celsius",
       conditions: "Sunny",
-    });
+    };
   }
-};
+}
 
 async function main() {
-  console.log("Creating chat with Tools...");
+  NodeLLM.configure({
+    provider: "anthropic",
+  });
+
+  console.log("Creating chat with Class-Based Tools...");
   
   const chat = NodeLLM.chat("claude-3-haiku-20240307")
     .withTool(WeatherTool);
 
-  // Anthropic supports thinking/tool use automatically
   console.log("User: What is the weather in Paris?");
   const response = await chat.ask("What is the weather in Paris?");
 

@@ -58,7 +58,8 @@ To run the full suite of OpenAI examples:
 ### 2. Running Individual OpenAI Examples
 *   **Basic Chat**: `node examples/openai/chat/basic.mjs`
 *   **Streaming**: `node examples/openai/chat/streaming.mjs`
-*   **Tools**: `node examples/openai/chat/tools.mjs`
+*   **Tools (Class-Based)**: `node examples/openai/chat/tools.mjs`
+*   **Tools (Raw JSON)**: `node examples/openai/chat/raw-json.mjs`
 *   **Reasoning (o1/o3)**: `node examples/openai/chat/reasoning.mjs`
 *   **Vision**: `node examples/openai/multimodal/vision.mjs`
 *   **Speech (TTS)**: `node examples/openai/multimodal/audio.mjs`
@@ -83,7 +84,8 @@ To run all available DeepSeek examples to verify functionality:
 *   **Chat**: `node examples/deepseek/chat/basic.mjs`
 *   **Streaming**: `node examples/deepseek/chat/streaming.mjs`
 *   **Structured Output**: `node examples/deepseek/chat/structured.mjs`
-*   **Tools**: `node examples/deepseek/chat/tools.mjs`
+*   **Tools (Class-Based)**: `node examples/deepseek/chat/tools.mjs`
+*   **Tools (Raw JSON)**: `node examples/deepseek/chat/raw-json.mjs`
 *   **Reasoning (R1)**: `node examples/deepseek/chat/reasoning.mjs`
 *   **Model Info**: `node examples/deepseek/discovery/models.mjs`
 
@@ -98,9 +100,25 @@ To run all available DeepSeek examples to verify functionality:
 
 ### 2. Running Individual Gemini Examples
 *   **Basic Chat**: `node examples/gemini/chat/basic.mjs`
-*   **Tools**: `node examples/gemini/chat/tools.mjs`
+*   **Tools (Class-Based)**: `node examples/gemini/chat/tools.mjs`
+*   **Tools (Raw JSON)**: `node examples/gemini/chat/raw-json.mjs`
 *   **Vision**: `node examples/gemini/multimodal/vision.mjs`
 *   **Embeddings**: `node examples/gemini/embeddings/create.mjs`
+
+---
+
+## Anthropic Examples
+
+### 1. Running All Anthropic Examples
+```bash
+./examples/run_anthropic_examples.sh
+```
+
+### 2. Running Individual Anthropic Examples
+*   **Basic Chat**: `node examples/anthropic/chat/basic.mjs`
+*   **Tools (Class-Based)**: `node examples/anthropic/chat/tools.mjs`
+*   **Tools (Raw JSON)**: `node examples/anthropic/chat/raw-json.mjs`
+*   **Streaming Tools**: `node examples/anthropic/chat/streaming-tools.mjs`
 
 ### 3. Unsupported Features (Error Handling)
 These scripts demonstrate that `NodeLLM` correctly raises errors for features not supported by DeepSeek (Multimodal, Embeddings, Image Generation).

@@ -1,27 +1,18 @@
 import "dotenv/config";
-import { NodeLLM } from "../../../packages/core/dist/index.js";
+import { NodeLLM, Tool, z } from "../../../packages/core/dist/index.js";
 
-const weatherTool = {
-  type: "function",
-  function: {
-    name: "get_weather",
-    description: "Get the current weather in a given location",
-    parameters: {
-      type: "object",
-      properties: {
-        location: {
-          type: "string",
-          description: "The city and state, e.g. San Francisco, CA",
-        },
-      },
-      required: ["location"],
-    },
-  },
-  async handler({ location }) {
+class WeatherTool extends Tool {
+  name = "get_weather";
+  description = "Get the current weather in a given location";
+  schema = z.object({
+    location: z.string().describe("The city and state, e.g. San Francisco, CA"),
+  });
+
+  async execute({ location }) {
     console.log(`[WeatherTool] Fetching weather for ${location}...`);
-    return `The weather in ${location} is 72°F and sunny.`;
+    return { location, temperature: 72, condition: "sunny" };
   }
-};
+}
 
 async function main() {
   NodeLLM.configure({
@@ -29,9 +20,9 @@ async function main() {
   });
 
   const chat = NodeLLM.chat("gemini-2.0-flash")
-    .withTool(weatherTool);
+    .withTool(WeatherTool);
 
-  console.log("Asking about weather in two cities...");
+  console.log("Asking Gemini about weather in two cities...");
 
   const response = await chat.ask("What is the weather like in San Francisco and New York?");
 

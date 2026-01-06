@@ -1,36 +1,39 @@
 import "dotenv/config";
-import { NodeLLM } from "../../../packages/core/dist/index.js";
+import { NodeLLM, Tool, z } from "../../../packages/core/dist/index.js";
+
+class WeatherTool extends Tool {
+  name = "get_weather";
+  description = "Get the current weather for a location";
+  schema = z.object({
+    location: z.string().describe("The city and state, e.g. San Francisco, CA"),
+    unit: z.enum(["celsius", "fahrenheit"]).optional()
+  });
+
+  async execute({ location, unit }) {
+    console.log(`[WeatherTool] Fetching weather for ${location}...`);
+    return {
+      location,
+      temperature: 22,
+      unit: unit || "celsius",
+      conditions: "Sunny",
+    };
+  }
+}
 
 async function main() {
-  NodeLLM.configure((config) => {
-    config.geminiApiKey = process.env.GEMINI_API_KEY;
+  NodeLLM.configure({
+    provider: "gemini",
   });
+
+  console.log("Creating Gemini chat with Class-Based Tools...");
   
-  NodeLLM.configure({ provider: "gemini" });
+  const chat = NodeLLM.chat("gemini-1.5-flash")
+    .withTool(WeatherTool);
 
-  const weatherTool = {
-    type: 'function',
-    function: {
-      name: 'get_weather',
-      description: 'Get the current weather',
-      parameters: {
-        type: 'object',
-        properties: { location: { type: 'string' } },
-        required: ['location']
-      }
-    },
-    handler: async ({ location }) => {
-      console.log(`[Tool] Weather checked for ${location}`);
-      return JSON.stringify({ location, temperature: 18, unit: 'celsius' });
-    }
-  };
+  console.log("User: What is the weather in Paris?");
+  const response = await chat.ask("What is the weather in Paris?");
 
-  const chat = NodeLLM.chat("gemini-2.0-flash").withTool(weatherTool);
-
-  console.log("Asking: How is the weather in Paris?");
-  const response = await chat.ask("How is the weather in Paris?");
-
-  console.log("\nFinal Answer:");
+  console.log("\nResponse:");
   console.log(response.content);
 }
 

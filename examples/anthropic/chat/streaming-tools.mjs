@@ -1,5 +1,25 @@
 import "dotenv/config";
-import { NodeLLM } from "../../../packages/core/dist/index.js";
+import { NodeLLM, Tool, z } from "../../../packages/core/dist/index.js";
+
+class WeatherTool extends Tool {
+  name = "get_weather";
+  description = "Get the current weather for a location";
+  schema = z.object({
+    location: z.string().describe("City name"),
+    unit: z.enum(['celsius', 'fahrenheit']).default('celsius')
+  });
+
+  async execute({ location, unit }) {
+    console.log(`\n[Tool Executed] get_weather(${location}, ${unit})`);
+    const temp = unit === 'celsius' ? 22 : 72;
+    return {
+      location,
+      temperature: temp,
+      unit,
+      condition: 'sunny'
+    };
+  }
+}
 
 async function main() {
   NodeLLM.configure({
@@ -7,36 +27,9 @@ async function main() {
     anthropicApiKey: process.env.ANTHROPIC_API_KEY,
   });
 
-  // Define a weather tool
-  const weatherTool = {
-    type: 'function',
-    function: {
-      name: 'get_weather',
-      description: 'Get the current weather for a location',
-      parameters: {
-        type: 'object',
-        properties: {
-          location: { type: 'string', description: 'City name' },
-          unit: { type: 'string', enum: ['celsius', 'fahrenheit'] }
-        },
-        required: ['location']
-      }
-    },
-    handler: async ({ location, unit = 'celsius' }) => {
-      console.log(`\n[Tool Executed] get_weather(${location}, ${unit})`);
-      const temp = unit === 'celsius' ? 22 : 72;
-      return JSON.stringify({
-        location,
-        temperature: temp,
-        unit,
-        condition: 'sunny'
-      });
-    }
-  };
-
   // Example 1: Streaming with tool calling
   console.log("=== Example 1: Anthropic Streaming with Tool Calling ===\n");
-  const chat1 = NodeLLM.chat("claude-3-haiku-20240307").withTool(weatherTool);
+  const chat1 = NodeLLM.chat("claude-3-haiku-20240307").withTool(WeatherTool);
   
   console.log("Question: What's the weather in Paris?\n");
   console.log("Streaming response:");
@@ -50,8 +43,7 @@ async function main() {
 
   // Example 2: Streaming with multiple tool calls
   console.log("\n=== Example 2: Streaming with Multiple Cities ===\n");
-  
-  const chat2 = NodeLLM.chat("claude-3-haiku-20240307").withTool(weatherTool);
+  const chat2 = NodeLLM.chat("claude-3-haiku-20240307").withTool(WeatherTool);
   
   console.log("Question: Compare weather in London and Tokyo\n");
   console.log("Streaming response:");
@@ -65,14 +57,13 @@ async function main() {
 
   // Example 3: Streaming with tool events
   console.log("\n=== Example 3: Streaming with Tool Event Handlers ===\n");
-  
   const chat3 = NodeLLM.chat("claude-3-haiku-20240307")
-    .withTool(weatherTool)
+    .withTool(WeatherTool)
     .onToolCall((toolCall) => {
       console.log(`\n[Event] Tool called: ${toolCall.function.name}`);
     })
     .onToolResult((result) => {
-      console.log(`[Event] Tool result: ${result}\n`);
+      console.log(`[Event] Tool result: ${JSON.stringify(result)}\n`);
     });
   
   console.log("Question: What's the weather in Berlin?\n");

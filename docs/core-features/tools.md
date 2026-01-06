@@ -140,13 +140,14 @@ How you handle errors in your `execute` method affects the conversation flow:
 
 ### Advanced: Raw JSON Schema
 
-If you prefer to define your parameters using standard JSON Schema instead of Zod, you can pass a schema object directly to the `schema` property.
+If you prefer to define your parameters using standard JSON Schema instead of Zod, you can pass a schema object directly to the `schema` property in your `Tool` class. This is useful for migrating existing tools or when you already have schema definitions.
 
 ```ts
 class CustomTool extends Tool {
   name = "custom_lookup";
   description = "Lookup items in a legacy system";
 
+  // Use Raw JSON Schema instead of Zod
   schema = {
     type: "object",
     properties: {
@@ -157,7 +158,8 @@ class CustomTool extends Tool {
   };
 
   async execute({ sku, limit }) {
-    // ...
+    // Arguments are still passed as a single object
+    return { status: "found" };
   }
 }
 ```

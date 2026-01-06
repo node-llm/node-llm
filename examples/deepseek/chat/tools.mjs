@@ -1,37 +1,39 @@
 import "dotenv/config";
-import { NodeLLM } from "../../../packages/core/dist/index.js";
+import { NodeLLM, Tool, z } from "../../../packages/core/dist/index.js";
+
+class WeatherTool extends Tool {
+  name = "get_weather";
+  description = "Get the current weather for a location";
+  schema = z.object({
+    location: z.string().describe("The city and state, e.g. San Francisco, CA"),
+    unit: z.enum(["celsius", "fahrenheit"]).optional()
+  });
+
+  async execute({ location, unit }) {
+    console.log(`[WeatherTool] Fetching weather for ${location}...`);
+    return {
+      location,
+      temperature: 22,
+      unit: unit || "celsius",
+      conditions: "Sunny",
+    };
+  }
+}
 
 async function main() {
-  NodeLLM.configure((config) => {
-    config.deepseekApiKey = process.env.DEEPSEEK_API_KEY;
+  NodeLLM.configure({
+    provider: "deepseek",
   });
+
+  console.log("Creating DeepSeek chat with Class-Based Tools...");
   
-  NodeLLM.configure({ provider: "deepseek" });
+  const chat = NodeLLM.chat("deepseek-chat")
+    .withTool(WeatherTool);
 
-  const weatherTool = {
-    type: 'function',
-    function: {
-      name: 'get_weather',
-      description: 'Get the current weather in a given location',
-      parameters: {
-        type: 'object',
-        properties: {
-          location: { type: 'string', description: 'The city and state, e.g. San Francisco, CA' }
-        },
-        required: ['location']
-      }
-    },
-    handler: async ({ location }) => {
-      return JSON.stringify({ location, temperature: 22, unit: 'celsius' });
-    }
-  };
+  console.log("User: What is the weather in Paris?");
+  const response = await chat.ask("What is the weather in Paris?");
 
-  const chat = NodeLLM.chat("deepseek-chat").withTool(weatherTool);
-
-  console.log("Asking a question that requires a function call...");
-  const response = await chat.ask("What is the weather in London?");
-
-  console.log("\nFinal Answer:");
+  console.log("\nResponse:");
   console.log(response.content);
 }
 

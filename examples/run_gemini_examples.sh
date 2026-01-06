@@ -22,6 +22,9 @@ EXAMPLES=(
   "chat/basic.mjs"
   "chat/instructions.mjs"
   "chat/tools.mjs"
+  "chat/raw-json.mjs"
+  "chat/streaming.mjs"
+  "chat/streaming-tools.mjs"
   "chat/events.mjs"
   "chat/usage.mjs"
   "chat/reasoning.mjs"
@@ -32,6 +35,7 @@ EXAMPLES=(
   "multimodal/vision.mjs"
   "multimodal/multi-image.mjs"
   "multimodal/files.mjs"
+  "multimodal/transcribe.mjs"
   "discovery/models.mjs"
   "embeddings/create.mjs"
 )

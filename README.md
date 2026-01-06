@@ -1,5 +1,7 @@
 <p align="left">
-  <img src="docs/assets/images/logo.jpg" alt="NodeLLM logo" width="300" />
+  <a href="https://node-llm.eshaiju.com/">
+    <img src="docs/assets/images/logo.jpg" alt="NodeLLM logo" width="300" />
+  </a>
 </p>
 
 # NodeLLM
