@@ -356,6 +356,7 @@ export class Chat {
       response.content ?? "", 
       response.usage ?? { input_tokens: 0, output_tokens: 0, total_tokens: 0 }, 
       this.model,
+      this.provider.id,
       response.reasoning
     );
 
@@ -417,6 +418,7 @@ export class Chat {
         response.content ?? "", 
         response.usage ?? { input_tokens: 0, output_tokens: 0, total_tokens: 0 }, 
         this.model,
+        this.provider.id,
         response.reasoning
       );
 
@@ -434,7 +436,7 @@ export class Chat {
 
     // For the final return, we might want to aggregate reasoning too if it happened in multiple turns? 
     // Usually reasoning only happens once or we just want the last one.
-    return new ChatResponseString(response.content ?? "", totalUsage, this.model, response.reasoning);
+    return new ChatResponseString(response.content ?? "", totalUsage, this.model, this.provider.id, response.reasoning);
   }
 
   /**

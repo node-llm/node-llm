@@ -9,6 +9,7 @@ export class ChatResponseString extends String {
     content: string,
     public readonly usage: Usage,
     public readonly model: string,
+    public readonly provider: string,
     public readonly reasoning?: string | null
   ) {
     super(content);

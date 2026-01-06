@@ -109,6 +109,17 @@ export class NodeLLMCore {
     return scoped;
   }
 
+  /**
+   * Register a custom LLM provider.
+   * This allows you to extend NodeLLM with your own logic at runtime.
+   * 
+   * @param name - Unique identifier for the provider
+   * @param factory - A function that returns a Provider instance
+   */
+  registerProvider(name: string, factory: () => Provider): void {
+    providerRegistry.register(name, factory);
+  }
+
   configure(configOrCallback: LLMConfig | ((config: NodeLLMConfig) => void)) {
     // Callback style: for setting API keys
     if (typeof configOrCallback === "function") {

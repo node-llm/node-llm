@@ -118,6 +118,7 @@ export class ChatStream {
                 fullContent,
                 { input_tokens: 0, output_tokens: 0, total_tokens: 0 },
                 model,
+                provider.id,
                 fullReasoning || undefined
               ));
             }
