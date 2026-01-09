@@ -1,7 +1,7 @@
 {
-  "name": "node-llm",
-  "version": "1.4.0",
-  "description": "",
+  "name": "@node-llm/core",
+  "version": "1.4.1",
+  "description": "An opinionated architectural layer for integrating Large Language Models in Node.js.",
   "main": "index.js",
   "workspaces": [
     "packages/*"
@@ -11,8 +11,29 @@
     "build": "npm run build --workspaces --if-present",
     "docs": "cd docs && bundle install && bundle exec jekyll serve"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "llm",
+    "large-language-models",
+    "ai",
+    "nodejs",
+    "llm-integration",
+    "architecture",
+    "integration-layer",
+    "provider-agnostic",
+    "vendor-agnostic",
+    "infrastructure",
+    "openai",
+    "anthropic",
+    "gemini",
+    "deepseek",
+    "openrouter",
+    "ollama",
+    "chat",
+    "streaming",
+    "rag",
+    "production"
+  ],
+  "author": "Shaiju Edakulangara",
   "license": "MIT",
   "devDependencies": {
     "@types/node": "^25.0.3",
