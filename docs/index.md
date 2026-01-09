@@ -9,12 +9,11 @@ back_to_top: false
 <p align="left">
   <img src="assets/images/logo.png" alt="NodeLLM" width="200" />
 </p>
-## Treat LLMs as an integration surface — not a dependency.
 **An opinionated architectural layer for integrating Large Language Models in Node.js.**
 
-Most LLM SDKs **tightly couple** your application to vendors, APIs, and churn. NodeLLM provides a unified, production-oriented API without the SDK fatigue.
-
 **Provider-agnostic by design.**
+
+Most LLM SDKs **tightly couple** your application to vendors, APIs, and churn. NodeLLM provides a unified, production-oriented API without the SDK fatigue.
 <div class="provider-icons">
   <div class="provider-logo">
     <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/openai.svg" alt="OpenAI" class="logo-medium">
@@ -44,10 +43,10 @@ Most LLM SDKs **tightly couple** your application to vendors, APIs, and churn. N
 <br/>
 <br/>
 
-[Get Started](/getting-started/overview){: .btn .btn-primary .fs-5 .mb-4 .mb-md-0 .mr-2 } [Read the Philosophy](#why-nodellm){: .btn .fs-5 .mb-4 .mb-md-0 .mr-2 } [View on GitHub](https://github.com/eshaiju/node-llm){: .btn .fs-5 .mb-4 .mb-md-0 }
+[Get Started](/getting-started/overview){: .btn .btn-primary .fs-5 .mb-4 .mb-md-0 .mr-2 } [Read on Blog](https://eshaiju.com){: .btn .fs-5 .mb-4 .mb-md-0 .mr-2 } [View on GitHub](https://github.com/eshaiju/node-llm){: .btn .fs-5 .mb-4 .mb-md-0 }
 
 <p class="text-small text-grey-dk-000 mt-4">
-  Distributed via <a href="https://www.npmjs.com/package/@node-llm/core">npm</a> &bull; Featured on <a href="https://eshaiju.com">eshaiju.com</a>
+  Distributed via <a href="https://www.npmjs.com/package/@node-llm/core">npm</a>
 </p>
 
 ---
@@ -65,7 +64,7 @@ NodeLLM is **NOT**:
 
 ## 🏗️ Why NodeLLM?
 
-Most AI integrations today are provider-specific, SDK-driven, and leaky at abstraction boundaries. This creates long-term architectural risk. **LLMs are becoming another integration surface**, and NodeLLM exists to help you treat them as infrastructure, not just a dependency.
+Most AI integrations today are provider-specific, SDK-driven, and leaky at abstraction boundaries. This creates long-term architectural risk. **LLMs should be treated as infrastructure**, and NodeLLM exists to help you integrate them without vendor lock-in.
 
 NodeLLM exists to solve **architectural problems**, not just provide API access. It is the core architectural layer for LLMs in the Node.js ecosystem.
 
