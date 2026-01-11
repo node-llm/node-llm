@@ -5,7 +5,7 @@ import { AnthropicMessage, AnthropicContentBlock } from "./types.js";
 export function formatSystemPrompt(messages: Message[]): string | undefined {
   let systemPrompt: string | undefined;
   for (const msg of messages) {
-    if (msg.role === "system") {
+    if (msg.role === "system" || msg.role === "developer") {
       if (typeof msg.content === "string") {
         systemPrompt = msg.content;
       } else if (Array.isArray(msg.content)) {
@@ -25,7 +25,7 @@ export function formatMessages(requestMessages: Message[]): AnthropicMessage[] {
   const messages: AnthropicMessage[] = [];
 
   for (const msg of requestMessages) {
-    if (msg.role === "system") continue;
+    if (msg.role === "system" || msg.role === "developer") continue;
 
     const formatted = formatSingleMessage(msg);
     const lastMsg = messages[messages.length - 1];

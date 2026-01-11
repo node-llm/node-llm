@@ -8,7 +8,7 @@ export class GeminiChatUtils {
     const systemInstructionParts: GeminiPart[] = [];
 
     for (const msg of messages) {
-      if (msg.role === "system") {
+      if (msg.role === "system" || msg.role === "developer") {
         if (typeof msg.content === "string") {
           systemInstructionParts.push({ text: msg.content });
         }

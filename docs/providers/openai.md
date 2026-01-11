@@ -40,6 +40,7 @@ const chat = NodeLLM.chat("gpt-4o")
 - **Vision**: specific models like `gpt-4o` support image analysis.
 - **Tools**: Fully supported, including parallel tool execution.
 - **Reasoning**: Automatic tracking of reasoning tokens and costs for `o1` and `o3` models.
+- **Smart Developer Role**: Modern instructions are automatically mapped to the `developer` role for compatible models when using the official API.
 - **Structured Output**: Supports strict schema validation via `json_schema`.
 
 ## Custom Endpoints

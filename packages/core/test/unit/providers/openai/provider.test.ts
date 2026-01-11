@@ -26,7 +26,7 @@ describe("OpenAIProvider", () => {
 
   it("should initialize with custom baseUrl", () => {
     const customProvider = new OpenAIProvider({ ...options, baseUrl: "https://custom.api" });
-    expect(OpenAIChat).toHaveBeenCalledWith("https://custom.api", "test-key");
+    expect(OpenAIChat).toHaveBeenCalledWith(customProvider, "test-key");
   });
 
   it("should delegate chat to chatHandler", async () => {

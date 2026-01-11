@@ -25,6 +25,7 @@ export class AnthropicProvider extends BaseProvider implements Provider {
     supportsTranscription: (_model: string) => false,
     supportsModeration: (_model: string) => false,
     supportsReasoning: (_model: string) => false,
+    supportsDeveloperRole: (_model: string) => true,
     getContextWindow: (model: string) => Capabilities.getContextWindow(model),
   };
 

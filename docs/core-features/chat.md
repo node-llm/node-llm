@@ -160,7 +160,20 @@ NodeLLM.configure({
 ```
 
 See the [Configuration Guide](/getting-started/configuration) for more details.
-
+ 
+## 🧱 Smart Context Isolation
+ 
+NodeLLM provides **Zero-Config Context Isolation** to ensure maximum instruction following and security. 
+ 
+Inspired by modern LLM architectures (like OpenAI's Developer Role), NodeLLM internally separates your system instructions from the conversation history. This prevents "instruction drift" as the conversation grows and provides a strong layer of protection against prompt injection.
+ 
+### How it works:
+- **Implicit Untangling**: If you pass a mixed array of messages to the Chat constructor, NodeLLM automatically identifies and isolates system-level instructions.
+- **Dynamic Role Mapping**: On the official OpenAI API, instructions for modern models (`gpt-4o`, `o1`, `o3`) are automatically promoted to the high-privilege `developer` role.
+- **Safe Fallbacks**: For older models or local providers (like Ollama or DeepSeek), NodeLLM safely maps instructions back to the standard `system` role to ensure perfect compatibility.
+ 
+This behavior is **enabled by default** for all chats.
+ 
 ## Next Steps
 
 - [Multi-modal Capabilities](/core-features/multimodal.html) (Images, Audio, Files)

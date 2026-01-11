@@ -29,6 +29,7 @@ export class OllamaProvider extends OpenAIProvider {
       supportsTranscription: (modelId: string) => OllamaCapabilities.supportsTranscription(modelId),
       supportsModeration: (modelId: string) => OllamaCapabilities.supportsModeration(modelId),
       supportsReasoning: (modelId: string) => OllamaCapabilities.supportsReasoning(modelId),
+      supportsDeveloperRole: (_modelId: string) => false,
       getContextWindow: (modelId: string) => OllamaCapabilities.getContextWindow(modelId),
     };
   }

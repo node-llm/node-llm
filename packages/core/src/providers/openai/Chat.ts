@@ -6,17 +6,33 @@ import { ModelRegistry } from "../../models/ModelRegistry.js";
 import { buildUrl } from "./utils.js";
 import { logger } from "../../utils/logger.js";
 
+import { OpenAIProvider } from "./OpenAIProvider.js";
+import { mapSystemMessages } from "../utils.js";
+
 export class OpenAIChat {
-  constructor(private readonly baseUrl: string, private readonly apiKey: string) {}
+  private readonly baseUrl: string;
+
+  constructor(private readonly providerOrUrl: OpenAIProvider | string, private readonly apiKey: string) {
+    this.baseUrl = typeof providerOrUrl === "string" ? providerOrUrl : providerOrUrl.apiBase();
+  }
 
   async execute(request: ChatRequest): Promise<ChatResponse> {
     const temperature = Capabilities.normalizeTemperature(request.temperature, request.model);
     
+    const isMainOpenAI = this.baseUrl.includes("api.openai.com");
+    const supportsDeveloperRole = isMainOpenAI && (
+      typeof this.providerOrUrl === "string" 
+        ? Capabilities.supportsDeveloperRole(request.model)
+        : this.providerOrUrl.capabilities?.supportsDeveloperRole(request.model)
+    );
+
     const { model, messages, tools, temperature: _, max_tokens, response_format, headers, ...rest } = request;
+
+    const mappedMessages = mapSystemMessages(messages, !!supportsDeveloperRole);
 
     const body: any = {
       model,
-      messages,
+      messages: mappedMessages,
       ...rest
     };
 

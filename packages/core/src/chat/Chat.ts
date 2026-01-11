@@ -23,6 +23,7 @@ import { ChatResponseString } from "./ChatResponse.js";
 
 export class Chat {
   private messages: Message[] = [];
+  private systemMessages: Message[] = [];
   private executor: Executor;
 
   constructor(
@@ -37,14 +38,17 @@ export class Chat {
     );
 
     if (options.systemPrompt) {
-      this.messages.push({
-        role: "system",
-        content: options.systemPrompt,
-      });
+      this.withInstructions(options.systemPrompt);
     }
 
     if (options.messages) {
-      this.messages.push(...options.messages);
+      for (const msg of options.messages) {
+        if (msg.role === "system" || msg.role === "developer") {
+          this.systemMessages.push(msg);
+        } else {
+          this.messages.push(msg);
+        }
+      }
     }
   }
 
@@ -52,7 +56,7 @@ export class Chat {
    * Read-only access to message history
    */
   get history(): readonly Message[] {
-    return this.messages;
+    return [...this.systemMessages, ...this.messages];
   }
 
   get modelId(): string {
@@ -137,19 +141,11 @@ export class Chat {
    */
   withInstructions(instruction: string, options?: { replace?: boolean }): this {
     if (options?.replace) {
-      this.messages = this.messages.filter((m) => m.role !== "system");
+      this.systemMessages = [];
     }
     
-    // System messages usually go first, but for "appending" behavior 
-    // mid-conversation, most providers handle them fine in history.
-    // Ideally, if it's "replace", we might want to unshift it to index 0,
-    // but simply pushing a new system message works for "updating" context too.
-    // For consistency with "replace" meaning "this is THE system prompt":
-    if (options?.replace) {
-      this.messages.unshift({ role: "system", content: instruction });
-    } else {
-      this.messages.push({ role: "system", content: instruction });
-    }
+    // Always push to isolated storage
+    this.systemMessages.push({ role: "system", content: instruction });
     
     return this;
   }
@@ -324,7 +320,7 @@ export class Chat {
 
     const executeOptions = {
       model: this.model,
-      messages: this.messages,
+      messages: [...this.systemMessages, ...this.messages],
       tools: this.options.tools,
       temperature: options?.temperature ?? this.options.temperature,
       max_tokens: options?.maxTokens ?? this.options.maxTokens,
@@ -417,7 +413,7 @@ export class Chat {
 
       response = await this.executor.executeChat({
         model: this.model,
-        messages: this.messages,
+        messages: [...this.systemMessages, ...this.messages],
         tools: this.options.tools,
         headers: this.options.headers,
       });
@@ -452,7 +448,7 @@ export class Chat {
    * Streams the model's response to a user question.
    */
   stream(content: string): Stream<ChatChunk> {
-    const streamer = new ChatStream(this.provider, this.model, this.options, this.messages);
+    const streamer = new ChatStream(this.provider, this.model, this.options, this.messages, this.systemMessages);
     return streamer.create(content);
   }
 }

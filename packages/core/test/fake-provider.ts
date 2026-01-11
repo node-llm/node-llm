@@ -8,7 +8,10 @@ export class FakeProvider implements Provider {
     this.replies = replies;
   }
 
-  async chat(_request: ChatRequest): Promise<ChatResponse> {
+  public lastRequest?: ChatRequest;
+
+  async chat(request: ChatRequest): Promise<ChatResponse> {
+    this.lastRequest = request;
     const reply = this.replies.shift() ?? "default reply";
     if (typeof reply === "string") {
       return { content: reply };

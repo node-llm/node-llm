@@ -45,6 +45,7 @@ export class GeminiProvider extends BaseProvider implements Provider {
     supportsTranscription: (model: string) => Capabilities.supportsTranscription(model),
     supportsModeration: (model: string) => Capabilities.supportsModeration(model),
     supportsReasoning: (_model: string) => false,
+    supportsDeveloperRole: (_model: string) => true,
     getContextWindow: (model: string) => Capabilities.getContextWindow(model),
   };
 

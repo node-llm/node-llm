@@ -34,14 +34,15 @@ export class OpenAIProvider extends BaseProvider implements Provider {
     supportsTranscription: (model: string) => Capabilities.supportsTranscription(model),
     supportsModeration: (model: string) => Capabilities.supportsModeration(model),
     supportsReasoning: (model: string) => Capabilities.supportsReasoning(model),
+    supportsDeveloperRole: (modelId: string) => this.baseUrl.includes("api.openai.com") && Capabilities.supportsDeveloperRole(modelId),
     getContextWindow: (model: string) => Capabilities.getContextWindow(model) || null,
   };
 
   constructor(protected readonly options: OpenAIProviderOptions) {
     super();
     this.baseUrl = options.baseUrl ?? "https://api.openai.com/v1";
-    this.chatHandler = new OpenAIChat(this.baseUrl, options.apiKey);
-    this.streamingHandler = new OpenAIStreaming(this.baseUrl, options.apiKey);
+    this.chatHandler = new OpenAIChat(this, options.apiKey);
+    this.streamingHandler = new OpenAIStreaming(this, options.apiKey);
     this.modelsHandler = new OpenAIModels(this.baseUrl, options.apiKey);
     this.imageHandler = new OpenAIImage(this.baseUrl, options.apiKey);
     this.transcriptionHandler = new OpenAITranscription(this.baseUrl, options.apiKey);

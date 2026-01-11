@@ -46,6 +46,7 @@ export interface ProviderCapabilities {
   supportsTranscription(modelId: string): boolean;
   supportsModeration(modelId: string): boolean;
   supportsReasoning(modelId: string): boolean;
+  supportsDeveloperRole(modelId: string): boolean;
   getContextWindow(modelId: string): number | null;
 }
 

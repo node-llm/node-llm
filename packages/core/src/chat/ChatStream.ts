@@ -10,26 +10,35 @@ import { Stream } from "../streaming/Stream.js";
  */
 export class ChatStream {
   private messages: Message[];
+  private systemMessages: Message[];
 
   constructor(
     private readonly provider: Provider,
     private readonly model: string,
     private readonly options: ChatOptions = {},
-    messages?: Message[]
+    messages?: Message[],
+    systemMessages?: Message[]
   ) {
     this.messages = messages ?? [];
+    this.systemMessages = systemMessages ?? [];
 
     // Only initialize if we're starting a new history
-    if (this.messages.length === 0) {
+    if (this.messages.length === 0 && this.systemMessages.length === 0) {
       if (options.systemPrompt) {
-        this.messages.push({
+        this.systemMessages.push({
           role: "system",
           content: options.systemPrompt,
         });
       }
 
       if (options.messages) {
-        this.messages.push(...options.messages);
+        for (const msg of options.messages) {
+          if (msg.role === "system" || msg.role === "developer") {
+            this.systemMessages.push(msg);
+          } else {
+            this.messages.push(msg);
+          }
+        }
       }
     }
   }
@@ -38,7 +47,7 @@ export class ChatStream {
    * Read-only access to message history
    */
   get history(): readonly Message[] {
-    return this.messages;
+    return [...this.systemMessages, ...this.messages];
   }
 
   /**
@@ -53,6 +62,7 @@ export class ChatStream {
       provider: Provider,
       model: string,
       messages: Message[],
+      systemMessages: Message[],
       options: ChatOptions,
       abortController: AbortController
     ) {
@@ -84,7 +94,7 @@ export class ChatStream {
         try {
           for await (const chunk of provider.stream({
             model,
-            messages,
+            messages: [...systemMessages, ...messages],
             tools: options.tools,
             temperature: options.temperature,
             max_tokens: options.maxTokens,
@@ -179,7 +189,7 @@ export class ChatStream {
     };
 
     return new Stream(
-      () => sideEffectGenerator(this.provider, this.model, this.messages, this.options, controller),
+      () => sideEffectGenerator(this.provider, this.model, this.messages, this.systemMessages, this.options, controller),
       controller
     );
   }

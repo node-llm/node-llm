@@ -80,6 +80,10 @@ export class Capabilities {
     return /o\d|gpt-5/.test(modelId);
   }
 
+  static supportsDeveloperRole(modelId: string): boolean {
+    return /gpt-4o|o1|o3/.test(modelId);
+  }
+
   static getModelType(modelId: string): "embeddings" | "audio" | "moderation" | "image" | "chat" | "audio_transcription" | "audio_speech" {
      if (this.supportsEmbeddings(modelId)) return "embeddings";
      if (/moderation/.test(modelId)) return "moderation";

@@ -181,6 +181,14 @@ process.env.NODELLM_DEBUG = "true";
 ```
 **Covers:** Chat, Streaming, Images, Embeddings, Transcription, Moderation - across all providers!
 
+### 🧱 Smart Context Isolation
+Stop worrying about prompt injection or instruction drift. NodeLLM automatically separates system instructions from the conversation history, providing a higher level of protection and strictness.
+
+- **Zero-Config Security**: Enabled by default for all chats. No special flags required.
+- **Smart Model Mapping**: Automatically uses OpenAI's modern `developer` role for compatible models (GPT-4o, o1, o3) while safely falling back to the standard `system` role for older or local models (Ollama, DeepSeek, etc.).
+- **Universal Context**: Instructions stay separated internally, ensuring they are always prioritized by the model and never accidentally overridden by user messages.
+- **Provider Agnostic**: Write instructions once; NodeLLM handles the specific role requirements for every major provider (OpenAI, Anthropic, Gemini).
+
 ### ✨ Structured Output
 Get type-safe, validated JSON back using **Zod** schemas.
 ```ts
@@ -237,7 +245,7 @@ console.log(res.reasoning); // Chain-of-thought
 
 | Provider | Supported Features |
 | :--- | :--- |
-| <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/openai.svg" height="18"> **OpenAI** | Chat, **Streaming + Tools**, Vision, Audio, Images, Transcription, **Reasoning** |
+| <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/openai.svg" height="18"> **OpenAI** | Chat, **Streaming + Tools**, Vision, Audio, Images, Transcription, **Reasoning**, **Smart Developer Role** |
 | <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/gemini-color.svg" height="18"> **Gemini** | Chat, **Streaming + Tools**, Vision, Audio, Video, Embeddings |
 | <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/anthropic-text.svg" height="12"> **Anthropic** | Chat, **Streaming + Tools**, Vision, PDF, Structured Output |
 | <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/deepseek-color.svg" height="18"> **DeepSeek** | Chat (V3), **Reasoning (R1)**, **Streaming + Tools** |
