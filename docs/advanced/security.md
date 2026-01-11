@@ -25,7 +25,7 @@ NodeLLM solves this by maintaining a strict architectural boundary between **Sys
 
 ---
 
-## 🛡️ Content Policy Hooks
+## 🛡️ Content Policy Hooks <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v1.4.0+</span>
 
 NodeLLM allows you to inject security and compliance policies at the **edge** of the request/response cycle using asynchronous hooks.
 
@@ -56,7 +56,7 @@ chat.afterResponse(async (response) => {
 
 ---
 
-## 🔍 Observability as Security
+## 🔍 Observability as Security <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v1.5.0+</span>
 
 Security in AI is not just about blocking; it's about **Auditing**. NodeLLM provides high-fidelity hooks for monitoring the entire lifecycle of tool executions, which are often the most sensitive part of an AI agent.
 
@@ -72,7 +72,7 @@ chat
 
 ---
 
-## 🚦 Tool Execution Policies
+## 🚦 Tool Execution Policies <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v1.5.0+</span>
 
 For sensitive operations (like database writes or financial transactions), NodeLLM provides granular control over the tool execution lifecycle via `toolExecution` modes.
 
