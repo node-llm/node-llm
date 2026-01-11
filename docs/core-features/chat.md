@@ -134,8 +134,9 @@ Hook into the chat lifecycle for logging, UI updates, audit trails, or debugging
 ```ts
 chat
   .onNewMessage(() => console.log("AI started typing..."))
-  .onToolCall((tool) => console.log(`Calling tool: ${tool.function.name}`))
-  .onToolResult((result) => console.log(`Tool result: ${result}`))
+  .onToolCallStart((call) => console.log(`Starting tool: ${call.function.name}`))
+  .onToolCallEnd((call, res) => console.log(`Tool ${call.id} finished with: ${res}`))
+  .onToolCallError((call, err) => console.error(`Tool ${call.function.name} failed: ${err.message}`))
   .onEndMessage((response) => {
     console.log(`Finished. Total tokens: ${response.total_tokens}`);
   });

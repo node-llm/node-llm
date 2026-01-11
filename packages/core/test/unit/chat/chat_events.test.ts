@@ -73,19 +73,19 @@ describe("Chat Events", () => {
       handler: async () => "tool_result"
     };
 
-    const onToolCall = vi.fn();
-    const onToolResult = vi.fn();
+    const onToolCallStart = vi.fn();
+    const onToolCallEnd = vi.fn();
 
     await chat
       .withTool(tool)
-      .onToolCall(onToolCall)
-      .onToolResult(onToolResult)
+      .onToolCallStart(onToolCallStart)
+      .onToolCallEnd(onToolCallEnd)
       .ask("Go");
 
-    expect(onToolCall).toHaveBeenCalledTimes(1);
-    expect(onToolCall.mock.calls[0][0].function.name).toBe("test_tool");
+    expect(onToolCallStart).toHaveBeenCalledTimes(1);
+    expect(onToolCallStart.mock.calls[0][0].function.name).toBe("test_tool");
 
-    expect(onToolResult).toHaveBeenCalledTimes(1);
-    expect(onToolResult).toHaveBeenCalledWith("tool_result");
+    expect(onToolCallEnd).toHaveBeenCalledTimes(1);
+    expect(onToolCallEnd).toHaveBeenCalledWith(expect.anything(), "tool_result");
   });
 });

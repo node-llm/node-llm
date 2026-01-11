@@ -230,12 +230,34 @@ export class Chat {
   }
 
   onToolCall(handler: (toolCall: any) => void): this {
-    this.options.onToolCall = handler;
-    return this;
+    return this.onToolCallStart(handler);
   }
 
   onToolResult(handler: (result: any) => void): this {
-    this.options.onToolResult = handler;
+    return this.onToolCallEnd((_call, result) => handler(result));
+  }
+
+  /**
+   * Called when a tool call starts.
+   */
+  onToolCallStart(handler: (toolCall: any) => void): this {
+    this.options.onToolCallStart = handler;
+    return this;
+  }
+
+  /**
+   * Called when a tool call ends successfully.
+   */
+  onToolCallEnd(handler: (toolCall: any, result: any) => void): this {
+    this.options.onToolCallEnd = handler;
+    return this;
+  }
+
+  /**
+   * Called when a tool call fails.
+   */
+  onToolCallError(handler: (toolCall: any, error: Error) => void): this {
+    this.options.onToolCallError = handler;
     return this;
   }
 
@@ -414,7 +436,7 @@ export class Chat {
       }
 
       for (const toolCall of response.tool_calls) {
-        if (this.options.onToolCall) this.options.onToolCall(toolCall);
+        if (this.options.onToolCallStart) this.options.onToolCallStart(toolCall);
 
         const tool = this.options.tools?.find(
           (t) => t.function.name === toolCall.function.name
@@ -424,7 +446,8 @@ export class Chat {
           try {
             const args = JSON.parse(toolCall.function.arguments);
             const result = await tool.handler(args);
-            if (this.options.onToolResult) this.options.onToolResult(result);
+            
+            if (this.options.onToolCallEnd) this.options.onToolCallEnd(toolCall, result);
 
             this.messages.push({
               role: "tool",
@@ -432,6 +455,8 @@ export class Chat {
               content: result,
             });
           } catch (error: any) {
+            if (this.options.onToolCallError) this.options.onToolCallError(toolCall, error);
+
             this.messages.push({
               role: "tool",
               tool_call_id: toolCall.id,
@@ -439,6 +464,9 @@ export class Chat {
             });
           }
         } else {
+          const error = new Error("Tool not found or no handler provided");
+          if (this.options.onToolCallError) this.options.onToolCallError(toolCall, error);
+
           this.messages.push({
             role: "tool",
             tool_call_id: toolCall.id,

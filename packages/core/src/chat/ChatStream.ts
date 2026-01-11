@@ -164,7 +164,7 @@ export class ChatStream {
 
           // Execute tool calls
           for (const toolCall of toolCalls) {
-            if (options.onToolCall) options.onToolCall(toolCall);
+            if (options.onToolCallStart) options.onToolCallStart(toolCall);
 
             const tool = options.tools?.find(
               (t) => t.function.name === toolCall.function.name
@@ -174,7 +174,8 @@ export class ChatStream {
               try {
                 const args = JSON.parse(toolCall.function.arguments);
                 const result = await tool.handler(args);
-                if (options.onToolResult) options.onToolResult(result);
+                
+                if (options.onToolCallEnd) options.onToolCallEnd(toolCall, result);
 
                 messages.push({
                   role: "tool",
@@ -182,6 +183,8 @@ export class ChatStream {
                   content: result,
                 });
               } catch (error: any) {
+                if (options.onToolCallError) options.onToolCallError(toolCall, error);
+
                 messages.push({
                   role: "tool",
                   tool_call_id: toolCall.id,
@@ -189,6 +192,9 @@ export class ChatStream {
                 });
               }
             } else {
+              const error = new Error("Tool not found or no handler provided");
+              if (options.onToolCallError) options.onToolCallError(toolCall, error);
+
               messages.push({
                 role: "tool",
                 tool_call_id: toolCall.id,

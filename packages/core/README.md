@@ -207,6 +207,16 @@ Stop worrying about prompt injection or instruction drift. NodeLLM automatically
 - **Universal Context**: Instructions stay separated internally, ensuring they are always prioritized by the model and never accidentally overridden by user messages.
 - **Provider Agnostic**: Write instructions once; NodeLLM handles the specific role requirements for every major provider (OpenAI, Anthropic, Gemini).
 
+### 🔍 Observability & Tool Auditing
+For enterprise compliance, NodeLLM provides deep visibility into the tool execution lifecycle. You can monitor, log, and audit every step of a tool's execution.
+
+```ts
+chat
+  .onToolCallStart((call) => log(`Starting tool: ${call.function.name}`))
+  .onToolCallEnd((call, res) => log(`Tool ${call.id} finished with: ${res}`))
+  .onToolCallError((call, err) => alert(`Tool ${call.function.name} failed: ${err.message}`));
+```
+
 ### ✨ Structured Output
 Get type-safe, validated JSON back using **Zod** schemas.
 ```ts
