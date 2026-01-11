@@ -16,4 +16,12 @@ export { Schema } from "./schema/Schema.js";
 export { BaseProvider } from "./providers/BaseProvider.js";
 export { resolveModelAlias } from "./model_aliases.js";
 export { default as MODEL_ALIASES } from "./aliases.js";
+export { 
+  ToolExecutionMode,
+  DEFAULT_MAX_TOOL_CALLS,
+  DEFAULT_MAX_RETRIES,
+  DEFAULT_TOOL_EXECUTION,
+  DEFAULT_OLLAMA_BASE_URL,
+  DEFAULT_MODELS
+} from "./constants.js";
 

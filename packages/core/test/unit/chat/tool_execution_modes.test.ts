@@ -1,6 +1,7 @@
 import { describe, it, expect, vi } from "vitest";
 import { Chat } from "../../../src/chat/Chat.js";
 import { FakeProvider } from "../../fake-provider.js";
+import { ToolExecutionMode } from "../../../src/constants.js";
 
 describe("Tool Execution Modes", () => {
   const toolCallResponse = {
@@ -35,7 +36,7 @@ describe("Tool Execution Modes", () => {
     
     const response = await chat
       .withTool(weatherTool)
-      .withToolExecution("dry-run")
+      .withToolExecution(ToolExecutionMode.DRY_RUN)
       .ask("Weather?");
 
     expect(chat.history.length).toBe(2); // User, Assistant (Plan)
@@ -53,7 +54,7 @@ describe("Tool Execution Modes", () => {
     
     await chat
       .withTool(weatherTool)
-      .withToolExecution("confirm")
+      .withToolExecution(ToolExecutionMode.CONFIRM)
       .onConfirmToolCall(onConfirm)
       .ask("Weather?");
 
@@ -69,7 +70,7 @@ describe("Tool Execution Modes", () => {
     
     await chat
       .withTool(weatherTool)
-      .withToolExecution("confirm")
+      .withToolExecution(ToolExecutionMode.CONFIRM)
       .onConfirmToolCall(onConfirm)
       .ask("Weather?");
 
@@ -85,7 +86,7 @@ describe("Tool Execution Modes", () => {
       
       const streamer = chat
         .withTool(weatherTool)
-        .withToolExecution("dry-run")
+        .withToolExecution(ToolExecutionMode.DRY_RUN)
         .stream("Weather?");
 
       for await (const _chunk of streamer) {
@@ -105,7 +106,7 @@ describe("Tool Execution Modes", () => {
       
       const streamer = chat
         .withTool(weatherTool)
-        .withToolExecution("confirm")
+        .withToolExecution(ToolExecutionMode.CONFIRM)
         .onConfirmToolCall(onConfirm)
         .stream("Weather?");
 

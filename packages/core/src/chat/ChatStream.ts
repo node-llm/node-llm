@@ -3,6 +3,8 @@ import { ChatOptions } from "./ChatOptions.js";
 import { Provider, ChatChunk } from "../providers/Provider.js";
 import { ChatResponseString } from "./ChatResponse.js";
 import { Stream } from "../streaming/Stream.js";
+import { config } from "../config.js";
+import { ToolExecutionMode } from "../constants.js";
 
 /**
  * Internal handler for chat streaming logic.
@@ -41,6 +43,10 @@ export class ChatStream {
         }
       }
     }
+
+    if (!this.options.toolExecution) {
+      this.options.toolExecution = config.toolExecution || ToolExecutionMode.AUTO;
+    }
   }
 
   /**
@@ -59,6 +65,7 @@ export class ChatStream {
     
     // We create a wrapper async generator that handles our side effects
     const sideEffectGenerator = async function* (
+      self: ChatStream,
       provider: Provider,
       model: string,
       messages: Message[],
@@ -162,17 +169,17 @@ export class ChatStream {
             break;
           }
 
-          if (options.toolExecution === "dry-run") {
+          // Dry-run mode: stop after proposing tools
+          if (!self.shouldExecuteTools(toolCalls, options.toolExecution)) {
             break;
           }
 
           // Execute tool calls
           for (const toolCall of toolCalls) {
-            if (options.onToolCallStart) options.onToolCallStart(toolCall);
-
-            if (options.toolExecution === "confirm") {
-              const confirmed = await options.onConfirmToolCall?.(toolCall);
-              if (confirmed === false) {
+            // Confirm mode: request approval
+            if (options.toolExecution === ToolExecutionMode.CONFIRM) {
+              const approved = await self.requestToolConfirmation(toolCall, options.onConfirmToolCall);
+              if (!approved) {
                 messages.push({
                   role: "tool",
                   tool_call_id: toolCall.id,
@@ -182,41 +189,15 @@ export class ChatStream {
               }
             }
 
-            const tool = options.tools?.find(
-              (t) => t.function.name === toolCall.function.name
+            // Execute the tool
+            const toolResult = await self.executeToolCall(
+              toolCall,
+              options.tools,
+              options.onToolCallStart,
+              options.onToolCallEnd,
+              options.onToolCallError
             );
-
-            if (tool?.handler) {
-              try {
-                const args = JSON.parse(toolCall.function.arguments);
-                const result = await tool.handler(args);
-                
-                if (options.onToolCallEnd) options.onToolCallEnd(toolCall, result);
-
-                messages.push({
-                  role: "tool",
-                  tool_call_id: toolCall.id,
-                  content: result,
-                });
-              } catch (error: any) {
-                if (options.onToolCallError) options.onToolCallError(toolCall, error);
-
-                messages.push({
-                  role: "tool",
-                  tool_call_id: toolCall.id,
-                  content: `Error executing tool: ${error.message}`,
-                });
-              }
-            } else {
-              const error = new Error("Tool not found or no handler provided");
-              if (options.onToolCallError) options.onToolCallError(toolCall, error);
-
-              messages.push({
-                role: "tool",
-                tool_call_id: toolCall.id,
-                content: "Error: Tool not found or no handler provided",
-              });
-            }
+            messages.push(toolResult);
           }
 
           // Continue loop to stream the next response after tool execution
@@ -230,8 +211,77 @@ export class ChatStream {
     };
 
     return new Stream(
-      () => sideEffectGenerator(this.provider, this.model, this.messages, this.systemMessages, this.options, controller),
+      () => sideEffectGenerator(this, this.provider, this.model, this.messages, this.systemMessages, this.options, controller),
       controller
     );
+  }
+
+  /**
+   * Check if tool execution should proceed based on the current mode.
+   */
+  private shouldExecuteTools(toolCalls: any[] | undefined, mode?: ToolExecutionMode): boolean {
+    if (!toolCalls || toolCalls.length === 0) return false;
+    if (mode === ToolExecutionMode.DRY_RUN) return false;
+    return true;
+  }
+
+  /**
+   * Request user confirmation for a tool call in "confirm" mode.
+   * Returns true if approved, false if rejected.
+   */
+  private async requestToolConfirmation(
+    toolCall: any,
+    onConfirm?: (call: any) => Promise<boolean> | boolean
+  ): Promise<boolean> {
+    if (!onConfirm) return true;
+    const confirmed = await onConfirm(toolCall);
+    return confirmed !== false;
+  }
+
+  /**
+   * Execute a single tool call and return the result message.
+   */
+  private async executeToolCall(
+    toolCall: any,
+    tools: any[] | undefined,
+    onStart?: (call: any) => void,
+    onEnd?: (call: any, result: any) => void,
+    onError?: (call: any, error: Error) => void
+  ): Promise<{ role: "tool"; tool_call_id: string; content: string }> {
+    if (onStart) onStart(toolCall);
+
+    const tool = tools?.find((t) => t.function.name === toolCall.function.name);
+
+    if (tool?.handler) {
+      try {
+        const args = JSON.parse(toolCall.function.arguments);
+        const result = await tool.handler(args);
+        
+        if (onEnd) onEnd(toolCall, result);
+
+        return {
+          role: "tool",
+          tool_call_id: toolCall.id,
+          content: result,
+        };
+      } catch (error: any) {
+        if (onError) onError(toolCall, error);
+
+        return {
+          role: "tool",
+          tool_call_id: toolCall.id,
+          content: `Error executing tool: ${error.message}`,
+        };
+      }
+    } else {
+      const error = new Error("Tool not found or no handler provided");
+      if (onError) onError(toolCall, error);
+
+      return {
+        role: "tool",
+        tool_call_id: toolCall.id,
+        content: "Error: Tool not found or no handler provided",
+      };
+    }
   }
 }

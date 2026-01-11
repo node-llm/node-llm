@@ -2,6 +2,7 @@ import { Message } from "./Message.js";
 import { ToolDefinition } from "./Tool.js";
 import { Schema } from "../schema/Schema.js";
 import { ChatResponseString } from "./ChatResponse.js";
+import { ToolExecutionMode } from "../constants.js";
 
 export interface ChatOptions {
   systemPrompt?: string;
@@ -21,7 +22,7 @@ export interface ChatOptions {
   assumeModelExists?: boolean;
   provider?: string;
   maxToolCalls?: number;
-  toolExecution?: "auto" | "confirm" | "dry-run";
+  toolExecution?: ToolExecutionMode;
   onConfirmToolCall?: (toolCall: any) => Promise<boolean> | boolean;
   onBeforeRequest?: (messages: Message[]) => Promise<Message[] | void>;
   onAfterResponse?: (response: ChatResponseString) => Promise<ChatResponseString | void>;

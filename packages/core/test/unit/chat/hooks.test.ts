@@ -78,8 +78,8 @@ describe("Content Policy Hooks", () => {
       // but the final response message in onEnd and history IS modified.
       expect(onEnd).toHaveBeenCalled();
       const finalMsg = onEnd.mock.calls[0][0];
-      expect(String(finalMsg.content)).toBe("Secret is [HIDDEN] ");
-      expect(String(chat.history[chat.history.length - 1].content)).toBe("Secret is [HIDDEN] ");
+      expect(String(finalMsg.content)).toBe("Secret is [HIDDEN]");
+      expect(String(chat.history[chat.history.length - 1].content)).toBe("Secret is [HIDDEN]");
     });
   });
 

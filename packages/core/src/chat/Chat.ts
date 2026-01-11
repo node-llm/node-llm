@@ -9,6 +9,8 @@ import { Tool, ToolDefinition } from "./Tool.js";
 import { Schema } from "../schema/Schema.js";
 import { toJsonSchema } from "../schema/to-json-schema.js";
 import { z } from "zod";
+import { config } from "../config.js";
+import { ToolExecutionMode } from "../constants.js";
 
 export interface AskOptions {
   images?: string[];
@@ -49,6 +51,10 @@ export class Chat {
           this.messages.push(msg);
         }
       }
+    }
+
+    if (!this.options.toolExecution) {
+      this.options.toolExecution = config.toolExecution || ToolExecutionMode.AUTO;
     }
   }
 
@@ -267,7 +273,7 @@ export class Chat {
    * - "confirm": Call onConfirmToolCall before executing each tool.
    * - "dry-run": Propose tool calls but do not execute them.
    */
-  withToolExecution(mode: "auto" | "confirm" | "dry-run"): this {
+  withToolExecution(mode: ToolExecutionMode): this {
     this.options.toolExecution = mode;
     return this;
   }
@@ -451,7 +457,8 @@ export class Chat {
     let stepCount = 0;
 
     while (response.tool_calls && response.tool_calls.length > 0) {
-      if (this.options.toolExecution === "dry-run") {
+      // Dry-run mode: stop after proposing tools
+      if (!this.shouldExecuteTools(response.tool_calls, this.options.toolExecution)) {
         break;
       }
 
@@ -461,11 +468,10 @@ export class Chat {
       }
 
       for (const toolCall of response.tool_calls) {
-        if (this.options.onToolCallStart) this.options.onToolCallStart(toolCall);
-
-        if (this.options.toolExecution === "confirm") {
-          const confirmed = await this.options.onConfirmToolCall?.(toolCall);
-          if (confirmed === false) {
+        // Confirm mode: request approval
+        if (this.options.toolExecution === ToolExecutionMode.CONFIRM) {
+          const approved = await this.requestToolConfirmation(toolCall, this.options.onConfirmToolCall);
+          if (!approved) {
             this.messages.push({
               role: "tool",
               tool_call_id: toolCall.id,
@@ -475,41 +481,15 @@ export class Chat {
           }
         }
 
-        const tool = this.options.tools?.find(
-          (t) => t.function.name === toolCall.function.name
+        // Execute the tool
+        const toolResult = await this.executeToolCall(
+          toolCall,
+          this.options.tools,
+          this.options.onToolCallStart,
+          this.options.onToolCallEnd,
+          this.options.onToolCallError
         );
-
-        if (tool?.handler) {
-          try {
-            const args = JSON.parse(toolCall.function.arguments);
-            const result = await tool.handler(args);
-            
-            if (this.options.onToolCallEnd) this.options.onToolCallEnd(toolCall, result);
-
-            this.messages.push({
-              role: "tool",
-              tool_call_id: toolCall.id,
-              content: result,
-            });
-          } catch (error: any) {
-            if (this.options.onToolCallError) this.options.onToolCallError(toolCall, error);
-
-            this.messages.push({
-              role: "tool",
-              tool_call_id: toolCall.id,
-              content: `Error executing tool: ${error.message}`,
-            });
-          }
-        } else {
-          const error = new Error("Tool not found or no handler provided");
-          if (this.options.onToolCallError) this.options.onToolCallError(toolCall, error);
-
-          this.messages.push({
-            role: "tool",
-            tool_call_id: toolCall.id,
-            content: "Error: Tool not found or no handler provided",
-          });
-        }
+        this.messages.push(toolResult);
       }
 
       response = await this.executor.executeChat({
@@ -566,5 +546,74 @@ export class Chat {
   stream(content: string): Stream<ChatChunk> {
     const streamer = new ChatStream(this.provider, this.model, this.options, this.messages, this.systemMessages);
     return streamer.create(content);
+  }
+
+  /**
+   * Check if tool execution should proceed based on the current mode.
+   */
+  private shouldExecuteTools(toolCalls: any[] | undefined, mode?: ToolExecutionMode): boolean {
+    if (!toolCalls || toolCalls.length === 0) return false;
+    if (mode === ToolExecutionMode.DRY_RUN) return false;
+    return true;
+  }
+
+  /**
+   * Request user confirmation for a tool call in "confirm" mode.
+   * Returns true if approved, false if rejected.
+   */
+  private async requestToolConfirmation(
+    toolCall: any,
+    onConfirm?: (call: any) => Promise<boolean> | boolean
+  ): Promise<boolean> {
+    if (!onConfirm) return true;
+    const confirmed = await onConfirm(toolCall);
+    return confirmed !== false;
+  }
+
+  /**
+   * Execute a single tool call and return the result message.
+   */
+  private async executeToolCall(
+    toolCall: any,
+    tools: any[] | undefined,
+    onStart?: (call: any) => void,
+    onEnd?: (call: any, result: any) => void,
+    onError?: (call: any, error: Error) => void
+  ): Promise<{ role: "tool"; tool_call_id: string; content: string }> {
+    if (onStart) onStart(toolCall);
+
+    const tool = tools?.find((t) => t.function.name === toolCall.function.name);
+
+    if (tool?.handler) {
+      try {
+        const args = JSON.parse(toolCall.function.arguments);
+        const result = await tool.handler(args);
+        
+        if (onEnd) onEnd(toolCall, result);
+
+        return {
+          role: "tool",
+          tool_call_id: toolCall.id,
+          content: result,
+        };
+      } catch (error: any) {
+        if (onError) onError(toolCall, error);
+
+        return {
+          role: "tool",
+          tool_call_id: toolCall.id,
+          content: `Error executing tool: ${error.message}`,
+        };
+      }
+    } else {
+      const error = new Error("Tool not found or no handler provided");
+      if (onError) onError(toolCall, error);
+
+      return {
+        role: "tool",
+        tool_call_id: toolCall.id,
+        content: "Error: Tool not found or no handler provided",
+      };
+    }
   }
 }
