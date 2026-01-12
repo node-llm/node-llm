@@ -18,6 +18,7 @@ export interface NodeLLMConfig {
   maxToolCalls?: number;
   maxRetries?: number;
   requestTimeout?: number;
+  maxTokens?: number;
   toolExecution?: ToolExecutionMode;
 }
 
@@ -25,6 +26,7 @@ import {
   DEFAULT_MAX_TOOL_CALLS, 
   DEFAULT_MAX_RETRIES, 
   DEFAULT_REQUEST_TIMEOUT,
+  DEFAULT_MAX_TOKENS,
   DEFAULT_TOOL_EXECUTION, 
   DEFAULT_OLLAMA_BASE_URL,
   ToolExecutionMode
@@ -46,6 +48,7 @@ class Configuration implements NodeLLMConfig {
   public maxToolCalls: number = DEFAULT_MAX_TOOL_CALLS;
   public maxRetries: number = DEFAULT_MAX_RETRIES;
   public requestTimeout: number = DEFAULT_REQUEST_TIMEOUT;
+  public maxTokens: number = DEFAULT_MAX_TOKENS;
   public toolExecution: ToolExecutionMode = DEFAULT_TOOL_EXECUTION;
 }
 

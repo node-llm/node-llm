@@ -74,7 +74,8 @@ Prevent runaway costs, infinite loops, and hanging requests by setting execution
 NodeLLM.configure({
   maxToolCalls: 5,      // Stop after 5 sequential tool execution turns
   maxRetries: 2,        // Retry network/server errors 2 times
-  requestTimeout: 30000 // Timeout requests after 30 seconds (default)
+  requestTimeout: 30000,// Timeout requests after 30 seconds (default)
+  maxTokens: 4096       // Limit output to 4K tokens (default)
 });
 ```
 
@@ -82,6 +83,7 @@ NodeLLM.configure({
 - **`maxToolCalls`**: Prevents infinite tool execution loops
 - **`maxRetries`**: Prevents retry storms that could exhaust resources
 - **`requestTimeout`**: Prevents hanging requests and DoS attacks
+- **`maxTokens`**: Prevents excessive output generation and cost overruns
 
 ## Supported Configuration Keys
 
@@ -104,6 +106,7 @@ NodeLLM.configure({
 | `maxToolCalls` | Max sequential tool execution turns | `5` |
 | `maxRetries` | Max retries for provider errors | `2` |
 | `requestTimeout` | Request timeout in milliseconds | `30000` (30s) |
+| `maxTokens` | Max output tokens per request | `4096` |
 | `retry` | Retry configuration (legacy) | `{ attempts: 1, delayMs: 0 }` |
 
 ## Inspecting Configuration

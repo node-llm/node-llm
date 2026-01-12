@@ -161,13 +161,15 @@ NodeLLM provides **defense-in-depth** security that you can configure globally o
 NodeLLM.configure({ 
   requestTimeout: 30000, // Timeout requests after 30 seconds (default)
   maxToolCalls: 5,       // Stop after 5 sequential tool execution turns
-  maxRetries: 2          // Retry provider-level errors up to 2 times
+  maxRetries: 2,         // Retry provider-level errors up to 2 times
+  maxTokens: 4096        // Limit output to 4K tokens (default)
 });
 
 // 2. Per request override
 await chat.ask("Deep search task", { 
   requestTimeout: 120000, // 2 minutes for this request
-  maxToolCalls: 10 
+  maxToolCalls: 10,
+  maxTokens: 8192         // 8K tokens for this request
 });
 ```
 
@@ -175,6 +177,7 @@ await chat.ask("Deep search task", {
 - **`requestTimeout`**: Prevents DoS attacks and hanging requests
 - **`maxToolCalls`**: Prevents infinite tool execution loops
 - **`maxRetries`**: Prevents retry storms during outages
+- **`maxTokens`**: Prevents excessive output and cost overruns
 
 ### 🔍 Comprehensive Debug Logging
 Enable detailed logging for all API requests and responses across every feature and provider:

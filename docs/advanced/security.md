@@ -161,10 +161,17 @@ NodeLLM.configure({
   requestTimeout: 30000,  // 30 second timeout
   maxRetries: 2,          // Retry failed requests twice
   maxToolCalls: 5,        // Limit tool execution loops
+  maxTokens: 4096,        // Limit output to 4K tokens
 });
 ```
 
 This creates a **defense-in-depth** strategy where multiple layers of protection work together to prevent resource exhaustion, cost overruns, and service disruptions.
+
+**Security Summary:**
+- **`requestTimeout`**: DoS protection, resource control, predictable SLAs
+- **`maxRetries`**: Prevents cascading failures and retry storms
+- **`maxToolCalls`**: Prevents infinite loops and runaway costs
+- **`maxTokens`**: Prevents excessive output generation and cost overruns
 
 ---
 

@@ -390,7 +390,7 @@ export class Chat {
       messages: [...this.systemMessages, ...this.messages],
       tools: this.options.tools,
       temperature: options?.temperature ?? this.options.temperature,
-      max_tokens: options?.maxTokens ?? this.options.maxTokens,
+      max_tokens: options?.maxTokens ?? this.options.maxTokens ?? config.maxTokens,
       headers: { ...this.options.headers, ...options?.headers },
       response_format: responseFormat, // Pass to provider
       requestTimeout: options?.requestTimeout ?? this.options.requestTimeout ?? config.requestTimeout,

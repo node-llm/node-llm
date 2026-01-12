@@ -112,7 +112,7 @@ export class ChatStream {
             messages: requestMessages,
             tools: options.tools,
             temperature: options.temperature,
-            max_tokens: options.maxTokens,
+            max_tokens: options.maxTokens ?? config.maxTokens,
             requestTimeout: options.requestTimeout ?? config.requestTimeout,
             signal: abortController.signal,
           })) {
