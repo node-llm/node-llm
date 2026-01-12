@@ -13,7 +13,7 @@
  */
 
 import "dotenv/config";
-import { NodeLLM } from "../packages/core/dist/index.js";
+import { NodeLLM } from "../../../packages/core/dist/index.js";
 
 // ============================================
 // 1. Global Timeout Configuration

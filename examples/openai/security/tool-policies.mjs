@@ -1,5 +1,5 @@
 import "dotenv/config";
-import { NodeLLM, Tool, z } from "../packages/core/dist/index.js";
+import { NodeLLM, Tool, z } from "../../../packages/core/dist/index.js";
 
 // 1. Define a Mock Database Tool
 class AdminDBTool extends Tool {

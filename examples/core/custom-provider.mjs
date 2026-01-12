@@ -1,5 +1,5 @@
 import "dotenv/config";
-import { NodeLLM, BaseProvider } from "../packages/core/dist/index.js";
+import { NodeLLM, BaseProvider } from "../../packages/core/dist/index.js";
 
 /**
  * EXAMPLE: Implementing a Custom Provider using BaseProvider

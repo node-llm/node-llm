@@ -35,9 +35,17 @@ EXAMPLES=(
   "safety/moderation.mjs"
   "discovery/models.mjs"
   "embeddings/create.mjs"
+  "security/configuration.mjs"
+  "security/request-timeout.mjs"
+  "security/content-policy-hooks.mjs"
+  "security/tool-policies.mjs"
+  "core/configuration.mjs"
+  "core/support-agent.mjs"
+  "core/parallel-scoring.mjs"
+  "core/custom-endpoints.mjs"
 )
 
-# Run each example
+# Run each example (assumes running from project root)
 FAILED=""
 for ex in "${EXAMPLES[@]}"; do
   echo "----------------------------------------------------"

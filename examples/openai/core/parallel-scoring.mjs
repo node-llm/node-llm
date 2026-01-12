@@ -7,7 +7,7 @@
  */
 
 import "dotenv/config";
-import { NodeLLM } from "../packages/core/dist/index.js";
+import { NodeLLM } from "../../../packages/core/dist/index.js";
 
 // 1. Initial global configuration (sets keys)
 NodeLLM.configure((config) => {

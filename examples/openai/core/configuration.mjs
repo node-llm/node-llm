@@ -1,5 +1,5 @@
 import "dotenv/config";
-import { NodeLLM } from "../packages/core/dist/index.js";
+import { NodeLLM } from "../../../packages/core/dist/index.js";
 
 /**
  * This example demonstrates the configuration system.

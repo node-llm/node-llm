@@ -1,5 +1,5 @@
 import "dotenv/config";
-import { NodeLLM, Tool, z } from "../packages/core/dist/index.js";
+import { NodeLLM, Tool, z } from "../../../packages/core/dist/index.js";
 
 /**
  * Real-world Example: Travel Support AI Agent

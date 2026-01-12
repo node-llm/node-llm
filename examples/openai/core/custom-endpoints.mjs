@@ -1,4 +1,4 @@
-import { NodeLLM } from '../packages/core/dist/index.js';
+import { NodeLLM } from '../../../packages/core/dist/index.js';
 import 'dotenv/config';
 
 async function chatExample() {

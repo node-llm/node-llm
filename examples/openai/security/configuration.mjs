@@ -9,7 +9,7 @@
  */
 
 import "dotenv/config";
-import { NodeLLM } from "../packages/core/dist/index.js";
+import { NodeLLM } from "../../../packages/core/dist/index.js";
 
 // ============================================
 // Complete Security Configuration
