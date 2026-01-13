@@ -9,7 +9,8 @@
   "scripts": {
     "test": "npm test --workspaces --if-present",
     "build": "npm run build --workspaces --if-present",
-    "docs": "cd docs && bundle install && bundle exec jekyll serve"
+    "docs": "cd docs && bundle install && bundle exec jekyll serve",
+    "sync-models": "node scripts/sync-models.mjs"
   },
   "keywords": [
     "llm",

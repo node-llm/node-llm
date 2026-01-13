@@ -7,7 +7,7 @@ parent: Providers
 
 # OpenRouter Provider
 
-The OpenRouter provider acts as a unified gateway to hundreds of AI models. `NodeLLM` leverages OpenRouter's standardized API while providing additional capabilities like integrated tool calling and vision.
+The OpenRouter provider acts as a unified gateway to AI models from multiple providers. `NodeLLM` leverages OpenRouter's standardized API while providing additional capabilities like integrated tool calling and vision.
 
 ## Configuration
 
@@ -22,7 +22,7 @@ NodeLLM.configure({
 
 ## Features
 
-- **Model Discovery**: Full support for `NodeLLM.listModels()` to explore hundreds of available models.
+- **Model Discovery**: Full support for `NodeLLM.listModels()` to explore available models.
 - **Unified API**: Switch between models from OpenAI, Anthropic, Google, and Meta using a single configuration.
 - **Vision**: Supported for multimodal models.
 - **Tools**: Supported for models with function calling capabilities.

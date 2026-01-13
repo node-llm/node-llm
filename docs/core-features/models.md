@@ -7,7 +7,7 @@ parent: Core Features
 
 # Models & Registry
 
-`NodeLLM` includes a comprehensive, built-in registry of hundreds of models using data from **Parsera**. This allows you to discover models and their capabilities programmatically.
+`NodeLLM` includes a comprehensive, built-in registry of models using data from **models.dev**. This allows you to discover models and their capabilities programmatically.
 
 ## Inspecting a Model
 

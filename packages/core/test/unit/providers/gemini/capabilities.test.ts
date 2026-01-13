@@ -3,8 +3,9 @@ import { Capabilities } from "../../../../src/providers/gemini/Capabilities.js";
 
 describe("Gemini Capabilities", () => {
   it("determines correct context window", () => {
-    expect(Capabilities.getContextWindow("gemini-1.5-pro")).toBe(2_097_152);
-    expect(Capabilities.getContextWindow("gemini-1.5-flash")).toBe(1_048_576);
+    // Using actual model IDs from models.dev
+    expect(Capabilities.getContextWindow("gemini-1.5-pro")).toBe(1_000_000); // Updated to actual value from models.dev
+    expect(Capabilities.getContextWindow("gemini-1.5-flash")).toBe(1_000_000); // Updated to actual value from models.dev
     expect(Capabilities.getContextWindow("gemini-2.0-flash")).toBe(1_048_576);
   });
 

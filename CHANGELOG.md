@@ -99,7 +99,7 @@ All notable changes to this project will be documented in this file.
 ### Added
 - **Major Stable Release**: Consolidated architectural foundation for production-ready LLM integrations.
 - **Advanced Streaming API**: Introduced a powerful global `Stream` utility supporting `.tee()`, `.toArray()`, and native `.abort()`.
-- **Comprehensive Model Registry**: Synchronized with `ruby_llm` to include **540+ models** across OpenAI, Anthropic, Gemini, DeepSeek, OpenRouter, and Ollama.
+- **Comprehensive Model Registry**: Synchronized with `models.dev` for verified models across OpenAI, Anthropic, Gemini, DeepSeek, OpenRouter, and Ollama.
 - **First-class OpenRouter Support**: High-performance implementation with automated capability detection and discovery.
 - **Enhanced Local LLM Support**: Deep integration with Ollama, including vision and tool-calling models.
 - **Rich Documentation**: Complete documentation overhaul with dedicated provider guides, examples, and architectural deep-dives.

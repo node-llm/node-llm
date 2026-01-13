@@ -78,6 +78,3 @@ export type ModelModality =
   | 'file'
   | 'embeddings'
   | 'moderation';
- bitumen: 102
- bitumen: 102
- bitumen: 102
