@@ -5,7 +5,7 @@ import { Provider, Usage, ChatChunk } from "../providers/Provider.js";
 import { Executor } from "../executor/Executor.js";
 import { ChatStream } from "./ChatStream.js";
 import { Stream } from "../streaming/Stream.js";
-import { Tool, ToolDefinition } from "./Tool.js";
+import { Tool, ToolDefinition, ToolResolvable } from "./Tool.js";
 import { Schema } from "../schema/Schema.js";
 import { toJsonSchema } from "../schema/to-json-schema.js";
 import { z } from "zod";
@@ -57,6 +57,12 @@ export class Chat {
     if (!this.options.toolExecution) {
       this.options.toolExecution = config.toolExecution || ToolExecutionMode.AUTO;
     }
+
+    if (options.tools) {
+      const toolList = options.tools;
+      this.options.tools = []; // Clear and re-add via normalized method
+      this.withTools(toolList);
+    }
   }
 
   /**
@@ -94,7 +100,7 @@ export class Chat {
    * Add a tool to the chat session (fluent API)
    * Supports passing a tool instance or a tool class (which will be instantiated).
    */
-  withTool(tool: any): this {
+  withTool(tool: ToolResolvable): this {
     return this.withTools([tool]);
   }
 
@@ -106,7 +112,7 @@ export class Chat {
    * @example
    * chat.withTools([WeatherTool, new CalculatorTool()], { replace: true });
    */
-  withTools(tools: (Tool | { new(): Tool } | any)[], options?: { replace?: boolean }): this {
+  withTools(tools: ToolResolvable[], options?: { replace?: boolean }): this {
     if (options?.replace) {
       this.options.tools = [];
     }
@@ -388,7 +394,7 @@ export class Chat {
     const executeOptions = {
       model: this.model,
       messages: [...this.systemMessages, ...this.messages],
-      tools: this.options.tools,
+      tools: this.options.tools as ToolDefinition[],
       temperature: options?.temperature ?? this.options.temperature,
       max_tokens: options?.maxTokens ?? this.options.maxTokens ?? config.maxTokens,
       headers: { ...this.options.headers, ...options?.headers },
@@ -497,7 +503,7 @@ export class Chat {
       response = await this.executor.executeChat({
         model: this.model,
         messages: [...this.systemMessages, ...this.messages],
-        tools: this.options.tools,
+        tools: this.options.tools as ToolDefinition[],
         headers: this.options.headers,
         requestTimeout: options?.requestTimeout ?? this.options.requestTimeout ?? config.requestTimeout,
       });

@@ -21,6 +21,11 @@ export interface ToolDefinition {
 }
 
 /**
+ * Anything that can be resolved into a ToolDefinition.
+ */
+export type ToolResolvable = Tool | { new(): Tool } | ToolDefinition | any;
+
+/**
  * Subclass this to create tools with auto-generated schemas and type safety.
  */
 export abstract class Tool<T = any> {

@@ -1,5 +1,5 @@
 import { Message } from "./Message.js";
-import { ToolDefinition } from "./Tool.js";
+import { ToolDefinition, ToolResolvable } from "./Tool.js";
 import { Schema } from "../schema/Schema.js";
 import { ChatResponseString } from "./ChatResponse.js";
 import { ToolExecutionMode } from "../constants.js";
@@ -7,7 +7,7 @@ import { ToolExecutionMode } from "../constants.js";
 export interface ChatOptions {
   systemPrompt?: string;
   messages?: Message[];
-  tools?: ToolDefinition[];
+  tools?: ToolResolvable[];
   temperature?: number;
   maxTokens?: number;
   onNewMessage?: () => void;
