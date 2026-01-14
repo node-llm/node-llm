@@ -3,9 +3,22 @@ layout: default
 title: Security & Compliance
 parent: Advanced
 nav_order: 1
+description: Learn how NodeLLM acts as an architectural security layer with context isolation, content filtering, human-in-the-loop tool execution, and resource limits.
 ---
 
-# Security & Compliance
+# {{ page.title }}
+{: .no_toc }
+
+{{ page.description }}
+{: .fs-6 .fw-300 }
+
+## Table of contents
+{: .no_toc .text-delta }
+
+1. TOC
+{:toc}
+
+---
 
 NodeLLM is built from the ground up to be an **architectural security layer**. In production AI applications, the LLM is often the most vulnerable component due to prompt injection, instruction drift, and potential PII leakage. 
 

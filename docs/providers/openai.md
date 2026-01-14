@@ -1,13 +1,26 @@
 ---
 layout: default
 title: OpenAI
-nav_order: 1
 parent: Providers
+nav_order: 1
+description: Full support for the complete range of NodeLLM features including tool calling, vision, image generation, and the advanced Developer role.
 ---
 
-# OpenAI Provider
+# {{ page.title }}
+{: .no_toc }
 
-The OpenAI provider supports the full range of `NodeLLM` features, including robust tool calling, vision, and structured outputs.
+{{ page.description }}
+{: .fs-6 .fw-300 }
+
+## Table of contents
+{: .no_toc .text-delta }
+
+1. TOC
+{:toc}
+
+---
+
+The OpenAI provider supports the full range of \`NodeLLM\` features, including robust tool calling, vision, and structured outputs.
 
 ## Configuration
 

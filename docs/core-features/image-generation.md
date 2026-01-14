@@ -3,9 +3,22 @@ layout: default
 title: Image Generation
 nav_order: 7
 parent: Core Features
+description: Create photorealistic images and digital art from text descriptions using DALL-E, Imagen, and other integrated image models.
 ---
 
-# Image Generation
+# {{ page.title }}
+{: .no_toc }
+
+{{ page.description }}
+{: .fs-6 .fw-300 }
+
+## Table of contents
+{: .no_toc .text-delta }
+
+1. TOC
+{:toc}
+
+---
 
 Generate images from text descriptions using models like DALL-E, Imagen, and others.
 

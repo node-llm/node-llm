@@ -1,11 +1,24 @@
 ---
 layout: default
 title: Ollama
-nav_order: 5
 parent: Providers
+nav_order: 5
+description: Run Large Language Models locally on your machine with full support for vision, tools, and embeddings while maintaining total data sovereignty.
 ---
 
-# Ollama Provider
+# {{ page.title }}
+{: .no_toc }
+
+{{ page.description }}
+{: .fs-6 .fw-300 }
+
+## Table of contents
+{: .no_toc .text-delta }
+
+1. TOC
+{:toc}
+
+---
 
 Allows you to run large language models locally using [Ollama](https://ollama.com/).
 

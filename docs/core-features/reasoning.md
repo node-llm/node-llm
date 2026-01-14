@@ -3,11 +3,24 @@ layout: default
 title: Reasoning
 parent: Core Features
 nav_order: 10
+description: Access the inner thoughts and chain-of-thought process of advanced reasoning models like DeepSeek R1 and OpenAI o1/o3.
 ---
 
-# Reasoning
+# {{ page.title }}
+{: .no_toc }
 
-`NodeLLM` provides a unified way to access the "thinking" or "reasoning" process of models like **DeepSeek R1** or **OpenAI o1/o3**. Some models expose their internal chain of thought before providing the final answer.
+{{ page.description }}
+{: .fs-6 .fw-300 }
+
+## Table of contents
+{: .no_toc .text-delta }
+
+1. TOC
+{:toc}
+
+---
+
+\`NodeLLM\` provides a unified way to access the "thinking" or "reasoning" process of models like **DeepSeek R1** or **OpenAI o1/o3**. Some models expose their internal chain of thought before providing the final answer.
 
 ## Accessing Reasoning Content
 

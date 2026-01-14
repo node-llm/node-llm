@@ -2,9 +2,22 @@
 layout: default
 title: Examples
 nav_order: 7
+description: Explore a comprehensive collection of runnable examples demonstrating every feature from basic chat to advanced multi-agent security policies.
 ---
 
-# Examples
+# {{ page.title }}
+{: .no_toc }
+
+{{ page.description }}
+{: .fs-6 .fw-300 }
+
+## Table of contents
+{: .no_toc .text-delta }
+
+1. TOC
+{:toc}
+
+---
 
 A comprehensive list of runnable examples available in the [examples/](https://github.com/node-llm/node-llm/tree/main/examples) directory of the repository.
 

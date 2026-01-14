@@ -3,11 +3,24 @@ layout: default
 title: Structured Output
 parent: Core Features
 nav_order: 3
+description: Force models to return strictly validated JSON data using Zod schemas or manual JSON definitions across all supported providers.
 ---
 
-# Structured Output
+# {{ page.title }}
+{: .no_toc }
 
-Ensure the AI returns data exactly matching a specific structure. `NodeLLM` supports strict schema validation using **Zod** (recommended) or manual JSON schemas.
+{{ page.description }}
+{: .fs-6 .fw-300 }
+
+## Table of contents
+{: .no_toc .text-delta }
+
+1. TOC
+{:toc}
+
+---
+
+Ensure the AI returns data exactly matching a specific structure. \`NodeLLM\` supports strict schema validation using **Zod** (recommended) or manual JSON schemas.
 
 This feature abstracts the provider-specific implementations (like OpenAI's `json_schema`, Gemini's `responseSchema`, or Anthropic's tool-use workarounds) into a single, unified API.
 

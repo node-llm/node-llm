@@ -1,13 +1,26 @@
 ---
 layout: default
 title: Custom Endpoints
-nav_order: 4
 parent: Advanced
+nav_order: 4
+description: Connect NodeLLM to Azure OpenAI, LiteLLM, Ollama, or any OpenAI-compatible API and use custom models outside the standard registry.
 ---
 
-# Custom Endpoints & Models
+# {{ page.title }}
+{: .no_toc }
 
-`NodeLLM` is flexible enough to connect to any OpenAI-compatible service and use custom models.
+{{ page.description }}
+{: .fs-6 .fw-300 }
+
+## Table of contents
+{: .no_toc .text-delta }
+
+1. TOC
+{:toc}
+
+---
+
+\`NodeLLM\` is flexible enough to connect to any OpenAI-compatible service and use custom models.
 
 ## OpenAI-Compatible Endpoints
 

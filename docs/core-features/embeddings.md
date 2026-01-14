@@ -3,11 +3,24 @@ layout: default
 title: Embeddings
 parent: Core Features
 nav_order: 3
+description: Generate high-dimensional vector representations for semantic search, RAG, and clustering with single and batch embedding operations.
 ---
 
-# Embeddings
+# {{ page.title }}
+{: .no_toc }
 
-Embeddings are vector representations of text used for semantic search, clustering, and similarity comparisons. `NodeLLM` provides a unified interface for generating embeddings across different providers.
+{{ page.description }}
+{: .fs-6 .fw-300 }
+
+## Table of contents
+{: .no_toc .text-delta }
+
+1. TOC
+{:toc}
+
+---
+
+Embeddings are vector representations of text used for semantic search, clustering, and similarity comparisons. \`NodeLLM\` provides a unified interface for generating embeddings across different providers.
 
 ## Basic Usage
 

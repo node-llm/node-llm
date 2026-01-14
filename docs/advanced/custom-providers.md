@@ -1,13 +1,26 @@
 ---
 layout: default
 title: Custom Providers
-nav_order: 3
 parent: Advanced
+nav_order: 3
+description: Extend NodeLLM with support for proprietary models, internal APIs, or legacy systems using our clean BaseProvider architecture.
 ---
 
-# Custom Providers
+# {{ page.title }}
+{: .no_toc }
 
-One of the core design goals of `NodeLLM` is provider-agnosticism. While we ship with support for major providers, you can easily add your own custom provider for internal APIs, proprietary models, or legacy systems.
+{{ page.description }}
+{: .fs-6 .fw-300 }
+
+## Table of contents
+{: .no_toc .text-delta }
+
+1. TOC
+{:toc}
+
+---
+
+One of the core design goals of \`NodeLLM\` is provider-agnosticism. While we ship with support for major providers, you can easily add your own custom provider for internal APIs, proprietary models, or legacy systems.
 
 The **recommended** way to create a custom provider is by extending the `BaseProvider` class.
 

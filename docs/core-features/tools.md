@@ -3,9 +3,22 @@ layout: default
 title: Tool Calling
 nav_order: 5
 parent: Core Features
+description: Give your models the ability to interact with the real world using a clean class-based DSL, automatic execution loops, and built-in safety guards.
 ---
 
-# Tool Calling
+# {{ page.title }}
+{: .no_toc }
+
+{{ page.description }}
+{: .fs-6 .fw-300 }
+
+## Table of contents
+{: .no_toc .text-delta }
+
+1. TOC
+{:toc}
+
+---
 
 `NodeLLM` simplifies function calling (tool use) by handling the execution loop automatically. You define the tools, and the library invokes them when the model requests it.
 

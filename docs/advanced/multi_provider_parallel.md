@@ -1,14 +1,27 @@
 ---
 layout: default
 title: Parallel Execution
-nav_order: 10
 parent: Advanced
+nav_order: 10
+description: Learn how to safely run multiple LLM providers concurrently using NodeLLM’s scoped context system to avoid global state race conditions.
 ---
 
-# Multi-Provider Parallel Execution
+# {{ page.title }}
+{: .no_toc }
+
+{{ page.description }}
+{: .fs-6 .fw-300 }
+
+## Table of contents
+{: .no_toc .text-delta }
+
+1. TOC
+{:toc}
+
+---
 
 ## The Problem
-`NodeLLM` is a singleton. When calling `NodeLLM.configure({ provider: '...' })` in parallel (e.g., inside `Promise.all`), one provider call could "overwrite" the provider for another call, leading to race conditions.
+\`NodeLLM\` is a singleton. When calling \`NodeLLM.configure({ provider: '...' })\` in parallel (e.g., inside \`Promise.all\`), one provider call could "overwrite" the provider for another call, leading to race conditions.
 
 ## The Solution
 Added a `.withProvider()` method to `NodeLLM`. This returns a **scoped copy** of the LLM instance that is isolated from the global singleton state.

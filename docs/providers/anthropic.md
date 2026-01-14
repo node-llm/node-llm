@@ -1,11 +1,24 @@
 ---
 layout: default
 title: Anthropic
-nav_order: 3
 parent: Providers
+nav_order: 3
+description: Experience the Claude family of models with native support for PDF document analysis, advanced reasoning, and long-context capabilities.
 ---
 
-# Anthropic Provider
+# {{ page.title }}
+{: .no_toc }
+
+{{ page.description }}
+{: .fs-6 .fw-300 }
+
+## Table of contents
+{: .no_toc .text-delta }
+
+1. TOC
+{:toc}
+
+---
 
 The Anthropic provider gives access to the Claude family of models, known for high-quality reasoning and coding capabilities.
 

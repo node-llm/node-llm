@@ -1,13 +1,26 @@
 ---
 layout: default
 title: Testing
-nav_order: 6
 parent: Advanced
+nav_order: 6
+description: Run automated tests using our high-fidelity VCR recording system to ensure reliable integrations without wasting API credits.
 ---
 
-# Testing
+# {{ page.title }}
+{: .no_toc }
 
-`NodeLLM` features a comprehensive test suite including high-level integration tests and granular unit tests.
+{{ page.description }}
+{: .fs-6 .fw-300 }
+
+## Table of contents
+{: .no_toc .text-delta }
+
+1. TOC
+{:toc}
+
+---
+
+\`NodeLLM\` features a comprehensive test suite including high-level integration tests and granular unit tests.
 
 ## Running Tests
 

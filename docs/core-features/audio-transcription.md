@@ -1,13 +1,26 @@
 ---
 layout: default
 title: Audio Transcription
-nav_order: 6
 parent: Core Features
+nav_order: 6
+description: Convert speech to text using specialized models like Whisper or leverage multimodal models for native audio understanding and analysis.
 ---
 
-# Audio Transcription
+# {{ page.title }}
+{: .no_toc }
 
-Convert audio files to text using models like OpenAI's Whisper or Google's Gemini. `NodeLLM` supports both raw transcription and multimodal chat analysis.
+{{ page.description }}
+{: .fs-6 .fw-300 }
+
+## Table of contents
+{: .no_toc .text-delta }
+
+1. TOC
+{:toc}
+
+---
+
+Convert audio files to text using models like OpenAI's Whisper or Google's Gemini. \`NodeLLM\` supports both raw transcription and multimodal chat analysis.
 
 ## Basic Transcription
 

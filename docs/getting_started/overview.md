@@ -4,9 +4,22 @@ title: Overview
 nav_order: 1
 parent: Getting Started
 permalink: /getting-started/overview
+description: High-level overview of NodeLLM components, design principles, and how the framework works.
 ---
 
-# Overview
+# {{ page.title }}
+{: .no_toc }
+
+{{ page.description }}
+{: .fs-6 .fw-300 }
+
+## Table of contents
+{: .no_toc .text-delta }
+
+1. TOC
+{:toc}
+
+---
 
 `NodeLLM` provides a seamless, unified interface for interacting with multiple Large Language Model (LLM) providers. Whether you are building a simple chat bot or a complex multi-modal agentic workflow, `NodeLLM` abstracts away the provider-specific complexities.
 

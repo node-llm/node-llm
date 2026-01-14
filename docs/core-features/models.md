@@ -1,13 +1,26 @@
 ---
 layout: default
 title: Models & Registry
-nav_order: 6
 parent: Core Features
+nav_order: 6
+description: Programmatically discover available models, their capabilities, and real-time costs using our built-in registry powered by models.dev.
 ---
 
-# Models & Registry
+# {{ page.title }}
+{: .no_toc }
 
-`NodeLLM` includes a comprehensive, built-in registry of models using data from **models.dev**. This allows you to discover models and their capabilities programmatically.
+{{ page.description }}
+{: .fs-6 .fw-300 }
+
+## Table of contents
+{: .no_toc .text-delta }
+
+1. TOC
+{:toc}
+
+---
+
+\`NodeLLM\` includes a comprehensive, built-in registry of models using data from **models.dev**. This allows you to discover models and their capabilities programmatically.
 
 ## Inspecting a Model
 

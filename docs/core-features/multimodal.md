@@ -3,9 +3,22 @@ layout: default
 title: Multi-modal
 parent: Core Features
 nav_order: 2
+description: Go beyond text. Learn how to pass images, audio, video, and documents to modern models using NodeLLM’s unified file handling system.
 ---
 
-# Multi-modal Capabilities
+# {{ page.title }}
+{: .no_toc }
+
+{{ page.description }}
+{: .fs-6 .fw-300 }
+
+## Table of contents
+{: .no_toc .text-delta }
+
+1. TOC
+{:toc}
+
+---
 
 Modern LLMs can understand more than just text. `NodeLLM` provides a unified way to pass images, audio, video, and documents to models that support them.
 

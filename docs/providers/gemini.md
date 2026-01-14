@@ -1,11 +1,24 @@
 ---
 layout: default
 title: Gemini
-nav_order: 2
 parent: Providers
+nav_order: 2
+description: Leverage Google's powerful multimodal capabilities with native support for image, audio, and video processing alongside long-context reasoning.
 ---
 
-# Gemini Provider
+# {{ page.title }}
+{: .no_toc }
+
+{{ page.description }}
+{: .fs-6 .fw-300 }
+
+## Table of contents
+{: .no_toc .text-delta }
+
+1. TOC
+{:toc}
+
+---
 
 Google's Gemini provider offers multimodal capabilities including native video and audio understanding.
 

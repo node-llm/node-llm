@@ -4,9 +4,22 @@ title: Configuration
 nav_order: 3
 parent: Getting Started
 permalink: /getting-started/configuration
+description: Learn how to configure NodeLLM with API keys, custom base URLs, security limits, and per-request overrides.
 ---
 
-# Configuration Guide
+# {{ page.title }}
+{: .no_toc }
+
+{{ page.description }}
+{: .fs-6 .fw-300 }
+
+## Table of contents
+{: .no_toc .text-delta }
+
+1. TOC
+{:toc}
+
+---
 
 `NodeLLM` uses a simple configuration object to set API keys and active providers.
 

@@ -3,9 +3,22 @@ layout: default
 title: Chat
 parent: Core Features
 nav_order: 1
+description: A unified interface for stateful conversations across all providers. Learn how to manage history, instructions, and lifecycle hooks.
 ---
 
-# Chat
+# {{ page.title }}
+{: .no_toc }
+
+{{ page.description }}
+{: .fs-6 .fw-300 }
+
+## Table of contents
+{: .no_toc .text-delta }
+
+1. TOC
+{:toc}
+
+---
 
 `NodeLLM` provides a unified chat interface across all providers (OpenAI, Gemini, Anthropic). It normalizes the differences in their APIs, allowing you to use a single set of methods for interacting with them.
 

@@ -1,11 +1,24 @@
 ---
 layout: default
 title: Token Usage
-nav_order: 5
 parent: Advanced
+nav_order: 5
+description: Monitor costs and resource consumption by tracking input/output tokens and estimated spend for individual requests or entire chat sessions.
 ---
 
-# Token Usage Tracking
+# {{ page.title }}
+{: .no_toc }
+
+{{ page.description }}
+{: .fs-6 .fw-300 }
+
+## Table of contents
+{: .no_toc .text-delta }
+
+1. TOC
+{:toc}
+
+---
 
 Track tokens for individual turns or the entire conversation to monitor costs and usage.
 

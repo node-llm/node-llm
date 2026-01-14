@@ -1,13 +1,26 @@
 ---
 layout: default
 title: Moderation
-nav_order: 4
 parent: Core Features
+nav_order: 4
+description: Protect your users and your brand by checking text content against safety policies for violence, hate speech, and harassment.
 ---
 
-# Content Moderation
+# {{ page.title }}
+{: .no_toc }
 
-Check if text content violates safety policies using `NodeLLM.moderate`. This is crucial for user-facing applications to prevent abuse.
+{{ page.description }}
+{: .fs-6 .fw-300 }
+
+## Table of contents
+{: .no_toc .text-delta }
+
+1. TOC
+{:toc}
+
+---
+
+Check if text content violates safety policies using \`NodeLLM.moderate\`. This is crucial for user-facing applications to prevent abuse.
 
 ## Basic Usage
 

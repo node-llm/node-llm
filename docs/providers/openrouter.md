@@ -1,13 +1,26 @@
 ---
 layout: default
 title: OpenRouter
-nav_order: 5
 parent: Providers
+nav_order: 5
+description: Access hundreds of open-source and proprietary models through a single gateway with unified tool calling, vision, and reasoning support.
 ---
 
-# OpenRouter Provider
+# {{ page.title }}
+{: .no_toc }
 
-The OpenRouter provider acts as a unified gateway to AI models from multiple providers. `NodeLLM` leverages OpenRouter's standardized API while providing additional capabilities like integrated tool calling and vision.
+{{ page.description }}
+{: .fs-6 .fw-300 }
+
+## Table of contents
+{: .no_toc .text-delta }
+
+1. TOC
+{:toc}
+
+---
+
+The OpenRouter provider acts as a unified gateway to AI models from multiple providers. \`NodeLLM\` leverages OpenRouter's standardized API while providing additional capabilities like integrated tool calling and vision.
 
 ## Configuration
 

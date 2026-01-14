@@ -1,13 +1,26 @@
 ---
 layout: default
 title: DeepSeek
-nav_order: 4
 parent: Providers
+nav_order: 4
+description: Access high-performance chat and advanced reasoning models with competitive pricing and full support for the DeepSeek R1 thought process.
 ---
 
-# DeepSeek Provider
+# {{ page.title }}
+{: .no_toc }
 
-The DeepSeek provider offers high-performance chat and reasoning models with competitive pricing. `NodeLLM` supports both the DeepSeek-V3 chat model and the DeepSeek-R1 reasoning model.
+{{ page.description }}
+{: .fs-6 .fw-300 }
+
+## Table of contents
+{: .no_toc .text-delta }
+
+1. TOC
+{:toc}
+
+---
+
+The DeepSeek provider offers high-performance chat and reasoning models with competitive pricing. \`NodeLLM\` supports both the DeepSeek-V3 chat model and the DeepSeek-R1 reasoning model.
 
 ## Configuration
 

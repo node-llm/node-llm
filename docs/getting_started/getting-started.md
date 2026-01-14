@@ -4,9 +4,22 @@ title: Quick Start
 nav_order: 2
 parent: Getting Started
 permalink: /getting-started/quick-start
+description: A 5-minute guide to get started with NodeLLM. Install, configure, and run your first chat, image generation, and embedding scripts.
 ---
 
-# Getting Started
+# {{ page.title }}
+{: .no_toc }
+
+{{ page.description }}
+{: .fs-6 .fw-300 }
+
+## Table of contents
+{: .no_toc .text-delta }
+
+1. TOC
+{:toc}
+
+---
 
 Start building AI apps in Node.js in 5 minutes. Chat, generate images, and create embeddings with one unified API.
 

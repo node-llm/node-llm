@@ -1,13 +1,26 @@
 ---
 layout: default
 title: Error Handling
-nav_order: 3
 parent: Advanced
+nav_order: 3
+description: Build resilient AI applications using our descriptive exception hierarchy and unified error reporting across all providers.
 ---
 
-# Error Handling
+# {{ page.title }}
+{: .no_toc }
 
-`NodeLLM` provides a rich exception hierarchy to help you handle failures gracefully. All errors inherit from the base `LLMError` class.
+{{ page.description }}
+{: .fs-6 .fw-300 }
+
+## Table of contents
+{: .no_toc .text-delta }
+
+1. TOC
+{:toc}
+
+---
+
+\`NodeLLM\` provides a rich exception hierarchy to help you handle failures gracefully. All errors inherit from the base \`LLMError\` class.
 
 ## Error Hierarchy
 

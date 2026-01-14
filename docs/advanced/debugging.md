@@ -3,11 +3,24 @@ layout: default
 title: Debugging & Logging
 parent: Advanced
 nav_order: 3
+description: Peek under the hood and inspect raw API requests, responses, and model alias resolution to troubleshoot your AI workflows.
 ---
 
-# Debugging & Logging
+# {{ page.title }}
+{: .no_toc }
 
-When building LLM applications, understanding what's happening "under the hood" is critical. `NodeLLM` provides mechanisms to inspect raw requests and responses.
+{{ page.description }}
+{: .fs-6 .fw-300 }
+
+## Table of contents
+{: .no_toc .text-delta }
+
+1. TOC
+{:toc}
+
+---
+
+When building LLM applications, understanding what's happening "under the hood" is critical. \`NodeLLM\` provides mechanisms to inspect raw requests and responses.
 
 ## Debug Mode
 

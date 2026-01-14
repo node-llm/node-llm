@@ -3,11 +3,24 @@ layout: default
 title: Stream Responses
 nav_order: 2
 parent: Core Features
+description: Implement real-time user experiences with low-latency responses using standard AsyncIterators and seamless tool execution loops.
 ---
 
-# Stream Responses
+# {{ page.title }}
+{: .no_toc }
 
-For real-time interactions, `NodeLLM` supports streaming responses via standard JavaScript `AsyncIterator`s. This allows you to display text to the user as it's being generated, reducing perceived latency.
+{{ page.description }}
+{: .fs-6 .fw-300 }
+
+## Table of contents
+{: .no_toc .text-delta }
+
+1. TOC
+{:toc}
+
+---
+
+For real-time interactions, \`NodeLLM\` supports streaming responses via standard JavaScript \`AsyncIterator\`s. This allows you to display text to the user as it's being generated, reducing perceived latency.
 
 ## Basic Streaming
 
