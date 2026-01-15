@@ -2,6 +2,8 @@
 
 A full-stack example application built with **NodeLLM v1.5.3**, generic Node.js, and React. This project demonstrates how to orchestrate multiple LLM providers to perform a real-world research task: auditing how a brand is perceived by AI models versus live search results.
 
+![Dashboard Screenshot](./demo.png)
+
 ---
 
 ## 🛠 What this demonstrates

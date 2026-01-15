@@ -1,7 +1,7 @@
 import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
-import { auditBrand, getAuditStream } from './llm/agent.js';
+import { auditBrand, getAuditStream } from './llm.js';
 
 const app = express();
 const port = process.env.PORT || 3001;
