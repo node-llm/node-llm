@@ -105,27 +105,74 @@ const chat = NodeLLM.chat("claude-3-5-sonnet", {
 You can switch providers globally or use scoped instances for parallel execution without side effects.
 
 ### Global Switching
-Global configuration affects all subsequent calls.
+
+{: .warning }
+> **⚠️ Multi-tenancy Warning**  
+> Global configuration (`NodeLLM.configure()`) affects **all subsequent calls** in the same Node.js process. This is unsafe for multi-tenant applications (e.g., SaaS, serverless functions) where different users/requests need different API keys or settings. Use scoped instances instead.
+
+Global configuration is safe for:
+- Single-tenant applications
+- CLI tools
+- Scripts
+- Development/testing
 
 ```ts
-// OpenAI
-NodeLLM.configure({ provider: "openai" });
-const gpt = NodeLLM.chat("gpt-4o");
+// ❌ UNSAFE in multi-tenant apps
+NodeLLM.configure({ provider: "openai", openaiApiKey: tenant1Key });
+const chat1 = NodeLLM.chat("gpt-4o"); // Uses tenant1Key
 
-// Switch to Anthropic
-NodeLLM.configure({ provider: "anthropic" });
-const claude = NodeLLM.chat("claude-3-5-sonnet");
+NodeLLM.configure({ provider: "openai", openaiApiKey: tenant2Key });
+const chat2 = NodeLLM.chat("gpt-4o"); // Uses tenant2Key
+// But chat1 is now also using tenant2Key! 🐛
 ```
 
-### ⚡ Scoped Parallelism (Recommended)
-Run multiple providers in parallel safely without global configuration side effects using isolated contexts via `withProvider`.
+### ⚡ Scoped Instances
+
+Use `withProvider()` to create isolated instances with their own configuration. Each instance maintains separate state without affecting others.
 
 ```ts
-const [gpt, claude] = await Promise.all([
-  // Each call branches off into its own isolated context
+// ✅ SAFE: Each instance is isolated
+const tenant1 = NodeLLM.withProvider("openai", { 
+  openaiApiKey: tenant1Key,
+  requestTimeout: 30000 
+});
+
+const tenant2 = NodeLLM.withProvider("openai", { 
+  openaiApiKey: tenant2Key,
+  requestTimeout: 60000 
+});
+
+// No interference - each has its own config
+await Promise.all([
+  tenant1.chat("gpt-4o").ask(prompt),
+  tenant2.chat("gpt-4o").ask(prompt),
+]);
+```
+
+**Multi-provider parallelism:**
+
+```ts
+const [gpt, claude, gemini] = await Promise.all([
   NodeLLM.withProvider("openai").chat("gpt-4o").ask(prompt),
   NodeLLM.withProvider("anthropic").chat("claude-3-5-sonnet").ask(prompt),
+  NodeLLM.withProvider("gemini").chat("gemini-2.0-flash").ask(prompt),
 ]);
+```
+
+**Per-request isolation in Express/Fastify:**
+
+```ts
+app.post('/chat', async (req, res) => {
+  const userApiKey = req.user.openaiApiKey; // From database
+  
+  // Create isolated instance per request
+  const llm = NodeLLM.withProvider("openai", { 
+    openaiApiKey: userApiKey 
+  });
+  
+  const response = await llm.chat("gpt-4o").ask(req.body.message);
+  res.json(response);
+});
 ```
 
 ## Temperature & Creativity
