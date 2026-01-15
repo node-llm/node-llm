@@ -1,6 +1,6 @@
 {
   "name": "@node-llm/core",
-  "version": "1.5.2",
+  "version": "1.5.4",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -58,6 +58,8 @@
     "lint": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
+    "prepack": "npm run build && cp ../../README.md ./README.md",
+    "postpack": "rm ./README.md",
     "prepublishOnly": "npm run build"
   },
   "dependencies": {

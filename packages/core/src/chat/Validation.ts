@@ -1,4 +1,5 @@
 import { Provider } from "../providers/Provider.js";
+import { logger } from "../utils/logger.js";
 
 export interface ValidationOptions {
   assumeModelExists?: boolean;
@@ -13,7 +14,7 @@ export class ChatValidator {
     }
     
     if (options.assumeModelExists) {
-      console.warn(`[NodeLLM] Skipping vision capability validation for model ${model}`);
+      logger.warn(`Skipping vision capability validation for model ${model}`);
     }
   }
 
@@ -25,7 +26,7 @@ export class ChatValidator {
     }
 
     if (options.assumeModelExists) {
-      console.warn(`[NodeLLM] Skipping tool capability validation for model ${model}`);
+      logger.warn(`Skipping tool capability validation for model ${model}`);
     }
   }
 
@@ -37,7 +38,7 @@ export class ChatValidator {
     }
 
     if (options.assumeModelExists) {
-      console.warn(`[NodeLLM] Skipping structured output capability validation for model ${model}`);
+      logger.warn(`Skipping structured output capability validation for model ${model}`);
     }
   }
 }

@@ -10,7 +10,8 @@
     "test": "npm test --workspaces --if-present",
     "build": "npm run build --workspaces --if-present",
     "docs": "cd docs && bundle install && bundle exec jekyll serve",
-    "sync-models": "node scripts/sync-models.mjs"
+    "sync-models": "node scripts/sync-models.mjs",
+    "demo": "cd examples/brand-perception-checker && npm run setup && npm run dev"
   },
   "keywords": [
     "llm",

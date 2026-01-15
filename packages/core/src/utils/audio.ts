@@ -22,7 +22,7 @@ export class AudioUtils {
       const urlPath = new URL(filePath).pathname;
       fileName = path.basename(urlPath) || "audio.mp3";
     } else {
-      const buffer = fs.readFileSync(filePath);
+      const buffer = await fs.promises.readFile(filePath);
       data = new Uint8Array(buffer);
       fileName = path.basename(filePath);
     }

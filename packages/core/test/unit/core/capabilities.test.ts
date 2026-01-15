@@ -5,7 +5,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const readmePath = path.resolve(__dirname, "../../../README.md");
+const textFilePath = path.resolve(__dirname, "../../../package.json");
 
 class MockLimitedProvider implements Provider {
   public capabilities = {
@@ -62,7 +62,7 @@ describe("Chat Capabilities Validation", () => {
     // Mock FileLoader to return text
     // (In real life, FileLoader handles .txt correctly)
     const response = await chat.ask("Read this", {
-      files: [readmePath]
+      files: [textFilePath]
     });
 
     expect(String(response)).toBe("ok");

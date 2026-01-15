@@ -6,11 +6,11 @@
 
 # NodeLLM
 
-**An opinionated architectural layer for integrating Large Language Models in Node.js.**
+**An architectural layer for integrating Large Language Models in Node.js.**
 
 **Provider-agnostic by design.**
 
-Most LLM SDKs **tightly couple** your application to vendors, APIs, and churn. NodeLLM provides a unified, production-oriented API for interacting with over 540+ models across multiple providers (OpenAI, Gemini, Anthropic, DeepSeek, OpenRouter, Ollama, etc.) without the SDK fatigue.
+Integrating multiple LLM providers often means juggling different SDKs, API styles, and update cycles. NodeLLM provides a single, unified, production-oriented API for interacting with over 540+ models across multiple providers (OpenAI, Gemini, Anthropic, DeepSeek, OpenRouter, Ollama, etc.) that stays consistent even when providers change.
 
 <p align="left">
   <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/openai.svg" height="28" />
@@ -52,9 +52,9 @@ NodeLLM is **NOT**:
 
 ## 🏗️ Why NodeLLM?
 
-Most AI integrations today are provider-specific, SDK-driven, and leaky at abstraction boundaries. This creates long-term architectural risk. **LLMs should be treated as infrastructure**, and NodeLLM exists to help you integrate them without vendor lock-in.
+Direct integrations often become tightly coupled to specific providers, making it difficult to adapt as models evolve. **LLMs should be treated as infrastructure**, and NodeLLM helps you build a stable foundation that persists regardless of which model is currently "state of the art."
 
-NodeLLM exists to solve **architectural problems**, not just provide API access. It is the core architectural layer for LLMs in the Node.js ecosystem.
+NodeLLM helps solve **architectural problems**, not just provide API access. It serves as the core integration layer for LLMs in the Node.js ecosystem.
 
 ### Strategic Goals
 - **Provider Isolation**: Decouple your services from vendor SDKs.
@@ -82,6 +82,16 @@ for await (const chunk of chat.stream("Explain event-driven architecture")) {
   process.stdout.write(chunk.content);
 }
 ```
+
+### 🎯 Real-World Example: Brand Perception Checker
+
+Built with NodeLLM - Multi-provider AI analysis, tool calling, and structured outputs working together:
+
+<p align="center">
+  <img src="assets/brand-perception-checker.png" alt="Brand Perception Checker" width="800" />
+</p>
+
+**[View Example →](examples/brand-perception-checker/)**
 
 
 ---
@@ -239,6 +249,16 @@ npm install @node-llm/core
 ```
 
 **[View Full Documentation ↗](https://node-llm.eshaiju.com/)**
+
+### 🍿 Try the Live Demo
+Want to see it in action? Run this in your terminal:
+```bash
+git clone https://github.com/node-llm/node-llm.git
+cd node-llm
+npm install
+npm run demo
+```
+
 
 ---
 

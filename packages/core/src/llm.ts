@@ -28,6 +28,7 @@ import {
   ModelCapabilityError 
 } from "./errors/index.js";
 import { resolveModelAlias } from "./model_aliases.js";
+import { logger } from "./utils/logger.js";
 
 import { config, NodeLLMConfig, Configuration } from "./config.js";
 
@@ -237,7 +238,7 @@ export class NodeLLMCore {
     const model = resolveModelAlias(rawModel || "", provider.id);
 
     if (options?.assumeModelExists) {
-      console.warn(`[NodeLLM] Skipping validation for model ${model}`);
+      logger.warn(`Skipping validation for model ${model}`);
     } else if (model && provider.capabilities && !provider.capabilities.supportsImageGeneration(model)) {
       throw new ModelCapabilityError(model, "image generation");
     }
@@ -269,7 +270,7 @@ export class NodeLLMCore {
     const rawModel = options?.model || this.defaultTranscriptionModelId || "";
     const model = resolveModelAlias(rawModel, provider.id);
     if (options?.assumeModelExists) {
-       console.warn(`[NodeLLM] Skipping validation for model ${model}`);
+       logger.warn(`Skipping validation for model ${model}`);
     } else if (model && provider.capabilities && !provider.capabilities.supportsTranscription(model)) {
       throw new ModelCapabilityError(model, "transcription");
     }
@@ -306,7 +307,7 @@ export class NodeLLMCore {
     const rawModel = options?.model || this.defaultModerationModelId || "";
     const model = resolveModelAlias(rawModel, provider.id);
     if (options?.assumeModelExists) {
-      console.warn(`[NodeLLM] Skipping validation for model ${model}`);
+      logger.warn(`Skipping validation for model ${model}`);
     } else if (model && provider.capabilities && !provider.capabilities.supportsModeration(model)) {
       throw new ModelCapabilityError(model, "moderation");
     }
@@ -338,7 +339,7 @@ export class NodeLLMCore {
     };
 
     if (options?.assumeModelExists) {
-      console.warn(`[NodeLLM] Skipping validation for model ${request.model}`);
+      logger.warn(`Skipping validation for model ${request.model}`);
     } else if (request.model && provider.capabilities && !provider.capabilities.supportsEmbeddings(request.model)) {
       throw new ModelCapabilityError(request.model, "embeddings");
     }

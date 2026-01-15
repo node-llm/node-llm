@@ -15,6 +15,7 @@ import { ToolExecutionMode } from "../constants.js";
 import { ConfigurationError } from "../errors/index.js";
 import { ChatValidator } from "./Validation.js";
 import { ToolHandler } from "./ToolHandler.js";
+import { logger } from "../utils/logger.js";
 
 export interface AskOptions {
   images?: string[];
@@ -470,7 +471,7 @@ export class Chat {
             throw error;
           }
 
-          console.error(`[NodeLLM] Tool execution failed for '${toolCall.function.name}':`, error);
+          logger.error(`Tool execution failed for '${toolCall.function.name}':`, error as Error);
         }
       }
 
@@ -547,7 +548,7 @@ export class Chat {
       try {
         toolInstance = new (tool as any)();
       } catch (e) {
-        console.error(`[NodeLLM] Failed to instantiate tool class: ${(tool as any).name}`, e);
+        logger.error(`Failed to instantiate tool class: ${(tool as any).name}`, e as Error);
         return null;
       }
     } else {

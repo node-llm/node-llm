@@ -1,0 +1,11 @@
+{
+  "name": "brand-perception-checker",
+  "version": "1.5.3",
+  "private": true,
+  "scripts": {
+    "setup": "cd server && npm install && cd ../app && npm install",
+    "start:server": "cd server && npm start",
+    "start:app": "cd app && npm run dev",
+    "dev": "echo \"\n⚠️  Please run 'npm run setup' first if you haven't! \n\nStarting Server & Client...\" && (cd server && npm start) & (cd app && npm run dev)"
+  }
+}

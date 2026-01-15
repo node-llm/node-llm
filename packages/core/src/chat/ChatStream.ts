@@ -12,6 +12,7 @@ import { toJsonSchema } from "../schema/to-json-schema.js";
 import { ToolDefinition } from "./Tool.js";
 import { ChatValidator } from "./Validation.js";
 import { ToolHandler } from "./ToolHandler.js";
+import { logger } from "../utils/logger.js";
 
 /**
  * Internal handler for chat streaming logic.
@@ -272,7 +273,7 @@ export class ChatStream {
                 throw error;
               }
 
-              console.error(`[NodeLLM] Tool execution failed for '${toolCall.function.name}':`, error);
+              logger.error(`Tool execution failed for '${toolCall.function.name}':`, error as Error);
             }
           }
         } catch (error) {

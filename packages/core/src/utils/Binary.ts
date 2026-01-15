@@ -1,5 +1,6 @@
 import fs from "fs";
 import path from "path";
+import { logger } from "./logger.js";
 
 export interface Base64Data {
   data: string;
@@ -31,23 +32,21 @@ export class BinaryUtils {
           data: base64,
         };
       } catch (e) {
-        console.error("Error converting URL to base64:", e);
+        logger.error("Error converting URL to base64:", e as Error);
         return null;
       }
     } else {
       // Assume local file path
       try {
-        if (fs.existsSync(url)) {
-          const buffer = fs.readFileSync(url);
-          const base64 = buffer.toString("base64");
-          const mimeType = this.guessMimeType(url);
-          return {
-            mimeType,
-            data: base64,
-          };
-        }
+        const buffer = await fs.promises.readFile(url);
+        const base64 = buffer.toString("base64");
+        const mimeType = this.guessMimeType(url);
+        return {
+          mimeType,
+          data: base64,
+        };
       } catch (e) {
-        console.error("Error reading local file for base64:", e);
+        logger.error("Error reading local file for base64:", e as Error);
         return null;
       }
     }

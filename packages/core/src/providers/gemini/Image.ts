@@ -10,7 +10,7 @@ export class GeminiImage {
     const url = `${this.baseUrl}/models/${modelId}:predict?key=${this.apiKey}`;
 
     if (request.size) {
-      console.log(`[Gemini] Ignoring size ${request.size}. Gemini does not support image size customization.`);
+      logger.warn(`[Gemini] Ignoring size ${request.size}. Gemini does not support image size customization.`);
     }
 
     const body: any = {

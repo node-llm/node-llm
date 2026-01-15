@@ -2,10 +2,19 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.5.4] - 2026-01-15
+
+### Fixed
+- **Async I/O Safety**: Refactored internal file loading utilities (`Binary.ts`, `FileLoader.ts`) to strictly use non-blocking `fs.promises` for all file operations, eliminating potential event loop blocking in high-throughput node servers.
+
+### Changed
+- **Centralized Logging**: Replaced scattered `console.log/error/warn` calls with a unified `Logger` adapter. All internal library logs now respect `NODELLM_DEBUG=true` configuration and use a consistent format, preventing log pollution in production environments.
+
 ## [1.5.3] - 2026-01-15
 
 ### Fixed
 - **Multi-turn Tool Loop State Loss (CRITICAL)**: Fixed a critical bug where `response_format` (Structured Outputs), `temperature`, `max_tokens`, and provider-specific `params` were being dropped after the first tool call in agentic workflows. This caused the model to revert to plain text or markdown in subsequent turns, resulting in empty or malformed data when using `withSchema()`. The fix ensures all configuration state is maintained across all tool-calling turns in `Chat.ask()`.
+- **ToolHandler Serialization**: Ensuring tool return values are always stringified before being sent back to the LLM. This fixes issues where tools returning objects would cause provider errors, enabling better "AI Self-Correction" workflows where the model sees the raw object data.
 
 ### Added
 - **AbortSignal Support**: Added proper cancellation support for long-running LLM requests via `signal?: AbortSignal` in `AskOptions`. Users can now abort requests using standard `AbortController`, enabling proper cleanup in interactive applications and server environments. The signal is propagated through all tool-calling turns and underlying fetch requests.
