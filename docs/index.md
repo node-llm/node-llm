@@ -9,11 +9,11 @@ back_to_top: false
 <p align="left">
   <img src="assets/images/logo.png" alt="NodeLLM" width="200" />
 </p>
-**An opinionated architectural layer for integrating Large Language Models in Node.js.**
+**An architectural layer for integrating Large Language Models in Node.js.**
 
 **Provider-agnostic by design.**
 
-Most LLM SDKs **tightly couple** your application to vendors, APIs, and churn. NodeLLM provides a unified, production-oriented API without the SDK fatigue.
+Integrating multiple LLM providers often means juggling different SDKs, API styles, and update cycles. NodeLLM provides a single, unified, production-oriented API that stays consistent even when providers change.
 <div class="provider-icons">
   <div class="provider-logo">
     <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/openai.svg" alt="OpenAI" class="logo-medium">
@@ -43,6 +43,8 @@ Most LLM SDKs **tightly couple** your application to vendors, APIs, and churn. N
 <br/>
 <br/>
 
+
+
 [Get Started](/getting-started/overview){: .btn .btn-primary .fs-5 .mb-4 .mb-md-0 .mr-2 } [Read on Blog](https://eshaiju.com){: .btn .fs-5 .mb-4 .mb-md-0 .mr-2 } [View on GitHub](https://github.com/node-llm/node-llm){: .btn .fs-5 .mb-4 .mb-md-0 }
 
 <p class="text-small text-grey-dk-000 mt-4">
@@ -64,9 +66,9 @@ NodeLLM is **NOT**:
 
 ## 🏗️ Why NodeLLM?
 
-Most AI integrations today are provider-specific, SDK-driven, and leaky at abstraction boundaries. This creates long-term architectural risk. **LLMs should be treated as infrastructure**, and NodeLLM exists to help you integrate them without vendor lock-in.
+Direct integrations often become tightly coupled to specific providers, making it difficult to adapt as models evolve. **LLMs should be treated as infrastructure**, and NodeLLM helps you build a stable foundation that persists regardless of which model is currently "state of the art."
 
-NodeLLM exists to solve **architectural problems**, not just provide API access. It is the core architectural layer for LLMs in the Node.js ecosystem.
+NodeLLM helps solve **architectural problems**, not just provide API access. It serves as the core integration layer for LLMs in the Node.js ecosystem.
 
 ### Strategic Principles
 - **Provider Isolation**: Decouple your services from vendor SDKs.
@@ -226,6 +228,21 @@ console.log(res.reasoning); // Chain-of-thought
 | <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/deepseek-color.svg" height="18"> **DeepSeek** | Chat (V3), **Reasoning (R1)**, Tools, Streaming |
 | <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/openrouter.svg" height="18"> **OpenRouter** | **Aggregator**, Chat, Streaming, Tools, Vision, Embeddings, **Reasoning** |
 | <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/ollama.svg" height="18"> **Ollama** | **Local Inference**, Chat, Streaming, Tools, Vision, Embeddings |
+
+---
+
+---
+
+## 🍿 Try the Live Demo
+
+Want to see NodeLLM in action? We have a full-stack, multi-provider example application ready for you.
+
+```bash
+git clone https://github.com/node-llm/node-llm.git
+cd node-llm
+npm install
+npm run demo
+```
 
 ---
 

@@ -25,6 +25,7 @@ A comprehensive list of runnable examples available in the [examples/](https://g
 
 | Example | Description |
 | :--- | :--- |
+| [`examples/brand-perception-checker/`](https://github.com/node-llm/node-llm/tree/main/examples/brand-perception-checker) | **Brand Perception Auditor** — A full-stack (Node+React) app demonstrating multi-provider orchestration, tool calling (Google SERP), and structured output. |
 | [`examples/real-world-support-agent.mjs`](https://github.com/node-llm/node-llm/blob/main/examples/real-world-support-agent.mjs) | **Real-world Travel Support AI Agent** using Context Isolation, Auto-executing Tools, and Structured Output. |
 | [`examples/content-policy-hooks.mjs`](https://github.com/node-llm/node-llm/blob/main/examples/content-policy-hooks.mjs) | **Content Policy & Security** using `beforeRequest` and `afterResponse` hooks for PII redaction. |
 | [`examples/security-tool-policies.mjs`](https://github.com/node-llm/node-llm/blob/main/examples/security-tool-policies.mjs) | **Advanced Tool Security** using `confirm` and `dry-run` modes for human-in-the-loop auditing. |
