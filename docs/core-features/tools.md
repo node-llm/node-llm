@@ -182,19 +182,69 @@ class HistoryTool extends Tool {
 }
 ```
 
-## Error Handling in Tools
+## Error Handling & Flow Control 🚦 <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v1.5.1+</span>
 
-How you handle errors in your `execute` method affects the conversation flow:
+`NodeLLM` handles tool errors intelligently to prevent infinite retry loops through a combination of automatic infrastructure protection and manual flow control.
 
-1.  **Recoverable Errors**: Return a JSON string describing the error. The model can often see this error and try to correct itself (e.g., retrying with different parameters).
-    ```ts
-    async execute({ id }) {
-      if (!id) return JSON.stringify({ error: "Missing ID" });
-      // ...
+### Zero-Config Safety (Fatal Errors)
+
+By default, the agent loop will **immediately stop and throw** if it encounters an unrecoverable "fatal" error. This prevents wasting tokens on retries that are guaranteed to fail.
+
+Fatal errors include:
+*   **Authentication Errors**: HTTP 401 or 403 errors from LLM providers or external APIs.
+*   **Explicit Fatal Errors**: Any error thrown using the `ToolError` class with `fatal: true`.
+
+```ts
+import { Tool, ToolError } from "@node-llm/core";
+
+class DatabaseTool extends Tool {
+  async execute({ query }) {
+    if (isMalicious(query)) {
+      // Force the agent to stop immediately
+      throw new ToolError("Security Violation", "db_tool", { fatal: true });
     }
-    ```
+  }
+}
+```
 
-2.  **Fatal Errors**: If you throw an exception inside a tool handler, `NodeLLM` catches it and feeds the error message back to the model as a "Tool Error". This allows the model to apologize to the user or attempt a different strategy.
+### Hook-Based Flow Control (`STOP` | `CONTINUE`)
+
+For granular control, you can use the `onToolCallError` hook to override internal logic. This allows you to differentiate between tools that are "mission-critical" and those that are "optional."
+
+The hook can return one of two directives:
+*   **`"STOP"`**: Force the agent to crash and bubble the error up to your code.
+*   **`"CONTINUE"`**: Catch the error, log it, and tell the agent to ignore it and move to the next turn.
+
+```ts
+const chat = NodeLLM.chat("gpt-4o", {
+  onToolCallError: (toolCall, error) => {
+    // 1. Critical Tool: Stop everything
+    if (toolCall.function.name === "process_payment") {
+      return "STOP";
+    }
+
+    // 2. Optional Tool: Just ignore if it fails
+    if (toolCall.function.name === "fetch_avatar") {
+      console.warn("Avatar fetch failed, but continuing...");
+      return "CONTINUE"; 
+    }
+
+    // 3. Default: Let NodeLLM decide (e.g. stop on 401/403)
+  }
+});
+```
+
+### Recoverable Errors (AI Self-Correction)
+
+If you want the model to see the error and try to fix its own parameters, simply return a string or object from your handler. NodeLLM will feed this back to the model as a successful tool result containing error details.
+
+```ts
+async execute({ date }) {
+  if (!isValid(date)) {
+    return { error: "Invalid date format. Please use YYYY-MM-DD." };
+  }
+}
+```
 
 ### Advanced: Raw JSON Schema
 

@@ -149,6 +149,9 @@ class WeatherTool extends Tool {
 
 // Now the model can use it automatically
 await chat.withTool(WeatherTool).ask("What's the weather in Tokyo?");
+
+// Lifecycle Hooks for Error & Flow Control
+chat.onToolCallError((call, err) => "STOP"); 
 ```
 **[Full Tool Calling Guide →](https://node-llm.eshaiju.com/core-features/tool-calling)**
 

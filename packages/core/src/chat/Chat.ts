@@ -250,10 +250,7 @@ export class Chat {
     return this;
   }
 
-  /**
-   * Called when a tool call fails.
-   */
-  onToolCallError(handler: (toolCall: any, error: Error) => void): this {
+  onToolCallError(handler: (toolCall: any, error: Error) => 'STOP' | 'CONTINUE' | void | Promise<'STOP' | 'CONTINUE' | void>): this {
     this.options.onToolCallError = handler;
     return this;
   }
@@ -473,33 +470,38 @@ export class Chat {
           }
         }
 
-        // Execute the tool
         try {
           const toolResult = await this.executeToolCall(
             toolCall,
             this.options.tools,
             this.options.onToolCallStart,
-            this.options.onToolCallEnd,
-            this.options.onToolCallError
+            this.options.onToolCallEnd
           );
           this.messages.push(toolResult);
         } catch (error: any) {
-          // Add error to history so the assistant (or user) knows what happened
+          const directive = await this.options.onToolCallError?.(toolCall, error);
+
+          if (directive === 'STOP') {
+            throw error;
+          }
+
           this.messages.push({
             role: "tool",
             tool_call_id: toolCall.id,
             content: `Fatal error executing tool '${toolCall.function.name}': ${error.message}`,
           });
 
-          // Short-circuit if it's a fatal error (e.g. AuthenticationError, or ToolError{fatal: true})
-          // Also short-circuit on standard API Errors like 401/403 which are fatal for the loop
+          if (directive === 'CONTINUE') {
+            continue;
+          }
+
+          // Default short-circuit logic
           const isFatal = error.fatal === true || error.status === 401 || error.status === 403;
           
           if (isFatal) {
             throw error;
           }
 
-          // Non-fatal: log it and continue to let the LLM handle the tool result (error message)
           console.error(`[NodeLLM] Tool execution failed for '${toolCall.function.name}':`, error);
         }
       }
@@ -590,8 +592,7 @@ export class Chat {
     toolCall: any,
     tools: any[] | undefined,
     onStart?: (call: any) => void,
-    onEnd?: (call: any, result: any) => void,
-    onError?: (call: any, error: Error) => void
+    onEnd?: (call: any, result: any) => void
   ): Promise<{ role: "tool"; tool_call_id: string; content: string }> {
     if (onStart) onStart(toolCall);
 
@@ -610,12 +611,10 @@ export class Chat {
           content: result,
         };
       } catch (error: any) {
-        if (onError) onError(toolCall, error);
         throw error;
       }
     } else {
       const error = new ToolError("Tool not found or no handler provided", toolCall.function?.name ?? "unknown");
-      if (onError) onError(toolCall, error);
       throw error;
     }
   }

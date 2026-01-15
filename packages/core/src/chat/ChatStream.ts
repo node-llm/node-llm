@@ -171,31 +171,36 @@ export class ChatStream {
               }
             }
 
-            // Execute the tool
             try {
               const toolResult = await self.executeToolCall(
                 toolCall,
                 options.tools,
                 options.onToolCallStart,
-                options.onToolCallEnd,
-                options.onToolCallError
+                options.onToolCallEnd
               );
               messages.push(toolResult);
             } catch (error: any) {
-              // Add error to history so the assistant (or user) knows what happened
+              const directive = await options.onToolCallError?.(toolCall, error);
+
+              if (directive === 'STOP') {
+                throw error;
+              }
+
               messages.push({
                 role: "tool",
                 tool_call_id: toolCall.id,
                 content: `Fatal error executing tool '${toolCall.function.name}': ${error.message}`,
               });
 
-              // Short-circuit if it's a fatal error (e.g., 401/403 or explicitly fatal)
+              if (directive === 'CONTINUE') {
+                continue;
+              }
+
               const isFatal = error.fatal === true || error.status === 401 || error.status === 403;
               if (isFatal) {
                 throw error;
               }
 
-              // Non-fatal: log and continue
               console.error(`[NodeLLM] Tool execution failed for '${toolCall.function.name}':`, error);
             }
           }
@@ -233,8 +238,7 @@ export class ChatStream {
     toolCall: any,
     tools: any[] | undefined,
     onStart?: (call: any) => void,
-    onEnd?: (call: any, result: any) => void,
-    onError?: (call: any, error: Error) => void
+    onEnd?: (call: any, result: any) => void
   ): Promise<{ role: "tool"; tool_call_id: string; content: string }> {
     if (onStart) onStart(toolCall);
 
@@ -253,12 +257,10 @@ export class ChatStream {
           content: result,
         };
       } catch (error: any) {
-        if (onError) onError(toolCall, error);
         throw error;
       }
     } else {
       const error = new ToolError("Tool not found or no handler provided", toolCall.function?.name ?? "unknown");
-      if (onError) onError(toolCall, error);
       throw error;
     }
   }

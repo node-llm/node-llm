@@ -34,6 +34,7 @@ description: Build resilient AI applications using our descriptive exception hie
     - `RateLimitError` (429): You are hitting limits.
     - `ServerError` (500+): Provider internal issues.
       - `ServiceUnavailableError`: Temporary outages or overloads.
+  - `ToolError`: Failure during tool execution. Includes `fatal` property for loop control.
 
 ## Handling Specific Errors
 
@@ -91,10 +92,26 @@ NodeLLM.configure({
 
 The library will **not** retry non-transient errors like `BadRequestError` (400) or `AuthenticationError` (401).
 
-## Debugging
+## Tool Loop Flow Control 🔄 <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v1.5.1+</span>
 
-If you are stuck, enable debug logs to see the exact request and response payloads associated with an error.
+When a tool fails inside a `Chat.ask()` or `Chat.stream()` loop, `NodeLLM` uses a strategy to stop infinite recursion.
 
-```bash
-export NODELLM_DEBUG=true
+### Automatic Logic
+The agent loop will **short-circuit and crash** immediately if:
+1.  An `AuthenticationError` (401/403) occurs.
+2.  A `ToolError` is thrown with `fatal: true`.
+
+### Manual Control
+You can override this behavior using the `onToolCallError` hook in `ChatOptions`:
+
+```ts
+const chat = NodeLLM.chat("gpt-4o", {
+  onToolCallError: (toolCall, error) => {
+    if (isCritical(toolCall)) return "STOP";     // Crash immediately
+    if (isOptional(toolCall)) return "CONTINUE"; // Swallow error and proceed
+    // return void to let NodeLLM decide
+  }
+});
 ```
+
+See the [Tool Calling documentation](../core-features/tools.html#error-handling--flow-control-) for more examples.

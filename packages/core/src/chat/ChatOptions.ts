@@ -14,7 +14,7 @@ export interface ChatOptions {
   onEndMessage?: (message: any) => void;
   onToolCallStart?: (toolCall: any) => void;
   onToolCallEnd?: (toolCall: any, result: any) => void;
-  onToolCallError?: (toolCall: any, error: Error) => void;
+  onToolCallError?: (toolCall: any, error: Error) => 'STOP' | 'CONTINUE' | void | Promise<'STOP' | 'CONTINUE' | void>;
   headers?: Record<string, string>;
   schema?: Schema;
   responseFormat?: { type: "json_object" | "text" };
