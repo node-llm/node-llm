@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from '@node-llm/core';
 
 export const PerceptionSchema = z.object({
   tone: z.string(),

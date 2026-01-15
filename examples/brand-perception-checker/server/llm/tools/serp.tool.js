@@ -1,6 +1,5 @@
-import { Tool } from '@node-llm/core';
+import { Tool, z } from '@node-llm/core';
 import axios from 'axios';
-import { z } from 'zod';
 
 export class SerpTool extends Tool {
   name = 'search_market_data';
