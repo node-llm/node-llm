@@ -58,6 +58,8 @@
     "lint": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
+    "prepack": "npm run build && cp ../../README.md ./README.md",
+    "postpack": "rm ./README.md",
     "prepublishOnly": "npm run build"
   },
   "dependencies": {
