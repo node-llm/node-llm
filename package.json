@@ -1,6 +1,6 @@
 {
   "name": "@node-llm/core",
-  "version": "1.5.1",
+  "version": "1.5.2",
   "description": "An opinionated architectural layer for integrating Large Language Models in Node.js.",
   "main": "index.js",
   "workspaces": [

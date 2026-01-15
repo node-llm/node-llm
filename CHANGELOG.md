@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.5.2] - 2026-01-15
+
+### Fixed
+- **ESM & Dotenv Safety**: Implemented lazy initialization for all environment-backed configuration (like `OPENAI_API_KEY`). This resolves race conditions where `process.env` might be accessed before `dotenv.config()` is called in ESM modules.
+- **OpenAI o1/o3-mini Compatibility**: Automatically map `max_tokens` to `max_completion_tokens` for OpenAI reasoning models, which are required for these specific models.
+- **withProvider Inheritance**: Fixed a bug where scoped instances created via `withProvider()` failed to inherit global defaults due to getter-based property enumeration.
+- **Process Lifecycle Protection**: Added unreferenced timers and explicit exit handling to prevent Node.js processes from hanging after completion.
+- **Ollama Base URL**: Fixed a typo in the `ollamaApiBase` configuration setter.
+
+### Added
+- **Reasoning Content Capture**: Support for capturing and returning `reasoning_content` (thinking text) from OpenAI reasoning models.
+- **Enhanced Usage Tracking**: Precise capture of `reasoning_tokens` and `cached_tokens` in usage metadata for supported providers.
+
+### Changed
+- **Internal Architecture Cleanup**: Refactored shared validation and tool execution logic between `Chat.ask()` and `Chat.stream()` for 100% feature parity and better maintainability.
+- **Configuration Snapshotting**: Enhanced the internal configuration system to support dynamic property discovery and cloning for custom providers.
+
 ## [1.5.0] - 2026-01-12
 
 ### Added
