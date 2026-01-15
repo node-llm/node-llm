@@ -31,13 +31,14 @@ export class ToolHandler {
       try {
         const args = JSON.parse(toolCall.function.arguments);
         const result = await tool.handler(args);
+        const safeResult = typeof result === 'string' ? result : JSON.stringify(result);
         
         if (onEnd) onEnd(toolCall, result);
 
         return {
           role: "tool",
           tool_call_id: toolCall.id,
-          content: result,
+          content: safeResult,
         };
       } catch (error: any) {
         throw error;
