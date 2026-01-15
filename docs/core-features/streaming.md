@@ -112,6 +112,39 @@ for await (const chunk of chat.stream("Weather in Tokyo?")) {
 
 **Supported Providers:** OpenAI, Anthropic, Gemini, DeepSeek
 
+## Multimodal & Structured Streaming ✨
+
+**NEW:** `chat.stream()` now supports the same advanced features as `chat.ask()`.
+
+### Multimodal Streaming
+Pass images, audio, or documents just like you would with a standard request.
+
+```ts
+const chat = NodeLLM.chat("gpt-4o");
+
+for await (const chunk of chat.stream("What's in this image?", {
+  images: ["./analysis.png"]
+})) {
+  process.stdout.write(chunk.content || "");
+}
+```
+
+### Structured Streaming (Validated JSON)
+Get streaming JSON that is automatically validated against a Zod schema.
+
+```ts
+const personSchema = z.object({
+  name: z.string(),
+  hobbies: z.array(z.string())
+});
+
+for await (const chunk of chat.withSchema(personSchema).stream("Generate a person profile")) {
+  // Chunks will contain partial content that cumulatively forms valid JSON
+  // Once the stream completes, history will contain the validated object
+  process.stdout.write(chunk.content || "");
+}
+```
+
 ## Error Handling
 
 Stream interruptions (network failure, rate limits) will throw an error within the `for await` loop. Always wrap in a `try/catch` block.

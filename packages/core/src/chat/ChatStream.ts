@@ -103,7 +103,7 @@ export class ChatStream {
 
       // Process Schema/Structured Output
       let responseFormat: any = options.responseFormat;
-      if (options.schema) {
+      if (!responseFormat && options.schema) {
         ChatValidator.validateStructuredOutput(provider, model, true, options);
         
         const jsonSchema = toJsonSchema(options.schema.definition.schema);

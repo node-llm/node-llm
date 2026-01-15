@@ -10,6 +10,7 @@ export interface OpenAIChatResponse {
     message: {
       role: string;
       content: string | null;
+      reasoning_content?: string | null;
       tool_calls?: Array<{
         id: string;
         type: 'function';
@@ -27,6 +28,9 @@ export interface OpenAIChatResponse {
     total_tokens: number;
     prompt_tokens_details?: {
       cached_tokens?: number;
+    };
+    completion_tokens_details?: {
+      reasoning_tokens?: number;
     };
   };
 }

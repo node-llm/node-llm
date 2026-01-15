@@ -45,6 +45,9 @@ const response = await chat
   .withSchema(personSchema)
   .ask("Generate a person named Alice who likes hiking and coding");
 
+// Streaming is also supported!
+// for await (const chunk of chat.withSchema(personSchema).stream("...")) { ... }
+
 // The response is strictly validated and parsed
 const person = response.parsed;
 

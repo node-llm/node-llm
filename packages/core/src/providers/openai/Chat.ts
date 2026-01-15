@@ -38,7 +38,15 @@ export class OpenAIChat {
     };
 
     if (temperature !== undefined && temperature !== null) body.temperature = temperature;
-    if (max_tokens) body.max_tokens = max_tokens;
+    
+    if (max_tokens) {
+      if (Capabilities.needsMaxCompletionTokens(request.model)) {
+        body.max_completion_tokens = max_tokens;
+      } else {
+        body.max_tokens = max_tokens;
+      }
+    }
+
     if (tools) body.tools = tools;
     if (response_format) body.response_format = response_format;
 
@@ -65,12 +73,14 @@ export class OpenAIChat {
     const message = json.choices[0]?.message;
     const content = message?.content ?? null;
     const tool_calls = message?.tool_calls;
+    const reasoning = (message as any)?.reasoning_content || null;
 
     const usage = json.usage ? {
       input_tokens: json.usage.prompt_tokens,
       output_tokens: json.usage.completion_tokens,
       total_tokens: json.usage.total_tokens,
       cached_tokens: json.usage.prompt_tokens_details?.cached_tokens,
+      reasoning_tokens: json.usage.completion_tokens_details?.reasoning_tokens,
     } : undefined;
 
     if (!content && !tool_calls) {
@@ -79,6 +89,6 @@ export class OpenAIChat {
 
     const calculatedUsage = usage ? ModelRegistry.calculateCost(usage, model, "openai") : undefined;
 
-    return { content, tool_calls, usage: calculatedUsage };
+    return { content, tool_calls, usage: calculatedUsage, reasoning };
   }
 }

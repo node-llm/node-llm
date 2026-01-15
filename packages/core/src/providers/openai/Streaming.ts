@@ -43,7 +43,11 @@ export class OpenAIStreaming {
     }
 
     if (request.max_tokens) {
-      body.max_tokens = request.max_tokens;
+      if (Capabilities.needsMaxCompletionTokens(request.model)) {
+        body.max_completion_tokens = request.max_tokens;
+      } else {
+        body.max_tokens = request.max_tokens;
+      }
     }
 
     if (request.response_format) {

@@ -140,9 +140,11 @@ NodeLLM.configure({ provider: "openai" });
 // Error: openaiApiKey is not set in config...
 ```
 
-## Environment Variables
+### Lazy Loading & ESM Safety
 
-By default, `NodeLLM` automatically loads configuration from environment variables. You can override these programmatically:
+By default, `NodeLLM` lazily initializes its configuration from environment variables. This means `process.env` is only read when you actually make your first AI request.
+
+**Why this matters:** In ESM environments, import hoisting can sometimes cause code to run before `dotenv.config()` has finished populating `process.env`. Because `NodeLLM` is lazy, it is **immune** to this race condition. You can safely import `NodeLLM` and call `dotenv.config()` in any order.
 
 ```typescript
 // Environment variable takes precedence initially

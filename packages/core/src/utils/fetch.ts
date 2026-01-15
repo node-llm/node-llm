@@ -20,6 +20,7 @@ export async function fetchWithTimeout(
 
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+  if (timeoutId.unref) timeoutId.unref();
 
   try {
     const response = await fetch(url, {

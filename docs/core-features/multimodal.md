@@ -24,7 +24,7 @@ Modern LLMs can understand more than just text. `NodeLLM` provides a unified way
 
 ## Smart File Handling
 
-You can pass local paths or URLs directly to the `ask` method using the `files` option. `NodeLLM` automatically detects the file type and formats it correctly for the specific provider.
+You can pass local paths or URLs directly to the `ask` or `stream` method using the `files` (or `images`) option. `NodeLLM` automatically detects the file type and formats it correctly for the specific provider.
 
 **Supported File Types:**
 - **Images**: `.jpg`, `.jpeg`, `.png`, `.gif`, `.webp`

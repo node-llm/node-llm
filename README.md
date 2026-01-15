@@ -58,8 +58,8 @@ NodeLLM exists to solve **architectural problems**, not just provide API access.
 
 ### Strategic Goals
 - **Provider Isolation**: Decouple your services from vendor SDKs.
-- **Production-Ready**: Native support for streaming, retries, and unified error handling.
-- **Predictable API**: Consistent behavior for Tools, Vision, and Structured Outputs across all models.
+- **Production-Ready**: Native support for streaming, automatic retries, and unified error handling.
+- **Predictable API**: Consistent behavior for Tools, Vision, and Structured Outputs across all models, **now including full parity for streaming**.
 
 ---
 
@@ -68,7 +68,7 @@ NodeLLM exists to solve **architectural problems**, not just provide API access.
 ```ts
 import { NodeLLM } from "@node-llm/core";
 
-// 1. Configure once
+// 1. Configure once (Safe for ESM + dotenv race conditions)
 NodeLLM.configure({ provider: "openai" });
 
 // 2. Chat (High-level request/response)
@@ -77,6 +77,7 @@ const response = await chat.ask("Explain event-driven architecture");
 console.log(response.content);
 
 // 3. Streaming (Standard AsyncIterator)
+// NOW with full support for Tools, Vision, and Schemas!
 for await (const chunk of chat.stream("Explain event-driven architecture")) {
   process.stdout.write(chunk.content);
 }
@@ -87,18 +88,15 @@ for await (const chunk of chat.stream("Explain event-driven architecture")) {
 
 ## 🔧 Strategic Configuration
 
-NodeLLM provides a flexible configuration system designed for enterprise usage:
+NodeLLM provides a flexible, **lazy-initialized** configuration system designed for enterprise usage. It is safe for ESM and resolved only when your first request is made, eliminating the common `dotenv` race condition.
 
 ```ts
 // Recommended for multi-provider pipelines
-NodeLLM.configure((config) => {
-  config.openaiApiKey = process.env.OPENAI_API_KEY;
-  config.anthropicApiKey = process.env.ANTHROPIC_API_KEY;
-  config.ollamaApiBase = process.env.OLLAMA_API_BASE;
+NodeLLM.configure({
+  openaiApiKey: process.env.OPENAI_API_KEY,
+  anthropicApiKey: process.env.ANTHROPIC_API_KEY,
+  ollamaApiBase: process.env.OLLAMA_API_BASE,
 });
-
-// Switch providers at the framework level
-NodeLLM.configure({ provider: "anthropic" });
 
 // Support for Custom Endpoints (e.g., Azure or LocalAI)
 NodeLLM.configure({
@@ -123,7 +121,7 @@ await chat.ask("Hello world");
 ```
 
 ### 👁️ Smart Vision & Files
-Pass images, PDFs, or audio files directly. We handle the heavy lifting: fetching remote URLs, base64 encoding, and MIME type mapping.
+Pass images, PDFs, or audio files directly to **both `ask()` and `stream()`**. We handle the heavy lifting: fetching remote URLs, base64 encoding, and MIME type mapping.
 ```ts
 await chat.ask("Analyze this interface", { 
   files: ["./screenshot.png", "https://example.com/spec.pdf"] 
@@ -142,7 +140,7 @@ class WeatherTool extends Tool {
   description = "Get current weather";
   schema = z.object({ location: z.string() });
 
-  async handler({ location }) { 
+  async execute({ location }) { 
     return `Sunny in ${location}`; 
   }
 }

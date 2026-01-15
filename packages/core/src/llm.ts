@@ -29,7 +29,7 @@ import {
 } from "./errors/index.js";
 import { resolveModelAlias } from "./model_aliases.js";
 
-import { config, NodeLLMConfig } from "./config.js";
+import { config, NodeLLMConfig, Configuration } from "./config.js";
 
 export interface RetryOptions {
   attempts?: number;
@@ -73,7 +73,14 @@ export class NodeLLMCore {
    * Create a new LLM instance. Defaults to the global config.
    */
   constructor(customConfig?: NodeLLMConfig) {
-    this.config = customConfig || config;
+    if (customConfig instanceof Configuration) {
+      this.config = customConfig;
+    } else if (customConfig) {
+      this.config = new Configuration();
+      Object.assign(this.config, customConfig);
+    } else {
+      this.config = config;
+    }
     
     if (this.config.maxRetries !== undefined) {
       this.retry.attempts = this.config.maxRetries + 1;
@@ -108,7 +115,8 @@ export class NodeLLMCore {
    * ```
    */
   withProvider(providerName: string, scopedConfig?: Partial<NodeLLMConfig>): NodeLLMCore {
-    const scoped = new NodeLLMCore({ ...this.config, ...scopedConfig });
+    const baseConfig = (this.config instanceof Configuration) ? this.config.toPlainObject() : this.config;
+    const scoped = new NodeLLMCore({ ...baseConfig, ...scopedConfig });
     scoped.configure({ provider: providerName });
     return scoped;
   }

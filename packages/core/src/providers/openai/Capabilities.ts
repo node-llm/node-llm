@@ -84,6 +84,10 @@ export class Capabilities {
     return /gpt-4o|o1|o3/.test(modelId);
   }
 
+  static needsMaxCompletionTokens(modelId: string): boolean {
+    return /o1|o3/.test(modelId);
+  }
+
   static getModelType(modelId: string): "embeddings" | "audio" | "moderation" | "image" | "chat" | "audio_transcription" | "audio_speech" {
      if (this.supportsEmbeddings(modelId)) return "embeddings";
      if (/moderation/.test(modelId)) return "moderation";
