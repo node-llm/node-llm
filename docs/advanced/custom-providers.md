@@ -151,7 +151,7 @@ NodeLLM.registerProvider("internal-llm", (config) => {
 });
 ```
 
-### 3. Handling Extra Fields
+### Handling Extra Fields
 
 End-users might want to pass provider-specific parameters that aren't part of the standard `NodeLLM` API. These can be sent using `.withParams()` and will be available in the `request` object passed to your `chat` method.
 

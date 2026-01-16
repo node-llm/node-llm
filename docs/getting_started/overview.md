@@ -29,7 +29,7 @@ description: High-level overview of NodeLLM components, design principles, and h
 
 Understanding these components will help you use the framework effectively.
 
-### 1. Chat
+### Chat
 
 The primary interface for conversational AI. `NodeLLM.chat()` creates a stateful object that manages conversation history.
 
@@ -37,15 +37,15 @@ The primary interface for conversational AI. `NodeLLM.chat()` creates a stateful
 const chat = llm.chat("gpt-4o");
 ```
 
-### 2. Providers
+### Providers
 
 Adapters that translate the unified `NodeLLM` format into provider-specific API calls (OpenAI, Anthropic, Gemini). You rarely interact with them directly; the library handles this based on the model ID you choose.
 
-### 3. Tools
+### Tools
 
 Functions that the AI can execute. You define the schema and the handler, and `NodeLLM` manages the execution loop automatically.
 
-### 4. Configuration
+### Configuration
 
 Global settings for API keys and defaults.
 

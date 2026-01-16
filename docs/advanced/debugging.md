@@ -28,7 +28,7 @@ When building LLM applications, understanding what's happening "under the hood" 
 
 You can enable detailed debug logging in two ways:
 
-### 1. Programmatic Configuration (Recommended)
+### Programmatic Configuration (Recommended)
 
 ```ts
 import { createLLM } from "@node-llm/core";
@@ -38,7 +38,7 @@ const llm = createLLM({ debug: true });
 
 This will print the raw HTTP requests and responses for **all API calls** across **every feature and provider**.
 
-### 2. Environment Variable
+### Environment Variable
 
 ```bash
 export NODELLM_DEBUG=true

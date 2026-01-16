@@ -74,7 +74,7 @@ The JSON format should match:
 
 Custom providers (e.g., local instances of LLMs or internal proxies) can define their own pricing logic.
 
-### 1. Registering the Model
+### Registering the Model
 First, ensure the model exists in the `ModelRegistry` so NodeLLM knows its context window and capabilities.
 
 ```ts
@@ -90,7 +90,7 @@ ModelRegistry.save({
 });
 ```
 
-### 2. Registering the Price
+### Registering the Price
 Then, assign it a price in the `PricingRegistry`.
 
 ```ts

@@ -34,7 +34,7 @@ As of v1.6.0, `NodeLLM` is a **frozen, immutable instance**. It cannot be mutate
 
 ## How to use it
 
-### 1. Simple Parallel Calls
+### Simple Parallel Calls
 
 The most elegant way to run multiple providers is using `.withProvider()`. This creates a scoped, isolated instance for that specific call.
 

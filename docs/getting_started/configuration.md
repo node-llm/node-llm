@@ -52,7 +52,7 @@ const chat = NodeLLM.chat();
 
 Recommended for production applications where you want to explicitly define provider behavior or manage multiple providers in one application.
 
-## Switching Providers
+### Switching Providers
 
 Since `NodeLLM` is immutable, you switch providers by creating a new instance using `createLLM()` or `withProvider()`.
 
@@ -64,9 +64,9 @@ const llm = createLLM({
 });
 ```
 
-## Provider Configuration
+### Provider Configuration
 
-### API Keys
+#### API Keys
 
 Configure API keys in the configuration object.
 
@@ -80,7 +80,7 @@ const llm = createLLM({
 });
 ```
 
-### Custom Base URLs
+#### Custom Base URLs
 
 Override the default API endpoints for custom deployments (e.g., Azure OpenAI):
 
@@ -92,7 +92,7 @@ const llm = createLLM({
 });
 ```
 
-### Loop Protection & Security Limits
+#### Loop Protection & Security Limits
 
 Prevent runaway costs, infinite loops, and hanging requests by setting execution and timeout limits:
 
@@ -170,23 +170,24 @@ const chat = NodeLLM.chat(); // Snapshots environment NOW
 
 ## Best Practices
 
-1. **Use dotenv for local development**:
+### Use dotenv for local development
 
-   ```typescript
-   import "dotenv/config";
-   import { createLLM } from "@node-llm/core";
+```typescript
+import "dotenv/config";
+import { createLLM } from "@node-llm/core";
 
-   const llm = createLLM({ provider: "openai" });
-   ```
+const llm = createLLM({ provider: "openai" });
+```
 
-2. **Configure once at startup**:
-   ```typescript
-   // app.ts
-   const llm = createLLM({
-     openaiApiKey: process.env.OPENAI_API_KEY,
-     anthropicApiKey: process.env.ANTHROPIC_API_KEY
-   });
-   ```
+### Configure once at startup
+
+```typescript
+// app.ts
+const llm = createLLM({
+  openaiApiKey: process.env.OPENAI_API_KEY,
+  anthropicApiKey: process.env.ANTHROPIC_API_KEY
+});
+```
 
 ### Scoped Configuration (Isolation)
 
@@ -194,7 +195,7 @@ const chat = NodeLLM.chat(); // Snapshots environment NOW
 
 Use `createLLM()` or `.withProvider()` to create an **isolated context**.
 
-#### 1. Isolated Provider State
+#### Isolated Provider State
 
 Run multiple providers in parallel safely without any side effects:
 
@@ -205,7 +206,7 @@ const [gpt, claude] = await Promise.all([
 ]);
 ```
 
-#### 2. Scoped Credentials
+#### Scoped Credentials
 
 You can also pass a second argument to `withProvider` to override configuration keys (like API keys) for that specific instance only. This is useful for multi-tenant applications.
 

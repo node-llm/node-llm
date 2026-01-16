@@ -58,7 +58,7 @@ const llm = createLLM({
 
 ## Quick Start Examples
 
-### 1. Chat
+### Chat
 
 ```ts
 const chat = llm.chat(); // Uses default model
@@ -67,21 +67,21 @@ console.log(response.content);
 // => "Computing using quantum mechanical phenomena."
 ```
 
-### 2. Generate Images
+### Generate Images
 
 ```ts
 const image = await llm.paint("A cyberpunk city with neon rain");
 console.log(image.url);
 ```
 
-### 3. Create Embeddings
+### Create Embeddings
 
 ```ts
 const embedding = await llm.embed("Semantic search is powerful.");
 console.log(`Vector dimensions: ${embedding.dimensions}`);
 ```
 
-### 4. Streaming
+### Streaming
 
 Real-time responses are essential for good UX.
 
