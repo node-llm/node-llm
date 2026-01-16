@@ -18,7 +18,7 @@ description: Learn how to safely run multiple LLM providers concurrently using N
 {: .no_toc .text-delta }
 
 1. TOC
-   {:toc}
+{:toc}
 
 ---
 

@@ -48,15 +48,15 @@ export class OpenRouterCapabilities {
     return model.includes("embedding") || model.includes("text-sdk");
   }
 
-  static supportsImageGeneration(model: string): boolean {
+  static supportsImageGeneration(_model: string): boolean {
     return false;
   }
 
-  static supportsTranscription(model: string): boolean {
+  static supportsTranscription(_model: string): boolean {
     return false;
   }
 
-  static supportsModeration(model: string): boolean {
+  static supportsModeration(_model: string): boolean {
     return false;
   }
 

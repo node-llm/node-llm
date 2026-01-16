@@ -18,7 +18,7 @@ description: A unified interface for stateful conversations across all providers
 {: .no_toc .text-delta }
 
 1. TOC
-   {:toc}
+{:toc}
 
 ---
 

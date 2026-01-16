@@ -1,5 +1,5 @@
 import { EmbeddingRequest, EmbeddingResponse } from "../Provider.js";
-import { GeminiBatchEmbedRequest, GeminiBatchEmbedResponse } from "./types.js";
+import { GeminiBatchEmbedRequest, GeminiBatchEmbedResponse, GeminiEmbedRequest } from "./types.js";
 import { handleGeminiError } from "./Errors.js";
 import { logger } from "../../utils/logger.js";
 
@@ -16,7 +16,7 @@ export class GeminiEmbeddings {
 
     const payload: GeminiBatchEmbedRequest = {
       requests: inputs.map((text) => {
-        const item: any = {
+        const item: GeminiEmbedRequest = {
           model: `models/${modelId}`,
           content: {
             parts: [{ text: String(text) }]

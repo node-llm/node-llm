@@ -27,7 +27,7 @@ export class OpenAIEmbedding {
 
     this.validateModel(model);
 
-    const body: any = {
+    const body: Record<string, unknown> = {
       input: request.input,
       model
     };
@@ -68,7 +68,7 @@ export class OpenAIEmbedding {
     });
 
     // Extract vectors from the response
-    const vectors = data.map((item: any) => item.embedding);
+    const vectors = data.map((item: { embedding: number[] }) => item.embedding);
 
     return {
       vectors,

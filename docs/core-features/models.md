@@ -18,7 +18,7 @@ description: Programmatically discover available models, their capabilities, and
 {: .no_toc .text-delta }
 
 1. TOC
-   {:toc}
+{:toc}
 
 ---
 

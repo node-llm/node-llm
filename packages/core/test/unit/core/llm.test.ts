@@ -1,7 +1,18 @@
 import { describe, it, expect } from "vitest";
-import { createLLM, NodeLLM } from "../../../src/llm.js";
+import { createLLM } from "../../../src/llm.js";
 import { providerRegistry } from "../../../src/providers/registry.js";
 import { FakeProvider } from "../../fake-provider.js";
+import {
+  ProviderCapabilities,
+  ImageRequest,
+  ImageResponse,
+  TranscriptionRequest,
+  TranscriptionResponse,
+  EmbeddingRequest,
+  EmbeddingResponse,
+  ModerationRequest,
+  ModerationResponse
+} from "../../../src/providers/Provider.js";
 
 describe("LLM Configuration", () => {
   it("resolves provider by name using registry", async () => {
@@ -69,20 +80,31 @@ class MockCapabilitiesProvider extends FakeProvider {
     supportsTranscription: (_m: string) => false,
     supportsModeration: (_m: string) => false,
     supportsReasoning: (_m: string) => false,
+    supportsDeveloperRole: (_m: string) => false,
     getContextWindow: (_m: string) => 0
-  } as any;
+  } as ProviderCapabilities;
 
-  async paint(_req: any): Promise<any> {
+  async paint(_req: ImageRequest): Promise<ImageResponse> {
     return { url: "ok" };
   }
-  async transcribe(_req: any): Promise<any> {
-    return { text: "ok" };
+  async transcribe(_req: TranscriptionRequest): Promise<TranscriptionResponse> {
+    return { text: "ok", model: "test" };
   }
-  async embed(_req: any): Promise<any> {
-    return { vectors: [[0.1]], model: "test", dimensions: 1 };
+  async embed(_req: EmbeddingRequest): Promise<EmbeddingResponse> {
+    return { vectors: [[0.1]], model: "test", dimensions: 1, input_tokens: 1 };
   }
-  async moderate(_req: any): Promise<any> {
-    return { flagged: false };
+  async moderate(_req: ModerationRequest): Promise<ModerationResponse> {
+    return {
+      model: "test-model",
+      id: "mod-123",
+      results: [
+        {
+          flagged: false,
+          categories: { hate: false },
+          category_scores: { hate: 0.1 }
+        }
+      ]
+    };
   }
 }
 

@@ -18,7 +18,7 @@ description: Generate high-dimensional vector representations for semantic searc
 {: .no_toc .text-delta }
 
 1. TOC
-   {:toc}
+{:toc}
 
 ---
 

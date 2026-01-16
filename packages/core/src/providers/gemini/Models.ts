@@ -1,7 +1,9 @@
+
 import { ModelInfo } from "../Provider.js";
 import { Capabilities } from "./Capabilities.js";
 import { ModelRegistry } from "../../models/ModelRegistry.js";
-import { handleGeminiError } from "./Errors.js";
+import { GeminiListModelsResponse } from "./types.js";
+
 
 export class GeminiModels {
   constructor(
@@ -19,7 +21,7 @@ export class GeminiModels {
       });
 
       if (response.ok) {
-        const { models } = (await response.json()) as { models: any[] };
+        const { models } = (await response.json()) as GeminiListModelsResponse;
 
         return models.map((m) => {
           const modelId = m.name.replace("models/", "");
@@ -57,7 +59,7 @@ export class GeminiModels {
       .map((m) => ({
         ...m,
         capabilities: Capabilities.getCapabilities(m.id)
-      })) as unknown as ModelInfo[];
+      })) as ModelInfo[];
   }
 
   find(modelId: string) {

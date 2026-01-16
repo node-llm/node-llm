@@ -18,7 +18,7 @@ description: Leverage Google's powerful multimodal capabilities with native supp
 {: .no_toc .text-delta }
 
 1. TOC
-   {:toc}
+{:toc}
 
 ---
 

@@ -98,7 +98,7 @@ export class FileLoader {
 
         // Default to image_url for unknown binary or use as-is
         return { type: "image_url", image_url: { url: dataUri } };
-      } catch (error) {
+      } catch {
         // Fallback to URL if fetch fails
         return { type: "image_url", image_url: { url: filePath } };
       }

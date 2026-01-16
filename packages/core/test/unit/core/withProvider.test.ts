@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { createLLM, NodeLLM } from "../../../src/llm.js";
+import { createLLM } from "../../../src/llm.js";
 
 describe("LLMCore.withProvider()", () => {
   it("should create a scoped instance with the specified provider", () => {
@@ -13,7 +13,7 @@ describe("LLMCore.withProvider()", () => {
     // Should have access to the same methods
     expect(typeof scoped.chat).toBe("function");
     // configure should not exist on instances created via factory/withProvider
-    expect((scoped as any).configure).toBeUndefined();
+    expect((scoped as unknown as Record<string, unknown>).configure).toBeUndefined();
   });
 
   it("should inherit global config by default", () => {

@@ -18,7 +18,7 @@ description: Create photorealistic images and digital art from text descriptions
 {: .no_toc .text-delta }
 
 1. TOC
-   {:toc}
+{:toc}
 
 ---
 

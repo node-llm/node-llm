@@ -1,7 +1,6 @@
 import { ModelInfo } from "../Provider.js";
 import { Capabilities } from "./Capabilities.js";
 import { ModelRegistry } from "../../models/ModelRegistry.js";
-import { handleAnthropicError } from "./Errors.js";
 
 export class AnthropicModels {
   constructor(
@@ -21,7 +20,9 @@ export class AnthropicModels {
       });
 
       if (response.ok) {
-        const { data } = (await response.json()) as { data: any[] };
+        const { data } = (await response.json()) as {
+          data: { id: string; display_name: string; created_at: string }[];
+        };
 
         return data.map((m) => {
           const modelId = m.id;
@@ -57,7 +58,7 @@ export class AnthropicModels {
       .map((m) => ({
         ...m,
         capabilities: Capabilities.getCapabilities(m.id)
-      })) as unknown as ModelInfo[];
+      })) as ModelInfo[];
   }
 
   find(modelId: string) {

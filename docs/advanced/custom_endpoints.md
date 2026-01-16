@@ -18,7 +18,7 @@ description: Connect NodeLLM to Azure OpenAI, LiteLLM, Ollama, or any OpenAI-com
 {: .no_toc .text-delta }
 
 1. TOC
-   {:toc}
+{:toc}
 
 ---
 

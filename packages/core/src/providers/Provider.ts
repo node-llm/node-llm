@@ -1,16 +1,28 @@
 import { Message } from "../chat/Message.js";
 import { ToolDefinition, ToolCall } from "../chat/Tool.js";
 
+export interface ResponseFormat {
+  type: "text" | "json_object" | "json_schema";
+  json_schema?: {
+    name: string;
+    description?: string;
+    strict?: boolean;
+    schema?: Record<string, unknown>;
+    [key: string]: unknown;
+  };
+  [key: string]: unknown;
+}
+
 export interface ChatRequest {
   model: string;
   messages: Message[];
   tools?: ToolDefinition[];
   temperature?: number;
   max_tokens?: number;
-  response_format?: any;
+  response_format?: ResponseFormat;
   headers?: Record<string, string>;
   requestTimeout?: number;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 export interface ChatChunk {
@@ -18,6 +30,7 @@ export interface ChatChunk {
   reasoning?: string;
   tool_calls?: ToolCall[];
   done?: boolean;
+  usage?: Usage;
 }
 
 export interface Usage {
@@ -60,8 +73,8 @@ export interface ModelInfo {
   max_output_tokens: number | null;
   modalities: { input: string[]; output: string[] };
   capabilities: string[];
-  pricing: any;
-  metadata?: Record<string, any>;
+  pricing: unknown;
+  metadata?: Record<string, unknown>;
 }
 
 export interface ImageRequest {
@@ -96,7 +109,7 @@ export interface TranscriptionSegment {
   end: number;
   text: string;
   speaker?: string;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 export interface TranscriptionResponse {

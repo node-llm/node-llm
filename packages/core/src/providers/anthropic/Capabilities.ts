@@ -61,7 +61,7 @@ export class Capabilities {
     return caps;
   }
 
-  static getPricing(modelId: string): any {
+  static getPricing(modelId: string): unknown {
     const model = ModelRegistry.find(modelId, "anthropic");
     if (model?.pricing) return model.pricing;
 

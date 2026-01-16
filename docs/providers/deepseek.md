@@ -18,7 +18,7 @@ description: Access high-performance chat and advanced reasoning models with com
 {: .no_toc .text-delta }
 
 1. TOC
-   {:toc}
+{:toc}
 
 ---
 

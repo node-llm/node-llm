@@ -1,10 +1,10 @@
 import { describe, it, expect, afterEach } from "vitest";
-import { NodeLLM, createLLM } from "../../../../src/index.js";
+import { createLLM } from "../../../../src/index.js";
 import { setupVCR } from "../../../helpers/vcr.js";
 import "dotenv/config";
 
 describe("OpenAI JSON Mode Integration (VCR)", { timeout: 30000 }, () => {
-  let polly: any;
+  let polly: { stop: () => Promise<void> } | undefined;
 
   afterEach(async () => {
     if (polly) {
@@ -33,7 +33,7 @@ describe("OpenAI JSON Mode Integration (VCR)", { timeout: 30000 }, () => {
 
     // Should be parseable JSON
     // We can now use the .parsed property directly
-    const json = response.parsed;
+    const json = response.parsed as { greeting: string };
     expect(json).toBeDefined();
     expect(json.greeting).toBe("hello");
   });

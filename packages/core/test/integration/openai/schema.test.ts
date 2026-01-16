@@ -1,11 +1,11 @@
 import { describe, it, expect, afterEach } from "vitest";
-import { NodeLLM, createLLM } from "../../../src/index.js";
+import { createLLM } from "../../../src/index.js";
 import { setupVCR } from "../../helpers/vcr.js";
 import { z } from "zod";
 import "dotenv/config";
 
 describe("OpenAI Structured Output (VCR)", { timeout: 30000 }, () => {
-  let polly: any;
+  let polly: { stop: () => Promise<void> } | undefined;
 
   afterEach(async () => {
     if (polly) {
@@ -35,7 +35,7 @@ describe("OpenAI Structured Output (VCR)", { timeout: 30000 }, () => {
     expect(String(response)).toContain("{");
 
     // The parsed content should allow access to properties
-    const person = response.parsed;
+    const person = response.parsed as z.infer<typeof schema>;
     expect(person.name).toBe("Alice");
     expect(person.age).toBe(30);
     expect(person.hobbies).toContain("hiking");

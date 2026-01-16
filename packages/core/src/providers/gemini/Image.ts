@@ -18,7 +18,7 @@ export class GeminiImage {
       );
     }
 
-    const body: any = {
+    const body: Record<string, unknown> = {
       instances: [
         {
           prompt: request.prompt

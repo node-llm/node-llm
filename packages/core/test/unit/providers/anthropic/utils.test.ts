@@ -20,7 +20,7 @@ describe("Anthropic Utils", () => {
             { type: "text", text: "Part 1" },
             { type: "text", text: "Part 2" }
           ]
-        } as any,
+        } as unknown as Message,
         { role: "user", content: "Hello" }
       ];
       expect(formatSystemPrompt(messages)).toBe("Part 1\nPart 2");
@@ -53,8 +53,8 @@ describe("Anthropic Utils", () => {
       expect(result).toHaveLength(1);
       expect(result[0].role).toBe("user");
       expect(result[0].content).toHaveLength(2);
-      expect((result[0].content as any)[0].text).toBe("Hello");
-      expect((result[0].content as any)[1].text).toBe("Are you there?");
+      expect((result[0].content as Array<{ text: string }>)[0].text).toBe("Hello");
+      expect((result[0].content as Array<{ text: string }>)[1].text).toBe("Are you there?");
     });
 
     it("should handle tool responses", () => {
@@ -63,8 +63,12 @@ describe("Anthropic Utils", () => {
       expect(result).toHaveLength(1);
       expect(result[0].role).toBe("user");
       expect(Array.isArray(result[0].content)).toBe(true);
-      expect((result[0].content as any)[0].type).toBe("tool_result");
-      expect((result[0].content as any)[0].tool_use_id).toBe("call1");
+      expect((result[0].content as Array<{ type: string; tool_use_id: string }>)[0].type).toBe(
+        "tool_result"
+      );
+      expect((result[0].content as Array<{ type: string; tool_use_id: string }>)[0].tool_use_id).toBe(
+        "call1"
+      );
     });
 
     it("should handle assistant messages with tool calls", () => {
@@ -75,14 +79,15 @@ describe("Anthropic Utils", () => {
           tool_calls: [
             { id: "call1", type: "function", function: { name: "test", arguments: "{}" } }
           ]
-        } as any
+        } as unknown as Message
       ];
       const result = formatMessages(messages);
       expect(result).toHaveLength(1);
       expect(result[0].role).toBe("assistant");
       expect(result[0].content).toHaveLength(2);
-      expect((result[0].content as any)[0].text).toBe("Thinking...");
-      expect((result[0].content as any)[1].type).toBe("tool_use");
+      const content = result[0].content as Array<{ text?: string; type?: string }>;
+      expect(content[0].text).toBe("Thinking...");
+      expect(content[1].type).toBe("tool_use");
     });
 
     it("should handle multimodal content", () => {
@@ -98,13 +103,17 @@ describe("Anthropic Utils", () => {
               }
             }
           ]
-        } as any
+        } as unknown as Message
       ];
       const result = formatMessages(messages);
       expect(result[0].content).toHaveLength(2);
-      expect((result[0].content as any)[0].type).toBe("text");
-      expect((result[0].content as any)[1].type).toBe("image");
-      expect((result[0].content as any)[1].source.media_type).toBe("image/png");
+      const content = result[0].content as Array<{
+        type: string;
+        source?: { media_type: string };
+      }>;
+      expect(content[0].type).toBe("text");
+      expect(content[1].type).toBe("image");
+      expect(content[1].source!.media_type).toBe("image/png");
     });
   });
 });

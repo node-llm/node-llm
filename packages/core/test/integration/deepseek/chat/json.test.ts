@@ -1,10 +1,10 @@
 import { describe, it, expect, afterEach } from "vitest";
-import { NodeLLM, createLLM, z } from "../../../../src/index.js";
+import { createLLM, z } from "../../../../src/index.js";
 import { setupVCR } from "../../../helpers/vcr.js";
 import "dotenv/config";
 
 describe("DeepSeek Chat Structured Output Integration (VCR)", { timeout: 30000 }, () => {
-  let polly: any;
+  let polly: { stop: () => Promise<void> } | undefined;
 
   afterEach(async () => {
     if (polly) {
@@ -28,9 +28,10 @@ describe("DeepSeek Chat Structured Output Integration (VCR)", { timeout: 30000 }
 
     const response = await chat.withSchema(recipeSchema).ask("Give me a recipe for toast.");
 
-    expect(response.parsed).toBeDefined();
-    expect(response.parsed.name).toBeDefined();
-    expect(Array.isArray(response.parsed.ingredients)).toBe(true);
-    expect(typeof response.parsed.prep_time).toBe("number");
+    const parsed = response.parsed as z.infer<typeof recipeSchema>;
+    expect(parsed).toBeDefined();
+    expect(parsed.name).toBeDefined();
+    expect(Array.isArray(parsed.ingredients)).toBe(true);
+    expect(typeof parsed.prep_time).toBe("number");
   });
 });

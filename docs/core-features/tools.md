@@ -18,7 +18,7 @@ description: Give your models the ability to interact with the real world using 
 {: .no_toc .text-delta }
 
 1. TOC
-   {:toc}
+{:toc}
 
 ---
 

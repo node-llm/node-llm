@@ -1,10 +1,10 @@
 import { describe, it, expect, afterEach } from "vitest";
-import { NodeLLM, createLLM } from "../../../src/index.js";
+import { createLLM } from "../../../src/index.js";
 import { setupVCR } from "../../helpers/vcr.js";
 import "dotenv/config";
 
 describe("OpenAI Manual Schema (VCR)", { timeout: 30000 }, () => {
-  let polly: any;
+  let polly: { stop: () => Promise<void> } | undefined;
 
   afterEach(async () => {
     if (polly) {
@@ -42,7 +42,7 @@ describe("OpenAI Manual Schema (VCR)", { timeout: 30000 }, () => {
     const response = await chat.withSchema(person_schema).ask("Generate a person who likes Ruby");
 
     // Check automatic parsing
-    const content = response.parsed;
+    const content = response.parsed as { name: string; age: number; hobbies: string[] };
 
     expect(content).toBeDefined();
     expect(content.name).toBeDefined();

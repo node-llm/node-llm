@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { describe, it, expect, vi, beforeEach, Mock } from "vitest";
 import { OpenAIChat } from "../../../../src/providers/openai/Chat.js";
 import { ChatRequest } from "../../../../src/providers/Provider.js";
 
@@ -23,7 +23,7 @@ describe("OpenAIChat", () => {
       usage: { prompt_tokens: 10, completion_tokens: 5, total_tokens: 15 }
     };
 
-    (fetch as any).mockResolvedValue({
+    (fetch as unknown as Mock).mockResolvedValue({
       ok: true,
       json: () => Promise.resolve(mockResponse)
     });
@@ -60,7 +60,7 @@ describe("OpenAIChat", () => {
       ]
     };
 
-    (fetch as any).mockResolvedValue({
+    (fetch as unknown as Mock).mockResolvedValue({
       ok: true,
       json: () => Promise.resolve(mockResponse)
     });
@@ -75,7 +75,7 @@ describe("OpenAIChat", () => {
   it("should throw error on empty response", async () => {
     const request: ChatRequest = { model: "gpt-4o", messages: [] };
 
-    (fetch as any).mockResolvedValue({
+    (fetch as unknown as Mock).mockResolvedValue({
       ok: true,
       json: () => Promise.resolve({ choices: [{ message: {} }] })
     });

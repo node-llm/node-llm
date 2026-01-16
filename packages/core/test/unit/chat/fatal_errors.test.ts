@@ -2,6 +2,7 @@ import { describe, it, expect } from "vitest";
 import { Chat } from "../../../src/chat/Chat.js";
 import { Provider, ChatRequest, ChatResponse } from "../../../src/providers/Provider.js";
 import { ToolError, AuthenticationError } from "../../../src/errors/index.js";
+import { ToolDefinition } from "../../../src/chat/Tool.js";
 
 class MockToolProvider implements Provider {
   public id = "mock";
@@ -9,7 +10,7 @@ class MockToolProvider implements Provider {
   constructor(responses: ChatResponse[]) {
     this.responses = responses;
   }
-  async chat(request: ChatRequest): Promise<ChatResponse> {
+  async chat(_request: ChatRequest): Promise<ChatResponse> {
     const response = this.responses.shift();
     if (!response) throw new Error("No responses");
     return response;
@@ -37,7 +38,7 @@ describe("Fatal Tool Error Short-Circuiting", () => {
 
     const finalResponse: ChatResponse = { content: "Should not reach this" };
     const provider = new MockToolProvider([toolCallResponse, finalResponse]);
-    const chat = new Chat(provider, "test-model", { tools: [fatalTool as any] });
+    const chat = new Chat(provider, "test-model", { tools: [fatalTool as unknown as ToolDefinition] });
 
     // Expect the call to THROW instead of continuing to finalResponse
     await expect(chat.ask("Call fatal tool")).rejects.toThrow("API Key Expired");
@@ -57,7 +58,7 @@ describe("Fatal Tool Error Short-Circuiting", () => {
     };
 
     const provider = new MockToolProvider([toolCallResponse]);
-    const chat = new Chat(provider, "test-model", { tools: [authTool as any] });
+    const chat = new Chat(provider, "test-model", { tools: [authTool as unknown as ToolDefinition] });
 
     await expect(chat.ask("Call auth tool")).rejects.toThrow("Unauthorized");
   });
@@ -79,7 +80,7 @@ describe("Fatal Tool Error Short-Circuiting", () => {
 
     const finalResponse: ChatResponse = { content: "Handled error" };
     const provider = new MockToolProvider([toolCallResponse, finalResponse]);
-    const chat = new Chat(provider, "test-model", { tools: [standardTool as any] });
+    const chat = new Chat(provider, "test-model", { tools: [standardTool as unknown as ToolDefinition] });
 
     const response = await chat.ask("Call standard tool");
 

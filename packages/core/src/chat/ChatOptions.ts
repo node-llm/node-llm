@@ -1,8 +1,9 @@
 import { Message } from "./Message.js";
-import { ToolDefinition, ToolResolvable } from "./Tool.js";
+import { ToolResolvable } from "./Tool.js";
 import { Schema } from "../schema/Schema.js";
 import { ChatResponseString } from "./ChatResponse.js";
 import { ToolExecutionMode } from "../constants.js";
+import { ResponseFormat } from "../providers/Provider.js";
 
 export interface ChatOptions {
   systemPrompt?: string;
@@ -11,23 +12,23 @@ export interface ChatOptions {
   temperature?: number;
   maxTokens?: number;
   onNewMessage?: () => void;
-  onEndMessage?: (message: any) => void;
-  onToolCallStart?: (toolCall: any) => void;
-  onToolCallEnd?: (toolCall: any, result: any) => void;
+  onEndMessage?: (message: ChatResponseString) => void;
+  onToolCallStart?: (toolCall: unknown) => void;
+  onToolCallEnd?: (toolCall: unknown, result: unknown) => void;
   onToolCallError?: (
-    toolCall: any,
+    toolCall: unknown,
     error: Error
-  ) => "STOP" | "CONTINUE" | void | Promise<"STOP" | "CONTINUE" | void>;
+  ) => "STOP" | "CONTINUE" | "RETRY" | void | Promise<"STOP" | "CONTINUE" | "RETRY" | void>;
   headers?: Record<string, string>;
   schema?: Schema;
-  responseFormat?: { type: "json_object" | "text" };
-  params?: Record<string, any>;
+  responseFormat?: ResponseFormat;
+  params?: Record<string, unknown>;
   assumeModelExists?: boolean;
   provider?: string;
   maxToolCalls?: number;
   requestTimeout?: number;
   toolExecution?: ToolExecutionMode;
-  onConfirmToolCall?: (toolCall: any) => Promise<boolean> | boolean;
+  onConfirmToolCall?: (toolCall: unknown) => Promise<boolean> | boolean;
   onBeforeRequest?: (messages: Message[]) => Promise<Message[] | void>;
   onAfterResponse?: (response: ChatResponseString) => Promise<ChatResponseString | void>;
 }

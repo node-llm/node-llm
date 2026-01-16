@@ -18,7 +18,7 @@ description: Build resilient AI applications using our descriptive exception hie
 {: .no_toc .text-delta }
 
 1. TOC
-   {:toc}
+{:toc}
 
 ---
 

@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { createLLM } from "../../../src/llm.js";
+import { createLLM, NodeLLMCore } from "../../../src/llm.js";
+import { Provider } from "../../../src/providers/Provider.js";
 
 // Mock Provider
 const mockEmbed = vi.fn();
@@ -12,15 +13,15 @@ const mockProvider = {
   capabilities: {
     supportsEmbeddings: mockSupportsEmbeddings
   }
-} as any;
+} as unknown as Provider;
 
 describe("NodeLLM Embeddings", () => {
-  let llm: any;
+  let llm: NodeLLMCore;
 
   beforeEach(() => {
     vi.clearAllMocks();
     llm = createLLM({
-      provider: mockProvider as any,
+      provider: mockProvider,
       defaultEmbeddingModel: "text-embedding-3-small"
     });
   });
@@ -82,7 +83,7 @@ describe("NodeLLM Embeddings", () => {
 
   it("should use defaultEmbeddingModel if configured", async () => {
     const customLlm = createLLM({
-      provider: mockProvider as any,
+      provider: mockProvider,
       defaultEmbeddingModel: "configured-default"
     });
 
@@ -103,7 +104,7 @@ describe("NodeLLM Embeddings", () => {
   });
 
   it("should throw if provider does not support embed", async () => {
-    const limited = createLLM({ provider: {} as any });
+    const limited = createLLM({ provider: {} as unknown as Provider });
     await expect(limited.embed("test")).rejects.toThrow("Provider does not support embed");
   });
 

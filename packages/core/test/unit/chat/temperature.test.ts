@@ -7,7 +7,7 @@ describe("Chat Temperature", () => {
     const mockChat = vi.fn().mockResolvedValue({ content: "Response" });
     const provider: Provider = {
       chat: mockChat
-    } as any;
+    } as unknown as Provider;
 
     const chat = new Chat(provider, "test-model");
 
@@ -25,7 +25,7 @@ describe("Chat Temperature", () => {
     const mockChat = vi.fn().mockResolvedValue({ content: "Response" });
     const provider: Provider = {
       chat: mockChat
-    } as any;
+    } as unknown as Provider;
 
     const chat = new Chat(provider, "test-model");
 
@@ -42,7 +42,7 @@ describe("Chat Temperature", () => {
     const mockChat = vi.fn().mockResolvedValue({ content: "Response" });
     const provider: Provider = {
       chat: mockChat
-    } as any;
+    } as unknown as Provider;
 
     const chat = new Chat(provider, "test-model");
 

@@ -18,7 +18,7 @@ description: Full support for the complete range of NodeLLM features including t
 {: .no_toc .text-delta }
 
 1. TOC
-   {:toc}
+{:toc}
 
 ---
 

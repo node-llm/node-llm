@@ -1,12 +1,6 @@
 import { Chat } from "./chat/Chat.js";
 import { ChatOptions } from "./chat/ChatOptions.js";
-import {
-  Provider,
-  ModelInfo,
-  TranscriptionResponse,
-  ModerationResponse,
-  EmbeddingResponse
-} from "./providers/Provider.js";
+import { Provider, ModelInfo } from "./providers/Provider.js";
 import {
   providerRegistry,
   ensureOpenAIRegistered,
@@ -18,6 +12,7 @@ import {
 } from "./providers/registry.js";
 import { GeneratedImage } from "./image/GeneratedImage.js";
 import { ModelRegistry } from "./models/ModelRegistry.js";
+import { Model } from "./models/types.js";
 import { Transcription } from "./transcription/Transcription.js";
 import { Moderation } from "./moderation/Moderation.js";
 import { Embedding } from "./embedding/Embedding.js";
@@ -44,7 +39,7 @@ type LLMConfig = {
   defaultTranscriptionModel?: string;
   defaultModerationModel?: string;
   defaultEmbeddingModel?: string;
-} & Partial<NodeLLMConfig>;
+} & Omit<Partial<NodeLLMConfig>, "provider">;
 
 // Provider registration map
 const PROVIDER_REGISTRARS: Record<string, () => void> = {
@@ -147,7 +142,7 @@ export class NodeLLMCore {
     const models = await provider.listModels();
 
     // Dynamically update the model registry with the fetched info
-    ModelRegistry.save(models as any);
+    ModelRegistry.save(models as unknown as Model[]);
 
     return models;
   }
@@ -393,7 +388,7 @@ export const NodeLLM: NodeLLMCore = new Proxy({} as NodeLLMCore, {
       _defaultInstance = createLLM(config);
       Object.freeze(_defaultInstance);
     }
-    const val = (_defaultInstance as any)[prop];
+    const val = Reflect.get(_defaultInstance, prop);
     // Only bind if it's a function AND it exists on the prototype (is a method)
     // This avoids binding properties like 'models' which is a Class.
     if (typeof val === "function" && prop in NodeLLMCore.prototype) {
@@ -425,7 +420,7 @@ export const NodeLLM: NodeLLMCore = new Proxy({} as NodeLLMCore, {
  * configure() will warn and no-op, as the global instance is now immutable.
  */
 export const LegacyNodeLLM = {
-  configure(options: LLMConfig | ((config: NodeLLMConfig) => void)) {
+  configure(_options: LLMConfig | ((config: NodeLLMConfig) => void)) {
     console.warn(
       "NodeLLM.configure() is deprecated and currently a NO-OP. " +
         "The global NodeLLM instance is now immutable. " +

@@ -1,5 +1,6 @@
+
 import { Message } from "./Message.js";
-import { ContentPart, isBinaryContent, formatMultimodalContent } from "./Content.js";
+import { ContentPart, isBinaryContent, formatMultimodalContent, MessageContent } from "./Content.js";
 import { ChatOptions } from "./ChatOptions.js";
 import { Provider, ChatChunk, Usage } from "../providers/Provider.js";
 import { ChatResponseString } from "./ChatResponse.js";
@@ -9,10 +10,11 @@ import { ToolExecutionMode } from "../constants.js";
 import { AskOptions } from "./Chat.js";
 import { FileLoader } from "../utils/FileLoader.js";
 import { toJsonSchema } from "../schema/to-json-schema.js";
-import { ToolDefinition } from "./Tool.js";
+import { ToolDefinition, ToolCall } from "./Tool.js";
 import { ChatValidator } from "./Validation.js";
 import { ToolHandler } from "./ToolHandler.js";
 import { logger } from "../utils/logger.js";
+import { ResponseFormat } from "../providers/Provider.js";
 
 /**
  * Internal handler for chat streaming logic.
@@ -81,7 +83,7 @@ export class ChatStream {
       };
 
       // Process Multimodal Content
-      let messageContent: any = content;
+      let messageContent: MessageContent = content;
       const files = [...(requestOptions.images ?? []), ...(requestOptions.files ?? [])];
 
       if (files.length > 0) {
@@ -103,7 +105,7 @@ export class ChatStream {
       }
 
       // Process Schema/Structured Output
-      let responseFormat: any = options.responseFormat;
+      let responseFormat: ResponseFormat | undefined = options.responseFormat;
       if (!responseFormat && options.schema) {
         ChatValidator.validateStructuredOutput(provider, model, true, options);
 
@@ -149,7 +151,7 @@ export class ChatStream {
 
         let fullContent = "";
         let fullReasoning = "";
-        let toolCalls: any[] | undefined;
+        let toolCalls: ToolCall[] | undefined;
         let currentTurnUsage: Usage | undefined;
 
         try {
@@ -192,8 +194,8 @@ export class ChatStream {
               toolCalls = chunk.tool_calls;
             }
 
-            if ((chunk as any).usage) {
-              currentTurnUsage = (chunk as any).usage;
+            if ((chunk as { usage?: Usage }).usage) {
+              currentTurnUsage = (chunk as { usage: Usage }).usage;
               trackUsage(currentTurnUsage);
             }
           }
@@ -251,13 +253,14 @@ export class ChatStream {
             try {
               const toolResult = await ToolHandler.execute(
                 toolCall,
-                options.tools,
+                options.tools as unknown as ToolDefinition[],
                 options.onToolCallStart,
                 options.onToolCallEnd
               );
               messages.push(toolResult);
-            } catch (error: any) {
-              const directive = await options.onToolCallError?.(toolCall, error);
+            } catch (error: unknown) {
+              const err = error as Error & { fatal?: boolean; status?: number };
+              const directive = await options.onToolCallError?.(toolCall, err);
 
               if (directive === "STOP") {
                 throw error;
@@ -266,16 +269,16 @@ export class ChatStream {
               messages.push({
                 role: "tool",
                 tool_call_id: toolCall.id,
-                content: `Fatal error executing tool '${toolCall.function.name}': ${error.message}`
+                content: `Fatal error executing tool '${toolCall.function.name}': ${err.message}`
               });
 
               if (directive === "CONTINUE") {
                 continue;
               }
 
-              const isFatal = error.fatal === true || error.status === 401 || error.status === 403;
+              const isFatal = err.fatal === true || err.status === 401 || err.status === 403;
               if (isFatal) {
-                throw error;
+                throw err;
               }
 
               logger.error(

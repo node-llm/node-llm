@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { describe, it, expect, vi, beforeEach, Mock } from "vitest";
 import { createLLM } from "../../../src/llm.js";
 import { Provider } from "../../../src/providers/Provider.js";
 
@@ -18,8 +18,8 @@ describe("Transcription Unit Tests", () => {
       }),
       capabilities: {
         supportsTranscription: vi.fn().mockReturnValue(true)
-      } as any
-    } as any;
+      } as unknown
+    } as Provider;
   });
 
   it("should call provider.transcribe with correct arguments", async () => {
@@ -85,7 +85,7 @@ describe("Transcription Unit Tests", () => {
     expect(result.model).toBe("whisper-1");
     expect(result.duration).toBe(10);
     expect(result.segments).toHaveLength(1);
-    expect(result.segments[0].text).toBe("Mock transcription");
+    expect(result.segments![0].text).toBe("Mock transcription");
     expect(result.toString()).toBe("Mock transcription");
   });
 
@@ -94,7 +94,7 @@ describe("Transcription Unit Tests", () => {
       id: "limited-provider",
       defaultModel: () => "test-model",
       chat: vi.fn()
-    } as any;
+    } as unknown as Provider;
     const llm = createLLM({ provider: limitedProvider });
 
     await expect(llm.transcribe("test.mp3")).rejects.toThrow(
@@ -115,9 +115,9 @@ describe("Transcription Unit Tests", () => {
     const llm = createLLM({ provider: mockProvider });
     const result = await llm.transcribe("test.mp3", { model: "gpt-4o-transcribe-diarize" });
 
-    expect(result.segments[0].speaker).toBe("A");
-    expect(result.segments[1].speaker).toBe("B");
-    expect(result.segments[0].start).toBe(0.5);
+    expect(result.segments![0].speaker).toBe("A");
+    expect(result.segments![1].speaker).toBe("B");
+    expect(result.segments![0].start).toBe(0.5);
   });
 
   it("should support known speaker identification", async () => {
@@ -137,7 +137,7 @@ describe("Transcription Unit Tests", () => {
   });
 
   it("should throw if model does not support transcription", async () => {
-    (mockProvider.capabilities!.supportsTranscription as any).mockReturnValue(false);
+    (mockProvider.capabilities!.supportsTranscription as unknown as Mock).mockReturnValue(false);
     const llm = createLLM({ provider: mockProvider });
     await expect(llm.transcribe("test.mp3", { model: "gpt-4" })).rejects.toThrow(
       "does not support transcription"

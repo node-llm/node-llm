@@ -168,7 +168,7 @@ export class Capabilities {
     return modelId.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
   }
 
-  static getPricing(modelId: string): any {
+  static getPricing(modelId: string): unknown {
     const model = ModelRegistry.find(modelId, "openai");
     if (model?.pricing) return model.pricing;
 

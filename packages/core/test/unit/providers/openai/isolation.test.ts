@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { describe, it, expect, vi, beforeEach, Mock } from "vitest";
 import { OpenAIProvider } from "../../../../src/providers/openai/OpenAIProvider.js";
 import { ChatRequest } from "../../../../src/providers/Provider.js";
 
@@ -16,7 +16,7 @@ describe("OpenAI Role Isolation Mapping", () => {
     const provider = new OpenAIProvider({ apiKey });
 
     // Mock successful response
-    (global.fetch as any).mockResolvedValue({
+    (global.fetch as unknown as Mock).mockResolvedValue({
       ok: true,
       json: async () => ({
         choices: [{ message: { content: "Response" } }],
@@ -34,7 +34,7 @@ describe("OpenAI Role Isolation Mapping", () => {
 
     await provider.chat(request);
 
-    const fetchCall = (global.fetch as any).mock.calls[0];
+    const fetchCall = (global.fetch as unknown as Mock).mock.calls[0];
     const body = JSON.parse(fetchCall[1].body);
 
     expect(body.messages[0].role).toBe("developer");
@@ -44,7 +44,7 @@ describe("OpenAI Role Isolation Mapping", () => {
   it("falls back to 'system' role for older models", async () => {
     const provider = new OpenAIProvider({ apiKey });
 
-    (global.fetch as any).mockResolvedValue({
+    (global.fetch as unknown as Mock).mockResolvedValue({
       ok: true,
       json: async () => ({
         choices: [{ message: { content: "Response" } }]
@@ -58,7 +58,7 @@ describe("OpenAI Role Isolation Mapping", () => {
 
     await provider.chat(request);
 
-    const fetchCall = (global.fetch as any).mock.calls[0];
+    const fetchCall = (global.fetch as unknown as Mock).mock.calls[0];
     const body = JSON.parse(fetchCall[1].body);
 
     expect(body.messages[0].role).toBe("system");
@@ -71,7 +71,7 @@ describe("OpenAI Role Isolation Mapping", () => {
       baseUrl: "https://my-local-llm.com/v1"
     });
 
-    (global.fetch as any).mockResolvedValue({
+    (global.fetch as unknown as Mock).mockResolvedValue({
       ok: true,
       json: async () => ({
         choices: [{ message: { content: "Response" } }]
@@ -85,7 +85,7 @@ describe("OpenAI Role Isolation Mapping", () => {
 
     await provider.chat(request);
 
-    const fetchCall = (global.fetch as any).mock.calls[0];
+    const fetchCall = (global.fetch as unknown as Mock).mock.calls[0];
     const body = JSON.parse(fetchCall[1].body);
 
     expect(body.messages[0].role).toBe("system");

@@ -13,7 +13,7 @@ description: Guide for migrating to NodeLLM v1.6.0 strict provider configuration
 NodeLLM v1.6.0 builds upon the **Immutable Architecture** introduced in v1.5.0 and introduces stricter configuration requirements to eliminate ambiguity when working with multiple providers.
 
 1. TOC
-   {:toc}
+{:toc}
 
 ---
 

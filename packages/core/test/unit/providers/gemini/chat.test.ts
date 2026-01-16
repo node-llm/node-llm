@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { describe, it, expect, vi, beforeEach, Mock } from "vitest";
 import { GeminiChat } from "../../../../src/providers/gemini/Chat.js";
 import { ChatRequest } from "../../../../src/providers/Provider.js";
 import { GeminiChatUtils } from "../../../../src/providers/gemini/ChatUtils.js";
@@ -26,7 +26,7 @@ describe("GeminiChat", () => {
       contents: [{ role: "user", parts: [{ text: "Hello" }] }],
       systemInstructionParts: []
     };
-    (GeminiChatUtils.convertMessages as any).mockResolvedValue(mockConvert);
+    (GeminiChatUtils.convertMessages as unknown as Mock).mockResolvedValue(mockConvert);
 
     const mockResponse = {
       candidates: [
@@ -38,7 +38,7 @@ describe("GeminiChat", () => {
       usageMetadata: { promptTokenCount: 5, candidatesTokenCount: 3, totalTokenCount: 8 }
     };
 
-    (fetch as any).mockResolvedValue({
+    (fetch as unknown as Mock).mockResolvedValue({
       ok: true,
       json: () => Promise.resolve(mockResponse)
     });
@@ -63,11 +63,11 @@ describe("GeminiChat", () => {
       response_format: { type: "json_object" }
     };
 
-    (GeminiChatUtils.convertMessages as any).mockResolvedValue({
+    (GeminiChatUtils.convertMessages as unknown as Mock).mockResolvedValue({
       contents: [],
       systemInstructionParts: []
     });
-    (fetch as any).mockResolvedValue({
+    (fetch as unknown as Mock).mockResolvedValue({
       ok: true,
       json: () => Promise.resolve({ candidates: [] })
     });
@@ -99,18 +99,18 @@ describe("GeminiChat", () => {
       }
     };
 
-    (GeminiChatUtils.convertMessages as any).mockResolvedValue({
+    (GeminiChatUtils.convertMessages as unknown as Mock).mockResolvedValue({
       contents: [],
       systemInstructionParts: []
     });
-    (fetch as any).mockResolvedValue({
+    (fetch as unknown as Mock).mockResolvedValue({
       ok: true,
       json: () => Promise.resolve({ candidates: [] })
     });
 
     await chat.execute(request);
 
-    const callArgs = JSON.parse((fetch as any).mock.calls[0][1].body);
+    const callArgs = JSON.parse((fetch as unknown as Mock).mock.calls[0][1].body);
     expect(callArgs.generationConfig.responseSchema).toBeDefined();
     expect(callArgs.generationConfig.responseSchema.additionalProperties).toBeUndefined();
   });

@@ -20,4 +20,4 @@ back_to_top: false
 {: .no_toc .text-delta }
 
 1. TOC
-   {:toc}
+{:toc}

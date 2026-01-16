@@ -19,7 +19,7 @@ description: Learn how to configure NodeLLM with API keys, custom base URLs, sec
 {: .no_toc .text-delta }
 
 1. TOC
-   {:toc}
+{:toc}
 
 ---
 

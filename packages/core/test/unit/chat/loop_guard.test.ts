@@ -6,7 +6,7 @@ class MockLoopProvider implements Provider {
   public id = "mock-loop";
   public requests: ChatRequest[] = [];
 
-  defaultModel(feature?: string): string {
+  defaultModel(_feature?: string): string {
     return "test-model";
   }
 

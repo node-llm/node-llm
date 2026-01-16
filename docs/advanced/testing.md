@@ -18,7 +18,7 @@ description: Run automated tests using our high-fidelity VCR recording system to
 {: .no_toc .text-delta }
 
 1. TOC
-   {:toc}
+{:toc}
 
 ---
 

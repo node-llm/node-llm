@@ -32,7 +32,7 @@ export class Capabilities {
     return 4_096;
   }
 
-  static supportsVision(modelId: string): boolean {
+  static supportsVision(_modelId: string): boolean {
     return false;
   }
 
@@ -44,19 +44,19 @@ export class Capabilities {
     return /deepseek-(?:chat|reasoner)/.test(modelId);
   }
 
-  static supportsEmbeddings(modelId: string): boolean {
+  static supportsEmbeddings(_modelId: string): boolean {
     return false;
   }
 
-  static supportsImageGeneration(modelId: string): boolean {
+  static supportsImageGeneration(_modelId: string): boolean {
     return false;
   }
 
-  static supportsTranscription(modelId: string): boolean {
+  static supportsTranscription(_modelId: string): boolean {
     return false;
   }
 
-  static supportsModeration(modelId: string): boolean {
+  static supportsModeration(_modelId: string): boolean {
     return false;
   }
 

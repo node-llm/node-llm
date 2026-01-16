@@ -11,7 +11,7 @@ export class OpenAIImage {
   ) {}
 
   async execute(request: ImageRequest): Promise<ImageResponse> {
-    const body: any = {
+    const body: Record<string, unknown> = {
       model: request.model || "dall-e-3",
       prompt: request.prompt,
       size: request.size || "1024x1024",

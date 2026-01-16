@@ -18,7 +18,7 @@ description: Learn how NodeLLM acts as an architectural security layer with cont
 {: .no_toc .text-delta }
 
 1. TOC
-   {:toc}
+{:toc}
 
 ---
 

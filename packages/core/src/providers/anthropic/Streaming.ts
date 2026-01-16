@@ -72,7 +72,10 @@ export class AnthropicStreaming {
 
     let done = false;
     // Track tool calls being built across chunks
-    const toolCallsMap = new Map<number, any>();
+    const toolCallsMap = new Map<
+      number,
+      { id: string; type: string; function: { name: string; arguments: string } }
+    >();
     let currentBlockIndex = -1;
 
     try {

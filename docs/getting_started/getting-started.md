@@ -19,7 +19,7 @@ description: A 5-minute guide to get started with NodeLLM. Install, configure, a
 {: .no_toc .text-delta }
 
 1. TOC
-   {:toc}
+{:toc}
 
 ---
 

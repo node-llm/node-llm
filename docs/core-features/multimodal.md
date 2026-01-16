@@ -18,7 +18,7 @@ description: Go beyond text. Learn how to pass images, audio, video, and documen
 {: .no_toc .text-delta }
 
 1. TOC
-   {:toc}
+{:toc}
 
 ---
 

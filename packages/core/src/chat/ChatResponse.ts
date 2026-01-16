@@ -69,10 +69,10 @@ export class ChatResponseString extends String {
    * Attempt to parse the content as JSON.
    * Returns the parsed object or null if parsing fails.
    */
-  get parsed(): any {
+  get parsed(): unknown {
     try {
       return JSON.parse(this.valueOf());
-    } catch (e) {
+    } catch {
       return null;
     }
   }

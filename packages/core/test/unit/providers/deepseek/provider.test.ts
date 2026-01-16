@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { describe, it, expect, vi, beforeEach, Mock } from "vitest";
 import { DeepSeekProvider } from "../../../../src/providers/deepseek/DeepSeekProvider.js";
 import { DeepSeekChat } from "../../../../src/providers/deepseek/Chat.js";
 import { DeepSeekModels } from "../../../../src/providers/deepseek/Models.js";
@@ -24,14 +24,13 @@ describe("DeepSeekProvider", () => {
   });
 
   it("should initialize with custom baseUrl", () => {
-    const customProvider = new DeepSeekProvider({ ...options, baseUrl: "https://custom.api" });
+    new DeepSeekProvider({ ...options, baseUrl: "https://custom.api" });
     expect(DeepSeekChat).toHaveBeenCalledWith("https://custom.api", "test-key");
   });
 
   it("should delegate chat to chatHandler", async () => {
     const request = { model: "test", messages: [] };
-    // @ts-expect-error
-    DeepSeekChat.prototype.execute.mockResolvedValue({ content: "ok" });
+    (DeepSeekChat.prototype.execute as unknown as Mock).mockResolvedValue({ content: "ok" });
     await provider.chat(request);
     expect(DeepSeekChat.prototype.execute).toHaveBeenCalledWith(request);
   });
@@ -41,8 +40,7 @@ describe("DeepSeekProvider", () => {
     const generator = (async function* () {
       yield { content: "ok" };
     })();
-    // @ts-expect-error
-    DeepSeekStreaming.prototype.execute.mockReturnValue(generator);
+    (DeepSeekStreaming.prototype.execute as unknown as Mock).mockReturnValue(generator);
 
     const stream = provider.stream(request);
     for await (const chunk of stream) {
@@ -52,8 +50,7 @@ describe("DeepSeekProvider", () => {
   });
 
   it("should delegate listModels to modelsHandler", async () => {
-    // @ts-expect-error
-    DeepSeekModels.prototype.execute.mockResolvedValue([]);
+    (DeepSeekModels.prototype.execute as unknown as Mock).mockResolvedValue([]);
     await provider.listModels();
     expect(DeepSeekModels.prototype.execute).toHaveBeenCalled();
   });

@@ -5,8 +5,7 @@ import {
   AuthenticationError,
   RateLimitError,
   ServiceUnavailableError,
-  ServerError,
-  APIError
+  ServerError
 } from "../../../../src/errors/index.js";
 
 describe("Gemini Errors", () => {

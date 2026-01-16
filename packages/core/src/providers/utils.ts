@@ -7,7 +7,7 @@ import { Message } from "../chat/Message.js";
  */
 export function mapSystemMessages(messages: Message[], supportsDeveloperRole: boolean): Message[] {
   return messages.map((msg) => {
-    if (msg.role === "system" || (msg.role as any) === "developer") {
+    if (msg.role === "system" || (msg.role as string) === "developer") {
       return {
         ...msg,
         role: supportsDeveloperRole ? "developer" : "system"

@@ -1,7 +1,11 @@
 import { describe, it, expect } from "vitest";
 import { Chat } from "../../../src/chat/Chat.js";
-import { Tool } from "../../../src/chat/Tool.js";
+import { Tool, ToolDefinition } from "../../../src/chat/Tool.js";
 import { FakeProvider } from "../../fake-provider.js";
+import { ChatOptions } from "../../../src/chat/ChatOptions.js";
+
+// Helper type to inspect private options
+type TestChat = { options: ChatOptions };
 
 class ComplexTool extends Tool {
   name = "complex_tool";
@@ -25,15 +29,15 @@ describe("Tool Normalization Regression Tests", () => {
       tools: [ComplexTool]
     });
 
-    const tools = (chat as any).options.tools;
+    const tools = (chat as unknown as TestChat).options.tools as ToolDefinition[];
     expect(tools).toHaveLength(1);
 
     // It should NOT be the class or a raw instance anymore
     // It should be the normalized ToolDefinition
-    expect(tools[0].type).toBe("function");
-    expect(tools[0].function.name).toBe("complex_tool");
-    expect(tools[0].function.parameters.properties).toBeDefined();
-    expect(typeof tools[0].handler).toBe("function");
+    expect(tools[0]!.type).toBe("function");
+    expect(tools[0]!.function.name).toBe("complex_tool");
+    expect(tools[0]!.function.parameters.properties).toBeDefined();
+    expect(typeof tools[0]!.handler).toBe("function");
   });
 
   it("should normalize tool instances passed in constructor options", () => {
@@ -43,11 +47,11 @@ describe("Tool Normalization Regression Tests", () => {
       tools: [toolInstance]
     });
 
-    const tools = (chat as any).options.tools;
+    const tools = (chat as unknown as TestChat).options.tools as ToolDefinition[];
     expect(tools).toHaveLength(1);
-    expect(tools[0].type).toBe("function");
-    expect(tools[0].function.name).toBe("complex_tool");
-    expect(typeof tools[0].handler).toBe("function");
+    expect(tools[0]!.type).toBe("function");
+    expect(tools[0]!.function.name).toBe("complex_tool");
+    expect(typeof tools[0]!.handler).toBe("function");
   });
 
   it("should maintain normalization when adding more tools via withTools later", () => {
@@ -67,14 +71,14 @@ describe("Tool Normalization Regression Tests", () => {
 
     chat.withTools([SecondTool]);
 
-    const tools = (chat as any).options.tools;
+    const tools = (chat as unknown as TestChat).options.tools as ToolDefinition[];
     expect(tools).toHaveLength(2);
-    expect(tools[0].function.name).toBe("complex_tool");
-    expect(tools[1].function.name).toBe("second_tool");
+    expect(tools[0]!.function.name).toBe("complex_tool");
+    expect(tools[1]!.function.name).toBe("second_tool");
 
     // Both should be normalized
-    expect(tools[0].type).toBe("function");
-    expect(tools[1].type).toBe("function");
+    expect(tools[0]!.type).toBe("function");
+    expect(tools[1]!.type).toBe("function");
   });
 
   it("should handle mixed raw objects and classes in constructor", () => {
@@ -89,11 +93,11 @@ describe("Tool Normalization Regression Tests", () => {
       tools: [rawTool, ComplexTool]
     });
 
-    const tools = (chat as any).options.tools;
+    const tools = (chat as unknown as TestChat).options.tools as ToolDefinition[];
     expect(tools).toHaveLength(2);
-    expect(tools[0].function.name).toBe("raw_tool");
-    expect(tools[1].function.name).toBe("complex_tool");
-    expect(tools[1].type).toBe("function");
+    expect(tools[0]!.function.name).toBe("raw_tool");
+    expect(tools[1]!.function.name).toBe("complex_tool");
+    expect(tools[1]!.type).toBe("function");
   });
 
   describe("Validation", () => {
@@ -107,7 +111,7 @@ describe("Tool Normalization Regression Tests", () => {
       expect(
         () =>
           new Chat(provider, "test-model", {
-            tools: [toolWithExecute as any]
+            tools: [toolWithExecute as unknown as ToolDefinition]
           })
       ).toThrow(/must have a 'handler' function/);
     });
@@ -122,7 +126,7 @@ describe("Tool Normalization Regression Tests", () => {
       expect(
         () =>
           new Chat(provider, "test-model", {
-            tools: [badTool as any]
+            tools: [badTool as unknown as ToolDefinition]
           })
       ).toThrow(/function.name/);
     });
@@ -137,7 +141,7 @@ describe("Tool Normalization Regression Tests", () => {
       expect(
         () =>
           new Chat(provider, "test-model", {
-            tools: [badTool as any]
+            tools: [badTool as unknown as ToolDefinition]
           })
       ).toThrow(/must have a 'handler' function/);
     });

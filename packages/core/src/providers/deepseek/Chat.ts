@@ -1,5 +1,4 @@
 import { ChatRequest, ChatResponse, Usage } from "../Provider.js";
-import { Capabilities } from "./Capabilities.js";
 import { ModelRegistry } from "../../models/ModelRegistry.js";
 import { logger } from "../../utils/logger.js";
 import { mapSystemMessages } from "../utils.js";
@@ -11,7 +10,7 @@ interface DeepSeekChatResponse {
     message: {
       content: string | null;
       reasoning_content?: string | null;
-      tool_calls?: any[];
+      tool_calls?: DeepSeekToolCall[];
     };
     finish_reason: string;
   }>;
@@ -19,6 +18,15 @@ interface DeepSeekChatResponse {
     prompt_tokens: number;
     completion_tokens: number;
     total_tokens: number;
+  };
+}
+
+interface DeepSeekToolCall {
+  id: string;
+  type: string;
+  function: {
+    name: string;
+    arguments: string;
   };
 }
 
@@ -35,14 +43,14 @@ export class DeepSeekChat {
       tools,
       max_tokens,
       response_format,
-      headers,
+      headers: _headers,
       requestTimeout,
       ...rest
     } = request;
 
     const mappedMessages = mapSystemMessages(messages, false);
 
-    const body: any = {
+    const body: Record<string, unknown> = {
       model,
       messages: mappedMessages,
       ...rest
@@ -60,18 +68,19 @@ export class DeepSeekChat {
 
         // Append schema instructions to the system prompt or convert to a new system message
         const schema = response_format.json_schema;
-        const schemaString = JSON.stringify(schema.schema, null, 2);
+        const schemaString = JSON.stringify(schema?.schema, null, 2);
         const instruction = `\n\nIMPORTANT: You must output strictly valid JSON conforming to the following schema:\n${schemaString}\n\nOutput only the JSON object.`;
 
         // Find system message or append to last user message
-        const systemMessage = body.messages.find(
-          (m: any) => m.role === "system" || m.role === "developer"
+        const messagesList = body.messages as { role: string; content: string }[];
+        const systemMessage = messagesList.find(
+          (m) => m.role === "system" || m.role === "developer"
         );
         if (systemMessage) {
           systemMessage.content += instruction;
         } else {
           // Insert system message at the beginning
-          body.messages.unshift({
+          messagesList.unshift({
             role: "system",
             content: "You are a helpful assistant." + instruction
           });
@@ -116,9 +125,9 @@ export class DeepSeekChat {
       total_tokens: json.usage.total_tokens
     };
 
-    const toolCalls = message?.tool_calls?.map((tc: any) => ({
+    const toolCalls = message?.tool_calls?.map((tc) => ({
       id: tc.id,
-      type: tc.type,
+      type: "function" as const,
       function: {
         name: tc.function.name,
         arguments: tc.function.arguments

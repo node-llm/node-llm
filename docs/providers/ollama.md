@@ -18,7 +18,7 @@ description: Run Large Language Models locally on your machine with full support
 {: .no_toc .text-delta }
 
 1. TOC
-   {:toc}
+{:toc}
 
 ---
 

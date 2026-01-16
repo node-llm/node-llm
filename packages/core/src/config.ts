@@ -151,7 +151,7 @@ export class Configuration implements NodeLLMConfig {
    * It handles getters (lazy-loaded values) correctly.
    */
   public toPlainObject(): NodeLLMConfig {
-    const plain: any = { ...this }; // Capture all enumerable "own" properties (custom keys, overrides)
+    const plain: Record<string, unknown> = { ...(this as unknown as Record<string, unknown>) }; // Capture all enumerable "own" properties (custom keys, overrides)
 
     // Capture all getters from the class prototype (lazy-loaded values)
     const prototype = Object.getPrototypeOf(this);
@@ -163,11 +163,11 @@ export class Configuration implements NodeLLMConfig {
       const descriptor = Object.getOwnPropertyDescriptor(prototype, name);
       if (descriptor && descriptor.get) {
         // Trigger the getter to snapshot the live value (including env fallbacks)
-        plain[name] = (this as any)[name];
+        plain[name] = Reflect.get(this, name);
       }
     }
 
-    return plain;
+    return plain as NodeLLMConfig;
   }
 }
 

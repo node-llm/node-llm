@@ -19,7 +19,7 @@ description: Browse AI models from every major provider. Always up-to-date, auto
 {: .no_toc .text-delta }
 
 1. TOC
-   {:toc}
+{:toc}
 
 ---
 

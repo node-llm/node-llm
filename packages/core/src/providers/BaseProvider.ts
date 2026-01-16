@@ -12,7 +12,8 @@ import {
   ModerationRequest,
   ModerationResponse,
   EmbeddingRequest,
-  EmbeddingResponse
+  EmbeddingResponse,
+  ProviderCapabilities
 } from "./Provider.js";
 
 /**
@@ -29,7 +30,7 @@ export abstract class BaseProvider implements Provider {
     return this.providerName();
   }
 
-  public defaultModel(feature?: string): string {
+  public defaultModel(_feature?: string): string {
     return "";
   }
 
@@ -38,9 +39,9 @@ export abstract class BaseProvider implements Provider {
   }
 
   abstract chat(request: ChatRequest): Promise<ChatResponse>;
-  abstract capabilities?: any;
+  abstract capabilities?: ProviderCapabilities;
 
-  async *stream?(request: ChatRequest): AsyncIterable<ChatChunk> {
+  async *stream?(_request: ChatRequest): AsyncIterable<ChatChunk> {
     this.throwUnsupportedError("stream");
     yield* [];
   }
@@ -49,19 +50,19 @@ export abstract class BaseProvider implements Provider {
     this.throwUnsupportedError("listModels");
   }
 
-  async paint?(request: ImageRequest): Promise<ImageResponse> {
+  async paint?(_request: ImageRequest): Promise<ImageResponse> {
     this.throwUnsupportedError("paint");
   }
 
-  async transcribe?(request: TranscriptionRequest): Promise<TranscriptionResponse> {
+  async transcribe?(_request: TranscriptionRequest): Promise<TranscriptionResponse> {
     this.throwUnsupportedError("transcribe");
   }
 
-  async moderate?(request: ModerationRequest): Promise<ModerationResponse> {
+  async moderate?(_request: ModerationRequest): Promise<ModerationResponse> {
     this.throwUnsupportedError("moderate");
   }
 
-  async embed?(request: EmbeddingRequest): Promise<EmbeddingResponse> {
+  async embed?(_request: EmbeddingRequest): Promise<EmbeddingResponse> {
     this.throwUnsupportedError("embed");
   }
 }

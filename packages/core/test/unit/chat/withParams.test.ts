@@ -4,7 +4,9 @@ import { Provider, ChatRequest, ChatResponse } from "../../../src/providers/Prov
 
 describe("Chat.withParams", () => {
   const mockProvider: Provider = {
-    chat: vi.fn(async (request: ChatRequest): Promise<ChatResponse> => {
+    id: "mock-provider",
+    defaultModel: () => "test-model",
+    chat: vi.fn(async (_request: ChatRequest): Promise<ChatResponse> => {
       return {
         content: "Test response",
         usage: { input_tokens: 10, output_tokens: 20, total_tokens: 30 }

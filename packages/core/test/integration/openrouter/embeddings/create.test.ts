@@ -1,10 +1,10 @@
 import { describe, it, expect, afterEach } from "vitest";
-import { NodeLLM, createLLM } from "../../../../src/index.js";
+import { createLLM } from "../../../../src/index.js";
 import { setupVCR } from "../../../helpers/vcr.js";
 import "dotenv/config";
 
 describe("OpenRouter Embeddings Integration (VCR)", { timeout: 30000 }, () => {
-  let polly: any;
+  let polly: { stop: () => Promise<void> } | undefined;
 
   afterEach(async () => {
     if (polly) {
@@ -25,7 +25,8 @@ describe("OpenRouter Embeddings Integration (VCR)", { timeout: 30000 }, () => {
 
     expect(response.vectors).toBeDefined();
     expect(Array.isArray(response.vectors)).toBe(true);
-    expect(response.vectors[0].length).toBeGreaterThan(0);
+    expect(response.vectors!.length).toBeGreaterThan(0);
+    expect(response.vectors![0]!.length).toBeGreaterThan(0);
     expect(response.input_tokens).toBeGreaterThan(0);
   });
 
@@ -40,8 +41,8 @@ describe("OpenRouter Embeddings Integration (VCR)", { timeout: 30000 }, () => {
       model: "text-embedding-3-small"
     });
 
-    expect(response.vectors.length).toBe(2);
-    expect(response.vectors[0].length).toBeGreaterThan(0);
-    expect(response.vectors[1].length).toBeGreaterThan(0);
+    expect(response.vectors!.length).toBe(2);
+    expect(response.vectors![0]!.length).toBeGreaterThan(0);
+    expect(response.vectors![1]!.length).toBeGreaterThan(0);
   });
 });

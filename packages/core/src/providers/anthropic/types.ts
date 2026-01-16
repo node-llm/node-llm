@@ -13,7 +13,7 @@ export interface AnthropicContentBlock {
   };
   id?: string;
   name?: string;
-  input?: any;
+  input?: Record<string, unknown>;
   tool_use_id?: string;
   content?: string | Array<AnthropicContentBlock>;
   is_error?: boolean;
@@ -24,14 +24,18 @@ export interface AnthropicMessageRequest {
   messages: AnthropicMessage[];
   max_tokens: number;
   system?: string;
-  metadata?: any;
+  metadata?: Record<string, unknown>;
   stop_sequences?: string[];
   stream?: boolean;
   temperature?: number;
   top_p?: number;
   top_k?: number;
-  tools?: any[];
-  tool_choice?: any;
+  tools?: Array<{
+    name: string;
+    description?: string;
+    input_schema?: Record<string, unknown>;
+  }>;
+  tool_choice?: { type: string; name?: string };
 }
 
 export interface AnthropicUsage {

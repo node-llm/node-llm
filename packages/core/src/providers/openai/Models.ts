@@ -62,7 +62,7 @@ export class OpenAIModels {
       });
 
       if (response.ok) {
-        const { data } = (await response.json()) as { data: any[] };
+        const { data } = (await response.json()) as { data: { id: string; created: number; owned_by: string }[] };
 
         return data.map((m) => {
           const modelId = m.id;
@@ -92,8 +92,8 @@ export class OpenAIModels {
 
     // Fallback to registry data
     return ModelRegistry.all()
-      .filter((m: any) => m.provider === provider)
-      .map((m: any) => ({
+      .filter((m) => m.provider === provider)
+      .map((m) => ({
         id: m.id,
         name: m.name,
         family: m.family || m.id,
@@ -103,7 +103,7 @@ export class OpenAIModels {
         modalities: m.modalities,
         max_output_tokens: m.max_output_tokens ?? null,
         pricing: m.pricing || {}
-      })) as unknown as ModelInfo[];
+      })) as ModelInfo[];
   }
 
   find(modelId: string) {

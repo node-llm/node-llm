@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect } from "vitest";
 import { createLLM, NodeLLM, BaseProvider } from "../../../src/index.js";
 import { providerRegistry } from "../../../src/providers/registry.js";
 
@@ -33,7 +33,7 @@ class CustomTestProvider extends BaseProvider {
     getContextWindow: () => 8192
   };
 
-  async chat(request: any) {
+  async chat(_request: unknown) {
     return {
       content: `Response from ${this.config.apiKey}`,
       usage: { input_tokens: 1, output_tokens: 1, total_tokens: 2 }

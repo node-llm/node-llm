@@ -8,8 +8,6 @@ import {
   ImageResponse,
   TranscriptionRequest,
   TranscriptionResponse,
-  ModerationRequest,
-  ModerationResponse,
   EmbeddingRequest,
   EmbeddingResponse
 } from "../Provider.js";
@@ -74,7 +72,7 @@ export class GeminiProvider extends BaseProvider implements Provider {
     return "Gemini";
   }
 
-  public override defaultModel(feature?: string): string {
+  public override defaultModel(_feature?: string): string {
     return "gemini-2.0-flash-exp";
   }
 

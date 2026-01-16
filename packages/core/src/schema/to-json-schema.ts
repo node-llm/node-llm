@@ -1,7 +1,9 @@
 import { z } from "zod";
 import { zodToJsonSchema } from "zod-to-json-schema";
 
-export function toJsonSchema(schema: z.ZodType<any> | Record<string, any>): Record<string, any> {
+export function toJsonSchema(
+  schema: z.ZodType<unknown> | Record<string, unknown>
+): Record<string, unknown> {
   // If it's a Zod schema, convert it
   if (schema instanceof z.ZodType) {
     return zodToJsonSchema(schema, { target: "openApi3" });

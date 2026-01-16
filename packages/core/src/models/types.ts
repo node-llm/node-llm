@@ -42,7 +42,7 @@ export interface Model {
       };
     };
   };
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 export type ProviderName = "openai" | "anthropic" | "gemini" | "deepseek" | "openrouter" | "ollama";

@@ -34,7 +34,7 @@ export class OpenAIStreaming {
 
     const mappedMessages = mapSystemMessages(request.messages, !!supportsDeveloperRole);
 
-    const body: any = {
+    const body: Record<string, unknown> = {
       model: request.model,
       messages: mappedMessages,
       stream: true
@@ -62,7 +62,10 @@ export class OpenAIStreaming {
 
     let done = false;
     // Track tool calls being built across chunks
-    const toolCallsMap = new Map<number, any>();
+    const toolCallsMap = new Map<
+      number,
+      { id: string; type: string; function: { name: string; arguments: string } }
+    >();
 
     try {
       const url = buildUrl(this.baseUrl, "/chat/completions");

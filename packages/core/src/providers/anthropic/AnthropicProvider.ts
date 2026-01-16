@@ -1,18 +1,4 @@
-import {
-  Provider,
-  ChatRequest,
-  ChatResponse,
-  ModelInfo,
-  ChatChunk,
-  ImageRequest,
-  ImageResponse,
-  ModerationRequest,
-  ModerationResponse,
-  TranscriptionRequest,
-  TranscriptionResponse,
-  EmbeddingRequest,
-  EmbeddingResponse
-} from "../Provider.js";
+import { Provider, ChatRequest, ChatResponse, ModelInfo, ChatChunk } from "../Provider.js";
 import { BaseProvider } from "../BaseProvider.js";
 import { Capabilities } from "./Capabilities.js";
 import { AnthropicChat } from "./Chat.js";
@@ -67,7 +53,7 @@ export class AnthropicProvider extends BaseProvider implements Provider {
     return "Anthropic";
   }
 
-  public override defaultModel(feature?: string): string {
+  public override defaultModel(_feature?: string): string {
     return "claude-3-5-haiku-20241022";
   }
 

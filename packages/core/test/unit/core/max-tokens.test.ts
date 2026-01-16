@@ -20,7 +20,7 @@ describe("Global MaxTokens Configuration", () => {
     const chat = llm.chat("gpt-4o", { maxTokens: 16384 });
 
     // The maxTokens should be stored in chat options
-    expect((chat as any).options.maxTokens).toBe(16384);
+    expect(((chat as unknown) as { options: { maxTokens: number } }).options.maxTokens).toBe(16384);
   });
 
   it("should use global maxTokens as fallback when not specified", () => {
@@ -33,7 +33,7 @@ describe("Global MaxTokens Configuration", () => {
     const chat = llm.chat("gpt-4o");
 
     // Chat should fall back to global config
-    expect((chat as any).options.maxTokens).toBeUndefined();
+    expect(((chat as unknown) as { options: { maxTokens?: number } }).options.maxTokens).toBeUndefined();
     expect(llm.config.maxTokens).toBe(2048);
   });
 });

@@ -7,7 +7,7 @@ describe("Custom HTTP Headers", () => {
     const mockChat = vi.fn().mockResolvedValue({ content: "Response" });
     const provider: Provider = {
       chat: mockChat
-    } as any;
+    } as unknown as Provider;
 
     const chat = new Chat(provider, "test-model");
 
@@ -32,7 +32,7 @@ describe("Custom HTTP Headers", () => {
     const mockChat = vi.fn().mockResolvedValue({ content: "Response" });
     const provider: Provider = {
       chat: mockChat
-    } as any;
+    } as unknown as Provider;
 
     const chat = new Chat(provider, "test-model");
 
@@ -56,7 +56,7 @@ describe("Custom HTTP Headers", () => {
     const mockChat = vi.fn().mockResolvedValue({ content: "Response" });
     const provider: Provider = {
       chat: mockChat
-    } as any;
+    } as unknown as Provider;
 
     const chat = new Chat(provider, "test-model"); // Invalid provider but mocked
 

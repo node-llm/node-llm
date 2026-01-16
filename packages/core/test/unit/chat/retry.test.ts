@@ -1,11 +1,13 @@
 import { expect, it } from "vitest";
 import { createLLM } from "../../../src/llm.js";
 import { ServerError } from "../../../src/errors/index.js";
+import { Provider } from "../../../src/providers/Provider.js";
 
 it("retries provider failures", async () => {
   let calls = 0;
 
   const provider = {
+    id: "test",
     async chat() {
       calls++;
       if (calls < 3) {
@@ -16,7 +18,7 @@ it("retries provider failures", async () => {
   };
 
   const llm = createLLM({
-    provider: provider as any,
+    provider: provider as unknown as Provider,
     retry: { attempts: 3 }
   });
 

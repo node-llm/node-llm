@@ -19,7 +19,7 @@ description: High-level overview of NodeLLM components, design principles, and h
 {: .no_toc .text-delta }
 
 1. TOC
-   {:toc}
+{:toc}
 
 ---
 

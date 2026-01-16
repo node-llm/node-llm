@@ -1,4 +1,4 @@
-import { ChatRequest, ChatResponse, Usage } from "../Provider.js";
+import { ChatRequest, ChatResponse } from "../Provider.js";
 import { OpenAIChatResponse } from "./types.js";
 import { Capabilities } from "./Capabilities.js";
 import { handleOpenAIError } from "./Errors.js";
@@ -37,15 +37,15 @@ export class OpenAIChat {
       temperature: _,
       max_tokens,
       response_format,
-      headers,
-      requestTimeout,
+      headers: _headers,
+      requestTimeout: _requestTimeout,
       signal,
       ...rest
     } = request;
 
     const mappedMessages = mapSystemMessages(messages, !!supportsDeveloperRole);
 
-    const body: any = {
+    const body: Record<string, unknown> = {
       model,
       messages: mappedMessages,
       ...rest
@@ -77,7 +77,7 @@ export class OpenAIChat {
           ...request.headers
         },
         body: JSON.stringify(body),
-        signal
+        signal: signal as AbortSignal | null | undefined
       },
       request.requestTimeout
     );
@@ -92,7 +92,7 @@ export class OpenAIChat {
     const message = json.choices[0]?.message;
     const content = message?.content ?? null;
     const tool_calls = message?.tool_calls;
-    const reasoning = (message as any)?.reasoning_content || null;
+    const reasoning = (message as unknown as { reasoning_content?: string })?.reasoning_content || null;
 
     const usage = json.usage
       ? {

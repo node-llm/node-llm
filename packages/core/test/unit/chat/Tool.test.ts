@@ -46,9 +46,9 @@ describe("Tool DSL", () => {
     chat.withTools([TestTool]);
 
     // Check if the tool was normalized
-    const registeredTool = (chat as any).options.tools[0] as ToolDefinition;
-    expect(registeredTool.function.name).toBe("test_tool");
-    expect(typeof registeredTool.handler).toBe("function");
+    const registeredTool = ((chat as unknown) as { options: { tools: ToolDefinition[] } }).options.tools[0];
+    expect(registeredTool?.function.name).toBe("test_tool");
+    expect(typeof registeredTool?.handler).toBe("function");
   });
 
   it("should handle object responses by stringifying them", async () => {

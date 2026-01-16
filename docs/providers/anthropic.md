@@ -18,7 +18,7 @@ description: Experience the Claude family of models with native support for PDF 
 {: .no_toc .text-delta }
 
 1. TOC
-   {:toc}
+{:toc}
 
 ---
 

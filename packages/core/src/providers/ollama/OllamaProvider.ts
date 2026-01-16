@@ -40,7 +40,7 @@ export class OllamaProvider extends OpenAIProvider {
     return "Ollama";
   }
 
-  public override defaultModel(feature?: string): string {
+  public override defaultModel(_feature?: string): string {
     return "llama3";
   }
 }

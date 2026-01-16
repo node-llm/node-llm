@@ -1,9 +1,12 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { Chat } from "../../../src/chat/Chat.js";
 import { Provider, ChatRequest, ChatResponse } from "../../../src/providers/Provider.js";
+import { ContentPart } from "../../../src/chat/Content.js";
 
 class MockVisionProvider implements Provider {
   public lastRequest: ChatRequest | undefined;
+  id = "mock-vision";
+  defaultModel = () => "gpt-4-vision-preview";
 
   async chat(request: ChatRequest): Promise<ChatResponse> {
     this.lastRequest = { ...request, messages: [...request.messages] };
@@ -41,7 +44,7 @@ describe("Chat Vision Support", () => {
     if (Array.isArray(content)) {
       expect(content).toHaveLength(2);
       expect(content[0]).toEqual({ type: "text", text: "Describe this image" });
-      const imgPart = content[1] as any;
+      const imgPart = content[1] as Extract<ContentPart, { type: "image_url" }>;
       expect(imgPart.type).toBe("image_url");
       expect(imgPart.image_url.url).toMatch(/^data:image\/jpeg;base64,/);
     }
@@ -59,8 +62,8 @@ describe("Chat Vision Support", () => {
 
     if (Array.isArray(content)) {
       expect(content).toHaveLength(3); // 1 text + 2 images
-      const imgPart1 = content[1] as any;
-      const imgPart2 = content[2] as any;
+      const imgPart1 = content[1] as Extract<ContentPart, { type: "image_url" }>;
+      const imgPart2 = content[2] as Extract<ContentPart, { type: "image_url" }>;
       expect(imgPart1.type).toBe("image_url");
       expect(imgPart1.image_url.url).toMatch(/^data:image\/jpeg;base64,/);
       expect(imgPart2.type).toBe("image_url");
@@ -87,7 +90,7 @@ describe("Chat Vision Support", () => {
 
       if (Array.isArray(content)) {
         expect(content).toHaveLength(2);
-        const imgPart = content[1] as any;
+        const imgPart = content[1] as Extract<ContentPart, { type: "image_url" }>;
         expect(imgPart.type).toBe("image_url");
         // Should be converted to data URI
         expect(imgPart.image_url.url).toMatch(/^data:image\/jpeg;base64,/);

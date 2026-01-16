@@ -25,29 +25,29 @@ vi.mock("../../../src/aliases.js", () => ({
 class MockProvider extends FakeProvider implements Provider {
   id = "fake";
   capabilities = {
-    supportsVision: ((m: string) => true) as any,
-    supportsTools: ((m: string) => true) as any,
-    supportsStructuredOutput: ((m: string) => true) as any,
-    supportsEmbeddings: ((m: string) => true) as any,
-    supportsImageGeneration: ((m: string) => true) as any,
-    supportsTranscription: ((m: string) => true) as any,
-    supportsModeration: ((m: string) => true) as any,
-    supportsReasoning: ((m: string) => true) as any,
-    supportsDeveloperRole: ((m: string) => true) as any,
-    getContextWindow: ((m: string) => 1000) as any
-  } as any;
+    supportsVision: (_m: string) => true,
+    supportsTools: (_m: string) => true,
+    supportsStructuredOutput: (_m: string) => true,
+    supportsEmbeddings: (_m: string) => true,
+    supportsImageGeneration: (_m: string) => true,
+    supportsTranscription: (_m: string) => true,
+    supportsModeration: (_m: string) => true,
+    supportsReasoning: (_m: string) => true,
+    supportsDeveloperRole: (_m: string) => true,
+    getContextWindow: (_m: string) => 1000
+  };
 
-  async paint(req: any) {
+  async paint(_req: unknown) {
     return { url: "ok", b64_json: "" };
   }
-  async transcribe(req: any) {
+  async transcribe(_req: unknown) {
     return { text: "ok", segments: [], model: "resolved-model-id" };
   }
-  async moderate(req: any) {
+  async moderate(_req: unknown) {
     return { flagged: false, results: [], id: "mod-1", model: "resolved-model-id" };
   }
-  async embed(req: any) {
-    return { vectors: [], model: req.model, dimensions: 0, input_tokens: 10 };
+  async embed(req: { model?: string }) {
+    return { vectors: [], model: req.model ?? "default-model", dimensions: 0, input_tokens: 10 };
   }
   async listModels() {
     return [];

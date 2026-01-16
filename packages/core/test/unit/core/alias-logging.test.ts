@@ -5,7 +5,7 @@ import { config } from "../../../src/config.js";
 
 describe("Model Alias Resolution Logging", () => {
   const originalDebug = config.debug;
-  let debugSpy: any;
+  let debugSpy: ReturnType<typeof vi.spyOn>;
 
   beforeEach(() => {
     config.debug = true;

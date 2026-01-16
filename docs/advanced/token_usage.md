@@ -18,7 +18,7 @@ description: Monitor costs and resource consumption by tracking input/output tok
 {: .no_toc .text-delta }
 
 1. TOC
-   {:toc}
+{:toc}
 
 ---
 

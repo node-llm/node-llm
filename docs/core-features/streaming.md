@@ -18,7 +18,7 @@ description: Implement real-time user experiences with low-latency responses usi
 {: .no_toc .text-delta }
 
 1. TOC
-   {:toc}
+{:toc}
 
 ---
 

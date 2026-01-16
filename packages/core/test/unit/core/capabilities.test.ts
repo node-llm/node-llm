@@ -9,7 +9,7 @@ const textFilePath = path.resolve(__dirname, "../../../package.json");
 
 class MockLimitedProvider implements Provider {
   public id = "mock-limited";
-  public defaultModel(type?: string) {
+  public defaultModel(_type?: string) {
     return "limited-model";
   }
   public capabilities = {
@@ -25,7 +25,7 @@ class MockLimitedProvider implements Provider {
     getContextWindow: () => 4096
   };
 
-  async chat(request: ChatRequest): Promise<ChatResponse> {
+  async chat(_request: ChatRequest): Promise<ChatResponse> {
     return { content: "ok" };
   }
 }

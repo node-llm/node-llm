@@ -4,9 +4,7 @@ import {
   BadRequestError,
   AuthenticationError,
   RateLimitError,
-  ServiceUnavailableError,
-  ServerError,
-  APIError
+  ServerError
 } from "../../../../src/errors/index.js";
 
 describe("OpenAI Errors", () => {

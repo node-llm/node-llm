@@ -44,7 +44,7 @@ export class AudioUtils {
         // Very rough MP3 estimate (assume 128kbps)
         return data.length / (128000 / 8);
       }
-    } catch (e) {
+    } catch {
       // Ignore estimation errors
     }
     return undefined;

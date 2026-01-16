@@ -1,4 +1,5 @@
 import { describe, it, expect, vi } from "vitest";
+import { Provider } from "../../../src/providers/Provider.js";
 import {
   LLMError,
   APIError,
@@ -42,7 +43,7 @@ describe("Error System", () => {
         })
       };
 
-      const executor = new Executor(mockProvider as any, { attempts: 3, delayMs: 0 });
+      const executor = new Executor(mockProvider as unknown as Provider, { attempts: 3, delayMs: 0 });
       const result = await executor.executeChat({ model: "test", messages: [] });
 
       expect(result.content).toBe("Success");
@@ -59,7 +60,7 @@ describe("Error System", () => {
         })
       };
 
-      const executor = new Executor(mockProvider as any, { attempts: 3, delayMs: 0 });
+      const executor = new Executor(mockProvider as unknown as Provider, { attempts: 3, delayMs: 0 });
 
       await expect(executor.executeChat({ model: "test", messages: [] })).rejects.toThrow(
         AuthenticationError
@@ -77,7 +78,7 @@ describe("Error System", () => {
         })
       };
 
-      const executor = new Executor(mockProvider as any, { attempts: 3, delayMs: 0 });
+      const executor = new Executor(mockProvider as unknown as Provider, { attempts: 3, delayMs: 0 });
 
       await expect(executor.executeChat({ model: "test", messages: [] })).rejects.toThrow(
         BadRequestError
@@ -88,7 +89,7 @@ describe("Error System", () => {
   });
 
   describe("OpenAI Error Mapper", () => {
-    const mockResponse = (status: number, body: any) =>
+    const mockResponse = (status: number, body: unknown) =>
       ({
         status,
         ok: false,
@@ -115,8 +116,8 @@ describe("Error System", () => {
       const response = mockResponse(400, { error: { message: "Custom OpenAI message" } });
       try {
         await handleOpenAIError(response);
-      } catch (e: any) {
-        expect(e.message).toBe("Custom OpenAI message");
+      } catch (e) {
+        expect((e as Error).message).toBe("Custom OpenAI message");
         expect(e).toBeInstanceOf(BadRequestError);
       }
     });

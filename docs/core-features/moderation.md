@@ -18,7 +18,7 @@ description: Protect your users and your brand by checking text content against 
 {: .no_toc .text-delta }
 
 1. TOC
-   {:toc}
+{:toc}
 
 ---
 

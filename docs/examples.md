@@ -17,7 +17,7 @@ description: Explore a comprehensive collection of runnable examples demonstrati
 {: .no_toc .text-delta }
 
 1. TOC
-   {:toc}
+{:toc}
 
 ---
 

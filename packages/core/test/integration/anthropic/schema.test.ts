@@ -1,11 +1,11 @@
 import { describe, it, expect, afterEach } from "vitest";
-import { NodeLLM, createLLM } from "../../../src/index.js";
+import { createLLM } from "../../../src/index.js";
 import { setupVCR } from "../../helpers/vcr.js";
 import { z } from "zod";
 import "dotenv/config";
 
 describe("Anthropic Structured Output (VCR)", { timeout: 30000 }, () => {
-  let polly: any;
+  let polly: { stop: () => Promise<void> } | undefined;
 
   afterEach(async () => {
     if (polly) {

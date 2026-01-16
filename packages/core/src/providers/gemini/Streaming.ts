@@ -1,4 +1,5 @@
 import { ChatRequest, ChatChunk } from "../Provider.js";
+import { ToolCall } from "../../chat/Tool.js";
 import { Capabilities } from "./Capabilities.js";
 import { handleGeminiError } from "./Errors.js";
 import { GeminiGenerateContentResponse } from "./types.js";
@@ -21,7 +22,7 @@ export class GeminiStreaming {
       request.messages
     );
 
-    const generationConfig: any = {
+    const generationConfig: Record<string, unknown> = {
       temperature: temperature ?? undefined,
       maxOutputTokens: request.max_tokens
     };
@@ -37,7 +38,7 @@ export class GeminiStreaming {
       }
     }
 
-    const payload: any = {
+    const payload: Record<string, unknown> = {
       contents,
       generationConfig
     };
@@ -59,7 +60,7 @@ export class GeminiStreaming {
     }
 
     let done = false;
-    const toolCalls: any[] = [];
+    const toolCalls: ToolCall[] = [];
 
     try {
       logger.logRequest("Gemini", "POST", url, payload);
@@ -139,7 +140,7 @@ export class GeminiStreaming {
                   });
                 }
               }
-            } catch (e) {
+            } catch {
               // Ignore parse errors
             }
           }
@@ -160,10 +161,10 @@ export class GeminiStreaming {
     }
   }
 
-  private sanitizeSchema(schema: any): any {
+  private sanitizeSchema(schema: unknown): unknown {
     if (typeof schema !== "object" || schema === null) return schema;
 
-    const sanitized = { ...schema };
+    const sanitized = { ...(schema as Record<string, unknown>) };
 
     // Remove unsupported fields
     delete sanitized.additionalProperties;
@@ -172,9 +173,10 @@ export class GeminiStreaming {
     delete sanitized.definitions;
 
     // Recursively sanitize
-    if (sanitized.properties) {
-      for (const key in sanitized.properties) {
-        sanitized.properties[key] = this.sanitizeSchema(sanitized.properties[key]);
+    if (sanitized.properties && typeof sanitized.properties === "object") {
+      const props = sanitized.properties as Record<string, unknown>;
+      for (const key in props) {
+        props[key] = this.sanitizeSchema(props[key]);
       }
     }
 

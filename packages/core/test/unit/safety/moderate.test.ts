@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { describe, it, expect, vi, beforeEach, Mock } from "vitest";
 import { createLLM } from "../../../src/llm.js";
 import { Provider } from "../../../src/providers/Provider.js";
 
@@ -21,7 +21,7 @@ describe("Moderation Unit Tests", () => {
           }
         ]
       })
-    } as any;
+    } as unknown as Provider;
   });
 
   it("should call provider.moderate with correct arguments", async () => {
@@ -50,11 +50,11 @@ describe("Moderation Unit Tests", () => {
     expect(result.id).toBe("mod-123");
     expect(result.model).toBe("text-moderation-latest");
     expect(result.flagged).toBe(false);
-    expect(result.results[0].flagged).toBe(false);
+    expect(result.results![0]!.flagged).toBe(false);
   });
 
   it("should correctly detect flagged content", async () => {
-    (mockProvider.moderate as any).mockResolvedValueOnce({
+    (mockProvider.moderate as unknown as Mock).mockResolvedValueOnce({
       id: "mod-456",
       model: "text-moderation-latest",
       results: [
@@ -76,7 +76,7 @@ describe("Moderation Unit Tests", () => {
   });
 
   it("should support Ruby-style aliases", async () => {
-    (mockProvider.moderate as any).mockResolvedValueOnce({
+    (mockProvider.moderate as unknown as Mock).mockResolvedValueOnce({
       id: "mod-789",
       model: "text-moderation-latest",
       results: [
@@ -95,7 +95,7 @@ describe("Moderation Unit Tests", () => {
   });
 
   it("should aggregate flagged categories across multiple results", async () => {
-    (mockProvider.moderate as any).mockResolvedValueOnce({
+    (mockProvider.moderate as unknown as Mock).mockResolvedValueOnce({
       id: "mod-multi",
       model: "text-moderation-latest",
       results: [
@@ -117,6 +117,6 @@ describe("Moderation Unit Tests", () => {
     const result = await llm.moderate("single text");
     const items = [...result];
     expect(items.length).toBe(1);
-    expect(items[0].flagged).toBe(false);
+    expect(items[0]!.flagged).toBe(false);
   });
 });

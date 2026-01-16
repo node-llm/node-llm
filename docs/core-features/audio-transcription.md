@@ -18,7 +18,7 @@ description: Convert speech to text using specialized models like Whisper or lev
 {: .no_toc .text-delta }
 
 1. TOC
-   {:toc}
+{:toc}
 
 ---
 

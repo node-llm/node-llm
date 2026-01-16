@@ -52,7 +52,7 @@ export class DeepSeekProvider extends BaseProvider implements Provider {
     return "DeepSeek";
   }
 
-  public override defaultModel(feature?: string): string {
+  public override defaultModel(_feature?: string): string {
     return "deepseek-chat";
   }
 

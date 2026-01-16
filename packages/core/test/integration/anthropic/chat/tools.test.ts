@@ -1,12 +1,12 @@
 import { describe, it, expect, afterEach } from "vitest";
-import { NodeLLM, createLLM, Tool } from "../../../../src/index.js";
+import { createLLM, ToolDefinition } from "../../../../src/index.js";
 import { setupVCR } from "../../../helpers/vcr.js";
-import { z } from "zod";
+
 import "dotenv/config";
 
 // Define a test tool
 // Define a test tool
-const WeatherTool: Tool = {
+const WeatherTool: ToolDefinition = {
   type: "function",
   function: {
     name: "get_weather",
@@ -37,7 +37,7 @@ const WeatherTool: Tool = {
 };
 
 describe("Anthropic Tool Calling Integration (VCR)", { timeout: 30000 }, () => {
-  let polly: any;
+  let polly: { stop: () => Promise<void> } | undefined;
 
   afterEach(async () => {
     if (polly) {

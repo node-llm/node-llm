@@ -85,7 +85,7 @@ export class Capabilities {
     return true;
   }
 
-  static supportsSystemInstructions(modelId: string): boolean {
+  static supportsSystemInstructions(_modelId: string): boolean {
     return true;
   }
 
@@ -121,11 +121,11 @@ export class Capabilities {
     return !!id.match(/gemini|flash|pro/);
   }
 
-  static supportsModeration(modelId: string): boolean {
+  static supportsModeration(_modelId: string): boolean {
     return false;
   }
 
-  static normalizeTemperature(temperature: number | undefined, model: string): number | undefined {
+  static normalizeTemperature(temperature: number | undefined, _model: string): number | undefined {
     return temperature;
   }
 

@@ -1,18 +1,11 @@
-import { ChatRequest, ChatResponse, Usage } from "../Provider.js";
-import {
-  AnthropicMessageRequest,
-  AnthropicMessage,
-  AnthropicContentBlock,
-  AnthropicMessageResponse
-} from "./types.js";
+import { ChatRequest, ChatResponse } from "../Provider.js";
+import { AnthropicMessageRequest, AnthropicMessageResponse } from "./types.js";
+import { ToolCall } from "../../chat/Tool.js";
 import { Capabilities } from "./Capabilities.js";
 import { handleAnthropicError } from "./Errors.js";
-import { Message } from "../../chat/Message.js";
-import { ContentPart } from "../../chat/Content.js";
 import { ModelRegistry } from "../../models/ModelRegistry.js";
 import { logger } from "../../utils/logger.js";
 import { fetchWithTimeout } from "../../utils/fetch.js";
-
 import { formatSystemPrompt, formatMessages } from "./Utils.js";
 
 export class AnthropicChat {
@@ -54,7 +47,7 @@ export class AnthropicChat {
       ...rest
     } = request;
 
-    const body: any = {
+    const body: AnthropicMessageRequest = {
       model: model,
       messages: messages,
       max_tokens: maxTokens,
@@ -115,7 +108,7 @@ export class AnthropicChat {
 
     // Extract text content and tool calls
     let content: string | null = null;
-    const toolCalls: any[] = []; // Using any for ToolCall matching Provider.ts interface
+    const toolCalls: ToolCall[] = [];
 
     for (const block of contentBlocks) {
       if (block.type === "text") {

@@ -1,5 +1,6 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+import { describe, it, expect, vi, beforeEach, afterEach, Mock } from "vitest";
 import { DeepSeekChat } from "../../../../src/providers/deepseek/Chat.js";
+import { ChatRequest } from "../../../../src/providers/Provider.js";
 
 describe("DeepSeekChat", () => {
   const baseUrl = "https://api.test";
@@ -32,7 +33,7 @@ describe("DeepSeekChat", () => {
       }
     };
 
-    (global.fetch as any).mockResolvedValue({
+    (global.fetch as unknown as Mock).mockResolvedValue({
       ok: true,
       json: async () => mockResponse
     });
@@ -42,7 +43,7 @@ describe("DeepSeekChat", () => {
       messages: [{ role: "user", content: "Hi" }]
     };
 
-    const response = await chat.execute(request as any);
+    const response = await chat.execute(request as ChatRequest);
 
     expect(global.fetch).toHaveBeenCalledWith(
       `${baseUrl}/chat/completions`,
@@ -83,25 +84,25 @@ describe("DeepSeekChat", () => {
       usage: { prompt_tokens: 10, completion_tokens: 10, total_tokens: 20 }
     };
 
-    (global.fetch as any).mockResolvedValue({
+    (global.fetch as unknown as Mock).mockResolvedValue({
       ok: true,
       json: async () => mockResponse
     });
 
-    const response = await chat.execute({ model: "deepseek-reasoner", messages: [] } as any);
+    const response = await chat.execute({ model: "deepseek-reasoner", messages: [] } as ChatRequest);
 
     expect(response.content).toBe("Answer");
     expect(response.reasoning).toBe("Thought process");
   });
 
   it("should handle API errors", async () => {
-    (global.fetch as any).mockResolvedValue({
+    (global.fetch as unknown as Mock).mockResolvedValue({
       ok: false,
       status: 400,
       text: async () => "Bad Request"
     });
 
-    await expect(chat.execute({ model: "deepseek-chat", messages: [] } as any)).rejects.toThrow(
+    await expect(chat.execute({ model: "deepseek-chat", messages: [] } as ChatRequest)).rejects.toThrow(
       "DeepSeek API error: 400 - Bad Request"
     );
   });
@@ -111,7 +112,7 @@ describe("DeepSeekChat", () => {
       choices: [{ message: { content: "{}" }, finish_reason: "stop" }],
       usage: { prompt_tokens: 0, completion_tokens: 0, total_tokens: 0 }
     };
-    (global.fetch as any).mockResolvedValue({
+    (global.fetch as unknown as Mock).mockResolvedValue({
       ok: true,
       json: async () => mockResponse
     });
@@ -125,7 +126,7 @@ describe("DeepSeekChat", () => {
       }
     };
 
-    await chat.execute(request as any);
+    await chat.execute(request as unknown as ChatRequest);
 
     expect(global.fetch).toHaveBeenCalledWith(
       expect.any(String),

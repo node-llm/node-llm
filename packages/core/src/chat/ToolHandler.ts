@@ -1,16 +1,17 @@
 import { ToolExecutionMode } from "../constants.js";
 import { ToolError } from "../errors/index.js";
+import { ToolCall, ToolDefinition } from "./Tool.js";
 
 export class ToolHandler {
-  static shouldExecuteTools(toolCalls: any[] | undefined, mode?: ToolExecutionMode): boolean {
+  static shouldExecuteTools(toolCalls: ToolCall[] | undefined, mode?: ToolExecutionMode): boolean {
     if (!toolCalls || toolCalls.length === 0) return false;
     if (mode === ToolExecutionMode.DRY_RUN) return false;
     return true;
   }
 
   static async requestToolConfirmation(
-    toolCall: any,
-    onConfirm?: (call: any) => Promise<boolean> | boolean
+    toolCall: ToolCall,
+    onConfirm?: (call: ToolCall) => Promise<boolean> | boolean
   ): Promise<boolean> {
     if (!onConfirm) return true;
     const confirmed = await onConfirm(toolCall);
@@ -18,10 +19,10 @@ export class ToolHandler {
   }
 
   static async execute(
-    toolCall: any,
-    tools: any[] | undefined,
-    onStart?: (call: any) => void,
-    onEnd?: (call: any, result: any) => void
+    toolCall: ToolCall,
+    tools: ToolDefinition[] | undefined,
+    onStart?: (call: ToolCall) => void,
+    onEnd?: (call: ToolCall, result: unknown) => void
   ): Promise<{ role: "tool"; tool_call_id: string; content: string }> {
     if (onStart) onStart(toolCall);
 

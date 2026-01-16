@@ -12,7 +12,10 @@ describe("Ollama Provider Registration", () => {
   });
 
   it("configures the provider with default endpoint", () => {
-    const provider = providerRegistry.resolve("ollama") as any;
+    const provider = providerRegistry.resolve("ollama") as unknown as {
+      baseUrl: string;
+      chatHandler: { apiKey: string };
+    };
     expect(provider.baseUrl).toBe("http://localhost:11434/v1");
     expect(provider.chatHandler.apiKey).toBe("ollama");
   });

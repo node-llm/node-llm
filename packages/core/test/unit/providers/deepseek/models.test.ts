@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+import { describe, it, expect, vi, beforeEach, afterEach, Mock } from "vitest";
 import { DeepSeekModels } from "../../../../src/providers/deepseek/Models.js";
 import { ModelRegistry } from "../../../../src/models/ModelRegistry.js";
 
@@ -22,7 +22,7 @@ describe("DeepSeekModels", () => {
       data: [{ id: "deepseek-chat", object: "model", owned_by: "deepseek" }]
     };
 
-    (global.fetch as any).mockResolvedValue({
+    (global.fetch as unknown as Mock).mockResolvedValue({
       ok: true,
       json: async () => mockResponse
     });
@@ -35,7 +35,7 @@ describe("DeepSeekModels", () => {
   });
 
   it("should fallback to local registry on API error", async () => {
-    (global.fetch as any).mockResolvedValue({
+    (global.fetch as unknown as Mock).mockResolvedValue({
       ok: false
     });
 

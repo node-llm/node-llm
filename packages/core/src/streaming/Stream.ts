@@ -1,4 +1,3 @@
-import { ChatChunk } from "../providers/Provider.js";
 
 /**
  * Stream wrapper class inspired by OpenAI SDK

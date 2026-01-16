@@ -41,11 +41,12 @@ export async function fetchWithTimeout(
     });
     clearTimeout(timeoutId);
     return response;
-  } catch (error: any) {
+  } catch (error: unknown) {
     clearTimeout(timeoutId);
 
     // Check if the error was due to timeout abort
-    if (error.name === "AbortError" && controller.signal.aborted) {
+    const isAbortError = error instanceof Error && error.name === "AbortError";
+    if (isAbortError && controller.signal.aborted) {
       throw new Error(`Request timeout after ${timeoutMs}ms`);
     }
 

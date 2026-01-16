@@ -18,7 +18,7 @@ description: Access hundreds of open-source and proprietary models through a sin
 {: .no_toc .text-delta }
 
 1. TOC
-   {:toc}
+{:toc}
 
 ---
 

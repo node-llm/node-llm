@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect } from "vitest";
 import { Capabilities } from "../../../../src/providers/deepseek/Capabilities.js";
 
 describe("DeepSeek Capabilities", () => {

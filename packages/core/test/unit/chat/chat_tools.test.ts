@@ -31,7 +31,7 @@ describe("Chat Tool Management", () => {
     chat.withTool(mockToolInstance);
 
     // Access private property 'options' via 'any' cast for testing state
-    const tools = (chat as any).options.tools;
+    const tools = (chat as unknown as { options: { tools: Tool[] } }).options.tools;
     expect(tools).toHaveLength(1);
     expect(tools[0]).toBe(mockToolInstance);
   });
@@ -46,7 +46,7 @@ describe("Chat Tool Management", () => {
 
     chat.withTools([mockToolInstance, anotherTool]);
 
-    const tools = (chat as any).options.tools;
+    const tools = (chat as unknown as { options: { tools: Tool[] } }).options.tools;
     expect(tools).toHaveLength(2);
     expect(tools[0].function.name).toBe("mock_instance_tool");
     expect(tools[1].function.name).toBe("another");
@@ -58,7 +58,7 @@ describe("Chat Tool Management", () => {
 
     chat.withTool(MockToolClass);
 
-    const tools = (chat as any).options.tools;
+    const tools = (chat as unknown as { options: { tools: Tool[] } }).options.tools;
     expect(tools).toHaveLength(1);
     expect(tools[0]).toBeInstanceOf(MockToolClass);
     expect(tools[0].function.name).toBe("mock_class_tool");
@@ -70,7 +70,7 @@ describe("Chat Tool Management", () => {
 
     chat.withTools([mockToolInstance, MockToolClass]);
 
-    const tools = (chat as any).options.tools;
+    const tools = (chat as unknown as { options: { tools: Tool[] } }).options.tools;
     expect(tools).toHaveLength(2);
     expect(tools[0].function.name).toBe("mock_instance_tool");
     expect(tools[1]).toBeInstanceOf(MockToolClass);
@@ -84,7 +84,7 @@ describe("Chat Tool Management", () => {
     // Replace with a class tool
     chat.withTools([MockToolClass], { replace: true });
 
-    const tools = (chat as any).options.tools;
+    const tools = (chat as unknown as { options: { tools: Tool[] } }).options.tools;
     expect(tools).toHaveLength(1);
     expect(tools[0]).toBeInstanceOf(MockToolClass);
     expect(tools[0].function.name).toBe("mock_class_tool");
@@ -97,7 +97,7 @@ describe("Chat Tool Management", () => {
     chat.withTool(mockToolInstance);
     chat.withTools([], { replace: true });
 
-    const tools = (chat as any).options.tools;
+    const tools = (chat as unknown as { options: { tools: Tool[] } }).options.tools;
     expect(tools).toHaveLength(0);
   });
 });

@@ -8,7 +8,7 @@ export class Executor {
   ) {}
 
   async executeChat(request: ChatRequest): Promise<ChatResponse> {
-    let lastError: any;
+    let lastError: unknown;
 
     for (let attempt = 1; attempt <= this.retry.attempts; attempt++) {
       try {

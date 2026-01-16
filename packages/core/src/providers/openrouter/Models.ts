@@ -102,9 +102,9 @@ export class OpenRouterModels {
   }
 
   private parsePricing(pricing: OpenRouterModelData["pricing"]) {
-    const result: any = {
+    const result: Record<string, unknown> = {
       text_tokens: {
-        standard: {}
+        standard: {} as Record<string, number>
       }
     };
 
@@ -113,17 +113,19 @@ export class OpenRouterModels {
     const cachedInput = pricing.input_cache_read ? parseFloat(pricing.input_cache_read) : 0;
     const reasoning = pricing.internal_reasoning ? parseFloat(pricing.internal_reasoning) : 0;
 
+    const standard = (result.text_tokens as Record<string, unknown>).standard as Record<string, number>;
+
     if (prompt > 0) {
-      result.text_tokens.standard.input_per_million = prompt * 1_000_000;
+      standard.input_per_million = prompt * 1_000_000;
     }
     if (completion > 0) {
-      result.text_tokens.standard.output_per_million = completion * 1_000_000;
+      standard.output_per_million = completion * 1_000_000;
     }
     if (cachedInput > 0) {
-      result.text_tokens.standard.cached_input_per_million = cachedInput * 1_000_000;
+      standard.cached_input_per_million = cachedInput * 1_000_000;
     }
     if (reasoning > 0) {
-      result.text_tokens.standard.reasoning_output_per_million = reasoning * 1_000_000;
+      standard.reasoning_output_per_million = reasoning * 1_000_000;
     }
 
     return result;

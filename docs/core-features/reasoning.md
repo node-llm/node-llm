@@ -18,7 +18,7 @@ description: Access the inner thoughts and chain-of-thought process of advanced 
 {: .no_toc .text-delta }
 
 1. TOC
-   {:toc}
+{:toc}
 
 ---
 

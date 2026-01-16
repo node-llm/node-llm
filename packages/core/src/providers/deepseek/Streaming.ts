@@ -18,14 +18,14 @@ export class DeepSeekStreaming {
       tools,
       max_tokens,
       response_format,
-      headers,
+      headers: _headers,
       requestTimeout,
       ...rest
     } = request;
 
     const mappedMessages = mapSystemMessages(messages, false);
 
-    const body: any = {
+    const body: Record<string, unknown> = {
       model,
       messages: mappedMessages,
       stream: true,
@@ -38,7 +38,10 @@ export class DeepSeekStreaming {
 
     let done = false;
     // Track tool calls being built across chunks
-    const toolCallsMap = new Map<number, any>();
+    const toolCallsMap = new Map<
+      number,
+      { id: string; type: string; function: { name: string; arguments: string } }
+    >();
 
     try {
       const url = `${this.baseUrl}/chat/completions`;

@@ -23,6 +23,8 @@ describe("Request Timeout Configuration", () => {
     const chat = llm.chat("gpt-4o", { requestTimeout: 45000 });
 
     // The timeout should be stored in chat options
-    expect((chat as any).options.requestTimeout).toBe(45000);
+    expect((chat as unknown as { options: { requestTimeout: number } }).options.requestTimeout).toBe(
+      45000
+    );
   });
 });

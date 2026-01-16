@@ -18,7 +18,7 @@ description: Peek under the hood and inspect raw API requests, responses, and mo
 {: .no_toc .text-delta }
 
 1. TOC
-   {:toc}
+{:toc}
 
 ---
 

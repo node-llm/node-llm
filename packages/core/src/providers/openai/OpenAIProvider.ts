@@ -6,6 +6,8 @@ import {
   ChatChunk,
   ImageRequest,
   ImageResponse,
+  TranscriptionRequest,
+  TranscriptionResponse,
   ModerationRequest,
   ModerationResponse,
   EmbeddingRequest,
@@ -20,7 +22,6 @@ import { OpenAIImage } from "./Image.js";
 import { OpenAITranscription } from "./Transcription.js";
 import { OpenAIModeration } from "./Moderation.js";
 import { OpenAIEmbedding } from "./Embedding.js";
-import { TranscriptionRequest, TranscriptionResponse } from "../Provider.js";
 
 export interface OpenAIProviderOptions {
   apiKey: string;
@@ -78,7 +79,7 @@ export class OpenAIProvider extends BaseProvider implements Provider {
     return "OpenAI";
   }
 
-  public override defaultModel(feature?: string): string {
+  public override defaultModel(_feature?: string): string {
     return "gpt-4o";
   }
 

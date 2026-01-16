@@ -1,7 +1,6 @@
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect } from "vitest";
 import { Chat } from "../../../src/chat/Chat.js";
 import { Provider, ChatRequest, ChatResponse } from "../../../src/providers/Provider.js";
-import { Tool } from "../../../src/chat/Tool.js";
 
 class MockToolProvider implements Provider {
   // Sequence of responses to return
@@ -41,7 +40,7 @@ describe("Chat Tool Calling", () => {
         description: "Get weather",
         parameters: { type: "object", properties: {} }
       },
-      handler: async (args: any) => {
+      handler: async (_args: unknown) => {
         return JSON.stringify({ temperature: 25, condition: "Sunny" });
       }
     };
@@ -79,20 +78,20 @@ describe("Chat Tool Calling", () => {
     expect(provider.requests).toHaveLength(2);
 
     // First request: User prompt
-    expect(provider.requests[0].messages).toHaveLength(1);
-    expect(provider.requests[0].messages[0].role).toBe("user");
+    expect(provider.requests[0]!.messages).toHaveLength(1);
+    expect(provider.requests[0]!.messages[0]!.role).toBe("user");
 
     // Second request: History should include:
     // 1. User prompt
     // 2. Assistant tool call
     // 3. Tool result
-    const history = provider.requests[1].messages;
+    const history = provider.requests[1]!.messages;
     expect(history).toHaveLength(3);
-    expect(history[0].role).toBe("user");
-    expect(history[1].role).toBe("assistant");
-    expect(history[1].tool_calls).toBeDefined();
-    expect(history[2].role).toBe("tool");
-    expect(history[2].content).toContain("Sunny");
+    expect(history[0]!.role).toBe("user");
+    expect(history[1]!.role).toBe("assistant");
+    expect(history[1]!.tool_calls).toBeDefined();
+    expect(history[2]!.role).toBe("tool");
+    expect(history[2]!.content).toContain("Sunny");
   });
 
   it("should handle tool execution errors gracefully", async () => {
@@ -129,8 +128,7 @@ describe("Chat Tool Calling", () => {
     const chat = new Chat(provider, "test-model");
 
     await chat.withTool(errorTool).ask("Trigger error");
-
-    const history = provider.requests[1].messages;
+    const history = provider.requests[1]!.messages;
     const toolMessage = history.find((m) => m.role === "tool");
     expect(toolMessage?.content).toContain(
       "Fatal error executing tool 'fail_tool': Something went wrong"
@@ -161,7 +159,7 @@ describe("Chat Tool Calling", () => {
     const chat = new Chat(provider, "test-model", { tools: [tool1] });
     await chat.withTool(tool2).ask("Call tool2");
 
-    expect(provider.requests[0].tools).toContain(tool1);
-    expect(provider.requests[0].tools).toContain(tool2);
+    expect(provider.requests[0]!.tools).toContain(tool1);
+    expect(provider.requests[0]!.tools).toContain(tool2);
   });
 });

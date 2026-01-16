@@ -18,7 +18,7 @@ description: Force models to return strictly validated JSON data using Zod schem
 {: .no_toc .text-delta }
 
 1. TOC
-   {:toc}
+{:toc}
 
 ---
 

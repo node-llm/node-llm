@@ -6,11 +6,11 @@ export interface GeminiPart {
   };
   functionCall?: {
     name: string;
-    args: Record<string, any>;
+    args: Record<string, unknown>;
   };
   functionResponse?: {
     name: string;
-    response: Record<string, any>;
+    response: Record<string, unknown>;
   };
 }
 
@@ -28,7 +28,7 @@ export interface GeminiGenerateContentRequest {
     functionDeclarations: Array<{
       name: string;
       description?: string;
-      parameters?: Record<string, any>;
+      parameters?: Record<string, unknown>;
     }>;
   }[];
   generationConfig?: {
@@ -38,7 +38,7 @@ export interface GeminiGenerateContentRequest {
     topP?: number;
     topK?: number;
     responseMimeType?: string;
-    responseSchema?: Record<string, any>;
+    responseSchema?: Record<string, unknown>;
   };
   safetySettings?: Array<{
     category: string;
