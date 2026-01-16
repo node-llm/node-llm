@@ -91,3 +91,5 @@ for await (const chunk of chat.stream("Write a poem")) {
 *   [Chat Features](/core-features/chat.html): Learn about history, system prompts, and JSON mode.
 *   [Multimodal](/core-features/multimodal.html): Send images, audio, and documents.
 *   [Tool Calling](/core-features/tools.html): Give your AI ability to execute code.
+*   [Migration Guide (v1.6)](/getting_started/migration-v1-6): Moving from legacy mutable versions.
+

@@ -24,7 +24,7 @@ description: Learn how to safely run multiple LLM providers concurrently using N
 In previous versions, `NodeLLM` was a mutable singleton. Calling `NodeLLM.configure()` concurrently could lead to race conditions where one request would overwrite the configuration of another.
 
 ## The Solution
-As of v1.5.4, `NodeLLM` is a **frozen, immutable instance**. It cannot be mutated at runtime. For parallel execution with different providers or configurations, you use **context branching** via `.withProvider()` or create independent instances via `createLLM()`.
+As of v1.6.0, `NodeLLM` is a **frozen, immutable instance**. It cannot be mutated at runtime. For parallel execution with different providers or configurations, you use **context branching** via `.withProvider()` or create independent instances via `createLLM()`.
 
 ---
 

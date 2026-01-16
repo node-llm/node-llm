@@ -153,7 +153,7 @@ When you create an LLM instance (including the default `NodeLLM` export), it **s
 In the global `NodeLLM` instance, this initialization is **lazy**. It only snapshots `process.env` the first time you access a property or method (like `.chat()`). This makes it safe to use with `dotenv/config` or similar libraries in ESM, even if they are imported after the core library.
 
 ```typescript
-// ✅ Safe in NodeLLM v1.5.4+: Initialized on first call
+// ✅ Safe in NodeLLM v1.6.0+: Initialized on first call
 import { NodeLLM } from "@node-llm/core";
 import "dotenv/config"; 
 

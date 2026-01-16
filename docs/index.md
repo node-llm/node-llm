@@ -256,3 +256,7 @@ We welcome contributions! Please see our [Contributing Guide](https://github.com
 ## 🫶 Credits
 
 Heavily inspired by the elegant design of [RubyLLM](https://rubyllm.com/).
+
+---
+
+**Upgrading to v1.6.0?** Read the [Migration Guide](/getting_started/migration-v1-6.html) to understand the new strict provider requirements and typed error hierarchy.
