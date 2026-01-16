@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { Chat } from "../../../src/chat/Chat.js";
 import { Provider, ChatRequest, ChatResponse } from "../../../src/providers/Provider.js";
+import { Message } from "../../../src/chat/Message.js";
 import { ContentPart } from "../../../src/chat/Content.js";
 
 class MockVisionProvider implements Provider {
@@ -11,6 +12,15 @@ class MockVisionProvider implements Provider {
   async chat(request: ChatRequest): Promise<ChatResponse> {
     this.lastRequest = { ...request, messages: [...request.messages] };
     return { content: "I see a cat in the image." };
+  }
+
+  formatToolResultMessage(toolCallId: string, content: string, options?: { isError?: boolean }): Message {
+    return {
+      role: "tool",
+      tool_call_id: toolCallId,
+      content: content,
+      isError: options?.isError
+    };
   }
 }
 

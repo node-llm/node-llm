@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { Chat } from "../../../src/chat/Chat.js";
 import { Provider, ChatRequest, ChatResponse } from "../../../src/providers/Provider.js";
+import { Message } from "../../../src/chat/Message.js";
 
 class MockLoopProvider implements Provider {
   public id = "mock-loop";
@@ -28,6 +29,15 @@ class MockLoopProvider implements Provider {
       ]
     };
   }
+
+  formatToolResultMessage(toolCallId: string, content: string, options?: { isError?: boolean }): Message {
+    return {
+      role: "tool",
+      tool_call_id: toolCallId,
+      content: content,
+      isError: options?.isError
+    };
+  }
 }
 
 describe("Chat Loop Guard", () => {
@@ -37,7 +47,7 @@ describe("Chat Loop Guard", () => {
 
     // Define a dummy tool
     const pingTool = {
-      type: "function",
+      type: "function" as const,
       function: { name: "ping", parameters: {} },
       handler: async () => "pong"
     };
@@ -59,7 +69,7 @@ describe("Chat Loop Guard", () => {
     const chat = new Chat(provider, "test-model");
 
     const pingTool = {
-      type: "function",
+      type: "function" as const,
       function: { name: "ping", parameters: {} },
       handler: async () => "pong"
     };

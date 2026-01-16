@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { Chat } from "../../../src/chat/Chat.js";
 import { Provider, ChatRequest, ChatResponse } from "../../../src/providers/Provider.js";
+import { Message } from "../../../src/chat/Message.js";
 import path from "path";
 import { fileURLToPath } from "url";
 
@@ -27,6 +28,15 @@ class MockLimitedProvider implements Provider {
 
   async chat(_request: ChatRequest): Promise<ChatResponse> {
     return { content: "ok" };
+  }
+
+  formatToolResultMessage(toolCallId: string, content: string, options?: { isError?: boolean }): Message {
+    return {
+      role: "tool",
+      tool_call_id: toolCallId,
+      content: content,
+      isError: options?.isError
+    };
   }
 }
 

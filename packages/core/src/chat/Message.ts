@@ -12,4 +12,5 @@ export interface Message {
   name?: string;
   usage?: Usage;
   reasoning?: string;
+  isError?: boolean;
 }

@@ -1,6 +1,7 @@
 import { describe, it, expect, vi } from "vitest";
 import { Chat } from "../../../src/chat/Chat.js";
 import { Provider, ChatRequest, ChatResponse } from "../../../src/providers/Provider.js";
+import { Message } from "../../../src/chat/Message.js";
 import { ToolDefinition } from "../../../src/chat/Tool.js";
 import { ToolError, AuthenticationError } from "../../../src/errors/index.js";
 
@@ -17,6 +18,15 @@ class MockToolProvider implements Provider {
   }
   defaultModel() {
     return "test-model";
+  }
+
+  formatToolResultMessage(toolCallId: string, content: string, options?: { isError?: boolean }): Message {
+    return {
+      role: "tool",
+      tool_call_id: toolCallId,
+      content: content,
+      isError: options?.isError
+    };
   }
 }
 

@@ -59,7 +59,8 @@ function formatSingleMessage(msg: Message): AnthropicMessage {
         {
           type: "tool_result",
           tool_use_id: msg.tool_call_id!,
-          content: typeof msg.content === "string" ? msg.content : JSON.stringify(msg.content)
+          content: typeof msg.content === "string" ? msg.content : JSON.stringify(msg.content),
+          is_error: msg.isError
         }
       ]
     };

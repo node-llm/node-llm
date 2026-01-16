@@ -446,11 +446,7 @@ export class Chat {
             this.options.onConfirmToolCall
           );
           if (!approved) {
-            this.messages.push({
-              role: "tool",
-              tool_call_id: toolCall.id,
-              content: "Action cancelled by user."
-            });
+            this.messages.push(this.provider.formatToolResultMessage(toolCall.id, "Action cancelled by user."));
             continue;
           }
         }
@@ -462,7 +458,7 @@ export class Chat {
             this.options.onToolCallStart,
             this.options.onToolCallEnd
           );
-          this.messages.push(toolResult);
+          this.messages.push(this.provider.formatToolResultMessage(toolResult.tool_call_id, toolResult.content));
         } catch (error: unknown) {
           let currentError: unknown = error;
           const directive = await this.options.onToolCallError?.(toolCall, currentError as Error);
@@ -479,7 +475,7 @@ export class Chat {
                 this.options.onToolCallStart,
                 this.options.onToolCallEnd
               );
-              this.messages.push(toolResult);
+              this.messages.push(this.provider.formatToolResultMessage(toolResult.tool_call_id, toolResult.content));
               continue;
             } catch (retryError: unknown) {
               // If retry also fails, fall through to default logic
@@ -487,11 +483,11 @@ export class Chat {
             }
           }
 
-          this.messages.push({
-            role: "tool",
-            tool_call_id: toolCall.id,
-            content: `Fatal error executing tool '${toolCall.function.name}': ${(currentError as Error).message}`
-          });
+          this.messages.push(this.provider.formatToolResultMessage(
+            toolCall.id,
+            `Fatal error executing tool '${toolCall.function.name}': ${(currentError as Error).message}`,
+            { isError: true }
+          ));
 
           if (directive === "CONTINUE") {
             continue;

@@ -1,4 +1,5 @@
 import { Provider } from "../src/providers/Provider.js";
+import { Message } from "../src/chat/Message.js";
 
 export class FakeStreamingProvider implements Provider {
   id = "fake-streaming";
@@ -14,5 +15,14 @@ export class FakeStreamingProvider implements Provider {
 
   defaultModel() {
     return "fake-model";
+  }
+
+  formatToolResultMessage(toolCallId: string, content: string, options?: { isError?: boolean }): Message {
+    return {
+      role: "tool",
+      tool_call_id: toolCallId,
+      content: content,
+      isError: options?.isError
+    };
   }
 }

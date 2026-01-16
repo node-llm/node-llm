@@ -1,3 +1,4 @@
+import { Message } from "../chat/Message.js";
 import { UnsupportedFeatureError } from "../errors/index.js";
 import {
   Provider,
@@ -64,5 +65,14 @@ export abstract class BaseProvider implements Provider {
 
   async embed?(_request: EmbeddingRequest): Promise<EmbeddingResponse> {
     this.throwUnsupportedError("embed");
+  }
+
+  formatToolResultMessage(toolCallId: string, content: string, options?: { isError?: boolean }): Message {
+    return {
+      role: "tool",
+      tool_call_id: toolCallId,
+      content: content,
+      isError: options?.isError
+    };
   }
 }

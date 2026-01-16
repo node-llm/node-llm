@@ -241,11 +241,7 @@ export class ChatStream {
                 options.onConfirmToolCall
               );
               if (!approved) {
-                messages.push({
-                  role: "tool",
-                  tool_call_id: toolCall.id,
-                  content: "Action cancelled by user."
-                });
+                messages.push(provider.formatToolResultMessage(toolCall.id, "Action cancelled by user."));
                 continue;
               }
             }
@@ -257,7 +253,7 @@ export class ChatStream {
                 options.onToolCallStart,
                 options.onToolCallEnd
               );
-              messages.push(toolResult);
+              messages.push(provider.formatToolResultMessage(toolResult.tool_call_id, toolResult.content));
             } catch (error: unknown) {
               const err = error as Error & { fatal?: boolean; status?: number };
               const directive = await options.onToolCallError?.(toolCall, err);
@@ -266,11 +262,11 @@ export class ChatStream {
                 throw error;
               }
 
-              messages.push({
-                role: "tool",
-                tool_call_id: toolCall.id,
-                content: `Fatal error executing tool '${toolCall.function.name}': ${err.message}`
-              });
+              messages.push(provider.formatToolResultMessage(
+                toolCall.id,
+                `Fatal error executing tool '${toolCall.function.name}': ${err.message}`,
+                { isError: true }
+              ));
 
               if (directive === "CONTINUE") {
                 continue;

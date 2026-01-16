@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { Chat } from "../../../src/chat/Chat.js";
 import { Provider, ChatRequest, ChatResponse } from "../../../src/providers/Provider.js";
+import { Message } from "../../../src/chat/Message.js";
 
 class MockToolProvider implements Provider {
   // Sequence of responses to return
@@ -29,12 +30,21 @@ class MockToolProvider implements Provider {
   defaultModel() {
     return "test-model";
   }
+
+  formatToolResultMessage(toolCallId: string, content: string, options?: { isError?: boolean }): Message {
+    return {
+      role: "tool",
+      tool_call_id: toolCallId,
+      content: content,
+      isError: options?.isError
+    };
+  }
 }
 
 describe("Chat Tool Calling", () => {
   it("should execute a tool and return the final response", async () => {
     const weatherTool = {
-      type: "function",
+      type: "function" as const,
       function: {
         name: "get_weather",
         description: "Get weather",
@@ -96,7 +106,7 @@ describe("Chat Tool Calling", () => {
 
   it("should handle tool execution errors gracefully", async () => {
     const errorTool = {
-      type: "function",
+      type: "function" as const,
       function: {
         name: "fail_tool",
         parameters: {}
@@ -137,12 +147,12 @@ describe("Chat Tool Calling", () => {
 
   it("should support both constructor tools and withTool fluent API", async () => {
     const tool1 = {
-      type: "function",
+      type: "function" as const,
       function: { name: "tool1", parameters: {} },
       handler: async () => "result1"
     };
     const tool2 = {
-      type: "function",
+      type: "function" as const,
       function: { name: "tool2", parameters: {} },
       handler: async () => "result2"
     };
