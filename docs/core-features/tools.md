@@ -7,14 +7,12 @@ description: Give your models the ability to interact with the real world using 
 ---
 
 # {{ page.title }}
-
 {: .no_toc }
 
 {{ page.description }}
 {: .fs-6 .fw-300 }
 
 ## Table of contents
-
 {: .no_toc .text-delta }
 
 1. TOC
@@ -57,7 +55,7 @@ const chat = llm.chat().withTool(WeatherTool);
 await chat.ask("What is the weather in SF?");
 ```
 
-### Benefits:
+### Benefits
 
 - **No Boilerplate**: No need to write manual JSON schemas.
 - **Type Safety**: `execute()` arguments are automatically typed from your schema.
@@ -121,7 +119,7 @@ To prevent infinite recursion and runaway costs (where a model keeps calling too
 
 By default, `NodeLLM` will throw an error if a model performs more than **5 sequential tool execution turns** in a single request.
 
-### Customizing the limit
+### Customizing the Limit
 
 You can configure this limit globally or override it for a specific request:
 

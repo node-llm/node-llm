@@ -7,14 +7,12 @@ description: Extend NodeLLM with support for proprietary models, internal APIs, 
 ---
 
 # {{ page.title }}
-
 {: .no_toc }
 
 {{ page.description }}
 {: .fs-6 .fw-300 }
 
 ## Table of contents
-
 {: .no_toc .text-delta }
 
 1. TOC

@@ -224,6 +224,8 @@ _Model information enriched by [models.dev](https://models.dev)._
 ${new Date().toISOString().split("T")[0]}
 {: .label .label-green }
 
+---
+
 ## Models by Provider
 
 `;
@@ -262,7 +264,7 @@ ${new Date().toISOString().split("T")[0]}
   });
 
   // Models by Capability
-  markdown += `## Models by Capability\n\n`;
+  markdown += `---\n\n## Models by Capability\n\n`;
 
   const capabilities = {
     "Function Calling": models.filter((m) => m.capabilities?.includes("function_calling")),
@@ -289,7 +291,7 @@ ${new Date().toISOString().split("T")[0]}
   });
 
   // Models by Modality
-  markdown += `## Models by Modality\n\n`;
+  markdown += `---\n\n## Models by Modality\n\n`;
 
   const visionModels = models.filter((m) => m.modalities?.input?.includes("image"));
   if (visionModels.length > 0) {
@@ -325,8 +327,7 @@ ${new Date().toISOString().split("T")[0]}
   }
 
   // Add programmatic access section (preserve original content)
-  markdown += `## Programmatic Access
-
+  markdown += `---\n\n## Programmatic Access\n
 You can access this data programmatically using the registry:
 
 \`\`\`ts
@@ -343,6 +344,8 @@ console.log(model.capabilities); // ["vision", "function_calling", ...]
 const allModels = await NodeLLM.listModels();
 \`\`\`
 
+---
+
 ## Finding Models
 
 Use the registry to find models dynamically based on capabilities:
@@ -355,6 +358,8 @@ const visionModel = allModels.find(m =>
   m.capabilities.includes("vision") && m.capabilities.includes("function_calling")
 );
 \`\`\`
+
+---
 
 ## Model Aliases
 

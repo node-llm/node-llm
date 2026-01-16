@@ -7,14 +7,12 @@ description: Leverage Google's powerful multimodal capabilities with native supp
 ---
 
 # {{ page.title }}
-
 {: .no_toc }
 
 {{ page.description }}
 {: .fs-6 .fw-300 }
 
 ## Table of contents
-
 {: .no_toc .text-delta }
 
 1. TOC
@@ -29,7 +27,10 @@ Google's Gemini provider offers multimodal capabilities including native video a
 ```ts
 import { createLLM } from "@node-llm/core";
 
-const llm = createLLM({ provider: "gemini", geminiApiKey: process.env.GEMINI_API_KEY, // Optional if set in env });
+const llm = createLLM({ 
+  provider: "gemini", 
+  geminiApiKey: process.env.GEMINI_API_KEY // Optional if set in env 
+});
 ```
 
 ## Specific Parameters
@@ -54,8 +55,8 @@ const chat = llm.chat("gemini-1.5-pro").withParams({
 
 ## Features
 
-- **Models**: `gemini-1.5-pro`, `gemini-1.5-flash`, `gemini-1.0-pro`.
-- **Multimodal**: Supports Images, Audio, and Video files directly.
+- **Models**: `gemini-1.5-pro`, `gemini-1.5-flash`, `gemini-2.0-flash`.
+- **Multimodal**: Supports images, audio, and video files directly.
 - **Tools**: Supported.
 - **System Instructions**: Supported.
 

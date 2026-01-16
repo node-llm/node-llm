@@ -8,14 +8,12 @@ description: A 5-minute guide to get started with NodeLLM. Install, configure, a
 ---
 
 # {{ page.title }}
-
 {: .no_toc }
 
 {{ page.description }}
 {: .fs-6 .fw-300 }
 
 ## Table of contents
-
 {: .no_toc .text-delta }
 
 1. TOC
@@ -25,6 +23,8 @@ description: A 5-minute guide to get started with NodeLLM. Install, configure, a
 
 Start building AI apps in Node.js in 5 minutes. Chat, generate images, and create embeddings with one unified API.
 
+---
+
 ## Installation
 
 ```bash
@@ -32,6 +32,8 @@ npm install @node-llm/core
 # or
 pnpm add @node-llm/core
 ```
+
+---
 
 ## Configuration
 
@@ -55,6 +57,8 @@ const llm = createLLM({
   openaiApiKey: process.env.OPENAI_API_KEY
 });
 ```
+
+---
 
 ## Quick Start Examples
 
@@ -90,6 +94,8 @@ for await (const chunk of chat.stream("Write a poem")) {
   process.stdout.write(chunk.content);
 }
 ```
+
+---
 
 ## Next Steps
 

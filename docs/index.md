@@ -219,7 +219,7 @@ console.log(res.reasoning); // Chain-of-thought
 
 ---
 
-## 🚀 Why use this over official SDKs?
+## 🚀 Why Use This Over Official SDKs?
 
 | Feature            | NodeLLM                       | Official SDKs               | Architectural Impact      |
 | :----------------- | :---------------------------- | :-------------------------- | :------------------------ |

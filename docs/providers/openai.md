@@ -7,14 +7,12 @@ description: Full support for the complete range of NodeLLM features including t
 ---
 
 # {{ page.title }}
-
 {: .no_toc }
 
 {{ page.description }}
 {: .fs-6 .fw-300 }
 
 ## Table of contents
-
 {: .no_toc .text-delta }
 
 1. TOC
@@ -29,7 +27,10 @@ The OpenAI provider supports the full range of \`NodeLLM\` features, including r
 ```ts
 import { createLLM } from "@node-llm/core";
 
-const llm = createLLM({ provider: "openai", openaiApiKey: process.env.OPENAI_API_KEY, // Optional if set in env });
+const llm = createLLM({ 
+  provider: "openai", 
+  openaiApiKey: process.env.OPENAI_API_KEY // Optional if set in env 
+});
 ```
 
 ## Specific Parameters
@@ -48,7 +49,7 @@ const chat = llm.chat("gpt-4o").withParams({
 ## Features
 
 - **Models**: `gpt-4o`, `gpt-4o-mini`, `gpt-4-turbo`, etc.
-- **Vision**: specific models like `gpt-4o` support image analysis.
+- **Vision**: Specific models like `gpt-4o` support image analysis.
 - **Tools**: Fully supported, including parallel tool execution.
 - **Reasoning**: Automatic tracking of reasoning tokens and costs for `o1` and `o3` models.
 - **Smart Developer Role**: Modern instructions are automatically mapped to the `developer` role for compatible models when using the official API.

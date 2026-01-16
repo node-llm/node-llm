@@ -7,14 +7,12 @@ description: Learn how to safely run multiple LLM providers concurrently using N
 ---
 
 # {{ page.title }}
-
 {: .no_toc }
 
 {{ page.description }}
 {: .fs-6 .fw-300 }
 
 ## Table of contents
-
 {: .no_toc .text-delta }
 
 1. TOC
@@ -50,10 +48,10 @@ const [score1, score2, score3] = await Promise.all([
 
 ## Benefits
 
-✅ **Singleton maintained**: No need to use `new NodeLLM()` unless you want to.  
-✅ **Race condition solved**: Each `.withProvider()` call creates an isolated context.  
-✅ **Clean syntax**: Chaining `.withProvider().chat().ask()` is intuitive and elegant.  
-✅ **Automatic key sharing**: Scoped instances inherit the global API keys by default.
+✅ **Singleton Maintained**: No need to use `new NodeLLM()` unless you want to.  
+✅ **Race Condition Solved**: Each `.withProvider()` call creates an isolated context.  
+✅ **Clean Syntax**: Chaining `.withProvider().chat().ask()` is intuitive and elegant.  
+✅ **Automatic Key Sharing**: Scoped instances inherit the global API keys by default.
 
 ## Example
 

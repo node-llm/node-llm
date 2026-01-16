@@ -7,14 +7,12 @@ description: Access high-performance chat and advanced reasoning models with com
 ---
 
 # {{ page.title }}
-
 {: .no_toc }
 
 {{ page.description }}
 {: .fs-6 .fw-300 }
 
 ## Table of contents
-
 {: .no_toc .text-delta }
 
 1. TOC
@@ -29,7 +27,10 @@ The DeepSeek provider offers high-performance chat and reasoning models with com
 ```ts
 import { createLLM } from "@node-llm/core";
 
-const llm = createLLM({ provider: "deepseek", deepseekApiKey: process.env.DEEPSEEK_API_KEY, // Optional if set in env });
+const llm = createLLM({ 
+  provider: "deepseek", 
+  deepseekApiKey: process.env.DEEPSEEK_API_KEY // Optional if set in env 
+});
 ```
 
 ## Specific Parameters

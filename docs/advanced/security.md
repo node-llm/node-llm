@@ -7,14 +7,12 @@ description: Learn how NodeLLM acts as an architectural security layer with cont
 ---
 
 # {{ page.title }}
-
 {: .no_toc }
 
 {{ page.description }}
 {: .fs-6 .fw-300 }
 
 ## Table of contents
-
 {: .no_toc .text-delta }
 
 1. TOC

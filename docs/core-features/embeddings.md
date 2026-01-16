@@ -7,14 +7,12 @@ description: Generate high-dimensional vector representations for semantic searc
 ---
 
 # {{ page.title }}
-
 {: .no_toc }
 
 {{ page.description }}
 {: .fs-6 .fw-300 }
 
 ## Table of contents
-
 {: .no_toc .text-delta }
 
 1. TOC
@@ -99,7 +97,7 @@ console.log(embedding.vector.length); // 256
 
 1.  **Batching**: Use `NodeLLM.embed(["text1", "text2"])` instead of serial calls.
 2.  **Caching**: Embeddings are deterministic for a given model and text. Cache them in your database to save costs.
-3.  **COSINE SIMILARITY**: To compare two vectors, calculate the cosine similarity. `NodeLLM` does not include math utilities to keep the core light, but you can implement it easily:
+3.  **Cosine Similarity**: To compare two vectors, calculate the cosine similarity. `NodeLLM` does not include math utilities to keep the core light, but you can implement it easily:
 
     ```ts
     function cosineSimilarity(A: number[], B: number[]) {

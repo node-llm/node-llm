@@ -7,14 +7,12 @@ description: Learn how to manage, override, and fetch LLM pricing data in NodeLL
 ---
 
 # {{ page.title }}
-
 {: .no_toc }
 
 {{ page.description }}
 {: .fs-6 .fw-300 }
 
 ## Table of contents
-
 {: .no_toc .text-delta }
 
 1. TOC
@@ -75,6 +73,7 @@ The JSON format should match:
 Custom providers (e.g., local instances of LLMs or internal proxies) can define their own pricing logic.
 
 ### Registering the Model
+
 First, ensure the model exists in the `ModelRegistry` so NodeLLM knows its context window and capabilities.
 
 ```ts
@@ -91,6 +90,7 @@ ModelRegistry.save({
 ```
 
 ### Registering the Price
+
 Then, assign it a price in the `PricingRegistry`.
 
 ```ts

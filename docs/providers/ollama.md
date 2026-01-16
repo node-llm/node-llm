@@ -7,14 +7,12 @@ description: Run Large Language Models locally on your machine with full support
 ---
 
 # {{ page.title }}
-
 {: .no_toc }
 
 {{ page.description }}
 {: .fs-6 .fw-300 }
 
 ## Table of contents
-
 {: .no_toc .text-delta }
 
 1. TOC
@@ -40,7 +38,10 @@ const llm = createLLM({ provider: "ollama" });
 If your Ollama instance is running on a different machine or port:
 
 ```javascript
-const llm = createLLM({ provider: "ollama", ollamaApiBase: "http://192.168.1.10:11434/v1", // Note the /v1 suffix });
+const llm = createLLM({ 
+  provider: "ollama", 
+  ollamaApiBase: "http://192.168.1.10:11434/v1" // Note the /v1 suffix 
+});
 ```
 
 ## Specific Parameters

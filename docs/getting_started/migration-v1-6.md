@@ -8,13 +8,11 @@ description: Guide for migrating to NodeLLM v1.6.0 strict provider configuration
 ---
 
 # Migrating to NodeLLM v1.6.0
-
 {: .no_toc }
 
 NodeLLM v1.6.0 builds upon the **Immutable Architecture** introduced in v1.5.0 and introduces stricter configuration requirements to eliminate ambiguity when working with multiple providers.
 
 ## Table of contents
-
 {: .no_toc .text-delta }
 
 1. TOC
@@ -22,7 +20,7 @@ NodeLLM v1.6.0 builds upon the **Immutable Architecture** introduced in v1.5.0 a
 
 ---
 
-## ⚡ Strict Provider Requirement
+## Strict Provider Requirement
 
 The most significant change in v1.6.0 is the removal of "Automatic Provider Detection."
 
@@ -44,7 +42,7 @@ If this variable is missing, `NodeLLM.chat()` will now throw a `ProviderNotConfi
 
 ---
 
-## 🛑 Immutable Global Configuration (Reminder)
+## Immutable Global Configuration (Reminder)
 
 While introduced in v1.5.0, v1.6.0 reinforces that the global `NodeLLM` instance is **Frozen**.
 
@@ -74,7 +72,7 @@ const llm = createLLM({
 
 ---
 
-## 🚦 Typed Error Hierarchy
+## Typed Error Hierarchy
 
 In v1.6.0, we have moved from generic `Error` strings to a robust, typed error hierarchy. This allows for better programmatic handling of LLM failures.
 
@@ -86,7 +84,7 @@ In v1.6.0, we have moved from generic `Error` strings to a robust, typed error h
 
 ---
 
-## 🛠️ Design Rationale
+## Design Rationale
 
 These changes complete the architectural transition started in v1.5.0:
 

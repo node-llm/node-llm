@@ -8,14 +8,12 @@ description: High-level overview of NodeLLM components, design principles, and h
 ---
 
 # {{ page.title }}
-
 {: .no_toc }
 
 {{ page.description }}
 {: .fs-6 .fw-300 }
 
 ## Table of contents
-
 {: .no_toc .text-delta }
 
 1. TOC
@@ -24,6 +22,8 @@ description: High-level overview of NodeLLM components, design principles, and h
 ---
 
 `NodeLLM` provides a seamless, unified interface for interacting with multiple Large Language Model (LLM) providers. Whether you are building a simple chat bot or a complex multi-modal agentic workflow, `NodeLLM` abstracts away the provider-specific complexities.
+
+---
 
 ## Core Components
 
@@ -56,6 +56,8 @@ const llm = createLLM({
 });
 ```
 
+---
+
 ## Design Principles
 
 ### Unified Interface
@@ -70,7 +72,9 @@ AI responses are slow. `NodeLLM` is built around `AsyncIterator` to make streami
 
 Start simple with `NodeLLM.chat().ask("Hello")`. As your needs grow, you can access advanced features like raw API responses, custom headers, and token usage tracking without breaking your initial code.
 
-## How it Works
+---
+
+## How It Works
 
 1.  **Normalization**: Your inputs (text, images, files) are converted into a standardized format.
 2.  **Configuration**: The library uses the provider and model you specify (e.g., GPT-4o with OpenAI).

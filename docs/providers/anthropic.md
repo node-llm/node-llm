@@ -7,14 +7,12 @@ description: Experience the Claude family of models with native support for PDF 
 ---
 
 # {{ page.title }}
-
 {: .no_toc }
 
 {{ page.description }}
 {: .fs-6 .fw-300 }
 
 ## Table of contents
-
 {: .no_toc .text-delta }
 
 1. TOC
@@ -29,7 +27,10 @@ The Anthropic provider gives access to the Claude family of models, known for hi
 ```ts
 import { createLLM } from "@node-llm/core";
 
-const llm = createLLM({ provider: "anthropic", anthropicApiKey: process.env.ANTHROPIC_API_KEY, // Optional if set in env });
+const llm = createLLM({ 
+  provider: "anthropic", 
+  anthropicApiKey: process.env.ANTHROPIC_API_KEY // Optional if set in env 
+});
 ```
 
 ## Specific Parameters

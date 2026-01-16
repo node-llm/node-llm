@@ -2,6 +2,8 @@ dist
 node_modules
 *.log
 packages/core/dist
+packages/core/src/models/models.ts
+packages/core/src/aliases.ts
 docs
 examples
 .jekyll-cache

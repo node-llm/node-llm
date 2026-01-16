@@ -7,14 +7,12 @@ description: Programmatically discover available models, their capabilities, and
 ---
 
 # {{ page.title }}
-
 {: .no_toc }
 
 {{ page.description }}
 {: .fs-6 .fw-300 }
 
 ## Table of contents
-
 {: .no_toc .text-delta }
 
 1. TOC
@@ -23,6 +21,8 @@ description: Programmatically discover available models, their capabilities, and
 ---
 
 \`NodeLLM\` includes a comprehensive, built-in registry of models using data from **models.dev**. This allows you to discover models and their capabilities programmatically.
+
+---
 
 ## Inspecting a Model
 
@@ -40,6 +40,8 @@ if (model) {
   console.log(`Output Price: $${model.pricing.text_tokens.standard.output_per_million}/1M`);
 }
 ```
+
+---
 
 ## Discovery by Capability
 
@@ -66,6 +68,8 @@ const toolModels = NodeLLM.models.list().filter((m) => m.capabilities.includes("
 const audioModels = NodeLLM.models.list().filter((m) => m.capabilities.includes("audio_input"));
 ```
 
+---
+
 ## Supported Providers
 
 The registry includes models from:
@@ -75,13 +79,15 @@ The registry includes models from:
 - **Google Gemini** (Gemini 1.5 Pro, Flash)
 - **Vertex AI** (via Gemini)
 
+---
+
 ## Custom Models & Endpoints
 
 Sometimes you need to use models not in the registry, such as **Azure OpenAI** deployments, **Local Models** (Ollama/LM Studio), or brand new releases.
 
 ### Using `assumeModelExists`
 
-This flag tells `NodeLLM` to bypass the registry check.
+This flag tells \`NodeLLM\` to bypass the registry check.
 
 **Important**: You MUST specify the `provider` when using this flag, as the system cannot infer it from the ID.
 
