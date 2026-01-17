@@ -12,5 +12,16 @@ describe("ChatResponseString", () => {
     expect(String(res)).toBe("hello");
     expect(res.usage).toEqual(usage);
     expect(res.tool_calls).toEqual(tool_calls);
+    expect(res.inputTokens).toBe(1);
+    expect(res.outputTokens).toBe(2);
+    expect(res.totalTokens).toBe(3);
+
+    expect(res.meta).toEqual({
+      usage,
+      model: "model",
+      provider: "provider",
+      reasoning: "logic",
+      tool_calls
+    });
   });
 });

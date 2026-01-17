@@ -39,12 +39,47 @@ export class ChatResponseString extends String {
     return this.usage.output_cost;
   }
 
+  // --- CamelCase Aliases (for Developer Delight) ---
+  get inputTokens() {
+    return this.input_tokens;
+  }
+  get outputTokens() {
+    return this.output_tokens;
+  }
+  get totalTokens() {
+    return this.total_tokens;
+  }
+  get cachedTokens() {
+    return this.cached_tokens;
+  }
+
   get content(): string {
     return this.valueOf();
   }
 
   get model_id(): string {
     return this.model;
+  }
+
+  /**
+   * Returns a serializable object containing all response metadata.
+   * Perfect for database persistence.
+   */
+  get meta() {
+    return {
+      usage: this.usage,
+      model: this.model,
+      provider: this.provider,
+      reasoning: this.reasoning,
+      tool_calls: this.tool_calls
+    };
+  }
+
+  /**
+   * Alias for meta (backwards compatibility)
+   */
+  get raw() {
+    return this.meta;
   }
 
   toString() {

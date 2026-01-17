@@ -26,12 +26,17 @@ Track tokens for individual turns or the entire conversation to monitor costs an
 
 Every response object contains usage metadata for that specific interaction.
 
-```ts
 const response = await chat.ask("Hello!");
 
-console.log(response.input_tokens); // e.g. 10
-console.log(response.output_tokens); // e.g. 5
-console.log(response.cost); // Estimated cost in USD
+// Standard Snake Case
+console.log(response.input_tokens); 
+
+// Modern Camel Case Alias <span style="background-color: #0d47a1; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v1.6.0</span>
+console.log(response.inputTokens); 
+
+// Full Metadata Object (Perfect for DB storage) <span style="background-color: #0d47a1; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v1.6.0</span>
+console.log(response.meta); 
+// => { usage: {...}, model: "...", provider: "...", reasoning: "..." }
 ```
 
 ## Session Totals

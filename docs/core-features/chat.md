@@ -69,9 +69,32 @@ const chat = llm.chat("gpt-4o", {
 // Option 2: Set or update later
 chat.withInstructions("Now speak like a pirate.");
 
+// Option 3: Standard Alias <span style="background-color: #0d47a1; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v1.6.0</span>
+chat.system("You are a helpful assistant.");
+
 await chat.ask("Hello");
 // => "Ahoy matey! The seas are calm today."
 ```
+
+---
+
+## Manual History Management <span style="background-color: #0d47a1; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v1.6.0</span>
+
+While NodeLLM handles history automatically during a session, you can manually inject messages into the conversation. This is especially useful for **Session Rehydration** from a database.
+
+```ts
+const chat = NodeLLM.chat("gpt-4o");
+
+// Rehydrate previous turns from your DB
+chat
+  .add("user", "What is my name?")
+  .add("assistant", "You told me your name is Alice.");
+
+const response = await chat.ask("What did I just say?");
+// => "You asked me what your name is."
+```
+
+The `.add()` method correctly isolates `system` and `developer` roles while maintaining chronological order for `user` and `assistant` messages.
 
 ---
 

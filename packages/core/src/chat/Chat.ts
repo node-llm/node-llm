@@ -170,6 +170,26 @@ export class Chat {
   }
 
   /**
+   * Alias for withInstructions
+   */
+  system(instruction: string, options?: { replace?: boolean }): this {
+    return this.withInstructions(instruction, options);
+  }
+
+  /**
+   * Add a message manually to the chat history.
+   * Useful for rehydrating sessions from a database.
+   */
+  add(role: "user" | "assistant" | "system" | "developer", content: string): this {
+    if (role === "system" || role === "developer") {
+      this.systemMessages.push({ role, content });
+    } else {
+      this.messages.push({ role, content });
+    }
+    return this;
+  }
+
+  /**
    * Set the temperature for the chat session.
    * Controls randomness: 0.0 (deterministic) to 1.0 (creative).
    */
