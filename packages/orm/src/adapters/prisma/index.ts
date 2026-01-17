@@ -24,4 +24,4 @@
  */
 
 export { Chat, createChat, loadChat } from "./Chat.js";
-export type { ChatRecord, MessageRecord, ChatOptions } from "./Chat.js";
+export type { ChatRecord, MessageRecord, ChatOptions, TableNames } from "./Chat.js";

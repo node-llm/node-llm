@@ -20,7 +20,18 @@ npm install -D prisma
 
 ## Quick Start
 
-### 1. Setup Prisma Schema
+### Option 1: Using the CLI (Recommended)
+
+```bash
+# Generate schema.prisma automatically
+npx node-llm-orm init
+
+# Create and apply migration
+npx prisma migrate dev --name init
+npx prisma generate
+```
+
+### Option 2: Manual Setup
 
 Copy the reference schema into your project:
 
@@ -180,6 +191,36 @@ export async function POST(req: Request) {
   });
 
   return new Response(stream);
+}
+```
+
+### Custom Table Names
+
+If you have existing tables with different names (e.g., `AssistantChat` instead of `Chat`), you can specify custom table names:
+
+```typescript
+import { createChat } from "@node-llm/orm/prisma";
+
+const tableNames = {
+  chat: "assistantChat",
+  message: "assistantMessage",
+  toolCall: "assistantToolCall",
+  request: "assistantRequest"
+};
+
+// Create chat with custom table names
+const chat = await createChat(prisma, llm, { model: "gpt-4" }, tableNames);
+
+// Load chat (must use same table names)
+const loaded = await loadChat(prisma, llm, chatId, tableNames);
+```
+
+**Note**: Your Prisma schema model names must match the table names you specify. For example:
+
+```prisma
+model AssistantChat {
+  // ... fields
+  @@map("assistantChat") // Optional: map to different database table name
 }
 ```
 

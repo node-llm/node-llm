@@ -33,6 +33,20 @@ export interface ChatOptions {
   metadata?: Record<string, any>;
 }
 
+export interface TableNames {
+  chat?: string;
+  message?: string;
+  toolCall?: string;
+  request?: string;
+}
+
+const DEFAULT_TABLE_NAMES: Required<TableNames> = {
+  chat: "chat",
+  message: "message",
+  toolCall: "toolCall",
+  request: "request"
+};
+
 /**
  * Chat - The core ORM model for persisting LLM conversations.
  *
@@ -57,11 +71,16 @@ export interface ChatOptions {
  * ```
  */
 export class Chat {
+  private readonly tables: Required<TableNames>;
+
   constructor(
     private readonly prisma: PrismaClient,
     private readonly llm: NodeLLMCore,
-    public readonly record: ChatRecord
-  ) {}
+    public readonly record: ChatRecord,
+    tableNames?: TableNames
+  ) {
+    this.tables = { ...DEFAULT_TABLE_NAMES, ...tableNames };
+  }
 
   get id() {
     return this.record.id;
@@ -72,7 +91,7 @@ export class Chat {
    */
   async ask(input: string): Promise<MessageRecord> {
     // Create user message
-    const userMessage = await (this.prisma as any).message.create({
+    const userMessage = await (this.prisma as any)[this.tables.message].create({
       data: {
         chatId: this.id,
         role: "user",
@@ -81,7 +100,7 @@ export class Chat {
     });
 
     // Create placeholder assistant message
-    const assistantMessage = await (this.prisma as any).message.create({
+    const assistantMessage = await (this.prisma as any)[this.tables.message].create({
       data: {
         chatId: this.id,
         role: "assistant",
@@ -91,7 +110,7 @@ export class Chat {
 
     try {
       // Fetch conversation history
-      const historyRecords = await (this.prisma as any).message.findMany({
+      const historyRecords = await (this.prisma as any)[this.tables.message].findMany({
         where: {
           chatId: this.id,
           id: { notIn: [userMessage.id, assistantMessage.id] }
@@ -121,7 +140,7 @@ export class Chat {
       // Attach persistence hooks
       chat
         .onToolCallEnd(async (call: any, result: any) => {
-          await (this.prisma as any).toolCall.create({
+          await (this.prisma as any)[this.tables.toolCall].create({
             data: {
               messageId: assistantMessage.id,
               toolCallId: call.id || "unknown",
@@ -135,7 +154,7 @@ export class Chat {
           });
         })
         .afterResponse(async (resp: any) => {
-          await (this.prisma as any).request.create({
+          await (this.prisma as any)[this.tables.request].create({
             data: {
               chatId: this.id,
               messageId: assistantMessage.id,
@@ -155,7 +174,7 @@ export class Chat {
       const response = await chat.ask(input);
 
       // Update assistant message with response
-      return await (this.prisma as any).message.update({
+      return await (this.prisma as any)[this.tables.message].update({
         where: { id: assistantMessage.id },
         data: {
           content: response.content,
@@ -169,7 +188,7 @@ export class Chat {
       });
     } catch (err) {
       // Cleanup on failure
-      await (this.prisma as any).message.delete({
+      await (this.prisma as any)[this.tables.message].delete({
         where: { id: assistantMessage.id }
       });
       throw err;
@@ -189,7 +208,7 @@ export class Chat {
    */
   async *askStream(input: string): AsyncGenerator<string, MessageRecord, undefined> {
     // Create user message
-    const userMessage = await (this.prisma as any).message.create({
+    const userMessage = await (this.prisma as any)[this.tables.message].create({
       data: {
         chatId: this.id,
         role: "user",
@@ -198,7 +217,7 @@ export class Chat {
     });
 
     // Create placeholder assistant message
-    const assistantMessage = await (this.prisma as any).message.create({
+    const assistantMessage = await (this.prisma as any)[this.tables.message].create({
       data: {
         chatId: this.id,
         role: "assistant",
@@ -208,7 +227,7 @@ export class Chat {
 
     try {
       // Fetch conversation history
-      const historyRecords = await (this.prisma as any).message.findMany({
+      const historyRecords = await (this.prisma as any)[this.tables.message].findMany({
         where: {
           chatId: this.id,
           id: { notIn: [userMessage.id, assistantMessage.id] }
@@ -238,7 +257,7 @@ export class Chat {
       // Attach persistence hooks
       chat
         .onToolCallEnd(async (call: any, result: any) => {
-          await (this.prisma as any).toolCall.create({
+          await (this.prisma as any)[this.tables.toolCall].create({
             data: {
               messageId: assistantMessage.id,
               toolCallId: call.id || "unknown",
@@ -252,7 +271,7 @@ export class Chat {
           });
         })
         .afterResponse(async (resp: any) => {
-          await (this.prisma as any).request.create({
+          await (this.prisma as any)[this.tables.request].create({
             data: {
               chatId: this.id,
               messageId: assistantMessage.id,
@@ -285,7 +304,7 @@ export class Chat {
       }
 
       // Update assistant message with complete response
-      const updatedMessage = await (this.prisma as any).message.update({
+      const updatedMessage = await (this.prisma as any)[this.tables.message].update({
         where: { id: assistantMessage.id },
         data: {
           content: fullContent,
@@ -301,7 +320,7 @@ export class Chat {
       return updatedMessage;
     } catch (err) {
       // Cleanup on failure
-      await (this.prisma as any).message.delete({
+      await (this.prisma as any)[this.tables.message].delete({
         where: { id: assistantMessage.id }
       });
       throw err;
@@ -312,7 +331,7 @@ export class Chat {
    * Get all messages in this chat.
    */
   async messages(): Promise<MessageRecord[]> {
-    return (this.prisma as any).message.findMany({
+    return (this.prisma as any)[this.tables.message].findMany({
       where: { chatId: this.id },
       orderBy: { createdAt: "asc" }
     });
@@ -321,13 +340,17 @@ export class Chat {
 
 /**
  * Create a new chat session.
+ *
+ * @param tableNames - Optional custom table names (e.g., { chat: 'assistantChat', message: 'assistantMessage' })
  */
 export async function createChat(
   prisma: PrismaClient,
   llm: NodeLLMCore,
-  options: ChatOptions = {}
+  options: ChatOptions = {},
+  tableNames?: TableNames
 ): Promise<Chat> {
-  const record = await (prisma as any).chat.create({
+  const tables = { ...DEFAULT_TABLE_NAMES, ...tableNames };
+  const record = await (prisma as any)[tables.chat].create({
     data: {
       model: options.model,
       provider: options.provider,
@@ -336,21 +359,25 @@ export async function createChat(
     }
   });
 
-  return new Chat(prisma, llm, record);
+  return new Chat(prisma, llm, record, tableNames);
 }
 
 /**
  * Load an existing chat session.
+ *
+ * @param tableNames - Optional custom table names (must match what was used in createChat)
  */
 export async function loadChat(
   prisma: PrismaClient,
   llm: NodeLLMCore,
-  chatId: string
+  chatId: string,
+  tableNames?: TableNames
 ): Promise<Chat | null> {
-  const record = await (prisma as any).chat.findUnique({
+  const tables = { ...DEFAULT_TABLE_NAMES, ...tableNames };
+  const record = await (prisma as any)[tables.chat].findUnique({
     where: { id: chatId }
   });
 
   if (!record) return null;
-  return new Chat(prisma, llm, record);
+  return new Chat(prisma, llm, record, tableNames);
 }
