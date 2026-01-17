@@ -23,6 +23,8 @@ description: Learn how to configure NodeLLM with API keys, custom base URLs, sec
 
 `NodeLLM` provides three ways to configure providers: **Zero-Config** (via environment variables), **Explicit Factory** (via `createLLM`), and **Isolated Branching** (via `.withProvider`).
 
+---
+
 ## 1. Zero-Config (The "Direct" Pattern)
 
 The simplest way to use NodeLLM is by relying on environment variables. NodeLLM will automatically snapshot your environment at load time.
@@ -110,6 +112,8 @@ const llm = createLLM({
 - **`requestTimeout`**: Prevents hanging requests and DoS attacks
 - **`maxTokens`**: Prevents excessive output generation and cost overruns
 
+---
+
 ## Supported Configuration Keys
 
 | Key                         | Description                         | Default                           |
@@ -134,6 +138,8 @@ const llm = createLLM({
 | `maxTokens`                 | Max output tokens per request       | `4096`                            |
 | `retry`                     | Retry configuration (legacy)        | `{ attempts: 1, delayMs: 0 }`     |
 
+---
+
 ## Inspecting Configuration
 
 You can inspect the current internal configuration at any time.
@@ -141,6 +147,8 @@ You can inspect the current internal configuration at any time.
 ```typescript
 console.log(NodeLLM.config.openaiApiKey);
 ```
+
+---
 
 ## Error Handling
 
@@ -166,9 +174,11 @@ import "dotenv/config";
 const chat = NodeLLM.chat(); // Snapshots environment NOW
 ```
 
+---
+
 ## Best Practices
 
-### Use dotenv for local development
+### Use Dotenv for Local Development
 
 ```typescript
 import "dotenv/config";
@@ -177,7 +187,7 @@ import { createLLM } from "@node-llm/core";
 const llm = createLLM({ provider: "openai" });
 ```
 
-### Configure once at startup
+### Configure Once at Startup
 
 ```typescript
 // app.ts

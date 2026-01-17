@@ -20,7 +20,9 @@ description: Access the inner thoughts and chain-of-thought process of advanced 
 
 ---
 
-\`NodeLLM\` provides a unified way to access the "thinking" or "reasoning" process of models like **DeepSeek R1** or **OpenAI o1/o3**. Some models expose their internal chain of thought before providing the final answer.
+`NodeLLM` provides a unified way to access the "thinking" or "reasoning" process of models like **DeepSeek R1** or **OpenAI o1/o3**. Some models expose their internal chain of thought before providing the final answer.
+
+---
 
 ## Accessing Reasoning Content
 
@@ -58,6 +60,8 @@ for await (const chunk of chat.stream("Explain quantum entanglement")) {
 
 The final response object in the `onEndMessage` callback or returned by the stream will also contain the full aggregated reasoning string.
 
+---
+
 ## OpenAI o1/o3 Support
 
 OpenAI models like `o3-mini` do not expose the reasoning text directly (in a separate field), but they use "reasoning tokens" during generation. `NodeLLM` automatically tracks these tokens and includes them in the usage and cost calculations.
@@ -69,6 +73,8 @@ const response = await chat.ask("Write a complex algorithm");
 console.log(`Reasoning tokens used: ${response.usage.output_tokens}`);
 console.log(`Total cost: $${response.cost}`);
 ```
+
+---
 
 ## Supported Models
 

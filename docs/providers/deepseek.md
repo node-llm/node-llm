@@ -20,7 +20,9 @@ description: Access high-performance chat and advanced reasoning models with com
 
 ---
 
-The DeepSeek provider offers high-performance chat and reasoning models with competitive pricing. \`NodeLLM\` supports both the DeepSeek-V3 chat model and the DeepSeek-R1 reasoning model.
+The DeepSeek provider offers high-performance chat and reasoning models with competitive pricing. `NodeLLM` supports both the DeepSeek-V3 chat model and the DeepSeek-R1 reasoning model.
+
+---
 
 ## Configuration
 
@@ -32,6 +34,8 @@ const llm = createLLM({
   deepseekApiKey: process.env.DEEPSEEK_API_KEY // Optional if set in env 
 });
 ```
+
+---
 
 ## Specific Parameters
 
@@ -45,6 +49,8 @@ const chat = llm.chat("deepseek-chat").withParams({
 });
 ```
 
+---
+
 ## Features
 
 - **Models**:
@@ -54,6 +60,8 @@ const chat = llm.chat("deepseek-chat").withParams({
 - **Reasoning**: Access inner thought process text from `deepseek-reasoner`.
 - **Streaming**: Full streaming support for all models.
 - **Structured Output**: Supported via automated prompt engineering and `json_object` mode transitions.
+
+---
 
 ## Usage Details
 

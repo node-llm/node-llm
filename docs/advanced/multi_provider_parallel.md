@@ -24,13 +24,15 @@ description: Learn how to safely run multiple LLM providers concurrently using N
 
 In previous versions, `NodeLLM` was a mutable singleton. Calling `NodeLLM.configure()` concurrently could lead to race conditions where one request would overwrite the configuration of another.
 
+---
+
 ## The Solution
 
 As of v1.6.0, `NodeLLM` is a **frozen, immutable instance**. It cannot be mutated at runtime. For parallel execution with different providers or configurations, you use **context branching** via `.withProvider()` or create independent instances via `createLLM()`.
 
 ---
 
-## How to use it
+## How To Use It
 
 ### Simple Parallel Calls
 
@@ -46,12 +48,16 @@ const [score1, score2, score3] = await Promise.all([
 ]);
 ```
 
+---
+
 ## Benefits
 
 ✅ **Singleton Maintained**: No need to use `new NodeLLM()` unless you want to.  
 ✅ **Race Condition Solved**: Each `.withProvider()` call creates an isolated context.  
 ✅ **Clean Syntax**: Chaining `.withProvider().chat().ask()` is intuitive and elegant.  
 ✅ **Automatic Key Sharing**: Scoped instances inherit the global API keys by default.
+
+---
 
 ## Example
 

@@ -102,7 +102,7 @@ chat.withToolExecution("confirm").onConfirmToolCall(async (call) => {
 });
 ```
 
-Security value:
+**Security Benefits:**
 
 - **Prevents Destructive Actions**: Stops the model from accidentally deleting data without oversight.
 - **Human-in-the-loop**: Increases trust by ensuring critical business logic remains under human control.

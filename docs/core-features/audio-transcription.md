@@ -20,7 +20,9 @@ description: Convert speech to text using specialized models like Whisper or lev
 
 ---
 
-Convert audio files to text using models like OpenAI's Whisper or Google's Gemini. \`NodeLLM\` supports both raw transcription and multimodal chat analysis.
+Convert audio files to text using models like OpenAI's Whisper or Google's Gemini. `NodeLLM` supports both raw transcription and multimodal chat analysis.
+
+---
 
 ## Basic Transcription
 
@@ -33,6 +35,8 @@ const text = await NodeLLM.transcribe("meeting.mp3", {
 
 console.log(text.toString());
 ```
+
+---
 
 ## Advanced Options
 
@@ -64,6 +68,8 @@ for (const segment of response.segments) {
 }
 ```
 
+---
+
 ## Multimodal Chat vs. Transcription
 
 There are two ways to work with audio:
@@ -80,6 +86,8 @@ await chat.ask("What is the main topic of this podcast?", {
   files: ["podcast.mp3"]
 });
 ```
+
+---
 
 ## Error Handling
 

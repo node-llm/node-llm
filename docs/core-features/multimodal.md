@@ -22,6 +22,8 @@ description: Go beyond text. Learn how to pass images, audio, video, and documen
 
 Modern LLMs can understand more than just text. `NodeLLM` provides a unified way to pass images, audio, video, and documents to models that support them.
 
+---
+
 ## Smart File Handling
 
 You can pass local paths or URLs directly to the `ask` or `stream` method using the `files` (or `images`) option. `NodeLLM` automatically detects the file type and formats it correctly for the specific provider.
@@ -33,6 +35,8 @@ You can pass local paths or URLs directly to the `ask` or `stream` method using 
 - **Audio**: `.wav`, `.mp3`, `.ogg`, `.flac`
 - **Documents**: `.pdf`, `.csv`, `.json`, `.xml`, `.md`, `.txt`
 - **Code**: `.js`, `.ts`, `.py`, `.rb`, `.go`, etc.
+
+---
 
 ## Working with Images (Vision)
 
@@ -57,6 +61,8 @@ await chat.ask("Compare the design of these two apps", {
 });
 ```
 
+---
+
 ## Working with Audio
 
 Audio-capable models (like `gemini-1.5-flash`) can listen to audio files and answer questions about them.
@@ -77,6 +83,8 @@ await chat.ask("What was the tone of the speaker?", {
 
 _Note: For pure transcription without chat, see [Audio Transcription](/core-features/audio-transcription.html)._
 
+---
+
 ## Working with Videos
 
 Video analysis is currently supported primarily by Google Gemini and limited OpenAI models. `NodeLLM` handles the upload and reference process seamlessly.
@@ -88,6 +96,8 @@ await chat.ask("What happens in this video?", {
   files: ["./demo_video.mp4"]
 });
 ```
+
+---
 
 ## Working with Documents (PDFs & Text)
 
@@ -112,13 +122,15 @@ For PDFs, providers handled differently:
 
 - **Anthropic**: Supports native PDF blocks (up to 10MB). `NodeLLM` handles the base64 encoding.
 - **Gemini**: Supports PDF via File API.
-- **OpenAI**: Often requires text extraction first (unless using Assistants API, which `NodeLLM` core interacts with as Chat). _Note: Ensure your provider supports the PDF modality directly or use a text extractor._
+- **OpenAI**: Often requires text extraction first (unless using Assistants API).
 
 ```ts
 await chat.ask("Summarize this contract", {
   files: ["./contract.pdf"]
 });
 ```
+
+---
 
 ## Automatic Type Detection
 

@@ -22,6 +22,8 @@ description: Learn how to manage, override, and fetch LLM pricing data in NodeLL
 
 NodeLLM comes with built-in pricing data for over 9,000 models, updated weekly from [models.dev](https://models.dev). However, you may need to override these prices for custom contracts, handle new models before they enter our registry, or manage pricing for local/custom providers.
 
+---
+
 ## The Pricing Registry
 
 All pricing logic is managed by the `PricingRegistry`. This registry uses a tiered lookup strategy to determine the cost of a model:
@@ -68,6 +70,8 @@ The JSON format should match:
 }
 ```
 
+---
+
 ## Custom Providers
 
 Custom providers (e.g., local instances of LLMs or internal proxies) can define their own pricing logic.
@@ -106,6 +110,8 @@ PricingRegistry.register("local", "local-llama", {
 });
 ```
 
+---
+
 ## Cost Calculation
 
 NodeLLM automatically calculates costs when a `usage` object is returned by a provider. You can also perform manual calculations using the registry:
@@ -122,6 +128,8 @@ const usage = {
 const costInfo = ModelRegistry.calculateCost(usage, "gpt-4o", "openai");
 console.log(costInfo.cost); // Total cost in USD
 ```
+
+---
 
 ## Advanced: Reasoning & Batch Pricing
 

@@ -22,6 +22,8 @@ description: Experience the Claude family of models with native support for PDF 
 
 The Anthropic provider gives access to the Claude family of models, known for high-quality reasoning and coding capabilities.
 
+---
+
 ## Configuration
 
 ```ts
@@ -32,6 +34,8 @@ const llm = createLLM({
   anthropicApiKey: process.env.ANTHROPIC_API_KEY // Optional if set in env 
 });
 ```
+
+---
 
 ## Specific Parameters
 
@@ -48,6 +52,8 @@ const chat = llm.chat("claude-3-5-sonnet-20241022").withParams({
 });
 ```
 
+---
+
 ## Features
 
 - **Models**: `claude-3-7-sonnet`, `claude-3-5-sonnet`, `claude-3-opus`, `claude-3-haiku`.
@@ -55,6 +61,8 @@ const chat = llm.chat("claude-3-5-sonnet-20241022").withParams({
 - **PDF Support**: Can read and analyze PDF documents natively.
 - **Tools**: Fully supported.
 - **Reasoning**: Support for Extended Thinking and token-based pricing for `claude-3-7`.
+
+---
 
 ## PDF Support
 

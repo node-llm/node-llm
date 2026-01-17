@@ -22,6 +22,8 @@ description: Leverage Google's powerful multimodal capabilities with native supp
 
 Google's Gemini provider offers multimodal capabilities including native video and audio understanding.
 
+---
+
 ## Configuration
 
 ```ts
@@ -32,6 +34,8 @@ const llm = createLLM({
   geminiApiKey: process.env.GEMINI_API_KEY // Optional if set in env 
 });
 ```
+
+---
 
 ## Specific Parameters
 
@@ -53,12 +57,16 @@ const chat = llm.chat("gemini-1.5-pro").withParams({
 });
 ```
 
+---
+
 ## Features
 
 - **Models**: `gemini-1.5-pro`, `gemini-1.5-flash`, `gemini-2.0-flash`.
 - **Multimodal**: Supports images, audio, and video files directly.
 - **Tools**: Supported.
 - **System Instructions**: Supported.
+
+---
 
 ## Video Support
 

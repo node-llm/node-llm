@@ -20,7 +20,9 @@ description: Access hundreds of open-source and proprietary models through a sin
 
 ---
 
-The OpenRouter provider acts as a unified gateway to AI models from multiple providers. \`NodeLLM\` leverages OpenRouter's standardized API while providing additional capabilities like integrated tool calling and vision.
+The OpenRouter provider acts as a unified gateway to AI models from multiple providers. `NodeLLM` leverages OpenRouter's standardized API while providing additional capabilities like integrated tool calling and vision.
+
+---
 
 ## Configuration
 
@@ -33,6 +35,8 @@ const llm = createLLM({
 });
 ```
 
+---
+
 ## Features
 
 - **Model Discovery**: Full support for `NodeLLM.listModels()` to explore available models.
@@ -41,6 +45,8 @@ const llm = createLLM({
 - **Tools**: Supported for models with function calling capabilities.
 - **Reasoning**: Access chain-of-thought for reasoning-capable models (e.g., DeepSeek R1).
 - **Streaming**: Native streaming support with the advanced `Stream` utility.
+
+---
 
 ## Specific Parameters
 

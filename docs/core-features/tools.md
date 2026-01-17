@@ -26,7 +26,9 @@ description: Give your models the ability to interact with the real world using 
 
 > **Looking for a real-world example?** Check out the [Brand Perception Checker](../../examples/brand-perception-checker/), which uses the `SerpTool` to perform live Google searches and "read" the results to extract semantic signals.
 
-## Class-Based Tools ✨
+---
+
+## Class-Based Tools <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">New ✨</span>
 
 The recommended way to define tools is by using the `Tool` class. This provides auto-generated JSON schemas and full type safety using `zod`.
 
@@ -78,6 +80,8 @@ await chat.ask("What is the weather in SF?");
 | `.optional()`         | Marks the field as not required.                    |
 | `.default(val)`       | Sets a default value if the LLM doesn't provide it. |
 
+---
+
 ## Using Tools in Chat
 
 Use the fluent `.withTool()` or `.withTools()` API to register tools for a chat session. By default, tools are appended. You can use the `replace` option to clear previous tools.
@@ -92,7 +96,9 @@ chat.withTools([SearchTool], { replace: true });
 const reply = await chat.ask("What is the weather in London?");
 ```
 
-## Tools Work in Streaming Too! ✨
+---
+
+## Tools Work in Streaming Too! <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">New ✨</span>
 
 Tools now work seamlessly with streaming! The same tool execution happens automatically during streaming:
 
@@ -107,11 +113,15 @@ for await (const chunk of chat.stream("What's the weather in Paris?")) {
 
 See the [Streaming documentation](streaming.html#streaming-with-tools-) for more details.
 
+---
+
 ## Parallel Tool Calling
 
 If the provider supports it (like OpenAI and Anthropic), the model can call multiple tools in a single turn. `NodeLLM` handles the concurrent execution of these tools automatically.
 
 See [examples/openai/chat/parallel-tools.mjs](https://github.com/node-llm/node-llm/blob/main/examples/openai/chat/parallel-tools.mjs) for a demo.
+
+---
 
 ## Loop Protection (Loop Guard) 🛡️
 
@@ -132,7 +142,9 @@ await chat.ask("Perform a complex deep research task", {
 });
 ```
 
-## Tool Execution Policies (Security) 🚥 <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v1.5.0+</span>
+---
+
+## Tool Execution Policies (Security) <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v1.5.0+</span>
 
 For sensitive operations, you can control the "autonomy" of the tool execution loop using `withToolExecution()`.
 
@@ -156,6 +168,8 @@ In `confirm` and `dry-run` modes, the `ChatResponseString` object returned by `.
 const res = await chat.withToolExecution("dry-run").ask("Delete all users");
 console.log(res.tool_calls); // [{ id: '...', function: { name: 'delete_users', ... } }]
 ```
+
+---
 
 ## Advanced Tool Metadata
 
@@ -185,7 +199,9 @@ class HistoryTool extends Tool {
 }
 ```
 
-## Error Handling & Flow Control 🚦 <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v1.5.1+</span>
+---
+
+## Error Handling & Flow Control <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v1.5.1+</span>
 
 `NodeLLM` handles tool errors intelligently to prevent infinite retry loops through a combination of automatic infrastructure protection and manual flow control.
 
@@ -211,7 +227,7 @@ class DatabaseTool extends Tool {
 }
 ```
 
-### Hook-Based Flow Control (`STOP` | `CONTINUE`)
+### Hook-Based Flow Control (STOP | CONTINUE)
 
 For granular control, you can use the `onToolCallError` hook to override internal logic. This allows you to differentiate between tools that are "mission-critical" and those that are "optional."
 
@@ -251,7 +267,9 @@ async execute({ date }) {
 }
 ```
 
-### Advanced: Raw JSON Schema
+---
+
+## Advanced: Raw JSON Schema
 
 If you prefer to define your parameters using standard JSON Schema instead of Zod, you can pass a schema object directly to the `schema` property in your `Tool` class. This is useful for migrating existing tools or when you already have schema definitions.
 
@@ -277,7 +295,9 @@ class CustomTool extends Tool {
 }
 ```
 
-### Function-Based Tools (Legacy)
+---
+
+## Function-Based Tools (Legacy)
 
 For simply wrapping a function without a class, you can define a tool as a plain object with a `handler`.
 
@@ -303,6 +323,8 @@ const weatherTool = {
 chat.withTool(weatherTool);
 ```
 
+---
+
 ## Security Considerations
 
 Treat arguments passed to your `execute` method as **untrusted user input**.
@@ -310,6 +332,8 @@ Treat arguments passed to your `execute` method as **untrusted user input**.
 - **Validate**: Always validate parameter types and ranges using libraries like `zod` inside the handler if critical.
 - **Sanitize**: Sanitize strings before using them in database queries or shell commands.
 - **Avoid Eval**: Never use `eval()` on inputs provided by the model.
+
+---
 
 ## Debugging Tools
 

@@ -20,7 +20,9 @@ description: Full support for the complete range of NodeLLM features including t
 
 ---
 
-The OpenAI provider supports the full range of \`NodeLLM\` features, including robust tool calling, vision, and structured outputs.
+The OpenAI provider supports the full range of `NodeLLM` features, including robust tool calling, vision, and structured outputs.
+
+---
 
 ## Configuration
 
@@ -32,6 +34,8 @@ const llm = createLLM({
   openaiApiKey: process.env.OPENAI_API_KEY // Optional if set in env 
 });
 ```
+
+---
 
 ## Specific Parameters
 
@@ -46,6 +50,8 @@ const chat = llm.chat("gpt-4o").withParams({
 });
 ```
 
+---
+
 ## Features
 
 - **Models**: `gpt-4o`, `gpt-4o-mini`, `gpt-4-turbo`, etc.
@@ -54,6 +60,8 @@ const chat = llm.chat("gpt-4o").withParams({
 - **Reasoning**: Automatic tracking of reasoning tokens and costs for `o1` and `o3` models.
 - **Smart Developer Role**: Modern instructions are automatically mapped to the `developer` role for compatible models when using the official API.
 - **Structured Output**: Supports strict schema validation via `json_schema`.
+
+---
 
 ## Custom Endpoints
 

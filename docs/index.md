@@ -9,6 +9,7 @@ back_to_top: false
 <p align="left">
   <img src="assets/images/logo.png" alt="NodeLLM" width="200" />
 </p>
+
 **An architectural layer for integrating Large Language Models in Node.js.**
 
 **Provider-agnostic by design.**
@@ -41,7 +42,6 @@ Integrating multiple LLM providers often means juggling different SDKs, API styl
   </div>
 </div>
 
-<br/>
 <br/>
 
 [Get Started](/getting-started/overview){: .btn .btn-primary .fs-5 .mb-4 .mb-md-0 .mr-2 } [Read on Blog](https://eshaiju.com){: .btn .fs-5 .mb-4 .mb-md-0 .mr-2 } [View on GitHub](https://github.com/node-llm/node-llm){: .btn .fs-5 .mb-4 .mb-md-0 }
@@ -244,9 +244,7 @@ console.log(res.reasoning); // Chain-of-thought
 
 ---
 
----
-
-## 🍿 Try the Live Demo
+## 🍿 Try The Live Demo
 
 Want to see NodeLLM in action? We have a full-stack, multi-provider example application ready for you.
 

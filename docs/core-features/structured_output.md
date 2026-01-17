@@ -20,13 +20,15 @@ description: Force models to return strictly validated JSON data using Zod schem
 
 ---
 
-Ensure the AI returns data exactly matching a specific structure. \`NodeLLM\` supports strict schema validation using **Zod** (recommended) or manual JSON schemas.
+Ensure the AI returns data exactly matching a specific structure. `NodeLLM` supports strict schema validation using **Zod** (recommended) or manual JSON schemas.
 
 This feature abstracts the provider-specific implementations (like OpenAI's `json_schema`, Gemini's `responseSchema`, or Anthropic's tool-use workarounds) into a single, unified API.
 
 {: .highlight }
 
 > **See it in action:** The [Brand Perception Checker](../../examples/brand-perception-checker/) demonstrates utilizing rigorous Zod schemas to extract consistent semantic profiles across multiple providers simultaneously.
+
+---
 
 ## Using Zod (Recommended)
 
@@ -60,6 +62,8 @@ console.log(person.age); // e.g. 25
 console.log(person.hobbies); // ["hiking", "coding"]
 ```
 
+---
+
 ## Manual JSON Schemas
 
 You can also provide a raw JSON schema object if you prefer not to use Zod.
@@ -82,6 +86,8 @@ const response = await chat.withSchema(schema).ask("Generate a person");
 console.log(response.parsed); // { name: "...", age: ... }
 ```
 
+---
+
 ## JSON Mode
 
 If you just need valid JSON but don't want to enforce a rigid schema, you can enable JSON mode. This instructs the model to return valid JSON but gives it more freedom with the structure.
@@ -95,6 +101,8 @@ const response = await chat.ask("Generate a JSON object with a greeting");
 console.log(response.parsed); // { greeting: "..." } or whatever keys it chose
 ```
 
+---
+
 ## Provider Support
 
 | Provider      | Method Used                                | Notes                                                                                                           |
@@ -102,6 +110,8 @@ console.log(response.parsed); // { greeting: "..." } or whatever keys it chose
 | **OpenAI**    | `response_format: { type: "json_schema" }` | Fully supported with strict adherence.                                                                          |
 | **Gemini**    | `responseSchema`                           | Supported natively.                                                                                             |
 | **Anthropic** | Tool Use (Mock)                            | `NodeLLM` automatically creates a tool definition and forces the model to use it to simulate structured output. |
+
+---
 
 ## Nested Schemas
 

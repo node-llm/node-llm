@@ -22,6 +22,8 @@ description: Run Large Language Models locally on your machine with full support
 
 Allows you to run large language models locally using [Ollama](https://ollama.com/).
 
+---
+
 ## Configuration
 
 Standard configuration for local inference (defaults to `http://localhost:11434/v1`):
@@ -44,6 +46,8 @@ const llm = createLLM({
 });
 ```
 
+---
+
 ## Specific Parameters
 
 You can pass Ollama/OpenAI-compatible parameters using `.withParams()`.
@@ -55,6 +59,8 @@ const chat = llm.chat("llama3").withParams({
   num_ctx: 8192 // Ollama specific context size
 });
 ```
+
+---
 
 ## Features
 
@@ -80,6 +86,8 @@ List all models currently pulled in your Ollama library to inspect their context
 const models = await NodeLLM.listModels();
 console.table(models);
 ```
+
+---
 
 ## Limitations
 

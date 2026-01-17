@@ -22,6 +22,8 @@ description: A unified interface for stateful conversations across all providers
 
 `NodeLLM` provides a unified chat interface across all providers (OpenAI, Gemini, Anthropic). It normalizes the differences in their APIs, allowing you to use a single set of methods for interacting with them.
 
+---
+
 ## Starting a Conversation
 
 The core entry point is `NodeLLM.chat(model_id?, options?)`.
@@ -52,6 +54,8 @@ await chat.ask("What is the population there?");
 // => "The population of Paris is approximately..."
 ```
 
+---
+
 ## System Prompts (Instructions)
 
 Guide the AI's behavior, personality, or constraints using system prompts. You can set this when creating the chat or update it later.
@@ -69,6 +73,8 @@ await chat.ask("Hello");
 // => "Ahoy matey! The seas are calm today."
 ```
 
+---
+
 ## Custom HTTP Headers
 
 Some providers offer beta features or require specific headers (like for observability proxies).
@@ -83,6 +89,8 @@ const chat = llm.chat("claude-3-5-sonnet").withRequestOptions({
 
 await chat.ask("Tell me about the weather");
 ```
+
+---
 
 ## Raw Content Blocks (Advanced)
 
@@ -101,9 +109,11 @@ const chat = llm.chat("claude-3-5-sonnet", {
 });
 ```
 
+---
+
 ## Working with Multiple Providers
 
-### Isolation and Multi-tenancy
+### Isolation and Multi-Tenancy
 
 `NodeLLM` is a **frozen, immutable instance**. It cannot be mutated at runtime. This design ensures that configurations (like API keys) do not leak between different parts of your application, making it safe for multi-tenant environments like SaaS or serverless functions.
 
@@ -166,6 +176,8 @@ app.post("/chat", async (req, res) => {
 });
 ```
 
+---
+
 ## Temperature & Creativity
 
 Adjust the randomness of the model's responses using `.withTemperature(0.0 - 1.0)`.
@@ -177,6 +189,8 @@ const factual = NodeLLM.chat("gpt-4o").withTemperature(0.0);
 // Creative / Random (High Temperature)
 const creative = NodeLLM.chat("gpt-4o").withTemperature(0.9);
 ```
+
+---
 
 ## Lifecycle Events <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">Enhanced in v1.5.0</span>
 
@@ -196,6 +210,8 @@ chat
 
 await chat.ask("What's the weather?");
 ```
+
+---
 
 ## 🛡️ Content Policy Hooks
 
@@ -220,6 +236,8 @@ chat
     }
   });
 ```
+
+---
 
 ## Retry Logic & Safety 🛡️
 
@@ -248,7 +266,7 @@ await chat.ask("Analyze this large dataset", {
 });
 ```
 
-### Request Cancellation <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">New in v1.5.3</span>
+### Request Cancellation <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v1.5.3+</span>
 
 You can cancel long-running requests using the standard `AbortController` API. This is useful for interactive UIs where users might navigate away or click "Stop".
 
@@ -273,24 +291,18 @@ The signal is propagated through all tool-calling turns, so even multi-step agen
 
 See the [Configuration Guide](/getting-started/configuration) for more details.
 
+---
+
 ## 🧱 Smart Context Isolation
 
 NodeLLM provides **Zero-Config Context Isolation** to ensure maximum instruction following and security.
 
 Inspired by modern LLM architectures (like OpenAI's Developer Role), NodeLLM internally separates your system instructions from the conversation history. This prevents "instruction drift" as the conversation grows and provides a strong layer of protection against prompt injection.
 
-### How it works:
+### How It Works
 
 - **Implicit Untangling**: If you pass a mixed array of messages to the Chat constructor, NodeLLM automatically identifies and isolates system-level instructions.
 - **Dynamic Role Mapping**: On the official OpenAI API, instructions for modern models (`gpt-4o`, `o1`, `o3`) are automatically promoted to the high-privilege `developer` role.
 - **Safe Fallbacks**: For older models or local providers (like Ollama or DeepSeek), NodeLLM safely maps instructions back to the standard `system` role to ensure perfect compatibility.
 
 This behavior is **enabled by default** for all chats.
-
-## Next Steps
-
-- [Multi-modal Capabilities](/core-features/multimodal.html) (Images, Audio, Files)
-- [Structured Output](/core-features/structured_output.html) (JSON Schemas, Zod)
-- [Tool Calling](/core-features/tools.html)
-- [Reasoning](/core-features/reasoning.html) (DeepSeek R1, OpenAI o1/o3)
-- [Security & Compliance](/advanced/security.html)

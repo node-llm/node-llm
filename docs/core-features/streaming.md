@@ -20,7 +20,9 @@ description: Implement real-time user experiences with low-latency responses usi
 
 ---
 
-For real-time interactions, \`NodeLLM\` supports streaming responses via standard JavaScript \`AsyncIterator\`s. This allows you to display text to the user as it's being generated, reducing perceived latency.
+For real-time interactions, `NodeLLM` supports streaming responses via standard JavaScript `AsyncIterator`s. This allows you to display text to the user as it's being generated, reducing perceived latency.
+
+---
 
 ## Basic Streaming
 
@@ -42,6 +44,8 @@ for await (const chunk of chat.stream("Write a haiku about code.")) {
 //    Bugs swim in the stream
 ```
 
+---
+
 ## Understanding Chunks
 
 Each chunk passed to your loop contains partial information about the response.
@@ -59,15 +63,17 @@ for await (const chunk of chat.stream("Hello")) {
 }
 ```
 
-## Streaming with Tools ✨
+---
 
-**NEW:** Tools now work seamlessly with streaming! When a model decides to call a tool during streaming, `NodeLLM` automatically:
+## Streaming with Tools <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">New ✨</span>
+
+Tools now work seamlessly with streaming! When a model decides to call a tool during streaming, `NodeLLM` automatically:
 
 1. **Executes the tool** with the provided arguments
 2. **Adds the result** to the conversation history
 3. **Continues streaming** the model's final response
 
-This all happens transparently - you just iterate over chunks as usual!
+This all happens transparently—you just iterate over chunks as usual!
 
 ```ts
 class WeatherTool extends Tool {
@@ -112,9 +118,11 @@ for await (const chunk of chat.stream("Weather in Tokyo?")) {
 
 **Supported Providers:** OpenAI, Anthropic, Gemini, DeepSeek
 
-## Multimodal & Structured Streaming ✨
+---
 
-**NEW:** `chat.stream()` now supports the same advanced features as `chat.ask()`.
+## Multimodal & Structured Streaming <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">New ✨</span>
+
+`chat.stream()` now supports the same advanced features as `chat.ask()`.
 
 ### Multimodal Streaming
 
@@ -147,6 +155,8 @@ for await (const chunk of chat.withSchema(personSchema).stream("Generate a perso
 }
 ```
 
+---
+
 ## Error Handling
 
 Stream interruptions (network failure, rate limits) will throw an error within the `for await` loop. Always wrap in a `try/catch` block.
@@ -160,6 +170,8 @@ try {
   console.error("\n[Stream Error]", error.message);
 }
 ```
+
+---
 
 ## Web Application Integration
 

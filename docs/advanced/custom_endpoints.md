@@ -20,7 +20,9 @@ description: Connect NodeLLM to Azure OpenAI, LiteLLM, Ollama, or any OpenAI-com
 
 ---
 
-\`NodeLLM\` is flexible enough to connect to any OpenAI-compatible service and use custom models.
+`NodeLLM` is flexible enough to connect to any OpenAI-compatible service and use custom models.
+
+---
 
 ## OpenAI-Compatible Endpoints
 
@@ -64,7 +66,9 @@ const chat = llm.chat("gpt-4").withRequestOptions({
 const response = await chat.ask("Hello Azure!");
 ```
 
-## Using Custom Models (`assumeModelExists`)
+---
+
+## Using Custom Models
 
 If you use a model ID not in the built-in registry (e.g., custom Azure names or new models), use `assumeModelExists: true` to bypass validation.
 
