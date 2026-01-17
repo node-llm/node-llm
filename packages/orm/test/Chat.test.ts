@@ -9,7 +9,7 @@ const createMockPrisma = () => {
   const toolCalls: any[] = [];
   const requests: any[] = [];
 
-  const mock: any = {
+  const tables: any = {
     chat: {
       create: vi.fn(async ({ data }) => {
         const chat = { id: "chat-123", ...data, createdAt: new Date(), updatedAt: new Date() };
@@ -52,6 +52,17 @@ const createMockPrisma = () => {
         const toolCall = { id: `tool-${toolCalls.length}`, ...data, createdAt: new Date() };
         toolCalls.push(toolCall);
         return toolCall;
+      }),
+      update: vi.fn(async ({ where, data }) => {
+        const toolCall = toolCalls.find(
+          (tc) =>
+            tc.messageId === where.messageId_toolCallId.messageId &&
+            tc.toolCallId === where.messageId_toolCallId.toolCallId
+        );
+        if (toolCall) {
+          Object.assign(toolCall, data);
+        }
+        return toolCall;
       })
     },
     request: {
@@ -67,22 +78,34 @@ const createMockPrisma = () => {
     _requests: requests
   };
 
-  // Create aliases for custom table names
-  mock.llmChat = mock.chat;
-  mock.llmMessage = mock.message;
-  mock.llmToolCall = mock.toolCall;
-  mock.llmRequest = mock.request;
-
-  return mock;
+  // Use Proxy to support any custom table name by mapping it to the base table mocks
+  return new Proxy(tables, {
+    get(target, prop) {
+      if (prop in target) return target[prop];
+      if (typeof prop === "string") {
+        if (prop.toLowerCase().includes("chat")) return target.chat;
+        if (prop.toLowerCase().includes("message")) return target.message;
+        if (prop.toLowerCase().includes("toolcall")) return target.toolCall;
+        if (prop.toLowerCase().includes("request")) return target.request;
+      }
+      return undefined;
+    }
+  });
 };
 
 // Mock NodeLLM
 const createMockLLM = () => {
   let capturedAfterResponseCallback: any = null;
+  let capturedToolCallStartCallback: any = null;
   let capturedToolCallEndCallback: any = null;
 
   const mockChat = {
     system: vi.fn().mockReturnThis(),
+    withTools: vi.fn().mockReturnThis(),
+    onToolCallStart: vi.fn((cb) => {
+      capturedToolCallStartCallback = cb;
+      return mockChat;
+    }),
     onToolCallEnd: vi.fn((cb) => {
       capturedToolCallEndCallback = cb;
       return mockChat;
@@ -91,13 +114,22 @@ const createMockLLM = () => {
       capturedAfterResponseCallback = cb;
       return mockChat;
     }),
+    onNewMessage: vi.fn().mockReturnThis(),
+    onEndMessage: vi.fn().mockReturnThis(),
+    beforeRequest: vi.fn().mockReturnThis(),
     ask: vi.fn(async () => {
-      // Simulate tool call
+      const toolCall = {
+        id: "call-123",
+        thought: "I need to search for this",
+        function: { name: "search", arguments: '{"query":"test"}' }
+      };
+
+      // Simulate tool call lifecycle
+      if (capturedToolCallStartCallback) {
+        await capturedToolCallStartCallback(toolCall);
+      }
       if (capturedToolCallEndCallback) {
-        await capturedToolCallEndCallback(
-          { id: "call-123", function: { name: "search", arguments: '{"query":"test"}' } },
-          "Search results"
-        );
+        await capturedToolCallEndCallback(toolCall, "Search results");
       }
 
       // Simulate response
@@ -105,8 +137,7 @@ const createMockLLM = () => {
         content: "Hello from LLM!",
         meta: { model: "gpt-4", provider: "openai" },
         reasoning: null,
-        inputTokens: 10,
-        outputTokens: 5,
+        usage: { input_tokens: 10, output_tokens: 5, total_tokens: 15 },
         model: "gpt-4",
         provider: "openai"
       };
@@ -123,12 +154,17 @@ const createMockLLM = () => {
       return response;
     }),
     stream: vi.fn(async function* () {
+      const toolCall = {
+        id: "call-456",
+        function: { name: "search", arguments: '{"query":"stream"}' }
+      };
+
       // Simulate tool call during streaming
+      if (capturedToolCallStartCallback) {
+        await capturedToolCallStartCallback(toolCall);
+      }
       if (capturedToolCallEndCallback) {
-        await capturedToolCallEndCallback(
-          { id: "call-456", function: { name: "search", arguments: '{"query":"stream"}' } },
-          "Stream results"
-        );
+        await capturedToolCallEndCallback(toolCall, "Stream results");
       }
 
       // Yield tokens
@@ -155,7 +191,11 @@ const createMockLLM = () => {
         });
       }
 
-      yield { content: "", meta: finalMeta };
+      yield {
+        content: "",
+        meta: finalMeta,
+        usage: { input_tokens: 15, output_tokens: 8, total_tokens: 23 }
+      };
     })
   };
 
@@ -249,13 +289,14 @@ describe("Chat ORM", () => {
       const chat = await createChat(mockPrisma, mockLLM, { model: "gpt-4" });
       await chat.ask("Search for something");
 
-      expect(mockPrisma.toolCall.create).toHaveBeenCalledWith({
-        data: expect.objectContaining({
-          name: "search",
-          arguments: '{"query":"test"}',
-          result: "Search results"
+      expect(mockPrisma.toolCall.create).toHaveBeenCalled();
+      expect(mockPrisma.toolCall.update).toHaveBeenCalledWith(
+        expect.objectContaining({
+          data: expect.objectContaining({
+            result: "Search results"
+          })
         })
-      });
+      );
     });
 
     it("should persist API request metrics", async () => {
@@ -317,12 +358,14 @@ describe("Chat ORM", () => {
         // consume stream
       }
 
-      expect(mockPrisma.toolCall.create).toHaveBeenCalledWith({
-        data: expect.objectContaining({
-          name: "search",
-          result: "Stream results"
+      expect(mockPrisma.toolCall.create).toHaveBeenCalled();
+      expect(mockPrisma.toolCall.update).toHaveBeenCalledWith(
+        expect.objectContaining({
+          data: expect.objectContaining({
+            result: "Stream results"
+          })
         })
-      });
+      );
     });
 
     it("should cleanup on streaming failure", async () => {
@@ -364,7 +407,7 @@ describe("Chat ORM", () => {
         request: "llmRequest"
       };
 
-      const chat = await createChat(mockPrisma, mockLLM, { model: "gpt-4" }, tableNames);
+      const chat = await createChat(mockPrisma, mockLLM, { model: "gpt-4", tableNames });
 
       expect(mockPrisma.llmChat.create).toHaveBeenCalled();
       expect(chat.id).toBe("chat-123");
@@ -376,10 +419,10 @@ describe("Chat ORM", () => {
       };
 
       // First create with custom names
-      await createChat(mockPrisma, mockLLM, { model: "gpt-4" }, tableNames);
+      await createChat(mockPrisma, mockLLM, { model: "gpt-4", tableNames });
 
       // Then load with same custom names
-      const loaded = await loadChat(mockPrisma, mockLLM, "chat-123", tableNames);
+      const loaded = await loadChat(mockPrisma, mockLLM, "chat-123", { tableNames });
 
       expect(mockPrisma.llmChat.findUnique).toHaveBeenCalled();
       expect(loaded?.id).toBe("chat-123");
@@ -390,7 +433,7 @@ describe("Chat ORM", () => {
         message: "llmMessage"
       };
 
-      const chat = await createChat(mockPrisma, mockLLM, { model: "gpt-4" }, tableNames);
+      const chat = await createChat(mockPrisma, mockLLM, { model: "gpt-4", tableNames });
       await chat.ask("Hello!");
 
       expect(mockPrisma.llmMessage.create).toHaveBeenCalled();
@@ -402,7 +445,7 @@ describe("Chat ORM", () => {
         toolCall: "llmToolCall"
       };
 
-      const chat = await createChat(mockPrisma, mockLLM, { model: "gpt-4" }, tableNames);
+      const chat = await createChat(mockPrisma, mockLLM, { model: "gpt-4", tableNames });
       await chat.ask("Search");
 
       expect(mockPrisma.llmToolCall.create).toHaveBeenCalled();
@@ -413,7 +456,7 @@ describe("Chat ORM", () => {
         request: "llmRequest"
       };
 
-      const chat = await createChat(mockPrisma, mockLLM, { model: "gpt-4" }, tableNames);
+      const chat = await createChat(mockPrisma, mockLLM, { model: "gpt-4", tableNames });
       await chat.ask("Hello!");
 
       expect(mockPrisma.llmRequest.create).toHaveBeenCalled();

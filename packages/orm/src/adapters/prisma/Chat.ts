@@ -1,36 +1,22 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { PrismaClient } from "@prisma/client";
 import type { NodeLLMCore } from "@node-llm/core";
+import { BaseChat, type ChatRecord, type ChatOptions } from "../../BaseChat.js";
 
-export interface ChatRecord {
-  id: string;
-  model?: string | null;
-  provider?: string | null;
-  instructions?: string | null;
-  metadata?: string | null;
-  createdAt: Date;
-  updatedAt: Date;
-}
+export { type ChatRecord, type ChatOptions };
 
 export interface MessageRecord {
   id: string;
   chatId: string;
   role: string;
-  content?: string | null;
-  contentRaw?: string | null;
-  reasoning?: string | null;
-  inputTokens?: number | null;
-  outputTokens?: number | null;
-  modelId?: string | null;
-  provider?: string | null;
+  content: string | null;
+  contentRaw: string | null;
+  reasoning: string | null;
+  inputTokens: number | null;
+  outputTokens: number | null;
+  modelId: string | null;
+  provider: string | null;
   createdAt: Date;
-}
-
-export interface ChatOptions {
-  model?: string;
-  provider?: string;
-  instructions?: string;
-  metadata?: Record<string, any>;
 }
 
 export interface TableNames {
@@ -40,81 +26,152 @@ export interface TableNames {
   request?: string;
 }
 
-const DEFAULT_TABLE_NAMES: Required<TableNames> = {
-  chat: "llmChat",
-  message: "llmMessage",
-  toolCall: "llmToolCall",
-  request: "llmRequest"
-};
-
 /**
- * Chat - The core ORM model for persisting LLM conversations.
- *
- * Integrates with NodeLLM to automatically save:
- * - User and assistant messages
- * - Tool calls and results
- * - API request metrics
- *
- * @example
- * ```typescript
- * import { createChat } from '@node-llm/orm/prisma';
- * import { prisma } from './db';
- * import { llm } from './llm';
- *
- * const chat = await createChat(prisma, llm, {
- *   model: 'gpt-4',
- *   instructions: 'You are a helpful assistant.'
- * });
- *
- * const response = await chat.ask('Hello!');
- * console.log(response.content);
- * ```
+ * Prisma-based Chat Implementation.
  */
-export class Chat {
-  private readonly tables: Required<TableNames>;
+export class Chat extends BaseChat {
+  private tables: Required<TableNames>;
 
   constructor(
-    private readonly prisma: PrismaClient,
-    private readonly llm: NodeLLMCore,
-    public readonly record: ChatRecord,
-    tableNames?: TableNames
+    private prisma: PrismaClient,
+    private llm: NodeLLMCore,
+    record: ChatRecord,
+    options: ChatOptions = {},
+    tableNames: TableNames = {}
   ) {
-    this.tables = { ...DEFAULT_TABLE_NAMES, ...tableNames };
+    super(record, options);
+    this.tables = {
+      chat: tableNames.chat || "chat",
+      message: tableNames.message || "message",
+      toolCall: tableNames.toolCall || "toolCall",
+      request: tableNames.request || "assistantRequest"
+    };
   }
 
-  get id() {
-    return this.record.id;
+  /**
+   * Internal prep for core Chat instance with persistence hooks.
+   */
+  private async prepareCoreChat(history: any[] = [], assistantMessageId: string) {
+    const provider = this.localOptions.provider || this.record.provider;
+    const model = this.localOptions.model || this.record.model;
+
+    const llmInstance = provider ? this.llm.withProvider(provider as string) : this.llm;
+
+    const coreChat = llmInstance.chat(model || undefined, {
+      messages: history,
+      ...this.localOptions
+    }) as any;
+
+    // Register tools
+    if (this.customTools.length > 0) {
+      coreChat.withTools(this.customTools);
+    }
+
+    // --- Persistence Hooks ---
+
+    coreChat.onToolCallStart(async (call: any) => {
+      const toolCallModel = this.tables.toolCall;
+      await (this.prisma as any)[toolCallModel].create({
+        data: {
+          messageId: assistantMessageId,
+          toolCallId: call.id,
+          name: call.function?.name || "unknown",
+          arguments: JSON.stringify(call.function?.arguments || {}),
+          thought: (call as any).thought || null
+        }
+      });
+
+      // User hooks
+      for (const h of this.userHooks.onToolCallStart) await h(call);
+    });
+
+    coreChat.onToolCallEnd(async (call: any, result: any) => {
+      const toolCallModel = this.tables.toolCall;
+      const resString = typeof result === "string" ? result : JSON.stringify(result);
+
+      await (this.prisma as any)[toolCallModel].update({
+        where: { messageId_toolCallId: { messageId: assistantMessageId, toolCallId: call.id } },
+        data: {
+          result: resString,
+          thought: (call as any).thought || null
+        }
+      });
+
+      // User hooks
+      for (const h of this.userHooks.onToolCallEnd) await h(call, result);
+    });
+
+    coreChat.afterResponse(async (finalResp: any) => {
+      const modelName = this.tables.request;
+      this.log(
+        `Internal afterResponse triggered. Calling ${this.userHooks.afterResponse.length} user hooks.`
+      );
+
+      // User hooks
+      for (const h of this.userHooks.afterResponse) {
+        const modified = await h(finalResp);
+        if (modified) finalResp = modified;
+      }
+
+      await (this.prisma as any)[modelName].create({
+        data: {
+          chatId: this.id,
+          messageId: assistantMessageId,
+          provider: finalResp.provider || provider || "unknown",
+          model: finalResp.model || model || "unknown",
+          statusCode: 200,
+          duration: finalResp.latency || 0,
+          inputTokens: finalResp.usage?.input_tokens || 0,
+          outputTokens: finalResp.usage?.output_tokens || 0,
+          cost: finalResp.usage?.cost || 0
+        }
+      });
+      return finalResp;
+    });
+
+    // Other core hooks
+    if (this.userHooks.onNewMessage.length > 0) {
+      coreChat.onNewMessage(async () => {
+        for (const h of this.userHooks.onNewMessage) await h();
+      });
+    }
+
+    if (this.userHooks.onEndMessage.length > 0) {
+      coreChat.onEndMessage(async (msg: any) => {
+        for (const h of this.userHooks.onEndMessage) await h(msg);
+      });
+    }
+
+    if (this.userHooks.onBeforeRequest.length > 0) {
+      coreChat.beforeRequest(async (msgs: any) => {
+        let current = msgs;
+        for (const h of this.userHooks.onBeforeRequest) {
+          const mod = await h(current);
+          if (mod) current = mod;
+        }
+        return current;
+      });
+    }
+
+    return coreChat;
   }
 
   /**
    * Send a message and persist the conversation.
    */
   async ask(input: string): Promise<MessageRecord> {
-    // Create user message
-    const userMessage = await (this.prisma as any)[this.tables.message].create({
-      data: {
-        chatId: this.id,
-        role: "user",
-        content: input
-      }
+    const messageModel = this.tables.message;
+    const userMessage = await (this.prisma as any)[messageModel].create({
+      data: { chatId: this.id, role: "user", content: input }
     });
 
-    // Create placeholder assistant message
-    const assistantMessage = await (this.prisma as any)[this.tables.message].create({
-      data: {
-        chatId: this.id,
-        role: "assistant",
-        content: null
-      }
+    const assistantMessage = await (this.prisma as any)[messageModel].create({
+      data: { chatId: this.id, role: "assistant", content: null }
     });
 
     try {
-      // Fetch conversation history
-      const historyRecords = await (this.prisma as any)[this.tables.message].findMany({
-        where: {
-          chatId: this.id,
-          id: { notIn: [userMessage.id, assistantMessage.id] }
-        },
+      const historyRecords = await (this.prisma as any)[messageModel].findMany({
+        where: { chatId: this.id, id: { notIn: [userMessage!.id, assistantMessage!.id] } },
         orderBy: { createdAt: "asc" }
       });
 
@@ -123,115 +180,43 @@ export class Chat {
         content: m.content || ""
       }));
 
-      // Create LLM chat instance
-      const provider = this.record.provider;
-      const model = this.record.model;
+      const coreChat = await this.prepareCoreChat(history, assistantMessage!.id);
+      const response = await coreChat.ask(input);
 
-      const llmInstance = provider ? this.llm.withProvider(provider) : this.llm;
-
-      const chat = llmInstance.chat(model || undefined, {
-        messages: history
-      });
-
-      if (this.record.instructions) {
-        chat.system(this.record.instructions);
-      }
-
-      // Attach persistence hooks
-      chat
-        .onToolCallEnd(async (call: any, result: any) => {
-          await (this.prisma as any)[this.tables.toolCall].create({
-            data: {
-              messageId: assistantMessage.id,
-              toolCallId: call.id || "unknown",
-              name: call.function.name,
-              arguments:
-                typeof call.function.arguments === "string"
-                  ? call.function.arguments
-                  : JSON.stringify(call.function.arguments),
-              result: typeof result === "string" ? result : JSON.stringify(result)
-            }
-          });
-        })
-        .afterResponse(async (resp: any) => {
-          await (this.prisma as any)[this.tables.request].create({
-            data: {
-              chatId: this.id,
-              messageId: assistantMessage.id,
-              provider: resp.provider || this.record.provider || "unknown",
-              model: resp.model || this.record.model || "unknown",
-              statusCode: 200,
-              duration: resp.latency || 0,
-              inputTokens: resp.usage?.input_tokens || 0,
-              outputTokens: resp.usage?.output_tokens || 0,
-              cost: resp.usage?.cost || 0
-            }
-          });
-          return resp;
-        });
-
-      // Execute LLM request
-      const response = await chat.ask(input);
-
-      // Update assistant message with response
-      return await (this.prisma as any)[this.tables.message].update({
-        where: { id: assistantMessage.id },
+      return await (this.prisma as any)[messageModel].update({
+        where: { id: assistantMessage!.id },
         data: {
           content: response.content,
           contentRaw: JSON.stringify(response.meta),
-          reasoning: response.reasoning,
-          inputTokens: response.inputTokens,
-          outputTokens: response.outputTokens,
-          modelId: response.model,
-          provider: response.provider
+          inputTokens: response.usage?.input_tokens || 0,
+          outputTokens: response.usage?.output_tokens || 0,
+          modelId: response.model || null,
+          provider: response.provider || null
         }
       });
-    } catch (err) {
-      // Cleanup on failure
-      await (this.prisma as any)[this.tables.message].delete({
-        where: { id: assistantMessage.id }
-      });
-      throw err;
+    } catch (error) {
+      await (this.prisma as any)[messageModel].delete({ where: { id: assistantMessage!.id } });
+      // await (this.prisma as any)[messageModel].delete({ where: { id: userMessage!.id } });
+      throw error;
     }
   }
 
   /**
    * Stream a response and persist the conversation.
-   * Yields tokens in real-time, then saves the complete message.
-   *
-   * @example
-   * ```typescript
-   * for await (const chunk of chat.askStream('Tell me a story')) {
-   *   process.stdout.write(chunk);
-   * }
-   * ```
    */
   async *askStream(input: string): AsyncGenerator<string, MessageRecord, undefined> {
-    // Create user message
-    const userMessage = await (this.prisma as any)[this.tables.message].create({
-      data: {
-        chatId: this.id,
-        role: "user",
-        content: input
-      }
+    const messageModel = this.tables.message;
+    const userMessage = await (this.prisma as any)[messageModel].create({
+      data: { chatId: this.id, role: "user", content: input }
     });
 
-    // Create placeholder assistant message
-    const assistantMessage = await (this.prisma as any)[this.tables.message].create({
-      data: {
-        chatId: this.id,
-        role: "assistant",
-        content: null
-      }
+    const assistantMessage = await (this.prisma as any)[messageModel].create({
+      data: { chatId: this.id, role: "assistant", content: null }
     });
 
     try {
-      // Fetch conversation history
-      const historyRecords = await (this.prisma as any)[this.tables.message].findMany({
-        where: {
-          chatId: this.id,
-          id: { notIn: [userMessage.id, assistantMessage.id] }
-        },
+      const historyRecords = await (this.prisma as any)[messageModel].findMany({
+        where: { chatId: this.id, id: { notIn: [userMessage!.id, assistantMessage!.id] } },
         orderBy: { createdAt: "asc" }
       });
 
@@ -240,98 +225,46 @@ export class Chat {
         content: m.content || ""
       }));
 
-      // Create LLM chat instance
-      const provider = this.record.provider;
-      const model = this.record.model;
+      const coreChat = await this.prepareCoreChat(history, assistantMessage!.id);
+      const stream = coreChat.stream(input);
 
-      const llmInstance = provider ? this.llm.withProvider(provider) : this.llm;
-
-      const chat = llmInstance.chat(model || undefined, {
-        messages: history
-      });
-
-      if (this.record.instructions) {
-        chat.system(this.record.instructions);
-      }
-
-      // Attach persistence hooks
-      chat
-        .onToolCallEnd(async (call: any, result: any) => {
-          await (this.prisma as any)[this.tables.toolCall].create({
-            data: {
-              messageId: assistantMessage.id,
-              toolCallId: call.id || "unknown",
-              name: call.function.name,
-              arguments:
-                typeof call.function.arguments === "string"
-                  ? call.function.arguments
-                  : JSON.stringify(call.function.arguments),
-              result: typeof result === "string" ? result : JSON.stringify(result)
-            }
-          });
-        })
-        .afterResponse(async (resp: any) => {
-          await (this.prisma as any)[this.tables.request].create({
-            data: {
-              chatId: this.id,
-              messageId: assistantMessage.id,
-              provider: resp.provider || this.record.provider || "unknown",
-              model: resp.model || this.record.model || "unknown",
-              statusCode: 200,
-              duration: resp.latency || 0,
-              inputTokens: resp.usage?.input_tokens || 0,
-              outputTokens: resp.usage?.output_tokens || 0,
-              cost: resp.usage?.cost || 0
-            }
-          });
-          return resp;
-        });
-
-      // Stream the response
       let fullContent = "";
       let metadata: any = {};
 
-      for await (const chunk of chat.stream(input)) {
+      for await (const chunk of stream) {
         if (chunk.content) {
           fullContent += chunk.content;
           yield chunk.content;
         }
-
-        // Capture metadata from final chunk
-        if (chunk.meta) {
-          metadata = chunk.meta;
+        if (chunk.usage) {
+          metadata = { ...metadata, ...chunk.usage };
         }
       }
 
-      // Update assistant message with complete response
-      const updatedMessage = await (this.prisma as any)[this.tables.message].update({
-        where: { id: assistantMessage.id },
+      return await (this.prisma as any)[messageModel].update({
+        where: { id: assistantMessage!.id },
         data: {
           content: fullContent,
           contentRaw: JSON.stringify(metadata),
-          reasoning: metadata.reasoning,
-          inputTokens: metadata.inputTokens,
-          outputTokens: metadata.outputTokens,
-          modelId: metadata.model,
-          provider: metadata.provider
+          inputTokens: metadata.input_tokens || 0,
+          outputTokens: metadata.output_tokens || 0,
+          modelId: coreChat.model || null,
+          provider: coreChat.provider?.id || null
         }
       });
-
-      return updatedMessage;
-    } catch (err) {
-      // Cleanup on failure
-      await (this.prisma as any)[this.tables.message].delete({
-        where: { id: assistantMessage.id }
-      });
-      throw err;
+    } catch (error) {
+      await (this.prisma as any)[messageModel].delete({ where: { id: assistantMessage!.id } });
+      // await (this.prisma as any)[messageModel].delete({ where: { id: userMessage!.id } });
+      throw error;
     }
   }
 
   /**
-   * Get all messages in this chat.
+   * Get all messages for this chat.
    */
   async messages(): Promise<MessageRecord[]> {
-    return (this.prisma as any)[this.tables.message].findMany({
+    const messageModel = this.tables.message;
+    return await (this.prisma as any)[messageModel].findMany({
       where: { chatId: this.id },
       orderBy: { createdAt: "asc" }
     });
@@ -339,18 +272,15 @@ export class Chat {
 }
 
 /**
- * Create a new chat session.
- *
- * @param tableNames - Optional custom table names (e.g., { chat: 'assistantChat', message: 'assistantMessage' })
+ * Convenience method to create a new chat session.
  */
 export async function createChat(
   prisma: PrismaClient,
   llm: NodeLLMCore,
-  options: ChatOptions = {},
-  tableNames?: TableNames
+  options: ChatOptions & { tableNames?: TableNames } = {}
 ): Promise<Chat> {
-  const tables = { ...DEFAULT_TABLE_NAMES, ...tableNames };
-  const record = await (prisma as any)[tables.chat].create({
+  const chatTable = options.tableNames?.chat || "chat";
+  const record = await (prisma as any)[chatTable].create({
     data: {
       model: options.model,
       provider: options.provider,
@@ -359,25 +289,23 @@ export async function createChat(
     }
   });
 
-  return new Chat(prisma, llm, record, tableNames);
+  return new Chat(prisma, llm, record, options, options.tableNames);
 }
 
 /**
- * Load an existing chat session.
- *
- * @param tableNames - Optional custom table names (must match what was used in createChat)
+ * Convenience method to load an existing chat session.
  */
 export async function loadChat(
   prisma: PrismaClient,
   llm: NodeLLMCore,
   chatId: string,
-  tableNames?: TableNames
+  options: ChatOptions & { tableNames?: TableNames } = {}
 ): Promise<Chat | null> {
-  const tables = { ...DEFAULT_TABLE_NAMES, ...tableNames };
-  const record = await (prisma as any)[tables.chat].findUnique({
+  const chatTable = options.tableNames?.chat || "chat";
+  const record = await (prisma as any)[chatTable].findUnique({
     where: { id: chatId }
   });
 
   if (!record) return null;
-  return new Chat(prisma, llm, record, tableNames);
+  return new Chat(prisma, llm, record, options, options.tableNames);
 }

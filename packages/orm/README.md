@@ -2,6 +2,8 @@
 
 Database persistence layer for NodeLLM. Automatically tracks chats, messages, tool calls, and API requests.
 
+**[Read the Full Documentation](https://node-llm.github.io/orm/prisma.html)**
+
 ## Features
 
 - ✅ **Automatic Persistence** - Messages, tool calls, and API metrics saved automatically

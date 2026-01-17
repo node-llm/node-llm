@@ -12,8 +12,8 @@
  *
  * ```typescript
  * import { createChat } from '@node-llm/orm/prisma';
- * import { prisma } from './db';
- * import { llm } from './llm';
+ * import { prisma } from './db.js';
+ * import { llm } from './llm.js';
  *
  * const chat = await createChat(prisma, llm, {
  *   model: 'gpt-4',

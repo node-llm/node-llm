@@ -208,6 +208,23 @@ await NodeLLM.paint("A cyberpunk city in rain");
 await NodeLLM.transcribe("meeting-recording.wav");
 ```
 
+### 💾 Persistence Layer
+
+Automatically track chat history, tool executions, and API metrics with **@node-llm/orm**.
+
+```ts
+import { createChat } from "@node-llm/orm/prisma";
+
+// Chat state is automatically saved to your database (Postgres/MySQL/SQLite)
+const chat = await createChat(prisma, llm, { model: "gpt-4o" });
+
+await chat.ask("Hello");
+// -> Saves User Message
+// -> Saves Assistant Response
+// -> Tracks Token Usage & Cost
+// -> Logs Tool Calls & Results
+```
+
 ### ⚡ Scoped Parallelism
 
 Run multiple providers in parallel safely without global configuration side effects using isolated contexts.

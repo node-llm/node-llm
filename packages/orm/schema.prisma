@@ -50,11 +50,13 @@ model LlmToolCall {
   toolCallId   String     // ID from the provider
   name         String
   arguments    String     // JSON string
+  thought      String?    // The LLM's reasoning for this tool call
   result       String?    // Tool execution result
   createdAt    DateTime   @default(now())
 
   message      LlmMessage @relation(fields: [messageId], references: [id], onDelete: Cascade)
 
+  @@unique([messageId, toolCallId])
   @@index([messageId])
   @@index([createdAt])
 }
