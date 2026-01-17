@@ -41,10 +41,10 @@ export interface TableNames {
 }
 
 const DEFAULT_TABLE_NAMES: Required<TableNames> = {
-  chat: "chat",
-  message: "message",
-  toolCall: "toolCall",
-  request: "request"
+  chat: "llmChat",
+  message: "llmMessage",
+  toolCall: "llmToolCall",
+  request: "llmRequest"
 };
 
 /**

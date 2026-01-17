@@ -42,28 +42,28 @@ cp node_modules/@node-llm/orm/schema.prisma prisma/schema.prisma
 Or manually add the models to your existing `prisma/schema.prisma`:
 
 ```prisma
-model Chat {
-  id           String    @id @default(uuid())
+model LlmChat {
+  id           String       @id @default(uuid())
   model        String?
   provider     String?
-  instructions String?   @db.Text
-  metadata     String?   @db.Text
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
+  instructions String?      @db.Text
+  metadata     String?      @db.Text
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
 
-  messages     Message[]
-  requests     Request[]
+  messages     LlmMessage[]
+  requests     LlmRequest[]
 }
 
-model Message {
-  id           String    @id @default(uuid())
+model LlmMessage {
+  id           String        @id @default(uuid())
   chatId       String
   role         String
-  content      String?   @db.Text
+  content      String?       @db.Text
   // ... see schema.prisma for full definition
 }
 
-model ToolCall {
+model LlmToolCall {
   id         String   @id @default(uuid())
   messageId  String
   toolCallId String
@@ -72,7 +72,7 @@ model ToolCall {
   // ... see schema.prisma for full definition
 }
 
-model Request {
+model LlmRequest {
   id           String   @id @default(uuid())
   chatId       String
   messageId    String?
@@ -118,12 +118,12 @@ console.log(messages); // [{ role: 'user', content: '...' }, { role: 'assistant'
 
 The ORM tracks four core entities:
 
-| Model        | Purpose              | Example                                    |
-| ------------ | -------------------- | ------------------------------------------ |
-| **Chat**     | Session container    | Holds model, provider, system instructions |
-| **Message**  | Conversation history | User queries and assistant responses       |
-| **ToolCall** | Tool executions      | Function calls made by the assistant       |
-| **Request**  | API metrics          | Token usage, latency, cost per API call    |
+| Model           | Purpose              | Example                                    |
+| --------------- | -------------------- | ------------------------------------------ |
+| **LlmChat**     | Session container    | Holds model, provider, system instructions |
+| **LlmMessage**  | Conversation history | User queries and assistant responses       |
+| **LlmToolCall** | Tool executions      | Function calls made by the assistant       |
+| **LlmRequest**  | API metrics          | Token usage, latency, cost per API call    |
 
 ### Data Flow
 

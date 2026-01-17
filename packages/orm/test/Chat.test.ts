@@ -68,10 +68,10 @@ const createMockPrisma = () => {
   };
 
   // Create aliases for custom table names
-  mock.assistantChat = mock.chat;
-  mock.assistantMessage = mock.message;
-  mock.assistantToolCall = mock.toolCall;
-  mock.assistantRequest = mock.request;
+  mock.llmChat = mock.chat;
+  mock.llmMessage = mock.message;
+  mock.llmToolCall = mock.toolCall;
+  mock.llmRequest = mock.request;
 
   return mock;
 };
@@ -358,21 +358,21 @@ describe("Chat ORM", () => {
   describe("Custom Table Names", () => {
     it("should use custom table names when creating chat", async () => {
       const tableNames = {
-        chat: "assistantChat",
-        message: "assistantMessage",
-        toolCall: "assistantToolCall",
-        request: "assistantRequest"
+        chat: "llmChat",
+        message: "llmMessage",
+        toolCall: "llmToolCall",
+        request: "llmRequest"
       };
 
       const chat = await createChat(mockPrisma, mockLLM, { model: "gpt-4" }, tableNames);
 
-      expect(mockPrisma.assistantChat.create).toHaveBeenCalled();
+      expect(mockPrisma.llmChat.create).toHaveBeenCalled();
       expect(chat.id).toBe("chat-123");
     });
 
     it("should use custom table names when loading chat", async () => {
       const tableNames = {
-        chat: "assistantChat"
+        chat: "llmChat"
       };
 
       // First create with custom names
@@ -381,42 +381,42 @@ describe("Chat ORM", () => {
       // Then load with same custom names
       const loaded = await loadChat(mockPrisma, mockLLM, "chat-123", tableNames);
 
-      expect(mockPrisma.assistantChat.findUnique).toHaveBeenCalled();
+      expect(mockPrisma.llmChat.findUnique).toHaveBeenCalled();
       expect(loaded?.id).toBe("chat-123");
     });
 
     it("should use custom table names for messages", async () => {
       const tableNames = {
-        message: "assistantMessage"
+        message: "llmMessage"
       };
 
       const chat = await createChat(mockPrisma, mockLLM, { model: "gpt-4" }, tableNames);
       await chat.ask("Hello!");
 
-      expect(mockPrisma.assistantMessage.create).toHaveBeenCalled();
-      expect(mockPrisma.assistantMessage.update).toHaveBeenCalled();
+      expect(mockPrisma.llmMessage.create).toHaveBeenCalled();
+      expect(mockPrisma.llmMessage.update).toHaveBeenCalled();
     });
 
     it("should use custom table names for tool calls", async () => {
       const tableNames = {
-        toolCall: "assistantToolCall"
+        toolCall: "llmToolCall"
       };
 
       const chat = await createChat(mockPrisma, mockLLM, { model: "gpt-4" }, tableNames);
       await chat.ask("Search");
 
-      expect(mockPrisma.assistantToolCall.create).toHaveBeenCalled();
+      expect(mockPrisma.llmToolCall.create).toHaveBeenCalled();
     });
 
     it("should use custom table names for requests", async () => {
       const tableNames = {
-        request: "assistantRequest"
+        request: "llmRequest"
       };
 
       const chat = await createChat(mockPrisma, mockLLM, { model: "gpt-4" }, tableNames);
       await chat.ask("Hello!");
 
-      expect(mockPrisma.assistantRequest.create).toHaveBeenCalled();
+      expect(mockPrisma.llmRequest.create).toHaveBeenCalled();
     });
   });
 });

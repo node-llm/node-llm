@@ -23,7 +23,7 @@ datasource db {
 }
 
 // NodeLLM ORM Models
-model Chat {
+model LlmLlmChat {
   id           String    @id @default(uuid())
   model        String?
   provider     String?
@@ -32,13 +32,13 @@ model Chat {
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
   
-  messages     Message[]
-  requests     Request[]
+  messages     LlmMessage[]
+  requests     LlmRequest[]
 
   @@index([createdAt])
 }
 
-model Message {
+model LlmLlmMessage {
   id           String      @id @default(uuid())
   chatId       String
   role         String
@@ -51,15 +51,15 @@ model Message {
   provider     String?
   createdAt    DateTime    @default(now())
 
-  chat         Chat        @relation(fields: [chatId], references: [id], onDelete: Cascade)
-  toolCalls    ToolCall[]
-  requests     Request[]
+  chat         LlmChat        @relation(fields: [chatId], references: [id], onDelete: Cascade)
+  toolCalls    LlmToolCall[]
+  requests     LlmRequest[]
 
   @@index([chatId])
   @@index([createdAt])
 }
 
-model ToolCall {
+model LlmToolCall {
   id           String   @id @default(uuid())
   messageId    String
   toolCallId   String
@@ -68,13 +68,13 @@ model ToolCall {
   result       String?  @db.Text
   createdAt    DateTime @default(now())
 
-  message      Message  @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  message      LlmMessage  @relation(fields: [messageId], references: [id], onDelete: Cascade)
 
   @@index([messageId])
   @@index([createdAt])
 }
 
-model Request {
+model LlmRequest {
   id           String   @id @default(uuid())
   chatId       String
   messageId    String?
@@ -89,7 +89,7 @@ model Request {
   
   createdAt    DateTime @default(now())
 
-  chat         Chat     @relation(fields: [chatId], references: [id], onDelete: Cascade)
+  chat         LlmChat     @relation(fields: [chatId], references: [id], onDelete: Cascade)
   message      Message? @relation(fields: [messageId], references: [id], onDelete: Cascade)
 
   @@index([chatId])

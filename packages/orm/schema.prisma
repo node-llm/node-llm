@@ -10,72 +10,72 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Chat {
-  id           String    @id @default(uuid())
+// NodeLLM ORM Models (matches @node-llm/orm schema)
+model LlmChat {
+  id           String       @id @default(uuid())
   model        String?
   provider     String?
-  instructions String?   @db.Text
-  metadata     String?   @db.Text
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
-  
-  messages     Message[]
-  requests     Request[]
+  instructions String?      // System instructions
+  metadata     String?      // JSON metadata
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+  messages     LlmMessage[]
+  requests     LlmRequest[]
 }
 
-model Message {
-  id           String    @id @default(uuid())
+model LlmMessage {
+  id           String        @id @default(uuid())
   chatId       String
-  role         String
-  content      String?   @db.Text
-  contentRaw   String?   @db.Text
-  reasoning    String?   @db.Text
+  role         String        // user, assistant, system, tool
+  content      String?
+  contentRaw   String?       // JSON raw payload
+  reasoning    String?       // Chain of thought
   inputTokens  Int?
   outputTokens Int?
   modelId      String?
   provider     String?
-  createdAt    DateTime  @default(now())
+  createdAt    DateTime      @default(now())
 
-  chat         Chat        @relation(fields: [chatId], references: [id], onDelete: Cascade)
-  toolCalls    ToolCall[]
-  requests     Request[]
+  chat         LlmChat       @relation(fields: [chatId], references: [id], onDelete: Cascade)
+  toolCalls    LlmToolCall[]
+  requests     LlmRequest[]
 
   @@index([chatId])
   @@index([createdAt])
 }
 
-model ToolCall {
-  id         String   @id @default(uuid())
-  messageId  String
-  toolCallId String
-  name       String
-  arguments  String   @db.Text
-  result     String?  @db.Text
-  createdAt  DateTime @default(now())
+model LlmToolCall {
+  id           String     @id @default(uuid())
+  messageId    String
+  toolCallId   String     // ID from the provider
+  name         String
+  arguments    String     // JSON string
+  result       String?    // Tool execution result
+  createdAt    DateTime   @default(now())
 
-  message    Message  @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  message      LlmMessage @relation(fields: [messageId], references: [id], onDelete: Cascade)
 
   @@index([messageId])
   @@index([createdAt])
 }
 
-model Request {
-  id           String   @id @default(uuid())
+model LlmRequest {
+  id           String      @id @default(uuid())
   chatId       String
-  messageId    String?
+  messageId    String?     // Optional because requests might fail before message creation
   
   provider     String
   model        String
   statusCode   Int
-  duration     Int
+  duration     Int         // milliseconds
   inputTokens  Int
   outputTokens Int
   cost         Float?
   
-  createdAt    DateTime @default(now())
+  createdAt    DateTime    @default(now())
 
-  chat         Chat     @relation(fields: [chatId], references: [id], onDelete: Cascade)
-  message      Message? @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  chat         LlmChat     @relation(fields: [chatId], references: [id], onDelete: Cascade)
+  message      LlmMessage? @relation(fields: [messageId], references: [id], onDelete: Cascade)
 
   @@index([chatId])
   @@index([createdAt])
