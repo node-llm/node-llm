@@ -1,0 +1,82 @@
+// This is the reference Prisma schema for @node-llm/orm
+// Users should copy this into their own prisma/schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Chat {
+  id           String    @id @default(uuid())
+  model        String?
+  provider     String?
+  instructions String?   @db.Text
+  metadata     String?   @db.Text
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  
+  messages     Message[]
+  requests     Request[]
+}
+
+model Message {
+  id           String    @id @default(uuid())
+  chatId       String
+  role         String
+  content      String?   @db.Text
+  contentRaw   String?   @db.Text
+  reasoning    String?   @db.Text
+  inputTokens  Int?
+  outputTokens Int?
+  modelId      String?
+  provider     String?
+  createdAt    DateTime  @default(now())
+
+  chat         Chat        @relation(fields: [chatId], references: [id], onDelete: Cascade)
+  toolCalls    ToolCall[]
+  requests     Request[]
+
+  @@index([chatId])
+  @@index([createdAt])
+}
+
+model ToolCall {
+  id         String   @id @default(uuid())
+  messageId  String
+  toolCallId String
+  name       String
+  arguments  String   @db.Text
+  result     String?  @db.Text
+  createdAt  DateTime @default(now())
+
+  message    Message  @relation(fields: [messageId], references: [id], onDelete: Cascade)
+
+  @@index([messageId])
+  @@index([createdAt])
+}
+
+model Request {
+  id           String   @id @default(uuid())
+  chatId       String
+  messageId    String?
+  
+  provider     String
+  model        String
+  statusCode   Int
+  duration     Int
+  inputTokens  Int
+  outputTokens Int
+  cost         Float?
+  
+  createdAt    DateTime @default(now())
+
+  chat         Chat     @relation(fields: [chatId], references: [id], onDelete: Cascade)
+  message      Message? @relation(fields: [messageId], references: [id], onDelete: Cascade)
+
+  @@index([chatId])
+  @@index([createdAt])
+}
