@@ -49,3 +49,4 @@ run_all_examples.sh
 docs/_site/
 docs/.jekyll-cache/
 docs/.jekyll-metadata
+/.agent

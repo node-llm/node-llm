@@ -235,14 +235,30 @@ describe("Chat ORM", () => {
       });
     });
 
-    it("should serialize metadata as JSON", async () => {
+    it("should pass metadata as-is (native JSON support)", async () => {
       await createChat(mockPrisma, mockLLM, {
         metadata: { userId: "user-123" }
       });
 
       expect(mockPrisma.chat.create).toHaveBeenCalledWith({
         data: expect.objectContaining({
-          metadata: '{"userId":"user-123"}'
+          metadata: { userId: "user-123" }
+        })
+      });
+    });
+
+    it("should spread extra custom fields into create data", async () => {
+      await createChat(mockPrisma, mockLLM, {
+        model: "gpt-4",
+        userId: "user-789",
+        projectId: "proj-abc"
+      } as any);
+
+      expect(mockPrisma.chat.create).toHaveBeenCalledWith({
+        data: expect.objectContaining({
+          model: "gpt-4",
+          userId: "user-789",
+          projectId: "proj-abc"
         })
       });
     });

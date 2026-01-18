@@ -267,6 +267,38 @@ console.log(
 console.log(`Total cost: $${requests.reduce((sum, r) => sum + (r.cost || 0), 0)}`);
 ```
 
+### Custom Fields & Metadata
+
+You can add custom fields (like `userId`, `projectId`, `tenantId`) to your Prisma schema and pass them directly to `createChat`. The library will pass these fields through to the generic Prisma create call.
+
+**1. Update your Prisma Schema:**
+
+```prisma
+model LlmChat {
+  // ... standard fields
+  metadata     Json?      // Use Json type for flexible storage
+  userId       String?    // Custom field
+  projectId    String?    // Custom field
+}
+```
+
+**2. Pass fields to createChat:**
+
+```typescript
+const chat = await createChat(prisma, llm, {
+  model: "gpt-4",
+  instructions: "You are consistent.",
+  // Custom fields passed directly
+  userId: "user_123",
+  projectId: "proj_abc",
+  // Metadata is passed as-is (native JSON support)
+  metadata: {
+    source: "web-client",
+    tags: ["experiment-a"]
+  }
+});
+```
+
 ## Environment Variables
 
 The ORM respects NodeLLM's provider configuration:

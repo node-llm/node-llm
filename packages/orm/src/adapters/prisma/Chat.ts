@@ -274,18 +274,23 @@ export class Chat extends BaseChat {
 /**
  * Convenience method to create a new chat session.
  */
-export async function createChat(
+export async function createChat<T = Record<string, any>>(
   prisma: PrismaClient,
   llm: NodeLLMCore,
-  options: ChatOptions & { tableNames?: TableNames } = {}
+  options: ChatOptions & { tableNames?: TableNames } & T = {} as any
 ): Promise<Chat> {
   const chatTable = options.tableNames?.chat || "chat";
+
+  // Extract known options so we don't double-pass them or pass them incorrectly
+  const { model, provider, instructions, metadata, tableNames, ...extras } = options;
+
   const record = await (prisma as any)[chatTable].create({
     data: {
-      model: options.model,
-      provider: options.provider,
-      instructions: options.instructions,
-      metadata: options.metadata ? JSON.stringify(options.metadata) : null
+      model,
+      provider,
+      instructions,
+      metadata: metadata ?? null,
+      ...extras
     }
   });
 

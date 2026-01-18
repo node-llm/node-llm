@@ -16,8 +16,8 @@ model LlmChat {
   model        String?
   provider     String?
   instructions String?      // System instructions
-  metadata     String?      // JSON metadata
-  createdAt    DateTime     @default(now())
+  metadata     Json?         // JSON metadata
+  createdAt    DateTime      @default(now())
   updatedAt    DateTime     @updatedAt
   messages     LlmMessage[]
   requests     LlmRequest[]
