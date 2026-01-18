@@ -299,6 +299,28 @@ const chat = await createChat(prisma, llm, {
 });
 ```
 
+### Persistence Configuration
+
+By default, the ORM persists everything: messages, tool calls, and API requests. If you don't need certain tables (e.g., you're building a minimal app without tool tracking), you can disable specific persistence features:
+
+```typescript
+const chat = await createChat(prisma, llm, {
+  model: "gpt-4",
+  persistence: {
+    toolCalls: false, // Skip LlmToolCall table
+    requests: false // Skip LlmRequest table
+  }
+});
+```
+
+**Use Cases:**
+
+- **Minimal Schema**: Only create `LlmChat` and `LlmMessage` tables
+- **Privacy**: Disable request logging for sensitive applications
+- **Performance**: Reduce database writes for high-throughput scenarios
+
+**Note**: Message persistence is always enabled (required for conversation history).
+
 ## Environment Variables
 
 The ORM respects NodeLLM's provider configuration:

@@ -16,6 +16,10 @@ export interface ChatOptions {
   instructions?: string;
   metadata?: Record<string, any>;
   debug?: boolean;
+  persistence?: {
+    toolCalls?: boolean; // Default: true
+    requests?: boolean; // Default: true
+  };
 }
 
 export interface UserHooks {

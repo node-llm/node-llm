@@ -31,6 +31,7 @@ export interface TableNames {
  */
 export class Chat extends BaseChat {
   private tables: Required<TableNames>;
+  private persistenceConfig: Required<NonNullable<ChatOptions["persistence"]>>;
 
   constructor(
     private prisma: PrismaClient,
@@ -45,6 +46,11 @@ export class Chat extends BaseChat {
       message: tableNames.message || "message",
       toolCall: tableNames.toolCall || "toolCall",
       request: tableNames.request || "assistantRequest"
+    };
+
+    this.persistenceConfig = {
+      toolCalls: options.persistence?.toolCalls ?? true,
+      requests: options.persistence?.requests ?? true
     };
   }
 
@@ -70,39 +76,44 @@ export class Chat extends BaseChat {
     // --- Persistence Hooks ---
 
     coreChat.onToolCallStart(async (call: any) => {
-      const toolCallModel = this.tables.toolCall;
-      await (this.prisma as any)[toolCallModel].create({
-        data: {
-          messageId: assistantMessageId,
-          toolCallId: call.id,
-          name: call.function?.name || "unknown",
-          arguments: JSON.stringify(call.function?.arguments || {}),
-          thought: (call as any).thought || null
-        }
-      });
+      // Only persist if toolCalls persistence is enabled
+      if (this.persistenceConfig.toolCalls) {
+        const toolCallModel = this.tables.toolCall;
+        await (this.prisma as any)[toolCallModel].create({
+          data: {
+            messageId: assistantMessageId,
+            toolCallId: call.id,
+            name: call.function?.name || "unknown",
+            arguments: JSON.stringify(call.function?.arguments || {}),
+            thought: (call as any).thought || null
+          }
+        });
+      }
 
       // User hooks
       for (const h of this.userHooks.onToolCallStart) await h(call);
     });
 
     coreChat.onToolCallEnd(async (call: any, result: any) => {
-      const toolCallModel = this.tables.toolCall;
-      const resString = typeof result === "string" ? result : JSON.stringify(result);
+      // Only persist if toolCalls persistence is enabled
+      if (this.persistenceConfig.toolCalls) {
+        const toolCallModel = this.tables.toolCall;
+        const resString = typeof result === "string" ? result : JSON.stringify(result);
 
-      await (this.prisma as any)[toolCallModel].update({
-        where: { messageId_toolCallId: { messageId: assistantMessageId, toolCallId: call.id } },
-        data: {
-          result: resString,
-          thought: (call as any).thought || null
-        }
-      });
+        await (this.prisma as any)[toolCallModel].update({
+          where: { messageId_toolCallId: { messageId: assistantMessageId, toolCallId: call.id } },
+          data: {
+            result: resString,
+            thought: (call as any).thought || null
+          }
+        });
+      }
 
       // User hooks
       for (const h of this.userHooks.onToolCallEnd) await h(call, result);
     });
 
     coreChat.afterResponse(async (finalResp: any) => {
-      const modelName = this.tables.request;
       this.log(
         `Internal afterResponse triggered. Calling ${this.userHooks.afterResponse.length} user hooks.`
       );
@@ -113,19 +124,24 @@ export class Chat extends BaseChat {
         if (modified) finalResp = modified;
       }
 
-      await (this.prisma as any)[modelName].create({
-        data: {
-          chatId: this.id,
-          messageId: assistantMessageId,
-          provider: finalResp.provider || provider || "unknown",
-          model: finalResp.model || model || "unknown",
-          statusCode: 200,
-          duration: finalResp.latency || 0,
-          inputTokens: finalResp.usage?.input_tokens || 0,
-          outputTokens: finalResp.usage?.output_tokens || 0,
-          cost: finalResp.usage?.cost || 0
-        }
-      });
+      // Only persist if requests persistence is enabled
+      if (this.persistenceConfig.requests) {
+        const modelName = this.tables.request;
+        await (this.prisma as any)[modelName].create({
+          data: {
+            chatId: this.id,
+            messageId: assistantMessageId,
+            provider: finalResp.provider || provider || "unknown",
+            model: finalResp.model || model || "unknown",
+            statusCode: 200,
+            duration: finalResp.latency || 0,
+            inputTokens: finalResp.usage?.input_tokens || 0,
+            outputTokens: finalResp.usage?.output_tokens || 0,
+            cost: finalResp.usage?.cost || 0
+          }
+        });
+      }
+
       return finalResp;
     });
 

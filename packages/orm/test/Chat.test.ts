@@ -478,4 +478,66 @@ describe("Chat ORM", () => {
       expect(mockPrisma.llmRequest.create).toHaveBeenCalled();
     });
   });
+
+  describe("Persistence Configuration", () => {
+    it("should skip tool call persistence when disabled", async () => {
+      const chat = await createChat(mockPrisma, mockLLM, {
+        model: "gpt-4",
+        persistence: { toolCalls: false }
+      });
+
+      await chat.ask("Search for something");
+
+      // Tool calls should NOT be persisted
+      expect(mockPrisma.toolCall.create).not.toHaveBeenCalled();
+      expect(mockPrisma.toolCall.update).not.toHaveBeenCalled();
+
+      // But requests should still be persisted (default: true)
+      expect(mockPrisma.request.create).toHaveBeenCalled();
+    });
+
+    it("should skip request persistence when disabled", async () => {
+      const chat = await createChat(mockPrisma, mockLLM, {
+        model: "gpt-4",
+        persistence: { requests: false }
+      });
+
+      await chat.ask("Hello!");
+
+      // Requests should NOT be persisted
+      expect(mockPrisma.request.create).not.toHaveBeenCalled();
+
+      // But tool calls should still be persisted (default: true)
+      expect(mockPrisma.toolCall.create).toHaveBeenCalled();
+    });
+
+    it("should disable both toolCalls and requests when configured", async () => {
+      const chat = await createChat(mockPrisma, mockLLM, {
+        model: "gpt-4",
+        persistence: {
+          toolCalls: false,
+          requests: false
+        }
+      });
+
+      await chat.ask("Search");
+
+      expect(mockPrisma.toolCall.create).not.toHaveBeenCalled();
+      expect(mockPrisma.request.create).not.toHaveBeenCalled();
+
+      // Messages should still be persisted (always required)
+      expect(mockPrisma.message.create).toHaveBeenCalled();
+    });
+
+    it("should persist everything by default when persistence config is omitted", async () => {
+      const chat = await createChat(mockPrisma, mockLLM, { model: "gpt-4" });
+
+      await chat.ask("Search");
+
+      // All persistence should be enabled by default
+      expect(mockPrisma.toolCall.create).toHaveBeenCalled();
+      expect(mockPrisma.request.create).toHaveBeenCalled();
+      expect(mockPrisma.message.create).toHaveBeenCalled();
+    });
+  });
 });
