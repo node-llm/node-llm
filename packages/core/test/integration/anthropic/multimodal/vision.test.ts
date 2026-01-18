@@ -43,10 +43,7 @@ describe("Anthropic Models Integration (VCR)", { timeout: 30000 }, () => {
     const path = await import("path");
     const { fileURLToPath } = await import("url");
     const __dirname = path.dirname(fileURLToPath(import.meta.url));
-    const pdfPath = path.resolve(
-      __dirname,
-      "../../../../../../examples/scripts/documents/simple.pdf"
-    );
+    const pdfPath = path.resolve(__dirname, "../../../../../../examples/documents/simple.pdf");
 
     const response = await chat.ask("What is this document?", {
       files: [pdfPath]

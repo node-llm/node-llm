@@ -44,10 +44,7 @@ describe("Gemini Multi-modal Integration (VCR)", { timeout: 30000 }, () => {
     const path = await import("path");
     const { fileURLToPath } = await import("url");
     const __dirname = path.dirname(fileURLToPath(import.meta.url));
-    const audioPath = path.resolve(
-      __dirname,
-      "../../../../../../examples/scripts/audio/sample-0.mp3"
-    );
+    const audioPath = path.resolve(__dirname, "../../../../../../examples/audio/sample-0.mp3");
 
     const response = await llm.transcribe(audioPath, { model: "gemini-2.0-flash" });
 
