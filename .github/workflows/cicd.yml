@@ -54,14 +54,10 @@ jobs:
         run: pnpm run build
 
       - name: Lint
-        run: |
-          cd packages/core
-          pnpm run lint || echo "Linting not configured yet"
+        run: pnpm run lint || echo "Linting failed but continuing tests"
 
       - name: Run tests
-        run: |
-          cd packages/core
-          pnpm test
+        run: pnpm -r test
         env:
           # VCR mode - use recorded cassettes
           VCR_MODE: replay
@@ -71,6 +67,10 @@ jobs:
     needs: test
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        package-path: ["packages/core", "packages/orm"]
 
     steps:
       - uses: actions/checkout@v4
@@ -93,15 +93,24 @@ jobs:
       - name: Build
         run: pnpm run build
 
+      - name: Get Package Info
+        id: pkg
+        run: |
+          cd ${{ matrix.package-path }}
+          VERSION=$(node -p "require('./package.json').version")
+          NAME=$(node -p "require('./package.json').name")
+          DIR_NAME=$(basename ${{ matrix.package-path }})
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "name=$NAME" >> $GITHUB_OUTPUT
+          echo "dir=$DIR_NAME" >> $GITHUB_OUTPUT
+
       - name: Check if version needs publishing
         id: check_version
         run: |
-          cd packages/core
-          PACKAGE_VERSION=$(node -p "require('./package.json').version")
-          PACKAGE_NAME=$(node -p "require('./package.json').name")
-
-          echo "Local version: $PACKAGE_VERSION"
-          echo "Package name: $PACKAGE_NAME"
+          PACKAGE_VERSION="${{ steps.pkg.outputs.version }}"
+          PACKAGE_NAME="${{ steps.pkg.outputs.name }}"
+          
+          echo "Checking if $PACKAGE_NAME@$PACKAGE_VERSION is already published..."
 
           # Check if version exists on npm
           if npm view "$PACKAGE_NAME@$PACKAGE_VERSION" version 2>/dev/null; then
@@ -110,13 +119,12 @@ jobs:
           else
             echo "Version $PACKAGE_VERSION not published yet"
             echo "version_changed=true" >> $GITHUB_OUTPUT
-            echo "version=$PACKAGE_VERSION" >> $GITHUB_OUTPUT
           fi
 
       - name: Publish to npm
         if: steps.check_version.outputs.version_changed == 'true'
         run: |
-          cd packages/core
+          cd ${{ matrix.package-path }}
           pnpm publish --access public --no-git-checks
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
@@ -125,8 +133,8 @@ jobs:
         if: steps.check_version.outputs.version_changed == 'true'
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: v${{ steps.check_version.outputs.version }}
-          name: Release v${{ steps.check_version.outputs.version }}
+          tag_name: ${{ steps.pkg.outputs.dir }}-v${{ steps.pkg.outputs.version }}
+          name: ${{ steps.pkg.outputs.dir }} v${{ steps.pkg.outputs.version }}
           draft: false
           prerelease: false
         env:
