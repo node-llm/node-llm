@@ -11,7 +11,7 @@
     "build": "npm run build --workspaces --if-present",
     "docs": "cd docs && bundle install && bundle exec jekyll serve",
     "sync-models": "node scripts/sync-models.mjs",
-    "demo": "cd examples/brand-perception-checker && npm run setup && npm run dev",
+    "demo": "cd examples/applications/brand-perception-checker && npm run setup && npm run dev",
     "lint": "eslint .",
     "format": "prettier --write .",
     "check-format": "prettier --check .",
@@ -82,5 +82,10 @@
   },
   "dependencies": {
     "dotenv": "^17.2.3"
+  },
+  "pnpm": {
+    "overrides": {
+      "undici": ">=6.23.0"
+    }
   }
 }
