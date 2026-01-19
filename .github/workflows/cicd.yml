@@ -52,6 +52,8 @@ jobs:
 
       - name: Build
         run: pnpm run build
+        env:
+          DATABASE_URL: "postgresql://localhost:5432/dummy"
 
       - name: Lint
         run: pnpm run lint || echo "Linting failed but continuing tests"
@@ -92,6 +94,8 @@ jobs:
 
       - name: Build
         run: pnpm run build
+        env:
+          DATABASE_URL: "postgresql://localhost:5432/dummy"
 
       - name: Get Package Info
         id: pkg

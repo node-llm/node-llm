@@ -6,11 +6,11 @@
 
 # NodeLLM
 
-**An architectural layer for integrating Large Language Models in Node.js.**
+**A simple way to use Large Language Models in Node.js.**
 
-**Provider-agnostic by design.**
+**NodeLLM keeps your AI code clean and predictable.**
 
-Integrating multiple LLM providers often means juggling different SDKs, API styles, and update cycles. NodeLLM provides a single, unified, production-oriented API for interacting with over 540+ models across multiple providers (OpenAI, Gemini, Anthropic, DeepSeek, OpenRouter, Ollama, etc.) that stays consistent even when providers change.
+Integrating multiple LLM providers often means juggling different SDKs, API styles, and update cycles. NodeLLM gives you a single, unified API for over 540+ models across multiple providers (OpenAI, Gemini, Anthropic, DeepSeek, OpenRouter, Ollama, etc.) that stays consistent even when providers change.
 
 <p align="left">
   <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/openai.svg" height="28" />
@@ -33,9 +33,13 @@ Integrating multiple LLM providers often means juggling different SDKs, API styl
 
 <br/>
 
-[![npm version](https://img.shields.io/npm/v/@node-llm/core.svg)](https://www.npmjs.com/package/@node-llm/core)
+[![npm version](https://img.shields.io/npm/v/@node-llm/core.svg)](https://www.npmjs.com/org/node-llm)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue.svg)](https://www.typescriptlang.org/)
+
+```bash
+npm install @node-llm/core
+```
 
 ---
 

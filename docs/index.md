@@ -10,11 +10,13 @@ back_to_top: false
   <img src="assets/images/logo.png" alt="NodeLLM" width="200" />
 </p>
 
-**An architectural layer for integrating Large Language Models in Node.js.**
+**A simple way to use Large Language Models in Node.js.**
 
-**Provider-agnostic by design.**
+**Standardize your AI integration.**
 
-Integrating multiple LLM providers often means juggling different SDKs, API styles, and update cycles. NodeLLM provides a single, unified, production-oriented API that stays consistent even when providers change.
+If you are coming from **Ruby on Rails**, NodeLLM will feel familiar. It provides the structured approach to history and provider switching that you'd expect from a mature framework, avoiding the mess of handling raw SDKs manually.
+
+Integrating multiple LLM providers often means juggling different SDKs, API styles, and update cycles. NodeLLM gives you a single, unified API that stays consistent even when providers change.
 
 <div class="provider-icons">
   <div class="provider-logo">
@@ -47,7 +49,7 @@ Integrating multiple LLM providers often means juggling different SDKs, API styl
 [Get Started](/getting-started/overview){: .btn .btn-primary .fs-5 .mb-4 .mb-md-0 .mr-2 } [Read on Blog](https://eshaiju.com){: .btn .fs-5 .mb-4 .mb-md-0 .mr-2 } [View on GitHub](https://github.com/node-llm/node-llm){: .btn .fs-5 .mb-4 .mb-md-0 }
 
 <p class="text-small text-grey-dk-000 mt-4">
-  Distributed via <a href="https://www.npmjs.com/package/@node-llm/core">npm</a>
+  Distributed via <a href="https://www.npmjs.com/org/node-llm">npm</a>
 </p>
 
 ---

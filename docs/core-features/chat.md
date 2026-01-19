@@ -23,6 +23,10 @@ description: A unified interface for stateful conversations across all providers
 
 `NodeLLM` provides a unified chat interface across all providers (OpenAI, Gemini, Anthropic). It normalizes the differences in their APIs, allowing you to use a single set of methods for interacting with them.
 
+```bash
+npm install @node-llm/core
+```
+
 ---
 
 ## Starting a Conversation

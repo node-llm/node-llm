@@ -1,164 +1,84 @@
 # HR Chatbot with RAG 🤖
 
-> **A complete, production-ready example** demonstrating NodeLLM's full capabilities: RAG, streaming, persistence, and real-time chat.
+> **Why this matters**: Most LLM tools are stateless. If a user refreshes the page, their chat is gone. This project shows how to build a **helpful HR bot** that remembers past conversations and looks up company policies using a database.
 
 ![HR Chatbot Screenshot](hr-chatbot.png)
 
-## 🎯 What This Example Demonstrates
+---
 
-This is a **flagship example** showing how to build a sophisticated AI application with NodeLLM. Perfect for learning or as a starter template for your own projects.
+## 🛠️ How it works: A Bot that Remembers
 
-### NodeLLM Core Features
-- ✅ **Streaming Responses**: Real-time token delivery with `chat.askStream()`
-- ✅ **Tool Calling**: Autonomous RAG with `searchDocumentsTool`
-- ✅ **Multi-Provider**: Switch between OpenAI, Gemini, etc. via config
-- ✅ **Structured Output**: Type-safe responses with Zod schemas
+Building a basic chat is easy; building one that stays useful over time is where things get tricky. This project handles:
+1. **Chat History**: Saving every message to PostgreSQL so people can pick up where they left off.
+2. **Policy Search**: Giving the bot access to documents so it doesn't give wrong answers.
+3. **Usage Logging**: Keeping track of how many tokens are used and which tools are called.
 
-### @node-llm/orm Features
-- ✅ **Chat Persistence**: Automatic message history with Prisma
-- ✅ **Streaming Persistence**: Messages saved as they stream
-- ✅ **JSON Metadata**: Native `Json` type for flexible metadata
-- ✅ **Custom Fields**: Ready for `userId`, `projectId` (see schema)
-- ✅ **Tool Call Tracking**: Audit log of every tool execution
-- ✅ **API Metrics**: Request latency, tokens, cost tracking
-- ✅ **Optional Persistence**: Configure what to persist
+### Built with NodeLLM & @node-llm/orm
+The `@node-llm` tools handle the database boilerplate for you:
+- **Core logic**: Handles the chat turns and policy searches.
+- **ORM layer**: Automatically saves the conversation to your database as it happens.
 
-### Production Patterns
-- ✅ **Next.js 14 App Router**: Modern React patterns
-- ✅ **Vector Search**: PostgreSQL + pgvector for RAG
-- ✅ **Testing**: Vitest with database integration tests
-- ✅ **Type Safety**: Full TypeScript throughout
-- ✅ **Clean Architecture**: Separated concerns (models, services, tools)
+---
 
-## 🛠️ Tech Stack
+## 🚀 Getting Started
 
-- **Framework**: Next.js 14 (App Router)
-- **AI Engine**: [@node-llm/core](https://github.com/node-llm/node-llm)
-- **Persistence**: [@node-llm/orm](https://github.com/node-llm/node-llm/tree/main/packages/orm)
-- **Database**: PostgreSQL 15+ with `pgvector` extension
-- **Embeddings**: OpenAI `text-embedding-3-small`
-- **Styling**: Tailwind CSS + Ant Design
-- **Testing**: Vitest
+If you were building this from scratch, you would start by installing the essential packages:
 
-## 🏁 Getting Started
+```bash
+npm install @node-llm/core @node-llm/orm
+```
 
 ### 1. Clone & Install
+
 ```bash
 # If you haven't cloned NodeLLM yet
 git clone https://github.com/node-llm/node-llm.git
 cd node-llm/examples/applications/hr-chatbot-rag
 
-# Install dependencies
+# Install all dependencies
 npm install
 ```
 
 ### 2. Configure Environment
-Copy the example environment file and fill in your API keys:
+
+Copy the example environment file and fill in your API keys (PostgreSQL with `pgvector` required):
+
 ```bash
 cp .env.example .env
 ```
 
-Edit `.env`:
-```bash
-# PostgreSQL Connection URL (Local Example)
-# NOTE: The migration automatically enables the "vector" extension.
-DATABASE_URL="postgresql://user:password@localhost:5432/hr_chatbot?schema=public"
-OPENAI_API_KEY="sk-..."
-```
+---
 
-### 3. Setup Database
-```bash
-# Generate Prisma Client
-npm run postinstall
+## 🧠 The "Convention Over Configuration" Logic
 
-# Run migrations (Reset if needed to ensure clean state)
-npx prisma migrate dev --name init
-```
+Notice in `src/models/assistant-chat.ts` how the ORM handles the heavy lifting. Instead of manual `prisma.message.create` calls, you simply use:
 
-### 4. Seed HR Policies
-Populate the vector database with sample HR policies:
-```bash
-npm run seed
-```
-
-### 5. Run the App
-```bash
-npm run dev
-```
-Visit `http://localhost:3002` (or the port shown in terminal) to chat.
-
-### 🔄 Switching Providers (e.g., Gemini)
-
-You can switch the underlying AI provider without changing code by updating your `.env` file.
-
-**Important**: If you switch providers, you **MUST** re-seed the database because embedding vectors are provider-specific.
-
-1.  **Update `.env`**:
-    ```bash
-    NODELLM_PROVIDER="gemini"
-    NODELLM_MODEL="gemini-1.5-flash"
-    GEMINI_API_KEY="your-gemini-key"
-    ```
-
-2.  **Re-seed Database** (Regenerates embeddings):
-    ```bash
-    npm run seed
-    ```
-
-3.  **Restart App**:
-    ```bash
-    npm run dev
-    ```
-
-## 🧪 Testing
-
-### Run Unit & Integration Tests
-```bash
-npm test
-```
-
-### Test in Console (CLI)
-You can test the RAG flow without the UI using the console script:
-```bash
-npm run console
-```
-Then try running:
 ```typescript
-const { AssistantChat } = await import("./src/models/assistant-chat");
-const chat = await AssistantChat.create({ model: "gpt-4o", provider: "openai" });
-await chat.ask("What is the remote work policy?");
+import { createChat } from "@node-llm/orm/prisma";
+
+// The chat object now automatically persists to the DB
+const chat = await createChat(prisma, llm, {
+  model: "gpt-4o",
+  persistence: { toolCalls: true, requests: true }
+});
+
+await chat.ask("What is our remote work policy?");
 ```
 
-## 🏗️ Architecture
+---
 
-### RAG Flow
-1. **Ingestion**: Documents are chunked and embedded via `DocumentIngestion` service.
-2. **Storage**: Chunks stored in `DocumentChunk` table using native `vector(1536)` type.
-3. **Retrieval**: `searchDocumentsTool` queries PostgreSQL.
-4. **Ranking**: Results ranked by hardware-accelerated cosine distance (`<=>` operator).
-5. **Generation**: LLM uses retrieved context to answer.
+## 🏗️ Architecture detail
 
 ### Data Model
-The database schema consists of the following key tables:
+The database schema (managed via Prisma) consists of the following key tables:
 
 | Table | Purpose |
 |-------|---------|
 | `AssistantChat` | Stores session metadata, model config, and system instructions. |
 | `AssistantMessage` | The logical conversation history (User query + Assistant Answer). |
 | `AssistantToolCall` | Audit log of every tool executed (args, names) during a turn. |
-| `AssistantRequest` | *Optional.* Used for low-level API debugging (latency/cost per HTTP request). |
+| `AssistantRequest` | *Optional metrics.* Latency and cost per HTTP request. |
 
-### Project Structure
-```
-src/
-├── app/              # Next.js App Router pages
-├── components/       # UI Components (Chat Interface)
-├── models/           # Domain Models (AssistantChat)
-├── services/         # Business Logic (Ingestion, Search)
-├── tools/            # NodeLLM Tools (RAG Tool)
-└── data/             # Sample Data (HR Policies)
-```
+---
 
-## 📝 License
-
-MIT - Feel free to use this as a template for your own projects!
+Built with 💚 using [NodeLLM](https://github.com/node-llm/node-llm) — The architectural layer for Node.js AI.

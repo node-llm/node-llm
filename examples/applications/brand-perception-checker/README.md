@@ -1,31 +1,44 @@
-# Brand Perception Checker Example
+# Brand Perception Checker 🔍
 
-A full-stack example application built with **NodeLLM v1.5.3**, generic Node.js, and React. This project demonstrates how to orchestrate multiple LLM providers to perform a real-world research task: auditing how a brand is perceived by AI models versus live search results.
+> **Why this matters**: Official LLM SDKs are often tied to one vendor. This example shows how to build a research tool that uses multiple models (OpenAI + Anthropic) to compare what the AI "thinks" against real market data.
 
 ![Dashboard Screenshot](./demo.png)
 
 ---
 
-## 🛠 What this demonstrates
+## 🛠️ How it works: Comparing AI and Reality
 
-This example is designed to show how to build robust AI applications using `NodeLLM`'s core features:
+This application helps you see if AI models have the right impression of a brand:
+1. **Ask different models** (OpenAI, Anthropic) what they know about a brand.
+2. **Search Google** in real-time to get the latest facts.
+3. **Show the difference** between the AI's training data and today's news.
 
-- **Multi-Provider Orchestration**: querying OpenAI and Anthropic in parallel to cross-check results.
-- **Structured Output**: using `withSchema()` (Zod) to forcefully extract clean JSON data from models.
-- **Tool Agents**: using a `SerpTool` to fetch live Google Search results.
-- **Resilience**: handling API failures gracefully without crashing the server.
-- **Reasoning**: capturing the "thought process" of models like OpenAI's o3-mini.
+### Built with NodeLLM
+Using NodeLLM makes this much easier by handling the repetitive parts:
+- **Switch effortlessly**: Running GPT-4 and Claude-3 side-by-side with the same code.
+- **Search tools**: A simple tool to fetch Google results without complex loops.
+- **Clean data**: Using Zod schemas to make sure the results are always ready for the dashboard.
 
-## 🚀 Key Features
+---
 
-- **AI Consensus**: compares what `gpt-4o` and `claude-3` "know" about a brand from their training data.
-- **Live Market Check**: cross-references AI knowledge with real-time Google Search snippets using `Serper.dev`.
-- **Diagnostic Dashboard**: visualizes the "alignment" or "gap" between AI perception and market reality.
-- **Clean Architecture**: separates business logic (`logic.js`) from AI orchestration (`agent.js`) for better testability.
+## 🚀 Getting Started
 
-## 📦 Setup & Run
+If you were building this from scratch, you would start by installing the core library:
 
-### 1. Configure Keys
+```bash
+npm install @node-llm/core
+```
+
+### 1. Run the Demo Project
+
+We've included a script to install dependencies and start the full-stack app (React + Node.js) for you:
+
+```bash
+# From the root of this project
+npm run demo
+```
+
+### 2. Configure Environment
 
 Create a `.env` file in the `server/` directory:
 
@@ -35,21 +48,21 @@ ANTHROPIC_API_KEY=sk-...
 SERPER_API_KEY=xxx... # Required for live Google search data
 ```
 
-### 2. Run the Demo
+---
 
-We've included a script to install dependencies and start everything for you:
+## 🧠 Key Logic: The Agent Flow
 
-```bash
-# Installs dependencies and starts both server (port 3001) & client (port 5173)
-npm run demo
+The core logic resides in `server/agent.js`. Notice how NodeLLM allows you to swap models or add tools without changing your business logic:
+
+```javascript
+const chat = NodeLLM.chat(model)
+  .withTool(SerpTool)
+  .withSchema(PerceptionSchema);
+
+const response = await chat.ask(`Analyze the brand: ${brandName}`);
 ```
-
-## 🧠 How it works
-
-1. **Intrinsic Check**: We ask multiple models (OpenAI, Anthropic) to describe the brand based _only_ on their latent knowledge.
-2. **Market Check**: We use a `SerpTool` to search Google for the brand's current status (news, sentiment, competitors).
-3. **Synthesis**: We compare the two sources. If the AI thinks the brand is "reliable" but recent news shows a "security breach," the system flags a **Truth Gap**.
 
 ---
 
-Built with 💚 using [NodeLLM](https://github.com/node-llm/node-llm).
+Built with 💚 using [NodeLLM](https://github.com/node-llm/node-llm) — The architectural layer for Node.js AI.
+

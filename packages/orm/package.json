@@ -19,7 +19,7 @@
     }
   },
   "scripts": {
-    "build": "tsc",
+    "build": "prisma generate --schema=schema.prisma && tsc",
     "test": "vitest run",
     "test:watch": "vitest",
     "prepack": "npm run build && cp ../../CHANGELOG.md ./CHANGELOG.md",
@@ -68,6 +68,7 @@
     "@node-llm/core": "file:../core",
     "@prisma/client": "^5.0.0",
     "@types/node": "^20.0.0",
+    "prisma": "^5.0.0",
     "typescript": "^5.0.0",
     "vitest": "^1.0.0"
   },

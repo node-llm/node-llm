@@ -23,6 +23,10 @@ description: Give your models the ability to interact with the real world using 
 
 `NodeLLM` simplifies function calling (tool use) by handling the execution loop automatically. You define the tools, and the library invokes them when the model requests it.
 
+```bash
+npm install @node-llm/core
+```
+
 {: .highlight }
 
 > **Looking for a real-world example?** Check out the [Brand Perception Checker](../../examples/applications/brand-perception-checker/), which uses the `SerpTool` to perform live Google searches and "read" the results to extract semantic signals.
