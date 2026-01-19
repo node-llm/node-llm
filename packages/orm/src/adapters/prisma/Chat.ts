@@ -298,8 +298,16 @@ export async function createChat<T = Record<string, any>>(
   const chatTable = options.tableNames?.chat || "chat";
 
   // Extract known options so we don't double-pass them or pass them incorrectly
-  const { model, provider, instructions, metadata, tableNames, debug, persistence, ...extras } =
-    options;
+  const {
+    model,
+    provider,
+    instructions,
+    metadata,
+    tableNames: _tableNames,
+    debug: _debug,
+    persistence: _persistence,
+    ...extras
+  } = options;
 
   const record = await (prisma as any)[chatTable].create({
     data: {
