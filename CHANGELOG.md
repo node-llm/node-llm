@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.6.2] - 2026-01-21 (@node-llm/core)
+
+### Extensibility
+
+- **fetchWithTimeout Export**: Exported `fetchWithTimeout` utility from the core package to support custom providers that need manual request signing while maintaining library-standard timeout protections.
+
+## [0.1.2] - 2026-01-21 (@node-llm/orm)
+
+### Compatibility
+
+- **Custom Provider Support**: Verified and improved support for custom LLM providers. Custom providers registered via `NodeLLM.registerProvider()` now work seamlessly with the ORM's automated persistence layer.
+
 ## [1.6.1] - 2026-01-19 (@node-llm/core)
 
 ### Documentation & Examples
