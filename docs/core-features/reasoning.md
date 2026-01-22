@@ -20,7 +20,7 @@ description: Access the inner thoughts and chain-of-thought process of advanced 
 
 ---
 
-`NodeLLM` provides a unified way to access the "thinking" or "reasoning" process of models like **DeepSeek R1**, **OpenAI o1/o3**, and **Claude 3.7**. Many models now expose their internal chain of thought or allow configuring the amount of effort spent on reasoning.
+`NodeLLM` provides a unified way to access the "thinking" or "reasoning" process of models like **DeepSeek R1**, **OpenAI o1/o3**, and **Claude 3.7/4**. Many models now expose their internal chain of thought or allow configuring the amount of effort spent on reasoning.
 
 ---
 
@@ -44,7 +44,7 @@ const response = await chat.ask("Solve this complex architecture problem...");
 For models like Claude 3.7, you can specify a token budget for thinking. The model will stop thinking once this budget is reached.
 
 ```ts
-const chat = NodeLLM.chat("claude-3-7-sonnet-20250219")
+const chat = NodeLLM.chat("claude-sonnet-4-20250514")
   .withThinking({ budget: 2000 });
 
 const response = await chat.ask("Analyze these logs...");
@@ -103,5 +103,5 @@ Currently, the following models have enhanced reasoning support in `NodeLLM`:
 | :--------------------------------- | :-------- | :------------------------------------------------ |
 | `deepseek-reasoner`                | DeepSeek  | Full text extraction                              |
 | `o1-*`, `o3-*`                     | OpenAI    | Effort configuration & token tracking             |
-| `claude-3-7-*`                     | Anthropic | Budget-based thinking & full text extraction      |
+| `claude-3-7-*`, `claude-*-4-*`     | Anthropic | Budget-based thinking & full text extraction      |
 | `gemini-2.0-flash-thinking-*`      | Gemini    | Full thinking text extraction                     |

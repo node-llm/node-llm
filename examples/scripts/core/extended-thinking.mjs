@@ -29,24 +29,29 @@ async function main() {
   console.log("\n[Answer]");
   console.log(response.content);
 
-  console.log("\n--- Claude 3.7 with Thinking Budget ---");
+  console.log("\n--- Claude 4 with Thinking Budget ---");
   
   const anthropic = NodeLLM.withProvider("anthropic", {
     anthropicApiKey: process.env.ANTHROPIC_API_KEY
   });
   
-  const claudeChat = anthropic.chat("claude-3-7-sonnet-20250219")
-    .withThinking({ budget: 2000 });
+  try {
+    const claudeChat = anthropic.chat("claude-sonnet-4-20250514")
+      .withThinking({ budget: 2000 });
 
-  const stream = claudeChat.stream("Analyze the security implications of using JWTs for session management.");
-  
-  for await (const chunk of stream) {
-    if (chunk.thinking?.text) {
-      process.stdout.write(`\x1b[90m${chunk.thinking.text}\x1b[0m`);
+    const stream = claudeChat.stream("Analyze the security implications of using JWTs for session management.");
+    
+    for await (const chunk of stream) {
+      if (chunk.thinking?.text) {
+        process.stdout.write(`\x1b[90m${chunk.thinking.text}\x1b[0m`);
+      }
+      if (chunk.content) {
+        process.stdout.write(chunk.content);
+      }
     }
-    if (chunk.content) {
-      process.stdout.write(chunk.content);
-    }
+  } catch (err) {
+    console.warn("\n[Anthropic Example Skipped]");
+    console.warn(err.message || err);
   }
 }
 
