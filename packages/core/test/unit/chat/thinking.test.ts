@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { Chat } from "../../../src/chat/Chat.js";
+import { ChatResponseString } from "../../../src/chat/ChatResponse.js";
 import { FakeProvider } from "../../fake-provider.js";
 
 describe("Chat Extended Thinking", () => {
@@ -71,8 +72,9 @@ describe("Chat Extended Thinking", () => {
     expect(chat.history).toHaveLength(2); // user + assistant
     const lastMsg = chat.history[chat.history.length - 1]!;
     expect(lastMsg.role).toBe("assistant");
-    expect((lastMsg.content as any).thinking?.text).toBe("Thinking in stream...");
-    expect((lastMsg.content as any).thinking?.signature).toBe("sig-stream");
-    expect((lastMsg.content as any).thinking?.tokens).toBe(20);
+    const assistantContent = lastMsg.content as ChatResponseString;
+    expect(assistantContent.thinking?.text).toBe("Thinking in stream...");
+    expect(assistantContent.thinking?.signature).toBe("sig-stream");
+    expect(assistantContent.thinking?.tokens).toBe(20);
   });
 });

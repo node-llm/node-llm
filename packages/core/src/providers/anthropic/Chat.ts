@@ -1,4 +1,4 @@
-import { ChatRequest, ChatResponse } from "../Provider.js";
+import { ChatRequest, ChatResponse, ThinkingResult } from "../Provider.js";
 import { AnthropicMessageRequest, AnthropicMessageResponse } from "./types.js";
 import { ToolCall } from "../../chat/Tool.js";
 import { Capabilities } from "./Capabilities.js";
@@ -120,7 +120,7 @@ export class AnthropicChat {
 
     // Extract text content and tool calls
     let content: string | null = null;
-    let thinkingResult: any = null;
+    let thinkingResult: ThinkingResult | undefined = undefined;
     const toolCalls: ToolCall[] = [];
 
     for (const block of contentBlocks) {
@@ -130,7 +130,9 @@ export class AnthropicChat {
       } else if (block.type === "thinking") {
         // Handle thinking block (Claude 3.7)
         if (!thinkingResult) thinkingResult = { text: "" };
-        thinkingResult.text += block.thinking;
+        if (block.thinking) {
+          thinkingResult.text = (thinkingResult.text || "") + block.thinking;
+        }
         if (block.signature) thinkingResult.signature = block.signature;
       } else if (block.type === "tool_use") {
         toolCalls.push({

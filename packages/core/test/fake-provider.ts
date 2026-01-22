@@ -41,7 +41,7 @@ export class FakeProvider implements Provider {
       yield {
         content: "",
         reasoning: reply.reasoning || undefined,
-        thinking: (reply as any).thinking,
+        thinking: reply.thinking,
         tool_calls: reply.tool_calls
       };
     }

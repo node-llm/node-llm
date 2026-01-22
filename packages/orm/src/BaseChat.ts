@@ -24,6 +24,12 @@ export interface ChatOptions {
     effort?: "low" | "medium" | "high" | "none";
     budget?: number;
   };
+  temperature?: number;
+  maxTokens?: number;
+  headers?: Record<string, string>;
+  maxToolCalls?: number;
+  requestTimeout?: number;
+  params?: Record<string, any>;
 }
 
 export interface UserHooks {
@@ -65,6 +71,12 @@ export abstract class BaseChat<
     this.localOptions.model = options.model || record.model;
     this.localOptions.provider = options.provider || record.provider;
     this.localOptions.thinking = options.thinking;
+    this.localOptions.temperature = options.temperature;
+    this.localOptions.maxTokens = options.maxTokens;
+    this.localOptions.headers = options.headers;
+    this.localOptions.maxToolCalls = options.maxToolCalls;
+    this.localOptions.requestTimeout = options.requestTimeout;
+    this.localOptions.params = options.params;
   }
 
   protected log(...args: any[]) {

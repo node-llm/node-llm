@@ -7,11 +7,20 @@ describe("ChatResponseString", () => {
     const tool_calls = [
       { id: "1", type: "function" as const, function: { name: "test", arguments: "{}" } }
     ];
-    const res = new ChatResponseString("hello", usage, "model", "provider", "logic", tool_calls);
+    const res = new ChatResponseString(
+      "hello",
+      usage,
+      "model",
+      "provider",
+      undefined,
+      "logic",
+      tool_calls
+    );
 
     expect(String(res)).toBe("hello");
     expect(res.usage).toEqual(usage);
     expect(res.tool_calls).toEqual(tool_calls);
+    expect(res.reasoning).toBe("logic");
     expect(res.inputTokens).toBe(1);
     expect(res.outputTokens).toBe(2);
     expect(res.totalTokens).toBe(3);
@@ -20,6 +29,7 @@ describe("ChatResponseString", () => {
       usage,
       model: "model",
       provider: "provider",
+      thinking: undefined,
       reasoning: "logic",
       tool_calls
     });

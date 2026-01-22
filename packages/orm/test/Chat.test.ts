@@ -346,8 +346,10 @@ describe("Chat ORM", () => {
       const chat = await createChat(mockPrisma, mockLLM, { model: "gpt-4" });
       const tokens: string[] = [];
 
-      for await (const token of chat.askStream("Tell me a story")) {
-        tokens.push(token);
+      for await (const chunk of chat.askStream("Tell me a story")) {
+        // Stream yields objects with { content, meta } - extract content
+        const content = typeof chunk === "string" ? chunk : chunk.content;
+        if (content) tokens.push(content);
       }
 
       expect(tokens).toEqual(["Hello", " from", " streaming", "!"]);
@@ -357,8 +359,9 @@ describe("Chat ORM", () => {
       const chat = await createChat(mockPrisma, mockLLM, { model: "gpt-4" });
       const tokens: string[] = [];
 
-      for await (const token of chat.askStream("Tell me a story")) {
-        tokens.push(token);
+      for await (const chunk of chat.askStream("Tell me a story")) {
+        const content = typeof chunk === "string" ? chunk : chunk.content;
+        if (content) tokens.push(content);
       }
 
       const messages = mockPrisma._messages.filter((m: any) => m.role === "assistant");

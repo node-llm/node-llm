@@ -74,6 +74,44 @@ Start simple with `NodeLLM.chat().ask("Hello")`. As your needs grow, you can acc
 
 ---
 
+## Configuration Patterns
+
+NodeLLM supports two primary styles of configuration to match your preferred architectural pattern.
+
+### 1. Fluent Builder API
+Ideal for step-by-step configuration and readable "action" chains.
+
+```ts
+const chat = NodeLLM.chat("claude-3-7-sonnet")
+  .withInstructions("You are a logic expert")
+  .withTemperature(0.2)
+  .withThinking({ budget: 16000 });
+
+await chat.ask("Solve this puzzle");
+```
+
+### 2. Direct Configuration Object (Stateless)
+Ideal for integrations that pass configuration dynamically or from a centralized settings object.
+
+```ts
+// All options can be passed together at initialization
+const chat = NodeLLM.chat("gpt-4o", {
+  instructions: "You are a helpful assistant",
+  temperature: 0.7,
+  maxTokens: 500,
+  thinking: { effort: "high" },
+  headers: { "X-Tenant-ID": "123" }
+});
+
+// Or per-request for granular override
+await chat.ask("Hello", {
+  temperature: 0.1,
+  maxToolCalls: 5
+});
+```
+
+---
+
 ## How It Works
 
 1.  **Normalization**: Your inputs (text, images, files) are converted into a standardized format.

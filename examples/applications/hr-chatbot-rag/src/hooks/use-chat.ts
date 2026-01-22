@@ -36,7 +36,7 @@ export function useChat() {
         thinking: result.message.thinkingText ?? undefined
       };
 
-      setMessages((prev) => [...prev, assistantMessage]);
+      setMessages((prev: Message[]) => [...prev, assistantMessage]);
     } catch (err) {
       console.error("Failed to send message:", err);
     } finally {
@@ -53,7 +53,7 @@ export function useChat() {
       content,
     };
 
-    setMessages((prev) => [...prev, userMessage]);
+    setMessages((prev: Message[]) => [...prev, userMessage]);
     setIsLoading(true);
 
     // Create placeholder for assistant message
@@ -65,7 +65,7 @@ export function useChat() {
       thinking: "",
     };
 
-    setMessages((prev) => [...prev, assistantMessage]);
+    setMessages((prev: Message[]) => [...prev, assistantMessage]);
 
     try {
       const stream = await sendMessageStream(chatId, content);

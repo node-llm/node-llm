@@ -43,7 +43,7 @@ export class DeepSeekChat {
       tools,
       max_tokens,
       response_format,
-      thinking,
+      thinking: _thinking,
       headers: _headers,
       requestTimeout,
       ...rest
