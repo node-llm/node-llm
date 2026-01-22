@@ -107,7 +107,12 @@ async function syncModels() {
               }
             }
           },
-          metadata: { source: "models.dev", ...(details.cost || {}), ...(details.limit || {}) }
+          metadata: {
+            source: "models.dev",
+            cost: details.cost || {},
+            limit: details.limit || {},
+            last_synced: new Date().toISOString()
+          }
         };
 
         finalModels.push(modelEntry);

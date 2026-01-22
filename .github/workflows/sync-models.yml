@@ -6,6 +6,11 @@ on:
     - cron: "0 9 * * 1"
   workflow_dispatch: # Allow manual trigger
 
+# Allow the workflow to create and update pull requests
+permissions:
+  contents: write
+  pull-requests: write
+
 jobs:
   sync-models:
     runs-on: ubuntu-latest
