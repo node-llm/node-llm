@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { PrismaClient } from "@prisma/client";
-import type { NodeLLMCore, ChatChunk } from "@node-llm/core";
+import type { NodeLLMCore, ChatChunk, AskOptions } from "@node-llm/core";
 import { BaseChat, type ChatRecord, type ChatOptions } from "../../BaseChat.js";
 
 export { type ChatRecord, type ChatOptions };
@@ -179,7 +179,7 @@ export class Chat extends BaseChat {
   /**
    * Send a message and persist the conversation.
    */
-  async ask(input: string): Promise<MessageRecord> {
+  async ask(input: string, options: AskOptions = {}): Promise<MessageRecord> {
     const messageModel = this.tables.message;
     const userMessage = await (this.prisma as any)[messageModel].create({
       data: { chatId: this.id, role: "user", content: input }
@@ -201,7 +201,7 @@ export class Chat extends BaseChat {
       }));
 
       const coreChat = await this.prepareCoreChat(history, assistantMessage!.id);
-      const response = await coreChat.ask(input);
+      const response = await coreChat.ask(input, options);
 
       return await (this.prisma as any)[messageModel].update({
         where: { id: assistantMessage!.id },
@@ -229,7 +229,10 @@ export class Chat extends BaseChat {
    * Stream a response and persist the conversation.
    * Yields ChatChunk objects for full visibility of thinking, content, and tools.
    */
-  async *askStream(input: string): AsyncGenerator<ChatChunk, MessageRecord, undefined> {
+  async *askStream(
+    input: string,
+    options: AskOptions = {}
+  ): AsyncGenerator<ChatChunk, MessageRecord, undefined> {
     const messageModel = this.tables.message;
     const userMessage = await (this.prisma as any)[messageModel].create({
       data: { chatId: this.id, role: "user", content: input }
@@ -251,7 +254,7 @@ export class Chat extends BaseChat {
       }));
 
       const coreChat = await this.prepareCoreChat(history, assistantMessage!.id);
-      const stream = coreChat.stream(input);
+      const stream = coreChat.stream(input, options);
 
       let fullContent = "";
       let metadata: any = {};

@@ -64,6 +64,7 @@ export abstract class BaseChat<
     this.localOptions.instructions = options.instructions || record.instructions;
     this.localOptions.model = options.model || record.model;
     this.localOptions.provider = options.provider || record.provider;
+    this.localOptions.thinking = options.thinking;
   }
 
   protected log(...args: any[]) {

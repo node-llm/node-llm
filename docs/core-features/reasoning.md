@@ -40,14 +40,13 @@ const chat = NodeLLM.chat("o3-mini")
 const response = await chat.ask("Solve this complex architecture problem...");
 ```
 
-### Setting a Thinking Budget
-For models like Claude 3.7, you can specify a token budget for thinking. The model will stop thinking once this budget is reached.
+### Per-Request Configuration
+If you prefer to be stateless or set configuration only for a specific request, you can pass the thinking configuration directly to `ask()` or `stream()`.
 
 ```ts
-const chat = NodeLLM.chat("claude-sonnet-4-20250514")
-  .withThinking({ budget: 2000 });
-
-const response = await chat.ask("Analyze these logs...");
+const response = await chat.ask("Solve this puzzle", {
+  thinking: { budget: 16000 }
+});
 ```
 
 ---

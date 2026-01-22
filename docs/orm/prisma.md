@@ -152,10 +152,11 @@ The ORM Chat implementation provides a fluent API that mirrors the core NodeLLM 
 ### Creating and Loading Chats
 
 ```typescript
-// Start a new session
+// Start a new session with reasoning enabled by default
 const chat = await createChat(prisma, llm, {
-  model: "gpt-4o",
-  instructions: "You are a helpful assistant."
+  model: "claude-3-7-sonnet",
+  instructions: "You are a helpful assistant.",
+  thinking: { budget: 16000 }
 });
 
 // Load an existing session from DB (automatically rehydrates history)
@@ -169,6 +170,11 @@ When you use `.ask()`, the persistence flow runs automatically.
 ```typescript
 // This saves the user message, calls the API, and persists the response
 const messageRecord = await chat.ask("What is the capital of France?");
+
+// You can also pass thinking configuration directly per request
+const advancedResp = await chat.ask("Solve this logical puzzle", {
+  thinking: { budget: 32000 }
+});
 
 console.log(messageRecord.content); // "The capital of France is Paris."
 console.log(messageRecord.inputTokens); // 12
