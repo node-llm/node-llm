@@ -95,8 +95,8 @@ export function useChat() {
               
               const chunk = data.chunk || { content: data.content };
               
-              setMessages((prev) =>
-                prev.map((msg) =>
+              setMessages((prev: Message[]) =>
+                prev.map((msg: Message) =>
                   msg.id === assistantId
                     ? { 
                         ...msg, 
