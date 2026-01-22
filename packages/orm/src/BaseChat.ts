@@ -20,6 +20,10 @@ export interface ChatOptions {
     toolCalls?: boolean; // Default: true
     requests?: boolean; // Default: true
   };
+  thinking?: {
+    effort?: "low" | "medium" | "high" | "none";
+    budget?: number;
+  };
 }
 
 export interface UserHooks {
@@ -120,6 +124,15 @@ export abstract class BaseChat<
   withParams(params: Record<string, any>): this {
     this.localOptions.params = { ...(this.localOptions.params || {}), ...params };
     return this;
+  }
+
+  withThinking(thinking: { effort?: "low" | "medium" | "high" | "none"; budget?: number }): this {
+    this.localOptions.thinking = { ...(this.localOptions.thinking || {}), ...thinking };
+    return this;
+  }
+
+  withEffort(effort: "low" | "medium" | "high" | "none"): this {
+    return this.withThinking({ effort });
   }
 
   // --- Hook Registration ---

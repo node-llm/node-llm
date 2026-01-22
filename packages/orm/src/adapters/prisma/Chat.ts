@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { PrismaClient } from "@prisma/client";
-import type { NodeLLMCore } from "@node-llm/core";
+import type { NodeLLMCore, ChatChunk } from "@node-llm/core";
 import { BaseChat, type ChatRecord, type ChatOptions } from "../../BaseChat.js";
 
 export { type ChatRecord, type ChatOptions };
@@ -14,6 +14,9 @@ export interface MessageRecord {
   reasoning: string | null;
   inputTokens: number | null;
   outputTokens: number | null;
+  thinkingText: string | null;
+  thinkingSignature: string | null;
+  thinkingTokens: number | null;
   modelId: string | null;
   provider: string | null;
   createdAt: Date;
@@ -85,7 +88,8 @@ export class Chat extends BaseChat {
             toolCallId: call.id,
             name: call.function?.name || "unknown",
             arguments: JSON.stringify(call.function?.arguments || {}),
-            thought: (call as any).thought || null
+            thought: (call as any).thought || null,
+            thoughtSignature: (call as any).thought_signature || null
           }
         });
       }
@@ -206,6 +210,9 @@ export class Chat extends BaseChat {
           contentRaw: JSON.stringify(response.meta),
           inputTokens: response.usage?.input_tokens || 0,
           outputTokens: response.usage?.output_tokens || 0,
+          thinkingText: response.thinking?.text || null,
+          thinkingSignature: response.thinking?.signature || null,
+          thinkingTokens: response.thinking?.tokens || null,
           modelId: response.model || null,
           provider: response.provider || null
         }
@@ -220,8 +227,9 @@ export class Chat extends BaseChat {
 
   /**
    * Stream a response and persist the conversation.
+   * Yields ChatChunk objects for full visibility of thinking, content, and tools.
    */
-  async *askStream(input: string): AsyncGenerator<string, MessageRecord, undefined> {
+  async *askStream(input: string): AsyncGenerator<ChatChunk, MessageRecord, undefined> {
     const messageModel = this.tables.message;
     const userMessage = await (this.prisma as any)[messageModel].create({
       data: { chatId: this.id, role: "user", content: input }
@@ -251,10 +259,18 @@ export class Chat extends BaseChat {
       for await (const chunk of stream) {
         if (chunk.content) {
           fullContent += chunk.content;
-          yield chunk.content;
         }
+
+        // Yield the full chunk to the caller
+        yield chunk;
         if (chunk.usage) {
           metadata = { ...metadata, ...chunk.usage };
+        }
+        if (chunk.thinking) {
+          metadata.thinking = { ...(metadata.thinking || {}), ...chunk.thinking };
+          if (chunk.thinking.text) {
+            metadata.thinking.text = (metadata.thinking.text || "") + chunk.thinking.text;
+          }
         }
       }
 
@@ -265,6 +281,9 @@ export class Chat extends BaseChat {
           contentRaw: JSON.stringify(metadata),
           inputTokens: metadata.input_tokens || 0,
           outputTokens: metadata.output_tokens || 0,
+          thinkingText: metadata.thinking?.text || null,
+          thinkingSignature: metadata.thinking?.signature || null,
+          thinkingTokens: metadata.thinking?.tokens || null,
           modelId: this.localOptions.model || this.record.model || null,
           provider: this.localOptions.provider || this.record.provider || null
         }
