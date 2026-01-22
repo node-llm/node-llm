@@ -11,6 +11,9 @@
     "lint": "next lint",
     "test": "vitest run",
     "postinstall": "prisma generate",
+    "db:migrate": "prisma migrate dev",
+    "db:deploy": "prisma migrate deploy",
+    "db:status": "prisma migrate status",
     "console": "tsx scripts/console.ts",
     "seed": "tsx scripts/seed-policies.ts"
   },

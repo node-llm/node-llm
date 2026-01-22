@@ -41,10 +41,22 @@ npm install
 
 ### 2. Configure Environment
 
-Copy the example environment file and fill in your API keys (PostgreSQL with `pgvector` required):
+Copy the example environment file and fill in your API keys. A PostgreSQL database with the `pgvector` extension is required.
 
 ```bash
 cp .env.example .env
+```
+
+### 3. Setup Database (Migrations)
+
+Initialize your PostgreSQL database with the correct schema and knowledge base.
+
+```bash
+# Apply database migrations
+npm run db:migrate
+
+# Seed the knowledge base with policy documents
+npm run seed
 ```
 
 ---

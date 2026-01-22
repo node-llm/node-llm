@@ -54,7 +54,7 @@ model LlmChat {
   model        String?
   provider     String?
   instructions String?      
-  metadata     String?      
+  metadata     Json?         // Use Json for metadata
   createdAt    DateTime     @default(now())
   updatedAt    DateTime     @updatedAt
   messages     LlmMessage[]
@@ -62,17 +62,20 @@ model LlmChat {
 }
 
 model LlmMessage {
-  id           String        @id @default(uuid())
-  chatId       String
-  role         String        // user, assistant, system, tool
-  content      String?
-  contentRaw   String?       // JSON raw payload
-  reasoning    String?       // Chain of thought
-  inputTokens  Int?
-  outputTokens Int?
-  modelId      String?
-  provider     String?
-  createdAt    DateTime      @default(now())
+  id                String        @id @default(uuid())
+  chatId            String
+  role              String        // user, assistant, system, tool
+  content           String?
+  contentRaw        String?       // JSON raw payload
+  reasoning         String?       // Chain of thought (deprecated)
+  thinkingText      String?       // Extended thinking text
+  thinkingSignature String?       // Cryptographic signature
+  thinkingTokens    Int?          // Tokens spent on thinking
+  inputTokens       Int?
+  outputTokens      Int?
+  modelId           String?
+  provider          String?
+  createdAt         DateTime      @default(now())
 
   chat         LlmChat       @relation(fields: [chatId], references: [id], onDelete: Cascade)
   toolCalls    LlmToolCall[]
@@ -80,14 +83,15 @@ model LlmMessage {
 }
 
 model LlmToolCall {
-  id           String     @id @default(uuid())
-  messageId    String
-  toolCallId   String     // ID from the provider
-  name         String
-  arguments    String     
-  thought      String?    
-  result       String?    
-  createdAt    DateTime   @default(now())
+  id               String     @id @default(uuid())
+  messageId        String
+  toolCallId       String     // ID from the provider
+  name             String
+  arguments        String     
+  thought          String?    
+  thoughtSignature String?    
+  result           String?    
+  createdAt        DateTime   @default(now())
 
   message      LlmMessage @relation(fields: [messageId], references: [id], onDelete: Cascade)
 
@@ -111,6 +115,12 @@ model LlmRequest {
   message      LlmMessage? @relation(fields: [messageId], references: [id], onDelete: Cascade)
 }
 ```
+
+### 2. Database Migrations
+
+For production-grade systems, always use **Prisma Migrate** instead of `db push`. This ensures you have a versioned history of changes and prevents accidental data loss.
+
+See the [Database Migration Guide](./migrations.md) for detailed instructions.
 
 ### 2. Manual Setup
 

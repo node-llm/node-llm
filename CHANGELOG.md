@@ -21,6 +21,11 @@ All notable changes to this project will be documented in this file.
   - New field in `LlmToolCall`: `thoughtSignature`.
   - Fluent `.withThinking()` and `.withEffort()` methods added to `BaseChat`.
   - Automatic aggregation and storage of thinking results in both standard and streaming (`askStream`) modes.
+- **Incremental Migrations**: Formalized database management workflow.
+  - Shifted from `db push` to professional **Prisma Migrate** workflow for safe, versioned schema updates.
+  - Added repository-wide `prisma/migrations` folder for reproducible deployments.
+  - New built-in scripts: `npm run db:migrate`, `npm run db:deploy`, and `npm run db:status`.
+  - Comprehensive [Database Migration Guide](https://node-llm.eshaiju.com/orm/migrations) for application scaling.
 
 ## [1.6.2] - 2026-01-21 (@node-llm/core)
 
