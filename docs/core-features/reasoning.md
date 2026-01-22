@@ -20,37 +20,66 @@ description: Access the inner thoughts and chain-of-thought process of advanced 
 
 ---
 
-`NodeLLM` provides a unified way to access the "thinking" or "reasoning" process of models like **DeepSeek R1** or **OpenAI o1/o3**. Some models expose their internal chain of thought before providing the final answer.
+`NodeLLM` provides a unified way to access the "thinking" or "reasoning" process of models like **DeepSeek R1**, **OpenAI o1/o3**, and **Claude 3.7**. Many models now expose their internal chain of thought or allow configuring the amount of effort spent on reasoning.
 
 ---
 
-## Accessing Reasoning Content
+## Configuring Thinking
 
-For models that support it (like `deepseek-reasoner`), you can access the reasoning text via the `.reasoning` property on the response object.
+You can control the reasoning behavior using the `.withThinking()` or `.withEffort()` methods. This is particularly useful for models like `o3-mini` or `claude-3-7-sonnet`.
+
+### Setting Effort Level
+Effort levels (low, medium, high) allow you to balance between speed/cost and reasoning depth.
 
 ```ts
 import { NodeLLM } from "@node-llm/core";
 
-const chat = NodeLLM.chat("deepseek-reasoner");
+const chat = NodeLLM.chat("o3-mini")
+  .withEffort("high"); // Options: "low", "medium", "high"
+
+const response = await chat.ask("Solve this complex architecture problem...");
+```
+
+### Setting a Thinking Budget
+For models like Claude 3.7, you can specify a token budget for thinking. The model will stop thinking once this budget is reached.
+
+```ts
+const chat = NodeLLM.chat("claude-3-7-sonnet-20250219")
+  .withThinking({ budget: 2000 });
+
+const response = await chat.ask("Analyze these logs...");
+```
+
+---
+
+## Accessing Thinking Results
+
+The results of thinking are available via the `.thinking` property on the response object. This unified object contains the text, tokens used, and any cryptographic signatures provided by the model.
+
+```ts
 const response = await chat.ask("Prove that the square root of 2 is irrational.");
 
-// Show the inner thought process
-console.log("Thinking:", response.reasoning);
+// High-level access via response.thinking
+if (response.thinking) {
+  console.log("Thought Process:", response.thinking.text);
+  console.log("Tokens Spent:", response.thinking.tokens);
+  console.log("Verification Signature:", response.thinking.signature);
+}
 
 // Show the final answer
 console.log("Answer:", response.content);
 ```
 
-### Streaming Reasoning
+### Streaming Thinking
 
-When using `.stream()`, reasoning content is emitted as chunks, just like regular content. You can distinguish them by checking `chunk.reasoning`.
+When using `.stream()`, thinking content is emitted in chunks. You can capture it by checking `chunk.thinking`.
 
 ```ts
 const chat = NodeLLM.chat("deepseek-reasoner");
 
 for await (const chunk of chat.stream("Explain quantum entanglement")) {
-  if (chunk.reasoning) {
-    process.stdout.write(`[Thinking] ${chunk.reasoning}`);
+  if (chunk.thinking?.text) {
+    process.stdout.write(`[Thinking] ${chunk.thinking.text}`);
   }
   if (chunk.content) {
     process.stdout.write(chunk.content);
@@ -58,29 +87,21 @@ for await (const chunk of chat.stream("Explain quantum entanglement")) {
 }
 ```
 
-The final response object in the `onEndMessage` callback or returned by the stream will also contain the full aggregated reasoning string.
+---
+
+## Backward Compatibility (Deprecated)
+
+Previously, reasoning text was accessed via the `response.reasoning` property. While still supported for backward compatibility, it is recommended to transition to the structured `response.thinking.text` API.
 
 ---
 
-## OpenAI o1/o3 Support
-
-OpenAI models like `o3-mini` do not expose the reasoning text directly (in a separate field), but they use "reasoning tokens" during generation. `NodeLLM` automatically tracks these tokens and includes them in the usage and cost calculations.
-
-```ts
-const chat = NodeLLM.chat("o3-mini");
-const response = await chat.ask("Write a complex algorithm");
-
-console.log(`Reasoning tokens used: ${response.usage.output_tokens}`);
-console.log(`Total cost: $${response.cost}`);
-```
-
----
-
-## Supported Models
+## Supported Capabilities
 
 Currently, the following models have enhanced reasoning support in `NodeLLM`:
 
-| Model ID                           | Provider | Feature                         |
-| :--------------------------------- | :------- | :------------------------------ |
-| `deepseek-reasoner`                | DeepSeek | Full thinking text extraction   |
-| `o1-preview`, `o1-mini`, `o3-mini` | OpenAI   | Reasoning token & cost tracking |
+| Model ID                           | Provider  | Support Level                                     |
+| :--------------------------------- | :-------- | :------------------------------------------------ |
+| `deepseek-reasoner`                | DeepSeek  | Full text extraction                              |
+| `o1-*`, `o3-*`                     | OpenAI    | Effort configuration & token tracking             |
+| `claude-3-7-*`                     | Anthropic | Budget-based thinking & full text extraction      |
+| `gemini-2.0-flash-thinking-*`      | Gemini    | Full thinking text extraction                     |

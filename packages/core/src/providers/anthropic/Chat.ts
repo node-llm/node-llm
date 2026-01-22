@@ -42,6 +42,7 @@ export class AnthropicChat {
       temperature: _temp,
       max_tokens: _max,
       response_format: _format,
+      thinking: _thinking,
       headers: _headers,
       requestTimeout,
       ...rest
@@ -55,6 +56,17 @@ export class AnthropicChat {
       stream: false,
       ...rest
     };
+
+    if (_thinking?.budget) {
+      body.thinking = {
+        type: "enabled",
+        budget_tokens: _thinking.budget
+      };
+      // Extended thinking models require a larger max_tokens
+      if (!request.max_tokens) {
+        body.max_tokens = Math.max(maxTokens, _thinking.budget + 1024);
+      }
+    }
 
     if (request.temperature !== undefined) {
       body.temperature = request.temperature;
@@ -108,12 +120,18 @@ export class AnthropicChat {
 
     // Extract text content and tool calls
     let content: string | null = null;
+    let thinkingResult: any = null;
     const toolCalls: ToolCall[] = [];
 
     for (const block of contentBlocks) {
       if (block.type === "text") {
         if (content === null) content = "";
         content += block.text;
+      } else if (block.type === "thinking") {
+        // Handle thinking block (Claude 3.7)
+        if (!thinkingResult) thinkingResult = { text: "" };
+        thinkingResult.text += block.thinking;
+        if (block.signature) thinkingResult.signature = block.signature;
       } else if (block.type === "tool_use") {
         toolCalls.push({
           id: block.id!,
@@ -143,6 +161,7 @@ export class AnthropicChat {
     return {
       content,
       usage: calculatedUsage,
+      thinking: thinkingResult,
       tool_calls: toolCalls.length > 0 ? toolCalls : undefined
     };
   }

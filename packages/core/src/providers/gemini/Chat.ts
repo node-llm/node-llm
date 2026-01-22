@@ -58,6 +58,12 @@ export class GeminiChat {
       ...rest
     };
 
+    if (request.thinking) {
+      payload.thinkingConfig = {
+        includeThoughts: true
+      };
+    }
+
     if (systemInstructionParts.length > 0) {
       payload.systemInstruction = { parts: systemInstructionParts };
     }
@@ -96,9 +102,15 @@ export class GeminiChat {
     logger.logResponse("Gemini", response.status, response.statusText, json);
     const candidate = json.candidates?.[0];
 
+    const reasoningText =
+      candidate?.content?.parts
+        ?.filter((p) => p.thought)
+        .map((p) => p.text)
+        .join("\n") || null;
+
     const content =
       candidate?.content?.parts
-        ?.filter((p) => p.text)
+        ?.filter((p) => !p.thought && p.text)
         .map((p) => p.text)
         .join("\n") || null;
 
@@ -125,7 +137,15 @@ export class GeminiChat {
       ? ModelRegistry.calculateCost(usage, request.model, "gemini")
       : undefined;
 
-    return { content, tool_calls, usage: calculatedUsage };
+    const thinkingResult = reasoningText ? { text: reasoningText } : undefined;
+
+    return {
+      content,
+      tool_calls,
+      usage: calculatedUsage,
+      thinking: thinkingResult,
+      reasoning: reasoningText
+    };
   }
 
   private sanitizeSchema(schema: unknown): unknown {

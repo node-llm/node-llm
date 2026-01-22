@@ -37,10 +37,11 @@ export class FakeProvider implements Provider {
         }
       }
 
-      // Yield reasoning and tool_calls in the last chunk
+      // Yield thinking, reasoning and tool_calls in the last chunk
       yield {
         content: "",
         reasoning: reply.reasoning || undefined,
+        thinking: (reply as any).thinking,
         tool_calls: reply.tool_calls
       };
     }

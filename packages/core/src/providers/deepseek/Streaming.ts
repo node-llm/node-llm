@@ -18,6 +18,7 @@ export class DeepSeekStreaming {
       tools,
       max_tokens,
       response_format,
+      thinking: _thinking,
       headers: _headers,
       requestTimeout,
       ...rest
@@ -135,7 +136,8 @@ export class DeepSeekStreaming {
             if (deltaContent || deltaReasoning) {
               yield {
                 content: deltaContent || "",
-                reasoning: deltaReasoning || ""
+                reasoning: deltaReasoning || "",
+                thinking: deltaReasoning ? { text: deltaReasoning } : undefined
               };
             }
 

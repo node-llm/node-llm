@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.7.0] - 2026-01-22 (@node-llm/core)
+
+### Features
+
+- **Extended Thinking**: Standardized support for reasoning-focused models like OpenAI o1/o3, Anthropic Claude 3.7, and DeepSeek R1.
+  - Added `.withThinking({ budget })` and `.withEffort(level)` fluent methods to `Chat`.
+  - Structured `ThinkingResult` in responses containing `text`, `signature`, and `tokens`.
+  - Multi-provider support: OpenAI (reasoning effort), Anthropic (thinking budget), Gemini (thought parts), and DeepSeek (reasoning content).
+  - Streaming support for thinking chunks across all supported providers.
+
+## [0.2.0] - 2026-01-22 (@node-llm/orm)
+
+### Features
+
+- **Thinking Persistence**: Added support for persisting extended thinking data.
+  - New fields in `LlmMessage`: `thinkingText`, `thinkingSignature`, and `thinkingTokens`.
+  - New field in `LlmToolCall`: `thoughtSignature`.
+  - Fluent `.withThinking()` and `.withEffort()` methods added to `BaseChat`.
+  - Automatic aggregation and storage of thinking results in both standard and streaming (`askStream`) modes.
+
 ## [1.6.2] - 2026-01-21 (@node-llm/core)
 
 ### Extensibility

@@ -54,6 +54,16 @@ export class AnthropicStreaming {
       }));
     }
 
+    if (request.thinking?.budget) {
+      body.thinking = {
+        type: "enabled",
+        budget_tokens: request.thinking.budget
+      };
+      if (!request.max_tokens) {
+        body.max_tokens = Math.max(maxTokens, request.thinking.budget + 1024);
+      }
+    }
+
     // Check if any message contains PDF content to add beta header
     const hasPdf = messages.some(
       (msg) => Array.isArray(msg.content) && msg.content.some((block) => block.type === "document")
@@ -163,6 +173,10 @@ export class AnthropicStreaming {
             } else if (eventType === "content_block_delta") {
               if (data.delta && data.delta.type === "text_delta") {
                 yield { content: data.delta.text };
+              } else if (data.delta && data.delta.type === "thinking_delta") {
+                yield { content: "", thinking: { text: data.delta.thinking } };
+              } else if (data.delta && data.delta.type === "signature_delta") {
+                yield { content: "", thinking: { signature: data.delta.signature } };
               } else if (data.delta && data.delta.type === "input_json_delta") {
                 // Accumulate tool arguments
                 const index = data.index;

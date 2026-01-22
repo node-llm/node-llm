@@ -13,10 +13,42 @@ export interface ResponseFormat {
   [key: string]: unknown;
 }
 
+export interface ThinkingConfig {
+  /**
+   * Effort level for thinking-capable models.
+   * 'low', 'medium', 'high' map to provider-specific qualitative settings.
+   * 'none' disables thinking if the model allows it.
+   */
+  effort?: "low" | "medium" | "high" | "none";
+
+  /**
+   * Maximum budget (in tokens) dedicated to thinking.
+   */
+  budget?: number;
+}
+
+export interface ThinkingResult {
+  /**
+   * The thinking text (chain of thought).
+   */
+  text?: string;
+
+  /**
+   * Cryptographic signature or provider-specific trace ID.
+   */
+  signature?: string;
+
+  /**
+   * Tokens consumed during thinking.
+   */
+  tokens?: number;
+}
+
 export interface ChatRequest {
   model: string;
   messages: Message[];
   tools?: ToolDefinition[];
+  thinking?: ThinkingConfig;
   temperature?: number;
   max_tokens?: number;
   response_format?: ResponseFormat;
@@ -27,6 +59,8 @@ export interface ChatRequest {
 
 export interface ChatChunk {
   content: string;
+  thinking?: ThinkingResult;
+  /** @deprecated use thinking.text */
   reasoning?: string;
   tool_calls?: ToolCall[];
   done?: boolean;
@@ -37,6 +71,7 @@ export interface Usage {
   input_tokens: number;
   output_tokens: number;
   total_tokens: number;
+  reasoning_tokens?: number;
   cached_tokens?: number;
   cache_creation_tokens?: number;
   cost?: number;
@@ -46,6 +81,8 @@ export interface Usage {
 
 export interface ChatResponse {
   content: string | null;
+  thinking?: ThinkingResult;
+  /** @deprecated use thinking.text */
   reasoning?: string | null;
   tool_calls?: ToolCall[];
   usage?: Usage;

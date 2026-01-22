@@ -3,7 +3,7 @@ import { ToolResolvable } from "./Tool.js";
 import { Schema } from "../schema/Schema.js";
 import { ChatResponseString } from "./ChatResponse.js";
 import { ToolExecutionMode } from "../constants.js";
-import { ResponseFormat } from "../providers/Provider.js";
+import { ResponseFormat, ThinkingConfig } from "../providers/Provider.js";
 
 export interface ChatOptions {
   systemPrompt?: string;
@@ -27,6 +27,7 @@ export interface ChatOptions {
   provider?: string;
   maxToolCalls?: number;
   requestTimeout?: number;
+  thinking?: ThinkingConfig;
   toolExecution?: ToolExecutionMode;
   onConfirmToolCall?: (toolCall: unknown) => Promise<boolean> | boolean;
   onBeforeRequest?: (messages: Message[]) => Promise<Message[] | void>;

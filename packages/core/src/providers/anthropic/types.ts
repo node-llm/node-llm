@@ -4,7 +4,14 @@ export interface AnthropicMessage {
 }
 
 export interface AnthropicContentBlock {
-  type: "text" | "image" | "tool_use" | "tool_result" | "document";
+  type:
+    | "text"
+    | "image"
+    | "tool_use"
+    | "tool_result"
+    | "document"
+    | "thinking"
+    | "redacted_thinking";
   text?: string;
   source?: {
     type: "base64";
@@ -17,6 +24,8 @@ export interface AnthropicContentBlock {
   tool_use_id?: string;
   content?: string | Array<AnthropicContentBlock>;
   is_error?: boolean;
+  thinking?: string;
+  signature?: string;
 }
 
 export interface AnthropicMessageRequest {
@@ -36,6 +45,10 @@ export interface AnthropicMessageRequest {
     input_schema?: Record<string, unknown>;
   }>;
   tool_choice?: { type: string; name?: string };
+  thinking?: {
+    type: "enabled" | "disabled";
+    budget_tokens: number;
+  };
 }
 
 export interface AnthropicUsage {

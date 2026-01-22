@@ -7,7 +7,13 @@ import {
   MessageContent
 } from "./Content.js";
 import { ChatOptions } from "./ChatOptions.js";
-import { Provider, Usage, ChatChunk, ResponseFormat } from "../providers/Provider.js";
+import {
+  Provider,
+  Usage,
+  ChatChunk,
+  ResponseFormat,
+  ThinkingConfig
+} from "../providers/Provider.js";
 import { Executor } from "../executor/Executor.js";
 import { ChatStream } from "./ChatStream.js";
 import { Stream } from "../streaming/Stream.js";
@@ -30,6 +36,7 @@ export interface AskOptions {
   headers?: Record<string, string>;
   maxToolCalls?: number;
   requestTimeout?: number;
+  thinking?: ThinkingConfig;
   signal?: AbortSignal;
 }
 
@@ -252,6 +259,21 @@ export class Chat {
     return this;
   }
 
+  /**
+   * Enable and configure extended thinking for reasoning models.
+   */
+  withThinking(config: ThinkingConfig): this {
+    this.options.thinking = { ...this.options.thinking, ...config };
+    return this;
+  }
+
+  /**
+   * Shortcut to set thinking effort.
+   */
+  withEffort(effort: "low" | "medium" | "high" | "none"): this {
+    return this.withThinking({ effort });
+  }
+
   // --- Event Handlers ---
 
   onNewMessage(handler: () => void): this {
@@ -390,6 +412,7 @@ export class Chat {
       response_format: responseFormat, // Pass to provider
       requestTimeout:
         options?.requestTimeout ?? this.options.requestTimeout ?? config.requestTimeout,
+      thinking: options?.thinking ?? this.options.thinking,
       signal: options?.signal,
       ...this.options.params
     };
@@ -429,6 +452,7 @@ export class Chat {
       response.usage ?? { input_tokens: 0, output_tokens: 0, total_tokens: 0 },
       this.model,
       this.provider.id,
+      response.thinking,
       response.reasoning,
       response.tool_calls
     );
@@ -565,6 +589,7 @@ export class Chat {
         response.usage ?? { input_tokens: 0, output_tokens: 0, total_tokens: 0 },
         this.model,
         this.provider.id,
+        response.thinking,
         response.reasoning
       );
 
@@ -595,6 +620,7 @@ export class Chat {
       totalUsage,
       this.model,
       this.provider.id,
+      assistantMessage.thinking,
       assistantMessage.reasoning,
       response.tool_calls
     );

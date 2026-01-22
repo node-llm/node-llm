@@ -43,6 +43,7 @@ export class DeepSeekChat {
       tools,
       max_tokens,
       response_format,
+      thinking,
       headers: _headers,
       requestTimeout,
       ...rest
@@ -141,6 +142,14 @@ export class DeepSeekChat {
     // deepseek cost calculation if needed, otherwise just return usage
     const calculatedUsage = ModelRegistry.calculateCost(usage, model, "deepseek");
 
-    return { content, reasoning, usage: calculatedUsage, tool_calls: toolCalls };
+    const thinkingResult = reasoning ? { text: reasoning } : undefined;
+
+    return {
+      content,
+      reasoning,
+      usage: calculatedUsage,
+      thinking: thinkingResult,
+      tool_calls: toolCalls
+    };
   }
 }

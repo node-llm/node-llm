@@ -24,6 +24,14 @@ export type { NodeLLMConfig } from "./config.js";
 export { providerRegistry } from "./providers/registry.js";
 export { Schema } from "./schema/Schema.js";
 export { BaseProvider } from "./providers/BaseProvider.js";
+export {
+  ChatRequest,
+  ChatResponse,
+  ChatChunk,
+  ThinkingConfig,
+  ThinkingResult,
+  Usage
+} from "./providers/Provider.js";
 export { resolveModelAlias } from "./model_aliases.js";
 export { default as MODEL_ALIASES } from "./aliases.js";
 export {

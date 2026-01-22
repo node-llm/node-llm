@@ -20,9 +20,10 @@ export class OpenAIStreaming {
   }
 
   async *execute(request: ChatRequest, controller?: AbortController): AsyncGenerator<ChatChunk> {
-    const abortController =
-      controller ||
-      (request.signal ? ({ signal: request.signal } as AbortController) : new AbortController());
+    const internalController = new AbortController();
+    const abortController = controller || internalController;
+
+    const signal = request.signal ? (request.signal as AbortSignal) : abortController.signal;
     const temperature = Capabilities.normalizeTemperature(request.temperature, request.model);
 
     const isMainOpenAI = this.baseUrl.includes("api.openai.com");
@@ -60,6 +61,10 @@ export class OpenAIStreaming {
       body.tools = request.tools;
     }
 
+    if (request.thinking?.effort && request.thinking.effort !== "none") {
+      body.reasoning_effort = request.thinking.effort;
+    }
+
     let done = false;
     // Track tool calls being built across chunks
     const toolCallsMap = new Map<
@@ -81,7 +86,7 @@ export class OpenAIStreaming {
             ...request.headers
           },
           body: JSON.stringify(body),
-          signal: abortController.signal
+          signal
         },
         request.requestTimeout
       );
@@ -156,6 +161,11 @@ export class OpenAIStreaming {
             // Handle content delta
             if (delta?.content) {
               yield { content: delta.content };
+            }
+
+            // Handle reasoning content delta
+            if (delta?.reasoning_content) {
+              yield { content: "", thinking: { text: delta.reasoning_content } };
             }
 
             // Handle tool calls delta

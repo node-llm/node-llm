@@ -37,6 +37,7 @@ export class OpenAIChat {
       temperature: _,
       max_tokens,
       response_format,
+      thinking,
       headers: _headers,
       requestTimeout: _requestTimeout,
       signal,
@@ -63,6 +64,10 @@ export class OpenAIChat {
 
     if (tools) body.tools = tools;
     if (response_format) body.response_format = response_format;
+
+    if (thinking?.effort && thinking.effort !== "none") {
+      body.reasoning_effort = thinking.effort;
+    }
 
     const url = buildUrl(this.baseUrl, "/chat/completions");
     logger.logRequest("OpenAI", "POST", url, body);
@@ -92,8 +97,7 @@ export class OpenAIChat {
     const message = json.choices[0]?.message;
     const content = message?.content ?? null;
     const tool_calls = message?.tool_calls;
-    const reasoning =
-      (message as unknown as { reasoning_content?: string })?.reasoning_content || null;
+    const reasoningText = (message as any).reasoning_content || null;
 
     const usage = json.usage
       ? {
@@ -105,12 +109,26 @@ export class OpenAIChat {
         }
       : undefined;
 
+    const thinkingResult =
+      reasoningText || usage?.reasoning_tokens
+        ? {
+            text: reasoningText || undefined,
+            tokens: usage?.reasoning_tokens
+          }
+        : undefined;
+
     if (!content && !tool_calls) {
       throw new Error("OpenAI returned empty response");
     }
 
     const calculatedUsage = usage ? ModelRegistry.calculateCost(usage, model, "openai") : undefined;
 
-    return { content, tool_calls, usage: calculatedUsage, reasoning };
+    return {
+      content,
+      tool_calls,
+      usage: calculatedUsage,
+      thinking: thinkingResult,
+      reasoning: reasoningText
+    };
   }
 }

@@ -12,6 +12,7 @@ export interface GeminiPart {
     name: string;
     response: Record<string, unknown>;
   };
+  thought?: boolean;
 }
 
 export interface GeminiContent {
@@ -44,6 +45,9 @@ export interface GeminiGenerateContentRequest {
     category: string;
     threshold: string;
   }>;
+  thinkingConfig?: {
+    includeThoughts: boolean;
+  };
 }
 
 export interface GeminiGenerateContentResponse {

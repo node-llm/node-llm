@@ -1,4 +1,4 @@
-import { Usage } from "../providers/Provider.js";
+import { Usage, ThinkingResult } from "../providers/Provider.js";
 import { ToolCall } from "./Tool.js";
 
 /**
@@ -11,6 +11,7 @@ export class ChatResponseString extends String {
     public readonly usage: Usage,
     public readonly model: string,
     public readonly provider: string,
+    public readonly thinking?: ThinkingResult,
     public readonly reasoning?: string | null,
     public readonly tool_calls?: ToolCall[]
   ) {
@@ -70,6 +71,7 @@ export class ChatResponseString extends String {
       usage: this.usage,
       model: this.model,
       provider: this.provider,
+      thinking: this.thinking,
       reasoning: this.reasoning,
       tool_calls: this.tool_calls
     };
@@ -95,6 +97,7 @@ export class ChatResponseString extends String {
       this.usage,
       this.model,
       this.provider,
+      this.thinking,
       this.reasoning,
       this.tool_calls
     );

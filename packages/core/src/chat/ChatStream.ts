@@ -6,7 +6,7 @@ import {
   MessageContent
 } from "./Content.js";
 import { ChatOptions } from "./ChatOptions.js";
-import { Provider, ChatChunk, Usage } from "../providers/Provider.js";
+import { Provider, ChatChunk, Usage, ThinkingResult } from "../providers/Provider.js";
 import { ChatResponseString } from "./ChatResponse.js";
 import { Stream } from "../streaming/Stream.js";
 import { config } from "../config.js";
@@ -155,6 +155,7 @@ export class ChatStream {
 
         let fullContent = "";
         let fullReasoning = "";
+        const thinking: ThinkingResult = { text: "" };
         let toolCalls: ToolCall[] | undefined;
         let currentTurnUsage: Usage | undefined;
 
@@ -176,6 +177,7 @@ export class ChatStream {
             response_format: responseFormat,
             headers: options.headers,
             requestTimeout: options.requestTimeout ?? config.requestTimeout,
+            thinking: options.thinking,
             signal: abortController.signal,
             ...options.params
           })) {
@@ -194,6 +196,19 @@ export class ChatStream {
               yield { content: "", reasoning: chunk.reasoning };
             }
 
+            if (chunk.thinking) {
+              if (chunk.thinking.text) {
+                thinking.text += chunk.thinking.text;
+              }
+              if (chunk.thinking.signature) {
+                thinking.signature = chunk.thinking.signature;
+              }
+              if (chunk.thinking.tokens) {
+                thinking.tokens = (thinking.tokens ?? 0) + chunk.thinking.tokens;
+              }
+              yield chunk;
+            }
+
             if (chunk.tool_calls) {
               toolCalls = chunk.tool_calls;
             }
@@ -209,6 +224,7 @@ export class ChatStream {
             currentTurnUsage || { input_tokens: 0, output_tokens: 0, total_tokens: 0 },
             model,
             provider.id,
+            thinking.text || thinking.signature ? thinking : undefined,
             fullReasoning || undefined
           );
 

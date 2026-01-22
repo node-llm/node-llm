@@ -38,10 +38,33 @@ export class GeminiStreaming {
       }
     }
 
+    const {
+      model: _model,
+      messages: _messages,
+      tools: _tools,
+      temperature: _temp,
+      max_tokens: _max,
+      response_format: _format,
+      headers: _headers,
+      requestTimeout: _requestTimeout,
+      thinking: _thinking,
+      ...rest
+    } = request;
+
     const payload: Record<string, unknown> = {
       contents,
-      generationConfig
+      generationConfig: {
+        ...generationConfig,
+        ...((rest.generationConfig as Record<string, unknown>) || {})
+      },
+      ...rest
     };
+
+    if (_thinking) {
+      payload.thinkingConfig = {
+        includeThoughts: true
+      };
+    }
 
     if (systemInstructionParts.length > 0) {
       payload.systemInstruction = { parts: systemInstructionParts };
@@ -126,7 +149,11 @@ export class GeminiStreaming {
               const parts = json.candidates?.[0]?.content?.parts || [];
               for (const part of parts) {
                 if (part.text) {
-                  yield { content: part.text };
+                  if (part.thought) {
+                    yield { content: "", thinking: { text: part.text } };
+                  } else {
+                    yield { content: part.text };
+                  }
                 }
                 // Handle function calls
                 if (part.functionCall) {
