@@ -91,6 +91,7 @@ export class BedrockModels {
       modelId.includes("deepseek") ||
       modelId.includes("mistral") ||
       modelId.includes("meta.llama") ||
+      modelId.includes("amazon.nova") ||
       modelId.includes("amazon.titan-text");
 
     return isSupportedFamily;

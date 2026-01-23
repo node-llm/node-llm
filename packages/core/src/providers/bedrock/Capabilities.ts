@@ -20,6 +20,9 @@ type ModelFamily =
   | "claude3_5_haiku"
   | "claude2"
   | "claude_instant"
+  | "claude4"
+  | "nova"
+  | "nova2"
   | "other";
 
 const MODEL_FAMILIES: Array<[RegExp, ModelFamily]> = [
@@ -31,7 +34,10 @@ const MODEL_FAMILIES: Array<[RegExp, ModelFamily]> = [
   [/anthropic\.claude-3-5-haiku/, "claude3_5_haiku"],
   [/anthropic\.claude-v2/, "claude2"],
   [/anthropic\.claude-2/, "claude2"],
-  [/anthropic\.claude-instant/, "claude_instant"]
+  [/anthropic\.claude-instant/, "claude_instant"],
+  [/anthropic\.claude-(opus|sonnet|haiku)-4/, "claude4"],
+  [/amazon\.nova-2/, "nova2"],
+  [/amazon\.nova/, "nova"]
 ];
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -45,6 +51,9 @@ const PRICES: Record<ModelFamily, { input: number; output: number }> = {
   claude3_5_haiku: { input: 0.8, output: 4.0 },
   claude2: { input: 8.0, output: 24.0 },
   claude_instant: { input: 0.8, output: 2.4 },
+  claude4: { input: 3.0, output: 15.0 }, // Assuming Sonnet 4 as baseline for the family
+  nova: { input: 0.06, output: 0.24 },
+  nova2: { input: 0.03, output: 0.12 }, // Assuming Nova 2 is cheaper as per trend
   other: { input: 0.1, output: 0.2 }
 };
 
@@ -86,6 +95,9 @@ export class Capabilities {
 
     // Titan
     if (/titan/.test(modelId)) return 32_000;
+
+    // Nova
+    if (/nova/.test(modelId)) return 300_000;
 
     return null;
   }
@@ -140,7 +152,7 @@ export class Capabilities {
    * Check if a model supports JSON mode.
    */
   static supportsJsonMode(modelId: string): boolean {
-    return /anthropic\.claude/.test(modelId);
+    return /anthropic\.claude/.test(modelId) || /amazon\.nova/.test(modelId);
   }
 
   /**
@@ -200,7 +212,7 @@ export class Capabilities {
       capabilities.push("reasoning");
     }
 
-    if (/claude-3\.5|claude-3-7/.test(modelId)) {
+    if (/claude-3\.5|claude-3-7|nova/.test(modelId)) {
       capabilities.push("batch");
       capabilities.push("citations");
     }

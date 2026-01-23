@@ -46,10 +46,63 @@ const GOLDEN_ALIASES = {
     openrouter: "anthropic/claude-3.5-haiku",
     bedrock: "anthropic.claude-3-5-haiku-20241022-v1:0"
   },
-  "deepseek-chat": { deepseek: "deepseek-chat", openrouter: "deepseek/deepseek-chat" },
-  "deepseek-reasoner": { deepseek: "deepseek-reasoner", openrouter: "deepseek/deepseek-reasoner" },
+  "claude-4-sonnet": { bedrock: "anthropic.claude-sonnet-4-20250514-v1:0" },
+  "claude-4-opus": { bedrock: "anthropic.claude-opus-4-20250514-v1:0" },
+  "claude-4-1-opus": { bedrock: "anthropic.claude-opus-4-1-20250805-v1:0" },
+  "claude-4-5-sonnet": { bedrock: "anthropic.claude-sonnet-4-5-20250929-v1:0" },
+  "claude-4-5-haiku": { bedrock: "anthropic.claude-haiku-4-5-20251001-v1:0" },
+  "claude-4-5-opus": { bedrock: "anthropic.claude-opus-4-5-20251101-v1:0" },
+  "deepseek-chat": {
+    deepseek: "deepseek-chat",
+    openrouter: "deepseek/deepseek-chat",
+    bedrock: "deepseek.v3-v1:0"
+  },
+  "deepseek-reasoner": {
+    deepseek: "deepseek-reasoner",
+    openrouter: "deepseek/deepseek-reasoner",
+    bedrock: "deepseek.r1-v1:0"
+  },
   "gemini-2.0-flash": { gemini: "gemini-2.0-flash", openrouter: "google/gemini-2.0-flash-001" },
-  "gemini-1.5-pro": { gemini: "gemini-1.5-pro-latest", openrouter: "google/gemini-pro-1.5" }
+  "gemini-1.5-pro": { gemini: "gemini-1.5-pro-latest", openrouter: "google/gemini-pro-1.5" },
+  "llama-3-3-70b": {
+    bedrock: "meta.llama3-3-70b-instruct-v1:0",
+    openrouter: "meta-llama/llama-3.3-70b-instruct"
+  },
+  "llama-3-1-7b": {
+    bedrock: "meta.llama3-1-8b-instruct-v1:0",
+    openrouter: "meta-llama/llama-3.1-8b-instruct"
+  },
+  "llama-3-1-70b": {
+    bedrock: "meta.llama3-1-70b-instruct-v1:0",
+    openrouter: "meta-llama/llama-3.1-70b-instruct"
+  },
+  "llama-3-2-1b": {
+    bedrock: "meta.llama3-2-1b-instruct-v1:0",
+    openrouter: "meta-llama/llama-3.2-1b-instruct"
+  },
+  "llama-3-2-3b": {
+    bedrock: "meta.llama3-2-3b-instruct-v1:0",
+    openrouter: "meta-llama/llama-3.2-3b-instruct"
+  },
+  "llama-3-2-11b": {
+    bedrock: "meta.llama3-2-11b-instruct-v1:0",
+    openrouter: "meta-llama/llama-3.2-11b-instruct"
+  },
+  "llama-3-2-90b": {
+    bedrock: "meta.llama3-2-90b-instruct-v1:0",
+    openrouter: "meta-llama/llama-3.2-90b-instruct"
+  },
+  "llama-4-maverick": { bedrock: "meta.llama4-maverick-17b-instruct-v1:0" },
+  "llama-4-scout": { bedrock: "meta.llama4-scout-17b-instruct-v1:0" },
+  "mistral-large": {
+    bedrock: "mistral.mistral-large-2402-v1:0",
+    openrouter: "mistralai/mistral-large"
+  },
+  "nova-pro": { bedrock: "amazon.nova-pro-v1:0" },
+  "nova-lite": { bedrock: "amazon.nova-lite-v1:0" },
+  "nova-micro": { bedrock: "amazon.nova-micro-v1:0" },
+  "nova-premier": { bedrock: "amazon.nova-premier-v1:0" },
+  "nova-2-lite": { bedrock: "amazon.nova-2-lite-v1:0" }
 };
 
 async function syncModels() {
