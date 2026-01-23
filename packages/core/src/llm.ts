@@ -8,7 +8,8 @@ import {
   registerGeminiProvider,
   registerDeepSeekProvider,
   registerOllamaProvider,
-  registerOpenRouterProvider
+  registerOpenRouterProvider,
+  registerBedrockProvider
 } from "./providers/registry.js";
 import { GeneratedImage } from "./image/GeneratedImage.js";
 import { ModelRegistry } from "./models/ModelRegistry.js";
@@ -49,7 +50,8 @@ const PROVIDER_REGISTRARS: Record<string, () => void> = {
   anthropic: registerAnthropicProvider,
   deepseek: registerDeepSeekProvider,
   ollama: registerOllamaProvider,
-  openrouter: registerOpenRouterProvider
+  openrouter: registerOpenRouterProvider,
+  bedrock: registerBedrockProvider
 };
 
 export class NodeLLMCore {

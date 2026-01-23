@@ -5,6 +5,7 @@ import { registerGeminiProvider } from "./gemini/index.js";
 import { registerDeepSeekProvider } from "./deepseek/index.js";
 import { registerOllamaProvider } from "./ollama/index.js";
 import { registerOpenRouterProvider } from "./openrouter/index.js";
+import { registerBedrockProvider } from "./bedrock/index.js";
 
 import { NodeLLMConfig } from "../config.js";
 
@@ -77,5 +78,6 @@ export {
   registerGeminiProvider,
   registerDeepSeekProvider,
   registerOllamaProvider,
-  registerOpenRouterProvider
+  registerOpenRouterProvider,
+  registerBedrockProvider
 };
