@@ -24,14 +24,19 @@ import { ThinkingConfig } from "../../providers/Provider.js";
  */
 function messageContentToBlocks(content: Message["content"]): BedrockContentBlock[] {
   if (typeof content === "string") {
-    return [{ text: content }];
+    return content ? [{ text: content }] : [];
   }
 
   if (Array.isArray(content)) {
     const blocks: BedrockContentBlock[] = [];
     for (const part of content) {
       if (part.type === "text") {
-        blocks.push({ text: part.text });
+        const block: BedrockContentBlock = { text: part.text };
+        blocks.push(block);
+
+        if (part.cache_control?.type === "ephemeral") {
+          blocks.push({ cachePoint: { type: "default" } });
+        }
       } else if (part.type === "image_url" && part.image_url) {
         // Extract base64 data from data URL
         const match = part.image_url.url.match(/^data:image\/(\w+);base64,(.+)$/);
@@ -51,10 +56,10 @@ function messageContentToBlocks(content: Message["content"]): BedrockContentBloc
         blocks.push({ text: "" });
       }
     }
-    return blocks;
+    return blocks.filter((b) => b.text !== "");
   }
 
-  return [{ text: "" }];
+  return [];
 }
 
 /**
@@ -86,8 +91,8 @@ export function convertMessages(messages: Message[]): {
 
     // System messages go to the top-level system field
     if (msg.role === "system") {
-      const content = typeof msg.content === "string" ? msg.content : "";
-      systemBlocks.push({ text: content });
+      const blocks = messageContentToBlocks(msg.content);
+      systemBlocks.push(...blocks);
       continue;
     }
 

@@ -1,8 +1,14 @@
+export type CacheControl = { type: "ephemeral" };
+
 export type ContentPart =
-  | { type: "text"; text: string }
-  | { type: "image_url"; image_url: { url: string } }
-  | { type: "input_audio"; input_audio: { data: string; format: string } }
-  | { type: "video_url"; video_url: { url: string } };
+  | { type: "text"; text: string; cache_control?: CacheControl }
+  | { type: "image_url"; image_url: { url: string }; cache_control?: CacheControl }
+  | {
+      type: "input_audio";
+      input_audio: { data: string; format: string };
+      cache_control?: CacheControl;
+    }
+  | { type: "video_url"; video_url: { url: string }; cache_control?: CacheControl };
 
 export const isBinaryContent = (part: ContentPart): boolean =>
   part.type === "image_url" || part.type === "input_audio" || part.type === "video_url";

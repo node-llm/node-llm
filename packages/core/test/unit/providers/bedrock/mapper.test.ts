@@ -67,8 +67,8 @@ describe("Bedrock Mapper", () => {
       const result = convertMessages(messages);
 
       expect(result.messages).toHaveLength(1);
-      expect(result.messages[0].content).toHaveLength(2); // empty text + toolUse
-      expect(result.messages[0].content[1]).toEqual({
+      expect(result.messages[0].content).toHaveLength(1); // toolUse only
+      expect(result.messages[0].content[0]).toEqual({
         toolUse: {
           toolUseId: "call_123",
           name: "get_weather",

@@ -43,6 +43,9 @@ export interface BedrockContentBlock {
       text: string;
     };
   };
+  cachePoint?: {
+    type: "default";
+  };
 }
 
 export interface BedrockMessage {
