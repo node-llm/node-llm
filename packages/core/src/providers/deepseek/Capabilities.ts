@@ -34,20 +34,29 @@ export class Capabilities {
     return 4_096;
   }
 
-  static supportsVision(_modelId: string): boolean {
-    return false;
+  static supportsVision(modelId: string): boolean {
+    const model = this.findModel(modelId);
+    return model?.modalities?.input?.includes("image") || false;
   }
 
   static supportsTools(modelId: string): boolean {
+    const model = this.findModel(modelId);
+    if (model?.capabilities?.includes("function_calling") || model?.capabilities?.includes("tools"))
+      return true;
+
     return /deepseek-chat/.test(modelId);
   }
 
   static supportsStructuredOutput(modelId: string): boolean {
+    const model = this.findModel(modelId);
+    if (model?.capabilities?.includes("structured_output")) return true;
+
     return /deepseek-(?:chat|reasoner)/.test(modelId);
   }
 
-  static supportsEmbeddings(_modelId: string): boolean {
-    return false;
+  static supportsEmbeddings(modelId: string): boolean {
+    const model = this.findModel(modelId);
+    return model?.modalities?.output?.includes("embeddings") || false;
   }
 
   static supportsImageGeneration(_modelId: string): boolean {
@@ -63,10 +72,17 @@ export class Capabilities {
   }
 
   static supportsReasoning(modelId: string): boolean {
+    const model = this.findModel(modelId);
+    if (model?.capabilities?.includes("reasoning")) return true;
+
     return /deepseek-reasoner/.test(modelId);
   }
 
   static getPricing(modelId: string): ModelPricing | undefined {
     return PricingRegistry.getPricing(modelId, "deepseek");
+  }
+
+  private static findModel(modelId: string) {
+    return ModelRegistry.find(modelId, "deepseek");
   }
 }
