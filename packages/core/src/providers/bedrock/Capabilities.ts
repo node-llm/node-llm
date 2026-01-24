@@ -139,7 +139,7 @@ export class Capabilities {
     if (model?.capabilities?.includes("tools") || model?.capabilities?.includes("function_calling"))
       return true;
 
-    return /anthropic\.claude|amazon\.nova/.test(modelId);
+    return /anthropic\.claude|amazon\.nova|deepseek-chat/.test(modelId);
   }
 
   static supportsJsonMode(modelId: string): boolean {
@@ -157,7 +157,7 @@ export class Capabilities {
     const model = this.findModel(modelId);
     if (model?.capabilities?.includes("reasoning")) return true;
 
-    return /claude-3-7/.test(modelId);
+    return /claude-3-7|deepseek-reasoner|deepseek\.r1/.test(modelId);
   }
 
   static supportsEmbeddings(modelId: string): boolean {

@@ -147,6 +147,8 @@ async function syncModels() {
         if (details.tool_call) {
           caps.push("function_calling");
           caps.push("tools");
+        }
+        if (details.json_mode || details.structured_output) {
           caps.push("structured_output");
           caps.push("json_mode");
         }

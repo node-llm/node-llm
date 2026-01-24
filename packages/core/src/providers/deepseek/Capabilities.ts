@@ -51,7 +51,7 @@ export class Capabilities {
     const model = this.findModel(modelId);
     if (model?.capabilities?.includes("structured_output")) return true;
 
-    return /deepseek-(?:chat|reasoner)/.test(modelId);
+    return /deepseek-chat/.test(modelId);
   }
 
   static supportsEmbeddings(modelId: string): boolean {
