@@ -90,6 +90,14 @@ export function setupVCR(recordingName: string, subDir?: string) {
       });
     }
 
+    // Scrub Bedrock Guardrail IDs from URL
+    if (recording.request.url && recording.request.url.includes("bedrock-runtime")) {
+      recording.request.url = recording.request.url.replace(
+        /\/guardrail\/[^/]+\/version\/[^/]+/,
+        "/guardrail/dummy-guardrail-id/version/1"
+      );
+    }
+
     // Scrub key from URL
     if (recording.request.url) {
       recording.request.url = recording.request.url.replace(/key=[^&]+/, "key=[REDACTED]");

@@ -36,7 +36,9 @@ import {
   EmbeddingRequest,
   EmbeddingResponse,
   ImageRequest,
-  ImageResponse
+  ImageResponse,
+  ModerationRequest,
+  ModerationResponse
 } from "../Provider.js";
 import { BaseProvider } from "../BaseProvider.js";
 import { BedrockConfig, getBedrockEndpoint } from "./config.js";
@@ -45,6 +47,7 @@ import { BedrockModels } from "./Models.js";
 import { BedrockStreaming } from "./Streaming.js";
 import { BedrockEmbeddings } from "./Embeddings.js";
 import { BedrockImage } from "./Image.js";
+import { BedrockModeration } from "./Moderation.js";
 import { Capabilities } from "./Capabilities.js";
 
 export class BedrockProvider extends BaseProvider implements Provider {
@@ -54,6 +57,7 @@ export class BedrockProvider extends BaseProvider implements Provider {
   private readonly streamingHandler: BedrockStreaming;
   private readonly embeddingsHandler: BedrockEmbeddings;
   private readonly imageHandler: BedrockImage;
+  private readonly moderationHandler: BedrockModeration;
 
   public capabilities: ProviderCapabilities = {
     supportsVision: (model: string) => Capabilities.supportsVision(model),
@@ -62,7 +66,8 @@ export class BedrockProvider extends BaseProvider implements Provider {
     supportsEmbeddings: (model: string) => Capabilities.supportsEmbeddings(model),
     supportsImageGeneration: (model: string) => Capabilities.supportsImageGeneration(model),
     supportsTranscription: (_model: string) => false,
-    supportsModeration: (_model: string) => false,
+    supportsModeration: (_model: string) =>
+      !!(this.config.guardrailIdentifier && this.config.guardrailVersion),
     supportsReasoning: (model: string) => Capabilities.supportsExtendedThinking(model),
     supportsDeveloperRole: (_model: string) => true,
     getContextWindow: (model: string) => Capabilities.getContextWindow(model)
@@ -76,6 +81,7 @@ export class BedrockProvider extends BaseProvider implements Provider {
     this.streamingHandler = new BedrockStreaming(config);
     this.embeddingsHandler = new BedrockEmbeddings(config);
     this.imageHandler = new BedrockImage(config);
+    this.moderationHandler = new BedrockModeration(config);
   }
 
   public apiBase(): string {
@@ -114,6 +120,10 @@ export class BedrockProvider extends BaseProvider implements Provider {
 
   async paint(request: ImageRequest): Promise<ImageResponse> {
     return this.imageHandler.execute(request);
+  }
+
+  async moderate(request: ModerationRequest): Promise<ModerationResponse> {
+    return this.moderationHandler.execute(request);
   }
 
   public override defaultModel(feature?: string): string {

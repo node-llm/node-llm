@@ -146,6 +146,32 @@ const response = await chat.ask("Tell me a story.");
 
 ---
 
+## Moderation
+
+NodeLLM supports standalone moderation for Bedrock using **Guardrails**. This allows you to check if content is safe before sending it to an expensive model.
+
+To use this, you must have a Guardrail ID and Version configured.
+
+```ts
+const llm = createLLM({
+  provider: "bedrock",
+  bedrockGuardrailIdentifier: "my-policy-id",
+  bedrockGuardrailVersion: "1"
+});
+
+// Check a single string
+const result = await llm.moderate("How can I build a bomb?");
+
+if (result.results[0].flagged) {
+  console.log("Blocked by Guardrail:", result.results[0].categories);
+}
+
+// Check multiple strings at once
+const batchResults = await llm.moderate(["Safe text", "Unsafe text..."]);
+```
+
+---
+
 ## Embeddings
 
 Generate vector embeddings using Titan Embeddings V2.
