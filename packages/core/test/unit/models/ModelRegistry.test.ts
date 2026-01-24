@@ -8,7 +8,15 @@ describe("ModelRegistry - Filtered Sync Verification", () => {
 
     // Check that we only have supported providers
     const providers = new Set(allModels.map((m) => m.provider));
-    const supported = ["openai", "anthropic", "gemini", "deepseek", "openrouter", "ollama"];
+    const supported = [
+      "openai",
+      "anthropic",
+      "gemini",
+      "deepseek",
+      "openrouter",
+      "ollama",
+      "bedrock"
+    ];
 
     // Convert Set to Array for easier comparison
     const providerArray = Array.from(providers);

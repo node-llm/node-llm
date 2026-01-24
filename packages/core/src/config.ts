@@ -14,6 +14,15 @@ export interface NodeLLMConfig {
   ollamaApiBase?: string;
   openrouterApiKey?: string;
   openrouterApiBase?: string;
+  // AWS Bedrock
+  bedrockApiKey?: string; // Long-term API key (Bearer token)
+  bedrockAccessKeyId?: string; // SigV4: AWS Access Key ID
+  bedrockSecretAccessKey?: string; // SigV4: AWS Secret Access Key
+  bedrockSessionToken?: string; // SigV4: Optional session token
+  bedrockRegion?: string; // AWS Region (e.g., "us-east-1")
+  bedrockGuardrailIdentifier?: string; // AWS Guardrail ID
+  bedrockGuardrailVersion?: string; // AWS Guardrail Version
+  // General options
   debug?: boolean;
   maxToolCalls?: number;
   maxRetries?: number;
@@ -45,6 +54,13 @@ export class Configuration implements NodeLLMConfig {
   private _ollamaApiBase?: string;
   private _openrouterApiKey?: string;
   private _openrouterApiBase?: string;
+  private _bedrockApiKey?: string;
+  private _bedrockAccessKeyId?: string;
+  private _bedrockSecretAccessKey?: string;
+  private _bedrockSessionToken?: string;
+  private _bedrockRegion?: string;
+  private _bedrockGuardrailIdentifier?: string;
+  private _bedrockGuardrailVersion?: string;
   private _debug?: boolean;
   private _provider?: string;
 
@@ -123,6 +139,56 @@ export class Configuration implements NodeLLMConfig {
   }
   public set openrouterApiBase(v: string | undefined) {
     this._openrouterApiBase = v;
+  }
+
+  // AWS Bedrock configuration
+  public get bedrockApiKey(): string | undefined {
+    return this._bedrockApiKey ?? process.env.AWS_BEARER_TOKEN_BEDROCK?.trim();
+  }
+  public set bedrockApiKey(v: string | undefined) {
+    this._bedrockApiKey = v;
+  }
+
+  public get bedrockAccessKeyId(): string | undefined {
+    return this._bedrockAccessKeyId ?? process.env.AWS_ACCESS_KEY_ID?.trim();
+  }
+  public set bedrockAccessKeyId(v: string | undefined) {
+    this._bedrockAccessKeyId = v;
+  }
+
+  public get bedrockSecretAccessKey(): string | undefined {
+    return this._bedrockSecretAccessKey ?? process.env.AWS_SECRET_ACCESS_KEY?.trim();
+  }
+  public set bedrockSecretAccessKey(v: string | undefined) {
+    this._bedrockSecretAccessKey = v;
+  }
+
+  public get bedrockSessionToken(): string | undefined {
+    return this._bedrockSessionToken ?? process.env.AWS_SESSION_TOKEN?.trim();
+  }
+  public set bedrockSessionToken(v: string | undefined) {
+    this._bedrockSessionToken = v;
+  }
+
+  public get bedrockRegion(): string | undefined {
+    return this._bedrockRegion ?? process.env.AWS_REGION?.trim() ?? "us-east-1";
+  }
+  public set bedrockRegion(v: string | undefined) {
+    this._bedrockRegion = v;
+  }
+
+  public get bedrockGuardrailIdentifier(): string | undefined {
+    return this._bedrockGuardrailIdentifier ?? process.env.AWS_GUARDRAIL_ID?.trim();
+  }
+  public set bedrockGuardrailIdentifier(v: string | undefined) {
+    this._bedrockGuardrailIdentifier = v;
+  }
+
+  public get bedrockGuardrailVersion(): string | undefined {
+    return this._bedrockGuardrailVersion ?? process.env.AWS_GUARDRAIL_VERSION?.trim();
+  }
+  public set bedrockGuardrailVersion(v: string | undefined) {
+    this._bedrockGuardrailVersion = v;
   }
 
   public get debug(): boolean | undefined {

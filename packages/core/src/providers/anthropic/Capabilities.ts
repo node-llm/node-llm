@@ -14,28 +14,28 @@ export class Capabilities {
   }
 
   static supportsVision(modelId: string): boolean {
-    const model = ModelRegistry.find(modelId, "anthropic");
+    const model = this.findModel(modelId);
     if (model?.modalities?.input?.includes("image")) return true;
 
     return /claude-3/.test(modelId);
   }
 
   static supportsTools(modelId: string): boolean {
-    const model = ModelRegistry.find(modelId, "anthropic");
+    const model = this.findModel(modelId);
     if (model?.capabilities?.includes("function_calling")) return true;
 
     return /claude-3/.test(modelId);
   }
 
   static supportsJsonMode(modelId: string): boolean {
-    const model = ModelRegistry.find(modelId, "anthropic");
+    const model = this.findModel(modelId);
     if (model?.capabilities.includes("json_mode")) return true;
 
     return this.supportsTools(modelId);
   }
 
   static supportsExtendedThinking(modelId: string): boolean {
-    const model = ModelRegistry.find(modelId, "anthropic");
+    const model = this.findModel(modelId);
     if (model?.capabilities.includes("reasoning")) return true;
 
     return /claude-3-7/.test(modelId) || /thinking/.test(modelId);
@@ -43,7 +43,7 @@ export class Capabilities {
 
   static getCapabilities(modelId: string): string[] {
     const caps = ["streaming"];
-    const model = ModelRegistry.find(modelId, "anthropic");
+    const model = this.findModel(modelId);
 
     if (model) {
       if (model.capabilities.includes("function_calling")) caps.push("function_calling");
@@ -65,5 +65,9 @@ export class Capabilities {
 
   static getPricing(modelId: string): ModelPricing | undefined {
     return PricingRegistry.getPricing(modelId, "anthropic");
+  }
+
+  private static findModel(modelId: string) {
+    return ModelRegistry.find(modelId, "anthropic");
   }
 }

@@ -29,14 +29,15 @@
 
 ## 📋 Supported Providers
 
-| Provider       | Supported Features                                               |
-| :------------- | :--------------------------------------------------------------- |
-| **OpenAI**     | Chat, Streaming, Tools, Vision, Audio, Images, Reasoning (o1/o3) |
-| **Anthropic**  | Chat, Streaming, Tools, Vision, PDF Support (Claude 3.5)         |
-| **Gemini**     | Chat, Streaming, Tools, Vision, Audio, Video, Embeddings         |
-| **DeepSeek**   | Chat (V3), Reasoning (R1), Streaming + Tools                     |
-| **OpenRouter** | 540+ models via a single API with automatic capability detection |
-| **Ollama**     | Local LLM inference with full Tool and Vision support            |
+| Provider                                                                                                                             | Supported Features                                                                         |
+| :----------------------------------------------------------------------------------------------------------------------------------- | :----------------------------------------------------------------------------------------- |
+| <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/openai.svg" height="18"> **OpenAI**            | Chat, Streaming, Tools, Vision, Audio, Images, Transcription, **Reasoning**                |
+| <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/anthropic-text.svg" height="12"> **Anthropic** | Chat, Streaming, Tools, Vision, PDF, Structured Output, **Extended Thinking (Claude 3.7)** |
+| <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/gemini-color.svg" height="18"> **Gemini**      | Chat, Streaming, Tools, Vision, Audio, Video, Embeddings                                   |
+| <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/deepseek-color.svg" height="18"> **DeepSeek**  | Chat (V3), **Extended Thinking (R1)**, Streaming, Tools                                    |
+| <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/bedrock-color.svg" height="18"> **Bedrock**    | Chat, Streaming, Tools, Image Gen (Titan/SD), Embeddings, **Prompt Caching**               |
+| <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/openrouter.svg" height="18"> **OpenRouter**    | 540+ models, Chat, Streaming, Tools, Vision, Embeddings, **Reasoning**                     |
+| <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/ollama.svg" height="18"> **Ollama**            | **Local Inference**, Chat, Streaming, Tools, Vision, Embeddings                            |
 
 ---
 

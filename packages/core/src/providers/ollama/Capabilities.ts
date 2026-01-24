@@ -34,7 +34,10 @@ export class OllamaCapabilities {
 
   static supportsTools(modelId: string): boolean {
     const model = this.findModel(modelId);
-    return model?.capabilities?.includes("tools") || false;
+    if (model?.capabilities?.includes("tools")) return true;
+
+    // Fallback heuristics for models not in registry
+    return /gpt-|claude|gemini|deepseek|llama/.test(modelId.toLowerCase());
   }
 
   static supportsStructuredOutput(modelId: string): boolean {

@@ -21,14 +21,18 @@ export function setupVCR(recordingName: string, subDir?: string) {
   }
   const mode = (process.env.VCR_MODE as "replay" | "record" | undefined) || "replay";
 
-  if (mode === "replay") {
-    if (!process.env.OPENAI_API_KEY) process.env.OPENAI_API_KEY = "sk-dummy-key-for-vcr-replay";
-    if (!process.env.GEMINI_API_KEY) process.env.GEMINI_API_KEY = "dummy-key-for-vcr-replay";
-    if (!process.env.ANTHROPIC_API_KEY) process.env.ANTHROPIC_API_KEY = "dummy-key-for-vcr-replay";
-    if (!process.env.DEEPSEEK_API_KEY) process.env.DEEPSEEK_API_KEY = "dummy-key-for-vcr-replay";
-    if (!process.env.OPENROUTER_API_KEY)
-      process.env.OPENROUTER_API_KEY = "dummy-key-for-vcr-replay";
+  // Provide dummy credentials for all providers if real ones are missing
+  if (!process.env.OPENAI_API_KEY) process.env.OPENAI_API_KEY = "sk-dummy-key-for-vcr-replay";
+  if (!process.env.GEMINI_API_KEY) process.env.GEMINI_API_KEY = "dummy-key-for-vcr-replay";
+  if (!process.env.ANTHROPIC_API_KEY) process.env.ANTHROPIC_API_KEY = "dummy-key-for-vcr-replay";
+  if (!process.env.DEEPSEEK_API_KEY) process.env.DEEPSEEK_API_KEY = "dummy-key-for-vcr-replay";
+  if (!process.env.OPENROUTER_API_KEY) process.env.OPENROUTER_API_KEY = "dummy-key-for-vcr-replay";
+
+  if (!process.env.AWS_ACCESS_KEY_ID && !process.env.AWS_BEARER_TOKEN_BEDROCK) {
+    process.env.AWS_ACCESS_KEY_ID = "AKIA-DUMMY-KEY";
+    process.env.AWS_SECRET_ACCESS_KEY = "dummy-secret-key";
   }
+  if (!process.env.AWS_REGION) process.env.AWS_REGION = "us-east-1";
 
   const polly = new Polly(recordingName, {
     adapters: ["node-http", "fetch"],
@@ -45,10 +49,28 @@ export function setupVCR(recordingName: string, subDir?: string) {
           "openai-organization",
           "openai-project",
           "user-agent",
-          "x-api-key"
+          "x-api-key",
+          "host",
+          ...(subDir === "bedrock"
+            ? ["x-amz-date", "x-amz-content-sha256", "x-amz-security-token", "x-amz-target"]
+            : [])
         ]
       },
       url: {
+        pathname: (pathname: string) => {
+          // Normalize Bedrock Guardrail URLs so record and replay match
+          if (pathname.includes("/guardrail/")) {
+            return pathname.replace(
+              /\/guardrail\/[^/]+\/version\/[^/]+/,
+              "/guardrail/dummy-guardrail-id/version/1"
+            );
+          }
+          // Normalize Bedrock Model IDs in URLs (especially provisioned throughput ARNs)
+          if (pathname.includes("/model/")) {
+            return pathname.replace(/\/model\/[^/]+/, "/model/normalized-model-id");
+          }
+          return pathname;
+        },
         query: (query: Record<string, unknown>) => {
           const { key: _key, ...rest } = query;
           return rest;
@@ -80,6 +102,14 @@ export function setupVCR(recordingName: string, subDir?: string) {
           header.value = "[REDACTED]";
         }
       });
+    }
+
+    // Scrub Bedrock Guardrail IDs from URL
+    if (recording.request.url && recording.request.url.includes("bedrock-runtime")) {
+      recording.request.url = recording.request.url.replace(
+        /\/guardrail\/[^/]+\/version\/[^/]+/,
+        "/guardrail/dummy-guardrail-id/version/1"
+      );
     }
 
     // Scrub key from URL

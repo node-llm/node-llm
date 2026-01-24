@@ -279,6 +279,7 @@ console.log(res.reasoning); // Chain-of-thought
 | <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/gemini-color.svg" height="18"> **Gemini**      | Chat, **Streaming + Tools**, Vision, Audio, Video, Embeddings                    |
 | <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/anthropic-text.svg" height="12"> **Anthropic** | Chat, **Streaming + Tools**, Vision, PDF, Structured Output                      |
 | <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/deepseek-color.svg" height="18"> **DeepSeek**  | Chat (V3), **Reasoning (R1)**, **Streaming + Tools**                             |
+| <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/aws.svg" height="18"> **AWS Bedrock**          | **Nova, Titan, Claude 3/3.5**, Streaming, Tools, Vision, Guardrails              |
 | <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/openrouter.svg" height="18"> **OpenRouter**    | **Aggregator**, Chat, Streaming, Tools, Vision, Embeddings, **Reasoning**        |
 | <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/ollama.svg" height="18"> **Ollama**            | **Local Inference**, Chat, Streaming, Tools, Vision, Embeddings                  |
 

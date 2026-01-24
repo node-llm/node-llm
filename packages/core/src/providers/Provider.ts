@@ -65,6 +65,8 @@ export interface ChatChunk {
   tool_calls?: ToolCall[];
   done?: boolean;
   usage?: Usage;
+  finish_reason?: string | null;
+  metadata?: Record<string, unknown>;
 }
 
 export interface Usage {
@@ -86,6 +88,8 @@ export interface ChatResponse {
   reasoning?: string | null;
   tool_calls?: ToolCall[];
   usage?: Usage;
+  finish_reason?: string | null;
+  metadata?: Record<string, unknown>;
 }
 
 export interface ProviderCapabilities {
@@ -120,6 +124,7 @@ export interface ImageRequest {
   size?: string;
   quality?: string;
   n?: number;
+  headers?: Record<string, string>;
   requestTimeout?: number;
 }
 

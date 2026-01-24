@@ -1,80 +1,125 @@
 export default {
+  "claude-2": {
+    "bedrock": "anthropic.claude-v2"
+  },
+  "claude-2.1": {
+    "bedrock": "anthropic.claude-v2:1"
+  },
   "claude-3-5-haiku": {
     "anthropic": "claude-3-5-haiku-20241022",
-    "openrouter": "anthropic/claude-3.5-haiku"
+    "openrouter": "anthropic/claude-3.5-haiku",
+    "bedrock": "anthropic.claude-3-5-haiku-20241022-v1:0"
   },
   "claude-3-5-sonnet": {
     "anthropic": "claude-3-5-sonnet-20241022",
-    "openrouter": "anthropic/claude-3.5-sonnet"
+    "openrouter": "anthropic/claude-3.5-sonnet",
+    "bedrock": "anthropic.claude-3-5-sonnet-20241022-v2:0"
   },
   "claude-3-7-sonnet": {
     "anthropic": "claude-3-7-sonnet-20250219",
-    "openrouter": "anthropic/claude-3.7-sonnet"
+    "openrouter": "anthropic/claude-3.7-sonnet",
+    "bedrock": "anthropic.claude-3-7-sonnet-20250219-v1:0"
+  },
+  "claude-4-1-opus": {
+    "bedrock": "anthropic.claude-opus-4-1-20250805-v1:0"
+  },
+  "claude-4-5-haiku": {
+    "bedrock": "anthropic.claude-haiku-4-5-20251001-v1:0"
+  },
+  "claude-4-5-opus": {
+    "bedrock": "anthropic.claude-opus-4-5-20251101-v1:0"
+  },
+  "claude-4-5-sonnet": {
+    "bedrock": "anthropic.claude-sonnet-4-5-20250929-v1:0"
+  },
+  "claude-4-opus": {
+    "bedrock": "anthropic.claude-opus-4-20250514-v1:0"
+  },
+  "claude-4-sonnet": {
+    "bedrock": "anthropic.claude-sonnet-4-20250514-v1:0"
   },
   "claude-haiku-3": {
-    "anthropic": "claude-3-haiku-20240307"
+    "anthropic": "claude-3-haiku-20240307",
+    "bedrock": "anthropic.claude-3-haiku-20240307-v1:0"
   },
   "claude-haiku-3.5": {
     "openrouter": "anthropic/claude-3.5-haiku",
-    "anthropic": "claude-3-5-haiku-20241022"
+    "anthropic": "claude-3-5-haiku-20241022",
+    "bedrock": "anthropic.claude-3-5-haiku-20241022-v1:0"
   },
   "claude-haiku-3.5-latest": {
     "anthropic": "claude-3-5-haiku-latest"
   },
   "claude-haiku-4.5": {
     "openrouter": "anthropic/claude-haiku-4.5",
-    "anthropic": "claude-haiku-4-5-20251001"
+    "anthropic": "claude-haiku-4-5-20251001",
+    "bedrock": "anthropic.claude-haiku-4-5-20251001-v1:0"
   },
   "claude-haiku-4.5-latest": {
     "anthropic": "claude-haiku-4-5"
   },
+  "claude-instant": {
+    "bedrock": "anthropic.claude-instant-v1"
+  },
   "claude-opus-3": {
-    "anthropic": "claude-3-opus-20240229"
+    "anthropic": "claude-3-opus-20240229",
+    "bedrock": "anthropic.claude-3-opus-20240229-v1:0"
   },
   "claude-opus-4": {
     "openrouter": "anthropic/claude-opus-4",
-    "anthropic": "claude-opus-4-20250514"
+    "anthropic": "claude-opus-4-20250514",
+    "bedrock": "anthropic.claude-opus-4-20250514-v1:0"
   },
   "claude-opus-4-latest": {
     "anthropic": "claude-opus-4-0"
   },
   "claude-opus-4.1": {
     "openrouter": "anthropic/claude-opus-4.1",
-    "anthropic": "claude-opus-4-1-20250805"
+    "anthropic": "claude-opus-4-1-20250805",
+    "bedrock": "anthropic.claude-opus-4-1-20250805-v1:0"
   },
   "claude-opus-4.1-latest": {
     "anthropic": "claude-opus-4-1"
   },
   "claude-opus-4.5": {
     "openrouter": "anthropic/claude-opus-4.5",
-    "anthropic": "claude-opus-4-5-20251101"
+    "anthropic": "claude-opus-4-5-20251101",
+    "bedrock": "anthropic.claude-opus-4-5-20251101-v1:0"
+  },
+  "claude-opus-4.5-global": {
+    "bedrock": "global.anthropic.claude-opus-4-5-20251101-v1:0"
   },
   "claude-opus-4.5-latest": {
     "anthropic": "claude-opus-4-5"
   },
   "claude-sonnet-3": {
-    "anthropic": "claude-3-sonnet-20240229"
+    "anthropic": "claude-3-sonnet-20240229",
+    "bedrock": "anthropic.claude-3-sonnet-20240229-v1:0"
   },
   "claude-sonnet-3.5": {
-    "anthropic": "claude-3-5-sonnet-20240620"
+    "anthropic": "claude-3-5-sonnet-20240620",
+    "bedrock": "anthropic.claude-3-5-sonnet-20241022-v2:0"
   },
   "claude-sonnet-3.7": {
     "openrouter": "anthropic/claude-3.7-sonnet",
-    "anthropic": "claude-3-7-sonnet-20250219"
+    "anthropic": "claude-3-7-sonnet-20250219",
+    "bedrock": "anthropic.claude-3-7-sonnet-20250219-v1:0"
   },
   "claude-sonnet-3.7-latest": {
     "anthropic": "claude-3-7-sonnet-latest"
   },
   "claude-sonnet-4": {
     "openrouter": "anthropic/claude-sonnet-4",
-    "anthropic": "claude-sonnet-4-20250514"
+    "anthropic": "claude-sonnet-4-20250514",
+    "bedrock": "anthropic.claude-sonnet-4-20250514-v1:0"
   },
   "claude-sonnet-4-latest": {
     "anthropic": "claude-sonnet-4-0"
   },
   "claude-sonnet-4.5": {
     "openrouter": "anthropic/claude-sonnet-4.5",
-    "anthropic": "claude-sonnet-4-5-20250929"
+    "anthropic": "claude-sonnet-4-5-20250929",
+    "bedrock": "anthropic.claude-sonnet-4-5-20250929-v1:0"
   },
   "claude-sonnet-4.5-latest": {
     "anthropic": "claude-sonnet-4-5"
@@ -85,12 +130,25 @@ export default {
   "codex-mini": {
     "openai": "codex-mini-latest"
   },
+  "command": {
+    "bedrock": "cohere.command-text-v14"
+  },
+  "command-light": {
+    "bedrock": "cohere.command-light-text-v14"
+  },
+  "command-r": {
+    "bedrock": "cohere.command-r-v1:0"
+  },
   "deephermes-3-llama-3-8b-preview": {
     "openrouter": "nousresearch/deephermes-3-llama-3-8b-preview"
   },
   "deepseek-chat": {
     "deepseek": "deepseek-chat",
-    "openrouter": "deepseek/deepseek-chat"
+    "openrouter": "deepseek/deepseek-chat",
+    "bedrock": "deepseek.v3-v1:0"
+  },
+  "deepseek-r1": {
+    "bedrock": "deepseek.r1-v1:0"
   },
   "deepseek-r1-0528-qwen3-8b-free": {
     "openrouter": "deepseek/deepseek-r1-0528-qwen3-8b:free"
@@ -106,7 +164,8 @@ export default {
   },
   "deepseek-reasoner": {
     "deepseek": "deepseek-reasoner",
-    "openrouter": "deepseek/deepseek-reasoner"
+    "openrouter": "deepseek/deepseek-reasoner",
+    "bedrock": "deepseek.r1-v1:0"
   },
   "deepseek-v3-0324": {
     "openrouter": "deepseek/deepseek-chat-v3-0324"
@@ -115,7 +174,8 @@ export default {
     "openrouter": "deepseek/deepseek-v3-base:free"
   },
   "deepseek-v3.1": {
-    "openrouter": "deepseek/deepseek-chat-v3.1"
+    "openrouter": "deepseek/deepseek-chat-v3.1",
+    "bedrock": "deepseek.v3-v1:0"
   },
   "deepseek-v3.1-terminus": {
     "openrouter": "deepseek/deepseek-v3.1-terminus"
@@ -254,6 +314,9 @@ export default {
   "gemma-3-27b-it": {
     "openrouter": "google/gemma-3-27b-it"
   },
+  "gemma-3-4b-it": {
+    "bedrock": "google.gemma-3-4b-it"
+  },
   "gemma-3n-4b-free": {
     "openrouter": "google/gemma-3n-e4b-it:free"
   },
@@ -284,6 +347,12 @@ export default {
   },
   "glm-z1-32b-free": {
     "openrouter": "thudm/glm-z1-32b:free"
+  },
+  "google-gemma-3-12b": {
+    "bedrock": "google.gemma-3-12b-it"
+  },
+  "google-gemma-3-27b-instruct": {
+    "bedrock": "google.gemma-3-27b-it"
   },
   "gpt-3.5-turbo": {
     "openai": "gpt-3.5-turbo"
@@ -387,17 +456,23 @@ export default {
   },
   "gpt-oss-120b": {
     "gemini": "openai/gpt-oss-120b-maas",
-    "openrouter": "openai/gpt-oss-120b"
+    "openrouter": "openai/gpt-oss-120b",
+    "bedrock": "openai.gpt-oss-120b-1:0"
   },
   "gpt-oss-120b-exacto": {
     "openrouter": "openai/gpt-oss-120b:exacto"
   },
   "gpt-oss-20b": {
     "gemini": "openai/gpt-oss-20b-maas",
-    "openrouter": "openai/gpt-oss-20b"
+    "openrouter": "openai/gpt-oss-20b",
+    "bedrock": "openai.gpt-oss-20b-1:0"
+  },
+  "gpt-oss-safeguard-120b": {
+    "bedrock": "openai.gpt-oss-safeguard-120b"
   },
   "gpt-oss-safeguard-20b": {
-    "openrouter": "openai/gpt-oss-safeguard-20b"
+    "openrouter": "openai/gpt-oss-safeguard-20b",
+    "bedrock": "openai.gpt-oss-safeguard-20b"
   },
   "grok-3": {
     "openrouter": "x-ai/grok-3"
@@ -429,6 +504,12 @@ export default {
   "hermes-4-70b": {
     "openrouter": "nousresearch/hermes-4-70b"
   },
+  "jamba-1.5-large": {
+    "bedrock": "ai21.jamba-1-5-large-v1:0"
+  },
+  "jamba-1.5-mini": {
+    "bedrock": "ai21.jamba-1-5-mini-v1:0"
+  },
   "kat-coder-pro-free": {
     "openrouter": "kwaipilot/kat-coder-pro:free"
   },
@@ -448,13 +529,81 @@ export default {
     "openrouter": "moonshotai/kimi-k2-0905:exacto"
   },
   "kimi-k2-thinking": {
-    "openrouter": "moonshotai/kimi-k2-thinking"
+    "openrouter": "moonshotai/kimi-k2-thinking",
+    "bedrock": "moonshot.kimi-k2-thinking"
+  },
+  "llama-3-1-70b": {
+    "bedrock": "meta.llama3-1-70b-instruct-v1:0",
+    "openrouter": "meta-llama/llama-3.1-70b-instruct"
+  },
+  "llama-3-1-7b": {
+    "bedrock": "meta.llama3-1-8b-instruct-v1:0",
+    "openrouter": "meta-llama/llama-3.1-8b-instruct"
+  },
+  "llama-3-2-11b": {
+    "bedrock": "meta.llama3-2-11b-instruct-v1:0",
+    "openrouter": "meta-llama/llama-3.2-11b-instruct"
+  },
+  "llama-3-2-1b": {
+    "bedrock": "meta.llama3-2-1b-instruct-v1:0",
+    "openrouter": "meta-llama/llama-3.2-1b-instruct"
+  },
+  "llama-3-2-3b": {
+    "bedrock": "meta.llama3-2-3b-instruct-v1:0",
+    "openrouter": "meta-llama/llama-3.2-3b-instruct"
+  },
+  "llama-3-2-90b": {
+    "bedrock": "meta.llama3-2-90b-instruct-v1:0",
+    "openrouter": "meta-llama/llama-3.2-90b-instruct"
+  },
+  "llama-3-3-70b": {
+    "bedrock": "meta.llama3-3-70b-instruct-v1:0",
+    "openrouter": "meta-llama/llama-3.3-70b-instruct"
+  },
+  "llama-3-70b-instruct": {
+    "bedrock": "meta.llama3-70b-instruct-v1:0"
+  },
+  "llama-3-8b-instruct": {
+    "bedrock": "meta.llama3-8b-instruct-v1:0"
+  },
+  "llama-3.1-70b-instruct": {
+    "bedrock": "meta.llama3-1-70b-instruct-v1:0"
+  },
+  "llama-3.1-8b-instruct": {
+    "bedrock": "meta.llama3-1-8b-instruct-v1:0"
+  },
+  "llama-3.2-11b-instruct": {
+    "bedrock": "meta.llama3-2-11b-instruct-v1:0"
   },
   "llama-3.2-11b-vision-instruct": {
     "openrouter": "meta-llama/llama-3.2-11b-vision-instruct"
   },
+  "llama-3.2-1b-instruct": {
+    "bedrock": "meta.llama3-2-1b-instruct-v1:0"
+  },
+  "llama-3.2-3b-instruct": {
+    "bedrock": "meta.llama3-2-3b-instruct-v1:0"
+  },
+  "llama-3.2-90b-instruct": {
+    "bedrock": "meta.llama3-2-90b-instruct-v1:0"
+  },
+  "llama-3.3-70b-instruct": {
+    "bedrock": "meta.llama3-3-70b-instruct-v1:0"
+  },
   "llama-3.3-70b-instruct-free": {
     "openrouter": "meta-llama/llama-3.3-70b-instruct:free"
+  },
+  "llama-4-maverick": {
+    "bedrock": "meta.llama4-maverick-17b-instruct-v1:0"
+  },
+  "llama-4-maverick-17b-instruct": {
+    "bedrock": "meta.llama4-maverick-17b-instruct-v1:0"
+  },
+  "llama-4-scout": {
+    "bedrock": "meta.llama4-scout-17b-instruct-v1:0"
+  },
+  "llama-4-scout-17b-instruct": {
+    "bedrock": "meta.llama4-scout-17b-instruct-v1:0"
   },
   "llama-4-scout-free": {
     "openrouter": "meta-llama/llama-4-scout:free"
@@ -469,13 +618,30 @@ export default {
     "openrouter": "minimax/minimax-m1"
   },
   "minimax-m2": {
-    "openrouter": "minimax/minimax-m2"
+    "openrouter": "minimax/minimax-m2",
+    "bedrock": "minimax.minimax-m2"
   },
   "minimax-m2.1": {
     "openrouter": "minimax/minimax-m2.1"
   },
+  "ministral-14b-3.0": {
+    "bedrock": "mistral.ministral-3-14b-instruct"
+  },
+  "ministral-3-8b": {
+    "bedrock": "mistral.ministral-3-8b-instruct"
+  },
   "mistral-7b-instruct-free": {
     "openrouter": "mistralai/mistral-7b-instruct:free"
+  },
+  "mistral-7b-instruct-v0.3": {
+    "bedrock": "mistral.mistral-7b-instruct-v0:2"
+  },
+  "mistral-large": {
+    "bedrock": "mistral.mistral-large-2402-v1:0",
+    "openrouter": "mistralai/mistral-large"
+  },
+  "mistral-large-24.02": {
+    "bedrock": "mistral.mistral-large-2402-v1:0"
   },
   "mistral-medium-3": {
     "openrouter": "mistralai/mistral-medium-3"
@@ -495,8 +661,30 @@ export default {
   "mistral-small-3.2-24b-instruct": {
     "openrouter": "mistralai/mistral-small-3.2-24b-instruct"
   },
+  "mixtral-8x7b-instruct-v0.1": {
+    "bedrock": "mistral.mixtral-8x7b-instruct-v0:1"
+  },
+  "nova-2-lite": {
+    "bedrock": "amazon.nova-2-lite-v1:0"
+  },
+  "nova-lite": {
+    "bedrock": "amazon.nova-lite-v1:0"
+  },
+  "nova-micro": {
+    "bedrock": "amazon.nova-micro-v1:0"
+  },
+  "nova-premier": {
+    "bedrock": "amazon.nova-premier-v1:0"
+  },
+  "nova-pro": {
+    "bedrock": "amazon.nova-pro-v1:0"
+  },
+  "nvidia-nemotron-nano-12b-v2-vl-bf16": {
+    "bedrock": "nvidia.nemotron-nano-12b-v2"
+  },
   "nvidia-nemotron-nano-9b": {
-    "openrouter": "nvidia/nemotron-nano-9b-v2"
+    "openrouter": "nvidia/nemotron-nano-9b-v2",
+    "bedrock": "nvidia.nemotron-nano-9b-v2"
   },
   "o1": {
     "openai": "o1",
@@ -543,6 +731,9 @@ export default {
   "qwen3-14b-free": {
     "openrouter": "qwen/qwen3-14b:free"
   },
+  "qwen3-235b-a22b-2507": {
+    "bedrock": "qwen.qwen3-235b-a22b-2507-v1:0"
+  },
   "qwen3-235b-a22b-free": {
     "openrouter": "qwen/qwen3-235b-a22b:free"
   },
@@ -564,6 +755,9 @@ export default {
   "qwen3-30b-a3b-thinking-2507": {
     "openrouter": "qwen/qwen3-30b-a3b-thinking-2507"
   },
+  "qwen3-32b-dense": {
+    "bedrock": "qwen.qwen3-32b-v1:0"
+  },
   "qwen3-32b-free": {
     "openrouter": "qwen/qwen3-32b:free"
   },
@@ -574,7 +768,11 @@ export default {
     "openrouter": "qwen/qwen3-coder"
   },
   "qwen3-coder-30b-a3b-instruct": {
-    "openrouter": "qwen/qwen3-coder-30b-a3b-instruct"
+    "openrouter": "qwen/qwen3-coder-30b-a3b-instruct",
+    "bedrock": "qwen.qwen3-coder-30b-a3b-v1:0"
+  },
+  "qwen3-coder-480b-a35b-instruct": {
+    "bedrock": "qwen.qwen3-coder-480b-a35b-v1:0"
   },
   "qwen3-coder-480b-a35b-instruct-free": {
     "openrouter": "qwen/qwen3-coder:free"
@@ -593,6 +791,12 @@ export default {
   },
   "qwen3-next-80b-a3b-thinking": {
     "openrouter": "qwen/qwen3-next-80b-a3b-thinking"
+  },
+  "qwenqwen3-next-80b-a3b-instruct": {
+    "bedrock": "qwen.qwen3-next-80b-a3b"
+  },
+  "qwenqwen3-vl-235b-a22b-instruct": {
+    "bedrock": "qwen.qwen3-vl-235b-a22b"
   },
   "qwerky-72b": {
     "openrouter": "featherless/qwerky-72b"
@@ -626,5 +830,14 @@ export default {
   },
   "text-embedding-ada-002": {
     "openai": "text-embedding-ada-002"
+  },
+  "titan-text-g1---express": {
+    "bedrock": "amazon.titan-text-express-v1"
+  },
+  "voxtral-mini-3b-2507": {
+    "bedrock": "mistral.voxtral-mini-3b-2507"
+  },
+  "voxtral-small-24b-2507": {
+    "bedrock": "mistral.voxtral-small-24b-2507"
   }
 } as const;

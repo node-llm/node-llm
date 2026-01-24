@@ -13,9 +13,14 @@ export class ChatResponseString extends String {
     public readonly provider: string,
     public readonly thinking?: ThinkingResult,
     public readonly reasoning?: string | null,
-    public readonly tool_calls?: ToolCall[]
+    public readonly tool_calls?: ToolCall[],
+    public readonly finish_reason?: string | null
   ) {
     super(content);
+  }
+
+  get finishReason() {
+    return this.finish_reason;
   }
 
   get input_tokens() {
@@ -73,7 +78,8 @@ export class ChatResponseString extends String {
       provider: this.provider,
       thinking: this.thinking,
       reasoning: this.reasoning,
-      tool_calls: this.tool_calls
+      tool_calls: this.tool_calls,
+      finish_reason: this.finish_reason
     };
   }
 
@@ -99,7 +105,8 @@ export class ChatResponseString extends String {
       this.provider,
       this.thinking,
       this.reasoning,
-      this.tool_calls
+      this.tool_calls,
+      this.finish_reason
     );
   }
 

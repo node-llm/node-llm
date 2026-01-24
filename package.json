@@ -1,6 +1,6 @@
 {
   "name": "@node-llm/core",
-  "version": "1.7.0",
+  "version": "1.8.0",
   "description": "An opinionated architectural layer for integrating Large Language Models in Node.js.",
   "main": "index.js",
   "workspaces": [
@@ -11,6 +11,10 @@
     "build": "npm run build --workspaces --if-present",
     "docs": "cd docs && bundle install && bundle exec jekyll serve",
     "sync-models": "node scripts/sync-models.mjs",
+    "vcr:record": "node scripts/vcr-record.mjs",
+    "vcr:refresh": "node scripts/vcr-maintenance.mjs refresh",
+    "vcr:verify": "node scripts/vcr-maintenance.mjs verify",
+    "release:prepare": "node scripts/release-prepare.mjs",
     "demo": "cd examples/applications/brand-perception-checker && npm run setup && npm run dev",
     "lint": "eslint .",
     "format": "prettier --write .",

@@ -1,5 +1,1328 @@
 export const modelsData = [
   {
+    "id": "ai21.jamba-1-5-large-v1:0",
+    "name": "Jamba 1.5 Large",
+    "provider": "bedrock",
+    "family": "jamba",
+    "created_at": "2024-08-15 00:00:00 UTC",
+    "context_window": 256000,
+    "max_output_tokens": 4096,
+    "knowledge_cutoff": "2024-08",
+    "modalities": {
+      "input": [
+        "text"
+      ],
+      "output": [
+        "text"
+      ]
+    },
+    "capabilities": [
+      "streaming",
+      "chat",
+      "function_calling",
+      "tools",
+      "structured_output",
+      "json_mode"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 2,
+          "output_per_million": 8,
+          "reasoning_output_per_million": 8
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "cost": {
+        "input": 2,
+        "output": 8
+      },
+      "limit": {
+        "context": 256000,
+        "output": 4096
+      },
+      "last_synced": "2026-01-24T18:05:51.951Z"
+    }
+  },
+  {
+    "id": "ai21.jamba-1-5-mini-v1:0",
+    "name": "Jamba 1.5 Mini",
+    "provider": "bedrock",
+    "family": "jamba",
+    "created_at": "2024-08-15 00:00:00 UTC",
+    "context_window": 256000,
+    "max_output_tokens": 4096,
+    "knowledge_cutoff": "2024-08",
+    "modalities": {
+      "input": [
+        "text"
+      ],
+      "output": [
+        "text"
+      ]
+    },
+    "capabilities": [
+      "streaming",
+      "chat",
+      "function_calling",
+      "tools",
+      "structured_output",
+      "json_mode"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 0.2,
+          "output_per_million": 0.4,
+          "reasoning_output_per_million": 0.4
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "cost": {
+        "input": 0.2,
+        "output": 0.4
+      },
+      "limit": {
+        "context": 256000,
+        "output": 4096
+      },
+      "last_synced": "2026-01-24T18:05:51.951Z"
+    }
+  },
+  {
+    "id": "amazon.nova-2-lite-v1:0",
+    "name": "Nova 2 Lite",
+    "provider": "bedrock",
+    "family": "nova",
+    "created_at": "2024-12-01 00:00:00 UTC",
+    "context_window": 128000,
+    "max_output_tokens": 4096,
+    "modalities": {
+      "input": [
+        "text",
+        "image",
+        "video"
+      ],
+      "output": [
+        "text"
+      ]
+    },
+    "capabilities": [
+      "streaming",
+      "chat",
+      "vision",
+      "function_calling",
+      "tools",
+      "structured_output",
+      "json_mode"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 0.33,
+          "output_per_million": 2.75,
+          "reasoning_output_per_million": 2.75
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "cost": {
+        "input": 0.33,
+        "output": 2.75
+      },
+      "limit": {
+        "context": 128000,
+        "output": 4096
+      },
+      "last_synced": "2026-01-24T18:05:51.951Z"
+    }
+  },
+  {
+    "id": "amazon.nova-lite-v1:0",
+    "name": "Nova Lite",
+    "provider": "bedrock",
+    "family": "nova-lite",
+    "created_at": "2024-12-03 00:00:00 UTC",
+    "context_window": 300000,
+    "max_output_tokens": 8192,
+    "knowledge_cutoff": "2024-10",
+    "modalities": {
+      "input": [
+        "text",
+        "image",
+        "video"
+      ],
+      "output": [
+        "text"
+      ]
+    },
+    "capabilities": [
+      "streaming",
+      "chat",
+      "vision",
+      "function_calling",
+      "tools",
+      "structured_output",
+      "json_mode"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 0.06,
+          "output_per_million": 0.24,
+          "cached_input_per_million": 0.015,
+          "reasoning_output_per_million": 0.24
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "cost": {
+        "input": 0.06,
+        "output": 0.24,
+        "cache_read": 0.015
+      },
+      "limit": {
+        "context": 300000,
+        "output": 8192
+      },
+      "last_synced": "2026-01-24T18:05:51.951Z"
+    }
+  },
+  {
+    "id": "amazon.nova-micro-v1:0",
+    "name": "Nova Micro",
+    "provider": "bedrock",
+    "family": "nova-micro",
+    "created_at": "2024-12-03 00:00:00 UTC",
+    "context_window": 128000,
+    "max_output_tokens": 8192,
+    "knowledge_cutoff": "2024-10",
+    "modalities": {
+      "input": [
+        "text"
+      ],
+      "output": [
+        "text"
+      ]
+    },
+    "capabilities": [
+      "streaming",
+      "chat",
+      "function_calling",
+      "tools",
+      "structured_output",
+      "json_mode"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 0.035,
+          "output_per_million": 0.14,
+          "cached_input_per_million": 0.00875,
+          "reasoning_output_per_million": 0.14
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "cost": {
+        "input": 0.035,
+        "output": 0.14,
+        "cache_read": 0.00875
+      },
+      "limit": {
+        "context": 128000,
+        "output": 8192
+      },
+      "last_synced": "2026-01-24T18:05:51.951Z"
+    }
+  },
+  {
+    "id": "amazon.nova-premier-v1:0",
+    "name": "Nova Premier",
+    "provider": "bedrock",
+    "family": "nova",
+    "created_at": "2024-12-03 00:00:00 UTC",
+    "context_window": 1000000,
+    "max_output_tokens": 16384,
+    "knowledge_cutoff": "2024-10",
+    "modalities": {
+      "input": [
+        "text",
+        "image",
+        "video"
+      ],
+      "output": [
+        "text"
+      ]
+    },
+    "capabilities": [
+      "streaming",
+      "reasoning",
+      "chat",
+      "vision",
+      "function_calling",
+      "tools",
+      "structured_output",
+      "json_mode"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 2.5,
+          "output_per_million": 12.5,
+          "reasoning_output_per_million": 12.5
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "cost": {
+        "input": 2.5,
+        "output": 12.5
+      },
+      "limit": {
+        "context": 1000000,
+        "output": 16384
+      },
+      "last_synced": "2026-01-24T18:05:51.951Z"
+    }
+  },
+  {
+    "id": "amazon.nova-pro-v1:0",
+    "name": "Nova Pro",
+    "provider": "bedrock",
+    "family": "nova-pro",
+    "created_at": "2024-12-03 00:00:00 UTC",
+    "context_window": 300000,
+    "max_output_tokens": 8192,
+    "knowledge_cutoff": "2024-10",
+    "modalities": {
+      "input": [
+        "text",
+        "image",
+        "video"
+      ],
+      "output": [
+        "text"
+      ]
+    },
+    "capabilities": [
+      "streaming",
+      "chat",
+      "vision",
+      "function_calling",
+      "tools",
+      "structured_output",
+      "json_mode"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 0.8,
+          "output_per_million": 3.2,
+          "cached_input_per_million": 0.2,
+          "reasoning_output_per_million": 3.2
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "cost": {
+        "input": 0.8,
+        "output": 3.2,
+        "cache_read": 0.2
+      },
+      "limit": {
+        "context": 300000,
+        "output": 8192
+      },
+      "last_synced": "2026-01-24T18:05:51.951Z"
+    }
+  },
+  {
+    "id": "amazon.titan-embed-text-v1",
+    "name": "Titan Text Embeddings v1",
+    "provider": "bedrock",
+    "family": "titan",
+    "context_window": 8000,
+    "max_output_tokens": 0,
+    "modalities": {
+      "input": [
+        "text"
+      ],
+      "output": [
+        "embedding"
+      ]
+    },
+    "capabilities": [
+      "embeddings"
+    ]
+  },
+  {
+    "id": "amazon.titan-embed-text-v2:0",
+    "name": "Titan Text Embeddings v2",
+    "provider": "bedrock",
+    "family": "titan",
+    "context_window": 8000,
+    "max_output_tokens": 0,
+    "modalities": {
+      "input": [
+        "text"
+      ],
+      "output": [
+        "embedding"
+      ]
+    },
+    "capabilities": [
+      "embeddings"
+    ]
+  },
+  {
+    "id": "amazon.titan-image-generator-v2:0",
+    "name": "Titan Image Generator V2",
+    "provider": "bedrock",
+    "family": "titan-image",
+    "created_at": "2023-11-28 00:00:00 UTC",
+    "context_window": 0,
+    "max_output_tokens": 0,
+    "modalities": {
+      "input": [
+        "text"
+      ],
+      "output": [
+        "image"
+      ]
+    },
+    "capabilities": [
+      "image_generation"
+    ],
+    "pricing": {
+      "image": {
+        "standard": {
+          "cost_per_image": 0.01
+        }
+      }
+    },
+    "metadata": {
+      "source": "aws",
+      "last_synced": "2026-01-24T18:13:00.000Z"
+    }
+  },
+  {
+    "id": "amazon.titan-text-express-v1",
+    "name": "Titan Text G1 - Express",
+    "provider": "bedrock",
+    "family": "titan",
+    "created_at": "2024-12-01 00:00:00 UTC",
+    "context_window": 128000,
+    "max_output_tokens": 4096,
+    "modalities": {
+      "input": [
+        "text"
+      ],
+      "output": [
+        "text"
+      ]
+    },
+    "capabilities": [
+      "streaming",
+      "chat",
+      "function_calling",
+      "tools",
+      "structured_output",
+      "json_mode"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 0.2,
+          "output_per_million": 0.6,
+          "reasoning_output_per_million": 0.6
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "cost": {
+        "input": 0.2,
+        "output": 0.6
+      },
+      "limit": {
+        "context": 128000,
+        "output": 4096
+      },
+      "last_synced": "2026-01-24T18:05:51.951Z"
+    }
+  },
+  {
+    "id": "amazon.titan-text-express-v1:0:8k",
+    "name": "Titan Text G1 - Express",
+    "provider": "bedrock",
+    "family": "titan",
+    "created_at": "2024-12-01 00:00:00 UTC",
+    "context_window": 128000,
+    "max_output_tokens": 4096,
+    "modalities": {
+      "input": [
+        "text"
+      ],
+      "output": [
+        "text"
+      ]
+    },
+    "capabilities": [
+      "streaming",
+      "chat",
+      "function_calling",
+      "tools",
+      "structured_output",
+      "json_mode"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 0.2,
+          "output_per_million": 0.6,
+          "reasoning_output_per_million": 0.6
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "cost": {
+        "input": 0.2,
+        "output": 0.6
+      },
+      "limit": {
+        "context": 128000,
+        "output": 4096
+      },
+      "last_synced": "2026-01-24T18:05:51.951Z"
+    }
+  },
+  {
+    "id": "anthropic.claude-3-5-haiku-20241022-v1:0",
+    "name": "Claude Haiku 3.5",
+    "provider": "bedrock",
+    "family": "claude-haiku",
+    "created_at": "2024-10-22 00:00:00 UTC",
+    "context_window": 200000,
+    "max_output_tokens": 8192,
+    "knowledge_cutoff": "2024-07",
+    "modalities": {
+      "input": [
+        "text",
+        "image",
+        "pdf"
+      ],
+      "output": [
+        "text"
+      ]
+    },
+    "capabilities": [
+      "streaming",
+      "chat",
+      "vision",
+      "function_calling",
+      "tools",
+      "structured_output",
+      "json_mode"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 0.8,
+          "output_per_million": 4,
+          "cached_input_per_million": 0.08,
+          "reasoning_output_per_million": 4
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "cost": {
+        "input": 0.8,
+        "output": 4,
+        "cache_read": 0.08,
+        "cache_write": 1
+      },
+      "limit": {
+        "context": 200000,
+        "output": 8192
+      },
+      "last_synced": "2026-01-24T18:05:51.951Z"
+    }
+  },
+  {
+    "id": "anthropic.claude-3-5-sonnet-20240620-v1:0",
+    "name": "Claude Sonnet 3.5",
+    "provider": "bedrock",
+    "family": "claude-sonnet",
+    "created_at": "2024-06-20 00:00:00 UTC",
+    "context_window": 200000,
+    "max_output_tokens": 8192,
+    "knowledge_cutoff": "2024-04",
+    "modalities": {
+      "input": [
+        "text",
+        "image",
+        "pdf"
+      ],
+      "output": [
+        "text"
+      ]
+    },
+    "capabilities": [
+      "streaming",
+      "chat",
+      "vision",
+      "function_calling",
+      "tools",
+      "structured_output",
+      "json_mode"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 3,
+          "output_per_million": 15,
+          "cached_input_per_million": 0.3,
+          "reasoning_output_per_million": 15
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "cost": {
+        "input": 3,
+        "output": 15,
+        "cache_read": 0.3,
+        "cache_write": 3.75
+      },
+      "limit": {
+        "context": 200000,
+        "output": 8192
+      },
+      "last_synced": "2026-01-24T18:05:51.951Z"
+    }
+  },
+  {
+    "id": "anthropic.claude-3-5-sonnet-20241022-v2:0",
+    "name": "Claude Sonnet 3.5 v2",
+    "provider": "bedrock",
+    "family": "claude-sonnet",
+    "created_at": "2024-10-22 00:00:00 UTC",
+    "context_window": 200000,
+    "max_output_tokens": 8192,
+    "knowledge_cutoff": "2024-04",
+    "modalities": {
+      "input": [
+        "text",
+        "image",
+        "pdf"
+      ],
+      "output": [
+        "text"
+      ]
+    },
+    "capabilities": [
+      "streaming",
+      "chat",
+      "vision",
+      "function_calling",
+      "tools",
+      "structured_output",
+      "json_mode"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 3,
+          "output_per_million": 15,
+          "cached_input_per_million": 0.3,
+          "reasoning_output_per_million": 15
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "cost": {
+        "input": 3,
+        "output": 15,
+        "cache_read": 0.3,
+        "cache_write": 3.75
+      },
+      "limit": {
+        "context": 200000,
+        "output": 8192
+      },
+      "last_synced": "2026-01-24T18:05:51.951Z"
+    }
+  },
+  {
+    "id": "anthropic.claude-3-7-sonnet-20250219-v1:0",
+    "name": "Claude Sonnet 3.7",
+    "provider": "bedrock",
+    "family": "claude-sonnet",
+    "created_at": "2025-02-19 00:00:00 UTC",
+    "context_window": 200000,
+    "max_output_tokens": 8192,
+    "knowledge_cutoff": "2024-04",
+    "modalities": {
+      "input": [
+        "text",
+        "image",
+        "pdf"
+      ],
+      "output": [
+        "text"
+      ]
+    },
+    "capabilities": [
+      "streaming",
+      "chat",
+      "vision",
+      "function_calling",
+      "tools",
+      "structured_output",
+      "json_mode"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 3,
+          "output_per_million": 15,
+          "cached_input_per_million": 0.3,
+          "reasoning_output_per_million": 15
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "cost": {
+        "input": 3,
+        "output": 15,
+        "cache_read": 0.3,
+        "cache_write": 3.75
+      },
+      "limit": {
+        "context": 200000,
+        "output": 8192
+      },
+      "last_synced": "2026-01-24T18:05:51.951Z"
+    }
+  },
+  {
+    "id": "anthropic.claude-3-haiku-20240307-v1:0",
+    "name": "Claude Haiku 3",
+    "provider": "bedrock",
+    "family": "claude-haiku",
+    "created_at": "2024-03-13 00:00:00 UTC",
+    "context_window": 200000,
+    "max_output_tokens": 4096,
+    "knowledge_cutoff": "2024-02",
+    "modalities": {
+      "input": [
+        "text",
+        "image",
+        "pdf"
+      ],
+      "output": [
+        "text"
+      ]
+    },
+    "capabilities": [
+      "streaming",
+      "chat",
+      "vision",
+      "function_calling",
+      "tools",
+      "structured_output",
+      "json_mode"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 0.25,
+          "output_per_million": 1.25,
+          "reasoning_output_per_million": 1.25
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "cost": {
+        "input": 0.25,
+        "output": 1.25
+      },
+      "limit": {
+        "context": 200000,
+        "output": 4096
+      },
+      "last_synced": "2026-01-24T18:05:51.951Z"
+    }
+  },
+  {
+    "id": "anthropic.claude-3-opus-20240229-v1:0",
+    "name": "Claude Opus 3",
+    "provider": "bedrock",
+    "family": "claude-opus",
+    "created_at": "2024-02-29 00:00:00 UTC",
+    "context_window": 200000,
+    "max_output_tokens": 4096,
+    "knowledge_cutoff": "2023-08",
+    "modalities": {
+      "input": [
+        "text",
+        "image",
+        "pdf"
+      ],
+      "output": [
+        "text"
+      ]
+    },
+    "capabilities": [
+      "streaming",
+      "chat",
+      "vision",
+      "function_calling",
+      "tools",
+      "structured_output",
+      "json_mode"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 15,
+          "output_per_million": 75,
+          "reasoning_output_per_million": 75
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "cost": {
+        "input": 15,
+        "output": 75
+      },
+      "limit": {
+        "context": 200000,
+        "output": 4096
+      },
+      "last_synced": "2026-01-24T18:05:51.951Z"
+    }
+  },
+  {
+    "id": "anthropic.claude-3-sonnet-20240229-v1:0",
+    "name": "Claude Sonnet 3",
+    "provider": "bedrock",
+    "family": "claude-sonnet",
+    "created_at": "2024-03-04 00:00:00 UTC",
+    "context_window": 200000,
+    "max_output_tokens": 4096,
+    "knowledge_cutoff": "2023-08",
+    "modalities": {
+      "input": [
+        "text",
+        "image",
+        "pdf"
+      ],
+      "output": [
+        "text"
+      ]
+    },
+    "capabilities": [
+      "streaming",
+      "chat",
+      "vision",
+      "function_calling",
+      "tools",
+      "structured_output",
+      "json_mode"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 3,
+          "output_per_million": 15,
+          "reasoning_output_per_million": 15
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "cost": {
+        "input": 3,
+        "output": 15
+      },
+      "limit": {
+        "context": 200000,
+        "output": 4096
+      },
+      "last_synced": "2026-01-24T18:05:51.951Z"
+    }
+  },
+  {
+    "id": "anthropic.claude-haiku-4-5-20251001-v1:0",
+    "name": "Claude Haiku 4.5",
+    "provider": "bedrock",
+    "family": "claude-haiku",
+    "created_at": "2025-10-15 00:00:00 UTC",
+    "context_window": 200000,
+    "max_output_tokens": 64000,
+    "knowledge_cutoff": "2025-02-28",
+    "modalities": {
+      "input": [
+        "text",
+        "image",
+        "pdf"
+      ],
+      "output": [
+        "text"
+      ]
+    },
+    "capabilities": [
+      "streaming",
+      "reasoning",
+      "chat",
+      "vision",
+      "function_calling",
+      "tools",
+      "structured_output",
+      "json_mode"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 1,
+          "output_per_million": 5,
+          "cached_input_per_million": 0.1,
+          "reasoning_output_per_million": 5
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "cost": {
+        "input": 1,
+        "output": 5,
+        "cache_read": 0.1,
+        "cache_write": 1.25
+      },
+      "limit": {
+        "context": 200000,
+        "output": 64000
+      },
+      "last_synced": "2026-01-24T18:05:51.951Z"
+    }
+  },
+  {
+    "id": "anthropic.claude-instant-v1",
+    "name": "Claude Instant",
+    "provider": "bedrock",
+    "family": "claude",
+    "created_at": "2023-03-01 00:00:00 UTC",
+    "context_window": 100000,
+    "max_output_tokens": 4096,
+    "knowledge_cutoff": "2023-08",
+    "modalities": {
+      "input": [
+        "text"
+      ],
+      "output": [
+        "text"
+      ]
+    },
+    "capabilities": [
+      "streaming",
+      "chat"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 0.8,
+          "output_per_million": 2.4,
+          "reasoning_output_per_million": 2.4
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "cost": {
+        "input": 0.8,
+        "output": 2.4
+      },
+      "limit": {
+        "context": 100000,
+        "output": 4096
+      },
+      "last_synced": "2026-01-24T18:05:51.951Z"
+    }
+  },
+  {
+    "id": "anthropic.claude-opus-4-1-20250805-v1:0",
+    "name": "Claude Opus 4.1",
+    "provider": "bedrock",
+    "family": "claude-opus",
+    "created_at": "2025-08-05 00:00:00 UTC",
+    "context_window": 200000,
+    "max_output_tokens": 32000,
+    "knowledge_cutoff": "2025-03-31",
+    "modalities": {
+      "input": [
+        "text",
+        "image",
+        "pdf"
+      ],
+      "output": [
+        "text"
+      ]
+    },
+    "capabilities": [
+      "streaming",
+      "reasoning",
+      "chat",
+      "vision",
+      "function_calling",
+      "tools",
+      "structured_output",
+      "json_mode"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 15,
+          "output_per_million": 75,
+          "cached_input_per_million": 1.5,
+          "reasoning_output_per_million": 75
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "cost": {
+        "input": 15,
+        "output": 75,
+        "cache_read": 1.5,
+        "cache_write": 18.75
+      },
+      "limit": {
+        "context": 200000,
+        "output": 32000
+      },
+      "last_synced": "2026-01-24T18:05:51.951Z"
+    }
+  },
+  {
+    "id": "anthropic.claude-opus-4-20250514-v1:0",
+    "name": "Claude Opus 4",
+    "provider": "bedrock",
+    "family": "claude-opus",
+    "created_at": "2025-05-22 00:00:00 UTC",
+    "context_window": 200000,
+    "max_output_tokens": 32000,
+    "knowledge_cutoff": "2024-04",
+    "modalities": {
+      "input": [
+        "text",
+        "image",
+        "pdf"
+      ],
+      "output": [
+        "text"
+      ]
+    },
+    "capabilities": [
+      "streaming",
+      "reasoning",
+      "chat",
+      "vision",
+      "function_calling",
+      "tools",
+      "structured_output",
+      "json_mode"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 15,
+          "output_per_million": 75,
+          "cached_input_per_million": 1.5,
+          "reasoning_output_per_million": 75
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "cost": {
+        "input": 15,
+        "output": 75,
+        "cache_read": 1.5,
+        "cache_write": 18.75
+      },
+      "limit": {
+        "context": 200000,
+        "output": 32000
+      },
+      "last_synced": "2026-01-24T18:05:51.951Z"
+    }
+  },
+  {
+    "id": "anthropic.claude-opus-4-5-20251101-v1:0",
+    "name": "Claude Opus 4.5",
+    "provider": "bedrock",
+    "family": "claude-opus",
+    "created_at": "2025-11-24 00:00:00 UTC",
+    "context_window": 200000,
+    "max_output_tokens": 64000,
+    "knowledge_cutoff": "2025-03-31",
+    "modalities": {
+      "input": [
+        "text",
+        "image",
+        "pdf"
+      ],
+      "output": [
+        "text"
+      ]
+    },
+    "capabilities": [
+      "streaming",
+      "reasoning",
+      "chat",
+      "vision",
+      "function_calling",
+      "tools",
+      "structured_output",
+      "json_mode"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 5,
+          "output_per_million": 25,
+          "cached_input_per_million": 0.5,
+          "reasoning_output_per_million": 25
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "cost": {
+        "input": 5,
+        "output": 25,
+        "cache_read": 0.5,
+        "cache_write": 6.25
+      },
+      "limit": {
+        "context": 200000,
+        "output": 64000
+      },
+      "last_synced": "2026-01-24T18:05:51.951Z"
+    }
+  },
+  {
+    "id": "anthropic.claude-sonnet-4-20250514-v1:0",
+    "name": "Claude Sonnet 4",
+    "provider": "bedrock",
+    "family": "claude-sonnet",
+    "created_at": "2025-05-22 00:00:00 UTC",
+    "context_window": 200000,
+    "max_output_tokens": 64000,
+    "knowledge_cutoff": "2024-04",
+    "modalities": {
+      "input": [
+        "text",
+        "image",
+        "pdf"
+      ],
+      "output": [
+        "text"
+      ]
+    },
+    "capabilities": [
+      "streaming",
+      "reasoning",
+      "chat",
+      "vision",
+      "function_calling",
+      "tools",
+      "structured_output",
+      "json_mode"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 3,
+          "output_per_million": 15,
+          "cached_input_per_million": 0.3,
+          "reasoning_output_per_million": 15
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "cost": {
+        "input": 3,
+        "output": 15,
+        "cache_read": 0.3,
+        "cache_write": 3.75
+      },
+      "limit": {
+        "context": 200000,
+        "output": 64000
+      },
+      "last_synced": "2026-01-24T18:05:51.951Z"
+    }
+  },
+  {
+    "id": "anthropic.claude-sonnet-4-5-20250929-v1:0",
+    "name": "Claude Sonnet 4.5",
+    "provider": "bedrock",
+    "family": "claude-sonnet",
+    "created_at": "2025-09-29 00:00:00 UTC",
+    "context_window": 200000,
+    "max_output_tokens": 64000,
+    "knowledge_cutoff": "2025-07-31",
+    "modalities": {
+      "input": [
+        "text",
+        "image",
+        "pdf"
+      ],
+      "output": [
+        "text"
+      ]
+    },
+    "capabilities": [
+      "streaming",
+      "reasoning",
+      "chat",
+      "vision",
+      "function_calling",
+      "tools",
+      "structured_output",
+      "json_mode"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 3,
+          "output_per_million": 15,
+          "cached_input_per_million": 0.3,
+          "reasoning_output_per_million": 15
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "cost": {
+        "input": 3,
+        "output": 15,
+        "cache_read": 0.3,
+        "cache_write": 3.75
+      },
+      "limit": {
+        "context": 200000,
+        "output": 64000
+      },
+      "last_synced": "2026-01-24T18:05:51.951Z"
+    }
+  },
+  {
+    "id": "anthropic.claude-v2",
+    "name": "Claude 2",
+    "provider": "bedrock",
+    "family": "claude",
+    "created_at": "2023-07-11 00:00:00 UTC",
+    "context_window": 100000,
+    "max_output_tokens": 4096,
+    "knowledge_cutoff": "2023-08",
+    "modalities": {
+      "input": [
+        "text"
+      ],
+      "output": [
+        "text"
+      ]
+    },
+    "capabilities": [
+      "streaming",
+      "chat"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 8,
+          "output_per_million": 24,
+          "reasoning_output_per_million": 24
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "cost": {
+        "input": 8,
+        "output": 24
+      },
+      "limit": {
+        "context": 100000,
+        "output": 4096
+      },
+      "last_synced": "2026-01-24T18:05:51.951Z"
+    }
+  },
+  {
+    "id": "anthropic.claude-v2:1",
+    "name": "Claude 2.1",
+    "provider": "bedrock",
+    "family": "claude",
+    "created_at": "2023-11-21 00:00:00 UTC",
+    "context_window": 200000,
+    "max_output_tokens": 4096,
+    "knowledge_cutoff": "2023-08",
+    "modalities": {
+      "input": [
+        "text"
+      ],
+      "output": [
+        "text"
+      ]
+    },
+    "capabilities": [
+      "streaming",
+      "chat"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 8,
+          "output_per_million": 24,
+          "reasoning_output_per_million": 24
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "cost": {
+        "input": 8,
+        "output": 24
+      },
+      "limit": {
+        "context": 200000,
+        "output": 4096
+      },
+      "last_synced": "2026-01-24T18:05:51.951Z"
+    }
+  },
+  {
     "id": "anthropic/claude-3.5-haiku",
     "name": "Claude Haiku 3.5",
     "provider": "openrouter",
@@ -39,11 +1362,17 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0.8,
-      "output": 8192,
-      "cache_read": 0.08,
-      "cache_write": 1,
-      "context": 200000
+      "cost": {
+        "input": 0.8,
+        "output": 4,
+        "cache_read": 0.08,
+        "cache_write": 1
+      },
+      "limit": {
+        "context": 200000,
+        "output": 8192
+      },
+      "last_synced": "2026-01-24T18:05:51.951Z"
     }
   },
   {
@@ -87,11 +1416,17 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 15,
-      "output": 128000,
-      "cache_read": 1.5,
-      "cache_write": 18.75,
-      "context": 200000
+      "cost": {
+        "input": 15,
+        "output": 75,
+        "cache_read": 1.5,
+        "cache_write": 18.75
+      },
+      "limit": {
+        "context": 200000,
+        "output": 128000
+      },
+      "last_synced": "2026-01-24T18:05:51.951Z"
     }
   },
   {
@@ -135,11 +1470,17 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 1,
-      "output": 64000,
-      "cache_read": 0.1,
-      "cache_write": 1.25,
-      "context": 200000
+      "cost": {
+        "input": 1,
+        "output": 5,
+        "cache_read": 0.1,
+        "cache_write": 1.25
+      },
+      "limit": {
+        "context": 200000,
+        "output": 64000
+      },
+      "last_synced": "2026-01-24T18:05:51.951Z"
     }
   },
   {
@@ -183,11 +1524,17 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 15,
-      "output": 32000,
-      "cache_read": 1.5,
-      "cache_write": 18.75,
-      "context": 200000
+      "cost": {
+        "input": 15,
+        "output": 75,
+        "cache_read": 1.5,
+        "cache_write": 18.75
+      },
+      "limit": {
+        "context": 200000,
+        "output": 32000
+      },
+      "last_synced": "2026-01-24T18:05:51.951Z"
     }
   },
   {
@@ -231,11 +1578,17 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 15,
-      "output": 32000,
-      "cache_read": 1.5,
-      "cache_write": 18.75,
-      "context": 200000
+      "cost": {
+        "input": 15,
+        "output": 75,
+        "cache_read": 1.5,
+        "cache_write": 18.75
+      },
+      "limit": {
+        "context": 200000,
+        "output": 32000
+      },
+      "last_synced": "2026-01-24T18:05:51.951Z"
     }
   },
   {
@@ -279,11 +1632,17 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 5,
-      "output": 32000,
-      "cache_read": 0.5,
-      "cache_write": 6.25,
-      "context": 200000
+      "cost": {
+        "input": 5,
+        "output": 25,
+        "cache_read": 0.5,
+        "cache_write": 6.25
+      },
+      "limit": {
+        "context": 200000,
+        "output": 32000
+      },
+      "last_synced": "2026-01-24T18:05:51.951Z"
     }
   },
   {
@@ -327,17 +1686,23 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 3,
-      "output": 64000,
-      "cache_read": 0.3,
-      "cache_write": 3.75,
-      "context_over_200k": {
-        "input": 6,
-        "output": 22.5,
-        "cache_read": 0.6,
-        "cache_write": 7.5
+      "cost": {
+        "input": 3,
+        "output": 15,
+        "cache_read": 0.3,
+        "cache_write": 3.75,
+        "context_over_200k": {
+          "input": 6,
+          "output": 22.5,
+          "cache_read": 0.6,
+          "cache_write": 7.5
+        }
       },
-      "context": 200000
+      "limit": {
+        "context": 200000,
+        "output": 64000
+      },
+      "last_synced": "2026-01-24T18:05:51.951Z"
     }
   },
   {
@@ -381,17 +1746,23 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 3,
-      "output": 64000,
-      "cache_read": 0.3,
-      "cache_write": 3.75,
-      "context_over_200k": {
-        "input": 6,
-        "output": 22.5,
-        "cache_read": 0.6,
-        "cache_write": 7.5
+      "cost": {
+        "input": 3,
+        "output": 15,
+        "cache_read": 0.3,
+        "cache_write": 3.75,
+        "context_over_200k": {
+          "input": 6,
+          "output": 22.5,
+          "cache_read": 0.6,
+          "cache_write": 7.5
+        }
       },
-      "context": 1000000
+      "limit": {
+        "context": 1000000,
+        "output": 64000
+      },
+      "last_synced": "2026-01-24T18:05:51.951Z"
     }
   },
   {
@@ -434,11 +1805,17 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0.8,
-      "output": 8192,
-      "cache_read": 0.08,
-      "cache_write": 1,
-      "context": 200000
+      "cost": {
+        "input": 0.8,
+        "output": 4,
+        "cache_read": 0.08,
+        "cache_write": 1
+      },
+      "limit": {
+        "context": 200000,
+        "output": 8192
+      },
+      "last_synced": "2026-01-24T18:05:51.951Z"
     }
   },
   {
@@ -481,11 +1858,17 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0.8,
-      "output": 8192,
-      "cache_read": 0.08,
-      "cache_write": 1,
-      "context": 200000
+      "cost": {
+        "input": 0.8,
+        "output": 4,
+        "cache_read": 0.08,
+        "cache_write": 1
+      },
+      "limit": {
+        "context": 200000,
+        "output": 8192
+      },
+      "last_synced": "2026-01-24T18:05:51.951Z"
     }
   },
   {
@@ -528,11 +1911,17 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 3,
-      "output": 8192,
-      "cache_read": 0.3,
-      "cache_write": 3.75,
-      "context": 200000
+      "cost": {
+        "input": 3,
+        "output": 15,
+        "cache_read": 0.3,
+        "cache_write": 3.75
+      },
+      "limit": {
+        "context": 200000,
+        "output": 8192
+      },
+      "last_synced": "2026-01-24T18:05:51.951Z"
     }
   },
   {
@@ -575,11 +1964,17 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 3,
-      "output": 8192,
-      "cache_read": 0.3,
-      "cache_write": 3.75,
-      "context": 200000
+      "cost": {
+        "input": 3,
+        "output": 15,
+        "cache_read": 0.3,
+        "cache_write": 3.75
+      },
+      "limit": {
+        "context": 200000,
+        "output": 8192
+      },
+      "last_synced": "2026-01-24T18:05:51.951Z"
     }
   },
   {
@@ -623,11 +2018,17 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 3,
-      "output": 64000,
-      "cache_read": 0.3,
-      "cache_write": 3.75,
-      "context": 200000
+      "cost": {
+        "input": 3,
+        "output": 15,
+        "cache_read": 0.3,
+        "cache_write": 3.75
+      },
+      "limit": {
+        "context": 200000,
+        "output": 64000
+      },
+      "last_synced": "2026-01-24T18:05:51.951Z"
     }
   },
   {
@@ -671,11 +2072,17 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 3,
-      "output": 64000,
-      "cache_read": 0.3,
-      "cache_write": 3.75,
-      "context": 200000
+      "cost": {
+        "input": 3,
+        "output": 15,
+        "cache_read": 0.3,
+        "cache_write": 3.75
+      },
+      "limit": {
+        "context": 200000,
+        "output": 64000
+      },
+      "last_synced": "2026-01-24T18:05:51.951Z"
     }
   },
   {
@@ -718,11 +2125,17 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0.25,
-      "output": 4096,
-      "cache_read": 0.03,
-      "cache_write": 0.3,
-      "context": 200000
+      "cost": {
+        "input": 0.25,
+        "output": 1.25,
+        "cache_read": 0.03,
+        "cache_write": 0.3
+      },
+      "limit": {
+        "context": 200000,
+        "output": 4096
+      },
+      "last_synced": "2026-01-24T18:05:51.951Z"
     }
   },
   {
@@ -765,11 +2178,17 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 15,
-      "output": 4096,
-      "cache_read": 1.5,
-      "cache_write": 18.75,
-      "context": 200000
+      "cost": {
+        "input": 15,
+        "output": 75,
+        "cache_read": 1.5,
+        "cache_write": 18.75
+      },
+      "limit": {
+        "context": 200000,
+        "output": 4096
+      },
+      "last_synced": "2026-01-24T18:05:51.951Z"
     }
   },
   {
@@ -812,11 +2231,17 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 3,
-      "output": 4096,
-      "cache_read": 0.3,
-      "cache_write": 0.3,
-      "context": 200000
+      "cost": {
+        "input": 3,
+        "output": 15,
+        "cache_read": 0.3,
+        "cache_write": 0.3
+      },
+      "limit": {
+        "context": 200000,
+        "output": 4096
+      },
+      "last_synced": "2026-01-24T18:05:51.951Z"
     }
   },
   {
@@ -860,11 +2285,17 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 1,
-      "output": 64000,
-      "cache_read": 0.1,
-      "cache_write": 1.25,
-      "context": 200000
+      "cost": {
+        "input": 1,
+        "output": 5,
+        "cache_read": 0.1,
+        "cache_write": 1.25
+      },
+      "limit": {
+        "context": 200000,
+        "output": 64000
+      },
+      "last_synced": "2026-01-24T18:05:51.951Z"
     }
   },
   {
@@ -908,11 +2339,17 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 1,
-      "output": 64000,
-      "cache_read": 0.1,
-      "cache_write": 1.25,
-      "context": 200000
+      "cost": {
+        "input": 1,
+        "output": 5,
+        "cache_read": 0.1,
+        "cache_write": 1.25
+      },
+      "limit": {
+        "context": 200000,
+        "output": 64000
+      },
+      "last_synced": "2026-01-24T18:05:51.951Z"
     }
   },
   {
@@ -956,11 +2393,17 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 15,
-      "output": 32000,
-      "cache_read": 1.5,
-      "cache_write": 18.75,
-      "context": 200000
+      "cost": {
+        "input": 15,
+        "output": 75,
+        "cache_read": 1.5,
+        "cache_write": 18.75
+      },
+      "limit": {
+        "context": 200000,
+        "output": 32000
+      },
+      "last_synced": "2026-01-24T18:05:51.951Z"
     }
   },
   {
@@ -1004,11 +2447,17 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 15,
-      "output": 32000,
-      "cache_read": 1.5,
-      "cache_write": 18.75,
-      "context": 200000
+      "cost": {
+        "input": 15,
+        "output": 75,
+        "cache_read": 1.5,
+        "cache_write": 18.75
+      },
+      "limit": {
+        "context": 200000,
+        "output": 32000
+      },
+      "last_synced": "2026-01-24T18:05:51.951Z"
     }
   },
   {
@@ -1052,11 +2501,17 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 15,
-      "output": 32000,
-      "cache_read": 1.5,
-      "cache_write": 18.75,
-      "context": 200000
+      "cost": {
+        "input": 15,
+        "output": 75,
+        "cache_read": 1.5,
+        "cache_write": 18.75
+      },
+      "limit": {
+        "context": 200000,
+        "output": 32000
+      },
+      "last_synced": "2026-01-24T18:05:51.951Z"
     }
   },
   {
@@ -1100,11 +2555,17 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 15,
-      "output": 32000,
-      "cache_read": 1.5,
-      "cache_write": 18.75,
-      "context": 200000
+      "cost": {
+        "input": 15,
+        "output": 75,
+        "cache_read": 1.5,
+        "cache_write": 18.75
+      },
+      "limit": {
+        "context": 200000,
+        "output": 32000
+      },
+      "last_synced": "2026-01-24T18:05:51.951Z"
     }
   },
   {
@@ -1148,11 +2609,17 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 5,
-      "output": 64000,
-      "cache_read": 0.5,
-      "cache_write": 6.25,
-      "context": 200000
+      "cost": {
+        "input": 5,
+        "output": 25,
+        "cache_read": 0.5,
+        "cache_write": 6.25
+      },
+      "limit": {
+        "context": 200000,
+        "output": 64000
+      },
+      "last_synced": "2026-01-24T18:05:51.951Z"
     }
   },
   {
@@ -1196,11 +2663,17 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 5,
-      "output": 64000,
-      "cache_read": 0.5,
-      "cache_write": 6.25,
-      "context": 200000
+      "cost": {
+        "input": 5,
+        "output": 25,
+        "cache_read": 0.5,
+        "cache_write": 6.25
+      },
+      "limit": {
+        "context": 200000,
+        "output": 64000
+      },
+      "last_synced": "2026-01-24T18:05:51.951Z"
     }
   },
   {
@@ -1244,11 +2717,17 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 3,
-      "output": 64000,
-      "cache_read": 0.3,
-      "cache_write": 3.75,
-      "context": 200000
+      "cost": {
+        "input": 3,
+        "output": 15,
+        "cache_read": 0.3,
+        "cache_write": 3.75
+      },
+      "limit": {
+        "context": 200000,
+        "output": 64000
+      },
+      "last_synced": "2026-01-24T18:05:51.951Z"
     }
   },
   {
@@ -1292,11 +2771,17 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 3,
-      "output": 64000,
-      "cache_read": 0.3,
-      "cache_write": 3.75,
-      "context": 200000
+      "cost": {
+        "input": 3,
+        "output": 15,
+        "cache_read": 0.3,
+        "cache_write": 3.75
+      },
+      "limit": {
+        "context": 200000,
+        "output": 64000
+      },
+      "last_synced": "2026-01-24T18:05:51.951Z"
     }
   },
   {
@@ -1340,11 +2825,17 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 3,
-      "output": 64000,
-      "cache_read": 0.3,
-      "cache_write": 3.75,
-      "context": 200000
+      "cost": {
+        "input": 3,
+        "output": 15,
+        "cache_read": 0.3,
+        "cache_write": 3.75
+      },
+      "limit": {
+        "context": 200000,
+        "output": 64000
+      },
+      "last_synced": "2026-01-24T18:05:51.951Z"
     }
   },
   {
@@ -1388,11 +2879,17 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 3,
-      "output": 64000,
-      "cache_read": 0.3,
-      "cache_write": 3.75,
-      "context": 200000
+      "cost": {
+        "input": 3,
+        "output": 15,
+        "cache_read": 0.3,
+        "cache_write": 3.75
+      },
+      "limit": {
+        "context": 200000,
+        "output": 64000
+      },
+      "last_synced": "2026-01-24T18:05:51.951Z"
     }
   },
   {
@@ -1434,10 +2931,16 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 1.5,
-      "output": 100000,
-      "cache_read": 0.375,
-      "context": 200000
+      "cost": {
+        "input": 1.5,
+        "output": 6,
+        "cache_read": 0.375
+      },
+      "limit": {
+        "context": 200000,
+        "output": 100000
+      },
+      "last_synced": "2026-01-24T18:05:51.948Z"
     }
   },
   {
@@ -1476,9 +2979,15 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0,
-      "output": 8192,
-      "context": 32768
+      "cost": {
+        "input": 0,
+        "output": 0
+      },
+      "limit": {
+        "context": 32768,
+        "output": 8192
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -1518,9 +3027,195 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0,
-      "output": 8192,
-      "context": 32768
+      "cost": {
+        "input": 0,
+        "output": 0
+      },
+      "limit": {
+        "context": 32768,
+        "output": 8192
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
+    }
+  },
+  {
+    "id": "cohere.command-light-text-v14",
+    "name": "Command Light",
+    "provider": "bedrock",
+    "family": "command-light",
+    "created_at": "2023-11-01 00:00:00 UTC",
+    "context_window": 4096,
+    "max_output_tokens": 4096,
+    "knowledge_cutoff": "2023-08",
+    "modalities": {
+      "input": [
+        "text"
+      ],
+      "output": [
+        "text"
+      ]
+    },
+    "capabilities": [
+      "streaming",
+      "chat"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 0.3,
+          "output_per_million": 0.6,
+          "reasoning_output_per_million": 0.6
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "cost": {
+        "input": 0.3,
+        "output": 0.6
+      },
+      "limit": {
+        "context": 4096,
+        "output": 4096
+      },
+      "last_synced": "2026-01-24T18:05:51.951Z"
+    }
+  },
+  {
+    "id": "cohere.command-r-plus-v1:0",
+    "name": "Command R+",
+    "provider": "bedrock",
+    "family": "command-r",
+    "created_at": "2024-04-04 00:00:00 UTC",
+    "context_window": 128000,
+    "max_output_tokens": 4096,
+    "knowledge_cutoff": "2024-04",
+    "modalities": {
+      "input": [
+        "text"
+      ],
+      "output": [
+        "text"
+      ]
+    },
+    "capabilities": [
+      "streaming",
+      "chat",
+      "function_calling",
+      "tools",
+      "structured_output",
+      "json_mode"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 3,
+          "output_per_million": 15,
+          "reasoning_output_per_million": 15
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "cost": {
+        "input": 3,
+        "output": 15
+      },
+      "limit": {
+        "context": 128000,
+        "output": 4096
+      },
+      "last_synced": "2026-01-24T18:05:51.951Z"
+    }
+  },
+  {
+    "id": "cohere.command-r-v1:0",
+    "name": "Command R",
+    "provider": "bedrock",
+    "family": "command-r",
+    "created_at": "2024-03-11 00:00:00 UTC",
+    "context_window": 128000,
+    "max_output_tokens": 4096,
+    "knowledge_cutoff": "2024-04",
+    "modalities": {
+      "input": [
+        "text"
+      ],
+      "output": [
+        "text"
+      ]
+    },
+    "capabilities": [
+      "streaming",
+      "chat",
+      "function_calling",
+      "tools",
+      "structured_output",
+      "json_mode"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 0.5,
+          "output_per_million": 1.5,
+          "reasoning_output_per_million": 1.5
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "cost": {
+        "input": 0.5,
+        "output": 1.5
+      },
+      "limit": {
+        "context": 128000,
+        "output": 4096
+      },
+      "last_synced": "2026-01-24T18:05:51.951Z"
+    }
+  },
+  {
+    "id": "cohere.command-text-v14",
+    "name": "Command",
+    "provider": "bedrock",
+    "family": "command",
+    "created_at": "2023-11-01 00:00:00 UTC",
+    "context_window": 4096,
+    "max_output_tokens": 4096,
+    "knowledge_cutoff": "2023-08",
+    "modalities": {
+      "input": [
+        "text"
+      ],
+      "output": [
+        "text"
+      ]
+    },
+    "capabilities": [
+      "streaming",
+      "chat"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 1.5,
+          "output_per_million": 2,
+          "reasoning_output_per_million": 2
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "cost": {
+        "input": 1.5,
+        "output": 2
+      },
+      "limit": {
+        "context": 4096,
+        "output": 4096
+      },
+      "last_synced": "2026-01-24T18:05:51.951Z"
     }
   },
   {
@@ -1561,10 +3256,16 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0.28,
-      "output": 8192,
-      "cache_read": 0.028,
-      "context": 128000
+      "cost": {
+        "input": 0.28,
+        "output": 0.42,
+        "cache_read": 0.028
+      },
+      "limit": {
+        "context": 128000,
+        "output": 8192
+      },
+      "last_synced": "2026-01-24T18:05:51.946Z"
     }
   },
   {
@@ -1588,9 +3289,6 @@ export const modelsData = [
       "streaming",
       "reasoning",
       "chat",
-      "vision",
-      "function_calling",
-      "tools",
       "structured_output",
       "json_mode"
     ],
@@ -1606,10 +3304,112 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0.28,
-      "output": 128000,
-      "cache_read": 0.028,
-      "context": 128000
+      "cost": {
+        "input": 0.28,
+        "output": 0.42,
+        "cache_read": 0.028
+      },
+      "limit": {
+        "context": 128000,
+        "output": 128000
+      },
+      "last_synced": "2026-01-24T18:05:51.947Z"
+    }
+  },
+  {
+    "id": "deepseek.r1-v1:0",
+    "name": "DeepSeek-R1",
+    "provider": "bedrock",
+    "family": "deepseek-thinking",
+    "created_at": "2025-01-20 00:00:00 UTC",
+    "context_window": 128000,
+    "max_output_tokens": 32768,
+    "knowledge_cutoff": "2024-07",
+    "modalities": {
+      "input": [
+        "text"
+      ],
+      "output": [
+        "text"
+      ]
+    },
+    "capabilities": [
+      "streaming",
+      "reasoning",
+      "chat",
+      "function_calling",
+      "tools",
+      "structured_output",
+      "json_mode"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 1.35,
+          "output_per_million": 5.4,
+          "reasoning_output_per_million": 5.4
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "cost": {
+        "input": 1.35,
+        "output": 5.4
+      },
+      "limit": {
+        "context": 128000,
+        "output": 32768
+      },
+      "last_synced": "2026-01-24T18:05:51.951Z"
+    }
+  },
+  {
+    "id": "deepseek.v3-v1:0",
+    "name": "DeepSeek-V3.1",
+    "provider": "bedrock",
+    "family": "deepseek",
+    "created_at": "2025-09-18 00:00:00 UTC",
+    "context_window": 163840,
+    "max_output_tokens": 81920,
+    "knowledge_cutoff": "2024-07",
+    "modalities": {
+      "input": [
+        "text"
+      ],
+      "output": [
+        "text"
+      ]
+    },
+    "capabilities": [
+      "streaming",
+      "reasoning",
+      "chat",
+      "function_calling",
+      "tools",
+      "structured_output",
+      "json_mode"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 0.58,
+          "output_per_million": 1.68,
+          "reasoning_output_per_million": 1.68
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "cost": {
+        "input": 0.58,
+        "output": 1.68
+      },
+      "limit": {
+        "context": 163840,
+        "output": 81920
+      },
+      "last_synced": "2026-01-24T18:05:51.951Z"
     }
   },
   {
@@ -1644,9 +3444,15 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0,
-      "output": 8192,
-      "context": 16384
+      "cost": {
+        "input": 0,
+        "output": 0
+      },
+      "limit": {
+        "context": 16384,
+        "output": 8192
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -1686,9 +3492,15 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0.2,
-      "output": 163840,
-      "context": 163840
+      "cost": {
+        "input": 0.2,
+        "output": 0.8
+      },
+      "limit": {
+        "context": 163840,
+        "output": 163840
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -1728,9 +3540,15 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0,
-      "output": 131072,
-      "context": 131072
+      "cost": {
+        "input": 0,
+        "output": 0
+      },
+      "limit": {
+        "context": 131072,
+        "output": 131072
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -1770,9 +3588,15 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0,
-      "output": 163840,
-      "context": 163840
+      "cost": {
+        "input": 0,
+        "output": 0
+      },
+      "limit": {
+        "context": 163840,
+        "output": 163840
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -1808,9 +3632,15 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0,
-      "output": 8192,
-      "context": 8192
+      "cost": {
+        "input": 0,
+        "output": 0
+      },
+      "limit": {
+        "context": 8192,
+        "output": 8192
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -1846,9 +3676,15 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0,
-      "output": 8192,
-      "context": 64000
+      "cost": {
+        "input": 0,
+        "output": 0
+      },
+      "limit": {
+        "context": 64000,
+        "output": 8192
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -1888,9 +3724,15 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0,
-      "output": 163840,
-      "context": 163840
+      "cost": {
+        "input": 0,
+        "output": 0
+      },
+      "limit": {
+        "context": 163840,
+        "output": 163840
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -1925,9 +3767,15 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0,
-      "output": 163840,
-      "context": 163840
+      "cost": {
+        "input": 0,
+        "output": 0
+      },
+      "limit": {
+        "context": 163840,
+        "output": 163840
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -1967,9 +3815,15 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0.27,
-      "output": 65536,
-      "context": 131072
+      "cost": {
+        "input": 0.27,
+        "output": 1
+      },
+      "limit": {
+        "context": 131072,
+        "output": 65536
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -2009,9 +3863,15 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0.27,
-      "output": 65536,
-      "context": 131072
+      "cost": {
+        "input": 0.27,
+        "output": 1
+      },
+      "limit": {
+        "context": 131072,
+        "output": 65536
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -2051,9 +3911,15 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0.28,
-      "output": 65536,
-      "context": 163840
+      "cost": {
+        "input": 0.28,
+        "output": 0.4
+      },
+      "limit": {
+        "context": 163840,
+        "output": 65536
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -2093,9 +3959,15 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0.27,
-      "output": 65536,
-      "context": 163840
+      "cost": {
+        "input": 0.27,
+        "output": 0.41
+      },
+      "limit": {
+        "context": 163840,
+        "output": 65536
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -2130,9 +4002,15 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0,
-      "output": 8192,
-      "context": 32768
+      "cost": {
+        "input": 0,
+        "output": 0
+      },
+      "limit": {
+        "context": 32768,
+        "output": 8192
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -2177,10 +4055,16 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0.075,
-      "output": 8192,
-      "cache_read": 0.01875,
-      "context": 1000000
+      "cost": {
+        "input": 0.075,
+        "output": 0.3,
+        "cache_read": 0.01875
+      },
+      "limit": {
+        "context": 1000000,
+        "output": 8192
+      },
+      "last_synced": "2026-01-24T18:05:51.947Z"
     }
   },
   {
@@ -2225,10 +4109,16 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0.0375,
-      "output": 8192,
-      "cache_read": 0.01,
-      "context": 1000000
+      "cost": {
+        "input": 0.0375,
+        "output": 0.15,
+        "cache_read": 0.01
+      },
+      "limit": {
+        "context": 1000000,
+        "output": 8192
+      },
+      "last_synced": "2026-01-24T18:05:51.947Z"
     }
   },
   {
@@ -2273,10 +4163,16 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 1.25,
-      "output": 8192,
-      "cache_read": 0.3125,
-      "context": 1000000
+      "cost": {
+        "input": 1.25,
+        "output": 5,
+        "cache_read": 0.3125
+      },
+      "limit": {
+        "context": 1000000,
+        "output": 8192
+      },
+      "last_synced": "2026-01-24T18:05:51.947Z"
     }
   },
   {
@@ -2322,10 +4218,16 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0.1,
-      "output": 8192,
-      "cache_read": 0.025,
-      "context": 1048576
+      "cost": {
+        "input": 0.1,
+        "output": 0.4,
+        "cache_read": 0.025
+      },
+      "limit": {
+        "context": 1048576,
+        "output": 8192
+      },
+      "last_synced": "2026-01-24T18:05:51.947Z"
     }
   },
   {
@@ -2371,10 +4273,16 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0.15,
-      "output": 8192,
-      "cache_read": 0.025,
-      "context": 1048576
+      "cost": {
+        "input": 0.15,
+        "output": 0.6,
+        "cache_read": 0.025
+      },
+      "limit": {
+        "context": 1048576,
+        "output": 8192
+      },
+      "last_synced": "2026-01-24T18:05:51.948Z"
     }
   },
   {
@@ -2419,9 +4327,15 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0.075,
-      "output": 8192,
-      "context": 1048576
+      "cost": {
+        "input": 0.075,
+        "output": 0.3
+      },
+      "limit": {
+        "context": 1048576,
+        "output": 8192
+      },
+      "last_synced": "2026-01-24T18:05:51.947Z"
     }
   },
   {
@@ -2466,9 +4380,15 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0.075,
-      "output": 8192,
-      "context": 1048576
+      "cost": {
+        "input": 0.075,
+        "output": 0.3
+      },
+      "limit": {
+        "context": 1048576,
+        "output": 8192
+      },
+      "last_synced": "2026-01-24T18:05:51.948Z"
     }
   },
   {
@@ -2515,11 +4435,17 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0.3,
-      "output": 65536,
-      "cache_read": 0.075,
-      "input_audio": 1,
-      "context": 1048576
+      "cost": {
+        "input": 0.3,
+        "output": 2.5,
+        "cache_read": 0.075,
+        "input_audio": 1
+      },
+      "limit": {
+        "context": 1048576,
+        "output": 65536
+      },
+      "last_synced": "2026-01-24T18:05:51.947Z"
     }
   },
   {
@@ -2566,11 +4492,17 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0.3,
-      "output": 65536,
-      "cache_read": 0.075,
-      "cache_write": 0.383,
-      "context": 1048576
+      "cost": {
+        "input": 0.3,
+        "output": 2.5,
+        "cache_read": 0.075,
+        "cache_write": 0.383
+      },
+      "limit": {
+        "context": 1048576,
+        "output": 65536
+      },
+      "last_synced": "2026-01-24T18:05:51.948Z"
     }
   },
   {
@@ -2611,10 +4543,16 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0.3,
-      "output": 32768,
-      "cache_read": 0.075,
-      "context": 32768
+      "cost": {
+        "input": 0.3,
+        "output": 30,
+        "cache_read": 0.075
+      },
+      "limit": {
+        "context": 32768,
+        "output": 32768
+      },
+      "last_synced": "2026-01-24T18:05:51.947Z"
     }
   },
   {
@@ -2655,10 +4593,16 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0.3,
-      "output": 32768,
-      "cache_read": 0.075,
-      "context": 32768
+      "cost": {
+        "input": 0.3,
+        "output": 30,
+        "cache_read": 0.075
+      },
+      "limit": {
+        "context": 32768,
+        "output": 32768
+      },
+      "last_synced": "2026-01-24T18:05:51.947Z"
     }
   },
   {
@@ -2705,10 +4649,16 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0.1,
-      "output": 65536,
-      "cache_read": 0.025,
-      "context": 1048576
+      "cost": {
+        "input": 0.1,
+        "output": 0.4,
+        "cache_read": 0.025
+      },
+      "limit": {
+        "context": 1048576,
+        "output": 65536
+      },
+      "last_synced": "2026-01-24T18:05:51.947Z"
     }
   },
   {
@@ -2755,10 +4705,16 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0.1,
-      "output": 65536,
-      "cache_read": 0.025,
-      "context": 1048576
+      "cost": {
+        "input": 0.1,
+        "output": 0.4,
+        "cache_read": 0.025
+      },
+      "limit": {
+        "context": 1048576,
+        "output": 65536
+      },
+      "last_synced": "2026-01-24T18:05:51.948Z"
     }
   },
   {
@@ -2805,11 +4761,17 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0.1,
-      "output": 65536,
-      "cache_read": 0.025,
-      "input_audio": 0.3,
-      "context": 1048576
+      "cost": {
+        "input": 0.1,
+        "output": 0.4,
+        "cache_read": 0.025,
+        "input_audio": 0.3
+      },
+      "limit": {
+        "context": 1048576,
+        "output": 65536
+      },
+      "last_synced": "2026-01-24T18:05:51.947Z"
     }
   },
   {
@@ -2856,10 +4818,16 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0.1,
-      "output": 65536,
-      "cache_read": 0.025,
-      "context": 65536
+      "cost": {
+        "input": 0.1,
+        "output": 0.4,
+        "cache_read": 0.025
+      },
+      "limit": {
+        "context": 65536,
+        "output": 65536
+      },
+      "last_synced": "2026-01-24T18:05:51.948Z"
     }
   },
   {
@@ -2906,10 +4874,16 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0.1,
-      "output": 65536,
-      "cache_read": 0.025,
-      "context": 1048576
+      "cost": {
+        "input": 0.1,
+        "output": 0.4,
+        "cache_read": 0.025
+      },
+      "limit": {
+        "context": 1048576,
+        "output": 65536
+      },
+      "last_synced": "2026-01-24T18:05:51.947Z"
     }
   },
   {
@@ -2956,10 +4930,16 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0.1,
-      "output": 65536,
-      "cache_read": 0.025,
-      "context": 1048576
+      "cost": {
+        "input": 0.1,
+        "output": 0.4,
+        "cache_read": 0.025
+      },
+      "limit": {
+        "context": 1048576,
+        "output": 65536
+      },
+      "last_synced": "2026-01-24T18:05:51.948Z"
     }
   },
   {
@@ -3006,10 +4986,16 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0.15,
-      "output": 65536,
-      "cache_read": 0.0375,
-      "context": 1048576
+      "cost": {
+        "input": 0.15,
+        "output": 0.6,
+        "cache_read": 0.0375
+      },
+      "limit": {
+        "context": 1048576,
+        "output": 65536
+      },
+      "last_synced": "2026-01-24T18:05:51.947Z"
     }
   },
   {
@@ -3056,10 +5042,16 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0.15,
-      "output": 65536,
-      "cache_read": 0.0375,
-      "context": 1048576
+      "cost": {
+        "input": 0.15,
+        "output": 0.6,
+        "cache_read": 0.0375
+      },
+      "limit": {
+        "context": 1048576,
+        "output": 65536
+      },
+      "last_synced": "2026-01-24T18:05:51.948Z"
     }
   },
   {
@@ -3106,10 +5098,16 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0.15,
-      "output": 65536,
-      "cache_read": 0.0375,
-      "context": 1048576
+      "cost": {
+        "input": 0.15,
+        "output": 0.6,
+        "cache_read": 0.0375
+      },
+      "limit": {
+        "context": 1048576,
+        "output": 65536
+      },
+      "last_synced": "2026-01-24T18:05:51.947Z"
     }
   },
   {
@@ -3156,10 +5154,16 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0.15,
-      "output": 65536,
-      "cache_read": 0.0375,
-      "context": 1048576
+      "cost": {
+        "input": 0.15,
+        "output": 0.6,
+        "cache_read": 0.0375
+      },
+      "limit": {
+        "context": 1048576,
+        "output": 65536
+      },
+      "last_synced": "2026-01-24T18:05:51.948Z"
     }
   },
   {
@@ -3206,11 +5210,17 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0.3,
-      "output": 65536,
-      "cache_read": 0.075,
-      "input_audio": 1,
-      "context": 1048576
+      "cost": {
+        "input": 0.3,
+        "output": 2.5,
+        "cache_read": 0.075,
+        "input_audio": 1
+      },
+      "limit": {
+        "context": 1048576,
+        "output": 65536
+      },
+      "last_synced": "2026-01-24T18:05:51.947Z"
     }
   },
   {
@@ -3257,11 +5267,17 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0.3,
-      "output": 65536,
-      "cache_read": 0.075,
-      "cache_write": 0.383,
-      "context": 1048576
+      "cost": {
+        "input": 0.3,
+        "output": 2.5,
+        "cache_read": 0.075,
+        "cache_write": 0.383
+      },
+      "limit": {
+        "context": 1048576,
+        "output": 65536
+      },
+      "last_synced": "2026-01-24T18:05:51.948Z"
     }
   },
   {
@@ -3297,9 +5313,15 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0.5,
-      "output": 16000,
-      "context": 8000
+      "cost": {
+        "input": 0.5,
+        "output": 10
+      },
+      "limit": {
+        "context": 8000,
+        "output": 16000
+      },
+      "last_synced": "2026-01-24T18:05:51.947Z"
     }
   },
   {
@@ -3346,10 +5368,16 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 1.25,
-      "output": 65536,
-      "cache_read": 0.31,
-      "context": 1048576
+      "cost": {
+        "input": 1.25,
+        "output": 10,
+        "cache_read": 0.31
+      },
+      "limit": {
+        "context": 1048576,
+        "output": 65536
+      },
+      "last_synced": "2026-01-24T18:05:51.947Z"
     }
   },
   {
@@ -3396,10 +5424,16 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 1.25,
-      "output": 65536,
-      "cache_read": 0.31,
-      "context": 1048576
+      "cost": {
+        "input": 1.25,
+        "output": 10,
+        "cache_read": 0.31
+      },
+      "limit": {
+        "context": 1048576,
+        "output": 65536
+      },
+      "last_synced": "2026-01-24T18:05:51.948Z"
     }
   },
   {
@@ -3446,10 +5480,16 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 1.25,
-      "output": 65536,
-      "cache_read": 0.31,
-      "context": 1048576
+      "cost": {
+        "input": 1.25,
+        "output": 10,
+        "cache_read": 0.31
+      },
+      "limit": {
+        "context": 1048576,
+        "output": 65536
+      },
+      "last_synced": "2026-01-24T18:05:51.947Z"
     }
   },
   {
@@ -3496,10 +5536,16 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 1.25,
-      "output": 65536,
-      "cache_read": 0.31,
-      "context": 1048576
+      "cost": {
+        "input": 1.25,
+        "output": 10,
+        "cache_read": 0.31
+      },
+      "limit": {
+        "context": 1048576,
+        "output": 65536
+      },
+      "last_synced": "2026-01-24T18:05:51.948Z"
     }
   },
   {
@@ -3546,10 +5592,16 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 1.25,
-      "output": 65536,
-      "cache_read": 0.31,
-      "context": 1048576
+      "cost": {
+        "input": 1.25,
+        "output": 10,
+        "cache_read": 0.31
+      },
+      "limit": {
+        "context": 1048576,
+        "output": 65536
+      },
+      "last_synced": "2026-01-24T18:05:51.947Z"
     }
   },
   {
@@ -3596,10 +5648,16 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 1.25,
-      "output": 65536,
-      "cache_read": 0.31,
-      "context": 1048576
+      "cost": {
+        "input": 1.25,
+        "output": 10,
+        "cache_read": 0.31
+      },
+      "limit": {
+        "context": 1048576,
+        "output": 65536
+      },
+      "last_synced": "2026-01-24T18:05:51.948Z"
     }
   },
   {
@@ -3635,9 +5693,15 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 1,
-      "output": 16000,
-      "context": 8000
+      "cost": {
+        "input": 1,
+        "output": 20
+      },
+      "limit": {
+        "context": 8000,
+        "output": 16000
+      },
+      "last_synced": "2026-01-24T18:05:51.947Z"
     }
   },
   {
@@ -3684,15 +5748,21 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0.5,
-      "output": 65536,
-      "cache_read": 0.05,
-      "context_over_200k": {
+      "cost": {
         "input": 0.5,
         "output": 3,
-        "cache_read": 0.05
+        "cache_read": 0.05,
+        "context_over_200k": {
+          "input": 0.5,
+          "output": 3,
+          "cache_read": 0.05
+        }
       },
-      "context": 1048576
+      "limit": {
+        "context": 1048576,
+        "output": 65536
+      },
+      "last_synced": "2026-01-24T18:05:51.947Z"
     }
   },
   {
@@ -3739,15 +5809,21 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0.5,
-      "output": 65536,
-      "cache_read": 0.05,
-      "context_over_200k": {
+      "cost": {
         "input": 0.5,
         "output": 3,
-        "cache_read": 0.05
+        "cache_read": 0.05,
+        "context_over_200k": {
+          "input": 0.5,
+          "output": 3,
+          "cache_read": 0.05
+        }
       },
-      "context": 1048576
+      "limit": {
+        "context": 1048576,
+        "output": 65536
+      },
+      "last_synced": "2026-01-24T18:05:51.947Z"
     }
   },
   {
@@ -3794,15 +5870,21 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 2,
-      "output": 64000,
-      "cache_read": 0.2,
-      "context_over_200k": {
-        "input": 4,
-        "output": 18,
-        "cache_read": 0.4
+      "cost": {
+        "input": 2,
+        "output": 12,
+        "cache_read": 0.2,
+        "context_over_200k": {
+          "input": 4,
+          "output": 18,
+          "cache_read": 0.4
+        }
       },
-      "context": 1000000
+      "limit": {
+        "context": 1000000,
+        "output": 64000
+      },
+      "last_synced": "2026-01-24T18:05:51.947Z"
     }
   },
   {
@@ -3849,15 +5931,21 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 2,
-      "output": 65536,
-      "cache_read": 0.2,
-      "context_over_200k": {
-        "input": 4,
-        "output": 18,
-        "cache_read": 0.4
+      "cost": {
+        "input": 2,
+        "output": 12,
+        "cache_read": 0.2,
+        "context_over_200k": {
+          "input": 4,
+          "output": 18,
+          "cache_read": 0.4
+        }
       },
-      "context": 1048576
+      "limit": {
+        "context": 1048576,
+        "output": 65536
+      },
+      "last_synced": "2026-01-24T18:05:51.948Z"
     }
   },
   {
@@ -3892,9 +5980,15 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0.15,
-      "output": 3072,
-      "context": 2048
+      "cost": {
+        "input": 0.15,
+        "output": 0
+      },
+      "limit": {
+        "context": 2048,
+        "output": 3072
+      },
+      "last_synced": "2026-01-24T18:05:51.947Z"
     }
   },
   {
@@ -3929,9 +6023,15 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0.15,
-      "output": 3072,
-      "context": 2048
+      "cost": {
+        "input": 0.15,
+        "output": 0
+      },
+      "limit": {
+        "context": 2048,
+        "output": 3072
+      },
+      "last_synced": "2026-01-24T18:05:51.947Z"
     }
   },
   {
@@ -3978,11 +6078,17 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0.3,
-      "output": 65536,
-      "cache_read": 0.075,
-      "input_audio": 1,
-      "context": 1048576
+      "cost": {
+        "input": 0.3,
+        "output": 2.5,
+        "cache_read": 0.075,
+        "input_audio": 1
+      },
+      "limit": {
+        "context": 1048576,
+        "output": 65536
+      },
+      "last_synced": "2026-01-24T18:05:51.947Z"
     }
   },
   {
@@ -4029,11 +6135,17 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0.3,
-      "output": 65536,
-      "cache_read": 0.075,
-      "cache_write": 0.383,
-      "context": 1048576
+      "cost": {
+        "input": 0.3,
+        "output": 2.5,
+        "cache_read": 0.075,
+        "cache_write": 0.383
+      },
+      "limit": {
+        "context": 1048576,
+        "output": 65536
+      },
+      "last_synced": "2026-01-24T18:05:51.948Z"
     }
   },
   {
@@ -4080,10 +6192,16 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0.1,
-      "output": 65536,
-      "cache_read": 0.025,
-      "context": 1048576
+      "cost": {
+        "input": 0.1,
+        "output": 0.4,
+        "cache_read": 0.025
+      },
+      "limit": {
+        "context": 1048576,
+        "output": 65536
+      },
+      "last_synced": "2026-01-24T18:05:51.947Z"
     }
   },
   {
@@ -4130,10 +6248,16 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0.1,
-      "output": 65536,
-      "cache_read": 0.025,
-      "context": 1048576
+      "cost": {
+        "input": 0.1,
+        "output": 0.4,
+        "cache_read": 0.025
+      },
+      "limit": {
+        "context": 1048576,
+        "output": 65536
+      },
+      "last_synced": "2026-01-24T18:05:51.948Z"
     }
   },
   {
@@ -4180,11 +6304,17 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0.5,
-      "output": 8000,
-      "input_audio": 3,
-      "output_audio": 12,
-      "context": 128000
+      "cost": {
+        "input": 0.5,
+        "output": 2,
+        "input_audio": 3,
+        "output_audio": 12
+      },
+      "limit": {
+        "context": 128000,
+        "output": 8000
+      },
+      "last_synced": "2026-01-24T18:05:51.947Z"
     }
   },
   {
@@ -4229,11 +6359,213 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0.5,
-      "output": 65536,
-      "input_audio": 3,
-      "output_audio": 12,
-      "context": 131072
+      "cost": {
+        "input": 0.5,
+        "output": 2,
+        "input_audio": 3,
+        "output_audio": 12
+      },
+      "limit": {
+        "context": 131072,
+        "output": 65536
+      },
+      "last_synced": "2026-01-24T18:05:51.947Z"
+    }
+  },
+  {
+    "id": "global.anthropic.claude-opus-4-5-20251101-v1:0",
+    "name": "Claude Opus 4.5 (Global)",
+    "provider": "bedrock",
+    "family": "claude-opus",
+    "created_at": "2025-11-24 00:00:00 UTC",
+    "context_window": 200000,
+    "max_output_tokens": 64000,
+    "knowledge_cutoff": "2025-03-31",
+    "modalities": {
+      "input": [
+        "text",
+        "image",
+        "pdf"
+      ],
+      "output": [
+        "text"
+      ]
+    },
+    "capabilities": [
+      "streaming",
+      "reasoning",
+      "chat",
+      "vision",
+      "function_calling",
+      "tools",
+      "structured_output",
+      "json_mode"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 5,
+          "output_per_million": 25,
+          "cached_input_per_million": 0.5,
+          "reasoning_output_per_million": 25
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "cost": {
+        "input": 5,
+        "output": 25,
+        "cache_read": 0.5,
+        "cache_write": 6.25
+      },
+      "limit": {
+        "context": 200000,
+        "output": 64000
+      },
+      "last_synced": "2026-01-24T18:05:51.951Z"
+    }
+  },
+  {
+    "id": "google.gemma-3-12b-it",
+    "name": "Google Gemma 3 12B",
+    "provider": "bedrock",
+    "family": "gemma",
+    "created_at": "2024-12-01 00:00:00 UTC",
+    "context_window": 131072,
+    "max_output_tokens": 8192,
+    "knowledge_cutoff": "2024-12",
+    "modalities": {
+      "input": [
+        "text",
+        "image"
+      ],
+      "output": [
+        "text"
+      ]
+    },
+    "capabilities": [
+      "streaming",
+      "chat",
+      "vision"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 0.049999999999999996,
+          "output_per_million": 0.09999999999999999,
+          "reasoning_output_per_million": 0.09999999999999999
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "cost": {
+        "input": 0.049999999999999996,
+        "output": 0.09999999999999999
+      },
+      "limit": {
+        "context": 131072,
+        "output": 8192
+      },
+      "last_synced": "2026-01-24T18:05:51.951Z"
+    }
+  },
+  {
+    "id": "google.gemma-3-27b-it",
+    "name": "Google Gemma 3 27B Instruct",
+    "provider": "bedrock",
+    "family": "gemma",
+    "created_at": "2025-07-27 00:00:00 UTC",
+    "context_window": 202752,
+    "max_output_tokens": 8192,
+    "knowledge_cutoff": "2025-07",
+    "modalities": {
+      "input": [
+        "text",
+        "image"
+      ],
+      "output": [
+        "text"
+      ]
+    },
+    "capabilities": [
+      "streaming",
+      "chat",
+      "vision",
+      "function_calling",
+      "tools",
+      "structured_output",
+      "json_mode"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 0.12,
+          "output_per_million": 0.2,
+          "reasoning_output_per_million": 0.2
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "cost": {
+        "input": 0.12,
+        "output": 0.2
+      },
+      "limit": {
+        "context": 202752,
+        "output": 8192
+      },
+      "last_synced": "2026-01-24T18:05:51.951Z"
+    }
+  },
+  {
+    "id": "google.gemma-3-4b-it",
+    "name": "Gemma 3 4B IT",
+    "provider": "bedrock",
+    "family": "gemma",
+    "created_at": "2024-12-01 00:00:00 UTC",
+    "context_window": 128000,
+    "max_output_tokens": 4096,
+    "modalities": {
+      "input": [
+        "text",
+        "image"
+      ],
+      "output": [
+        "text"
+      ]
+    },
+    "capabilities": [
+      "streaming",
+      "chat",
+      "vision",
+      "function_calling",
+      "tools",
+      "structured_output",
+      "json_mode"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 0.04,
+          "output_per_million": 0.08,
+          "reasoning_output_per_million": 0.08
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "cost": {
+        "input": 0.04,
+        "output": 0.08
+      },
+      "limit": {
+        "context": 128000,
+        "output": 4096
+      },
+      "last_synced": "2026-01-24T18:05:51.951Z"
     }
   },
   {
@@ -4279,10 +6611,16 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0.1,
-      "output": 8192,
-      "cache_read": 0.025,
-      "context": 1048576
+      "cost": {
+        "input": 0.1,
+        "output": 0.4,
+        "cache_read": 0.025
+      },
+      "limit": {
+        "context": 1048576,
+        "output": 8192
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -4323,9 +6661,15 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0,
-      "output": 1048576,
-      "context": 1048576
+      "cost": {
+        "input": 0,
+        "output": 0
+      },
+      "limit": {
+        "context": 1048576,
+        "output": 1048576
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -4372,10 +6716,16 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0.3,
-      "output": 65536,
-      "cache_read": 0.0375,
-      "context": 1048576
+      "cost": {
+        "input": 0.3,
+        "output": 2.5,
+        "cache_read": 0.0375
+      },
+      "limit": {
+        "context": 1048576,
+        "output": 65536
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -4422,10 +6772,16 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0.1,
-      "output": 65536,
-      "cache_read": 0.025,
-      "context": 1048576
+      "cost": {
+        "input": 0.1,
+        "output": 0.4,
+        "cache_read": 0.025
+      },
+      "limit": {
+        "context": 1048576,
+        "output": 65536
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -4472,10 +6828,16 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0.1,
-      "output": 65536,
-      "cache_read": 0.025,
-      "context": 1048576
+      "cost": {
+        "input": 0.1,
+        "output": 0.4,
+        "cache_read": 0.025
+      },
+      "limit": {
+        "context": 1048576,
+        "output": 65536
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -4522,10 +6884,16 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0.3,
-      "output": 65536,
-      "cache_read": 0.031,
-      "context": 1048576
+      "cost": {
+        "input": 0.3,
+        "output": 2.5,
+        "cache_read": 0.031
+      },
+      "limit": {
+        "context": 1048576,
+        "output": 65536
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -4572,10 +6940,16 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 1.25,
-      "output": 65536,
-      "cache_read": 0.31,
-      "context": 1048576
+      "cost": {
+        "input": 1.25,
+        "output": 10,
+        "cache_read": 0.31
+      },
+      "limit": {
+        "context": 1048576,
+        "output": 65536
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -4622,10 +6996,16 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 1.25,
-      "output": 65536,
-      "cache_read": 0.31,
-      "context": 1048576
+      "cost": {
+        "input": 1.25,
+        "output": 10,
+        "cache_read": 0.31
+      },
+      "limit": {
+        "context": 1048576,
+        "output": 65536
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -4672,10 +7052,16 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 1.25,
-      "output": 65536,
-      "cache_read": 0.31,
-      "context": 1048576
+      "cost": {
+        "input": 1.25,
+        "output": 10,
+        "cache_read": 0.31
+      },
+      "limit": {
+        "context": 1048576,
+        "output": 65536
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -4722,10 +7108,16 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0.5,
-      "output": 65536,
-      "cache_read": 0.05,
-      "context": 1048576
+      "cost": {
+        "input": 0.5,
+        "output": 3,
+        "cache_read": 0.05
+      },
+      "limit": {
+        "context": 1048576,
+        "output": 65536
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -4771,9 +7163,15 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 2,
-      "output": 66000,
-      "context": 1050000
+      "cost": {
+        "input": 2,
+        "output": 12
+      },
+      "limit": {
+        "context": 1050000,
+        "output": 66000
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -4812,9 +7210,15 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0,
-      "output": 8192,
-      "context": 8192
+      "cost": {
+        "input": 0,
+        "output": 0
+      },
+      "limit": {
+        "context": 8192,
+        "output": 8192
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -4855,9 +7259,15 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0,
-      "output": 8192,
-      "context": 96000
+      "cost": {
+        "input": 0,
+        "output": 0
+      },
+      "limit": {
+        "context": 96000,
+        "output": 8192
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -4898,9 +7308,15 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0,
-      "output": 8192,
-      "context": 96000
+      "cost": {
+        "input": 0,
+        "output": 0
+      },
+      "limit": {
+        "context": 96000,
+        "output": 8192
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -4939,9 +7355,15 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0,
-      "output": 8192,
-      "context": 8192
+      "cost": {
+        "input": 0,
+        "output": 0
+      },
+      "limit": {
+        "context": 8192,
+        "output": 8192
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -4984,9 +7406,15 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0,
-      "output": 8192,
-      "context": 8192
+      "cost": {
+        "input": 0,
+        "output": 0
+      },
+      "limit": {
+        "context": 8192,
+        "output": 8192
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -5022,10 +7450,16 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0.5,
-      "output": 4096,
-      "cache_read": 1.25,
-      "context": 16385
+      "cost": {
+        "input": 0.5,
+        "output": 1.5,
+        "cache_read": 1.25
+      },
+      "limit": {
+        "context": 16385,
+        "output": 4096
+      },
+      "last_synced": "2026-01-24T18:05:51.948Z"
     }
   },
   {
@@ -5065,9 +7499,15 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 30,
-      "output": 8192,
-      "context": 8192
+      "cost": {
+        "input": 30,
+        "output": 60
+      },
+      "limit": {
+        "context": 8192,
+        "output": 8192
+      },
+      "last_synced": "2026-01-24T18:05:51.948Z"
     }
   },
   {
@@ -5108,9 +7548,15 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 10,
-      "output": 4096,
-      "context": 128000
+      "cost": {
+        "input": 10,
+        "output": 30
+      },
+      "limit": {
+        "context": 128000,
+        "output": 4096
+      },
+      "last_synced": "2026-01-24T18:05:51.948Z"
     }
   },
   {
@@ -5152,10 +7598,16 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 2,
-      "output": 32768,
-      "cache_read": 0.5,
-      "context": 1047576
+      "cost": {
+        "input": 2,
+        "output": 8,
+        "cache_read": 0.5
+      },
+      "limit": {
+        "context": 1047576,
+        "output": 32768
+      },
+      "last_synced": "2026-01-24T18:05:51.948Z"
     }
   },
   {
@@ -5197,10 +7649,16 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0.4,
-      "output": 32768,
-      "cache_read": 0.1,
-      "context": 1047576
+      "cost": {
+        "input": 0.4,
+        "output": 1.6,
+        "cache_read": 0.1
+      },
+      "limit": {
+        "context": 1047576,
+        "output": 32768
+      },
+      "last_synced": "2026-01-24T18:05:51.948Z"
     }
   },
   {
@@ -5242,10 +7700,16 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0.1,
-      "output": 32768,
-      "cache_read": 0.03,
-      "context": 1047576
+      "cost": {
+        "input": 0.1,
+        "output": 0.4,
+        "cache_read": 0.03
+      },
+      "limit": {
+        "context": 1047576,
+        "output": 32768
+      },
+      "last_synced": "2026-01-24T18:05:51.948Z"
     }
   },
   {
@@ -5287,10 +7751,16 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 2.5,
-      "output": 16384,
-      "cache_read": 1.25,
-      "context": 128000
+      "cost": {
+        "input": 2.5,
+        "output": 10,
+        "cache_read": 1.25
+      },
+      "limit": {
+        "context": 128000,
+        "output": 16384
+      },
+      "last_synced": "2026-01-24T18:05:51.948Z"
     }
   },
   {
@@ -5331,9 +7801,15 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 5,
-      "output": 4096,
-      "context": 128000
+      "cost": {
+        "input": 5,
+        "output": 15
+      },
+      "limit": {
+        "context": 128000,
+        "output": 4096
+      },
+      "last_synced": "2026-01-24T18:05:51.948Z"
     }
   },
   {
@@ -5375,10 +7851,16 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 2.5,
-      "output": 16384,
-      "cache_read": 1.25,
-      "context": 128000
+      "cost": {
+        "input": 2.5,
+        "output": 10,
+        "cache_read": 1.25
+      },
+      "limit": {
+        "context": 128000,
+        "output": 16384
+      },
+      "last_synced": "2026-01-24T18:05:51.948Z"
     }
   },
   {
@@ -5420,10 +7902,16 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 2.5,
-      "output": 16384,
-      "cache_read": 1.25,
-      "context": 128000
+      "cost": {
+        "input": 2.5,
+        "output": 10,
+        "cache_read": 1.25
+      },
+      "limit": {
+        "context": 128000,
+        "output": 16384
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -5465,10 +7953,16 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0.15,
-      "output": 16384,
-      "cache_read": 0.08,
-      "context": 128000
+      "cost": {
+        "input": 0.15,
+        "output": 0.6,
+        "cache_read": 0.08
+      },
+      "limit": {
+        "context": 128000,
+        "output": 16384
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -5511,10 +8005,17 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 272000,
-      "output": 128000,
-      "cache_read": 0.125,
-      "context": 400000
+      "cost": {
+        "input": 1.25,
+        "output": 10,
+        "cache_read": 0.125
+      },
+      "limit": {
+        "context": 400000,
+        "input": 272000,
+        "output": 128000
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -5539,7 +8040,9 @@ export const modelsData = [
       "streaming",
       "reasoning",
       "chat",
-      "vision"
+      "vision",
+      "structured_output",
+      "json_mode"
     ],
     "pricing": {
       "text_tokens": {
@@ -5552,9 +8055,16 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 272000,
-      "output": 128000,
-      "context": 400000
+      "cost": {
+        "input": 1.25,
+        "output": 10
+      },
+      "limit": {
+        "context": 400000,
+        "input": 272000,
+        "output": 128000
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -5597,10 +8107,17 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 272000,
-      "output": 128000,
-      "cache_read": 0.125,
-      "context": 400000
+      "cost": {
+        "input": 1.25,
+        "output": 10,
+        "cache_read": 0.125
+      },
+      "limit": {
+        "context": 400000,
+        "input": 272000,
+        "output": 128000
+      },
+      "last_synced": "2026-01-24T18:05:51.948Z"
     }
   },
   {
@@ -5643,10 +8160,17 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 272000,
-      "output": 128000,
-      "cache_read": 0.025,
-      "context": 400000
+      "cost": {
+        "input": 0.25,
+        "output": 2,
+        "cache_read": 0.025
+      },
+      "limit": {
+        "context": 400000,
+        "input": 272000,
+        "output": 128000
+      },
+      "last_synced": "2026-01-24T18:05:51.948Z"
     }
   },
   {
@@ -5689,10 +8213,17 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 272000,
-      "output": 128000,
-      "cache_read": 0.005,
-      "context": 400000
+      "cost": {
+        "input": 0.05,
+        "output": 0.4,
+        "cache_read": 0.005
+      },
+      "limit": {
+        "context": 400000,
+        "input": 272000,
+        "output": 128000
+      },
+      "last_synced": "2026-01-24T18:05:51.948Z"
     }
   },
   {
@@ -5734,9 +8265,16 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 272000,
-      "output": 272000,
-      "context": 400000
+      "cost": {
+        "input": 15,
+        "output": 120
+      },
+      "limit": {
+        "context": 400000,
+        "input": 272000,
+        "output": 272000
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -5779,10 +8317,17 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 272000,
-      "output": 128000,
-      "cache_read": 0.13,
-      "context": 400000
+      "cost": {
+        "input": 1.25,
+        "output": 10,
+        "cache_read": 0.13
+      },
+      "limit": {
+        "context": 400000,
+        "input": 272000,
+        "output": 128000
+      },
+      "last_synced": "2026-01-24T18:05:51.948Z"
     }
   },
   {
@@ -5825,10 +8370,16 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 1.25,
-      "output": 16384,
-      "cache_read": 0.125,
-      "context": 128000
+      "cost": {
+        "input": 1.25,
+        "output": 10,
+        "cache_read": 0.125
+      },
+      "limit": {
+        "context": 128000,
+        "output": 16384
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -5871,10 +8422,17 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 272000,
-      "output": 128000,
-      "cache_read": 0.125,
-      "context": 400000
+      "cost": {
+        "input": 1.25,
+        "output": 10,
+        "cache_read": 0.125
+      },
+      "limit": {
+        "context": 400000,
+        "input": 272000,
+        "output": 128000
+      },
+      "last_synced": "2026-01-24T18:05:51.948Z"
     }
   },
   {
@@ -5917,10 +8475,17 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 272000,
-      "output": 128000,
-      "cache_read": 0.125,
-      "context": 400000
+      "cost": {
+        "input": 1.25,
+        "output": 10,
+        "cache_read": 0.125
+      },
+      "limit": {
+        "context": 400000,
+        "input": 272000,
+        "output": 128000
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -5963,10 +8528,17 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 272000,
-      "output": 128000,
-      "cache_read": 0.025,
-      "context": 400000
+      "cost": {
+        "input": 0.25,
+        "output": 2,
+        "cache_read": 0.025
+      },
+      "limit": {
+        "context": 400000,
+        "input": 272000,
+        "output": 128000
+      },
+      "last_synced": "2026-01-24T18:05:51.948Z"
     }
   },
   {
@@ -6009,10 +8581,17 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 272000,
-      "output": 128000,
-      "cache_read": 0.175,
-      "context": 400000
+      "cost": {
+        "input": 1.75,
+        "output": 14,
+        "cache_read": 0.175
+      },
+      "limit": {
+        "context": 400000,
+        "input": 272000,
+        "output": 128000
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -6055,10 +8634,16 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 1.75,
-      "output": 16384,
-      "cache_read": 0.175,
-      "context": 128000
+      "cost": {
+        "input": 1.75,
+        "output": 14,
+        "cache_read": 0.175
+      },
+      "limit": {
+        "context": 128000,
+        "output": 16384
+      },
+      "last_synced": "2026-01-24T18:05:51.948Z"
     }
   },
   {
@@ -6102,10 +8687,17 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 272000,
-      "output": 128000,
-      "cache_read": 0.175,
-      "context": 400000
+      "cost": {
+        "input": 1.75,
+        "output": 14,
+        "cache_read": 0.175
+      },
+      "limit": {
+        "context": 400000,
+        "input": 272000,
+        "output": 128000
+      },
+      "last_synced": "2026-01-24T18:05:51.948Z"
     }
   },
   {
@@ -6147,9 +8739,16 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 272000,
-      "output": 128000,
-      "context": 400000
+      "cost": {
+        "input": 21,
+        "output": 168
+      },
+      "limit": {
+        "context": 400000,
+        "input": 272000,
+        "output": 128000
+      },
+      "last_synced": "2026-01-24T18:05:51.948Z"
     }
   },
   {
@@ -6188,9 +8787,15 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0,
-      "output": 65536,
-      "context": 256000
+      "cost": {
+        "input": 0,
+        "output": 0
+      },
+      "limit": {
+        "context": 256000,
+        "output": 65536
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -6227,9 +8832,15 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0,
-      "output": 8192,
-      "context": 131072
+      "cost": {
+        "input": 0,
+        "output": 0
+      },
+      "limit": {
+        "context": 131072,
+        "output": 8192
+      },
+      "last_synced": "2026-01-24T18:05:51.951Z"
     }
   },
   {
@@ -6268,9 +8879,15 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0,
-      "output": 65536,
-      "context": 65536
+      "cost": {
+        "input": 0,
+        "output": 0
+      },
+      "limit": {
+        "context": 65536,
+        "output": 65536
+      },
+      "last_synced": "2026-01-24T18:05:51.951Z"
     }
   },
   {
@@ -6311,9 +8928,532 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0,
-      "output": 64000,
-      "context": 64000
+      "cost": {
+        "input": 0,
+        "output": 0
+      },
+      "limit": {
+        "context": 64000,
+        "output": 64000
+      },
+      "last_synced": "2026-01-24T18:05:51.951Z"
+    }
+  },
+  {
+    "id": "meta.llama3-1-70b-instruct-v1:0",
+    "name": "Llama 3.1 70B Instruct",
+    "provider": "bedrock",
+    "family": "llama",
+    "created_at": "2024-07-23 00:00:00 UTC",
+    "context_window": 128000,
+    "max_output_tokens": 4096,
+    "knowledge_cutoff": "2023-12",
+    "modalities": {
+      "input": [
+        "text"
+      ],
+      "output": [
+        "text"
+      ]
+    },
+    "capabilities": [
+      "streaming",
+      "chat",
+      "function_calling",
+      "tools",
+      "structured_output",
+      "json_mode"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 0.72,
+          "output_per_million": 0.72,
+          "reasoning_output_per_million": 0.72
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "cost": {
+        "input": 0.72,
+        "output": 0.72
+      },
+      "limit": {
+        "context": 128000,
+        "output": 4096
+      },
+      "last_synced": "2026-01-24T18:05:51.951Z"
+    }
+  },
+  {
+    "id": "meta.llama3-1-8b-instruct-v1:0",
+    "name": "Llama 3.1 8B Instruct",
+    "provider": "bedrock",
+    "family": "llama",
+    "created_at": "2024-07-23 00:00:00 UTC",
+    "context_window": 128000,
+    "max_output_tokens": 4096,
+    "knowledge_cutoff": "2023-12",
+    "modalities": {
+      "input": [
+        "text"
+      ],
+      "output": [
+        "text"
+      ]
+    },
+    "capabilities": [
+      "streaming",
+      "chat",
+      "function_calling",
+      "tools",
+      "structured_output",
+      "json_mode"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 0.22,
+          "output_per_million": 0.22,
+          "reasoning_output_per_million": 0.22
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "cost": {
+        "input": 0.22,
+        "output": 0.22
+      },
+      "limit": {
+        "context": 128000,
+        "output": 4096
+      },
+      "last_synced": "2026-01-24T18:05:51.951Z"
+    }
+  },
+  {
+    "id": "meta.llama3-2-11b-instruct-v1:0",
+    "name": "Llama 3.2 11B Instruct",
+    "provider": "bedrock",
+    "family": "llama",
+    "created_at": "2024-09-25 00:00:00 UTC",
+    "context_window": 128000,
+    "max_output_tokens": 4096,
+    "knowledge_cutoff": "2023-12",
+    "modalities": {
+      "input": [
+        "text",
+        "image"
+      ],
+      "output": [
+        "text"
+      ]
+    },
+    "capabilities": [
+      "streaming",
+      "chat",
+      "vision",
+      "function_calling",
+      "tools",
+      "structured_output",
+      "json_mode"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 0.16,
+          "output_per_million": 0.16,
+          "reasoning_output_per_million": 0.16
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "cost": {
+        "input": 0.16,
+        "output": 0.16
+      },
+      "limit": {
+        "context": 128000,
+        "output": 4096
+      },
+      "last_synced": "2026-01-24T18:05:51.951Z"
+    }
+  },
+  {
+    "id": "meta.llama3-2-1b-instruct-v1:0",
+    "name": "Llama 3.2 1B Instruct",
+    "provider": "bedrock",
+    "family": "llama",
+    "created_at": "2024-09-25 00:00:00 UTC",
+    "context_window": 131000,
+    "max_output_tokens": 4096,
+    "knowledge_cutoff": "2023-12",
+    "modalities": {
+      "input": [
+        "text"
+      ],
+      "output": [
+        "text"
+      ]
+    },
+    "capabilities": [
+      "streaming",
+      "chat",
+      "function_calling",
+      "tools",
+      "structured_output",
+      "json_mode"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 0.1,
+          "output_per_million": 0.1,
+          "reasoning_output_per_million": 0.1
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "cost": {
+        "input": 0.1,
+        "output": 0.1
+      },
+      "limit": {
+        "context": 131000,
+        "output": 4096
+      },
+      "last_synced": "2026-01-24T18:05:51.951Z"
+    }
+  },
+  {
+    "id": "meta.llama3-2-3b-instruct-v1:0",
+    "name": "Llama 3.2 3B Instruct",
+    "provider": "bedrock",
+    "family": "llama",
+    "created_at": "2024-09-25 00:00:00 UTC",
+    "context_window": 131000,
+    "max_output_tokens": 4096,
+    "knowledge_cutoff": "2023-12",
+    "modalities": {
+      "input": [
+        "text"
+      ],
+      "output": [
+        "text"
+      ]
+    },
+    "capabilities": [
+      "streaming",
+      "chat",
+      "function_calling",
+      "tools",
+      "structured_output",
+      "json_mode"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 0.15,
+          "output_per_million": 0.15,
+          "reasoning_output_per_million": 0.15
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "cost": {
+        "input": 0.15,
+        "output": 0.15
+      },
+      "limit": {
+        "context": 131000,
+        "output": 4096
+      },
+      "last_synced": "2026-01-24T18:05:51.951Z"
+    }
+  },
+  {
+    "id": "meta.llama3-2-90b-instruct-v1:0",
+    "name": "Llama 3.2 90B Instruct",
+    "provider": "bedrock",
+    "family": "llama",
+    "created_at": "2024-09-25 00:00:00 UTC",
+    "context_window": 128000,
+    "max_output_tokens": 4096,
+    "knowledge_cutoff": "2023-12",
+    "modalities": {
+      "input": [
+        "text",
+        "image"
+      ],
+      "output": [
+        "text"
+      ]
+    },
+    "capabilities": [
+      "streaming",
+      "chat",
+      "vision",
+      "function_calling",
+      "tools",
+      "structured_output",
+      "json_mode"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 0.72,
+          "output_per_million": 0.72,
+          "reasoning_output_per_million": 0.72
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "cost": {
+        "input": 0.72,
+        "output": 0.72
+      },
+      "limit": {
+        "context": 128000,
+        "output": 4096
+      },
+      "last_synced": "2026-01-24T18:05:51.951Z"
+    }
+  },
+  {
+    "id": "meta.llama3-3-70b-instruct-v1:0",
+    "name": "Llama 3.3 70B Instruct",
+    "provider": "bedrock",
+    "family": "llama",
+    "created_at": "2024-12-06 00:00:00 UTC",
+    "context_window": 128000,
+    "max_output_tokens": 4096,
+    "knowledge_cutoff": "2023-12",
+    "modalities": {
+      "input": [
+        "text"
+      ],
+      "output": [
+        "text"
+      ]
+    },
+    "capabilities": [
+      "streaming",
+      "chat",
+      "function_calling",
+      "tools",
+      "structured_output",
+      "json_mode"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 0.72,
+          "output_per_million": 0.72,
+          "reasoning_output_per_million": 0.72
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "cost": {
+        "input": 0.72,
+        "output": 0.72
+      },
+      "limit": {
+        "context": 128000,
+        "output": 4096
+      },
+      "last_synced": "2026-01-24T18:05:51.951Z"
+    }
+  },
+  {
+    "id": "meta.llama3-70b-instruct-v1:0",
+    "name": "Llama 3 70B Instruct",
+    "provider": "bedrock",
+    "family": "llama",
+    "created_at": "2024-07-23 00:00:00 UTC",
+    "context_window": 8192,
+    "max_output_tokens": 2048,
+    "knowledge_cutoff": "2023-12",
+    "modalities": {
+      "input": [
+        "text"
+      ],
+      "output": [
+        "text"
+      ]
+    },
+    "capabilities": [
+      "streaming",
+      "chat"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 2.65,
+          "output_per_million": 3.5,
+          "reasoning_output_per_million": 3.5
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "cost": {
+        "input": 2.65,
+        "output": 3.5
+      },
+      "limit": {
+        "context": 8192,
+        "output": 2048
+      },
+      "last_synced": "2026-01-24T18:05:51.951Z"
+    }
+  },
+  {
+    "id": "meta.llama3-8b-instruct-v1:0",
+    "name": "Llama 3 8B Instruct",
+    "provider": "bedrock",
+    "family": "llama",
+    "created_at": "2024-07-23 00:00:00 UTC",
+    "context_window": 8192,
+    "max_output_tokens": 2048,
+    "knowledge_cutoff": "2023-03",
+    "modalities": {
+      "input": [
+        "text"
+      ],
+      "output": [
+        "text"
+      ]
+    },
+    "capabilities": [
+      "streaming",
+      "chat"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 0.3,
+          "output_per_million": 0.6,
+          "reasoning_output_per_million": 0.6
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "cost": {
+        "input": 0.3,
+        "output": 0.6
+      },
+      "limit": {
+        "context": 8192,
+        "output": 2048
+      },
+      "last_synced": "2026-01-24T18:05:51.951Z"
+    }
+  },
+  {
+    "id": "meta.llama4-maverick-17b-instruct-v1:0",
+    "name": "Llama 4 Maverick 17B Instruct",
+    "provider": "bedrock",
+    "family": "llama",
+    "created_at": "2025-04-05 00:00:00 UTC",
+    "context_window": 1000000,
+    "max_output_tokens": 16384,
+    "knowledge_cutoff": "2024-08",
+    "modalities": {
+      "input": [
+        "text",
+        "image"
+      ],
+      "output": [
+        "text"
+      ]
+    },
+    "capabilities": [
+      "streaming",
+      "chat",
+      "vision",
+      "function_calling",
+      "tools",
+      "structured_output",
+      "json_mode"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 0.24,
+          "output_per_million": 0.97,
+          "reasoning_output_per_million": 0.97
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "cost": {
+        "input": 0.24,
+        "output": 0.97
+      },
+      "limit": {
+        "context": 1000000,
+        "output": 16384
+      },
+      "last_synced": "2026-01-24T18:05:51.951Z"
+    }
+  },
+  {
+    "id": "meta.llama4-scout-17b-instruct-v1:0",
+    "name": "Llama 4 Scout 17B Instruct",
+    "provider": "bedrock",
+    "family": "llama",
+    "created_at": "2025-04-05 00:00:00 UTC",
+    "context_window": 3500000,
+    "max_output_tokens": 16384,
+    "knowledge_cutoff": "2024-08",
+    "modalities": {
+      "input": [
+        "text",
+        "image"
+      ],
+      "output": [
+        "text"
+      ]
+    },
+    "capabilities": [
+      "streaming",
+      "chat",
+      "vision",
+      "function_calling",
+      "tools",
+      "structured_output",
+      "json_mode"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 0.17,
+          "output_per_million": 0.66,
+          "reasoning_output_per_million": 0.66
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "cost": {
+        "input": 0.17,
+        "output": 0.66
+      },
+      "limit": {
+        "context": 3500000,
+        "output": 16384
+      },
+      "last_synced": "2026-01-24T18:05:51.951Z"
     }
   },
   {
@@ -6353,9 +9493,62 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0,
-      "output": 163840,
-      "context": 163840
+      "cost": {
+        "input": 0,
+        "output": 0
+      },
+      "limit": {
+        "context": 163840,
+        "output": 163840
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
+    }
+  },
+  {
+    "id": "minimax.minimax-m2",
+    "name": "MiniMax M2",
+    "provider": "bedrock",
+    "family": "minimax",
+    "created_at": "2025-10-27 00:00:00 UTC",
+    "context_window": 204608,
+    "max_output_tokens": 128000,
+    "modalities": {
+      "input": [
+        "text"
+      ],
+      "output": [
+        "text"
+      ]
+    },
+    "capabilities": [
+      "streaming",
+      "reasoning",
+      "chat",
+      "function_calling",
+      "tools",
+      "structured_output",
+      "json_mode"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 0.3,
+          "output_per_million": 1.2,
+          "reasoning_output_per_million": 1.2
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "cost": {
+        "input": 0.3,
+        "output": 1.2
+      },
+      "limit": {
+        "context": 204608,
+        "output": 128000
+      },
+      "last_synced": "2026-01-24T18:05:51.951Z"
     }
   },
   {
@@ -6396,9 +9589,15 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0.2,
-      "output": 1000000,
-      "context": 1000000
+      "cost": {
+        "input": 0.2,
+        "output": 1.1
+      },
+      "limit": {
+        "context": 1000000,
+        "output": 1000000
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -6437,9 +9636,15 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0.4,
-      "output": 40000,
-      "context": 1000000
+      "cost": {
+        "input": 0.4,
+        "output": 2.2
+      },
+      "limit": {
+        "context": 1000000,
+        "output": 40000
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -6479,11 +9684,17 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0.28,
-      "output": 118000,
-      "cache_read": 0.28,
-      "cache_write": 1.15,
-      "context": 196600
+      "cost": {
+        "input": 0.28,
+        "output": 1.15,
+        "cache_read": 0.28,
+        "cache_write": 1.15
+      },
+      "limit": {
+        "context": 196600,
+        "output": 118000
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -6522,9 +9733,340 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0.3,
-      "output": 131072,
-      "context": 204800
+      "cost": {
+        "input": 0.3,
+        "output": 1.2
+      },
+      "limit": {
+        "context": 204800,
+        "output": 131072
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
+    }
+  },
+  {
+    "id": "mistral.ministral-3-14b-instruct",
+    "name": "Ministral 14B 3.0",
+    "provider": "bedrock",
+    "family": "ministral",
+    "created_at": "2024-12-01 00:00:00 UTC",
+    "context_window": 128000,
+    "max_output_tokens": 4096,
+    "modalities": {
+      "input": [
+        "text"
+      ],
+      "output": [
+        "text"
+      ]
+    },
+    "capabilities": [
+      "streaming",
+      "chat",
+      "function_calling",
+      "tools",
+      "structured_output",
+      "json_mode"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 0.2,
+          "output_per_million": 0.2,
+          "reasoning_output_per_million": 0.2
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "cost": {
+        "input": 0.2,
+        "output": 0.2
+      },
+      "limit": {
+        "context": 128000,
+        "output": 4096
+      },
+      "last_synced": "2026-01-24T18:05:51.951Z"
+    }
+  },
+  {
+    "id": "mistral.ministral-3-8b-instruct",
+    "name": "Ministral 3 8B",
+    "provider": "bedrock",
+    "family": "ministral",
+    "created_at": "2024-12-01 00:00:00 UTC",
+    "context_window": 128000,
+    "max_output_tokens": 4096,
+    "modalities": {
+      "input": [
+        "text"
+      ],
+      "output": [
+        "text"
+      ]
+    },
+    "capabilities": [
+      "streaming",
+      "chat",
+      "function_calling",
+      "tools",
+      "structured_output",
+      "json_mode"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 0.15,
+          "output_per_million": 0.15,
+          "reasoning_output_per_million": 0.15
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "cost": {
+        "input": 0.15,
+        "output": 0.15
+      },
+      "limit": {
+        "context": 128000,
+        "output": 4096
+      },
+      "last_synced": "2026-01-24T18:05:51.951Z"
+    }
+  },
+  {
+    "id": "mistral.mistral-7b-instruct-v0:2",
+    "name": "Mistral-7B-Instruct-v0.3",
+    "provider": "bedrock",
+    "family": "mistral",
+    "created_at": "2025-04-01 00:00:00 UTC",
+    "context_window": 127000,
+    "max_output_tokens": 127000,
+    "modalities": {
+      "input": [
+        "text"
+      ],
+      "output": [
+        "text"
+      ]
+    },
+    "capabilities": [
+      "streaming",
+      "chat",
+      "function_calling",
+      "tools",
+      "structured_output",
+      "json_mode"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 0.11,
+          "output_per_million": 0.11,
+          "reasoning_output_per_million": 0.11
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "cost": {
+        "input": 0.11,
+        "output": 0.11
+      },
+      "limit": {
+        "context": 127000,
+        "output": 127000
+      },
+      "last_synced": "2026-01-24T18:05:51.951Z"
+    }
+  },
+  {
+    "id": "mistral.mistral-large-2402-v1:0",
+    "name": "Mistral Large (24.02)",
+    "provider": "bedrock",
+    "family": "mistral-large",
+    "created_at": "2024-12-01 00:00:00 UTC",
+    "context_window": 128000,
+    "max_output_tokens": 4096,
+    "modalities": {
+      "input": [
+        "text"
+      ],
+      "output": [
+        "text"
+      ]
+    },
+    "capabilities": [
+      "streaming",
+      "chat",
+      "function_calling",
+      "tools",
+      "structured_output",
+      "json_mode"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 0.5,
+          "output_per_million": 1.5,
+          "reasoning_output_per_million": 1.5
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "cost": {
+        "input": 0.5,
+        "output": 1.5
+      },
+      "limit": {
+        "context": 128000,
+        "output": 4096
+      },
+      "last_synced": "2026-01-24T18:05:51.951Z"
+    }
+  },
+  {
+    "id": "mistral.mixtral-8x7b-instruct-v0:1",
+    "name": "Mixtral-8x7B-Instruct-v0.1",
+    "provider": "bedrock",
+    "family": "mixtral",
+    "created_at": "2025-04-01 00:00:00 UTC",
+    "context_window": 32000,
+    "max_output_tokens": 32000,
+    "modalities": {
+      "input": [
+        "text"
+      ],
+      "output": [
+        "text"
+      ]
+    },
+    "capabilities": [
+      "streaming",
+      "chat",
+      "structured_output",
+      "json_mode"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 0.7,
+          "output_per_million": 0.7,
+          "reasoning_output_per_million": 0.7
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "cost": {
+        "input": 0.7,
+        "output": 0.7
+      },
+      "limit": {
+        "context": 32000,
+        "output": 32000
+      },
+      "last_synced": "2026-01-24T18:05:51.951Z"
+    }
+  },
+  {
+    "id": "mistral.voxtral-mini-3b-2507",
+    "name": "Voxtral Mini 3B 2507",
+    "provider": "bedrock",
+    "family": "mistral",
+    "created_at": "2024-12-01 00:00:00 UTC",
+    "context_window": 128000,
+    "max_output_tokens": 4096,
+    "modalities": {
+      "input": [
+        "audio",
+        "text"
+      ],
+      "output": [
+        "text"
+      ]
+    },
+    "capabilities": [
+      "streaming",
+      "chat",
+      "transcription",
+      "function_calling",
+      "tools",
+      "structured_output",
+      "json_mode"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 0.04,
+          "output_per_million": 0.04,
+          "reasoning_output_per_million": 0.04
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "cost": {
+        "input": 0.04,
+        "output": 0.04
+      },
+      "limit": {
+        "context": 128000,
+        "output": 4096
+      },
+      "last_synced": "2026-01-24T18:05:51.951Z"
+    }
+  },
+  {
+    "id": "mistral.voxtral-small-24b-2507",
+    "name": "Voxtral Small 24B 2507",
+    "provider": "bedrock",
+    "family": "mistral",
+    "created_at": "2025-07-01 00:00:00 UTC",
+    "context_window": 32000,
+    "max_output_tokens": 8192,
+    "modalities": {
+      "input": [
+        "text",
+        "audio"
+      ],
+      "output": [
+        "text"
+      ]
+    },
+    "capabilities": [
+      "streaming",
+      "chat",
+      "vision",
+      "transcription",
+      "function_calling",
+      "tools",
+      "structured_output",
+      "json_mode"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 0.15,
+          "output_per_million": 0.35,
+          "reasoning_output_per_million": 0.35
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "cost": {
+        "input": 0.15,
+        "output": 0.35
+      },
+      "limit": {
+        "context": 32000,
+        "output": 8192
+      },
+      "last_synced": "2026-01-24T18:05:51.951Z"
     }
   },
   {
@@ -6563,9 +10105,15 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0.3,
-      "output": 256000,
-      "context": 256000
+      "cost": {
+        "input": 0.3,
+        "output": 0.9
+      },
+      "limit": {
+        "context": 256000,
+        "output": 256000
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -6604,9 +10152,15 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0.15,
-      "output": 262144,
-      "context": 262144
+      "cost": {
+        "input": 0.15,
+        "output": 0.6
+      },
+      "limit": {
+        "context": 262144,
+        "output": 262144
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -6645,9 +10199,15 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0,
-      "output": 262144,
-      "context": 262144
+      "cost": {
+        "input": 0,
+        "output": 0
+      },
+      "limit": {
+        "context": 262144,
+        "output": 262144
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -6686,9 +10246,15 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0.4,
-      "output": 131072,
-      "context": 131072
+      "cost": {
+        "input": 0.4,
+        "output": 2
+      },
+      "limit": {
+        "context": 131072,
+        "output": 131072
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -6727,9 +10293,15 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0.06,
-      "output": 128000,
-      "context": 128000
+      "cost": {
+        "input": 0.06,
+        "output": 0.12
+      },
+      "limit": {
+        "context": 128000,
+        "output": 128000
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -6768,9 +10340,15 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0,
-      "output": 32768,
-      "context": 32768
+      "cost": {
+        "input": 0,
+        "output": 0
+      },
+      "limit": {
+        "context": 32768,
+        "output": 32768
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -6809,9 +10387,15 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0.1,
-      "output": 131072,
-      "context": 131072
+      "cost": {
+        "input": 0.1,
+        "output": 0.3
+      },
+      "limit": {
+        "context": 131072,
+        "output": 131072
+      },
+      "last_synced": "2026-01-24T18:05:51.951Z"
     }
   },
   {
@@ -6850,9 +10434,15 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0,
-      "output": 32768,
-      "context": 32768
+      "cost": {
+        "input": 0,
+        "output": 0
+      },
+      "limit": {
+        "context": 32768,
+        "output": 32768
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -6893,9 +10483,15 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0.4,
-      "output": 131072,
-      "context": 131072
+      "cost": {
+        "input": 0.4,
+        "output": 2
+      },
+      "limit": {
+        "context": 131072,
+        "output": 131072
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -6936,9 +10532,15 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0.4,
-      "output": 262144,
-      "context": 262144
+      "cost": {
+        "input": 0.4,
+        "output": 2
+      },
+      "limit": {
+        "context": 262144,
+        "output": 262144
+      },
+      "last_synced": "2026-01-24T18:05:51.951Z"
     }
   },
   {
@@ -6977,9 +10579,15 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0,
-      "output": 131072,
-      "context": 131072
+      "cost": {
+        "input": 0,
+        "output": 0
+      },
+      "limit": {
+        "context": 131072,
+        "output": 131072
+      },
+      "last_synced": "2026-01-24T18:05:51.951Z"
     }
   },
   {
@@ -7020,9 +10628,15 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0,
-      "output": 8192,
-      "context": 128000
+      "cost": {
+        "input": 0,
+        "output": 0
+      },
+      "limit": {
+        "context": 128000,
+        "output": 8192
+      },
+      "last_synced": "2026-01-24T18:05:51.951Z"
     }
   },
   {
@@ -7063,9 +10677,15 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0,
-      "output": 8192,
-      "context": 96000
+      "cost": {
+        "input": 0,
+        "output": 0
+      },
+      "limit": {
+        "context": 96000,
+        "output": 8192
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -7106,9 +10726,61 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0,
-      "output": 96000,
-      "context": 96000
+      "cost": {
+        "input": 0,
+        "output": 0
+      },
+      "limit": {
+        "context": 96000,
+        "output": 96000
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
+    }
+  },
+  {
+    "id": "moonshot.kimi-k2-thinking",
+    "name": "Kimi K2 Thinking",
+    "provider": "bedrock",
+    "created_at": "2025-12-02 00:00:00 UTC",
+    "context_window": 256000,
+    "max_output_tokens": 256000,
+    "modalities": {
+      "input": [
+        "text"
+      ],
+      "output": [
+        "text"
+      ]
+    },
+    "capabilities": [
+      "streaming",
+      "reasoning",
+      "chat",
+      "function_calling",
+      "tools",
+      "structured_output",
+      "json_mode"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 0.6,
+          "output_per_million": 2.5,
+          "reasoning_output_per_million": 2.5
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "cost": {
+        "input": 0.6,
+        "output": 2.5
+      },
+      "limit": {
+        "context": 256000,
+        "output": 256000
+      },
+      "last_synced": "2026-01-24T18:05:51.951Z"
     }
   },
   {
@@ -7147,9 +10819,15 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0,
-      "output": 131072,
-      "context": 131072
+      "cost": {
+        "input": 0,
+        "output": 0
+      },
+      "limit": {
+        "context": 131072,
+        "output": 131072
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -7188,9 +10866,15 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0.55,
-      "output": 32768,
-      "context": 131072
+      "cost": {
+        "input": 0.55,
+        "output": 2.2
+      },
+      "limit": {
+        "context": 131072,
+        "output": 32768
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -7229,9 +10913,15 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0.6,
-      "output": 16384,
-      "context": 262144
+      "cost": {
+        "input": 0.6,
+        "output": 2.5
+      },
+      "limit": {
+        "context": 262144,
+        "output": 16384
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -7270,9 +10960,15 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0.6,
-      "output": 16384,
-      "context": 262144
+      "cost": {
+        "input": 0.6,
+        "output": 2.5
+      },
+      "limit": {
+        "context": 262144,
+        "output": 16384
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -7313,10 +11009,16 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0.6,
-      "output": 262144,
-      "cache_read": 0.15,
-      "context": 262144
+      "cost": {
+        "input": 0.6,
+        "output": 2.5,
+        "cache_read": 0.15
+      },
+      "limit": {
+        "context": 262144,
+        "output": 262144
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -7355,9 +11057,15 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0,
-      "output": 32800,
-      "context": 32800
+      "cost": {
+        "input": 0,
+        "output": 0
+      },
+      "limit": {
+        "context": 32800,
+        "output": 32800
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -7397,9 +11105,15 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0,
-      "output": 8192,
-      "context": 131072
+      "cost": {
+        "input": 0,
+        "output": 0
+      },
+      "limit": {
+        "context": 131072,
+        "output": 8192
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -7439,9 +11153,15 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 1,
-      "output": 131072,
-      "context": 131072
+      "cost": {
+        "input": 1,
+        "output": 3
+      },
+      "limit": {
+        "context": 131072,
+        "output": 131072
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -7481,9 +11201,109 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0.13,
-      "output": 131072,
-      "context": 131072
+      "cost": {
+        "input": 0.13,
+        "output": 0.4
+      },
+      "limit": {
+        "context": 131072,
+        "output": 131072
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
+    }
+  },
+  {
+    "id": "nvidia.nemotron-nano-12b-v2",
+    "name": "NVIDIA Nemotron Nano 12B v2 VL BF16",
+    "provider": "bedrock",
+    "family": "nemotron",
+    "created_at": "2024-12-01 00:00:00 UTC",
+    "context_window": 128000,
+    "max_output_tokens": 4096,
+    "modalities": {
+      "input": [
+        "text",
+        "image"
+      ],
+      "output": [
+        "text"
+      ]
+    },
+    "capabilities": [
+      "streaming",
+      "chat",
+      "vision",
+      "function_calling",
+      "tools",
+      "structured_output",
+      "json_mode"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 0.2,
+          "output_per_million": 0.6,
+          "reasoning_output_per_million": 0.6
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "cost": {
+        "input": 0.2,
+        "output": 0.6
+      },
+      "limit": {
+        "context": 128000,
+        "output": 4096
+      },
+      "last_synced": "2026-01-24T18:05:51.951Z"
+    }
+  },
+  {
+    "id": "nvidia.nemotron-nano-9b-v2",
+    "name": "NVIDIA Nemotron Nano 9B v2",
+    "provider": "bedrock",
+    "family": "nemotron",
+    "created_at": "2024-12-01 00:00:00 UTC",
+    "context_window": 128000,
+    "max_output_tokens": 4096,
+    "modalities": {
+      "input": [
+        "text"
+      ],
+      "output": [
+        "text"
+      ]
+    },
+    "capabilities": [
+      "streaming",
+      "chat",
+      "function_calling",
+      "tools",
+      "structured_output",
+      "json_mode"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 0.06,
+          "output_per_million": 0.23,
+          "reasoning_output_per_million": 0.23
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "cost": {
+        "input": 0.06,
+        "output": 0.23
+      },
+      "limit": {
+        "context": 128000,
+        "output": 4096
+      },
+      "last_synced": "2026-01-24T18:05:51.951Z"
     }
   },
   {
@@ -7523,9 +11343,15 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0.04,
-      "output": 131072,
-      "context": 131072
+      "cost": {
+        "input": 0.04,
+        "output": 0.16
+      },
+      "limit": {
+        "context": 131072,
+        "output": 131072
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -7568,10 +11394,16 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 15,
-      "output": 100000,
-      "cache_read": 7.5,
-      "context": 200000
+      "cost": {
+        "input": 15,
+        "output": 60,
+        "cache_read": 7.5
+      },
+      "limit": {
+        "context": 200000,
+        "output": 100000
+      },
+      "last_synced": "2026-01-24T18:05:51.948Z"
     }
   },
   {
@@ -7594,7 +11426,9 @@ export const modelsData = [
     "capabilities": [
       "streaming",
       "reasoning",
-      "chat"
+      "chat",
+      "structured_output",
+      "json_mode"
     ],
     "pricing": {
       "text_tokens": {
@@ -7608,10 +11442,16 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 1.1,
-      "output": 65536,
-      "cache_read": 0.55,
-      "context": 128000
+      "cost": {
+        "input": 1.1,
+        "output": 4.4,
+        "cache_read": 0.55
+      },
+      "limit": {
+        "context": 128000,
+        "output": 65536
+      },
+      "last_synced": "2026-01-24T18:05:51.948Z"
     }
   },
   {
@@ -7648,10 +11488,16 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 15,
-      "output": 32768,
-      "cache_read": 7.5,
-      "context": 128000
+      "cost": {
+        "input": 15,
+        "output": 60,
+        "cache_read": 7.5
+      },
+      "limit": {
+        "context": 128000,
+        "output": 32768
+      },
+      "last_synced": "2026-01-24T18:05:51.948Z"
     }
   },
   {
@@ -7693,9 +11539,15 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 150,
-      "output": 100000,
-      "context": 200000
+      "cost": {
+        "input": 150,
+        "output": 600
+      },
+      "limit": {
+        "context": 200000,
+        "output": 100000
+      },
+      "last_synced": "2026-01-24T18:05:51.948Z"
     }
   },
   {
@@ -7738,10 +11590,16 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 2,
-      "output": 100000,
-      "cache_read": 0.5,
-      "context": 200000
+      "cost": {
+        "input": 2,
+        "output": 8,
+        "cache_read": 0.5
+      },
+      "limit": {
+        "context": 200000,
+        "output": 100000
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -7784,10 +11642,16 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 10,
-      "output": 100000,
-      "cache_read": 2.5,
-      "context": 200000
+      "cost": {
+        "input": 10,
+        "output": 40,
+        "cache_read": 2.5
+      },
+      "limit": {
+        "context": 200000,
+        "output": 100000
+      },
+      "last_synced": "2026-01-24T18:05:51.948Z"
     }
   },
   {
@@ -7828,10 +11692,16 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 1.1,
-      "output": 100000,
-      "cache_read": 0.55,
-      "context": 200000
+      "cost": {
+        "input": 1.1,
+        "output": 4.4,
+        "cache_read": 0.55
+      },
+      "limit": {
+        "context": 200000,
+        "output": 100000
+      },
+      "last_synced": "2026-01-24T18:05:51.948Z"
     }
   },
   {
@@ -7873,9 +11743,15 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 20,
-      "output": 100000,
-      "context": 200000
+      "cost": {
+        "input": 20,
+        "output": 80
+      },
+      "limit": {
+        "context": 200000,
+        "output": 100000
+      },
+      "last_synced": "2026-01-24T18:05:51.948Z"
     }
   },
   {
@@ -7918,10 +11794,16 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 1.1,
-      "output": 100000,
-      "cache_read": 0.28,
-      "context": 200000
+      "cost": {
+        "input": 1.1,
+        "output": 4.4,
+        "cache_read": 0.28
+      },
+      "limit": {
+        "context": 200000,
+        "output": 100000
+      },
+      "last_synced": "2026-01-24T18:05:51.948Z"
     }
   },
   {
@@ -7964,10 +11846,200 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 2,
-      "output": 100000,
-      "cache_read": 0.5,
-      "context": 200000
+      "cost": {
+        "input": 2,
+        "output": 8,
+        "cache_read": 0.5
+      },
+      "limit": {
+        "context": 200000,
+        "output": 100000
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
+    }
+  },
+  {
+    "id": "openai.gpt-oss-120b-1:0",
+    "name": "gpt-oss-120b",
+    "provider": "bedrock",
+    "family": "gpt-oss",
+    "created_at": "2024-12-01 00:00:00 UTC",
+    "context_window": 128000,
+    "max_output_tokens": 4096,
+    "modalities": {
+      "input": [
+        "text"
+      ],
+      "output": [
+        "text"
+      ]
+    },
+    "capabilities": [
+      "streaming",
+      "chat",
+      "function_calling",
+      "tools",
+      "structured_output",
+      "json_mode"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 0.15,
+          "output_per_million": 0.6,
+          "reasoning_output_per_million": 0.6
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "cost": {
+        "input": 0.15,
+        "output": 0.6
+      },
+      "limit": {
+        "context": 128000,
+        "output": 4096
+      },
+      "last_synced": "2026-01-24T18:05:51.951Z"
+    }
+  },
+  {
+    "id": "openai.gpt-oss-20b-1:0",
+    "name": "gpt-oss-20b",
+    "provider": "bedrock",
+    "family": "gpt-oss",
+    "created_at": "2024-12-01 00:00:00 UTC",
+    "context_window": 128000,
+    "max_output_tokens": 4096,
+    "modalities": {
+      "input": [
+        "text"
+      ],
+      "output": [
+        "text"
+      ]
+    },
+    "capabilities": [
+      "streaming",
+      "chat",
+      "function_calling",
+      "tools",
+      "structured_output",
+      "json_mode"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 0.07,
+          "output_per_million": 0.3,
+          "reasoning_output_per_million": 0.3
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "cost": {
+        "input": 0.07,
+        "output": 0.3
+      },
+      "limit": {
+        "context": 128000,
+        "output": 4096
+      },
+      "last_synced": "2026-01-24T18:05:51.951Z"
+    }
+  },
+  {
+    "id": "openai.gpt-oss-safeguard-120b",
+    "name": "GPT OSS Safeguard 120B",
+    "provider": "bedrock",
+    "family": "gpt-oss",
+    "created_at": "2024-12-01 00:00:00 UTC",
+    "context_window": 128000,
+    "max_output_tokens": 4096,
+    "modalities": {
+      "input": [
+        "text"
+      ],
+      "output": [
+        "text"
+      ]
+    },
+    "capabilities": [
+      "streaming",
+      "chat",
+      "function_calling",
+      "tools",
+      "structured_output",
+      "json_mode"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 0.15,
+          "output_per_million": 0.6,
+          "reasoning_output_per_million": 0.6
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "cost": {
+        "input": 0.15,
+        "output": 0.6
+      },
+      "limit": {
+        "context": 128000,
+        "output": 4096
+      },
+      "last_synced": "2026-01-24T18:05:51.951Z"
+    }
+  },
+  {
+    "id": "openai.gpt-oss-safeguard-20b",
+    "name": "GPT OSS Safeguard 20B",
+    "provider": "bedrock",
+    "family": "gpt-oss",
+    "created_at": "2024-12-01 00:00:00 UTC",
+    "context_window": 128000,
+    "max_output_tokens": 4096,
+    "modalities": {
+      "input": [
+        "text"
+      ],
+      "output": [
+        "text"
+      ]
+    },
+    "capabilities": [
+      "streaming",
+      "chat",
+      "function_calling",
+      "tools",
+      "structured_output",
+      "json_mode"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 0.07,
+          "output_per_million": 0.2,
+          "reasoning_output_per_million": 0.2
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "cost": {
+        "input": 0.07,
+        "output": 0.2
+      },
+      "limit": {
+        "context": 128000,
+        "output": 4096
+      },
+      "last_synced": "2026-01-24T18:05:51.951Z"
     }
   },
   {
@@ -8009,10 +12081,16 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 2,
-      "output": 32768,
-      "cache_read": 0.5,
-      "context": 1047576
+      "cost": {
+        "input": 2,
+        "output": 8,
+        "cache_read": 0.5
+      },
+      "limit": {
+        "context": 1047576,
+        "output": 32768
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -8054,10 +12132,16 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0.4,
-      "output": 32768,
-      "cache_read": 0.1,
-      "context": 1047576
+      "cost": {
+        "input": 0.4,
+        "output": 1.6,
+        "cache_read": 0.1
+      },
+      "limit": {
+        "context": 1047576,
+        "output": 32768
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -8099,10 +12183,16 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0.15,
-      "output": 16384,
-      "cache_read": 0.08,
-      "context": 128000
+      "cost": {
+        "input": 0.15,
+        "output": 0.6,
+        "cache_read": 0.08
+      },
+      "limit": {
+        "context": 128000,
+        "output": 16384
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -8144,9 +12234,15 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 1.25,
-      "output": 128000,
-      "context": 400000
+      "cost": {
+        "input": 1.25,
+        "output": 10
+      },
+      "limit": {
+        "context": 400000,
+        "output": 128000
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -8184,9 +12280,15 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 1.25,
-      "output": 128000,
-      "context": 400000
+      "cost": {
+        "input": 1.25,
+        "output": 10
+      },
+      "limit": {
+        "context": 400000,
+        "output": 128000
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -8229,10 +12331,16 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 1.25,
-      "output": 128000,
-      "cache_read": 0.125,
-      "context": 400000
+      "cost": {
+        "input": 1.25,
+        "output": 10,
+        "cache_read": 0.125
+      },
+      "limit": {
+        "context": 400000,
+        "output": 128000
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -8278,10 +12386,16 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 5,
-      "output": 128000,
-      "cache_read": 1.25,
-      "context": 400000
+      "cost": {
+        "input": 5,
+        "output": 10,
+        "cache_read": 1.25
+      },
+      "limit": {
+        "context": 400000,
+        "output": 128000
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -8323,9 +12437,15 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0.25,
-      "output": 128000,
-      "context": 400000
+      "cost": {
+        "input": 0.25,
+        "output": 2
+      },
+      "limit": {
+        "context": 400000,
+        "output": 128000
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -8367,9 +12487,15 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0.05,
-      "output": 128000,
-      "context": 400000
+      "cost": {
+        "input": 0.05,
+        "output": 0.4
+      },
+      "limit": {
+        "context": 400000,
+        "output": 128000
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -8411,9 +12537,15 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 15,
-      "output": 272000,
-      "context": 400000
+      "cost": {
+        "input": 15,
+        "output": 120
+      },
+      "limit": {
+        "context": 400000,
+        "output": 272000
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -8456,10 +12588,16 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 1.25,
-      "output": 128000,
-      "cache_read": 0.125,
-      "context": 400000
+      "cost": {
+        "input": 1.25,
+        "output": 10,
+        "cache_read": 0.125
+      },
+      "limit": {
+        "context": 400000,
+        "output": 128000
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -8502,10 +12640,16 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 1.25,
-      "output": 16384,
-      "cache_read": 0.125,
-      "context": 128000
+      "cost": {
+        "input": 1.25,
+        "output": 10,
+        "cache_read": 0.125
+      },
+      "limit": {
+        "context": 128000,
+        "output": 16384
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -8548,10 +12692,16 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 1.25,
-      "output": 128000,
-      "cache_read": 0.125,
-      "context": 400000
+      "cost": {
+        "input": 1.25,
+        "output": 10,
+        "cache_read": 0.125
+      },
+      "limit": {
+        "context": 400000,
+        "output": 128000
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -8594,10 +12744,16 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 1.1,
-      "output": 128000,
-      "cache_read": 0.11,
-      "context": 400000
+      "cost": {
+        "input": 1.1,
+        "output": 9,
+        "cache_read": 0.11
+      },
+      "limit": {
+        "context": 400000,
+        "output": 128000
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -8640,10 +12796,16 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0.25,
-      "output": 100000,
-      "cache_read": 0.025,
-      "context": 400000
+      "cost": {
+        "input": 0.25,
+        "output": 2,
+        "cache_read": 0.025
+      },
+      "limit": {
+        "context": 400000,
+        "output": 100000
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -8686,10 +12848,16 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 1.75,
-      "output": 128000,
-      "cache_read": 0.175,
-      "context": 400000
+      "cost": {
+        "input": 1.75,
+        "output": 14,
+        "cache_read": 0.175
+      },
+      "limit": {
+        "context": 400000,
+        "output": 128000
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -8732,10 +12900,16 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 1.75,
-      "output": 16384,
-      "cache_read": 0.175,
-      "context": 128000
+      "cost": {
+        "input": 1.75,
+        "output": 14,
+        "cache_read": 0.175
+      },
+      "limit": {
+        "context": 128000,
+        "output": 16384
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -8778,10 +12952,16 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 1.75,
-      "output": 128000,
-      "cache_read": 0.175,
-      "context": 400000
+      "cost": {
+        "input": 1.75,
+        "output": 14,
+        "cache_read": 0.175
+      },
+      "limit": {
+        "context": 400000,
+        "output": 128000
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -8823,9 +13003,15 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 21,
-      "output": 128000,
-      "context": 400000
+      "cost": {
+        "input": 21,
+        "output": 168
+      },
+      "limit": {
+        "context": 400000,
+        "output": 128000
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -8864,9 +13050,15 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0.072,
-      "output": 32768,
-      "context": 131072
+      "cost": {
+        "input": 0.072,
+        "output": 0.28
+      },
+      "limit": {
+        "context": 131072,
+        "output": 32768
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -8905,9 +13097,15 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0.09,
-      "output": 32768,
-      "context": 131072
+      "cost": {
+        "input": 0.09,
+        "output": 0.36
+      },
+      "limit": {
+        "context": 131072,
+        "output": 32768
+      },
+      "last_synced": "2026-01-24T18:05:51.948Z"
     }
   },
   {
@@ -8946,9 +13144,15 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0.05,
-      "output": 32768,
-      "context": 131072
+      "cost": {
+        "input": 0.05,
+        "output": 0.24
+      },
+      "limit": {
+        "context": 131072,
+        "output": 32768
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -8987,9 +13191,15 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0.05,
-      "output": 32768,
-      "context": 131072
+      "cost": {
+        "input": 0.05,
+        "output": 0.2
+      },
+      "limit": {
+        "context": 131072,
+        "output": 32768
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -9028,9 +13238,15 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0.07,
-      "output": 32768,
-      "context": 131072
+      "cost": {
+        "input": 0.07,
+        "output": 0.25
+      },
+      "limit": {
+        "context": 131072,
+        "output": 32768
+      },
+      "last_synced": "2026-01-24T18:05:51.948Z"
     }
   },
   {
@@ -9069,9 +13285,15 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0.075,
-      "output": 65536,
-      "context": 131072
+      "cost": {
+        "input": 0.075,
+        "output": 0.3
+      },
+      "limit": {
+        "context": 131072,
+        "output": 65536
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -9114,10 +13336,16 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 1.1,
-      "output": 100000,
-      "cache_read": 0.28,
-      "context": 200000
+      "cost": {
+        "input": 1.1,
+        "output": 4.4,
+        "cache_read": 0.28
+      },
+      "limit": {
+        "context": 200000,
+        "output": 100000
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -9158,9 +13386,15 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0,
-      "output": 0,
-      "context": 1840000
+      "cost": {
+        "input": 0,
+        "output": 0
+      },
+      "limit": {
+        "context": 1840000,
+        "output": 0
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -9202,9 +13436,298 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0,
-      "output": 0,
-      "context": 1840000
+      "cost": {
+        "input": 0,
+        "output": 0
+      },
+      "limit": {
+        "context": 1840000,
+        "output": 0
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
+    }
+  },
+  {
+    "id": "qwen.qwen3-235b-a22b-2507-v1:0",
+    "name": "Qwen3 235B A22B 2507",
+    "provider": "bedrock",
+    "family": "qwen",
+    "created_at": "2025-09-18 00:00:00 UTC",
+    "context_window": 262144,
+    "max_output_tokens": 131072,
+    "knowledge_cutoff": "2024-04",
+    "modalities": {
+      "input": [
+        "text"
+      ],
+      "output": [
+        "text"
+      ]
+    },
+    "capabilities": [
+      "streaming",
+      "chat",
+      "function_calling",
+      "tools",
+      "structured_output",
+      "json_mode"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 0.22,
+          "output_per_million": 0.88,
+          "reasoning_output_per_million": 0.88
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "cost": {
+        "input": 0.22,
+        "output": 0.88
+      },
+      "limit": {
+        "context": 262144,
+        "output": 131072
+      },
+      "last_synced": "2026-01-24T18:05:51.951Z"
+    }
+  },
+  {
+    "id": "qwen.qwen3-32b-v1:0",
+    "name": "Qwen3 32B (dense)",
+    "provider": "bedrock",
+    "family": "qwen",
+    "created_at": "2025-09-18 00:00:00 UTC",
+    "context_window": 16384,
+    "max_output_tokens": 16384,
+    "knowledge_cutoff": "2024-04",
+    "modalities": {
+      "input": [
+        "text"
+      ],
+      "output": [
+        "text"
+      ]
+    },
+    "capabilities": [
+      "streaming",
+      "reasoning",
+      "chat",
+      "function_calling",
+      "tools",
+      "structured_output",
+      "json_mode"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 0.15,
+          "output_per_million": 0.6,
+          "reasoning_output_per_million": 0.6
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "cost": {
+        "input": 0.15,
+        "output": 0.6
+      },
+      "limit": {
+        "context": 16384,
+        "output": 16384
+      },
+      "last_synced": "2026-01-24T18:05:51.951Z"
+    }
+  },
+  {
+    "id": "qwen.qwen3-coder-30b-a3b-v1:0",
+    "name": "Qwen3 Coder 30B A3B Instruct",
+    "provider": "bedrock",
+    "family": "qwen",
+    "created_at": "2025-09-18 00:00:00 UTC",
+    "context_window": 262144,
+    "max_output_tokens": 131072,
+    "knowledge_cutoff": "2024-04",
+    "modalities": {
+      "input": [
+        "text"
+      ],
+      "output": [
+        "text"
+      ]
+    },
+    "capabilities": [
+      "streaming",
+      "chat",
+      "function_calling",
+      "tools",
+      "structured_output",
+      "json_mode"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 0.15,
+          "output_per_million": 0.6,
+          "reasoning_output_per_million": 0.6
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "cost": {
+        "input": 0.15,
+        "output": 0.6
+      },
+      "limit": {
+        "context": 262144,
+        "output": 131072
+      },
+      "last_synced": "2026-01-24T18:05:51.951Z"
+    }
+  },
+  {
+    "id": "qwen.qwen3-coder-480b-a35b-v1:0",
+    "name": "Qwen3 Coder 480B A35B Instruct",
+    "provider": "bedrock",
+    "family": "qwen",
+    "created_at": "2025-09-18 00:00:00 UTC",
+    "context_window": 131072,
+    "max_output_tokens": 65536,
+    "knowledge_cutoff": "2024-04",
+    "modalities": {
+      "input": [
+        "text"
+      ],
+      "output": [
+        "text"
+      ]
+    },
+    "capabilities": [
+      "streaming",
+      "chat",
+      "function_calling",
+      "tools",
+      "structured_output",
+      "json_mode"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 0.22,
+          "output_per_million": 1.8,
+          "reasoning_output_per_million": 1.8
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "cost": {
+        "input": 0.22,
+        "output": 1.8
+      },
+      "limit": {
+        "context": 131072,
+        "output": 65536
+      },
+      "last_synced": "2026-01-24T18:05:51.951Z"
+    }
+  },
+  {
+    "id": "qwen.qwen3-next-80b-a3b",
+    "name": "Qwen/Qwen3-Next-80B-A3B-Instruct",
+    "provider": "bedrock",
+    "family": "qwen",
+    "created_at": "2025-09-18 00:00:00 UTC",
+    "context_window": 262000,
+    "max_output_tokens": 262000,
+    "modalities": {
+      "input": [
+        "text"
+      ],
+      "output": [
+        "text"
+      ]
+    },
+    "capabilities": [
+      "streaming",
+      "chat",
+      "function_calling",
+      "tools",
+      "structured_output",
+      "json_mode"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 0.14,
+          "output_per_million": 1.4,
+          "reasoning_output_per_million": 1.4
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "cost": {
+        "input": 0.14,
+        "output": 1.4
+      },
+      "limit": {
+        "context": 262000,
+        "output": 262000
+      },
+      "last_synced": "2026-01-24T18:05:51.951Z"
+    }
+  },
+  {
+    "id": "qwen.qwen3-vl-235b-a22b",
+    "name": "Qwen/Qwen3-VL-235B-A22B-Instruct",
+    "provider": "bedrock",
+    "family": "qwen",
+    "created_at": "2025-10-04 00:00:00 UTC",
+    "context_window": 262000,
+    "max_output_tokens": 262000,
+    "modalities": {
+      "input": [
+        "text",
+        "image"
+      ],
+      "output": [
+        "text"
+      ]
+    },
+    "capabilities": [
+      "streaming",
+      "chat",
+      "vision",
+      "function_calling",
+      "tools",
+      "structured_output",
+      "json_mode"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 0.3,
+          "output_per_million": 1.5,
+          "reasoning_output_per_million": 1.5
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "cost": {
+        "input": 0.3,
+        "output": 1.5
+      },
+      "limit": {
+        "context": 262000,
+        "output": 262000
+      },
+      "last_synced": "2026-01-24T18:05:51.951Z"
     }
   },
   {
@@ -9239,9 +13762,15 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0,
-      "output": 8192,
-      "context": 32768
+      "cost": {
+        "input": 0,
+        "output": 0
+      },
+      "limit": {
+        "context": 32768,
+        "output": 8192
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -9283,9 +13812,15 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0,
-      "output": 8192,
-      "context": 8192
+      "cost": {
+        "input": 0,
+        "output": 0
+      },
+      "limit": {
+        "context": 8192,
+        "output": 8192
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -9322,9 +13857,15 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0,
-      "output": 8192,
-      "context": 32768
+      "cost": {
+        "input": 0,
+        "output": 0
+      },
+      "limit": {
+        "context": 32768,
+        "output": 8192
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -9365,9 +13906,15 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0,
-      "output": 32768,
-      "context": 32768
+      "cost": {
+        "input": 0,
+        "output": 0
+      },
+      "limit": {
+        "context": 32768,
+        "output": 32768
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -9407,9 +13954,15 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0,
-      "output": 40960,
-      "context": 40960
+      "cost": {
+        "input": 0,
+        "output": 0
+      },
+      "limit": {
+        "context": 40960,
+        "output": 40960
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -9448,9 +14001,15 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0.15,
-      "output": 131072,
-      "context": 262144
+      "cost": {
+        "input": 0.15,
+        "output": 0.85
+      },
+      "limit": {
+        "context": 262144,
+        "output": 131072
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -9489,9 +14048,15 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0,
-      "output": 131072,
-      "context": 262144
+      "cost": {
+        "input": 0,
+        "output": 0
+      },
+      "limit": {
+        "context": 262144,
+        "output": 131072
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -9531,9 +14096,15 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0.078,
-      "output": 81920,
-      "context": 262144
+      "cost": {
+        "input": 0.078,
+        "output": 0.312
+      },
+      "limit": {
+        "context": 262144,
+        "output": 81920
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -9573,9 +14144,15 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0,
-      "output": 131072,
-      "context": 131072
+      "cost": {
+        "input": 0,
+        "output": 0
+      },
+      "limit": {
+        "context": 131072,
+        "output": 131072
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -9614,9 +14191,15 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0.2,
-      "output": 262000,
-      "context": 262000
+      "cost": {
+        "input": 0.2,
+        "output": 0.8
+      },
+      "limit": {
+        "context": 262000,
+        "output": 262000
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -9656,9 +14239,15 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0.2,
-      "output": 262000,
-      "context": 262000
+      "cost": {
+        "input": 0.2,
+        "output": 0.8
+      },
+      "limit": {
+        "context": 262000,
+        "output": 262000
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -9698,9 +14287,15 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0,
-      "output": 40960,
-      "context": 40960
+      "cost": {
+        "input": 0,
+        "output": 0
+      },
+      "limit": {
+        "context": 40960,
+        "output": 40960
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -9740,9 +14335,15 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0,
-      "output": 40960,
-      "context": 40960
+      "cost": {
+        "input": 0,
+        "output": 0
+      },
+      "limit": {
+        "context": 40960,
+        "output": 40960
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -9782,9 +14383,15 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0,
-      "output": 40960,
-      "context": 40960
+      "cost": {
+        "input": 0,
+        "output": 0
+      },
+      "limit": {
+        "context": 40960,
+        "output": 40960
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -9823,9 +14430,15 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0.3,
-      "output": 66536,
-      "context": 262144
+      "cost": {
+        "input": 0.3,
+        "output": 1.2
+      },
+      "limit": {
+        "context": 262144,
+        "output": 66536
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -9864,9 +14477,15 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0.07,
-      "output": 65536,
-      "context": 160000
+      "cost": {
+        "input": 0.07,
+        "output": 0.27
+      },
+      "limit": {
+        "context": 160000,
+        "output": 65536
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -9905,9 +14524,15 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0.3,
-      "output": 66536,
-      "context": 128000
+      "cost": {
+        "input": 0.3,
+        "output": 1.5
+      },
+      "limit": {
+        "context": 128000,
+        "output": 66536
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -9946,9 +14571,15 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0.38,
-      "output": 32768,
-      "context": 131072
+      "cost": {
+        "input": 0.38,
+        "output": 1.53
+      },
+      "limit": {
+        "context": 131072,
+        "output": 32768
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -9987,9 +14618,15 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0,
-      "output": 66536,
-      "context": 262144
+      "cost": {
+        "input": 0,
+        "output": 0
+      },
+      "limit": {
+        "context": 262144,
+        "output": 66536
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -10028,9 +14665,15 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 1.2,
-      "output": 32768,
-      "context": 262144
+      "cost": {
+        "input": 1.2,
+        "output": 6
+      },
+      "limit": {
+        "context": 262144,
+        "output": 32768
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -10069,9 +14712,15 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0.14,
-      "output": 262144,
-      "context": 262144
+      "cost": {
+        "input": 0.14,
+        "output": 1.4
+      },
+      "limit": {
+        "context": 262144,
+        "output": 262144
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -10111,9 +14760,15 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0.14,
-      "output": 262144,
-      "context": 262144
+      "cost": {
+        "input": 0.14,
+        "output": 1.4
+      },
+      "limit": {
+        "context": 262144,
+        "output": 262144
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -10153,9 +14808,15 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0,
-      "output": 32768,
-      "context": 32768
+      "cost": {
+        "input": 0,
+        "output": 0
+      },
+      "limit": {
+        "context": 32768,
+        "output": 32768
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -10195,9 +14856,15 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0,
-      "output": 8192,
-      "context": 32768
+      "cost": {
+        "input": 0,
+        "output": 0
+      },
+      "limit": {
+        "context": 32768,
+        "output": 8192
+      },
+      "last_synced": "2026-01-24T18:05:51.951Z"
     }
   },
   {
@@ -10237,9 +14904,46 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0,
-      "output": 32768,
-      "context": 32768
+      "cost": {
+        "input": 0,
+        "output": 0
+      },
+      "limit": {
+        "context": 32768,
+        "output": 32768
+      },
+      "last_synced": "2026-01-24T18:05:51.951Z"
+    }
+  },
+  {
+    "id": "stability.stable-diffusion-xl-v1:0",
+    "name": "Stable Diffusion XL v1",
+    "provider": "bedrock",
+    "family": "stability",
+    "created_at": "2023-11-28 00:00:00 UTC",
+    "context_window": 0,
+    "max_output_tokens": 0,
+    "modalities": {
+      "input": [
+        "text"
+      ],
+      "output": [
+        "image"
+      ]
+    },
+    "capabilities": [
+      "image_generation"
+    ],
+    "pricing": {
+      "image": {
+        "standard": {
+          "cost_per_image": 0.04
+        }
+      }
+    },
+    "metadata": {
+      "source": "aws",
+      "last_synced": "2026-01-24T18:13:00.000Z"
     }
   },
   {
@@ -10274,9 +14978,15 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0.13,
-      "output": 3072,
-      "context": 8191
+      "cost": {
+        "input": 0.13,
+        "output": 0
+      },
+      "limit": {
+        "context": 8191,
+        "output": 3072
+      },
+      "last_synced": "2026-01-24T18:05:51.948Z"
     }
   },
   {
@@ -10311,9 +15021,15 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0.02,
-      "output": 1536,
-      "context": 8191
+      "cost": {
+        "input": 0.02,
+        "output": 0
+      },
+      "limit": {
+        "context": 8191,
+        "output": 1536
+      },
+      "last_synced": "2026-01-24T18:05:51.948Z"
     }
   },
   {
@@ -10348,9 +15064,15 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0.1,
-      "output": 1536,
-      "context": 8192
+      "cost": {
+        "input": 0.1,
+        "output": 0
+      },
+      "limit": {
+        "context": 8192,
+        "output": 1536
+      },
+      "last_synced": "2026-01-24T18:05:51.948Z"
     }
   },
   {
@@ -10390,9 +15112,15 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0,
-      "output": 32768,
-      "context": 32768
+      "cost": {
+        "input": 0,
+        "output": 0
+      },
+      "limit": {
+        "context": 32768,
+        "output": 32768
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -10428,9 +15156,15 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0,
-      "output": 163840,
-      "context": 163840
+      "cost": {
+        "input": 0,
+        "output": 0
+      },
+      "limit": {
+        "context": 163840,
+        "output": 163840
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -10470,11 +15204,17 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 3,
-      "output": 8192,
-      "cache_read": 0.75,
-      "cache_write": 15,
-      "context": 131072
+      "cost": {
+        "input": 3,
+        "output": 15,
+        "cache_read": 0.75,
+        "cache_write": 15
+      },
+      "limit": {
+        "context": 131072,
+        "output": 8192
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -10514,11 +15254,17 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 3,
-      "output": 8192,
-      "cache_read": 0.75,
-      "cache_write": 15,
-      "context": 131072
+      "cost": {
+        "input": 3,
+        "output": 15,
+        "cache_read": 0.75,
+        "cache_write": 15
+      },
+      "limit": {
+        "context": 131072,
+        "output": 8192
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -10559,11 +15305,17 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0.3,
-      "output": 8192,
-      "cache_read": 0.075,
-      "cache_write": 0.5,
-      "context": 131072
+      "cost": {
+        "input": 0.3,
+        "output": 0.5,
+        "cache_read": 0.075,
+        "cache_write": 0.5
+      },
+      "limit": {
+        "context": 131072,
+        "output": 8192
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -10604,11 +15356,17 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0.3,
-      "output": 8192,
-      "cache_read": 0.075,
-      "cache_write": 0.5,
-      "context": 131072
+      "cost": {
+        "input": 0.3,
+        "output": 0.5,
+        "cache_read": 0.075,
+        "cache_write": 0.5
+      },
+      "limit": {
+        "context": 131072,
+        "output": 8192
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -10649,11 +15407,17 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 3,
-      "output": 64000,
-      "cache_read": 0.75,
-      "cache_write": 15,
-      "context": 256000
+      "cost": {
+        "input": 3,
+        "output": 15,
+        "cache_read": 0.75,
+        "cache_write": 15
+      },
+      "limit": {
+        "context": 256000,
+        "output": 64000
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -10696,11 +15460,17 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0.2,
-      "output": 30000,
-      "cache_read": 0.05,
-      "cache_write": 0.05,
-      "context": 2000000
+      "cost": {
+        "input": 0.2,
+        "output": 0.5,
+        "cache_read": 0.05,
+        "cache_write": 0.05
+      },
+      "limit": {
+        "context": 2000000,
+        "output": 30000
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -10743,11 +15513,17 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0.2,
-      "output": 30000,
-      "cache_read": 0.05,
-      "cache_write": 0.05,
-      "context": 2000000
+      "cost": {
+        "input": 0.2,
+        "output": 0.5,
+        "cache_read": 0.05,
+        "cache_write": 0.05
+      },
+      "limit": {
+        "context": 2000000,
+        "output": 30000
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -10788,10 +15564,16 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0.2,
-      "output": 10000,
-      "cache_read": 0.02,
-      "context": 256000
+      "cost": {
+        "input": 0.2,
+        "output": 1.5,
+        "cache_read": 0.02
+      },
+      "limit": {
+        "context": 256000,
+        "output": 10000
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -10831,9 +15613,15 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0.6,
-      "output": 96000,
-      "context": 128000
+      "cost": {
+        "input": 0.6,
+        "output": 2.2
+      },
+      "limit": {
+        "context": 128000,
+        "output": 96000
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -10873,9 +15661,15 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0.2,
-      "output": 96000,
-      "context": 128000
+      "cost": {
+        "input": 0.2,
+        "output": 1.1
+      },
+      "limit": {
+        "context": 128000,
+        "output": 96000
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -10911,9 +15705,15 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0,
-      "output": 96000,
-      "context": 128000
+      "cost": {
+        "input": 0,
+        "output": 0
+      },
+      "limit": {
+        "context": 128000,
+        "output": 96000
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -10956,9 +15756,15 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0.6,
-      "output": 16384,
-      "context": 64000
+      "cost": {
+        "input": 0.6,
+        "output": 1.8
+      },
+      "limit": {
+        "context": 64000,
+        "output": 16384
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -10999,10 +15805,16 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0.6,
-      "output": 128000,
-      "cache_read": 0.11,
-      "context": 200000
+      "cost": {
+        "input": 0.6,
+        "output": 2.2,
+        "cache_read": 0.11
+      },
+      "limit": {
+        "context": 200000,
+        "output": 128000
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -11043,10 +15855,16 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0.6,
-      "output": 128000,
-      "cache_read": 0.11,
-      "context": 200000
+      "cost": {
+        "input": 0.6,
+        "output": 1.9,
+        "cache_read": 0.11
+      },
+      "limit": {
+        "context": 200000,
+        "output": 128000
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -11087,10 +15905,16 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0.6,
-      "output": 131072,
-      "cache_read": 0.11,
-      "context": 204800
+      "cost": {
+        "input": 0.6,
+        "output": 2.2,
+        "cache_read": 0.11
+      },
+      "limit": {
+        "context": 204800,
+        "output": 131072
+      },
+      "last_synced": "2026-01-24T18:05:51.950Z"
     }
   },
   {
@@ -11130,9 +15954,15 @@ export const modelsData = [
     },
     "metadata": {
       "source": "models.dev",
-      "input": 0.6,
-      "output": 131072,
-      "context": 204800
+      "cost": {
+        "input": 0.6,
+        "output": 2.2
+      },
+      "limit": {
+        "context": 204800,
+        "output": 131072
+      },
+      "last_synced": "2026-01-24T18:05:51.948Z"
     }
   }
 ];

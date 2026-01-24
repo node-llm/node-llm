@@ -8,12 +8,21 @@ const MODELS_FILE = path.join(ROOT_DIR, "packages/core/src/models/models.ts");
 const ALIASES_FILE = path.join(ROOT_DIR, "packages/core/src/aliases.ts");
 const API_URL = "https://models.dev/api.json";
 
-const SUPPORTED_PROVIDERS = ["openai", "anthropic", "gemini", "deepseek", "openrouter", "ollama"];
+const SUPPORTED_PROVIDERS = [
+  "openai",
+  "anthropic",
+  "gemini",
+  "deepseek",
+  "openrouter",
+  "ollama",
+  "bedrock"
+];
 
 const PROVIDER_MAP = {
   google: "gemini",
   "google-vertex": "gemini",
-  vertexai: "gemini"
+  vertexai: "gemini",
+  "amazon-bedrock": "bedrock"
 };
 
 // High-quality manual overrides for the most common models
@@ -24,20 +33,76 @@ const GOLDEN_ALIASES = {
   "o3-mini": { openai: "o3-mini", openrouter: "openai/o3-mini" },
   "claude-3-5-sonnet": {
     anthropic: "claude-3-5-sonnet-20241022",
-    openrouter: "anthropic/claude-3.5-sonnet"
+    openrouter: "anthropic/claude-3.5-sonnet",
+    bedrock: "anthropic.claude-3-5-sonnet-20241022-v2:0"
   },
   "claude-3-7-sonnet": {
     anthropic: "claude-3-7-sonnet-20250219",
-    openrouter: "anthropic/claude-3.7-sonnet"
+    openrouter: "anthropic/claude-3.7-sonnet",
+    bedrock: "anthropic.claude-3-7-sonnet-20250219-v1:0"
   },
   "claude-3-5-haiku": {
     anthropic: "claude-3-5-haiku-20241022",
-    openrouter: "anthropic/claude-3.5-haiku"
+    openrouter: "anthropic/claude-3.5-haiku",
+    bedrock: "anthropic.claude-3-5-haiku-20241022-v1:0"
   },
-  "deepseek-chat": { deepseek: "deepseek-chat", openrouter: "deepseek/deepseek-chat" },
-  "deepseek-reasoner": { deepseek: "deepseek-reasoner", openrouter: "deepseek/deepseek-reasoner" },
+  "claude-4-sonnet": { bedrock: "anthropic.claude-sonnet-4-20250514-v1:0" },
+  "claude-4-opus": { bedrock: "anthropic.claude-opus-4-20250514-v1:0" },
+  "claude-4-1-opus": { bedrock: "anthropic.claude-opus-4-1-20250805-v1:0" },
+  "claude-4-5-sonnet": { bedrock: "anthropic.claude-sonnet-4-5-20250929-v1:0" },
+  "claude-4-5-haiku": { bedrock: "anthropic.claude-haiku-4-5-20251001-v1:0" },
+  "claude-4-5-opus": { bedrock: "anthropic.claude-opus-4-5-20251101-v1:0" },
+  "deepseek-chat": {
+    deepseek: "deepseek-chat",
+    openrouter: "deepseek/deepseek-chat",
+    bedrock: "deepseek.v3-v1:0"
+  },
+  "deepseek-reasoner": {
+    deepseek: "deepseek-reasoner",
+    openrouter: "deepseek/deepseek-reasoner",
+    bedrock: "deepseek.r1-v1:0"
+  },
   "gemini-2.0-flash": { gemini: "gemini-2.0-flash", openrouter: "google/gemini-2.0-flash-001" },
-  "gemini-1.5-pro": { gemini: "gemini-1.5-pro-latest", openrouter: "google/gemini-pro-1.5" }
+  "gemini-1.5-pro": { gemini: "gemini-1.5-pro-latest", openrouter: "google/gemini-pro-1.5" },
+  "llama-3-3-70b": {
+    bedrock: "meta.llama3-3-70b-instruct-v1:0",
+    openrouter: "meta-llama/llama-3.3-70b-instruct"
+  },
+  "llama-3-1-7b": {
+    bedrock: "meta.llama3-1-8b-instruct-v1:0",
+    openrouter: "meta-llama/llama-3.1-8b-instruct"
+  },
+  "llama-3-1-70b": {
+    bedrock: "meta.llama3-1-70b-instruct-v1:0",
+    openrouter: "meta-llama/llama-3.1-70b-instruct"
+  },
+  "llama-3-2-1b": {
+    bedrock: "meta.llama3-2-1b-instruct-v1:0",
+    openrouter: "meta-llama/llama-3.2-1b-instruct"
+  },
+  "llama-3-2-3b": {
+    bedrock: "meta.llama3-2-3b-instruct-v1:0",
+    openrouter: "meta-llama/llama-3.2-3b-instruct"
+  },
+  "llama-3-2-11b": {
+    bedrock: "meta.llama3-2-11b-instruct-v1:0",
+    openrouter: "meta-llama/llama-3.2-11b-instruct"
+  },
+  "llama-3-2-90b": {
+    bedrock: "meta.llama3-2-90b-instruct-v1:0",
+    openrouter: "meta-llama/llama-3.2-90b-instruct"
+  },
+  "llama-4-maverick": { bedrock: "meta.llama4-maverick-17b-instruct-v1:0" },
+  "llama-4-scout": { bedrock: "meta.llama4-scout-17b-instruct-v1:0" },
+  "mistral-large": {
+    bedrock: "mistral.mistral-large-2402-v1:0",
+    openrouter: "mistralai/mistral-large"
+  },
+  "nova-pro": { bedrock: "amazon.nova-pro-v1:0" },
+  "nova-lite": { bedrock: "amazon.nova-lite-v1:0" },
+  "nova-micro": { bedrock: "amazon.nova-micro-v1:0" },
+  "nova-premier": { bedrock: "amazon.nova-premier-v1:0" },
+  "nova-2-lite": { bedrock: "amazon.nova-2-lite-v1:0" }
 };
 
 async function syncModels() {
@@ -50,7 +115,29 @@ async function syncModels() {
     }
 
     const rawData = await response.json();
+
+    // Read existing models to preserve manual/other source entries
+    let existingModels = [];
+    if (fs.existsSync(MODELS_FILE)) {
+      try {
+        const content = fs.readFileSync(MODELS_FILE, "utf-8");
+        const jsonMatch = content.match(/modelsData = (\[[\s\S]*\]);/);
+        if (jsonMatch) {
+          existingModels = JSON.parse(jsonMatch[1]);
+        }
+      } catch {
+        console.warn("Could not parse existing models file, starting fresh.");
+      }
+    }
+
     const finalModels = [];
+    // Preserve any models that didn't come from models.dev
+    for (const model of existingModels) {
+      if (model.metadata?.source !== "models.dev") {
+        finalModels.push(model);
+      }
+    }
+
     const generatedAliases = { ...GOLDEN_ALIASES };
 
     for (const [providerId, providerData] of Object.entries(rawData)) {
@@ -82,8 +169,24 @@ async function syncModels() {
         if (details.tool_call) {
           caps.push("function_calling");
           caps.push("tools");
+        }
+        if (details.json_mode || details.structured_output || details.tool_call) {
           caps.push("structured_output");
           caps.push("json_mode");
+        }
+
+        // Special overrides for DeepSeek Reasoner (R1)
+        if (modelId === "deepseek-reasoner") {
+          // R1 does not support tools/function calling on official API
+          const remove = ["function_calling", "tools", "vision"];
+          remove.forEach((cap) => {
+            const idx = caps.indexOf(cap);
+            if (idx > -1) caps.splice(idx, 1);
+          });
+
+          // Ensure reasoning and structured_output are present
+          if (!caps.includes("reasoning")) caps.push("reasoning");
+          if (!caps.includes("structured_output")) caps.push("structured_output");
         }
 
         const modelEntry = {
@@ -236,14 +339,23 @@ ${new Date().toISOString().split("T")[0]}
 `;
 
   // Generate tables for each provider
-  const providerOrder = ["openai", "anthropic", "gemini", "deepseek", "openrouter", "ollama"];
+  const providerOrder = [
+    "openai",
+    "anthropic",
+    "gemini",
+    "deepseek",
+    "openrouter",
+    "ollama",
+    "bedrock"
+  ];
   const providerNames = {
     openai: "OpenAI",
     anthropic: "Anthropic",
     gemini: "Gemini",
     deepseek: "DeepSeek",
     openrouter: "OpenRouter",
-    ollama: "Ollama (Local)"
+    ollama: "Ollama (Local)",
+    bedrock: "Amazon Bedrock"
   };
 
   providerOrder.forEach((provider) => {

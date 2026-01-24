@@ -61,7 +61,7 @@
   "author": "NodeLLM Contributors",
   "license": "MIT",
   "peerDependencies": {
-    "@node-llm/core": "^1.7.0",
+    "@node-llm/core": "^1.8.0",
     "@prisma/client": "^5.0.0"
   },
   "devDependencies": {

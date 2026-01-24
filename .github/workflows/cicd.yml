@@ -113,7 +113,7 @@ jobs:
         run: |
           PACKAGE_VERSION="${{ steps.pkg.outputs.version }}"
           PACKAGE_NAME="${{ steps.pkg.outputs.name }}"
-          
+
           echo "Checking if $PACKAGE_NAME@$PACKAGE_VERSION is already published..."
 
           # Check if version exists on npm

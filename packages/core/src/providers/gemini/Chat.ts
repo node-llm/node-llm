@@ -1,5 +1,5 @@
 import { ChatRequest, ChatResponse } from "../Provider.js";
-import { GeminiGenerateContentResponse } from "./types.js";
+import { GeminiGenerateContentRequest, GeminiGenerateContentResponse } from "./types.js";
 import { Capabilities } from "./Capabilities.js";
 import { handleGeminiError } from "./Errors.js";
 import { GeminiChatUtils } from "./ChatUtils.js";
@@ -21,7 +21,7 @@ export class GeminiChat {
       request.messages
     );
 
-    const generationConfig: Record<string, unknown> = {
+    const generationConfig: any = {
       temperature: temperature ?? undefined,
       maxOutputTokens: request.max_tokens
     };
@@ -49,20 +49,14 @@ export class GeminiChat {
       ...rest
     } = request;
 
-    const payload: Record<string, unknown> = {
+    const payload: any = {
       contents,
       generationConfig: {
         ...generationConfig,
-        ...((rest.generationConfig as Record<string, unknown>) || {})
+        ...(rest.generationConfig || {})
       },
       ...rest
     };
-
-    if (request.thinking) {
-      payload.thinkingConfig = {
-        includeThoughts: true
-      };
-    }
 
     if (systemInstructionParts.length > 0) {
       payload.systemInstruction = { parts: systemInstructionParts };
@@ -74,7 +68,7 @@ export class GeminiChat {
           functionDeclarations: request.tools.map((t) => ({
             name: t.function.name,
             description: t.function.description,
-            parameters: this.sanitizeSchema(t.function.parameters)
+            parameters: t.function.parameters
           }))
         }
       ];
@@ -102,15 +96,9 @@ export class GeminiChat {
     logger.logResponse("Gemini", response.status, response.statusText, json);
     const candidate = json.candidates?.[0];
 
-    const reasoningText =
-      candidate?.content?.parts
-        ?.filter((p) => p.thought)
-        .map((p) => p.text)
-        .join("\n") || null;
-
     const content =
       candidate?.content?.parts
-        ?.filter((p) => !p.thought && p.text)
+        ?.filter((p) => p.text)
         .map((p) => p.text)
         .join("\n") || null;
 
@@ -137,21 +125,13 @@ export class GeminiChat {
       ? ModelRegistry.calculateCost(usage, request.model, "gemini")
       : undefined;
 
-    const thinkingResult = reasoningText ? { text: reasoningText } : undefined;
-
-    return {
-      content,
-      tool_calls,
-      usage: calculatedUsage,
-      thinking: thinkingResult,
-      reasoning: reasoningText
-    };
+    return { content, tool_calls, usage: calculatedUsage };
   }
 
-  private sanitizeSchema(schema: unknown): unknown {
+  private sanitizeSchema(schema: any): any {
     if (typeof schema !== "object" || schema === null) return schema;
 
-    const sanitized = { ...(schema as Record<string, unknown>) };
+    const sanitized = { ...schema };
 
     // Remove unsupported fields
     delete sanitized.additionalProperties;
@@ -160,10 +140,9 @@ export class GeminiChat {
     delete sanitized.definitions;
 
     // Recursively sanitize
-    if (sanitized.properties && typeof sanitized.properties === "object") {
-      const props = sanitized.properties as Record<string, unknown>;
-      for (const key in props) {
-        props[key] = this.sanitizeSchema(props[key]);
+    if (sanitized.properties) {
+      for (const key in sanitized.properties) {
+        sanitized.properties[key] = this.sanitizeSchema(sanitized.properties[key]);
       }
     }
 
