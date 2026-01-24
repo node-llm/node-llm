@@ -1,5 +1,67 @@
 export const modelsData = [
   {
+    "id": "amazon.titan-image-generator-v2:0",
+    "name": "Titan Image Generator V2",
+    "provider": "bedrock",
+    "family": "titan-image",
+    "created_at": "2023-11-28 00:00:00 UTC",
+    "context_window": 0,
+    "max_output_tokens": 0,
+    "modalities": {
+      "input": [
+        "text"
+      ],
+      "output": [
+        "image"
+      ]
+    },
+    "capabilities": [
+      "image_generation"
+    ],
+    "pricing": {
+      "image": {
+        "standard": {
+          "cost_per_image": 0.01
+        }
+      }
+    },
+    "metadata": {
+      "source": "aws",
+      "last_synced": "2026-01-24T18:13:00.000Z"
+    }
+  },
+  {
+    "id": "stability.stable-diffusion-xl-v1:0",
+    "name": "Stable Diffusion XL v1",
+    "provider": "bedrock",
+    "family": "stability",
+    "created_at": "2023-11-28 00:00:00 UTC",
+    "context_window": 0,
+    "max_output_tokens": 0,
+    "modalities": {
+      "input": [
+        "text"
+      ],
+      "output": [
+        "image"
+      ]
+    },
+    "capabilities": [
+      "image_generation"
+    ],
+    "pricing": {
+      "image": {
+        "standard": {
+          "cost_per_image": 0.04
+        }
+      }
+    },
+    "metadata": {
+      "source": "aws",
+      "last_synced": "2026-01-24T18:13:00.000Z"
+    }
+  },
+  {
     "id": "ai21.jamba-1-5-large-v1:0",
     "name": "Jamba 1.5 Large",
     "provider": "bedrock",

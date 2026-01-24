@@ -158,6 +158,12 @@ export class Capabilities {
     return /amazon\.titan-embed/.test(modelId);
   }
 
+  static supportsImageGeneration(modelId: string): boolean {
+    if (ModelRegistry.supports(modelId, "image_generation", "bedrock")) return true;
+
+    return /amazon\.titan-image-generator|stability\.stable-diffusion/.test(modelId);
+  }
+
   /**
    * Check if a model supports audio input.
    */

@@ -34,7 +34,9 @@ import {
   ChatResponse,
   ChatChunk,
   EmbeddingRequest,
-  EmbeddingResponse
+  EmbeddingResponse,
+  ImageRequest,
+  ImageResponse
 } from "../Provider.js";
 import { BaseProvider } from "../BaseProvider.js";
 import { BedrockConfig, getBedrockEndpoint } from "./config.js";
@@ -42,6 +44,7 @@ import { BedrockChat } from "./Chat.js";
 import { BedrockModels } from "./Models.js";
 import { BedrockStreaming } from "./Streaming.js";
 import { BedrockEmbeddings } from "./Embeddings.js";
+import { BedrockImage } from "./Image.js";
 import { Capabilities } from "./Capabilities.js";
 
 export class BedrockProvider extends BaseProvider implements Provider {
@@ -50,13 +53,14 @@ export class BedrockProvider extends BaseProvider implements Provider {
   private readonly modelsHandler: BedrockModels;
   private readonly streamingHandler: BedrockStreaming;
   private readonly embeddingsHandler: BedrockEmbeddings;
+  private readonly imageHandler: BedrockImage;
 
   public capabilities: ProviderCapabilities = {
     supportsVision: (model: string) => Capabilities.supportsVision(model),
     supportsTools: (model: string) => Capabilities.supportsTools(model),
     supportsStructuredOutput: (model: string) => Capabilities.supportsJsonMode(model),
     supportsEmbeddings: (model: string) => Capabilities.supportsEmbeddings(model),
-    supportsImageGeneration: (_model: string) => false,
+    supportsImageGeneration: (model: string) => Capabilities.supportsImageGeneration(model),
     supportsTranscription: (_model: string) => false,
     supportsModeration: (_model: string) => false,
     supportsReasoning: (model: string) => Capabilities.supportsExtendedThinking(model),
@@ -71,6 +75,7 @@ export class BedrockProvider extends BaseProvider implements Provider {
     this.modelsHandler = new BedrockModels(config);
     this.streamingHandler = new BedrockStreaming(config);
     this.embeddingsHandler = new BedrockEmbeddings(config);
+    this.imageHandler = new BedrockImage(config);
   }
 
   public apiBase(): string {
@@ -105,6 +110,10 @@ export class BedrockProvider extends BaseProvider implements Provider {
 
   async embed(request: EmbeddingRequest): Promise<EmbeddingResponse> {
     return this.embeddingsHandler.execute(request);
+  }
+
+  async paint(request: ImageRequest): Promise<ImageResponse> {
+    return this.imageHandler.execute(request);
   }
 
   public override defaultModel(feature?: string): string {

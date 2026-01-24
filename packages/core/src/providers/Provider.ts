@@ -122,6 +122,7 @@ export interface ImageRequest {
   size?: string;
   quality?: string;
   n?: number;
+  headers?: Record<string, string>;
   requestTimeout?: number;
 }
 
