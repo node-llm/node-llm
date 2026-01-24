@@ -14,8 +14,6 @@ back_to_top: false
 
 **Standardize your AI integration.**
 
-If you are coming from **Ruby on Rails**, NodeLLM will feel familiar. It provides the structured approach to history and provider switching that you'd expect from a mature framework, avoiding the mess of handling raw SDKs manually.
-
 Integrating multiple LLM providers often means juggling different SDKs, API styles, and update cycles. NodeLLM gives you a single, unified API that stays consistent even when providers change.
 
 <div class="provider-icons">
@@ -72,9 +70,11 @@ NodeLLM is **NOT**:
 
 ## 🏗️ Why NodeLLM?
 
-Direct integrations often become tightly coupled to specific providers, making it difficult to adapt as models evolve. **LLMs should be treated as infrastructure**, and NodeLLM helps you build a stable foundation that persists regardless of which model is currently "state of the art."
+### The "Backend-First" AI SDK
 
-NodeLLM helps solve **architectural problems**, not just provide API access. It serves as the core integration layer for LLMs in the Node.js ecosystem.
+While most AI SDKs (like Vercel AI SDK) are heavily optimized for **Frontend Streaming** (Next.js, React Server Components), NodeLLM is built for the **Backend**.
+
+It is the "AI SDK for the rest of us"—backend engineers building workers, cron jobs, CLI tools, Slack bots, and REST/GraphQL APIs that *aren't* Next.js.
 
 ### Strategic Principles
 

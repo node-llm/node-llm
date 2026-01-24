@@ -57,9 +57,11 @@ NodeLLM is **NOT**:
 
 ## 🏗️ Why NodeLLM?
 
-Direct integrations often become tightly coupled to specific providers, making it difficult to adapt as models evolve. **LLMs should be treated as infrastructure**, and NodeLLM helps you build a stable foundation that persists regardless of which model is currently "state of the art."
+### The "Backend-First" AI SDK
 
-NodeLLM helps solve **architectural problems**, not just provide API access. It serves as the core integration layer for LLMs in the Node.js ecosystem.
+While most AI SDKs (like Vercel AI SDK) are heavily optimized for **Frontend Streaming** (Next.js, React Server Components), NodeLLM is built for the **Backend**.
+
+It is the "AI SDK for the rest of us"—backend engineers building workers, cron jobs, CLI tools, Slack bots, and REST/GraphQL APIs that _aren't_ Next.js.
 
 ### Strategic Goals
 
@@ -255,6 +257,18 @@ Direct access to the thought process of models like **DeepSeek R1** or **OpenAI 
 const res = await NodeLLM.chat("deepseek-reasoner").ask("Solve this logical puzzle");
 console.log(res.reasoning); // Chain-of-thought
 ```
+
+### 🔒 Agentic Zero Trust
+
+Security is not an afterthought. NodeLLM includes a native **"Invisible Perimeter"** to protect your infrastructure:
+
+- **Redaction**: Automatically masks API keys in logs.
+- **Guardrails**: Integrated support for Bedrock/Azure safety filters.
+- **Auditing**: Full prompt/response tracing via `@node-llm/orm`.
+
+### 📼 Native VCR Testing
+
+Stop guessing if your agent works. NodeLLM is the only framework with built-in **VCR testing architecture** for deterministic CI/CD. Record real interactions once, and replay them forever in your test suite without hitting the API or spending money.
 
 ---
 
