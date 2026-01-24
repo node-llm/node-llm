@@ -9,6 +9,13 @@ echo "Bedrock Examples"
 echo "================================"
 echo ""
 
+# Load .env from project root if it exists
+if [ -f "../../../.env" ]; then
+  set -a
+  source "../../../.env"
+  set +a
+fi
+
 # Check for required env vars
 if [ -z "$AWS_BEARER_TOKEN_BEDROCK" ] && [ -z "$AWS_ACCESS_KEY_ID" ]; then
   echo "Error: AWS credentials not set."
@@ -54,6 +61,26 @@ echo ""
 
 echo "Running Nova specific tests..."
 node chat/nova.mjs
+echo ""
+
+echo "Running vision example..."
+node chat/vision.mjs
+echo ""
+
+echo "Running thinking example..."
+node chat/thinking.mjs
+echo ""
+
+echo "Running guardrails example..."
+node chat/guardrails.mjs
+echo ""
+
+echo "Running embeddings example..."
+node embeddings/basic.mjs
+echo ""
+
+echo "Running image generation example..."
+node image/titan.mjs
 echo ""
 
 echo "================================"

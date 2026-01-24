@@ -17,6 +17,7 @@ import {
 import { Executor } from "../executor/Executor.js";
 import { ChatStream } from "./ChatStream.js";
 import { Stream } from "../streaming/Stream.js";
+import { ModelRegistry } from "../models/ModelRegistry.js";
 import { ToolDefinition, ToolResolvable } from "./Tool.js";
 import { Schema } from "../schema/Schema.js";
 import { toJsonSchema } from "../schema/to-json-schema.js";
@@ -433,6 +434,14 @@ export class Chat {
     const totalUsage: Usage = { input_tokens: 0, output_tokens: 0, total_tokens: 0 };
     const trackUsage = (u?: Usage) => {
       if (u) {
+        // Fallback cost calculation if provider didn't return it
+        if (u.cost === undefined) {
+          const withCost = ModelRegistry.calculateCost(u, this.model, this.provider.id);
+          u.cost = (withCost as any).cost;
+          u.input_cost = (withCost as any).input_cost;
+          u.output_cost = (withCost as any).output_cost;
+        }
+
         totalUsage.input_tokens += u.input_tokens;
         totalUsage.output_tokens += u.output_tokens;
         totalUsage.total_tokens += u.total_tokens;
@@ -441,6 +450,12 @@ export class Chat {
         }
         if (u.cost !== undefined) {
           totalUsage.cost = (totalUsage.cost ?? 0) + u.cost;
+        }
+        if (u.input_cost !== undefined) {
+          totalUsage.input_cost = (totalUsage.input_cost ?? 0) + u.input_cost;
+        }
+        if (u.output_cost !== undefined) {
+          totalUsage.output_cost = (totalUsage.output_cost ?? 0) + u.output_cost;
         }
       }
     };

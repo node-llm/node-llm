@@ -11,6 +11,7 @@ import { signRequest, AwsCredentials } from "../../utils/AwsSigV4.js";
 import { fetchWithTimeout } from "../../utils/fetch.js";
 import { logger } from "../../utils/logger.js";
 import { buildConverseRequest } from "./mapper.js";
+import { ModelRegistry } from "../../models/ModelRegistry.js";
 
 export class BedrockStreaming {
   private readonly config: BedrockConfig;
@@ -115,9 +116,14 @@ export class BedrockStreaming {
 
           try {
             const event = JSON.parse(chunkJson);
-            const chatChunk = this.parseEvent(event, currentToolCalls, (text) => {
-              currentReasoning += text;
-            });
+            const chatChunk = this.parseEvent(
+              event,
+              currentToolCalls,
+              (text) => {
+                currentReasoning += text;
+              },
+              modelId
+            );
             if (chatChunk) {
               yield chatChunk;
             }
@@ -141,7 +147,8 @@ export class BedrockStreaming {
   private parseEvent(
     event: any,
     toolCalls: Map<number, { id: string; name: string; input: string }>,
-    onReasoning: (text: string) => void
+    onReasoning: (text: string) => void,
+    modelId: string
   ): ChatChunk | null {
     // Bedrock ConverseStream events can be wrapped or unwrapped depending on model/service version
     const contentBlockStart = event.contentBlockStart;
@@ -221,11 +228,16 @@ export class BedrockStreaming {
 
     // 5. Metadata (Usage)
     if (event.metadata && event.metadata.usage) {
-      const usage: Usage = {
+      const rawUsage: Usage = {
         input_tokens: event.metadata.usage.inputTokens,
         output_tokens: event.metadata.usage.outputTokens,
-        total_tokens: event.metadata.usage.totalTokens
+        total_tokens: event.metadata.usage.totalTokens,
+        cached_tokens: event.metadata.usage.cacheReadInputTokens,
+        cache_creation_tokens: event.metadata.usage.cacheWriteInputTokens
       };
+
+      const usage = ModelRegistry.calculateCost(rawUsage, modelId, "bedrock");
+
       return { content: "", usage, done: true };
     }
 

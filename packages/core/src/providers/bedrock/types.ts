@@ -112,6 +112,8 @@ export interface BedrockConverseResponse {
     inputTokens: number;
     outputTokens: number;
     totalTokens: number;
+    cacheReadInputTokens?: number;
+    cacheWriteInputTokens?: number;
   };
   trace?: {
     guardrail?: {

@@ -10,6 +10,7 @@ import { BedrockConfig, validateBedrockConfig, getBedrockEndpoint } from "./conf
 import { BedrockConverseResponse, BedrockContentBlock } from "./types.js";
 import { buildConverseRequest } from "./mapper.js";
 import { signRequest, AwsCredentials } from "../../utils/AwsSigV4.js";
+import { ModelRegistry } from "../../models/ModelRegistry.js";
 import { fetchWithTimeout } from "../../utils/fetch.js";
 import { logger } from "../../utils/logger.js";
 
@@ -105,7 +106,13 @@ export class BedrockChat {
     const json = (await response.json()) as BedrockConverseResponse;
     logger.logResponse("Bedrock", response.status, response.statusText, json);
 
-    return this.parseResponse(json);
+    const result = this.parseResponse(json);
+
+    if (result.usage) {
+      result.usage = ModelRegistry.calculateCost(result.usage, modelId, "bedrock");
+    }
+
+    return result;
   }
 
   /**
@@ -193,7 +200,9 @@ export class BedrockChat {
     const usage: Usage = {
       input_tokens: response.usage.inputTokens,
       output_tokens: response.usage.outputTokens,
-      total_tokens: response.usage.totalTokens
+      total_tokens: response.usage.totalTokens,
+      cached_tokens: response.usage.cacheReadInputTokens,
+      cache_creation_tokens: response.usage.cacheWriteInputTokens
     };
 
     return {
