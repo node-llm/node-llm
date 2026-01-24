@@ -40,7 +40,7 @@ export class BedrockStreaming {
       }
     }
 
-    const url = `${this.baseUrl}/model/${encodeURIComponent(modelId)}/converse-stream`;
+    const url = `${this.baseUrl}/model/${modelId}/converse-stream`;
     const body = buildConverseRequest(request.messages, request.tools, {
       maxTokens: request.max_tokens,
       temperature: request.temperature,

@@ -16,20 +16,15 @@ export function registerBedrockProvider() {
       throw new Error("bedrockRegion is not set in config or AWS_REGION environment variable");
     }
 
-    // Build the config object, prioritizing API Key (Bearer token) if present
+    // Pass all available credentials to the provider.
+    // BedrockProvider.validateBedrockConfig will ensure they are mutually exclusive.
     const bedrockConfig: BedrockConfig = {
       region,
-      apiKey: cfg.bedrockApiKey
+      apiKey: cfg.bedrockApiKey,
+      accessKeyId: cfg.bedrockAccessKeyId,
+      secretAccessKey: cfg.bedrockSecretAccessKey,
+      sessionToken: cfg.bedrockSessionToken
     };
-
-    // If no API Key, use SigV4 (IAM)
-    if (!bedrockConfig.apiKey) {
-      if (cfg.bedrockAccessKeyId && cfg.bedrockSecretAccessKey) {
-        bedrockConfig.accessKeyId = cfg.bedrockAccessKeyId;
-        bedrockConfig.secretAccessKey = cfg.bedrockSecretAccessKey;
-        bedrockConfig.sessionToken = cfg.bedrockSessionToken;
-      }
-    }
 
     return new BedrockProvider(bedrockConfig);
   });

@@ -45,7 +45,7 @@ export class BedrockEmbeddings {
    */
   async execute(request: EmbeddingRequest): Promise<EmbeddingResponse> {
     const modelId = request.model ?? "amazon.titan-embed-text-v2:0";
-    const url = `${this.baseUrl}/model/${encodeURIComponent(modelId!)}/invoke`;
+    const url = `${this.baseUrl}/model/${modelId}/invoke`;
 
     // Handle single vs multiple inputs (Titan only supports one at a time via InvokeModel)
     const inputs = Array.isArray(request.input) ? request.input : [request.input];

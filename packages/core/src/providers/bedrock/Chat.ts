@@ -45,7 +45,7 @@ export class BedrockChat {
       }
     }
 
-    const url = `${this.baseUrl}/model/${encodeURIComponent(modelId)}/converse`;
+    const url = `${this.baseUrl}/model/${modelId}/converse`;
 
     // Build the Bedrock request body
     const body = buildConverseRequest(request.messages, request.tools, {

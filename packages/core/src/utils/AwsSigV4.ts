@@ -96,7 +96,16 @@ function extractHost(url: string): string {
  */
 function extractPath(url: string): string {
   const parsed = new URL(url);
-  return parsed.pathname || "/";
+  const path = parsed.pathname || "/";
+  return path
+    .split("/")
+    .map((segment) => encodeURIComponent(segment))
+    .join("/")
+    .replace(/%20/g, "%20") // encodeURIComponent already does %20
+    .replace(/'/g, "%27") // AWS expects single quotes encoded
+    .replace(/\(/g, "%28")
+    .replace(/\)/g, "%29")
+    .replace(/\*/g, "%2A");
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
