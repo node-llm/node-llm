@@ -55,7 +55,7 @@ export class Capabilities {
   }
 
   static supportsVision(modelId: string): boolean {
-    const model = ModelRegistry.find(modelId, "gemini");
+    const model = this.findModel(modelId);
     if (model?.modalities?.input?.includes("image")) return true;
 
     const id = this.normalizeModelId(modelId);
@@ -66,7 +66,7 @@ export class Capabilities {
   }
 
   static supportsTools(modelId: string): boolean {
-    const model = ModelRegistry.find(modelId, "gemini");
+    const model = this.findModel(modelId);
     if (model?.capabilities?.includes("function_calling")) return true;
 
     const id = this.normalizeModelId(modelId);
@@ -77,7 +77,7 @@ export class Capabilities {
   }
 
   static supportsStructuredOutput(modelId: string): boolean {
-    const model = ModelRegistry.find(modelId, "gemini");
+    const model = this.findModel(modelId);
     if (model?.capabilities?.includes("structured_output")) return true;
 
     const id = this.normalizeModelId(modelId);
@@ -96,7 +96,7 @@ export class Capabilities {
   }
 
   static supportsEmbeddings(modelId: string): boolean {
-    const model = ModelRegistry.find(modelId, "gemini");
+    const model = this.findModel(modelId);
     if (model?.modalities?.output?.includes("embeddings")) return true;
 
     const id = this.normalizeModelId(modelId);
@@ -104,7 +104,7 @@ export class Capabilities {
   }
 
   static supportsImageGeneration(modelId: string): boolean {
-    const model = ModelRegistry.find(modelId, "gemini");
+    const model = this.findModel(modelId);
     if (
       model?.capabilities?.includes("image_generation") ||
       model?.modalities?.output?.includes("image")
@@ -116,7 +116,7 @@ export class Capabilities {
   }
 
   static supportsTranscription(modelId: string): boolean {
-    const model = ModelRegistry.find(modelId, "gemini");
+    const model = this.findModel(modelId);
     if (model?.modalities?.input?.includes("audio")) return true;
 
     const id = this.normalizeModelId(modelId);
@@ -159,5 +159,9 @@ export class Capabilities {
 
   private static normalizeModelId(modelId: string): string {
     return modelId.replace("models/", "");
+  }
+
+  private static findModel(modelId: string) {
+    return ModelRegistry.find(modelId, "gemini");
   }
 }

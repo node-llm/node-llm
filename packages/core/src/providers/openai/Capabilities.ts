@@ -23,14 +23,14 @@ export class Capabilities {
   }
 
   static supportsVision(modelId: string): boolean {
-    const model = ModelRegistry.find(modelId, "openai");
+    const model = this.findModel(modelId);
     if (model?.modalities?.input?.includes("image")) return true;
 
     return /gpt-4(?!-3)|o1/.test(modelId) && !/audio|realtime|voice/.test(modelId);
   }
 
   static supportsTools(modelId: string): boolean {
-    const model = ModelRegistry.find(modelId, "openai");
+    const model = this.findModel(modelId);
     if (model?.capabilities?.includes("function_calling") || model?.capabilities?.includes("tools"))
       return true;
 
@@ -38,7 +38,7 @@ export class Capabilities {
   }
 
   static supportsStructuredOutput(modelId: string): boolean {
-    const model = ModelRegistry.find(modelId, "openai");
+    const model = this.findModel(modelId);
     if (model?.capabilities?.includes("structured_output")) return true;
 
     return /gpt-4|o1|o3/.test(modelId);
@@ -49,14 +49,14 @@ export class Capabilities {
   }
 
   static supportsEmbeddings(modelId: string): boolean {
-    const model = ModelRegistry.find(modelId, "openai");
+    const model = this.findModel(modelId);
     if (model?.modalities?.output?.includes("embeddings")) return true;
 
     return /embedding/.test(modelId);
   }
 
   static supportsImageGeneration(modelId: string): boolean {
-    const model = ModelRegistry.find(modelId, "openai");
+    const model = this.findModel(modelId);
     if (
       model?.capabilities?.includes("image_generation") ||
       model?.modalities?.output?.includes("image")
@@ -67,21 +67,21 @@ export class Capabilities {
   }
 
   static supportsTranscription(modelId: string): boolean {
-    const model = ModelRegistry.find(modelId, "openai");
+    const model = this.findModel(modelId);
     if (model?.modalities?.input?.includes("audio")) return true;
 
     return /whisper|audio|transcribe/.test(modelId);
   }
 
   static supportsModeration(modelId: string): boolean {
-    const model = ModelRegistry.find(modelId, "openai");
+    const model = this.findModel(modelId);
     if (model?.modalities?.output?.includes("moderation")) return true;
 
     return /moderation/.test(modelId);
   }
 
   static supportsReasoning(modelId: string): boolean {
-    const model = ModelRegistry.find(modelId, "openai");
+    const model = this.findModel(modelId);
     if (model?.capabilities?.includes("reasoning")) return true;
 
     return /o\d|gpt-5/.test(modelId);
@@ -119,7 +119,7 @@ export class Capabilities {
     const input = ["text"];
     const output = ["text"];
 
-    const model = ModelRegistry.find(modelId, "openai");
+    const model = this.findModel(modelId);
     if (model?.modalities) return model.modalities;
 
     if (this.supportsVision(modelId)) input.push("image", "pdf");
@@ -134,7 +134,7 @@ export class Capabilities {
 
   static getCapabilities(modelId: string): string[] {
     const caps = ["streaming"];
-    const model = ModelRegistry.find(modelId, "openai");
+    const model = this.findModel(modelId);
 
     if (model) {
       model.capabilities.forEach((c) => {
@@ -164,7 +164,7 @@ export class Capabilities {
   }
 
   static formatDisplayName(modelId: string): string {
-    const model = ModelRegistry.find(modelId, "openai");
+    const model = this.findModel(modelId);
     if (model?.name && model.name !== modelId) return model.name;
 
     return modelId.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
@@ -172,5 +172,9 @@ export class Capabilities {
 
   static getPricing(modelId: string): ModelPricing | undefined {
     return PricingRegistry.getPricing(modelId, "openai");
+  }
+
+  private static findModel(modelId: string) {
+    return ModelRegistry.find(modelId, "openai");
   }
 }

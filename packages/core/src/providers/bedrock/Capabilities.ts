@@ -101,7 +101,8 @@ export class Capabilities {
   }
 
   static supportsChat(modelId: string): boolean {
-    if (ModelRegistry.supports(modelId, "chat", "bedrock")) return true;
+    const model = this.findModel(modelId);
+    if (model?.capabilities?.includes("chat")) return true;
 
     return (
       /anthropic\.claude/.test(modelId) ||
@@ -113,7 +114,8 @@ export class Capabilities {
   }
 
   static supportsStreaming(modelId: string): boolean {
-    if (ModelRegistry.supports(modelId, "streaming", "bedrock")) return true;
+    const model = this.findModel(modelId);
+    if (model?.capabilities?.includes("streaming")) return true;
 
     return (
       /anthropic\.claude/.test(modelId) ||
@@ -125,7 +127,7 @@ export class Capabilities {
   }
 
   static supportsVision(modelId: string): boolean {
-    const model = ModelRegistry.find(modelId, "bedrock");
+    const model = this.findModel(modelId);
     if (model?.modalities?.input?.includes("image")) return true;
     if (model?.capabilities?.includes("vision")) return true;
 
@@ -133,33 +135,41 @@ export class Capabilities {
   }
 
   static supportsTools(modelId: string): boolean {
-    if (ModelRegistry.supports(modelId, "tools", "bedrock")) return true;
-    if (ModelRegistry.supports(modelId, "function_calling", "bedrock")) return true;
+    const model = this.findModel(modelId);
+    if (model?.capabilities?.includes("tools") || model?.capabilities?.includes("function_calling"))
+      return true;
 
     return /anthropic\.claude|amazon\.nova/.test(modelId);
   }
 
   static supportsJsonMode(modelId: string): boolean {
-    if (ModelRegistry.supports(modelId, "json_mode", "bedrock")) return true;
-    if (ModelRegistry.supports(modelId, "structured_output", "bedrock")) return true;
+    const model = this.findModel(modelId);
+    if (
+      model?.capabilities?.includes("json_mode") ||
+      model?.capabilities?.includes("structured_output")
+    )
+      return true;
 
     return /anthropic\.claude|amazon\.nova/.test(modelId);
   }
 
   static supportsExtendedThinking(modelId: string): boolean {
-    if (ModelRegistry.supports(modelId, "reasoning", "bedrock")) return true;
+    const model = this.findModel(modelId);
+    if (model?.capabilities?.includes("reasoning")) return true;
 
     return /claude-3-7/.test(modelId);
   }
 
   static supportsEmbeddings(modelId: string): boolean {
-    if (ModelRegistry.supports(modelId, "embeddings", "bedrock")) return true;
+    const model = this.findModel(modelId);
+    if (model?.capabilities?.includes("embeddings")) return true;
 
     return /amazon\.titan-embed/.test(modelId);
   }
 
   static supportsImageGeneration(modelId: string): boolean {
-    if (ModelRegistry.supports(modelId, "image_generation", "bedrock")) return true;
+    const model = this.findModel(modelId);
+    if (model?.capabilities?.includes("image_generation")) return true;
 
     return /amazon\.titan-image-generator|stability\.stable-diffusion/.test(modelId);
   }
@@ -271,5 +281,9 @@ export class Capabilities {
       .split(" ")
       .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
       .join(" ");
+  }
+
+  private static findModel(modelId: string) {
+    return ModelRegistry.find(modelId, "bedrock");
   }
 }
