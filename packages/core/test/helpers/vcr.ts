@@ -50,6 +50,7 @@ export function setupVCR(recordingName: string, subDir?: string) {
           "openai-project",
           "user-agent",
           "x-api-key",
+          "host",
           ...(subDir === "bedrock"
             ? ["x-amz-date", "x-amz-content-sha256", "x-amz-security-token", "x-amz-target"]
             : [])
