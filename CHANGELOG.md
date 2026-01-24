@@ -2,6 +2,29 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.8.0] - 2026-01-24 (@node-llm/core)
+
+### Features
+
+- **AWS Bedrock Provider**: Complete integration with Amazon Bedrock service.
+  - Support for Converse API with custom SigV4 authentication.
+  - Nova model family support (nova-lite, nova-pro, nova-micro).
+  - Streaming responses for real-time text generation.
+  - Multimodal vision capabilities for image understanding.
+  - Native reasoning support for advanced model capabilities.
+  - Embeddings support for text vectorization.
+  - Image generation using Amazon Titan models.
+  - Prompt caching for improved performance and cost efficiency.
+  - Guardrails support for content safety and compliance.
+  - User-friendly error mapping for billing and access issues.
+  - Model listing functionality for available Bedrock models.
+
+### Improvements
+
+- **Token Calculation**: Fixed token usage calculation for better accuracy.
+- **Documentation**: Added comprehensive documentation for Bedrock provider.
+- **Test Stability**: Improved VCR infrastructure for multi-provider support and stabilized test suite.
+
 ## [1.7.0] - 2026-01-22 (@node-llm/core)
 
 ### Features
