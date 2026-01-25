@@ -10,113 +10,32 @@
   gtag("config", "G-6Z9CNYDJ49");
 </script>
 
+<!-- Custom overrides moved to assets/css/custom.css to prevent clashing -->
 <style>
-  /* Node.js Green Theme Overrides */
+  /* Restore brand colors */
   :root {
-    --color-brand-primary: #339933;
-    --color-brand-primary-light: #52a852;
-    --color-brand-primary-dark: #206020;
+    --accent-green: #00d46a;
   }
-
-  /* Force links to be green */
   a {
-    color: #339933;
+    color: var(--accent-green) !important;
   }
   .btn-primary {
-    background-color: #339933 !important;
-    border-color: #339933 !important;
+    background-color: var(--accent-green) !important;
+    border-color: var(--accent-green) !important;
   }
-  .btn-primary:hover {
-    background-color: #267326 !important;
+  .nav-list-link:hover, .nav-list-expander:hover {
+    color: var(--accent-green) !important;
   }
-
-  /* Fix Logo Size */
-  .site-logo {
-    max-height: 38px !important; 
-    max-width: 100% !important;
+  .nav-list-item.active > .nav-list-link {
+    color: var(--accent-green) !important;
   }
 
-  /* Force Sidebar to White to match Logo background */
-  .side-bar,
-  .site-header {
-    background-color: #ffffff !important;
-  }
-  /* Provider Icons */
+  /* Minimal head fixes */
   .provider-icons {
     display: flex;
     flex-wrap: wrap;
-    gap: 15px;
+    gap: 1.5rem;
     align-items: center;
-    margin: 30px 0;
-  }
-  .provider-logo {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    transition: transform 0.2s;
-  }
-  .provider-logo:hover {
-    transform: translateY(-2px);
-  }
-  .logo-medium {
-    height: 28px;
-  }
-  .logo-small {
-    height: 20px;
-  }
-
-  /* Modern Typography & Header Normalization */
-  h1, h2, h3, h4, h5, h6 {
-    color: #24292e !important;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
-    -webkit-font-smoothing: antialiased;
-  }
-
-  h1 { font-size: 2rem !important; font-weight: 700 !important; letter-spacing: -0.03em !important; margin-bottom: 0.5rem !important; }
-  h2 { font-size: 1.5rem !important; font-weight: 700 !important; border-bottom: none !important; margin-top: 1.75rem !important; margin-bottom: 0.6rem !important; }
-  h3 { font-size: 1.25rem !important; font-weight: 600 !important; margin-top: 1.5rem !important; margin-bottom: 0.5rem !important; }
-
-  /* Premium Look: Clean Sub-Headers & TOC Labels */
-  h4, .text-delta {
-    text-transform: none !important;
-    letter-spacing: normal !important;
-    font-size: 1.05rem !important;
-    font-weight: 600 !important;
-    color: #444 !important;
-    margin-top: 1.5rem !important;
-    margin-bottom: 0.5rem !important;
-  }
-
-  h5 {
-    text-transform: none !important;
-    letter-spacing: normal !important;
-    font-size: 1rem !important;
-    font-weight: 600 !important;
-    color: #555 !important;
-  }
-
-  /* Premium Code Blocks */
-  .highlighter-rouge, code {
-    border-radius: 8px !important;
-  }
-
-  div.highlighter-rouge {
-    background-color: #f8f9fa !important;
-    border: 1px solid rgba(0,0,0,0.05) !important;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-  }
-
-  div.highlighter-rouge:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.03);
-  }
-
-  /* Vibrant Horizontal Rules */
-  hr {
-    height: 1px !important;
-    background: linear-gradient(to right, rgba(0,255,100,0.1), rgba(0,255,100,0.3), rgba(0,255,100,0.1)) !important;
-    border: none !important;
-    margin: 2.5rem 0 !important;
   }
 </style>
 

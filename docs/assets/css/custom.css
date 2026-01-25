@@ -1,103 +1,120 @@
 ---
 ---
 
-/* Custom CSS for`NodeLLM` documentation */
+/* --- Total Background Parity Fix --- */
 
-/* Style for the horizontal banner logo */
-.site-header .site-logo img,
-.site-header a.site-title img,
-.site-title img,
-a[href="/"] img {
-  height: 48px !important;
-  width: auto !important;
-  max-width: none !important;
-  max-height: none !important;
-  min-height: 48px !important;
-  object-fit: contain !important;
-  display: inline-block !important;
+:root {
+  --body-background-color: #0f110f !important;
+  --sidebar-color: #161a16 !important;
+  --search-background-color: #161a16 !important;
+  --bg-dark: #0f110f;
+  --bg-dark-accent: #161a16;
+  --accent-green: #00d46a;
+  --text-light: #f0fdf4;
+  --text-dim: #dce6dc;
 }
 
-.site-header .site-logo,
-.site-header a.site-title,
-.site-title,
-a[href="/"] {
-  height: auto !important;
-  display: flex !important;
-  align-items: center !important;
-}
-
-/* Adjust header padding for the logo */
+/* 1. Force the page containers */
+html, body, 
+.site-nav, 
+.side-bar, 
+.main-header, 
+.main-content-wrap, 
+.main-content, 
+.site-footer,
 .site-header {
-  padding-top: 0.6rem !important;
-  padding-bottom: 0.6rem !important;
-  min-height: 70px !important;
+  background-color: #0f110f !important;
+  background-image: none !important;
+  color: #f0fdf4 !important;
 }
 
-/* Modern Typography & Header Normalization */
+/* 2. Sidebar & Sidebar Components */
+.side-bar {
+  background-color: #161a16 !important;
+  border-right: 1px solid rgba(0, 212, 106, 0.1) !important;
+}
+
+.site-button {
+  background-color: transparent !important;
+  color: #00d46a !important;
+}
+
+/* 3. Main Header (Search Bar Area) */
+.main-header {
+  background-color: #0f110f !important;
+  border-bottom: 1px solid rgba(0, 212, 106, 0.1) !important;
+}
+
+.search-input {
+  background-color: #161a16 !important;
+  border: 1px solid rgba(0, 212, 106, 0.1) !important;
+  color: #f0fdf4 !important;
+}
+
+/* 4. Active Navigation State */
+.nav-list-item.active > .nav-list-link {
+  background-color: rgba(0, 212, 106, 0.12) !important;
+  color: #00d46a !important;
+  background-image: none !important;
+}
+
+.nav-list-link:hover {
+  background-color: rgba(255, 255, 255, 0.05) !important;
+  color: #00d46a !important;
+}
+
+/* 5. Typography & Content */
 h1, h2, h3, h4, h5, h6 {
-  color: #24292e !important;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
-  -webkit-font-smoothing: antialiased;
+  color: #f0fdf4 !important;
 }
 
-h1 { font-weight: 800 !important; letter-spacing: -0.03em !important; }
-h2 { font-weight: 700 !important; border-bottom: none !important; margin-top: 3rem !important; }
-h3 { font-weight: 600 !important; margin-top: 2.5rem !important; }
-
-/* Very Light Look: Clean Sub-Headers (Fixing the "API KEYS" all-caps look) */
-h4 {
-  text-transform: none !important;
-  letter-spacing: -0.01em !important;
-  font-size: 1.15rem !important;
-  font-weight: 600 !important;
-  color: #444 !important;
-  margin-top: 2.25rem !important;
-  margin-bottom: 0.75rem !important;
-  position: relative;
+p, li {
+  color: #dce6dc !important;
 }
 
-h5 {
-  text-transform: none !important;
-  letter-spacing: normal !important;
-  font-size: 1rem !important;
-  font-weight: 600 !important;
-  color: #555 !important;
+a {
+  color: #00d46a !important;
 }
 
-/* Premium Code Blocks */
-.highlighter-rouge, code {
-  border-radius: 8px !important;
+/* 6. Code Blocks */
+.highlighter-rouge, pre, code {
+  background-color: #161a16 !important;
+  border: 1px solid rgba(0, 212, 106, 0.1) !important;
+  color: #f0fdf4 !important;
 }
 
-div.highlighter-rouge {
-  background-color: #f8f9fa !important;
-  border: 1px solid rgba(0,0,0,0.05) !important;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+code.highlighter-rouge {
+  background-color: rgba(0, 212, 106, 0.08) !important;
+  color: #00d46a !important;
 }
 
-div.highlighter-rouge:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+/* 7. Provider Icons - FORCED VISIBILITY */
+.provider-icons {
+  margin: 3rem 0 !important;
 }
 
-/* Vibrant Horizontal Rules */
-hr {
-  height: 1px !important;
-  background: linear-gradient(to right, rgba(0,255,100,0.1), rgba(0,255,100,0.4), rgba(0,255,100,0.1)) !important;
-  border: none !important;
-  margin: 3.5rem 0 !important;
+/* Aggressive Inversion for Logos */
+.provider-icons img, 
+.provider-logo img, 
+.main-content img[src*="svg"], 
+.main-content img[src*="logo"],
+.main-content table img {
+  filter: invert(1) brightness(1.8) grayscale(1) !important;
+  opacity: 0.8 !important;
+  transition: all 0.3s ease !important;
 }
 
-/* Interactive Links */
-.btn-primary {
-  background-color: #00d46a !important;
-  border-color: #00d46a !important;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
-  box-shadow: 0 2px 4px rgba(0,212,106,0.1) !important;
+.provider-icons img:hover, 
+.provider-logo img:hover,
+.main-content img[src*="svg"]:hover {
+  filter: invert(1) brightness(2.5) grayscale(0) !important;
+  opacity: 1 !important;
 }
 
-.btn-primary:hover {
-  background-color: #00bb5d !important;
-  transform: translateY(-1px) !important;
-  box-shadow: 0 4px 12px rgba(0,212,106,0.2) !important;
+/* Exclude the main product logo from inversion */
+.site-header .site-logo img,
+.logo img,
+img[alt="NodeLLM"],
+img[alt="Logo"] {
+  filter: brightness(1.2) !important;
 }

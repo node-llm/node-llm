@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NodeLLM - The Backend-First AI SDK</title>
+  <meta name="description" content="Open-source infrastructure layer for building production-grade AI agents in Node.js.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;800&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/jpeg" href="assets/images/favicon.jpg">
+  <style>
+    :root {
+      --bg: #0a0f0a;
+      --bg-accent: #111811;
+      --text: #f0fdf4;
+      --text-dim: #a1b0a1;
+      --accent: #00d46a;
+      --border: rgba(0, 212, 106, 0.1);
+      --code-bg: #141a14;
+    }
+
+    * { box-sizing: border-box; }
+    
+    body {
+      margin: 0;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Minimal Header */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.5rem 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .logo { font-weight: 800; font-size: 1.2rem; text-decoration: none; color: var(--text); display: flex; align-items: center; gap: 0.5rem; }
+    .logo img { height: 32px; width: auto; filter: brightness(1.2); }
+
+    nav a {
+      text-decoration: none;
+      color: var(--text-dim);
+      font-weight: 500;
+      font-size: 0.95rem;
+      margin-left: 2rem;
+      transition: color 0.2s;
+    }
+    nav a:hover { color: var(--accent); }
+
+    /* Hero */
+    .hero {
+      text-align: center;
+      padding: 8rem 1rem 6rem;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .gradient-text {
+      background: linear-gradient(to right, #00d46a, #a3ff80);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    h1 {
+      font-size: 5rem;
+      font-weight: 800;
+      line-height: 1;
+      letter-spacing: -0.05em;
+      margin-bottom: 2rem;
+      color: var(--text);
+    }
+
+    .subtitle {
+      font-size: 1.4rem;
+      color: var(--text-dim);
+      max-width: 700px;
+      margin: 0 auto 3rem;
+      line-height: 1.5;
+      font-weight: 400;
+    }
+
+    /* Buttons */
+    .cta-group {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+    }
+
+    .btn {
+      padding: 0.8rem 2rem;
+      border-radius: 99px; /* Pill shape like Vercel/Bun */
+      font-weight: 600;
+      font-size: 1rem;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #050a05;
+      border: 1px solid var(--accent);
+    }
+    .btn-primary:hover { 
+      background: #00bb5d; 
+      transform: translateY(-2px); 
+      box-shadow: 0 10px 30px rgba(0, 212, 106, 0.3);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+    }
+    .btn-secondary:hover { 
+      background: rgba(255, 255, 255, 0.05); 
+      border-color: var(--accent);
+      transform: translateY(-2px);
+    }
+
+    /* Features Grid */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 2rem;
+      max-width: 1200px;
+      margin: 6rem auto;
+      padding: 0 2rem;
+    }
+
+    .card {
+      padding: 3rem 2rem;
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      background: rgba(20, 26, 20, 0.4);
+      backdrop-filter: blur(10px);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .card:hover { 
+      border-color: rgba(0, 212, 106, 0.4);
+      transform: translateY(-5px);
+      background: rgba(20, 26, 20, 0.6);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    }
+
+    .card h3 { margin-top: 0; font-size: 1.4rem; font-weight: 700; margin-bottom: 1rem; color: var(--text); }
+    .card p { color: var(--text-dim); font-size: 1rem; margin-bottom: 0; line-height: 1.6; }
+    .icon { font-size: 1.5rem; margin-bottom: 1.5rem; display: block; opacity: 1; }
+
+    /* Code Block - Simplified */
+    .code-section {
+      background: var(--bg-accent);
+      padding: 6rem 1rem;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      margin-top: 4rem;
+    }
+    .code-container {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      gap: 5rem;
+      align-items: center;
+    }
+    .code-desc { flex: 0.8; }
+    .code-desc h2 { font-size: 3rem; font-weight: 800; letter-spacing: -0.04em; margin-bottom: 1.5rem; line-height: 1.1; }
+    .code-desc p { color: var(--text-dim); font-size: 1.25rem; line-height: 1.5; font-weight: 400; opacity: 0.8; }
+    
+    .code-window {
+      flex: 1.2;
+      background: #1e1e1e;
+      color: #fff;
+      padding: 2.5rem;
+      border-radius: 16px;
+      font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
+      font-size: 0.95rem;
+      line-height: 1.7;
+      box-shadow: 0 30px 60px rgba(0,0,0,0.12);
+      border: 1px solid rgba(0,0,0,0.1);
+      overflow-x: auto;
+    }
+    
+    .kw { color: #c678dd; } /* purple keyword */
+    .fn { color: #61afef; } /* blue function */
+    .str { color: #98c379; } /* green string */
+    .com { color: #5c6370; font-style: italic; } /* gray comment */
+
+    /* Logo Cloud */
+    .logo-cloud {
+      margin-top: 2rem;
+      padding-top: 2rem;
+    }
+    .logo-label {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      color: var(--text-dim);
+      margin-bottom: 2rem;
+      font-weight: 600;
+      opacity: 0.5;
+    }
+    .logo-row {
+      display: flex;
+      justify-content: center;
+      gap: 3rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .logo-row img {
+      height: 28px;
+      width: auto;
+      opacity: 0.7;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      /* Brighten them up for dark mode while keeping colors */
+      filter: brightness(1.2);
+    }
+    
+    /* Make the inherently black icons white so they don't disappear */
+    .logo-row img[alt="OpenAI"],
+    .logo-row img[alt="Anthropic"],
+    .logo-row img[alt="OpenRouter"],
+    .logo-row img[alt="Ollama"] {
+      filter: invert(1) brightness(1.5);
+    }
+
+    .logo-row img:hover {
+      opacity: 1;
+      filter: brightness(1.5) scale(1.1);
+      transform: translateY(-2px);
+    }
+
+    @media (max-width: 768px) {
+      h1 { font-size: 2.5rem; margin-bottom: 1rem; }
+      .subtitle { font-size: 1.1rem; }
+      .replacement-statement { font-size: 1rem !important; margin-top: -0.5rem !important; }
+      
+      header { padding: 1rem; }
+      .hero { padding: 4rem 1rem 2rem; }
+      
+      .cta-group { flex-direction: column; width: 100%; max-width: 300px; margin: 0 auto; }
+      .btn { text-align: center; width: 100%; }
+      
+      .logo-row { gap: 1.5rem; }
+      .logo-row img { height: 22px; }
+      
+      .grid { margin: 2rem auto; padding: 0 1rem; gap: 1rem; }
+      .card { padding: 1.5rem; }
+      
+      .code-section { padding: 3rem 1rem; }
+      .code-container { flex-direction: column; gap: 3rem; text-align: center; }
+      .code-desc h2 { font-size: 2rem; }
+      .code-desc p { font-size: 1.1rem; }
+      .code-window { padding: 1.5rem; width: 100%; font-size: 0.85rem; }
+      
+      nav { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <a href="/" class="logo">
+      <img src="assets/images/logo.png" alt="Logo">
+    </a>
+    <nav>
+      <a href="/docs/intro">Documentation</a>
+      <a href="https://www.eshaiju.com/blog">Blog</a>
+      <a href="https://github.com/node-llm/node-llm">GitHub</a>
+      <a href="https://www.npmjs.com/org/node-llm">npm</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <h1>NodeLLM <br/> The Backend-First <span class="gradient-text">AI SDK</span></h1>
+    <p class="subtitle">
+      Open-source infrastructure for building production-grade agents in Node.js — provider-agnostic, database-backed, with zero dependency bloat.
+    </p>
+    <p class="replacement-statement" style="color: #444; font-size: 1.1rem; margin-top: -1.5rem; margin-bottom: 2.5rem; max-width: 700px; margin-left: auto; margin-right: auto;">
+      Replace provider SDKs, prompt glue code, and ad-hoc agent state with a single, versioned backend API.
+    </p>
+
+    <div class="cta-group">
+      <a href="/docs/intro" class="btn btn-primary">Get Started (5 mins)</a>
+      <a href="https://github.com/node-llm/node-llm" class="btn btn-secondary">View on GitHub</a>
+    </div>
+
+    <div class="logo-cloud">
+      <p class="logo-label">Unified support for</p>
+      <div class="logo-row">
+        <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/openai.svg" title="OpenAI" alt="OpenAI">
+        <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/anthropic.svg" title="Anthropic" alt="Anthropic">
+        <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/gemini-color.svg" title="Gemini" alt="Gemini">
+        <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/deepseek-color.svg" title="DeepSeek" alt="DeepSeek">
+        <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/bedrock-color.svg" title="Amazon Bedrock" alt="Bedrock">
+        <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/openrouter.svg" title="OpenRouter" alt="OpenRouter">
+        <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/ollama.svg" title="Ollama" alt="Ollama">
+      </div>
+      <p class="logo-text-list" style="margin-top: 1rem; color: #888; font-size: 0.9rem;">
+        OpenAI · Anthropic · Gemini · Bedrock · DeepSeek · Ollama · OpenRouter
+      </p>
+    </div>
+  </section>
+
+  <section class="grid">
+    <div class="card">
+      <span class="icon">🔌</span>
+      <h3>Provider Agnostic</h3>
+      <p>Switch between OpenAI, Anthropic, Gemini, Bedrock, and DeepSeek with zero code changes. A unified API for 540+ models.</p>
+    </div>
+    <div class="card">
+      <span class="icon">⚡️</span>
+      <h3>Backend First</h3>
+      <p>Optimized for workers, CRON jobs, and microservices. Built for long-running stability, not just frontend streaming.</p>
+    </div>
+    <div class="card">
+      <span class="icon">🔒</span>
+      <h3>Agentic Zero Trust</h3>
+      <p>The "Invisible Perimeter" for your agents. Automatic key redaction, PII masking, and guardrails included by default.</p>
+    </div>
+  </section>
+
+  <section class="code-section">
+    <div style="text-align: center; color: #666; font-size: 0.9rem; margin-bottom: 3rem;">
+      Actively maintained · Versioned releases · Backward-compatibility guaranteed within major versions
+    </div>
+    <div class="code-container">
+      <div class="code-desc">
+        <h2>Clean, Predictable API.</h2>
+        <p>No more distinct SDKs. No more prompt parsing hell. Whether you need simple chat, streaming, or deep reasoning models, the syntax remains exactly the same.</p>
+      </div>
+      <div class="code-window">
+<pre><code><span class="kw">import</span> { NodeLLM } <span class="kw">from</span> <span class="str">"@node-llm/core"</span>;
+
+<span class="com">// 1. Unified Interface</span>
+<span class="kw">const</span> chat = NodeLLM.<span class="fn">chat</span>(<span class="str">"gpt-4o"</span>);
+
+<span class="com">// 2. Add Tools (Auto-executed)</span>
+<span class="kw">await</span> chat.<span class="fn">withTool</span>(WeatherTool);
+
+<span class="com">// 3. Ask (or Stream)</span>
+<span class="kw">const</span> response = <span class="kw">await</span> chat.<span class="fn">ask</span>(
+  <span class="str">"What's the weather in Tokyo?"</span>
+);
+
+console.<span class="fn">log</span>(response.content);
+<span class="com">// "It is currently sunny in Tokyo..."</span></code></pre>
+      </div>
+    </div>
+  </section>
+
+</body>
+</html>
