@@ -8,7 +8,7 @@
 
 **A simple way to use Large Language Models in Node.js.**
 
-**NodeLLM keeps your AI code clean and predictable.**
+**NodeLLM is an open-source infrastructure layer for building provider-agnostic, production-grade LLM systems in Node.js.**
 
 Integrating multiple LLM providers often means juggling different SDKs, API styles, and update cycles. NodeLLM gives you a single, unified API for over 540+ models across multiple providers (OpenAI, Gemini, Anthropic, DeepSeek, OpenRouter, Ollama, etc.) that stays consistent even when providers change.
 
