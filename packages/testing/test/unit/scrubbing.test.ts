@@ -7,7 +7,8 @@ import { MockProvider } from "../helpers/MockProvider.js";
 
 describe("VCR Feature 4: Automatic Scrubbing", () => {
   const CASSETTE_NAME = "scrub-test";
-  const CASSETTE_PATH = path.join(process.cwd(), "test/cassettes", `${CASSETTE_NAME}.json`);
+  const CASSETTE_DIR = path.join(__dirname, "../cassettes");
+  const CASSETTE_PATH = path.join(CASSETTE_DIR, `${CASSETTE_NAME}.json`);
   let mock: MockProvider;
 
   beforeEach(() => {
@@ -21,7 +22,7 @@ describe("VCR Feature 4: Automatic Scrubbing", () => {
   });
 
   test("Automatically scrubs API keys and sensitive JSON keys", async () => {
-    const vcr = setupVCR(CASSETTE_NAME, { mode: "record" });
+    const vcr = setupVCR(CASSETTE_NAME, { mode: "record", cassettesDir: CASSETTE_DIR });
     const llm = NodeLLM.withProvider("mock-provider");
 
     // 1. Trigger request with secrets
@@ -41,6 +42,7 @@ describe("VCR Feature 4: Automatic Scrubbing", () => {
   test("Allows custom scrubbing hooks", async () => {
     const vcr = setupVCR(CASSETTE_NAME, {
       mode: "record",
+      cassettesDir: CASSETTE_DIR,
       scrub: (data: unknown) => {
         // Deep string replacement on the whole interaction object
         return JSON.parse(JSON.stringify(data).replace(/sensitive-info/g, "XXXX"));

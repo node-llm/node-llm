@@ -6,13 +6,14 @@ import fs from "node:fs";
 import path from "node:path";
 
 describe("VCR Feature 12: Hierarchical Scoping", () => {
-  const CUSTOM_DIR = ".custom-cassettes";
+  // Use absolute path relative to this test file
+  const CUSTOM_DIR = path.join(__dirname, "../cassettes/custom-scope-test");
   const LEVEL_1 = "Authentication";
   const LEVEL_2 = "Login Flow";
   const TEST_NAME = "Successful Login";
 
   beforeEach(() => {
-    if (fs.existsSync(CUSTOM_DIR)) fs.rmSync(CUSTOM_DIR, { recursive: true });
+    if (fs.existsSync(CUSTOM_DIR)) fs.rmSync(CUSTOM_DIR, { recursive: true, force: true });
     providerRegistry.register("mock-provider", () => new MockProvider());
   });
 
@@ -33,7 +34,6 @@ describe("VCR Feature 12: Hierarchical Scoping", () => {
 
     // Verify the path exists
     const expectedPath = path.join(
-      process.cwd(),
       CUSTOM_DIR,
       "authentication",
       "login-flow",

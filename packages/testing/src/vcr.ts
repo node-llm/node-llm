@@ -62,7 +62,13 @@ export class VCR {
 
     // 3. Construct Final Directory Path
     const targetDir = path.join(baseDir, ...scopes.map((s) => this.slugify(s)));
-    this.filePath = path.join(process.cwd(), targetDir, `${this.slugify(name)}.json`);
+
+    // Robust path resolution: Never join CWD if the target is already absolute
+    if (path.isAbsolute(targetDir)) {
+      this.filePath = path.join(targetDir, `${this.slugify(name)}.json`);
+    } else {
+      this.filePath = path.join(process.cwd(), targetDir, `${this.slugify(name)}.json`);
+    }
 
     const initialMode = options.mode || (process.env.VCR_MODE as VCRMode) || "auto";
     const isCI = !!process.env.CI;

@@ -7,7 +7,10 @@ import { MockProvider } from "../helpers/MockProvider.js";
 
 describe("VCR Feature 1: Native Record & Replay", () => {
   const CASSETTE_NAME = "feature-1-vcr";
-  const CASSETTE_PATH = path.join(process.cwd(), "test/cassettes", `${CASSETTE_NAME}.json`);
+  // Explicitly use __dirname to anchor cassettes to this test file's location
+  // This prevents root pollution when running tests from monorepo root
+  const CASSETTE_DIR = path.join(__dirname, "../cassettes");
+  const CASSETTE_PATH = path.join(CASSETTE_DIR, `${CASSETTE_NAME}.json`);
   let mock: MockProvider;
 
   beforeEach(() => {
@@ -22,7 +25,8 @@ describe("VCR Feature 1: Native Record & Replay", () => {
 
   test("Records and replays interactions correctly", async () => {
     // 1. RECORD PHASE
-    const vcrRecord = setupVCR(CASSETTE_NAME, { mode: "record" });
+    // Pass explicit directory to VCR
+    const vcrRecord = setupVCR(CASSETTE_NAME, { mode: "record", cassettesDir: CASSETTE_DIR });
 
     const llmRecord = NodeLLM.withProvider("mock-provider");
     await llmRecord.chat().ask("Record me");
@@ -34,7 +38,7 @@ describe("VCR Feature 1: Native Record & Replay", () => {
 
     // 2. REPLAY PHASE
     mock.chat.mockClear();
-    const vcrReplay = setupVCR(CASSETTE_NAME, { mode: "replay" });
+    const vcrReplay = setupVCR(CASSETTE_NAME, { mode: "replay", cassettesDir: CASSETTE_DIR });
 
     const llmReplay = NodeLLM.withProvider("mock-provider");
     const res2 = await llmReplay.chat().ask("Record me");

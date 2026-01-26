@@ -28,7 +28,7 @@ describe("ProviderRegistry", () => {
 
   it("should throw error for unknown provider", () => {
     expect(() => providerRegistry.resolve("non-existent")).toThrow(
-      "Unknown LLM provider 'non-existent'"
+      "Provider non-existent not registered"
     );
   });
 

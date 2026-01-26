@@ -118,7 +118,7 @@ mocker.embed("text").respond({ vectors: [[0.1, 0.2, 0.3]] });
 | Env Variable       | Description                                                | Default          |
 | ------------------ | ---------------------------------------------------------- | ---------------- |
 | `VCR_MODE`         | `record`, `replay`, `auto`, or `passthrough`               | `auto`           |
-| `VCR_CASSETTE_DIR` | Base directory for cassettes                               | `.llm-cassettes` |
+| `VCR_CASSETTE_DIR` | Base directory for cassettes                               | `test/cassettes` |
 | `CI`               | When true, VCR prevents recording and forces exact matches | (Auto-detected)  |
 
 ---
