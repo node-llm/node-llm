@@ -1,0 +1,53 @@
+{
+  "name": "records and replays a full conversation flow",
+  "interactions": [
+    {
+      "method": "chat",
+      "request": {
+        "model": "google/gemini-2.0-flash-001",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Who is the HR head?"
+          }
+        ],
+        "tools": [
+          {
+            "type": "function",
+            "function": {
+              "name": "search_hr_documents",
+              "description": "Search the company's HR policy documents for information about leave policies, remote work, benefits, compensation, or any other HR-related topics. Use this when the user asks about company policies.",
+              "parameters": {
+                "type": "object",
+                "properties": {
+                  "query": {
+                    "type": "string",
+                    "description": "The search query or question to find relevant HR policy information"
+                  }
+                },
+                "required": [
+                  "query"
+                ],
+                "additionalProperties": false
+              }
+            }
+          }
+        ],
+        "max_tokens": 4096,
+        "headers": {},
+        "requestTimeout": 30000
+      },
+      "response": {
+        "content": "I do not have the ability to search for who the HR head is. I can only search HR documents.\n",
+        "usage": {
+          "input_tokens": 65,
+          "output_tokens": 23,
+          "total_tokens": 88,
+          "cached_tokens": 0,
+          "reasoning_tokens": 0
+        },
+        "reasoning": null
+      }
+    }
+  ]
+}
