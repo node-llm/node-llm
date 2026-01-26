@@ -1,10 +1,15 @@
 import { vi } from "vitest";
-import { BaseProvider, ChatRequest, ChatResponse, ProviderCapabilities } from "@node-llm/core";
+import {
+  BaseProvider,
+  ChatRequest,
+  ChatResponse,
+  ProviderCapabilities,
+  MessageContent
+} from "@node-llm/core";
 
 export class MockProvider extends BaseProvider {
-  get id() {
-    return "mock-provider";
-  }
+  public id = "mock-provider";
+
   apiBase() {
     return "http://mock";
   }
@@ -13,6 +18,10 @@ export class MockProvider extends BaseProvider {
   }
   protected providerName() {
     return "mock-provider";
+  }
+
+  defaultModel() {
+    return "mock-model";
   }
 
   capabilities: ProviderCapabilities = {
@@ -29,9 +38,27 @@ export class MockProvider extends BaseProvider {
   };
 
   chat = vi.fn(async (req: ChatRequest): Promise<ChatResponse> => {
+    const lastMsg = req.messages[req.messages.length - 1];
+    let contentStr = "nothing";
+
+    if (lastMsg && lastMsg.content) {
+      if (typeof lastMsg.content === "string") {
+        contentStr = lastMsg.content;
+      } else if (Array.isArray(lastMsg.content)) {
+        contentStr = lastMsg.content.map((p) => (p.type === "text" ? p.text : "")).join("");
+      } else {
+        contentStr = lastMsg.content.toString();
+      }
+    }
+
     return {
-      content: `Response to ${req.messages[0]?.content ?? "nothing"}`,
+      content: `Response to ${contentStr}`,
       usage: { input_tokens: 10, output_tokens: 10, total_tokens: 20 }
     };
   });
+
+  embed = vi.fn();
+  paint = vi.fn();
+  transcribe = vi.fn();
+  moderate = vi.fn();
 }

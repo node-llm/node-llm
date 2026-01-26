@@ -188,7 +188,10 @@ export class Chat {
    * Add a message manually to the chat history.
    * Useful for rehydrating sessions from a database.
    */
-  add(role: "user" | "assistant" | "system" | "developer", content: string | MessageContent): this {
+  add(
+    role: "user" | "assistant" | "system" | "developer" | "tool",
+    content: string | MessageContent
+  ): this {
     // Ensure content matches MessageContent type
     const safeContent = content as MessageContent;
 
@@ -196,6 +199,18 @@ export class Chat {
       this.systemMessages.push({ role, content: safeContent });
     } else {
       this.messages.push({ role, content: safeContent });
+    }
+    return this;
+  }
+
+  /**
+   * Add a raw Message object to the chat history.
+   */
+  addMessage(message: Message): this {
+    if (message.role === "system" || message.role === "developer") {
+      this.systemMessages.push(message);
+    } else {
+      this.messages.push(message);
     }
     return this;
   }

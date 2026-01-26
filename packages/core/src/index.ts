@@ -32,7 +32,15 @@ export {
   ChatChunk,
   ThinkingConfig,
   ThinkingResult,
-  Usage
+  Usage,
+  ImageRequest,
+  ImageResponse,
+  TranscriptionRequest,
+  TranscriptionResponse,
+  ModerationRequest,
+  ModerationResponse,
+  EmbeddingRequest,
+  EmbeddingResponse
 } from "./providers/Provider.js";
 export { resolveModelAlias } from "./model_aliases.js";
 export { default as MODEL_ALIASES } from "./aliases.js";

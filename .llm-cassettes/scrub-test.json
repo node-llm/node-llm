@@ -4,7 +4,7 @@
     {
       "method": "chat",
       "request": {
-        "model": "",
+        "model": "mock-model",
         "messages": [
           {
             "role": "user",
