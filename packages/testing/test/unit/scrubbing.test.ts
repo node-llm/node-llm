@@ -17,7 +17,7 @@ describe("VCR Feature 4: Automatic Scrubbing", () => {
     CASSETTE_DIR = fs.mkdtempSync(path.join(os.tmpdir(), "vcr-scrub-test-"));
     CASSETTE_PATH = path.join(CASSETTE_DIR, `${CASSETTE_NAME}.json`);
     mock = new MockProvider();
-    providerRegistry.register("mock-provider", () => mock);
+    providerRegistry.register("mock-provider", () => mock as any);
   });
 
   afterEach(() => {

@@ -7,8 +7,21 @@ permalink: /core-features/testing
 description: Deterministic testing infrastructure for NodeLLM applications. VCR integration and fluent mocking for reliable AI systems.
 ---
 
-# Testing with @node-llm/testing
+# {{ page.title }}
 {: .no_toc }
+
+{{ page.description }}
+{: .fs-6 .fw-300 }
+
+## Table of contents
+{: .no_toc .text-delta }
+
+1. TOC
+{:toc}
+
+---
+
+## Overview
 
 Deterministic testing infrastructure for NodeLLM-powered AI systems. Built for engineers who prioritize **Boring Solutions**, **Security**, and **High-Fidelity Feedback Loops**.
 

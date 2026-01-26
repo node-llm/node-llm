@@ -7,7 +7,7 @@ import { Scrubber } from "./Scrubber.js";
 const currentVCRScopes: string[] = [];
 
 // Try to import Vitest's expect to get test state
-let vitestExpect: any;
+let vitestExpect: { getState?: () => { currentTestName?: string } } | undefined;
 try {
   // @ts-ignore
   import("vitest").then((m) => {
@@ -21,9 +21,9 @@ export type VCRMode = "record" | "replay" | "auto" | "passthrough";
 
 export interface VCRInteraction {
   method: string;
-  request: any;
-  response: any;
-  chunks?: any[];
+  request: unknown;
+  response: unknown;
+  chunks?: unknown[];
 }
 
 export interface VCRCassette {
@@ -40,7 +40,7 @@ export interface VCRCassette {
 
 export interface VCROptions {
   mode?: VCRMode;
-  scrub?: (data: any) => any;
+  scrub?: (data: unknown) => unknown;
   cassettesDir?: string;
   scope?: string | string[]; // Allow single or multiple scopes
   sensitivePatterns?: RegExp[];
@@ -181,9 +181,9 @@ export class VCR {
 
   public async execute(
     method: string,
-    originalMethod: (...args: any[]) => Promise<any>,
-    request: any
-  ): Promise<any> {
+    originalMethod: (...args: unknown[]) => Promise<unknown>,
+    request: unknown
+  ): Promise<unknown> {
     if (this.mode === "replay") {
       const interaction = this.cassette.interactions[this.interactionIndex++];
       if (!interaction) {
@@ -209,9 +209,9 @@ export class VCR {
 
   public async *executeStream(
     method: string,
-    originalMethod: (...args: any[]) => AsyncIterable<any>,
-    request: any
-  ): AsyncIterable<any> {
+    originalMethod: (...args: unknown[]) => AsyncIterable<unknown>,
+    request: unknown
+  ): AsyncIterable<unknown> {
     if (this.mode === "replay") {
       const interaction = this.cassette.interactions[this.interactionIndex++];
       if (!interaction || !interaction.chunks) {
@@ -224,7 +224,7 @@ export class VCR {
     }
 
     const stream = originalMethod(request);
-    const chunks: any[] = [];
+    const chunks: unknown[] = [];
 
     for await (const chunk of stream) {
       if (this.mode === "record") chunks.push(this.clone(chunk));
@@ -243,7 +243,7 @@ export class VCR {
     }
   }
 
-  private clone(obj: any) {
+  private clone(obj: unknown): unknown {
     try {
       return JSON.parse(JSON.stringify(obj));
     } catch {
@@ -274,7 +274,7 @@ export function setupVCR(name: string, options: VCROptions = {}) {
         const method = prop.toString();
 
         if (typeof originalValue === "function" && EXECUTION_METHODS.includes(method)) {
-          return function (...args: any[]) {
+          return function (...args: unknown[]) {
             if (method === "stream") {
               return vcr.executeStream(method, originalValue.bind(target), args[0]);
             }
@@ -300,14 +300,20 @@ export function withVCR(
   options: VCROptions,
   fn: () => Promise<void>
 ): () => Promise<void>;
-export function withVCR(...args: any[]): () => Promise<void> {
+export function withVCR(
+  ...args: [
+    (() => Promise<void>) | string | VCROptions,
+    ((() => Promise<void>) | VCROptions)?,
+    (() => Promise<void>)?
+  ]
+): () => Promise<void> {
   // Capture scopes at initialization time
   const capturedScopes = [...currentVCRScopes];
 
   return async function () {
     let name: string | undefined;
     let options: VCROptions = {};
-    let fn: () => Promise<void>;
+    let fn: (() => Promise<void>) | undefined;
 
     if (typeof args[0] === "function") {
       fn = args[0];
@@ -321,7 +327,11 @@ export function withVCR(...args: any[]): () => Promise<void> {
       }
     } else {
       options = args[0] || {};
-      fn = args[1];
+      fn = args[1] as (() => Promise<void>) | undefined;
+    }
+
+    if (!fn) {
+      throw new Error("VCR: No test function provided.");
     }
 
     // Pass captured inherited scopes if not explicitly overridden
@@ -329,7 +339,7 @@ export function withVCR(...args: any[]): () => Promise<void> {
       options.scope = capturedScopes;
     }
 
-    if (!name && vitestExpect) {
+    if (!name && vitestExpect?.getState) {
       const state = vitestExpect.getState();
       name = state.currentTestName || "unnamed-test";
     }
