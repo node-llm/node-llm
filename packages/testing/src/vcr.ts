@@ -47,7 +47,8 @@ export class VCR {
 
   constructor(name: string, options: VCROptions = {}) {
     // 1. Resolve Base Directory (Env -> Option -> Default)
-    const baseDir = options.cassettesDir || process.env.VCR_CASSETTE_DIR || ".llm-cassettes";
+    // Rails-inspired organization: cassettes belong inside the test folder
+    const baseDir = options.cassettesDir || process.env.VCR_CASSETTE_DIR || "test/cassettes";
 
     // 2. Resolve Hierarchical Scopes
     const scopes: string[] = [];

@@ -31,7 +31,7 @@ describe("VCR Feature 5 & 6: DX Sugar & Auto-Naming", () => {
 
   test("Verifying the file exists after withVCR", async () => {
     // Note: Since withVCR above runs, we check it here
-    const files = fs.readdirSync(path.join(process.cwd(), ".llm-cassettes"));
+    const files = fs.readdirSync(path.join(process.cwd(), "test/cassettes"));
     const found = files.some((f) => f.includes("automatically-names-and-records-cassettes"));
     expect(found).toBe(true);
   });
@@ -45,7 +45,7 @@ describe("VCR Feature 5 & 6: DX Sugar & Auto-Naming", () => {
   );
 
   test("Verifying explicit file existence", async () => {
-    const filePath = path.join(process.cwd(), ".llm-cassettes", "explicit-sugar-test.json");
+    const filePath = path.join(process.cwd(), "test/cassettes", "explicit-sugar-test.json");
     expect(fs.existsSync(filePath)).toBe(true);
   });
 });

@@ -1,14 +1,23 @@
-import { vi } from "vitest";
+import { vi, type Mock } from "vitest";
 import {
   BaseProvider,
   ChatRequest,
   ChatResponse,
   ProviderCapabilities,
-  MessageContent
+  EmbeddingResponse,
+  ImageResponse,
+  TranscriptionResponse,
+  ModerationResponse,
+  EmbeddingRequest,
+  ImageRequest,
+  TranscriptionRequest,
+  ModerationRequest
 } from "@node-llm/core";
 
 export class MockProvider extends BaseProvider {
-  public id = "mock-provider";
+  get id() {
+    return "mock-provider";
+  }
 
   apiBase() {
     return "http://mock";
@@ -37,28 +46,30 @@ export class MockProvider extends BaseProvider {
     getContextWindow: () => 128000
   };
 
-  chat = vi.fn(async (req: ChatRequest): Promise<ChatResponse> => {
-    const lastMsg = req.messages[req.messages.length - 1];
-    let contentStr = "nothing";
+  chat: Mock<(req: ChatRequest) => Promise<ChatResponse>> = vi.fn(
+    async (req: ChatRequest): Promise<ChatResponse> => {
+      const lastMsg = req.messages[req.messages.length - 1];
+      let contentStr = "nothing";
 
-    if (lastMsg && lastMsg.content) {
-      if (typeof lastMsg.content === "string") {
-        contentStr = lastMsg.content;
-      } else if (Array.isArray(lastMsg.content)) {
-        contentStr = lastMsg.content.map((p) => (p.type === "text" ? p.text : "")).join("");
-      } else {
-        contentStr = lastMsg.content.toString();
+      if (lastMsg && lastMsg.content) {
+        if (typeof lastMsg.content === "string") {
+          contentStr = lastMsg.content;
+        } else if (Array.isArray(lastMsg.content)) {
+          contentStr = lastMsg.content.map((p) => (p.type === "text" ? p.text : "")).join("");
+        } else {
+          contentStr = String(lastMsg.content);
+        }
       }
+
+      return {
+        content: `Response to ${contentStr}`,
+        usage: { input_tokens: 10, output_tokens: 10, total_tokens: 20 }
+      };
     }
+  );
 
-    return {
-      content: `Response to ${contentStr}`,
-      usage: { input_tokens: 10, output_tokens: 10, total_tokens: 20 }
-    };
-  });
-
-  embed = vi.fn();
-  paint = vi.fn();
-  transcribe = vi.fn();
-  moderate = vi.fn();
+  embed: Mock<(req: EmbeddingRequest) => Promise<EmbeddingResponse>> = vi.fn();
+  paint: Mock<(req: ImageRequest) => Promise<ImageResponse>> = vi.fn();
+  transcribe: Mock<(req: TranscriptionRequest) => Promise<TranscriptionResponse>> = vi.fn();
+  moderate: Mock<(req: ModerationRequest) => Promise<ModerationResponse>> = vi.fn();
 }

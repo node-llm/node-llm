@@ -1,14 +1,14 @@
 {
-  "name": "VCR Feature 5 & 6: DX Sugar & Auto-Naming > Automatically names and records cassettes",
+  "name": "explicit-sugar-test",
   "interactions": [
     {
       "method": "chat",
       "request": {
-        "model": "",
+        "model": "mock-model",
         "messages": [
           {
             "role": "user",
-            "content": "Sugar test"
+            "content": "Explicit test"
           }
         ],
         "max_tokens": 4096,
@@ -16,7 +16,7 @@
         "requestTimeout": 30000
       },
       "response": {
-        "content": "Response to Sugar test",
+        "content": "Response to Explicit test",
         "usage": {
           "input_tokens": 10,
           "output_tokens": 10,

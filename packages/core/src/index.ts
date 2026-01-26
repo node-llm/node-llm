@@ -39,6 +39,7 @@ export {
   TranscriptionResponse,
   ModerationRequest,
   ModerationResponse,
+  ModerationResult,
   EmbeddingRequest,
   EmbeddingResponse
 } from "./providers/Provider.js";

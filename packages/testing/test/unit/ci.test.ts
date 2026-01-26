@@ -5,7 +5,7 @@ import path from "node:path";
 
 describe("VCR Feature 8: CI-Safe Replay", () => {
   const CASSETTE_NAME = "ci-test-cassette";
-  const CASSETTE_PATH = path.join(process.cwd(), ".llm-cassettes", `${CASSETTE_NAME}.json`);
+  const CASSETTE_PATH = path.join(process.cwd(), "test/cassettes", `${CASSETTE_NAME}.json`);
   const originalCI = process.env.CI;
 
   beforeEach(() => {

@@ -7,7 +7,7 @@ import { MockProvider } from "../helpers/MockProvider.js";
 
 describe("VCR Feature 1: Native Record & Replay", () => {
   const CASSETTE_NAME = "feature-1-vcr";
-  const CASSETTE_PATH = path.join(process.cwd(), ".llm-cassettes", `${CASSETTE_NAME}.json`);
+  const CASSETTE_PATH = path.join(process.cwd(), "test/cassettes", `${CASSETTE_NAME}.json`);
   let mock: MockProvider;
 
   beforeEach(() => {
