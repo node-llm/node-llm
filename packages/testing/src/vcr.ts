@@ -2,6 +2,7 @@ import { Provider, providerRegistry } from "@node-llm/core";
 import fs from "node:fs";
 import path from "node:path";
 import { Scrubber } from "./Scrubber.js";
+import { Serializer } from "./Serializer.js";
 
 // Internal state for nested scoping (Feature 12)
 const currentVCRScopes: string[] = [];
@@ -139,7 +140,7 @@ export class VCR {
       if (!exists) {
         throw new Error(`VCR[${name}]: Cassette not found at ${this.filePath}`);
       }
-      this.cassette = JSON.parse(fs.readFileSync(this.filePath, "utf-8"));
+      this.cassette = Serializer.deserialize(fs.readFileSync(this.filePath, "utf-8"));
     } else {
       this.cassette = {
         name,
@@ -170,7 +171,7 @@ export class VCR {
         this.cassette.metadata.duration = duration;
       }
 
-      fs.writeFileSync(this.filePath, JSON.stringify(this.cassette, null, 2));
+      fs.writeFileSync(this.filePath, Serializer.serialize(this.cassette, 2));
     }
     providerRegistry.setInterceptor(undefined);
   }
@@ -244,11 +245,7 @@ export class VCR {
   }
 
   private clone(obj: unknown): unknown {
-    try {
-      return JSON.parse(JSON.stringify(obj));
-    } catch {
-      return obj;
-    }
+    return Serializer.clone(obj);
   }
 
   private slugify(text: string): string {

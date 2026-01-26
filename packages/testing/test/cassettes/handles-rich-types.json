@@ -1,0 +1,38 @@
+{
+  "name": "Handles Rich Types",
+  "version": "1.0",
+  "metadata": {
+    "recordedAt": "2026-01-26T14:26:32.372Z",
+    "duration": 5
+  },
+  "interactions": [
+    {
+      "method": "chat",
+      "request": {
+        "model": "mock-model",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Hello"
+          }
+        ],
+        "max_tokens": 4096,
+        "headers": {},
+        "requestTimeout": 30000,
+        "createdAt": {},
+        "meta": {
+          "$type": "Map",
+          "value": [["key", "value"]]
+        }
+      },
+      "response": {
+        "content": "Response to Hello",
+        "usage": {
+          "input_tokens": 10,
+          "output_tokens": 10,
+          "total_tokens": 20
+        }
+      }
+    }
+  ]
+}

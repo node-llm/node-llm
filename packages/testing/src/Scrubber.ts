@@ -56,6 +56,36 @@ export class Scrubber {
       return val.map((v) => this.deepScrub(v));
     }
 
+    if (val instanceof Map) {
+      const newMap = new Map();
+      for (const [k, v] of val.entries()) {
+        const scrubbedKey = typeof k === "string" ? this.deepScrub(k) : k;
+        const scrubbedValue = this.deepScrub(v);
+        newMap.set(scrubbedKey, scrubbedValue);
+      }
+      return newMap;
+    }
+
+    if (val instanceof Set) {
+      const newSet = new Set();
+      for (const v of val.values()) {
+        newSet.add(this.deepScrub(v));
+      }
+      return newSet;
+    }
+
+    if (val instanceof Date) {
+      return new Date(val);
+    }
+
+    if (val instanceof RegExp) {
+      return new RegExp(val);
+    }
+
+    if (typeof Buffer !== "undefined" && Buffer.isBuffer(val)) {
+      return Buffer.from(val);
+    }
+
     if (val !== null && typeof val === "object") {
       const obj = val as Record<string, unknown>;
       const newObj: Record<string, unknown> = {};
