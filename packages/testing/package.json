@@ -1,0 +1,17 @@
+{
+  "name": "@node-llm/testing",
+  "version": "1.0.0",
+  "description": "Deterministic testing for NodeLLM powered AI systems",
+  "main": "dist/index.js",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@node-llm/core": "workspace:*",
+    "vitest": "^1.0.0",
+    "typescript": "^5.0.0"
+  }
+}

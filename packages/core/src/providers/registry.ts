@@ -10,18 +10,23 @@ import { registerBedrockProvider } from "./bedrock/index.js";
 import { NodeLLMConfig } from "../config.js";
 
 type ProviderFactory = (config?: NodeLLMConfig) => Provider;
+export type ProviderInterceptor = (provider: Provider) => Provider;
 
 class ProviderRegistry {
   private providers = new Map<string, ProviderFactory>();
+  private globalInterceptor?: ProviderInterceptor;
+
+  public setInterceptor(interceptor: ProviderInterceptor | undefined) {
+    this.globalInterceptor = interceptor;
+  }
 
   /**
    * Register a provider factory
    */
-  register(name: string, factory: ProviderFactory): void {
+  register(name: string, factory: ProviderFactory) {
     if (this.providers.has(name)) {
       return;
     }
-
     this.providers.set(name, factory);
   }
 
@@ -32,10 +37,16 @@ class ProviderRegistry {
     const factory = this.providers.get(name);
 
     if (!factory) {
-      throw new Error(`Unknown LLM provider '${name}'`);
+      throw new Error(`Provider ${name} not registered`);
     }
 
-    return factory(config);
+    let provider = factory(config);
+
+    if (this.globalInterceptor) {
+      provider = this.globalInterceptor(provider);
+    }
+
+    return provider;
   }
 
   /**

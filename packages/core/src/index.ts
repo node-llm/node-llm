@@ -21,10 +21,12 @@ export {
 } from "./llm.js";
 export { config } from "./config.js";
 export type { NodeLLMConfig } from "./config.js";
-export { providerRegistry } from "./providers/registry.js";
+export { providerRegistry, ProviderInterceptor } from "./providers/registry.js";
 export { Schema } from "./schema/Schema.js";
 export { BaseProvider } from "./providers/BaseProvider.js";
 export {
+  Provider,
+  ProviderCapabilities,
   ChatRequest,
   ChatResponse,
   ChatChunk,
