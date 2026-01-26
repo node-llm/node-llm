@@ -72,7 +72,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        package-path: ["packages/core", "packages/orm"]
+        package-path: ["packages/core", "packages/orm", "packages/testing"]
 
     steps:
       - uses: actions/checkout@v4
