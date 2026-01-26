@@ -3,6 +3,17 @@ import fs from "node:fs";
 import path from "node:path";
 import { Scrubber } from "./Scrubber.js";
 
+// Try to import Vitest's expect to get test state, but don't fail if not in a test env
+let vitestExpect: unknown;
+try {
+  // @ts-ignore
+  import("vitest").then((m) => {
+    vitestExpect = m.expect;
+  });
+} catch {
+  // Not in vitest env
+}
+
 export type VCRMode = "record" | "replay" | "auto" | "passthrough";
 
 export interface VCRInteraction {
@@ -20,6 +31,7 @@ export interface VCRCassette {
 export interface VCROptions {
   mode?: VCRMode;
   scrub?: (data: unknown) => unknown;
+  cassettesDir?: string;
 }
 
 export class VCR {
@@ -30,9 +42,10 @@ export class VCR {
   private scrubber: Scrubber;
 
   constructor(name: string, options: VCROptions = {}, cassettesDir = ".llm-cassettes") {
+    const targetDir = options.cassettesDir || cassettesDir;
     this.mode = options.mode || (process.env.VCR_MODE as VCRMode) || "auto";
     this.scrubber = new Scrubber({ customScrubber: options.scrub });
-    this.filePath = path.join(process.cwd(), cassettesDir, `${name}.json`);
+    this.filePath = path.join(process.cwd(), targetDir, `${this.slugify(name)}.json`);
 
     if (this.mode === "auto") {
       this.mode = fs.existsSync(this.filePath) ? "replay" : "record";
@@ -142,6 +155,16 @@ export class VCR {
       return obj;
     }
   }
+
+  private slugify(text: string): string {
+    return text
+      .toString()
+      .toLowerCase()
+      .trim()
+      .replace(/\s+/g, "-")
+      .replace(/[^\w-]+/g, "")
+      .replace(/--+/g, "-");
+  }
 }
 
 const EXECUTION_METHODS = ["chat", "stream", "paint", "transcribe", "moderate", "embed"];
@@ -181,4 +204,63 @@ export function setupVCR(name: string, options: VCROptions = {}) {
   });
 
   return vcr;
+}
+
+interface VitestExpect {
+  getState: () => { currentTestName?: string };
+}
+
+/**
+ * One-line DX Sugar for VCR testing.
+ * Automatically handles setup, teardown, and naming.
+ */
+export function withVCR(fn: () => Promise<void>): () => Promise<void>;
+export function withVCR(name: string, fn: () => Promise<void>): () => Promise<void>;
+export function withVCR(options: VCROptions, fn: () => Promise<void>): () => Promise<void>;
+export function withVCR(
+  name: string,
+  options: VCROptions,
+  fn: () => Promise<void>
+): () => Promise<void>;
+export function withVCR(...args: unknown[]): () => Promise<void> {
+  return async function () {
+    let name: string | undefined;
+    let options: VCROptions = {};
+    let fn: () => Promise<void>;
+
+    // logic to parse overloaded arguments
+    if (typeof args[0] === "function") {
+      fn = args[0] as () => Promise<void>;
+    } else if (typeof args[0] === "string") {
+      name = args[0];
+      if (typeof args[1] === "function") {
+        fn = args[1] as () => Promise<void>;
+      } else {
+        options = (args[1] as VCROptions) || {};
+        fn = args[2] as () => Promise<void>;
+      }
+    } else {
+      options = (args[0] as VCROptions) || {};
+      fn = args[1] as () => Promise<void>;
+    }
+
+    // Auto-naming from Vitest
+    if (!name && vitestExpect) {
+      const state = (vitestExpect as VitestExpect).getState();
+      name = state.currentTestName || "unnamed-test";
+    }
+
+    if (!name) {
+      throw new Error(
+        "VCR: Could not determine cassette name. Provide a name or run within Vitest."
+      );
+    }
+
+    const vcr = setupVCR(name, options);
+    try {
+      await fn();
+    } finally {
+      await vcr.stop();
+    }
+  };
 }
