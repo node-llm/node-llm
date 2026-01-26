@@ -319,7 +319,7 @@ export async function createChat<T = Record<string, any>>(
   llm: NodeLLMCore,
   options: ChatOptions & { tableNames?: TableNames } & T = {} as any
 ): Promise<Chat> {
-  const chatTable = options.tableNames?.chat || "chat";
+  const chatTable = options.tableNames?.chat || "llmChat";
 
   // Extract known options so we don't double-pass them or pass them incorrectly
   const {
@@ -355,7 +355,7 @@ export async function loadChat(
   chatId: string,
   options: ChatOptions & { tableNames?: TableNames } = {}
 ): Promise<Chat | null> {
-  const chatTable = options.tableNames?.chat || "chat";
+  const chatTable = options.tableNames?.chat || "llmChat";
   const record = await (prisma as any)[chatTable].findUnique({
     where: { id: chatId }
   });
