@@ -1,9 +1,9 @@
 {
-  "name": "Successful Login",
+  "name": "test/unit/dx.test.ts > VCR Feature 5 & 6: DX Sugar & Auto-Naming > Automatically names and records cassettes",
   "version": "1.0",
   "metadata": {
-    "recordedAt": "2026-01-26T09:37:53.089Z",
-    "duration": 11
+    "recordedAt": "2026-01-26T09:31:37.890Z",
+    "duration": 6
   },
   "interactions": [
     {
@@ -13,7 +13,7 @@
         "messages": [
           {
             "role": "user",
-            "content": "Trigger record"
+            "content": "Sugar test"
           }
         ],
         "max_tokens": 4096,
@@ -21,7 +21,7 @@
         "requestTimeout": 30000
       },
       "response": {
-        "content": "Response to Trigger record",
+        "content": "Response to Sugar test",
         "usage": {
           "input_tokens": 10,
           "output_tokens": 10,

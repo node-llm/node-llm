@@ -5,6 +5,8 @@ Deterministic testing infrastructure for NodeLLM-powered AI systems. Built for e
 > 💡 **What is High-Fidelity?**
 > Your tests exercise the same execution path, provider behavior, and tool orchestration as production — without live network calls.
 
+**Framework Support**: ✅ Vitest (native) | ✅ Jest (compatible) | ✅ Any test framework (core APIs)
+
 ---
 
 ## 🧭 The Philosophy: Two-Tier Testing
@@ -212,6 +214,84 @@ withVCR(
 });
 
 ````
+
+---
+
+## 🧪 Framework Integration
+
+### Vitest (Native Support)
+
+Vitest is the primary test framework with optimized helpers:
+
+```typescript
+import { it, describe } from "vitest";
+import { mockLLM, withVCR, describeVCR } from "@node-llm/testing";
+
+describeVCR("Payments", () => {
+  it(
+    "processes successfully",
+    withVCR(async () => {
+      // ✨ withVCR auto-detects test name ("processes successfully")
+      // ✨ describeVCR auto-manages scopes
+    })
+  );
+});
+```
+
+### Jest Compatibility
+
+All core APIs work with Jest. The only difference: `withVCR()` can't auto-detect test names, so provide it manually:
+
+```typescript
+import { describe, it } from "@jest/globals";
+import { mockLLM, setupVCR, describeVCR } from "@node-llm/testing";
+
+describeVCR("Payments", () => {
+  it("processes successfully", async () => {
+    // ✅ describeVCR works with Jest (framework-agnostic)
+    // ⚠️ withVCR doesn't work here (needs Vitest's expect.getState())
+    // ✅ Use setupVCR instead:
+    const vcr = setupVCR("processes", { mode: "record" });
+
+    const mocker = mockLLM();  // ✅ works with Jest
+    mocker.chat("pay").respond("done");
+
+    // Test logic here
+
+    await vcr.stop();
+  });
+});
+```
+
+### Framework Support Matrix
+
+| API | Vitest | Jest | Any Framework |
+|-----|--------|------|---------------|
+| `mockLLM()` | ✅ | ✅ | ✅ |
+| `describeVCR()` | ✅ | ✅ | ✅ |
+| `setupVCR()` | ✅ | ✅ | ✅ |
+| `withVCR()` | ✅ (auto name) | ⚠️ (manual name) | ⚠️ (manual name) |
+| Mocker class | ✅ | ✅ | ✅ |
+| VCR class | ✅ | ✅ | ✅ |
+
+**Only `withVCR()` is Vitest-specific** because it auto-detects test names. All other APIs are framework-agnostic.
+
+### Any Test Framework
+
+Using raw classes for maximum portability:
+
+```typescript
+import { Mocker, VCR } from "@node-llm/testing";
+
+// Mocker - works everywhere
+const mocker = new Mocker();
+mocker.chat("hello").respond("hi");
+
+// VCR - works everywhere
+const vcr = new VCR("test-name", { mode: "record" });
+// ... run test ...
+await vcr.stop();
+```
 
 ---
 
