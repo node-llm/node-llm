@@ -190,8 +190,10 @@ console.log(messageRecord.inputTokens); // 12
 For real-time user experiences, use `askStream()`. The assistant message record is "finalized" once the stream completes.
 
 ```typescript
-for await (const token of chat.askStream("Tell me a long story")) {
-  process.stdout.write(token);
+for await (const chunk of chat.askStream("Tell me a long story")) {
+  if (chunk.content) {
+    process.stdout.write(chunk.content);
+  }
 }
 
 // History is now updated in the DB
@@ -239,7 +241,7 @@ await chat.withTool(WeatherTool).ask("How is the weather in London?");
 
 If an API call fails, NodeLLM follows a "clean rollback" strategy:
 1. The pending Assistant message is **deleted**.
-2. The initial User message is **deleted** (to prevent orphaned conversation turns).
+2. The initial User message is **preserved** so you have a record of the request for debugging.
 3. The error is thrown for your application to handle.
 
 This ensures your database doesn't fill up with "broken" chat turns.

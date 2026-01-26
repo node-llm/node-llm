@@ -45,10 +45,10 @@ export class Chat extends BaseChat {
   ) {
     super(record, options);
     this.tables = {
-      chat: tableNames.chat || "chat",
-      message: tableNames.message || "message",
-      toolCall: tableNames.toolCall || "toolCall",
-      request: tableNames.request || "assistantRequest"
+      chat: tableNames.chat || "llmChat",
+      message: tableNames.message || "llmMessage",
+      toolCall: tableNames.toolCall || "llmToolCall",
+      request: tableNames.request || "llmRequest"
     };
 
     this.persistenceConfig = {
