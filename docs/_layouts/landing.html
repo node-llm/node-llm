@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;800&display=swap" rel="stylesheet">
-  <link rel="icon" type="image/jpeg" href="assets/images/favicon.jpg">
+  <link rel="icon" type="image/jpeg" href="assets/images/favicon.png">
   <style>
     :root {
       --bg: #0a0f0a;
@@ -42,7 +42,7 @@
     }
 
     .logo { font-weight: 800; font-size: 1.2rem; text-decoration: none; color: var(--text); display: flex; align-items: center; gap: 0.5rem; }
-    .logo img { height: 40px; width: auto; filter: brightness(1.2); }
+    .logo img { height: 45px; width: auto; }
 
     nav a {
       text-decoration: none;
@@ -338,7 +338,7 @@
 
   <header>
     <a href="/" class="logo">
-      <img src="assets/images/logo.png" alt="Logo">
+      <img src="assets/images/logo-dark.png" alt="Logo">
     </a>
     <nav>
       <a href="/docs/intro">Documentation</a>
@@ -459,9 +459,12 @@ console.<span class="fn">log</span>(res.content);</code></pre>
         <!-- Tab 5: Persistence -->
         <div id="persistence" class="code-content">
 <pre><code><span class="kw">import</span> { createChat } <span class="kw">from</span> <span class="str">"@node-llm/orm"</span>;
+<span class="kw">import</span> { NodeLLM } <span class="kw">from</span> <span class="str">"@node-llm/core"</span>;
 
 <span class="com">// Auto-persisted history, costs, & tokens</span>
-<span class="kw">const</span> chat = <span class="kw">await</span> <span class="fn">createChat</span>(prisma, <span class="str">"gpt-4o"</span>);
+<span class="kw">const</span> chat = <span class="kw">await</span> <span class="fn">createChat</span>(prisma, NodeLLM, { 
+  model: <span class="str">"gpt-4o"</span> 
+});
 
 <span class="com">// DB state is managed automatically</span>
 <span class="kw">await</span> chat.<span class="fn">ask</span>(<span class="str">"Recall previous security scan"</span>);</code></pre>
