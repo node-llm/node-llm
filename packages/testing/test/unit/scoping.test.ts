@@ -1,37 +1,48 @@
 import { test, expect, describe, beforeEach, afterEach } from "vitest";
 import { withVCR, describeVCR } from "../../src/vcr.js";
 import { NodeLLM, providerRegistry } from "@node-llm/core";
+import { MockProvider } from "../helpers/MockProvider.js";
 import fs from "node:fs";
 import path from "node:path";
-import { MockProvider } from "../helpers/MockProvider.js";
 
-describe("VCR Feature 7: Grouped Scoping", () => {
-  let mock: MockProvider;
+describe("VCR Feature 12: Hierarchical Scoping", () => {
+  const CUSTOM_DIR = ".custom-cassettes";
+  const LEVEL_1 = "Authentication";
+  const LEVEL_2 = "Login Flow";
+  const TEST_NAME = "Successful Login";
 
   beforeEach(() => {
-    mock = new MockProvider();
-    providerRegistry.register("mock-provider", () => mock);
+    if (fs.existsSync(CUSTOM_DIR)) fs.rmSync(CUSTOM_DIR, { recursive: true });
+    providerRegistry.register("mock-provider", () => new MockProvider());
   });
 
-  afterEach(() => {
-    providerRegistry.setInterceptor(undefined);
-  });
+  test("Organizes cassettes into nested subfolders", async () => {
+    // We use process.env to set the base dir for this test
+    process.env.VCR_CASSETTE_DIR = CUSTOM_DIR;
 
-  describeVCR("Audit Scope", () => {
-    test(
-      "Saves cassette in scoped directory",
-      withVCR(async () => {
-        const llm = NodeLLM.withProvider("mock-provider");
-        await llm.chat().ask("Scope test");
-      })
+    await describeVCR(LEVEL_1, () => {
+      return describeVCR(LEVEL_2, async () => {
+        const testFn = withVCR(TEST_NAME, async () => {
+          const llm = NodeLLM.withProvider("mock-provider");
+          await llm.chat().ask("Trigger record");
+        });
+
+        await testFn();
+      });
+    });
+
+    // Verify the path exists
+    const expectedPath = path.join(
+      process.cwd(),
+      CUSTOM_DIR,
+      "authentication",
+      "login-flow",
+      "successful-login.json"
     );
-  });
 
-  test("Verifies file location in subfolder", async () => {
-    const scopeDir = path.join(process.cwd(), ".llm-cassettes", "audit-scope");
-    expect(fs.existsSync(scopeDir)).toBe(true);
+    expect(fs.existsSync(expectedPath)).toBe(true);
 
-    const files = fs.readdirSync(scopeDir);
-    expect(files.some((f) => f.includes("saves-cassette-in-scoped-directory"))).toBe(true);
+    // Clean up env
+    delete process.env.VCR_CASSETTE_DIR;
   });
 });

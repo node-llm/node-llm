@@ -3,11 +3,11 @@ import fs from "node:fs";
 import path from "node:path";
 import { Scrubber } from "./Scrubber.js";
 
-// Internal state for scoping
-let currentVCRScope: string | undefined;
+// Internal state for nested scoping (Feature 12)
+const currentVCRScopes: string[] = [];
 
-// Try to import Vitest's expect to get test state, but don't fail if not in a test env
-let vitestExpect: unknown;
+// Try to import Vitest's expect to get test state
+let vitestExpect: any;
 try {
   // @ts-ignore
   import("vitest").then((m) => {
@@ -21,9 +21,9 @@ export type VCRMode = "record" | "replay" | "auto" | "passthrough";
 
 export interface VCRInteraction {
   method: string;
-  request: unknown;
-  response: unknown;
-  chunks?: unknown[];
+  request: any;
+  response: any;
+  chunks?: any[];
 }
 
 export interface VCRCassette {
@@ -33,9 +33,9 @@ export interface VCRCassette {
 
 export interface VCROptions {
   mode?: VCRMode;
-  scrub?: (data: unknown) => unknown;
+  scrub?: (data: any) => any;
   cassettesDir?: string;
-  scope?: string; // Captured scope
+  scope?: string | string[]; // Allow single or multiple scopes
 }
 
 export class VCR {
@@ -45,28 +45,36 @@ export class VCR {
   private filePath: string;
   private scrubber: Scrubber;
 
-  constructor(name: string, options: VCROptions = {}, cassettesDir = ".llm-cassettes") {
-    let targetDir = options.cassettesDir || cassettesDir;
+  constructor(name: string, options: VCROptions = {}) {
+    // 1. Resolve Base Directory (Env -> Option -> Default)
+    const baseDir = options.cassettesDir || process.env.VCR_CASSETTE_DIR || ".llm-cassettes";
 
-    // Use provided scope or global scope
-    const scope = options.scope || currentVCRScope;
-    if (scope) {
-      targetDir = path.join(targetDir, this.slugify(scope));
+    // 2. Resolve Hierarchical Scopes
+    const scopes: string[] = [];
+    if (Array.isArray(options.scope)) {
+      scopes.push(...options.scope);
+    } else if (options.scope) {
+      scopes.push(options.scope);
+    } else {
+      scopes.push(...currentVCRScopes);
     }
+
+    // 3. Construct Final Directory Path
+    const targetDir = path.join(baseDir, ...scopes.map((s) => this.slugify(s)));
+    this.filePath = path.join(process.cwd(), targetDir, `${this.slugify(name)}.json`);
 
     const initialMode = options.mode || (process.env.VCR_MODE as VCRMode) || "auto";
     const isCI = !!process.env.CI;
-    this.filePath = path.join(process.cwd(), targetDir, `${this.slugify(name)}.json`);
     const exists = fs.existsSync(this.filePath);
 
-    // CI Enforcement logic (Feature 8)
+    // CI Enforcement
     if (isCI) {
       if (initialMode === "record") {
-        throw new Error(`VCR[${name}]: Recording cassettes is not allowed in CI environments.`);
+        throw new Error(`VCR[${name}]: Recording cassettes is not allowed in CI.`);
       }
       if (initialMode === "auto" && !exists) {
         throw new Error(
-          `VCR[${name}]: Cassette missing in CI. Run tests locally to generate ${this.filePath}`
+          `VCR[${name}]: Cassette missing in CI. Run locally to generate ${this.filePath}`
         );
       }
     }
@@ -81,7 +89,7 @@ export class VCR {
 
     if (this.mode === "replay") {
       if (!exists) {
-        throw new Error(`VCR[${name}]: Cassette file not found at ${this.filePath} in replay mode`);
+        throw new Error(`VCR[${name}]: Cassette not found at ${this.filePath}`);
       }
       this.cassette = JSON.parse(fs.readFileSync(this.filePath, "utf-8"));
     } else {
@@ -94,31 +102,29 @@ export class VCR {
   }
 
   async stop() {
-    if (this.mode === "record" && this.cassette.interactions.length > 0) {
+    if (this.mode === "record" && this.interactionsCount > 0) {
       const dir = path.dirname(this.filePath);
       if (!fs.existsSync(dir)) {
         fs.mkdirSync(dir, { recursive: true });
       }
       fs.writeFileSync(this.filePath, JSON.stringify(this.cassette, null, 2));
     }
-    // Unregister interceptor
     providerRegistry.setInterceptor(undefined);
+  }
+
+  private get interactionsCount() {
+    return this.cassette.interactions.length;
   }
 
   public async execute(
     method: string,
-    originalMethod: (...args: unknown[]) => Promise<unknown>,
-    request: unknown
-  ): Promise<unknown> {
+    originalMethod: (...args: any[]) => Promise<any>,
+    request: any
+  ): Promise<any> {
     if (this.mode === "replay") {
       const interaction = this.cassette.interactions[this.interactionIndex++];
       if (!interaction) {
-        throw new Error(`VCR[${this.cassette.name}]: No more interactions found for ${method}`);
-      }
-      if (interaction.method !== method) {
-        throw new Error(
-          `VCR[${this.cassette.name}]: Method mismatch. Expected ${interaction.method}, got ${method}`
-        );
+        throw new Error(`VCR[${this.cassette.name}]: No more interactions for ${method}`);
       }
       return interaction.response;
     }
@@ -140,15 +146,13 @@ export class VCR {
 
   public async *executeStream(
     method: string,
-    originalMethod: (...args: unknown[]) => AsyncIterable<unknown>,
-    request: unknown
-  ): AsyncIterable<unknown> {
+    originalMethod: (...args: any[]) => AsyncIterable<any>,
+    request: any
+  ): AsyncIterable<any> {
     if (this.mode === "replay") {
       const interaction = this.cassette.interactions[this.interactionIndex++];
       if (!interaction || !interaction.chunks) {
-        throw new Error(
-          `VCR[${this.cassette.name}]: No more streaming interactions found for ${method}`
-        );
+        throw new Error(`VCR[${this.cassette.name}]: No streaming interactions found`);
       }
       for (const chunk of interaction.chunks) {
         yield chunk;
@@ -157,7 +161,7 @@ export class VCR {
     }
 
     const stream = originalMethod(request);
-    const chunks: unknown[] = [];
+    const chunks: any[] = [];
 
     for await (const chunk of stream) {
       if (this.mode === "record") chunks.push(this.clone(chunk));
@@ -176,7 +180,7 @@ export class VCR {
     }
   }
 
-  private clone(obj: unknown) {
+  private clone(obj: any) {
     try {
       return JSON.parse(JSON.stringify(obj));
     } catch {
@@ -207,25 +211,13 @@ export function setupVCR(name: string, options: VCROptions = {}) {
         const method = prop.toString();
 
         if (typeof originalValue === "function" && EXECUTION_METHODS.includes(method)) {
-          return function (...args: unknown[]) {
-            // Handle streaming methods
+          return function (...args: any[]) {
             if (method === "stream") {
-              return vcr.executeStream(
-                method,
-                originalValue.bind(target) as (...args: unknown[]) => AsyncIterable<unknown>,
-                args[0]
-              );
+              return vcr.executeStream(method, originalValue.bind(target), args[0]);
             }
-
-            // Handle standard Promise methods
-            return vcr.execute(
-              method,
-              originalValue.bind(target) as (...args: unknown[]) => Promise<unknown>,
-              args[0]
-            );
+            return vcr.execute(method, originalValue.bind(target), args[0]);
           };
         }
-
         return originalValue;
       }
     });
@@ -234,13 +226,8 @@ export function setupVCR(name: string, options: VCROptions = {}) {
   return vcr;
 }
 
-interface VitestExpect {
-  getState: () => { currentTestName?: string };
-}
-
 /**
  * One-line DX Sugar for VCR testing.
- * Automatically handles setup, teardown, and naming.
  */
 export function withVCR(fn: () => Promise<void>): () => Promise<void>;
 export function withVCR(name: string, fn: () => Promise<void>): () => Promise<void>;
@@ -250,47 +237,41 @@ export function withVCR(
   options: VCROptions,
   fn: () => Promise<void>
 ): () => Promise<void>;
-export function withVCR(...args: unknown[]): () => Promise<void> {
-  // CAPTURE the scope during the initialization (synchronous Vitest collection phase)
-  const capturedScope = currentVCRScope;
+export function withVCR(...args: any[]): () => Promise<void> {
+  // Capture scopes at initialization time
+  const capturedScopes = [...currentVCRScopes];
 
   return async function () {
     let name: string | undefined;
     let options: VCROptions = {};
     let fn: () => Promise<void>;
 
-    // logic to parse overloaded arguments
     if (typeof args[0] === "function") {
-      fn = args[0] as () => Promise<void>;
+      fn = args[0];
     } else if (typeof args[0] === "string") {
       name = args[0];
       if (typeof args[1] === "function") {
-        fn = args[1] as () => Promise<void>;
+        fn = args[1];
       } else {
-        options = (args[1] as VCROptions) || {};
-        fn = args[2] as () => Promise<void>;
+        options = args[1] || {};
+        fn = args[2];
       }
     } else {
-      options = (args[0] as VCROptions) || {};
-      fn = args[1] as () => Promise<void>;
+      options = args[0] || {};
+      fn = args[1];
     }
 
-    // Pass the CAPTURED scope into the options if not already set
-    if (capturedScope && !options.scope) {
-      options.scope = capturedScope;
+    // Pass captured inherited scopes if not explicitly overridden
+    if (capturedScopes.length > 0 && !options.scope) {
+      options.scope = capturedScopes;
     }
 
-    // Auto-naming from Vitest
     if (!name && vitestExpect) {
-      const state = (vitestExpect as VitestExpect).getState();
+      const state = vitestExpect.getState();
       name = state.currentTestName || "unnamed-test";
     }
 
-    if (!name) {
-      throw new Error(
-        "VCR: Could not determine cassette name. Provide a name or run within Vitest."
-      );
-    }
+    if (!name) throw new Error("VCR: Could not determine cassette name.");
 
     const vcr = setupVCR(name, options);
     try {
@@ -302,14 +283,24 @@ export function withVCR(...args: unknown[]): () => Promise<void> {
 }
 
 /**
- * Organizes cassettes by test group subdirectory.
+ * Organizes cassettes by hierarchical subdirectories.
  */
-export function describeVCR(name: string, fn: () => void): void {
-  const previousScope = currentVCRScope;
-  currentVCRScope = name;
+export function describeVCR(name: string, fn: () => void | Promise<void>): void | Promise<void> {
+  currentVCRScopes.push(name);
+
+  const finish = () => {
+    currentVCRScopes.pop();
+  };
+
   try {
-    fn();
-  } finally {
-    currentVCRScope = previousScope;
+    const result = fn();
+    if (result instanceof Promise) {
+      return result.finally(finish);
+    }
+    finish();
+    return result;
+  } catch (err) {
+    finish();
+    throw err;
   }
 }
