@@ -15,6 +15,7 @@ NodeLLM is an open-source infrastructure layer for building provider-agnostic, p
 - **Languages**: JavaScript, TypeScript
 - **License**: MIT
 - **Package**: `@node-llm/core`
+- **Testing Package**: `@node-llm/testing`
 - **Repository**: `https://github.com/node-llm/node-llm`
 - **Documentation**: `https://node-llm.eshaiju.com`
 
@@ -25,6 +26,7 @@ NodeLLM is an open-source infrastructure layer for building provider-agnostic, p
 - **Static Model Registry**: Zero-latency, offline access to model metadata (context window, pricing, capabilities).
 - **Agentic Zero Trust**: Built-in PII redaction, guardrails, and audit logging.
 - **ORM Integration**: First-class support for persisting chat history and tools via `@node-llm/orm`.
+- **Deterministic Testing**: Native support for recording/replaying LLM interactions (VCR) and fluent mocking via `@node-llm/testing`.
 
 ## Architecture
 
@@ -55,4 +57,5 @@ const response = await chat.ask("Explain infrastructure-as-code");
 
 - **Get Started**: https://node-llm.eshaiju.com/getting-started/overview
 - **Architecture**: https://node-llm.eshaiju.com/architecture
+- **Testing**: https://node-llm.eshaiju.com/core-features/testing
 - **Contributing**: https://github.com/node-llm/node-llm/blob/main/CONTRIBUTING.md
