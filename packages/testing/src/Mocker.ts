@@ -45,6 +45,14 @@ export interface MockDefinition {
   response: MockResponse | ((request: unknown) => MockResponse);
 }
 
+/**
+ * Debug information about defined mocks.
+ */
+export interface MockerDebugInfo {
+  totalMocks: number;
+  methods: string[];
+}
+
 const EXECUTION_METHODS = ["chat", "stream", "paint", "transcribe", "moderate", "embed"];
 
 export class Mocker {
@@ -154,6 +162,18 @@ export class Mocker {
       lastMock.response = response;
     }
     return this;
+  }
+
+  /**
+   * Returns debug information about defined mocks.
+   * Useful for troubleshooting what mocks are defined.
+   */
+  public getDebugInfo(): MockerDebugInfo {
+    const methods = this.mocks.map((m) => m.method);
+    return {
+      totalMocks: this.mocks.length,
+      methods: [...new Set(methods)]
+    };
   }
 
   public clear(): void {

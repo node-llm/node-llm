@@ -28,6 +28,13 @@ export interface VCRInteraction {
 
 export interface VCRCassette {
   name: string;
+  version?: "1.0";
+  metadata?: {
+    recordedAt?: string;
+    recordedFrom?: string;
+    provider?: string;
+    duration?: number;
+  };
   interactions: VCRInteraction[];
 }
 
@@ -46,6 +53,7 @@ export class VCR {
   private mode: VCRMode;
   private filePath: string;
   private scrubber: Scrubber;
+  private recordStartTime: number = 0;
 
   constructor(name: string, options: VCROptions = {}) {
     // 1. Merge Global Defaults
@@ -118,7 +126,15 @@ export class VCR {
       }
       this.cassette = JSON.parse(fs.readFileSync(this.filePath, "utf-8"));
     } else {
-      this.cassette = { name, interactions: [] };
+      this.cassette = {
+        name,
+        version: "1.0",
+        metadata: {
+          recordedAt: new Date().toISOString()
+        },
+        interactions: []
+      };
+      this.recordStartTime = Date.now();
     }
   }
 
@@ -132,6 +148,13 @@ export class VCR {
       if (!fs.existsSync(dir)) {
         fs.mkdirSync(dir, { recursive: true });
       }
+
+      // Update metadata with duration
+      const duration = Date.now() - this.recordStartTime;
+      if (this.cassette.metadata) {
+        this.cassette.metadata.duration = duration;
+      }
+
       fs.writeFileSync(this.filePath, JSON.stringify(this.cassette, null, 2));
     }
     providerRegistry.setInterceptor(undefined);
@@ -312,6 +335,10 @@ let globalVCROptions: VCROptions = {};
 
 export function configureVCR(options: VCROptions) {
   globalVCROptions = { ...globalVCROptions, ...options };
+}
+
+export function resetVCRConfig(): void {
+  globalVCROptions = {};
 }
 
 /**

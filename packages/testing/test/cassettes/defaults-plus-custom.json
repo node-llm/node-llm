@@ -1,5 +1,10 @@
 {
   "name": "defaults-plus-custom",
+  "version": "1.0",
+  "metadata": {
+    "recordedAt": "2026-01-26T08:32:50.273Z",
+    "duration": 1
+  },
   "interactions": [
     {
       "method": "chat",

@@ -1,9 +1,9 @@
 {
-  "name": "feature-1-vcr",
+  "name": "global-config-patterns",
   "version": "1.0",
   "metadata": {
-    "recordedAt": "2026-01-26T08:32:50.258Z",
-    "duration": 6
+    "recordedAt": "2026-01-26T08:32:50.270Z",
+    "duration": 2
   },
   "interactions": [
     {
@@ -13,7 +13,7 @@
         "messages": [
           {
             "role": "user",
-            "content": "Record me"
+            "content": "Status of [REDACTED]"
           }
         ],
         "max_tokens": 4096,
@@ -21,7 +21,7 @@
         "requestTimeout": 30000
       },
       "response": {
-        "content": "Response to Record me",
+        "content": "Response to Status of [REDACTED]",
         "usage": {
           "input_tokens": 10,
           "output_tokens": 10,

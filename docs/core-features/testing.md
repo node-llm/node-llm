@@ -12,6 +12,9 @@ description: Deterministic testing infrastructure for NodeLLM applications. VCR 
 
 Deterministic testing infrastructure for NodeLLM-powered AI systems. Built for engineers who prioritize **Boring Solutions**, **Security**, and **High-Fidelity Feedback Loops**.
 
+> 💡 **What is High-Fidelity?**
+> Your tests exercise the same execution path, provider behavior, and tool orchestration as production — without live network calls.
+
 ---
 
 ## The Philosophy: Two-Tier Testing
@@ -38,7 +41,7 @@ We believe AI testing should never be flaky or expensive. We provide two distinc
 
 **When to use**: To test application logic, edge cases (errors, rate limits), and rare tool-calling paths.
 
-- **Declarative**: Fluent API to define expected prompts and responses.
+- **Declarative**: Fluent, explicit API to define expected prompts and responses.
 - **Multimodal**: Native support for `chat`, `embed`, `paint`, `transcribe`, and `moderate`.
 - **Streaming**: Simulate token-by-token delivery to test real-time UI logic.
 
@@ -161,6 +164,46 @@ mocker.embed("text").respond({ vectors: [[0.1, 0.2, 0.3]] });
 
 ---
 
+## 🛣️ Decision Tree: VCR vs Mocker
+
+Choose the right tool for your test:
+
+```
+Does your test need to verify behavior against REAL LLM responses?
+├─ YES → Use VCR (integration testing)
+│   ├─ Do you need to record the first time and replay afterward?
+│   │   └─ YES → Use VCR in "record" or "auto" mode
+│   ├─ Are you testing in CI/CD? (No live API calls allowed)
+│   │   └─ YES → Set VCR_MODE=replay in CI
+│   └─ Need custom scrubbing for sensitive data?
+│       └─ YES → Use withVCR({ scrub: ... })
+│
+└─ NO → Use Mocker (unit testing)
+    ├─ Testing error handling, edge cases, or rare paths?
+    │   └─ YES → Mock the error with mocker.chat(...).respond({ error: ... })
+    ├─ Testing streaming token delivery?
+    │   └─ YES → Use mocker.chat(...).stream([...])
+    └─ Testing tool-calling paths without real tools?
+        └─ YES → Use mocker.chat(...).callsTool(name, params)
+```
+
+**Quick Reference**:
+- **VCR**: Database queries, API calls, real provider behavior, network latency
+- **Mocker**: Business logic, UI interactions, error scenarios, tool orchestration
+
+### At-a-Glance Comparison
+
+| Use Case | VCR | Mocker |
+|----------|-----|--------|
+| Real provider behavior | ✅ | ❌ |
+| CI-safe (no live calls) | ✅ (after record) | ✅ |
+| Zero network overhead | ❌ (first run) | ✅ |
+| Error simulation | ⚠️ (record real) | ✅ |
+| Tool orchestration | ✅ | ✅ |
+| Streaming tokens | ✅ | ✅ |
+
+---
+
 ## ⚙️ Configuration Contract
 
 | Env Variable       | Description                                                | Default          |
@@ -217,6 +260,155 @@ it("handles tool errors in ORM sessions", async () => {
   const chat = await loadChat(prisma, llm, "existing-id");
 
   await expect(chat.ask("Search docs")).rejects.toThrow("DB Timeout");
+});
+```
+
+---
+
+## 🚨 Common Error Scenarios
+
+### VCR: Missing Cassette
+
+**Error**: `Error: Cassette file not found`
+
+**Cause**: VCR is in `replay` mode but the cassette doesn't exist yet.
+
+**Solution**:
+```bash
+# Record it first
+VCR_MODE=record npm test
+
+# Or use auto mode (records if missing, replays if exists)
+VCR_MODE=auto npm test
+```
+
+### VCR: Cassette Mismatch
+
+**Error**: `AssertionError: No interaction matched the request`
+
+**Cause**: Your code is making a request that doesn't match any recorded interaction.
+
+**Solution**:
+```bash
+# Re-record the cassette
+rm -rf test/cassettes/your-test
+VCR_MODE=record npm test -- your-test
+```
+
+### Mocker: Strict Mode Violation
+
+**Error**: `Error: No mock defined for prompt: "unexpected question"`
+
+**Cause**: Your code asked a question you didn't mock in strict mode.
+
+**Solution**:
+```typescript
+// Add the missing mock
+mocker.chat("unexpected question").respond("mocked response");
+
+// Or disable strict mode
+const mocker = mockLLM({ strict: false });
+```
+
+### Mocker: Debug Information
+
+Get insight into what mocks are registered:
+
+```typescript
+const mocker = mockLLM();
+mocker.chat("hello").respond("hi");
+mocker.embed("text").respond({ vectors: [[0.1, 0.2]] });
+
+const debug = mocker.getDebugInfo();
+console.log(debug);
+// Output: { totalMocks: 2, methods: ["chat", "embed"] }
+```
+
+---
+
+## 🎯 Advanced Patterns
+
+### Pattern: Parametrized Testing with VCR
+
+Test the same logic against multiple scenarios by organizing cassettes hierarchically:
+
+```typescript
+describeVCR("Payment Processing", () => {
+  ["visa", "mastercard", "amex"].forEach((cardType) => {
+    describeVCR(cardType, () => {
+      it(
+        "processes payment",
+        withVCR(async () => {
+          const result = await processor.pay({
+            amount: 100,
+            cardType
+          });
+          expect(result.status).toBe("success");
+        })
+      );
+    });
+  });
+});
+
+// Cassettes created at:
+// test/cassettes/payment-processing/visa/processes-payment.json
+// test/cassettes/payment-processing/mastercard/processes-payment.json
+// test/cassettes/payment-processing/amex/processes-payment.json
+```
+
+### Pattern: Strict Mode for Safety
+
+Enforce that every expected interaction is mocked:
+
+```typescript
+describe("Customer Service Bot", () => {
+  it("responds to greeting", async () => {
+    const mocker = mockLLM({ strict: true });
+    mocker.chat("hello").respond("Hello! How can I help?");
+    
+    await bot.handle("hello");
+    // Pass ✅
+  });
+
+  it("fails if unmocked", async () => {
+    const mocker = mockLLM({ strict: true });
+    mocker.chat("hello").respond("Hello!");
+    
+    // This throws because "goodbye" wasn't mocked
+    await expect(bot.handle("goodbye")).rejects.toThrow();
+  });
+});
+```
+
+### Pattern: Testing Streaming
+
+Simulate token delivery to verify UI updates correctly:
+
+```typescript
+it("displays tokens as they arrive", async () => {
+  const mocker = mockLLM();
+  mocker.chat("Write a poem").stream([
+    "Roses ",
+    "are ",
+    "red\n",
+    "Violets ",
+    "are ",
+    "blue"
+  ]);
+
+  const tokens = [];
+  await llm.stream("Write a poem", {
+    onToken: (token) => tokens.push(token)
+  });
+
+  expect(tokens).toEqual([
+    "Roses ",
+    "are ",
+    "red\n",
+    "Violets ",
+    "are ",
+    "blue"
+  ]);
 });
 ```
 

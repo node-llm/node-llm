@@ -1,0 +1,10 @@
+{
+  "name": "vcr-streaming",
+  "interactions": [
+    {
+      "method": "stream",
+      "request": { "messages": [{ "role": "user", "content": "Test" }] },
+      "response": null
+    }
+  ]
+}
