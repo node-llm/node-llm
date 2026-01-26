@@ -54,16 +54,33 @@ export class VCR {
       targetDir = path.join(targetDir, this.slugify(scope));
     }
 
-    this.mode = options.mode || (process.env.VCR_MODE as VCRMode) || "auto";
-    this.scrubber = new Scrubber({ customScrubber: options.scrub });
+    const initialMode = options.mode || (process.env.VCR_MODE as VCRMode) || "auto";
+    const isCI = !!process.env.CI;
     this.filePath = path.join(process.cwd(), targetDir, `${this.slugify(name)}.json`);
+    const exists = fs.existsSync(this.filePath);
 
-    if (this.mode === "auto") {
-      this.mode = fs.existsSync(this.filePath) ? "replay" : "record";
+    // CI Enforcement logic (Feature 8)
+    if (isCI) {
+      if (initialMode === "record") {
+        throw new Error(`VCR[${name}]: Recording cassettes is not allowed in CI environments.`);
+      }
+      if (initialMode === "auto" && !exists) {
+        throw new Error(
+          `VCR[${name}]: Cassette missing in CI. Run tests locally to generate ${this.filePath}`
+        );
+      }
     }
 
+    if (initialMode === "auto") {
+      this.mode = exists ? "replay" : "record";
+    } else {
+      this.mode = initialMode;
+    }
+
+    this.scrubber = new Scrubber({ customScrubber: options.scrub });
+
     if (this.mode === "replay") {
-      if (!fs.existsSync(this.filePath)) {
+      if (!exists) {
         throw new Error(`VCR[${name}]: Cassette file not found at ${this.filePath} in replay mode`);
       }
       this.cassette = JSON.parse(fs.readFileSync(this.filePath, "utf-8"));
