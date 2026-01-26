@@ -177,6 +177,27 @@ mocker.paint(/a cat/i).respond({ url: "https://mock.com/cat.png" });
 mocker.embed("text").respond({ vectors: [[0.1, 0.2, 0.3]] });
 ```
 
+### Call Verification & History 🕵️‍♀️
+
+Inspect what requests were sent to your mock, enabling "spy" style assertions.
+
+```typescript
+// 1. Check full history
+const history = mocker.history;
+expect(history.length).toBe(1);
+
+// 2. Filter by method
+const chats = mocker.getCalls("chat");
+expect(chats[0].args[0].messages[0].content).toContain("Hello");
+
+// 3. Get the most recent call
+const lastEmbed = mocker.getLastCall("embed");
+expect(lastEmbed.args[0].input).toBe("text to embed");
+
+// 4. Reset history (keep mocks)
+mocker.resetHistory();
+```
+
 ---
 
 ## 🛣️ Decision Tree: VCR vs Mocker

@@ -55,12 +55,37 @@ export interface MockerDebugInfo {
 
 const EXECUTION_METHODS = ["chat", "stream", "paint", "transcribe", "moderate", "embed"];
 
+export interface MockCall {
+  method: string;
+  args: unknown[];
+  timestamp: number;
+}
+
 export class Mocker {
   private mocks: MockDefinition[] = [];
+  private _history: MockCall[] = [];
   public strict = false;
 
   constructor() {
     this.setupInterceptor();
+  }
+
+  public get history(): MockCall[] {
+    return [...this._history];
+  }
+
+  public getCalls(method?: string): MockCall[] {
+    if (!method) return this.history;
+    return this._history.filter((c) => c.method === method);
+  }
+
+  public getLastCall(method?: string): MockCall | undefined {
+    const calls = this.getCalls(method);
+    return calls[calls.length - 1];
+  }
+
+  public resetHistory(): void {
+    this._history = [];
   }
 
   public chat(query?: string | RegExp): this {
@@ -178,6 +203,7 @@ export class Mocker {
 
   public clear(): void {
     this.mocks = [];
+    this._history = [];
     providerRegistry.setInterceptor(undefined);
   }
 
@@ -207,6 +233,12 @@ export class Mocker {
           if (EXECUTION_METHODS.includes(methodName)) {
             if (methodName === "stream") {
               return async function* (this: Mocker, request: ChatRequest) {
+                this._history.push({
+                  method: methodName,
+                  args: [request],
+                  timestamp: Date.now()
+                });
+
                 const matchingMocks = this.mocks.filter(
                   (m) => m.method === methodName && m.match(request)
                 );
@@ -234,6 +266,12 @@ export class Mocker {
 
             // Promise-based methods
             return (async (request: unknown) => {
+              this._history.push({
+                method: methodName,
+                args: [request],
+                timestamp: Date.now()
+              });
+
               const matchingMocks = this.mocks.filter(
                 (m) => m.method === methodName && m.match(request)
               );
