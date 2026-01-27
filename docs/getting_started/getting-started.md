@@ -41,21 +41,17 @@ The fastest way to start is using **Zero-Config**. NodeLLM automatically reads y
 
 ```ts
 import "dotenv/config";
-import { NodeLLM } from "@node-llm/core";
-
-// 1. Ensure NODELLM_PROVIDER=openai and OPENAI_API_KEY=... are in .env
-const llm = NodeLLM; // Exported singleton, ready to go!
-```
-
-Alternatively, use **Explicit Configuration** for multi-tenant or multi-provider apps:
-
-```ts
 import { createLLM } from "@node-llm/core";
 
-const llm = createLLM({
-  provider: "openai",
-  openaiApiKey: process.env.OPENAI_API_KEY
-});
+// Explicit initialization is recommended for production apps
+const llm = createLLM({ provider: "openai" });
+```
+
+Alternatively, use the **Zero-Config** singleton for rapid prototyping. NodeLLM automatically reads your API keys and the active provider from environment variables:
+
+```ts
+import { NodeLLM } from "@node-llm/core";
+const llm = NodeLLM; // Exported singleton
 ```
 
 ---

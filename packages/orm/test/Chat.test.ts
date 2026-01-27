@@ -70,6 +70,16 @@ const createMockPrisma = () => {
         const request = { id: `req-${requests.length}`, ...data, createdAt: new Date() };
         requests.push(request);
         return request;
+      }),
+      aggregate: vi.fn(async ({ where }) => {
+        const filtered = requests.filter((r) => r.chatId === where.chatId);
+        return {
+          _sum: {
+            inputTokens: filtered.reduce((acc, r) => acc + (r.inputTokens || 0), 0),
+            outputTokens: filtered.reduce((acc, r) => acc + (r.outputTokens || 0), 0),
+            cost: filtered.reduce((acc, r) => acc + (r.cost || 0), 0)
+          }
+        };
       })
     },
     _messages: messages,
@@ -98,10 +108,11 @@ const createMockLLM = () => {
   let capturedAfterResponseCallback: any = null;
   let capturedToolCallStartCallback: any = null;
   let capturedToolCallEndCallback: any = null;
+  let nextResponse: any = null;
 
-  const mockChat = {
-    system: vi.fn().mockReturnThis(),
-    withTools: vi.fn().mockReturnThis(),
+  const mockChat: any = {
+    system: vi.fn(() => mockChat),
+    withTools: vi.fn(() => mockChat),
     onToolCallStart: vi.fn((cb) => {
       capturedToolCallStartCallback = cb;
       return mockChat;
@@ -114,9 +125,9 @@ const createMockLLM = () => {
       capturedAfterResponseCallback = cb;
       return mockChat;
     }),
-    onNewMessage: vi.fn().mockReturnThis(),
-    onEndMessage: vi.fn().mockReturnThis(),
-    beforeRequest: vi.fn().mockReturnThis(),
+    onNewMessage: vi.fn(() => mockChat),
+    onEndMessage: vi.fn(() => mockChat),
+    beforeRequest: vi.fn(() => mockChat),
     ask: vi.fn(async () => {
       const toolCall = {
         id: "call-123",
@@ -133,21 +144,21 @@ const createMockLLM = () => {
       }
 
       // Simulate response
-      const response = {
+      const response = nextResponse || {
         content: "Hello from LLM!",
         meta: { model: "gpt-4", provider: "openai" },
         reasoning: null,
-        usage: { input_tokens: 10, output_tokens: 5, total_tokens: 15 },
+        usage: { input_tokens: 10, output_tokens: 5, total_tokens: 15, cost: 0.001 },
         model: "gpt-4",
         provider: "openai"
       };
 
       if (capturedAfterResponseCallback) {
         await capturedAfterResponseCallback({
-          provider: "openai",
-          model: "gpt-4",
+          provider: response.provider || "openai",
+          model: response.model || "gpt-4",
           latency: 100,
-          usage: { input_tokens: 10, output_tokens: 5, cost: 0.001 }
+          usage: response.usage || { input_tokens: 10, output_tokens: 5, cost: 0.001 }
         });
       }
 
@@ -199,12 +210,15 @@ const createMockLLM = () => {
     })
   };
 
-  return {
+  const llm: any = {
     chat: vi.fn(() => mockChat),
-    withProvider: vi.fn(() => ({
-      chat: vi.fn(() => mockChat)
-    }))
+    withProvider: vi.fn(() => llm),
+    withResponse: (resp: any) => {
+      nextResponse = resp;
+    }
   };
+
+  return llm;
 };
 
 describe("Chat ORM", () => {
@@ -541,6 +555,34 @@ describe("Chat ORM", () => {
       expect(mockPrisma.toolCall.create).toHaveBeenCalled();
       expect(mockPrisma.request.create).toHaveBeenCalled();
       expect(mockPrisma.message.create).toHaveBeenCalled();
+    });
+  });
+
+  describe("stats", () => {
+    it("aggregates usage and cost across multiple turns", async () => {
+      const mockPrisma = createMockPrisma();
+      const mockLLM = createMockLLM();
+      const chat = await createChat(mockPrisma as any, mockLLM as any);
+
+      // Turn 1
+      mockLLM.withResponse({
+        content: "Turn 1",
+        usage: { input_tokens: 10, output_tokens: 20, cost: 0.05 }
+      });
+      await chat.ask("Hello 1");
+
+      // Turn 2
+      mockLLM.withResponse({
+        content: "Turn 2",
+        usage: { input_tokens: 30, output_tokens: 40, cost: 0.15 }
+      });
+      await chat.ask("Hello 2");
+
+      const stats = await chat.stats();
+      expect(stats.input_tokens).toBe(40);
+      expect(stats.output_tokens).toBe(60);
+      expect(stats.total_tokens).toBe(100);
+      expect(stats.cost).toBe(0.2);
     });
   });
 });

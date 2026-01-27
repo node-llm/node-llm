@@ -202,6 +202,25 @@ const history = await chat.messages();
 
 ---
 
+## Analytical Views (Insights)
+
+The ORM is great at storing data, but querying it for usage insights (e.g., "How many tokens did this user spend?") can be complex. NodeLLM provides a built-in `stats()` method that aggregates conversation-level metrics efficiently using Prisma's `aggregate` features.
+
+### Conversation Summary
+
+```typescript
+const chat = await loadChat(prisma, llm, "chat-uuid-123");
+const stats = await chat.stats();
+
+console.log(`Input Tokens: ${stats.input_tokens}`);
+console.log(`Output Tokens: ${stats.output_tokens}`);
+console.log(`Total Cost: $${stats.cost}`);
+```
+
+This method is significantly more efficient than fetching and summing all message records manually, as it performs the calculation directly inside the database.
+
+---
+
 ## Advanced Usage
 
 ### Custom Table Names

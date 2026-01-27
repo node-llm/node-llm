@@ -8,7 +8,9 @@ export class ModelRegistry {
 
   static find(modelId: string, provider?: string): Model | undefined {
     return this.models.find(
-      (m) => m.id.toLowerCase() === modelId.toLowerCase() && (!provider || m.provider === provider)
+      (m) =>
+        m.id.toLowerCase() === modelId.toLowerCase() &&
+        (!provider || m.provider.toLowerCase() === provider.toLowerCase())
     );
   }
 

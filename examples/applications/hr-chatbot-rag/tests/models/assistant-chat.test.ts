@@ -89,6 +89,13 @@ vi.mock("@/lib/db", () => {
              store[modelName].clear();
              return { count };
         }),
+        aggregate: vi.fn(async () => ({
+            _sum: {
+                inputTokens: 0,
+                outputTokens: 0,
+                cost: 0
+            }
+        })),
     });
 
     return {

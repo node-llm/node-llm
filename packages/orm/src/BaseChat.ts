@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import type { Usage } from "@node-llm/core";
 
 export interface ChatRecord {
   id: string;
@@ -187,4 +188,9 @@ export abstract class BaseChat<
     this.userHooks.onEndMessage.push(callback);
     return this;
   }
+
+  /**
+   * Returns a usage summary for this chat session.
+   */
+  abstract stats(): Promise<Usage>;
 }

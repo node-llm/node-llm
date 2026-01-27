@@ -38,6 +38,9 @@ export class DeepSeekStreaming {
     if (tools && tools.length > 0) body.tools = tools;
     if (response_format) body.response_format = response_format;
 
+    // DeepSeek (and most OpenAI compatible) supports include_usage
+    body.stream_options = { include_usage: true };
+
     let done = false;
     // Track tool calls being built across chunks
     const toolCallsMap = new Map<
@@ -166,6 +169,16 @@ export class DeepSeekStreaming {
                   }
                 }
               }
+            }
+
+            // Handle usage
+            if (json.usage) {
+              const usage = {
+                input_tokens: json.usage.prompt_tokens,
+                output_tokens: json.usage.completion_tokens,
+                total_tokens: json.usage.total_tokens
+              };
+              yield { content: "", usage };
             }
           } catch (e) {
             // Re-throw APIError

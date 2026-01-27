@@ -65,6 +65,8 @@ export class OpenAIStreaming {
       body.reasoning_effort = request.thinking.effort;
     }
 
+    body.stream_options = { include_usage: true };
+
     let done = false;
     // Track tool calls being built across chunks
     const toolCallsMap = new Map<
@@ -193,6 +195,16 @@ export class OpenAIStreaming {
                   }
                 }
               }
+            }
+
+            // Handle usage (usually in the special chunk when stream_options.include_usage: true)
+            if (json.usage) {
+              const usage = {
+                input_tokens: json.usage.prompt_tokens,
+                output_tokens: json.usage.completion_tokens,
+                total_tokens: json.usage.total_tokens
+              };
+              yield { content: "", usage };
             }
           } catch (e) {
             // Re-throw APIError

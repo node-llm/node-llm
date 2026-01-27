@@ -190,9 +190,25 @@ export class AnthropicStreaming {
             } else if (eventType === "content_block_stop") {
               // Block finished
             } else if (eventType === "message_start") {
-              // Could extract initial usage here
+              if (data.message?.usage) {
+                const usage = {
+                  input_tokens: data.message.usage.input_tokens,
+                  output_tokens: data.message.usage.output_tokens,
+                  total_tokens: data.message.usage.input_tokens + data.message.usage.output_tokens
+                };
+                yield { content: "", usage };
+              }
             } else if (eventType === "message_delta") {
-              // Update usage or stop reason
+              // Update usage
+              if (data.usage) {
+                const usage = {
+                  input_tokens: 0, // Delta usually only contains output
+                  output_tokens: data.usage.output_tokens,
+                  total_tokens: data.usage.output_tokens
+                };
+                yield { content: "", usage };
+              }
+
               if (data.delta?.stop_reason === "end_turn" && toolCallsMap.size > 0) {
                 // Yield accumulated tool calls
                 const toolCalls = Array.from(toolCallsMap.values()).map((tc) => ({

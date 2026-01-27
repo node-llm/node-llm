@@ -19,6 +19,7 @@ import { ChatValidator } from "./Validation.js";
 import { ToolHandler } from "./ToolHandler.js";
 import { logger } from "../utils/logger.js";
 import { ResponseFormat } from "../providers/Provider.js";
+import { ModelRegistry } from "../models/ModelRegistry.js";
 
 /**
  * Internal handler for chat streaming logic.
@@ -136,11 +137,22 @@ export class ChatStream {
       const totalUsage: Usage = { input_tokens: 0, output_tokens: 0, total_tokens: 0 };
       const trackUsage = (u?: Usage) => {
         if (u) {
+          // Fallback cost calculation if provider didn't return it
+          if (u.cost === undefined) {
+            const withCost = ModelRegistry.calculateCost(u, model, provider.id);
+            u.cost = (withCost as any).cost;
+            u.input_cost = (withCost as any).input_cost;
+            u.output_cost = (withCost as any).output_cost;
+          }
+
           totalUsage.input_tokens += u.input_tokens;
           totalUsage.output_tokens += u.output_tokens;
           totalUsage.total_tokens += u.total_tokens;
           if (u.cached_tokens) {
             totalUsage.cached_tokens = (totalUsage.cached_tokens ?? 0) + u.cached_tokens;
+          }
+          if (u.cost !== undefined) {
+            totalUsage.cost = (totalUsage.cost ?? 0) + u.cost;
           }
         }
       };

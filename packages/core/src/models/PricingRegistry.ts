@@ -57,14 +57,14 @@ export class PricingRegistry {
    */
   static getPricing(modelId: string, provider: string): ModelPricing | undefined {
     // 1. Check custom overrides (Runtime/Remote)
-    const key = `${provider}/${modelId}`;
+    const key = `${provider.toLowerCase()}/${modelId.toLowerCase()}`;
     if (this.pricingOverrides.has(key)) {
       return this.pricingOverrides.get(key);
     }
 
     // 2. Check library default patterns (Core Overrides)
     for (const entry of this.DEFAULT_PATTERNS) {
-      if (entry.provider === provider && entry.pattern.test(modelId)) {
+      if (entry.provider.toLowerCase() === provider.toLowerCase() && entry.pattern.test(modelId)) {
         return entry.pricing;
       }
     }
@@ -78,7 +78,7 @@ export class PricingRegistry {
    * Register or override pricing at runtime.
    */
   static register(provider: string, modelId: string, pricing: ModelPricing) {
-    this.pricingOverrides.set(`${provider}/${modelId}`, pricing);
+    this.pricingOverrides.set(`${provider.toLowerCase()}/${modelId.toLowerCase()}`, pricing);
   }
 
   /**

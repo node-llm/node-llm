@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { PrismaClient } from "@prisma/client";
-import type { NodeLLMCore, ChatChunk, AskOptions } from "@node-llm/core";
+import type { NodeLLMCore, ChatChunk, AskOptions, Usage } from "@node-llm/core";
 import { BaseChat, type ChatRecord, type ChatOptions } from "../../BaseChat.js";
 
 export { type ChatRecord, type ChatOptions };
@@ -308,6 +308,28 @@ export class Chat extends BaseChat {
       where: { chatId: this.id },
       orderBy: { createdAt: "asc" }
     });
+  }
+
+  /**
+   * Returns a usage summary for this chat session.
+   */
+  async stats(): Promise<Usage> {
+    const requestModel = this.tables.request;
+    const aggregate = await (this.prisma as any)[requestModel].aggregate({
+      where: { chatId: this.id },
+      _sum: {
+        inputTokens: true,
+        outputTokens: true,
+        cost: true
+      }
+    });
+
+    return {
+      input_tokens: Number(aggregate._sum.inputTokens || 0),
+      output_tokens: Number(aggregate._sum.outputTokens || 0),
+      total_tokens: Number((aggregate._sum.inputTokens || 0) + (aggregate._sum.outputTokens || 0)),
+      cost: Number(aggregate._sum.cost || 0)
+    };
   }
 }
 

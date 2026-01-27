@@ -29,6 +29,9 @@ export async function sendMessage(chatId: string | null, message: string) {
 
   const responseRecord = await chat.withTool(searchDocumentsTool).ask(message);
 
+  const stats = await chat.stats();
+  console.log(`[Chat Stats] Chat ${chat.id}:`, stats);
+
   return {
     chatId: chat.id,
     message: responseRecord,
@@ -81,6 +84,9 @@ export async function sendMessageStream(
         }
 
         // Signal completion
+        const stats = await chat.stats();
+        console.log(`[Chat Stats Stream] Chat ${chat.id}:`, stats);
+
         controller.enqueue(encoder.encode(JSON.stringify({ type: "done" }) + "\n"));
       } catch (error) {
         controller.enqueue(

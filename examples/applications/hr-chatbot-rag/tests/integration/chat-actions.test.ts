@@ -21,6 +21,13 @@ vi.mock("@/lib/db", () => {
     delete: vi.fn(async () => ({})),
     deleteMany: vi.fn(async () => ({ count: 0 })),
     update: vi.fn(async ({ data }) => data),
+    aggregate: vi.fn(async () => ({
+      _sum: {
+        inputTokens: 0,
+        outputTokens: 0,
+        cost: 0
+      }
+    })),
   };
 
   return {

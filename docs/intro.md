@@ -75,10 +75,11 @@ It is the "AI SDK for the rest of us"—backend engineers building workers, cron
 ## ⚡ The 5-Minute Path
 
 ```ts
-import { NodeLLM } from "@node-llm/core";
+import { createLLM } from "@node-llm/core";
 
-// 1. Install & Configure (Uses env vars)
-const chat = NodeLLM.chat("gpt-4o");
+// 1. Explicit Initialization (Preferred)
+const llm = createLLM({ provider: "openai" });
+const chat = llm.chat("gpt-4o");
 
 // 2. Chat (High-level request/response)
 const response = await chat.ask("Explain event-driven architecture");
@@ -123,10 +124,10 @@ NodeLLM is **NOT**:
 Stop rewriting code for every provider. `NodeLLM` normalizes inputs and outputs into a single, predictable mental model.
 
 ```ts
-import { NodeLLM } from "@node-llm/core";
+import { createLLM } from "@node-llm/core";
 
-// Uses NODELLM_PROVIDER from environment (defaults to GPT-4o)
-const chat = NodeLLM.chat();
+const llm = createLLM({ provider: "openai" });
+const chat = llm.chat("gpt-4o");
 await chat.ask("Hello world");
 ```
 
