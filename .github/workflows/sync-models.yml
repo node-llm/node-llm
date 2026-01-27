@@ -21,22 +21,27 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: "20"
-          cache: "npm"
+          cache: "pnpm"
 
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install
 
       - name: Run model sync
-        run: npm run sync-models
+        run: pnpm run sync-models
 
       - name: Check for changes
         id: git-check
         run: |
-          git diff --exit-code packages/core/src/models/models.ts packages/core/src/aliases.ts || echo "changed=true" >> $GITHUB_OUTPUT
+          git diff --exit-code packages/core/src/models/models.json packages/core/src/aliases.ts || echo "changed=true" >> $GITHUB_OUTPUT
 
       - name: Create Pull Request
         if: steps.git-check.outputs.changed == 'true'
@@ -51,7 +56,7 @@ jobs:
             This PR updates the model registry with the latest data from [models.dev](https://models.dev).
 
             ### Changes
-            - Updated `packages/core/src/models/models.ts`
+            - Updated `packages/core/src/models/models.json`
             - Updated `packages/core/src/aliases.ts`
 
             ### Review Checklist
