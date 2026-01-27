@@ -179,8 +179,9 @@ await vcr.useCassette("pricing_flow", async () => {
 
 // 2. Unit Tests (Mocker)
 const mock = new Mocker()
-  .chat("Next step?", "Login User")
-  .tool("getCurrentUser", { id: 1 });
+  .chat("Next step?")
+  .respond("Login User")
+  .callsTool("getCurrentUser", { id: 1 });
 ```
 
 ### 🛡️ [Security & Compliance](/advanced/security)
