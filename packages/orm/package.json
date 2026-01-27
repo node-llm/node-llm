@@ -1,6 +1,6 @@
 {
   "name": "@node-llm/orm",
-  "version": "0.2.2",
+  "version": "0.3.0",
   "description": "Database persistence layer for NodeLLM - Chat, Message, and ToolCall tracking with streaming support",
   "type": "module",
   "main": "./dist/index.js",
@@ -61,7 +61,7 @@
   "author": "NodeLLM Contributors",
   "license": "MIT",
   "peerDependencies": {
-    "@node-llm/core": "^1.8.0",
+    "@node-llm/core": "^1.9.0",
     "@prisma/client": "^5.0.0"
   },
   "devDependencies": {

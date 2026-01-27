@@ -2,10 +2,26 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.0] - 2026-01-27 (@node-llm/orm)
+
+### Features
+
+- **Type-Safe Schema Support**: Updated `BaseChat` to handle generic types for structured outputs, mirroring core package improvements.
+- **Dependency Update**: Bumped peer dependency for `@node-llm/core` to `^1.9.0`.
+
+## [0.3.0] - 2026-01-27 (@node-llm/testing)
+
+### Features
+
+- **Mocker History**: Added internal call history tracking to the `Mocker` class.
+- **Enhanced Verification**: Added `getCalls()` and `getLastCall()` methods for detailed assertion of mock interactions during tests.
+- **Type Safety**: Improved type definitions for mock matchers and responses.
+
 ## [1.9.0] - 2026-01-27 (@node-llm/core)
 
 ### Features
 
+- **Type-Safe Structured Outputs**: Enhanced `.withSchema(schema)` to return a generic `Chat<T>` instance, providing full TypeScript intellisense for validated data.
 - **Robust JSON Extraction**: New `extractJson` utility that handles conversational filler and markdown code blocks, ensuring reliable parsing even from "chatty" models.
 - **ActiveRecord-style Response Validation**:
   - Added `.data` property to `ChatResponseString` with automatic Zod validation.
