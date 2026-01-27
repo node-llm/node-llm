@@ -1,5 +1,6 @@
 import { Provider, ChatRequest, ChatResponse, ModelInfo, ChatChunk } from "../Provider.js";
 import { BaseProvider } from "../BaseProvider.js";
+import { DEFAULT_DEEPSEEK_BASE_URL } from "../../constants.js";
 import { DeepSeekChat } from "./Chat.js";
 import { DeepSeekModels } from "./Models.js";
 import { DeepSeekStreaming } from "./Streaming.js";
@@ -31,7 +32,7 @@ export class DeepSeekProvider extends BaseProvider implements Provider {
 
   constructor(private readonly options: DeepSeekProviderOptions) {
     super();
-    this.baseUrl = options.baseUrl ?? "https://api.deepseek.com";
+    this.baseUrl = options.baseUrl ?? DEFAULT_DEEPSEEK_BASE_URL;
     this.chatHandler = new DeepSeekChat(this.baseUrl, options.apiKey);
     this.streamingHandler = new DeepSeekStreaming(this.baseUrl, options.apiKey);
     this.modelsHandler = new DeepSeekModels(this.baseUrl, options.apiKey);

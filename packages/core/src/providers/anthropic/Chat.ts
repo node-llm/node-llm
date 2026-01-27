@@ -7,6 +7,7 @@ import { ModelRegistry } from "../../models/ModelRegistry.js";
 import { logger } from "../../utils/logger.js";
 import { fetchWithTimeout } from "../../utils/fetch.js";
 import { formatSystemPrompt, formatMessages } from "./Utils.js";
+import { DEFAULT_MAX_TOKENS } from "../../constants.js";
 
 export class AnthropicChat {
   constructor(
@@ -16,7 +17,8 @@ export class AnthropicChat {
 
   async execute(request: ChatRequest): Promise<ChatResponse> {
     const model = request.model;
-    const maxTokens = request.max_tokens || Capabilities.getMaxOutputTokens(model) || 4096;
+    const maxTokens =
+      request.max_tokens || Capabilities.getMaxOutputTokens(model) || DEFAULT_MAX_TOKENS;
 
     const systemPrompt = formatSystemPrompt(request.messages);
     const messages = formatMessages(request.messages);

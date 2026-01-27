@@ -14,6 +14,7 @@ import {
   EmbeddingResponse
 } from "../Provider.js";
 import { BaseProvider } from "../BaseProvider.js";
+import { DEFAULT_OPENAI_BASE_URL } from "../../constants.js";
 import { Capabilities } from "./Capabilities.js";
 import { OpenAIChat } from "./Chat.js";
 import { OpenAIStreaming } from "./Streaming.js";
@@ -54,7 +55,7 @@ export class OpenAIProvider extends BaseProvider implements Provider {
 
   constructor(protected readonly options: OpenAIProviderOptions) {
     super();
-    this.baseUrl = options.baseUrl ?? "https://api.openai.com/v1";
+    this.baseUrl = options.baseUrl ?? DEFAULT_OPENAI_BASE_URL;
     this.chatHandler = new OpenAIChat(this, options.apiKey);
     this.streamingHandler = new OpenAIStreaming(this, options.apiKey);
     this.modelsHandler = new OpenAIModels(this.baseUrl, options.apiKey);

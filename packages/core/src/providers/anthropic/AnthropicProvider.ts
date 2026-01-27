@@ -1,5 +1,6 @@
 import { Provider, ChatRequest, ChatResponse, ModelInfo, ChatChunk } from "../Provider.js";
 import { BaseProvider } from "../BaseProvider.js";
+import { DEFAULT_ANTHROPIC_BASE_URL } from "../../constants.js";
 import { Capabilities } from "./Capabilities.js";
 import { AnthropicChat } from "./Chat.js";
 import { AnthropicStreaming } from "./Streaming.js";
@@ -31,7 +32,7 @@ export class AnthropicProvider extends BaseProvider implements Provider {
 
   constructor(private readonly options: AnthropicProviderOptions) {
     super();
-    this.baseUrl = options.baseUrl ?? "https://api.anthropic.com/v1";
+    this.baseUrl = options.baseUrl ?? DEFAULT_ANTHROPIC_BASE_URL;
     this.chatHandler = new AnthropicChat(this.baseUrl, options.apiKey);
     this.streamHandler = new AnthropicStreaming(this.baseUrl, options.apiKey);
     this.modelsHandler = new AnthropicModels(this.baseUrl, options.apiKey);

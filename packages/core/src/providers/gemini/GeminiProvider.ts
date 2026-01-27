@@ -12,6 +12,7 @@ import {
   EmbeddingResponse
 } from "../Provider.js";
 import { BaseProvider } from "../BaseProvider.js";
+import { DEFAULT_GEMINI_BASE_URL } from "../../constants.js";
 import { Capabilities } from "./Capabilities.js";
 import { GeminiChat } from "./Chat.js";
 import { GeminiStreaming } from "./Streaming.js";
@@ -49,7 +50,7 @@ export class GeminiProvider extends BaseProvider implements Provider {
 
   constructor(private readonly options: GeminiProviderOptions) {
     super();
-    this.baseUrl = options.baseUrl ?? "https://generativelanguage.googleapis.com/v1beta";
+    this.baseUrl = options.baseUrl ?? DEFAULT_GEMINI_BASE_URL;
     this.chatHandler = new GeminiChat(this.baseUrl, options.apiKey);
     this.streamingHandler = new GeminiStreaming(this.baseUrl, options.apiKey);
     this.modelsHandler = new GeminiModels(this.baseUrl, options.apiKey);

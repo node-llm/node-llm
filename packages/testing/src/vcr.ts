@@ -259,7 +259,15 @@ export class VCR {
   }
 }
 
-const EXECUTION_METHODS = ["chat", "stream", "paint", "transcribe", "moderate", "embed"];
+const EXECUTION_METHODS = [
+  "chat",
+  "stream",
+  "paint",
+  "transcribe",
+  "moderate",
+  "embed",
+  "listModels"
+];
 
 export function setupVCR(name: string, options: VCROptions = {}) {
   const vcr = new VCR(name, options);

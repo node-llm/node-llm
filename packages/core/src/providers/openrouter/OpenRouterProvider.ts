@@ -1,4 +1,5 @@
 import { OpenAIProvider } from "../openai/OpenAIProvider.js";
+import { DEFAULT_OPENROUTER_BASE_URL } from "../../constants.js";
 import { OpenRouterCapabilities } from "./Capabilities.js";
 
 export interface OpenRouterProviderOptions {
@@ -25,7 +26,7 @@ export class OpenRouterProvider extends OpenAIProvider {
   constructor(options: OpenRouterProviderOptions) {
     super({
       apiKey: options.apiKey,
-      baseUrl: options.baseUrl || "https://openrouter.ai/api/v1"
+      baseUrl: options.baseUrl || DEFAULT_OPENROUTER_BASE_URL
     });
   }
 

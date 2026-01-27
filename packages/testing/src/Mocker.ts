@@ -53,7 +53,15 @@ export interface MockerDebugInfo {
   methods: string[];
 }
 
-const EXECUTION_METHODS = ["chat", "stream", "paint", "transcribe", "moderate", "embed"];
+const EXECUTION_METHODS = [
+  "chat",
+  "stream",
+  "paint",
+  "transcribe",
+  "moderate",
+  "embed",
+  "listModels"
+];
 
 export interface MockerOptions {
   /**
@@ -353,6 +361,9 @@ export class Mocker {
                         { flagged: false, categories: {}, category_scores: {} }
                       ]
                     } as ModerationResponse;
+                  }
+                  case "listModels": {
+                    return res || [];
                   }
                   default:
                     return res;

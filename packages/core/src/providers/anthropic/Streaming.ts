@@ -5,6 +5,7 @@ import { formatSystemPrompt, formatMessages } from "./Utils.js";
 import { AnthropicMessageRequest } from "./types.js";
 import { logger } from "../../utils/logger.js";
 import { fetchWithTimeout } from "../../utils/fetch.js";
+import { DEFAULT_MAX_TOKENS } from "../../constants.js";
 
 export class AnthropicStreaming {
   constructor(
@@ -15,7 +16,8 @@ export class AnthropicStreaming {
   async *execute(request: ChatRequest, controller?: AbortController): AsyncGenerator<ChatChunk> {
     const abortController = controller || new AbortController();
     const model = request.model;
-    const maxTokens = request.max_tokens || Capabilities.getMaxOutputTokens(model) || 4096;
+    const maxTokens =
+      request.max_tokens || Capabilities.getMaxOutputTokens(model) || DEFAULT_MAX_TOKENS;
 
     const systemPrompt = formatSystemPrompt(request.messages);
     const messages = formatMessages(request.messages);

@@ -1,5 +1,6 @@
 import { OpenAIProvider } from "../openai/OpenAIProvider.js";
 import { config } from "../../config.js";
+import { DEFAULT_OLLAMA_BASE_URL } from "../../constants.js";
 import { OllamaModels } from "./Models.js";
 import { OllamaEmbedding } from "./Embedding.js";
 import { OllamaCapabilities } from "./Capabilities.js";
@@ -12,7 +13,7 @@ export class OllamaProvider extends OpenAIProvider {
   constructor(options: OllamaProviderOptions = {}) {
     super({
       apiKey: "ollama",
-      baseUrl: options.baseUrl || config.ollamaApiBase || "http://localhost:11434/v1"
+      baseUrl: options.baseUrl || DEFAULT_OLLAMA_BASE_URL
     });
 
     // Override handlers with Ollama-specific ones

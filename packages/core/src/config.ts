@@ -38,7 +38,13 @@ import {
   DEFAULT_REQUEST_TIMEOUT,
   DEFAULT_MAX_TOKENS,
   DEFAULT_TOOL_EXECUTION,
+  DEFAULT_OPENAI_BASE_URL,
+  DEFAULT_ANTHROPIC_BASE_URL,
+  DEFAULT_GEMINI_BASE_URL,
+  DEFAULT_DEEPSEEK_BASE_URL,
+  DEFAULT_OPENROUTER_BASE_URL,
   DEFAULT_OLLAMA_BASE_URL,
+  DEFAULT_BEDROCK_REGION,
   ToolExecutionMode
 } from "./constants.js";
 
@@ -72,7 +78,7 @@ export class Configuration implements NodeLLMConfig {
   }
 
   public get openaiApiBase(): string | undefined {
-    return this._openaiApiBase ?? process.env.OPENAI_API_BASE?.trim();
+    return this._openaiApiBase ?? process.env.OPENAI_API_BASE?.trim() ?? DEFAULT_OPENAI_BASE_URL;
   }
   public set openaiApiBase(v: string | undefined) {
     this._openaiApiBase = v;
@@ -86,7 +92,9 @@ export class Configuration implements NodeLLMConfig {
   }
 
   public get anthropicApiBase(): string | undefined {
-    return this._anthropicApiBase ?? process.env.ANTHROPIC_API_BASE?.trim();
+    return (
+      this._anthropicApiBase ?? process.env.ANTHROPIC_API_BASE?.trim() ?? DEFAULT_ANTHROPIC_BASE_URL
+    );
   }
   public set anthropicApiBase(v: string | undefined) {
     this._anthropicApiBase = v;
@@ -100,7 +108,7 @@ export class Configuration implements NodeLLMConfig {
   }
 
   public get geminiApiBase(): string | undefined {
-    return this._geminiApiBase ?? process.env.GEMINI_API_BASE?.trim();
+    return this._geminiApiBase ?? process.env.GEMINI_API_BASE?.trim() ?? DEFAULT_GEMINI_BASE_URL;
   }
   public set geminiApiBase(v: string | undefined) {
     this._geminiApiBase = v;
@@ -114,7 +122,9 @@ export class Configuration implements NodeLLMConfig {
   }
 
   public get deepseekApiBase(): string | undefined {
-    return this._deepseekApiBase ?? process.env.DEEPSEEK_API_BASE?.trim();
+    return (
+      this._deepseekApiBase ?? process.env.DEEPSEEK_API_BASE?.trim() ?? DEFAULT_DEEPSEEK_BASE_URL
+    );
   }
   public set deepseekApiBase(v: string | undefined) {
     this._deepseekApiBase = v;
@@ -135,7 +145,11 @@ export class Configuration implements NodeLLMConfig {
   }
 
   public get openrouterApiBase(): string | undefined {
-    return this._openrouterApiBase ?? process.env.OPENROUTER_API_BASE?.trim();
+    return (
+      this._openrouterApiBase ??
+      process.env.OPENROUTER_API_BASE?.trim() ??
+      DEFAULT_OPENROUTER_BASE_URL
+    );
   }
   public set openrouterApiBase(v: string | undefined) {
     this._openrouterApiBase = v;
@@ -171,7 +185,7 @@ export class Configuration implements NodeLLMConfig {
   }
 
   public get bedrockRegion(): string | undefined {
-    return this._bedrockRegion ?? process.env.AWS_REGION?.trim() ?? "us-east-1";
+    return this._bedrockRegion ?? process.env.AWS_REGION?.trim() ?? DEFAULT_BEDROCK_REGION;
   }
   public set bedrockRegion(v: string | undefined) {
     this._bedrockRegion = v;
