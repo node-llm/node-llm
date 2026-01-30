@@ -1,6 +1,6 @@
 <p align="left">
   <a href="https://node-llm.eshaiju.com/">
-    <img src="https://node-llm.eshaiju.com/assets/images/logo.jpg" alt="NodeLLM logo" width="300" />
+    <img src="https://node-llm.eshaiju.com/assets/images/logo.png" alt="NodeLLM logo" width="300" />
   </a>
 </p>
 
