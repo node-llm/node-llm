@@ -40,6 +40,7 @@ export interface RetryOptions {
 type LLMConfig = {
   provider?: Provider | string;
   retry?: RetryOptions;
+  middlewares?: Middleware[];
   defaultChatModel?: string;
   defaultTranscriptionModel?: string;
   defaultModerationModel?: string;
@@ -65,6 +66,7 @@ export class NodeLLMCore {
     public readonly config: NodeLLMConfig,
     public readonly provider?: Provider,
     public readonly retry: Required<RetryOptions> = { attempts: 1, delayMs: 0 },
+    public readonly middlewares: Middleware[] = [],
     private readonly defaults: {
       chat?: string;
       transcription?: string;
@@ -102,7 +104,8 @@ export class NodeLLMCore {
       ...baseConfig,
       ...scopedConfig,
       provider: providerName,
-      // Preserve defaults unless overridden (conceptually, though createLLM takes specific keys)
+      // Preserve middlewares and defaults unless overridden
+      middlewares: this.middlewares,
       defaultChatModel: this.defaults.chat,
       defaultTranscriptionModel: this.defaults.transcription,
       defaultModerationModel: this.defaults.moderation,
@@ -134,14 +137,21 @@ export class NodeLLMCore {
     return this.provider as Provider & Record<K, NonNullable<Provider[K]>>;
   }
 
-  chat(model?: string, options?: ChatOptions): Chat {
+  chat(model?: string, options: ChatOptions = {}): Chat {
     if (!this.provider) {
       throw new ProviderNotConfiguredError();
     }
 
     const rawModel = model || this.defaults.chat || this.provider.defaultModel("chat");
     const resolvedModel = resolveModelAlias(rawModel, this.provider.id);
-    return new Chat(this.provider, resolvedModel, options, this.retry);
+
+    // Merge global middlewares with local ones
+    const combinedOptions = {
+      ...options,
+      middlewares: [...this.middlewares, ...(options.middlewares || [])]
+    };
+
+    return new Chat(this.provider, resolvedModel, combinedOptions, this.retry);
   }
 
   async listModels(): Promise<ModelInfo[]> {
@@ -182,7 +192,7 @@ export class NodeLLMCore {
       state
     };
 
-    const middlewares = options?.middlewares || [];
+    const middlewares = [...this.middlewares, ...(options?.middlewares || [])];
 
     try {
       await runMiddleware(middlewares, "onRequest", context);
@@ -246,7 +256,7 @@ export class NodeLLMCore {
       state
     };
 
-    const middlewares = options?.middlewares || [];
+    const middlewares = [...this.middlewares, ...(options?.middlewares || [])];
 
     try {
       await runMiddleware(middlewares, "onRequest", context);
@@ -306,7 +316,7 @@ export class NodeLLMCore {
       state
     };
 
-    const middlewares = options?.middlewares || [];
+    const middlewares = [...this.middlewares, ...(options?.middlewares || [])];
 
     try {
       await runMiddleware(middlewares, "onRequest", context);
@@ -367,7 +377,7 @@ export class NodeLLMCore {
       state
     };
 
-    const middlewares = options?.middlewares || [];
+    const middlewares = [...this.middlewares, ...(options?.middlewares || [])];
 
     try {
       await runMiddleware(middlewares, "onRequest", context);
@@ -459,7 +469,7 @@ export function createLLM(options: LLMConfig = {}): NodeLLMCore {
     embedding: options.defaultEmbeddingModel
   };
 
-  return new NodeLLMCore(baseConfig, providerInstance, retry, defaults);
+  return new NodeLLMCore(baseConfig, providerInstance, retry, options.middlewares || [], defaults);
 }
 
 /**

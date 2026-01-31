@@ -68,6 +68,11 @@ export interface MiddlewareContext {
 }
 
 /**
+ * Directives for handling tool execution errors.
+ */
+export type ToolErrorDirective = "STOP" | "CONTINUE" | "RETRY" | void;
+
+/**
  * Middleware interface for hooking into the LLM execution lifecycle.
  */
 export interface Middleware {
@@ -105,6 +110,11 @@ export interface Middleware {
 
   /**
    * Called if a tool execution fails.
+   * Can return a directive to tell the engine how to proceed.
    */
-  onToolCallError?(ctx: MiddlewareContext, tool: ToolCall, error: Error): Promise<void>;
+  onToolCallError?(
+    ctx: MiddlewareContext,
+    tool: ToolCall,
+    error: Error
+  ): Promise<ToolErrorDirective>;
 }

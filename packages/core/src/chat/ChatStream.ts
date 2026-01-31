@@ -20,7 +20,7 @@ import { ToolHandler } from "./ToolHandler.js";
 import { logger } from "../utils/logger.js";
 import { ResponseFormat } from "../providers/Provider.js";
 import { ModelRegistry } from "../models/ModelRegistry.js";
-import { Middleware, MiddlewareContext } from "../types/Middleware.js";
+import { Middleware, MiddlewareContext, ToolErrorDirective } from "../types/Middleware.js";
 import { runMiddleware } from "../utils/middleware-runner.js";
 import { randomUUID } from "node:crypto";
 
@@ -329,9 +329,16 @@ export class ChatStream {
               let currentError = error as Error & { fatal?: boolean; status?: number };
 
               // 4. onToolCallError Hook
-              await runMiddleware(middlewares, "onToolCallError", context, toolCall, currentError);
+              const middlewareDirective = await runMiddleware<ToolErrorDirective>(
+                middlewares,
+                "onToolCallError",
+                context,
+                toolCall,
+                currentError
+              );
 
-              const directive = await options.onToolCallError?.(toolCall, currentError);
+              const directive =
+                middlewareDirective || (await options.onToolCallError?.(toolCall, currentError));
 
               if (directive === "STOP") {
                 throw error;

@@ -29,7 +29,7 @@ import { ConfigurationError } from "../errors/index.js";
 import { ChatValidator } from "./Validation.js";
 import { ToolHandler } from "./ToolHandler.js";
 import { logger } from "../utils/logger.js";
-import { Middleware, MiddlewareContext } from "../types/Middleware.js";
+import { Middleware, MiddlewareContext, ToolErrorDirective } from "../types/Middleware.js";
 import { runMiddleware } from "../utils/middleware-runner.js";
 
 export interface AskOptions {
@@ -590,7 +590,7 @@ export class Chat<S = unknown> {
             let currentError: unknown = error;
 
             // 4. onToolCallError Hook
-            await runMiddleware(
+            const middlewareDirective = await runMiddleware<ToolErrorDirective>(
               this.middlewares,
               "onToolCallError",
               context,
@@ -598,7 +598,9 @@ export class Chat<S = unknown> {
               currentError
             );
 
-            const directive = await this.options.onToolCallError?.(toolCall, currentError as Error);
+            const directive =
+              middlewareDirective ||
+              (await this.options.onToolCallError?.(toolCall, currentError as Error));
 
             if (directive === "STOP") {
               throw currentError;
