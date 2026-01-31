@@ -16,6 +16,9 @@ import { createLLM } from "@node-llm/core";
 import { withVCR, describeVCR, configureVCR } from "@node-llm/testing";
 import "dotenv/config";
 
+// Provide dummy API key for VCR replay mode when real key is not available
+const OPENAI_API_KEY = process.env.OPENAI_API_KEY || "sk-dummy-key-for-vcr-replay";
+
 // Global VCR configuration - applies to all tests
 configureVCR({
   mode: "auto",
@@ -29,7 +32,7 @@ describe("HR Chatbot: Business Logic Tests", () => {
         "retrieves leave policy for employee question",
         withVCR(async () => {
           // Create LLM inside test so VCR interceptor is active
-          const llm = createLLM({ provider: "openai" });
+          const llm = createLLM({ provider: "openai", openaiApiKey: OPENAI_API_KEY });
           const chat = llm.chat("gpt-4o-mini");
           
           const result = await chat.ask(
@@ -45,7 +48,7 @@ describe("HR Chatbot: Business Logic Tests", () => {
         "handles streaming responses",
         withVCR(async () => {
           // Create LLM inside test so VCR interceptor is active
-          const llm = createLLM({ provider: "openai" });
+          const llm = createLLM({ provider: "openai", openaiApiKey: OPENAI_API_KEY });
           const chat = llm.chat("gpt-4o-mini");
           const chunks: string[] = [];
 
@@ -65,7 +68,7 @@ describe("HR Chatbot: Business Logic Tests", () => {
         "handles multi-turn conversation",
         withVCR(async () => {
           // Create LLM inside test so VCR interceptor is active
-          const llm = createLLM({ provider: "openai" });
+          const llm = createLLM({ provider: "openai", openaiApiKey: OPENAI_API_KEY });
           const chat = llm.chat("gpt-4o-mini");
 
           const response1 = await chat.ask("What is vacation policy? One sentence.");
