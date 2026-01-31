@@ -190,7 +190,8 @@ export class ChatStream {
           let toolCalls: ToolCall[] | undefined;
           let currentTurnUsage: Usage | undefined;
 
-          let requestMessages = context.messages || []; // Use messages from context which can be mutated
+          context.messages = [...systemMessages, ...messages];
+          let requestMessages = context.messages; // Use up-to-date messages from context
           if (options.onBeforeRequest) {
             const result = await options.onBeforeRequest(requestMessages);
             if (result) {
@@ -270,7 +271,7 @@ export class ChatStream {
 
           messages.push({
             role: "assistant",
-            content: assistantResponse || null,
+            content: assistantResponse?.toString() || null,
             tool_calls: toolCalls,
             reasoning: fullReasoning || undefined,
             usage: currentTurnUsage
