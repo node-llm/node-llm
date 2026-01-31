@@ -8,6 +8,7 @@ export * from "./chat/ChatStream.js";
 export * from "./streaming/Stream.js";
 export * from "./errors/index.js";
 export type { Middleware, MiddlewareContext } from "./types/Middleware.js";
+export * from "./middlewares/index.js";
 
 export { z } from "zod";
 export {
