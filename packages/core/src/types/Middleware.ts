@@ -24,16 +24,26 @@ export interface MiddlewareContext {
   model: string;
 
   /**
-   * The messages sent to the model.
+   * The messages sent to the model (Chat only).
    * Mutating this array in `onRequest` affects the actual call.
    */
-  messages: Message[];
+  messages?: Message[];
 
   /**
-   * Configuration options for the chat request.
+   * Configuration options for the chat request (Chat only).
    * Mutating this object in `onRequest` affects the actual call.
    */
-  options: ChatOptions;
+  options?: ChatOptions;
+
+  /**
+   * Input text(s) for embeddings (Embedding only).
+   */
+  input?: string | string[];
+
+  /**
+   * Options passed to the embedding request (Embedding only).
+   */
+  embeddingOptions?: Record<string, any>;
 
   /**
    * Shared state storage for passing data between middleware hooks.

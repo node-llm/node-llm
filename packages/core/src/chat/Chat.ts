@@ -443,7 +443,7 @@ export class Chat<S = unknown> {
       await this.runMiddleware("onRequest", context);
 
       // Re-read mutable context
-      const messagesToUse = context.messages;
+      const messagesToUse = context.messages || [];
 
       const executeOptions = {
         model: this.model,

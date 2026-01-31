@@ -189,7 +189,7 @@ export class ChatStream {
           let toolCalls: ToolCall[] | undefined;
           let currentTurnUsage: Usage | undefined;
 
-          let requestMessages = context.messages; // Use messages from context which can be mutated
+          let requestMessages = context.messages || []; // Use messages from context which can be mutated
           if (options.onBeforeRequest) {
             const result = await options.onBeforeRequest(requestMessages);
             if (result) {

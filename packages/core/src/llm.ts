@@ -28,6 +28,8 @@ import { resolveModelAlias } from "./model_aliases.js";
 import { logger } from "./utils/logger.js";
 
 import { config, NodeLLMConfig, Configuration } from "./config.js";
+import { Middleware, MiddlewareContext } from "./types/Middleware.js";
+import { randomUUID } from "node:crypto";
 
 export interface RetryOptions {
   attempts?: number;
@@ -253,6 +255,7 @@ export class NodeLLMCore {
       dimensions?: number;
       assumeModelExists?: boolean;
       requestTimeout?: number;
+      middlewares?: Middleware[];
     }
   ): Promise<Embedding> {
     const provider = this.ensureProviderSupport("embed");
@@ -260,25 +263,53 @@ export class NodeLLMCore {
     const rawModel = options?.model || this.defaults.embedding || "";
     const model = resolveModelAlias(rawModel, provider.id);
 
-    const request: EmbeddingRequest = {
-      input,
+    const requestId = randomUUID();
+    const state: Record<string, unknown> = {};
+
+    const context: MiddlewareContext = {
+      requestId,
+      provider: provider.id,
       model,
-      dimensions: options?.dimensions,
-      requestTimeout: options?.requestTimeout ?? this.config.requestTimeout
+      input,
+      embeddingOptions: options,
+      state
     };
 
-    if (options?.assumeModelExists) {
-      logger.warn(`Skipping validation for model ${request.model}`);
-    } else if (
-      request.model &&
-      provider.capabilities &&
-      !provider.capabilities.supportsEmbeddings(request.model)
-    ) {
-      throw new ModelCapabilityError(request.model, "embeddings");
-    }
+    const middlewares = options?.middlewares || [];
 
-    const response = await provider.embed(request);
-    return new Embedding(response);
+    try {
+      await runMiddleware(middlewares, "onRequest", context);
+
+      // Re-read input from context as it might have been modified
+      const currentInput = context.input || input;
+
+      const request: EmbeddingRequest = {
+        input: currentInput,
+        model,
+        dimensions: options?.dimensions,
+        requestTimeout: options?.requestTimeout ?? this.config.requestTimeout
+      };
+
+      if (options?.assumeModelExists) {
+        logger.warn(`Skipping validation for model ${request.model}`);
+      } else if (
+        request.model &&
+        provider.capabilities &&
+        !provider.capabilities.supportsEmbeddings(request.model)
+      ) {
+        throw new ModelCapabilityError(request.model, "embeddings");
+      }
+
+      const response = await provider.embed(request);
+      const embeddingResult = new Embedding(response);
+
+      await runMiddleware(middlewares, "onResponse", context, embeddingResult as any);
+
+      return embeddingResult;
+    } catch (error) {
+      await runMiddleware(middlewares, "onError", context, error as Error);
+      throw error;
+    }
   }
 }
 
@@ -432,3 +463,19 @@ export const LegacyNodeLLM = {
     );
   }
 };
+
+async function runMiddleware(
+  middlewares: Middleware[],
+  hookName: keyof Middleware,
+  context: MiddlewareContext,
+  ...args: any[]
+) {
+  if (!middlewares || middlewares.length === 0) return;
+
+  for (const middleware of middlewares) {
+    if (typeof middleware[hookName] === "function") {
+      // @ts-ignore
+      await middleware[hookName](context, ...args);
+    }
+  }
+}
