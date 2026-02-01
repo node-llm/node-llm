@@ -123,9 +123,6 @@ importers:
       '@node-llm/core':
         specifier: workspace:*
         version: link:../../../packages/core
-      '@node-llm/monitor':
-        specifier: file:../../../../node-llm-monitor
-        version: file:../node-llm-monitor
       '@node-llm/orm':
         specifier: workspace:*
         version: link:../../../packages/orm
@@ -798,9 +795,6 @@ packages:
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [win32]
-
-  '@node-llm/monitor@file:../node-llm-monitor':
-    resolution: {directory: ../node-llm-monitor, type: directory}
 
   '@octokit/auth-token@6.0.0':
     resolution: {integrity: sha512-P4YJBPdPSpWTQ1NU4XYdvHvXJJDxM6YwpS0FZHRgP7YFkdVxsWcpWGy/NVqlAA7PcPCnMacXlRm1y2PFZRWL/w==}
@@ -4913,8 +4907,6 @@ snapshots:
 
   '@next/swc-win32-x64-msvc@16.1.6':
     optional: true
-
-  '@node-llm/monitor@file:../node-llm-monitor': {}
 
   '@octokit/auth-token@6.0.0': {}
 

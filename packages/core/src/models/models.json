@@ -31,7 +31,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.009Z"
     }
   },
   {
@@ -66,7 +66,44 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.009Z"
+    }
+  },
+  {
+    "id": "allenai/molmo-2-8b:free",
+    "name": "Molmo2 8B (free)",
+    "provider": "openrouter",
+    "family": "allenai",
+    "created_at": "2026-01-09 00:00:00 UTC",
+    "context_window": 36864,
+    "max_output_tokens": 36864,
+    "knowledge_cutoff": "2025-06",
+    "modalities": {
+      "input": ["text", "image", "video"],
+      "output": ["text"]
+    },
+    "capabilities": [
+      "streaming",
+      "reasoning",
+      "chat",
+      "vision",
+      "function_calling",
+      "tools",
+      "structured_output",
+      "json_mode"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 0,
+          "output_per_million": 0,
+          "reasoning_output_per_million": 0
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -101,7 +138,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.009Z"
     }
   },
   {
@@ -138,7 +175,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.009Z"
     }
   },
   {
@@ -174,7 +211,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.009Z"
     }
   },
   {
@@ -211,7 +248,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.009Z"
     }
   },
   {
@@ -248,7 +285,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.009Z"
     }
   },
   {
@@ -282,7 +319,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.009Z"
     }
   },
   {
@@ -316,7 +353,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.009Z"
     }
   },
   {
@@ -353,7 +390,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.009Z"
     }
   },
   {
@@ -390,7 +427,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.009Z"
     }
   },
   {
@@ -427,7 +464,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.009Z"
     }
   },
   {
@@ -464,7 +501,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.009Z"
     }
   },
   {
@@ -500,7 +537,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.009Z"
     }
   },
   {
@@ -536,7 +573,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.009Z"
     }
   },
   {
@@ -572,7 +609,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.009Z"
     }
   },
   {
@@ -610,7 +647,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.009Z"
     }
   },
   {
@@ -638,7 +675,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.009Z"
     }
   },
   {
@@ -676,7 +713,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.009Z"
     }
   },
   {
@@ -714,7 +751,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.009Z"
     }
   },
   {
@@ -752,7 +789,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.009Z"
     }
   },
   {
@@ -790,7 +827,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.009Z"
     }
   },
   {
@@ -828,7 +865,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.009Z"
     }
   },
   {
@@ -856,7 +893,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.009Z"
     }
   },
   {
@@ -884,7 +921,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.009Z"
     }
   },
   {
@@ -921,7 +958,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -959,7 +996,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -997,7 +1034,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -1035,7 +1072,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -1073,7 +1110,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -1111,7 +1148,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -1149,7 +1186,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -1187,7 +1224,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -1209,6 +1246,76 @@
       "version": "001",
       "description": "Model trained to return answers to questions that are grounded in provided sources, along with estimating answerable probability.",
       "supported_generation_methods": ["generateAnswer"]
+    }
+  },
+  {
+    "id": "arcee-ai/trinity-large-preview:free",
+    "name": "Trinity Large Preview",
+    "provider": "openrouter",
+    "family": "trinity",
+    "created_at": "2026-01-28 00:00:00 UTC",
+    "context_window": 131072,
+    "max_output_tokens": 131072,
+    "knowledge_cutoff": "2025-06",
+    "modalities": {
+      "input": ["text"],
+      "output": ["text"]
+    },
+    "capabilities": [
+      "streaming",
+      "chat",
+      "function_calling",
+      "tools",
+      "structured_output",
+      "json_mode"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 0,
+          "output_per_million": 0,
+          "reasoning_output_per_million": 0
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "last_synced": "2026-02-01T15:48:21.008Z"
+    }
+  },
+  {
+    "id": "arcee-ai/trinity-mini:free",
+    "name": "Trinity Mini",
+    "provider": "openrouter",
+    "family": "trinity-mini",
+    "created_at": "2026-01-28 00:00:00 UTC",
+    "context_window": 131072,
+    "max_output_tokens": 131072,
+    "knowledge_cutoff": "2025-06",
+    "modalities": {
+      "input": ["text"],
+      "output": ["text"]
+    },
+    "capabilities": [
+      "streaming",
+      "chat",
+      "function_calling",
+      "tools",
+      "structured_output",
+      "json_mode"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 0,
+          "output_per_million": 0,
+          "reasoning_output_per_million": 0
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -1236,6 +1343,146 @@
     "metadata": {
       "object": "model",
       "owned_by": "system"
+    }
+  },
+  {
+    "id": "black-forest-labs/flux.2-flex",
+    "name": "FLUX.2 Flex",
+    "provider": "openrouter",
+    "family": "flux",
+    "created_at": "2025-11-25 00:00:00 UTC",
+    "context_window": 67344,
+    "max_output_tokens": 67344,
+    "knowledge_cutoff": "2025-06",
+    "modalities": {
+      "input": ["image", "text"],
+      "output": ["image", "text"]
+    },
+    "capabilities": ["streaming", "chat", "vision", "image_generation"],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 0,
+          "output_per_million": 0,
+          "reasoning_output_per_million": 0
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "last_synced": "2026-02-01T15:48:21.008Z"
+    }
+  },
+  {
+    "id": "black-forest-labs/flux.2-klein-4b",
+    "name": "FLUX.2 Klein 4B",
+    "provider": "openrouter",
+    "family": "flux",
+    "created_at": "2026-01-14 00:00:00 UTC",
+    "context_window": 40960,
+    "max_output_tokens": 40960,
+    "knowledge_cutoff": "2025-06",
+    "modalities": {
+      "input": ["image", "text"],
+      "output": ["image", "text"]
+    },
+    "capabilities": ["streaming", "chat", "vision", "image_generation"],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 0,
+          "output_per_million": 0,
+          "reasoning_output_per_million": 0
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "last_synced": "2026-02-01T15:48:21.008Z"
+    }
+  },
+  {
+    "id": "black-forest-labs/flux.2-max",
+    "name": "FLUX.2 Max",
+    "provider": "openrouter",
+    "family": "flux",
+    "created_at": "2025-12-16 00:00:00 UTC",
+    "context_window": 46864,
+    "max_output_tokens": 46864,
+    "knowledge_cutoff": "2025-06",
+    "modalities": {
+      "input": ["image", "text"],
+      "output": ["image", "text"]
+    },
+    "capabilities": ["streaming", "chat", "vision", "image_generation"],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 0,
+          "output_per_million": 0,
+          "reasoning_output_per_million": 0
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "last_synced": "2026-02-01T15:48:21.008Z"
+    }
+  },
+  {
+    "id": "black-forest-labs/flux.2-pro",
+    "name": "FLUX.2 Pro",
+    "provider": "openrouter",
+    "family": "flux",
+    "created_at": "2025-11-25 00:00:00 UTC",
+    "context_window": 46864,
+    "max_output_tokens": 46864,
+    "knowledge_cutoff": "2025-06",
+    "modalities": {
+      "input": ["image", "text"],
+      "output": ["image", "text"]
+    },
+    "capabilities": ["streaming", "chat", "vision", "image_generation"],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 0,
+          "output_per_million": 0,
+          "reasoning_output_per_million": 0
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "last_synced": "2026-02-01T15:48:21.008Z"
+    }
+  },
+  {
+    "id": "bytedance-seed/seedream-4.5",
+    "name": "Seedream 4.5",
+    "provider": "openrouter",
+    "family": "seed",
+    "created_at": "2025-12-23 00:00:00 UTC",
+    "context_window": 4096,
+    "max_output_tokens": 4096,
+    "knowledge_cutoff": "2025-06",
+    "modalities": {
+      "input": ["image", "text"],
+      "output": ["image", "text"]
+    },
+    "capabilities": ["streaming", "chat", "vision", "image_generation"],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 0,
+          "output_per_million": 0,
+          "reasoning_output_per_million": 0
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -1327,7 +1574,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.009Z"
     }
   },
   {
@@ -1364,7 +1611,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.009Z"
     }
   },
   {
@@ -1401,7 +1648,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.009Z"
     }
   },
   {
@@ -1438,7 +1685,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.009Z"
     }
   },
   {
@@ -1506,7 +1753,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.009Z"
     }
   },
   {
@@ -1544,7 +1791,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.009Z"
     }
   },
   {
@@ -1609,7 +1856,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.009Z"
     }
   },
   {
@@ -1674,7 +1921,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.009Z"
     }
   },
   {
@@ -1711,7 +1958,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.009Z"
     }
   },
   {
@@ -1773,7 +2020,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.009Z"
     }
   },
   {
@@ -1835,7 +2082,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.009Z"
     }
   },
   {
@@ -1873,7 +2120,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.009Z"
     }
   },
   {
@@ -1935,7 +2182,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.009Z"
     }
   },
   {
@@ -1997,7 +2244,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.009Z"
     }
   },
   {
@@ -2063,7 +2310,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.009Z"
     }
   },
   {
@@ -2101,7 +2348,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.009Z"
     }
   },
   {
@@ -2139,7 +2386,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.009Z"
     }
   },
   {
@@ -2177,7 +2424,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.009Z"
     }
   },
   {
@@ -2243,7 +2490,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.009Z"
     }
   },
   {
@@ -2305,7 +2552,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.009Z"
     }
   },
   {
@@ -2367,7 +2614,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.009Z"
     }
   },
   {
@@ -2433,7 +2680,42 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.007Z"
+    }
+  },
+  {
+    "id": "cognitivecomputations/dolphin-mistral-24b-venice-edition:free",
+    "name": "Uncensored (free)",
+    "provider": "openrouter",
+    "family": "mistral",
+    "created_at": "2025-07-09 00:00:00 UTC",
+    "context_window": 32768,
+    "max_output_tokens": 32768,
+    "knowledge_cutoff": "2025-06",
+    "modalities": {
+      "input": ["text"],
+      "output": ["text"]
+    },
+    "capabilities": [
+      "streaming",
+      "chat",
+      "function_calling",
+      "tools",
+      "structured_output",
+      "json_mode"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 0,
+          "output_per_million": 0,
+          "reasoning_output_per_million": 0
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -2468,7 +2750,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -2504,7 +2786,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -2532,7 +2814,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.009Z"
     }
   },
   {
@@ -2567,7 +2849,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.009Z"
     }
   },
   {
@@ -2602,7 +2884,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.009Z"
     }
   },
   {
@@ -2630,7 +2912,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.009Z"
     }
   },
   {
@@ -2790,7 +3072,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.606Z"
+      "last_synced": "2026-02-01T15:48:21.006Z"
     }
   },
   {
@@ -2819,7 +3101,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.607Z"
+      "last_synced": "2026-02-01T15:48:21.007Z"
     }
   },
   {
@@ -2855,7 +3137,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.009Z"
     }
   },
   {
@@ -2891,7 +3173,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.009Z"
     }
   },
   {
@@ -2919,7 +3201,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -2955,7 +3237,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -2991,7 +3273,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -3007,15 +3289,7 @@
       "input": ["text"],
       "output": ["text"]
     },
-    "capabilities": [
-      "streaming",
-      "reasoning",
-      "chat",
-      "function_calling",
-      "tools",
-      "structured_output",
-      "json_mode"
-    ],
+    "capabilities": ["streaming", "reasoning", "chat"],
     "pricing": {
       "text_tokens": {
         "standard": {
@@ -3027,7 +3301,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -3055,7 +3329,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -3083,7 +3357,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -3119,7 +3393,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -3147,7 +3421,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -3183,7 +3457,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -3219,7 +3493,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -3255,7 +3529,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -3291,7 +3565,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -3373,7 +3647,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -3411,7 +3685,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.608Z"
+      "last_synced": "2026-02-01T15:48:21.007Z"
     }
   },
   {
@@ -3449,7 +3723,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.608Z"
+      "last_synced": "2026-02-01T15:48:21.007Z"
     }
   },
   {
@@ -3487,7 +3761,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.608Z"
+      "last_synced": "2026-02-01T15:48:21.007Z"
     }
   },
   {
@@ -3563,7 +3837,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.607Z"
+      "last_synced": "2026-02-01T15:48:21.007Z"
     }
   },
   {
@@ -3601,7 +3875,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.007Z"
     }
   },
   {
@@ -3777,7 +4051,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.607Z"
+      "last_synced": "2026-02-01T15:48:21.007Z"
     }
   },
   {
@@ -3814,7 +4088,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.007Z"
     }
   },
   {
@@ -4219,7 +4493,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.607Z"
+      "last_synced": "2026-02-01T15:48:21.007Z"
     }
   },
   {
@@ -4258,7 +4532,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.007Z"
     }
   },
   {
@@ -4319,7 +4593,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.607Z"
+      "last_synced": "2026-02-01T15:48:21.007Z"
     }
   },
   {
@@ -4380,7 +4654,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.607Z"
+      "last_synced": "2026-02-01T15:48:21.007Z"
     }
   },
   {
@@ -4457,7 +4731,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.607Z"
+      "last_synced": "2026-02-01T15:48:21.007Z"
     }
   },
   {
@@ -4496,7 +4770,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.007Z"
     }
   },
   {
@@ -4535,7 +4809,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.607Z"
+      "last_synced": "2026-02-01T15:48:21.007Z"
     }
   },
   {
@@ -4574,7 +4848,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.007Z"
     }
   },
   {
@@ -4650,7 +4924,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.608Z"
+      "last_synced": "2026-02-01T15:48:21.007Z"
     }
   },
   {
@@ -4689,7 +4963,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.007Z"
     }
   },
   {
@@ -4728,7 +5002,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.607Z"
+      "last_synced": "2026-02-01T15:48:21.007Z"
     }
   },
   {
@@ -4767,7 +5041,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.007Z"
     }
   },
   {
@@ -4806,7 +5080,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.607Z"
+      "last_synced": "2026-02-01T15:48:21.007Z"
     }
   },
   {
@@ -4845,7 +5119,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.007Z"
     }
   },
   {
@@ -4921,7 +5195,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.607Z"
+      "last_synced": "2026-02-01T15:48:21.007Z"
     }
   },
   {
@@ -4960,7 +5234,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.007Z"
     }
   },
   {
@@ -5020,7 +5294,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.607Z"
+      "last_synced": "2026-02-01T15:48:21.007Z"
     }
   },
   {
@@ -5097,7 +5371,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.608Z"
+      "last_synced": "2026-02-01T15:48:21.007Z"
     }
   },
   {
@@ -5136,7 +5410,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.007Z"
     }
   },
   {
@@ -5249,7 +5523,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.607Z"
+      "last_synced": "2026-02-01T15:48:21.007Z"
     }
   },
   {
@@ -5288,7 +5562,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.007Z"
     }
   },
   {
@@ -5364,7 +5638,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.607Z"
+      "last_synced": "2026-02-01T15:48:21.007Z"
     }
   },
   {
@@ -5403,7 +5677,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.007Z"
     }
   },
   {
@@ -5463,7 +5737,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.607Z"
+      "last_synced": "2026-02-01T15:48:21.007Z"
     }
   },
   {
@@ -5502,7 +5776,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.607Z"
+      "last_synced": "2026-02-01T15:48:21.007Z"
     }
   },
   {
@@ -5541,7 +5815,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.007Z"
     }
   },
   {
@@ -5617,7 +5891,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.607Z"
+      "last_synced": "2026-02-01T15:48:21.007Z"
     }
   },
   {
@@ -5656,7 +5930,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.007Z"
     }
   },
   {
@@ -5716,7 +5990,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.607Z"
+      "last_synced": "2026-02-01T15:48:21.007Z"
     }
   },
   {
@@ -5744,7 +6018,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.007Z"
     }
   },
   {
@@ -5931,7 +6205,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.607Z"
+      "last_synced": "2026-02-01T15:48:21.007Z"
     }
   },
   {
@@ -5970,7 +6244,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.007Z"
     }
   },
   {
@@ -6046,7 +6320,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.607Z"
+      "last_synced": "2026-02-01T15:48:21.007Z"
     }
   },
   {
@@ -6085,7 +6359,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.007Z"
     }
   },
   {
@@ -6124,7 +6398,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.607Z"
+      "last_synced": "2026-02-01T15:48:21.007Z"
     }
   },
   {
@@ -6162,7 +6436,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.607Z"
+      "last_synced": "2026-02-01T15:48:21.007Z"
     }
   },
   {
@@ -6461,7 +6735,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.009Z"
     }
   },
   {
@@ -6489,7 +6763,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.009Z"
     }
   },
   {
@@ -6525,7 +6799,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.009Z"
     }
   },
   {
@@ -6560,7 +6834,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.009Z"
     }
   },
   {
@@ -6598,7 +6872,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -6634,7 +6908,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -6673,7 +6947,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -6712,7 +6986,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -6751,7 +7025,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -6790,7 +7064,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -6829,7 +7103,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -6868,7 +7142,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -6907,7 +7181,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -6946,7 +7220,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -6984,12 +7258,12 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
-    "id": "google/gemma-2-9b-it:free",
-    "name": "Gemma 2 9B (free)",
+    "id": "google/gemma-2-9b-it",
+    "name": "Gemma 2 9B",
     "provider": "openrouter",
     "family": "gemma",
     "created_at": "2024-06-28 00:00:00 UTC",
@@ -7000,50 +7274,63 @@
       "input": ["text"],
       "output": ["text"]
     },
-    "capabilities": [
-      "streaming",
-      "chat",
-      "function_calling",
-      "tools",
-      "structured_output",
-      "json_mode"
-    ],
+    "capabilities": ["streaming", "chat"],
     "pricing": {
       "text_tokens": {
         "standard": {
-          "input_per_million": 0,
-          "output_per_million": 0,
-          "reasoning_output_per_million": 0
+          "input_per_million": 0.03,
+          "output_per_million": 0.09,
+          "reasoning_output_per_million": 0.09
         }
       }
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
     "id": "google/gemma-3-12b-it",
-    "name": "Gemma 3 12B IT",
+    "name": "Gemma 3 12B",
     "provider": "openrouter",
     "family": "gemma",
     "created_at": "2025-03-13 00:00:00 UTC",
-    "context_window": 96000,
+    "context_window": 131072,
+    "max_output_tokens": 131072,
+    "knowledge_cutoff": "2024-10",
+    "modalities": {
+      "input": ["text", "image"],
+      "output": ["text"]
+    },
+    "capabilities": ["streaming", "chat", "vision"],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 0.03,
+          "output_per_million": 0.1,
+          "reasoning_output_per_million": 0.1
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "last_synced": "2026-02-01T15:48:21.008Z"
+    }
+  },
+  {
+    "id": "google/gemma-3-12b-it:free",
+    "name": "Gemma 3 12B (free)",
+    "provider": "openrouter",
+    "family": "gemma",
+    "created_at": "2025-03-13 00:00:00 UTC",
+    "context_window": 32768,
     "max_output_tokens": 8192,
     "knowledge_cutoff": "2024-10",
     "modalities": {
       "input": ["text", "image"],
       "output": ["text"]
     },
-    "capabilities": [
-      "streaming",
-      "chat",
-      "vision",
-      "function_calling",
-      "tools",
-      "structured_output",
-      "json_mode"
-    ],
+    "capabilities": ["streaming", "chat", "vision"],
     "pricing": {
       "text_tokens": {
         "standard": {
@@ -7055,16 +7342,52 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
     "id": "google/gemma-3-27b-it",
-    "name": "Gemma 3 27B IT",
+    "name": "Gemma 3 27B",
     "provider": "openrouter",
     "family": "gemma",
     "created_at": "2025-03-12 00:00:00 UTC",
     "context_window": 96000,
+    "max_output_tokens": 96000,
+    "knowledge_cutoff": "2024-10",
+    "modalities": {
+      "input": ["text", "image"],
+      "output": ["text"]
+    },
+    "capabilities": [
+      "streaming",
+      "chat",
+      "vision",
+      "function_calling",
+      "tools",
+      "structured_output",
+      "json_mode"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 0.04,
+          "output_per_million": 0.15,
+          "reasoning_output_per_million": 0.15
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "last_synced": "2026-02-01T15:48:21.008Z"
+    }
+  },
+  {
+    "id": "google/gemma-3-27b-it:free",
+    "name": "Gemma 3 27B (free)",
+    "provider": "openrouter",
+    "family": "gemma",
+    "created_at": "2025-03-12 00:00:00 UTC",
+    "context_window": 131072,
     "max_output_tokens": 8192,
     "knowledge_cutoff": "2024-10",
     "modalities": {
@@ -7091,23 +7414,51 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
-    "id": "google/gemma-3n-e4b-it",
-    "name": "Gemma 3n E4B IT",
+    "id": "google/gemma-3-4b-it",
+    "name": "Gemma 3 4B",
     "provider": "openrouter",
     "family": "gemma",
-    "created_at": "2025-05-20 00:00:00 UTC",
-    "context_window": 8192,
+    "created_at": "2025-03-13 00:00:00 UTC",
+    "context_window": 96000,
+    "max_output_tokens": 96000,
+    "knowledge_cutoff": "2024-10",
+    "modalities": {
+      "input": ["text", "image"],
+      "output": ["text"]
+    },
+    "capabilities": ["streaming", "chat", "vision"],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 0.01703,
+          "output_per_million": 0.06815,
+          "reasoning_output_per_million": 0.06815
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "last_synced": "2026-02-01T15:48:21.008Z"
+    }
+  },
+  {
+    "id": "google/gemma-3-4b-it:free",
+    "name": "Gemma 3 4B (free)",
+    "provider": "openrouter",
+    "family": "gemma",
+    "created_at": "2025-03-13 00:00:00 UTC",
+    "context_window": 32768,
     "max_output_tokens": 8192,
     "knowledge_cutoff": "2024-10",
     "modalities": {
-      "input": ["text", "image", "audio"],
+      "input": ["text", "image"],
       "output": ["text"]
     },
-    "capabilities": ["streaming", "chat", "vision", "transcription"],
+    "capabilities": ["streaming", "chat", "vision"],
     "pricing": {
       "text_tokens": {
         "standard": {
@@ -7119,7 +7470,63 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
+    }
+  },
+  {
+    "id": "google/gemma-3n-e2b-it:free",
+    "name": "Gemma 3n 2B (free)",
+    "provider": "openrouter",
+    "family": "gemma",
+    "created_at": "2025-07-09 00:00:00 UTC",
+    "context_window": 8192,
+    "max_output_tokens": 2000,
+    "knowledge_cutoff": "2024-06",
+    "modalities": {
+      "input": ["text"],
+      "output": ["text"]
+    },
+    "capabilities": ["streaming", "chat", "vision"],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 0,
+          "output_per_million": 0,
+          "reasoning_output_per_million": 0
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "last_synced": "2026-02-01T15:48:21.008Z"
+    }
+  },
+  {
+    "id": "google/gemma-3n-e4b-it",
+    "name": "Gemma 3n 4B",
+    "provider": "openrouter",
+    "family": "gemma",
+    "created_at": "2025-05-20 00:00:00 UTC",
+    "context_window": 32768,
+    "max_output_tokens": 32768,
+    "knowledge_cutoff": "2024-06",
+    "modalities": {
+      "input": ["text"],
+      "output": ["text"]
+    },
+    "capabilities": ["streaming", "chat", "vision"],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 0.02,
+          "output_per_million": 0.04,
+          "reasoning_output_per_million": 0.04
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -7129,22 +7536,13 @@
     "family": "gemma",
     "created_at": "2025-05-20 00:00:00 UTC",
     "context_window": 8192,
-    "max_output_tokens": 8192,
-    "knowledge_cutoff": "2025-05",
+    "max_output_tokens": 2000,
+    "knowledge_cutoff": "2024-06",
     "modalities": {
-      "input": ["text", "image", "audio"],
+      "input": ["text"],
       "output": ["text"]
     },
-    "capabilities": [
-      "streaming",
-      "chat",
-      "vision",
-      "transcription",
-      "function_calling",
-      "tools",
-      "structured_output",
-      "json_mode"
-    ],
+    "capabilities": ["streaming", "chat", "vision"],
     "pricing": {
       "text_tokens": {
         "standard": {
@@ -7156,7 +7554,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -7216,7 +7614,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.007Z"
     }
   },
   {
@@ -7418,7 +7816,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.007Z"
     }
   },
   {
@@ -7570,7 +7968,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.007Z"
     }
   },
   {
@@ -7697,7 +8095,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.007Z"
     }
   },
   {
@@ -7798,7 +8196,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.007Z"
     }
   },
   {
@@ -7899,7 +8297,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.007Z"
     }
   },
   {
@@ -8058,7 +8456,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.007Z"
     }
   },
   {
@@ -8150,7 +8548,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.007Z"
     }
   },
   {
@@ -8214,7 +8612,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.007Z"
     }
   },
   {
@@ -8278,7 +8676,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.007Z"
     }
   },
   {
@@ -8455,7 +8853,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -8991,7 +9389,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -9079,7 +9477,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.007Z"
     }
   },
   {
@@ -9145,7 +9543,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.007Z"
     }
   },
   {
@@ -9215,7 +9613,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.007Z"
     }
   },
   {
@@ -9317,7 +9715,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.007Z"
     }
   },
   {
@@ -9417,7 +9815,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -9570,7 +9968,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.007Z"
     }
   },
   {
@@ -9664,7 +10062,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -9730,7 +10128,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.007Z"
     }
   },
   {
@@ -9768,7 +10166,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.007Z"
     }
   },
   {
@@ -9834,7 +10232,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.007Z"
     }
   },
   {
@@ -9872,7 +10270,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -9910,7 +10308,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.007Z"
     }
   },
   {
@@ -9948,7 +10346,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.007Z"
     }
   },
   {
@@ -9985,7 +10383,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.007Z"
     }
   },
   {
@@ -10414,7 +10812,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -10450,6 +10848,113 @@
     }
   },
   {
+    "id": "liquid/lfm-2.5-1.2b-instruct:free",
+    "name": "LFM2.5-1.2B-Instruct (free)",
+    "provider": "openrouter",
+    "family": "liquid",
+    "created_at": "2026-01-20 00:00:00 UTC",
+    "context_window": 131072,
+    "max_output_tokens": 32768,
+    "knowledge_cutoff": "2025-06",
+    "modalities": {
+      "input": ["text"],
+      "output": ["text"]
+    },
+    "capabilities": [
+      "streaming",
+      "chat",
+      "function_calling",
+      "tools",
+      "structured_output",
+      "json_mode"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 0,
+          "output_per_million": 0,
+          "reasoning_output_per_million": 0
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "last_synced": "2026-02-01T15:48:21.008Z"
+    }
+  },
+  {
+    "id": "liquid/lfm-2.5-1.2b-thinking:free",
+    "name": "LFM2.5-1.2B-Thinking (free)",
+    "provider": "openrouter",
+    "family": "liquid",
+    "created_at": "2026-01-20 00:00:00 UTC",
+    "context_window": 131072,
+    "max_output_tokens": 32768,
+    "knowledge_cutoff": "2025-06",
+    "modalities": {
+      "input": ["text"],
+      "output": ["text"]
+    },
+    "capabilities": [
+      "streaming",
+      "reasoning",
+      "chat",
+      "function_calling",
+      "tools",
+      "structured_output",
+      "json_mode"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 0,
+          "output_per_million": 0,
+          "reasoning_output_per_million": 0
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "last_synced": "2026-02-01T15:48:21.008Z"
+    }
+  },
+  {
+    "id": "meta-llama/llama-3.1-405b-instruct:free",
+    "name": "Llama 3.1 405B Instruct (free)",
+    "provider": "openrouter",
+    "family": "llama",
+    "created_at": "2024-07-23 00:00:00 UTC",
+    "context_window": 131072,
+    "max_output_tokens": 131072,
+    "knowledge_cutoff": "2024-08",
+    "modalities": {
+      "input": ["text"],
+      "output": ["text"]
+    },
+    "capabilities": [
+      "streaming",
+      "chat",
+      "vision",
+      "function_calling",
+      "tools",
+      "structured_output",
+      "json_mode"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 0,
+          "output_per_million": 0,
+          "reasoning_output_per_million": 0
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "last_synced": "2026-02-01T15:48:21.008Z"
+    }
+  },
+  {
     "id": "meta-llama/llama-3.2-11b-vision-instruct",
     "name": "Llama 3.2 11B Vision Instruct",
     "provider": "openrouter",
@@ -10474,7 +10979,43 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
+    }
+  },
+  {
+    "id": "meta-llama/llama-3.2-3b-instruct:free",
+    "name": "Llama 3.2 3B Instruct (free)",
+    "provider": "openrouter",
+    "family": "llama",
+    "created_at": "2024-09-25 00:00:00 UTC",
+    "context_window": 131072,
+    "max_output_tokens": 131072,
+    "knowledge_cutoff": "2023-12",
+    "modalities": {
+      "input": ["text", "image"],
+      "output": ["text"]
+    },
+    "capabilities": [
+      "streaming",
+      "chat",
+      "vision",
+      "function_calling",
+      "tools",
+      "structured_output",
+      "json_mode"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 0,
+          "output_per_million": 0,
+          "reasoning_output_per_million": 0
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -10483,8 +11024,8 @@
     "provider": "openrouter",
     "family": "llama",
     "created_at": "2024-12-06 00:00:00 UTC",
-    "context_window": 65536,
-    "max_output_tokens": 65536,
+    "context_window": 131072,
+    "max_output_tokens": 131072,
     "knowledge_cutoff": "2024-12",
     "modalities": {
       "input": ["text"],
@@ -10509,7 +11050,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -10545,7 +11086,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -10580,7 +11121,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.009Z"
     }
   },
   {
@@ -10615,7 +11156,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.009Z"
     }
   },
   {
@@ -10651,7 +11192,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.009Z"
     }
   },
   {
@@ -10686,7 +11227,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.009Z"
     }
   },
   {
@@ -10721,7 +11262,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.009Z"
     }
   },
   {
@@ -10757,7 +11298,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.009Z"
     }
   },
   {
@@ -10792,7 +11333,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.009Z"
     }
   },
   {
@@ -10820,7 +11361,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.009Z"
     }
   },
   {
@@ -10848,7 +11389,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.009Z"
     }
   },
   {
@@ -10884,7 +11425,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.009Z"
     }
   },
   {
@@ -10920,7 +11461,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.009Z"
     }
   },
   {
@@ -10956,7 +11497,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -10991,7 +11532,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.009Z"
     }
   },
   {
@@ -11027,7 +11568,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -11062,7 +11603,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -11098,7 +11639,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -11133,7 +11674,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -11167,7 +11708,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.009Z"
     }
   },
   {
@@ -11201,7 +11742,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.009Z"
     }
   },
   {
@@ -11235,7 +11776,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.009Z"
     }
   },
   {
@@ -11269,7 +11810,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.009Z"
     }
   },
   {
@@ -11296,7 +11837,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.009Z"
     }
   },
   {
@@ -11331,7 +11872,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.009Z"
     }
   },
   {
@@ -11367,7 +11908,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.009Z"
     }
   },
   {
@@ -11402,7 +11943,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -11437,7 +11978,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -11472,7 +12013,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -11507,7 +12048,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -11542,7 +12083,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -11577,7 +12118,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -11612,7 +12153,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -11647,7 +12188,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -11683,7 +12224,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -11719,7 +12260,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -11754,7 +12295,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -11790,7 +12331,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -11826,7 +12367,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -11862,7 +12403,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -11896,7 +12437,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.009Z"
     }
   },
   {
@@ -11931,7 +12472,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -11966,7 +12507,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -12001,7 +12542,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -12036,7 +12577,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -12073,7 +12614,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -12108,7 +12649,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -12146,7 +12687,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -12182,7 +12723,43 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
+    }
+  },
+  {
+    "id": "nousresearch/hermes-3-llama-3.1-405b:free",
+    "name": "Hermes 3 405B Instruct (free)",
+    "provider": "openrouter",
+    "family": "hermes",
+    "created_at": "2024-08-16 00:00:00 UTC",
+    "context_window": 131072,
+    "max_output_tokens": 131072,
+    "knowledge_cutoff": "2023-12",
+    "modalities": {
+      "input": ["text"],
+      "output": ["text"]
+    },
+    "capabilities": [
+      "streaming",
+      "reasoning",
+      "chat",
+      "function_calling",
+      "tools",
+      "structured_output",
+      "json_mode"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 0,
+          "output_per_million": 0,
+          "reasoning_output_per_million": 0
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -12218,7 +12795,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -12254,7 +12831,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -12289,7 +12866,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.009Z"
     }
   },
   {
@@ -12323,7 +12900,80 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.009Z"
+    }
+  },
+  {
+    "id": "nvidia/nemotron-3-nano-30b-a3b:free",
+    "name": "Nemotron 3 Nano 30B A3B (free)",
+    "provider": "openrouter",
+    "family": "nemotron",
+    "created_at": "2025-12-14 00:00:00 UTC",
+    "context_window": 256000,
+    "max_output_tokens": 256000,
+    "knowledge_cutoff": "2025-11",
+    "modalities": {
+      "input": ["text"],
+      "output": ["text"]
+    },
+    "capabilities": [
+      "streaming",
+      "reasoning",
+      "chat",
+      "function_calling",
+      "tools",
+      "structured_output",
+      "json_mode"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 0,
+          "output_per_million": 0,
+          "reasoning_output_per_million": 0
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "last_synced": "2026-02-01T15:48:21.008Z"
+    }
+  },
+  {
+    "id": "nvidia/nemotron-nano-12b-v2-vl:free",
+    "name": "Nemotron Nano 12B 2 VL (free)",
+    "provider": "openrouter",
+    "family": "nemotron",
+    "created_at": "2025-10-28 00:00:00 UTC",
+    "context_window": 128000,
+    "max_output_tokens": 128000,
+    "knowledge_cutoff": "2025-11",
+    "modalities": {
+      "input": ["text", "image"],
+      "output": ["text"]
+    },
+    "capabilities": [
+      "streaming",
+      "reasoning",
+      "chat",
+      "vision",
+      "function_calling",
+      "tools",
+      "structured_output",
+      "json_mode"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 0,
+          "output_per_million": 0,
+          "reasoning_output_per_million": 0
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -12359,7 +13009,43 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
+    }
+  },
+  {
+    "id": "nvidia/nemotron-nano-9b-v2:free",
+    "name": "Nemotron Nano 9B V2 (free)",
+    "provider": "openrouter",
+    "family": "nemotron",
+    "created_at": "2025-09-05 00:00:00 UTC",
+    "context_window": 128000,
+    "max_output_tokens": 128000,
+    "knowledge_cutoff": "2024-09",
+    "modalities": {
+      "input": ["text"],
+      "output": ["text"]
+    },
+    "capabilities": [
+      "streaming",
+      "reasoning",
+      "chat",
+      "function_calling",
+      "tools",
+      "structured_output",
+      "json_mode"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 0,
+          "output_per_million": 0,
+          "reasoning_output_per_million": 0
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -12429,7 +13115,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.007Z"
     }
   },
   {
@@ -12515,7 +13201,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.007Z"
     }
   },
   {
@@ -12594,7 +13280,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.007Z"
     }
   },
   {
@@ -12687,7 +13373,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.007Z"
     }
   },
   {
@@ -12788,7 +13474,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.007Z"
     }
   },
   {
@@ -12890,7 +13576,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.007Z"
     }
   },
   {
@@ -12991,7 +13677,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.007Z"
     }
   },
   {
@@ -13091,7 +13777,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.007Z"
     }
   },
   {
@@ -13192,7 +13878,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.007Z"
     }
   },
   {
@@ -13294,7 +13980,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.007Z"
     }
   },
   {
@@ -13400,7 +14086,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.009Z"
     }
   },
   {
@@ -13434,7 +14120,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.009Z"
     }
   },
   {
@@ -13468,7 +14154,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.009Z"
     }
   },
   {
@@ -13502,7 +14188,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.009Z"
     }
   },
   {
@@ -13539,7 +14225,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -13576,7 +14262,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -13613,7 +14299,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -13650,7 +14336,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -13678,7 +14364,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -13716,7 +14402,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -13755,7 +14441,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -13792,7 +14478,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -13829,7 +14515,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -13866,7 +14552,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -13904,7 +14590,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -13942,7 +14628,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -13980,7 +14666,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -14018,7 +14704,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -14056,7 +14742,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -14094,11 +14780,11 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
-    "id": "openai/gpt-5.2-chat-latest",
+    "id": "openai/gpt-5.2-chat",
     "name": "GPT-5.2 Chat",
     "provider": "openrouter",
     "family": "gpt-codex",
@@ -14132,7 +14818,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -14170,7 +14856,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -14207,7 +14893,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -14242,7 +14928,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -14277,7 +14963,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.007Z"
     }
   },
   {
@@ -14312,7 +14998,42 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
+    }
+  },
+  {
+    "id": "openai/gpt-oss-120b:free",
+    "name": "gpt-oss-120b (free)",
+    "provider": "openrouter",
+    "family": "gpt-oss",
+    "created_at": "2025-08-05 00:00:00 UTC",
+    "context_window": 131072,
+    "max_output_tokens": 32768,
+    "modalities": {
+      "input": ["text"],
+      "output": ["text"]
+    },
+    "capabilities": [
+      "streaming",
+      "reasoning",
+      "chat",
+      "function_calling",
+      "tools",
+      "structured_output",
+      "json_mode"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 0,
+          "output_per_million": 0,
+          "reasoning_output_per_million": 0
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -14347,7 +15068,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -14382,7 +15103,42 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.007Z"
+    }
+  },
+  {
+    "id": "openai/gpt-oss-20b:free",
+    "name": "gpt-oss-20b (free)",
+    "provider": "openrouter",
+    "family": "gpt-oss",
+    "created_at": "2025-08-05 00:00:00 UTC",
+    "context_window": 131072,
+    "max_output_tokens": 32768,
+    "modalities": {
+      "input": ["text"],
+      "output": ["text"]
+    },
+    "capabilities": [
+      "streaming",
+      "reasoning",
+      "chat",
+      "function_calling",
+      "tools",
+      "structured_output",
+      "json_mode"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 0,
+          "output_per_million": 0,
+          "reasoning_output_per_million": 0
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -14417,7 +15173,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -14455,7 +15211,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -14491,7 +15247,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -14528,7 +15284,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -14563,7 +15319,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.009Z"
     }
   },
   {
@@ -14599,7 +15355,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.009Z"
     }
   },
   {
@@ -14634,7 +15390,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.009Z"
     }
   },
   {
@@ -14669,7 +15425,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.009Z"
     }
   },
   {
@@ -14703,7 +15459,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.009Z"
     }
   },
   {
@@ -14738,7 +15494,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.009Z"
     }
   },
   {
@@ -14766,7 +15522,43 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
+    }
+  },
+  {
+    "id": "qwen/qwen-2.5-vl-7b-instruct:free",
+    "name": "Qwen2.5-VL 7B Instruct (free)",
+    "provider": "openrouter",
+    "family": "qwen",
+    "created_at": "2024-08-28 00:00:00 UTC",
+    "context_window": 32768,
+    "max_output_tokens": 32768,
+    "knowledge_cutoff": "2025-02",
+    "modalities": {
+      "input": ["text", "image"],
+      "output": ["text"]
+    },
+    "capabilities": [
+      "streaming",
+      "chat",
+      "vision",
+      "function_calling",
+      "tools",
+      "structured_output",
+      "json_mode"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 0,
+          "output_per_million": 0,
+          "reasoning_output_per_million": 0
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -14802,7 +15594,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -14830,7 +15622,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -14866,7 +15658,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -14902,7 +15694,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -14937,7 +15729,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -14972,7 +15764,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -15008,7 +15800,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -15044,7 +15836,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -15079,7 +15871,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -15115,7 +15907,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -15151,7 +15943,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -15187,7 +15979,43 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
+    }
+  },
+  {
+    "id": "qwen/qwen3-4b:free",
+    "name": "Qwen3 4B (free)",
+    "provider": "openrouter",
+    "family": "qwen",
+    "created_at": "2025-04-30 00:00:00 UTC",
+    "context_window": 40960,
+    "max_output_tokens": 40960,
+    "knowledge_cutoff": "2025-04",
+    "modalities": {
+      "input": ["text"],
+      "output": ["text"]
+    },
+    "capabilities": [
+      "streaming",
+      "reasoning",
+      "chat",
+      "function_calling",
+      "tools",
+      "structured_output",
+      "json_mode"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 0,
+          "output_per_million": 0,
+          "reasoning_output_per_million": 0
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -15223,7 +16051,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -15258,7 +16086,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -15293,7 +16121,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -15328,7 +16156,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -15363,7 +16191,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -15398,7 +16226,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -15433,7 +16261,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -15468,7 +16296,42 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
+    }
+  },
+  {
+    "id": "qwen/qwen3-next-80b-a3b-instruct:free",
+    "name": "Qwen3 Next 80B A3B Instruct (free)",
+    "provider": "openrouter",
+    "family": "qwen",
+    "created_at": "2025-09-11 00:00:00 UTC",
+    "context_window": 262144,
+    "max_output_tokens": 262144,
+    "knowledge_cutoff": "2025-04",
+    "modalities": {
+      "input": ["text"],
+      "output": ["text"]
+    },
+    "capabilities": [
+      "streaming",
+      "chat",
+      "function_calling",
+      "tools",
+      "structured_output",
+      "json_mode"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 0,
+          "output_per_million": 0,
+          "reasoning_output_per_million": 0
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -15504,7 +16367,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -15540,7 +16403,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -15576,7 +16439,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -15612,7 +16475,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.610Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -15659,6 +16522,90 @@
     "metadata": {
       "object": "model",
       "owned_by": "system"
+    }
+  },
+  {
+    "id": "sourceful/riverflow-v2-fast-preview",
+    "name": "Riverflow V2 Fast Preview",
+    "provider": "openrouter",
+    "family": "sourceful",
+    "created_at": "2025-12-08 00:00:00 UTC",
+    "context_window": 8192,
+    "max_output_tokens": 8192,
+    "knowledge_cutoff": "2025-06",
+    "modalities": {
+      "input": ["text", "image"],
+      "output": ["image"]
+    },
+    "capabilities": ["streaming", "chat", "vision", "image_generation"],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 0,
+          "output_per_million": 0,
+          "reasoning_output_per_million": 0
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "last_synced": "2026-02-01T15:48:21.008Z"
+    }
+  },
+  {
+    "id": "sourceful/riverflow-v2-max-preview",
+    "name": "Riverflow V2 Max Preview",
+    "provider": "openrouter",
+    "family": "sourceful",
+    "created_at": "2025-12-08 00:00:00 UTC",
+    "context_window": 8192,
+    "max_output_tokens": 8192,
+    "knowledge_cutoff": "2025-06",
+    "modalities": {
+      "input": ["text", "image"],
+      "output": ["image"]
+    },
+    "capabilities": ["streaming", "chat", "vision", "image_generation"],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 0,
+          "output_per_million": 0,
+          "reasoning_output_per_million": 0
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "last_synced": "2026-02-01T15:48:21.008Z"
+    }
+  },
+  {
+    "id": "sourceful/riverflow-v2-standard-preview",
+    "name": "Riverflow V2 Standard Preview",
+    "provider": "openrouter",
+    "family": "sourceful",
+    "created_at": "2025-12-08 00:00:00 UTC",
+    "context_window": 8192,
+    "max_output_tokens": 8192,
+    "knowledge_cutoff": "2025-06",
+    "modalities": {
+      "input": ["text", "image"],
+      "output": ["image"]
+    },
+    "capabilities": ["streaming", "chat", "vision", "image_generation"],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 0,
+          "output_per_million": 0,
+          "reasoning_output_per_million": 0
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -15750,7 +16697,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.007Z"
     }
   },
   {
@@ -15815,7 +16762,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.007Z"
     }
   },
   {
@@ -15880,7 +16827,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.007Z"
     }
   },
   {
@@ -15950,7 +16897,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -15978,7 +16925,35 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
+    }
+  },
+  {
+    "id": "tngtech/tng-r1t-chimera:free",
+    "name": "R1T Chimera (free)",
+    "provider": "openrouter",
+    "family": "tngtech",
+    "created_at": "2025-11-26 00:00:00 UTC",
+    "context_window": 163840,
+    "max_output_tokens": 163840,
+    "knowledge_cutoff": "2025-07",
+    "modalities": {
+      "input": ["text"],
+      "output": ["text"]
+    },
+    "capabilities": ["streaming", "reasoning", "chat"],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 0,
+          "output_per_million": 0,
+          "reasoning_output_per_million": 0
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -16146,7 +17121,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -16182,7 +17157,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -16219,7 +17194,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -16256,7 +17231,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -16293,7 +17268,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -16331,7 +17306,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -16369,7 +17344,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -16406,7 +17381,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -16442,7 +17417,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -16478,7 +17453,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -16506,7 +17481,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -16543,7 +17518,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -16580,7 +17555,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -16617,7 +17592,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -16654,7 +17629,42 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.008Z"
+    }
+  },
+  {
+    "id": "z-ai/glm-4.7-flash",
+    "name": "GLM-4.7",
+    "provider": "openrouter",
+    "family": "glm",
+    "created_at": "2026-01-19 00:00:00 UTC",
+    "context_window": 200000,
+    "max_output_tokens": 65535,
+    "modalities": {
+      "input": ["text"],
+      "output": ["text"]
+    },
+    "capabilities": [
+      "streaming",
+      "reasoning",
+      "chat",
+      "function_calling",
+      "tools",
+      "structured_output",
+      "json_mode"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 0.07,
+          "output_per_million": 0.4,
+          "reasoning_output_per_million": 0.4
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "last_synced": "2026-02-01T15:48:21.008Z"
     }
   },
   {
@@ -16690,7 +17700,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-01-27T18:48:08.609Z"
+      "last_synced": "2026-02-01T15:48:21.007Z"
     }
   }
 ]
