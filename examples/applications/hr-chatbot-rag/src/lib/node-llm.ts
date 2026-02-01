@@ -1,6 +1,15 @@
-import { createLLM, PIIMaskMiddleware, UsageLoggerMiddleware, CostGuardMiddleware } from "@node-llm/core";
+import { createLLM, PIIMaskMiddleware, CostGuardMiddleware } from "@node-llm/core";
+import { createPrismaMonitor } from "@node-llm/monitor";
 import { hrChatbotMiddlewares } from "./middlewares";
+import { prisma } from "./db";
 import "dotenv/config";
+
+/**
+ * Advanced monitoring instance for the HR repository.
+ */
+const monitor = createPrismaMonitor(prisma, {
+  captureContent: true 
+});
 
 /**
  * Core principle: NodeLLM is pure infrastructure.
@@ -12,7 +21,7 @@ export const llm = createLLM({
   middlewares: [
     ...hrChatbotMiddlewares,
     new PIIMaskMiddleware(),
-    new UsageLoggerMiddleware({ prefix: "HR-Bot" }),
+    monitor,
     new CostGuardMiddleware({ maxCost: 1.0 }) // $1.00 safety limit per turn
   ]
 });

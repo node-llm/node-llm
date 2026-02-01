@@ -23,6 +23,7 @@
   "dependencies": {
     "@ant-design/icons": "^6.1.0",
     "@ant-design/nextjs-registry": "^1.3.0",
+    "@node-llm/monitor": "file:../../../../node-llm-monitor",
     "@node-llm/core": "workspace:*",
     "@node-llm/orm": "workspace:*",
     "@node-llm/testing": "workspace:*",

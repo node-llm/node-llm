@@ -90,3 +90,26 @@ model AssistantRequest {
   chat         AssistantChat     @relation(fields: [chatId], references: [id], onDelete: Cascade)
   message      AssistantMessage? @relation(fields: [messageId], references: [id], onDelete: Cascade)
 }
+
+model monitoring_events {
+  id             String   @id @default(uuid())
+  eventType      String   // request.start, request.end, tool.start, etc.
+  requestId      String
+  sessionId      String?
+  transactionId  String?
+  time           DateTime @default(now())
+  duration       Int?     // duration in ms
+  cost           Float?
+  cpuTime        Float?
+  gcTime         Float?
+  allocations    Int?
+  payload        Json     // Stores metadata, tokens and optional content
+  createdAt      DateTime @default(now())
+  provider       String
+  model          String
+
+  @@index([requestId])
+  @@index([sessionId])
+  @@index([transactionId])
+  @@index([time])
+}
