@@ -14,6 +14,7 @@
   "license": "ISC",
   "dependencies": {
     "@node-llm/core": "workspace:*",
+    "@node-llm/monitor": "file:../../../../../node-llm-monitor",
     "@node-llm/testing": "workspace:*",
     "axios": "^1.13.2",
     "cors": "^2.8.5",

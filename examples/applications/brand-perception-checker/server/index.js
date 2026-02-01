@@ -53,6 +53,31 @@ app.get("/stream", async (req, res) => {
   res.end();
 });
 
+/**
+ * Monitor Dashboard Routes
+ * Access the monitoring UI at /monitor
+ */
+import { monitorGET, monitorPOST } from "./monitor-route.js";
+
+// Handle all monitor routes using app.use for path prefix matching
+app.use("/monitor", async (req, res) => {
+  const request = new Request(`http://localhost${req.url}`, {
+    method: req.method,
+    headers: req.headers,
+    body: req.method === "POST" ? JSON.stringify(req.body) : undefined
+  });
+  
+  const handler = req.method === "GET" ? monitorGET : monitorPOST;
+  const response = await handler(request);
+  
+  res.status(response.status);
+  response.headers.forEach((value, key) => {
+    res.setHeader(key, value);
+  });
+  const body = await response.arrayBuffer();
+  res.send(Buffer.from(body));
+});
+
 app.get("/health", (req, res) => res.json({ status: "operational" }));
 
 app.listen(port, () => {
