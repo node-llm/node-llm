@@ -5,5 +5,6 @@ const { GET: monitorGET, POST: monitorPOST } = createMonitoringRouter(prisma, {
   basePath: "/api/monitor"
 });
 
-export const GET = monitorGET;
-export const POST = monitorPOST;
+// Type assertion needed due to Response type differences between Next.js and undici-types
+export const GET = monitorGET as any;
+export const POST = monitorPOST as any;
