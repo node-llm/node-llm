@@ -28,6 +28,9 @@ import { resolveModelAlias } from "./model_aliases.js";
 import { logger } from "./utils/logger.js";
 
 import { config, NodeLLMConfig, Configuration } from "./config.js";
+import { Middleware, MiddlewareContext } from "./types/Middleware.js";
+import { runMiddleware } from "./utils/middleware-runner.js";
+import { randomUUID } from "node:crypto";
 
 export interface RetryOptions {
   attempts?: number;
@@ -37,6 +40,7 @@ export interface RetryOptions {
 type LLMConfig = {
   provider?: Provider | string;
   retry?: RetryOptions;
+  middlewares?: Middleware[];
   defaultChatModel?: string;
   defaultTranscriptionModel?: string;
   defaultModerationModel?: string;
@@ -62,6 +66,7 @@ export class NodeLLMCore {
     public readonly config: NodeLLMConfig,
     public readonly provider?: Provider,
     public readonly retry: Required<RetryOptions> = { attempts: 1, delayMs: 0 },
+    public readonly middlewares: Middleware[] = [],
     private readonly defaults: {
       chat?: string;
       transcription?: string;
@@ -99,7 +104,8 @@ export class NodeLLMCore {
       ...baseConfig,
       ...scopedConfig,
       provider: providerName,
-      // Preserve defaults unless overridden (conceptually, though createLLM takes specific keys)
+      // Preserve middlewares and defaults unless overridden
+      middlewares: this.middlewares,
       defaultChatModel: this.defaults.chat,
       defaultTranscriptionModel: this.defaults.transcription,
       defaultModerationModel: this.defaults.moderation,
@@ -131,14 +137,21 @@ export class NodeLLMCore {
     return this.provider as Provider & Record<K, NonNullable<Provider[K]>>;
   }
 
-  chat(model?: string, options?: ChatOptions): Chat {
+  chat(model?: string, options: ChatOptions = {}): Chat {
     if (!this.provider) {
       throw new ProviderNotConfiguredError();
     }
 
     const rawModel = model || this.defaults.chat || this.provider.defaultModel("chat");
     const resolvedModel = resolveModelAlias(rawModel, this.provider.id);
-    return new Chat(this.provider, resolvedModel, options, this.retry);
+
+    // Merge global middlewares with local ones
+    const combinedOptions = {
+      ...options,
+      middlewares: [...this.middlewares, ...(options.middlewares || [])]
+    };
+
+    return new Chat(this.provider, resolvedModel, combinedOptions, this.retry);
   }
 
   async listModels(): Promise<ModelInfo[]> {
@@ -159,31 +172,58 @@ export class NodeLLMCore {
       quality?: string;
       assumeModelExists?: boolean;
       requestTimeout?: number;
+      middlewares?: Middleware[];
     }
   ): Promise<GeneratedImage> {
     const provider = this.ensureProviderSupport("paint");
 
-    const rawModel = options?.model;
-    const model = resolveModelAlias(rawModel || "", provider.id);
+    const rawModel = options?.model || provider.defaultModel("image");
+    const model = resolveModelAlias(rawModel, provider.id);
 
-    if (options?.assumeModelExists) {
-      logger.warn(`Skipping validation for model ${model}`);
-    } else if (
-      model &&
-      provider.capabilities &&
-      !provider.capabilities.supportsImageGeneration(model)
-    ) {
-      throw new ModelCapabilityError(model, "image generation");
-    }
+    const requestId = randomUUID();
+    const state: Record<string, unknown> = {};
 
-    const response = await provider.paint({
-      prompt,
-      ...options,
+    const context: MiddlewareContext = {
+      requestId,
+      provider: provider.id,
       model,
-      requestTimeout: options?.requestTimeout ?? this.config.requestTimeout
-    });
+      input: prompt,
+      imageOptions: options,
+      state
+    };
 
-    return new GeneratedImage(response);
+    const middlewares = [...this.middlewares, ...(options?.middlewares || [])];
+
+    try {
+      await runMiddleware(middlewares, "onRequest", context);
+
+      const currentPrompt = (context.input as string) || prompt;
+
+      if (options?.assumeModelExists) {
+        logger.warn(`Skipping validation for model ${model}`);
+      } else if (
+        model &&
+        provider.capabilities &&
+        !provider.capabilities.supportsImageGeneration(model)
+      ) {
+        throw new ModelCapabilityError(model, "image generation");
+      }
+
+      const response = await provider.paint({
+        prompt: currentPrompt,
+        ...options,
+        model,
+        requestTimeout: options?.requestTimeout ?? this.config.requestTimeout
+      });
+
+      const imageResult = new GeneratedImage(response);
+      await runMiddleware(middlewares, "onResponse", context, imageResult as any);
+
+      return imageResult;
+    } catch (error) {
+      await runMiddleware(middlewares, "onError", context, error as Error);
+      throw error;
+    }
   }
 
   async transcribe(
@@ -196,54 +236,120 @@ export class NodeLLMCore {
       speakerReferences?: string[];
       assumeModelExists?: boolean;
       requestTimeout?: number;
+      middlewares?: Middleware[];
     }
   ): Promise<Transcription> {
     const provider = this.ensureProviderSupport("transcribe");
 
-    const rawModel = options?.model || this.defaults.transcription || "";
+    const rawModel =
+      options?.model || this.defaults.transcription || provider.defaultModel("transcription");
     const model = resolveModelAlias(rawModel, provider.id);
-    if (options?.assumeModelExists) {
-      logger.warn(`Skipping validation for model ${model}`);
-    } else if (
-      model &&
-      provider.capabilities &&
-      !provider.capabilities.supportsTranscription(model)
-    ) {
-      throw new ModelCapabilityError(model, "transcription");
-    }
 
-    const response = await provider.transcribe({
-      file,
-      ...options,
+    const requestId = randomUUID();
+    const state: Record<string, unknown> = {};
+
+    const context: MiddlewareContext = {
+      requestId,
+      provider: provider.id,
       model,
-      requestTimeout: options?.requestTimeout ?? this.config.requestTimeout
-    });
+      input: file,
+      transcriptionOptions: options,
+      state
+    };
 
-    return new Transcription(response);
+    const middlewares = [...this.middlewares, ...(options?.middlewares || [])];
+
+    try {
+      await runMiddleware(middlewares, "onRequest", context);
+
+      const currentFile = (context.input as string) || file;
+
+      if (options?.assumeModelExists) {
+        logger.warn(`Skipping validation for model ${model}`);
+      } else if (
+        model &&
+        provider.capabilities &&
+        !provider.capabilities.supportsTranscription(model)
+      ) {
+        throw new ModelCapabilityError(model, "transcription");
+      }
+
+      const response = await provider.transcribe({
+        file: currentFile,
+        ...options,
+        model,
+        requestTimeout: options?.requestTimeout ?? this.config.requestTimeout
+      });
+
+      const transcriptionResult = new Transcription(response);
+      await runMiddleware(middlewares, "onResponse", context, transcriptionResult as any);
+
+      return transcriptionResult;
+    } catch (error) {
+      await runMiddleware(middlewares, "onError", context, error as Error);
+      throw error;
+    }
   }
 
   async moderate(
     input: string | string[],
-    options?: { model?: string; assumeModelExists?: boolean; requestTimeout?: number }
+    options?: {
+      model?: string;
+      assumeModelExists?: boolean;
+      requestTimeout?: number;
+      middlewares?: Middleware[];
+    }
   ): Promise<Moderation> {
     const provider = this.ensureProviderSupport("moderate");
 
-    const rawModel = options?.model || this.defaults.moderation || "";
+    const rawModel =
+      options?.model || this.defaults.moderation || provider.defaultModel("moderation");
     const model = resolveModelAlias(rawModel, provider.id);
-    if (options?.assumeModelExists) {
-      logger.warn(`Skipping validation for model ${model}`);
-    } else if (model && provider.capabilities && !provider.capabilities.supportsModeration(model)) {
-      throw new ModelCapabilityError(model, "moderation");
-    }
 
-    const response = await provider.moderate({
-      input,
-      ...options,
+    const requestId = randomUUID();
+    const state: Record<string, unknown> = {};
+
+    const context: MiddlewareContext = {
+      requestId,
+      provider: provider.id,
       model,
-      requestTimeout: options?.requestTimeout ?? this.config.requestTimeout
-    });
+      input,
+      moderationOptions: options,
+      state
+    };
 
-    return new Moderation(response);
+    const middlewares = [...this.middlewares, ...(options?.middlewares || [])];
+
+    try {
+      await runMiddleware(middlewares, "onRequest", context);
+
+      const currentInput = (context.input as string | string[]) || input;
+
+      if (options?.assumeModelExists) {
+        logger.warn(`Skipping validation for model ${model}`);
+      } else if (
+        model &&
+        provider.capabilities &&
+        !provider.capabilities.supportsModeration(model)
+      ) {
+        throw new ModelCapabilityError(model, "moderation");
+      }
+
+      const response = await provider.moderate({
+        input: currentInput,
+        ...options,
+        model,
+        requestTimeout: options?.requestTimeout ?? this.config.requestTimeout
+      });
+
+      const moderationResult = new Moderation(response);
+      await runMiddleware(middlewares, "onResponse", context, moderationResult as any);
+
+      return moderationResult;
+    } catch (error) {
+      await runMiddleware(middlewares, "onError", context, error as Error);
+      throw error;
+    }
   }
 
   async embed(
@@ -253,32 +359,62 @@ export class NodeLLMCore {
       dimensions?: number;
       assumeModelExists?: boolean;
       requestTimeout?: number;
+      middlewares?: Middleware[];
     }
   ): Promise<Embedding> {
     const provider = this.ensureProviderSupport("embed");
 
-    const rawModel = options?.model || this.defaults.embedding || "";
+    const rawModel =
+      options?.model || this.defaults.embedding || provider.defaultModel("embedding");
     const model = resolveModelAlias(rawModel, provider.id);
 
-    const request: EmbeddingRequest = {
-      input,
+    const requestId = randomUUID();
+    const state: Record<string, unknown> = {};
+
+    const context: MiddlewareContext = {
+      requestId,
+      provider: provider.id,
       model,
-      dimensions: options?.dimensions,
-      requestTimeout: options?.requestTimeout ?? this.config.requestTimeout
+      input,
+      embeddingOptions: options,
+      state
     };
 
-    if (options?.assumeModelExists) {
-      logger.warn(`Skipping validation for model ${request.model}`);
-    } else if (
-      request.model &&
-      provider.capabilities &&
-      !provider.capabilities.supportsEmbeddings(request.model)
-    ) {
-      throw new ModelCapabilityError(request.model, "embeddings");
-    }
+    const middlewares = [...this.middlewares, ...(options?.middlewares || [])];
 
-    const response = await provider.embed(request);
-    return new Embedding(response);
+    try {
+      await runMiddleware(middlewares, "onRequest", context);
+
+      // Re-read input from context as it might have been modified
+      const currentInput = context.input || input;
+
+      const request: EmbeddingRequest = {
+        input: currentInput,
+        model,
+        dimensions: options?.dimensions,
+        requestTimeout: options?.requestTimeout ?? this.config.requestTimeout
+      };
+
+      if (options?.assumeModelExists) {
+        logger.warn(`Skipping validation for model ${request.model}`);
+      } else if (
+        request.model &&
+        provider.capabilities &&
+        !provider.capabilities.supportsEmbeddings(request.model)
+      ) {
+        throw new ModelCapabilityError(request.model, "embeddings");
+      }
+
+      const response = await provider.embed(request);
+      const embeddingResult = new Embedding(response);
+
+      await runMiddleware(middlewares, "onResponse", context, embeddingResult as any);
+
+      return embeddingResult;
+    } catch (error) {
+      await runMiddleware(middlewares, "onError", context, error as Error);
+      throw error;
+    }
   }
 }
 
@@ -336,7 +472,7 @@ export function createLLM(options: LLMConfig = {}): NodeLLMCore {
     embedding: options.defaultEmbeddingModel
   };
 
-  return new NodeLLMCore(baseConfig, providerInstance, retry, defaults);
+  return new NodeLLMCore(baseConfig, providerInstance, retry, options.middlewares || [], defaults);
 }
 
 /**

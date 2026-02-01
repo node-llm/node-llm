@@ -80,6 +80,8 @@ describe("Custom Provider Registration", () => {
     const llm = createLLM({ provider: name });
 
     // moderate() is not implemented in CustomTestProvider
-    await expect(llm.moderate("test")).rejects.toThrow("custom-test does not support moderate");
+    await expect(llm.moderate("test")).rejects.toThrow(
+      "Model test-model does not support moderation"
+    );
   });
 });

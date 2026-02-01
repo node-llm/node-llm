@@ -70,9 +70,11 @@ Most AI SDKs optimize for "getting a response to the user fast" (Frontend/Edge).
 
 While most AI SDKs (like Vercel AI SDK) are heavily optimized for **Frontend Streaming** (Next.js, React Server Components), NodeLLM is built for the **Backend**.
 
+- **Reasoning Models**: Native support for OpenAI o1/o3 and Anthropic Thinking models with first-class tokens tracking.
+- **Middlewares**: Intercept and modify requests/responses for auditing, cost tracking, and PII redaction.
+- **ORM & Persistence**: Save entire conversation threads, tool calls, and latency metrics to your database automatically.
+- **Deterministic Testing**: Record and replay LLM interactions with VCR-style testing.
 - **Strict Process Protection**: Preventing hung requests from stalling event loops.
-- **Normalized Persistence**: Treating chat interactions as database records via `@node-llm/orm`.
-- **Determinism**: Testing your AI logic with VCR recordings and time-travel debugging.
 
 ### Strategic Goals
 

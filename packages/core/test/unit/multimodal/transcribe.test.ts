@@ -30,7 +30,7 @@ describe("Transcription Unit Tests", () => {
       file: "test.mp3",
       language: "en",
       prompt: "Test prompt",
-      model: "",
+      model: "test-model",
       requestTimeout: 30000
     });
   });

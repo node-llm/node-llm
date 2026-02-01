@@ -3,9 +3,9 @@ import { Message } from "../src/chat/Message.js";
 
 export class FakeProvider implements Provider {
   id = "fake";
-  private replies: (string | ChatResponse)[];
+  private replies: (string | ChatResponse | Error)[];
 
-  constructor(replies: (string | ChatResponse)[] = []) {
+  constructor(replies: (string | ChatResponse | Error)[] = []) {
     this.replies = replies;
   }
 
@@ -14,6 +14,11 @@ export class FakeProvider implements Provider {
   async chat(request: ChatRequest): Promise<ChatResponse> {
     this.lastRequest = request;
     const reply = this.replies.shift() ?? "default reply";
+
+    if (reply instanceof Error) {
+      throw reply;
+    }
+
     if (typeof reply === "string") {
       return { content: reply };
     }
@@ -23,6 +28,10 @@ export class FakeProvider implements Provider {
   async *stream(request: ChatRequest) {
     this.lastRequest = request;
     const reply = this.replies.shift() ?? "default reply";
+
+    if (reply instanceof Error) {
+      throw reply;
+    }
 
     if (typeof reply === "string") {
       const words = reply.split(" ");

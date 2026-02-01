@@ -12,6 +12,7 @@ export async function sendMessage(chatId: string | null, message: string) {
       instructions: HR_ASSISTANT_DEFINITION.instructions,
       model: HR_ASSISTANT_DEFINITION.defaultModel,
       provider: HR_ASSISTANT_DEFINITION.defaultProvider,
+      maxToolCalls: HR_ASSISTANT_DEFINITION.maxToolCalls,
     });
   } else {
     const loadedChat = await AssistantChat.load(chatId);
@@ -21,6 +22,7 @@ export async function sendMessage(chatId: string | null, message: string) {
         instructions: HR_ASSISTANT_DEFINITION.instructions,
         model: HR_ASSISTANT_DEFINITION.defaultModel,
         provider: HR_ASSISTANT_DEFINITION.defaultProvider,
+        maxToolCalls: HR_ASSISTANT_DEFINITION.maxToolCalls,
       });
     } else {
       chat = loadedChat;
@@ -44,6 +46,7 @@ async function getOrCreateChat(chatId: string | null): Promise<Chat> {
       instructions: HR_ASSISTANT_DEFINITION.instructions,
       model: HR_ASSISTANT_DEFINITION.defaultModel,
       provider: HR_ASSISTANT_DEFINITION.defaultProvider,
+      maxToolCalls: HR_ASSISTANT_DEFINITION.maxToolCalls,
     });
   }
 
@@ -54,6 +57,7 @@ async function getOrCreateChat(chatId: string | null): Promise<Chat> {
       instructions: HR_ASSISTANT_DEFINITION.instructions,
       model: HR_ASSISTANT_DEFINITION.defaultModel,
       provider: HR_ASSISTANT_DEFINITION.defaultProvider,
+      maxToolCalls: HR_ASSISTANT_DEFINITION.maxToolCalls,
     });
   }
 

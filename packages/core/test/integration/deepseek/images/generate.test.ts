@@ -18,6 +18,6 @@ describe("DeepSeek Images Integration (VCR)", { timeout: 30000 }, () => {
       deepseekApiKey: process.env.DEEPSEEK_API_KEY,
       provider: "deepseek"
     });
-    await expect(llm.paint("test")).rejects.toThrow(/does not support paint/i);
+    await expect(llm.paint("test")).rejects.toThrow(/does not support image generation/i);
   });
 });

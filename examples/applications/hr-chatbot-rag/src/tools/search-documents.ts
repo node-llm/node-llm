@@ -14,7 +14,11 @@ class SearchDocumentsTool extends Tool<{ query: string }> {
   });
 
   async execute({ query }: { query: string }) {
-    const results = await DocumentSearch.search(query, 3);
+    const results = await DocumentSearch.search(query, 5); // Increased breadth
+    console.log(`[SearchTool] Query: "${query}", Results: ${results.length}`);
+    if (results.length > 0) {
+      console.log(`[SearchTool] Top score: ${results[0].score.toFixed(4)} from ${results[0].metadata.source}`);
+    }
 
     if (results.length === 0) {
       return "No relevant HR policy documents found for this query.";
@@ -23,7 +27,8 @@ class SearchDocumentsTool extends Tool<{ query: string }> {
     const formattedResults = results
       .map((result, index) => {
         const { source } = result.metadata;
-        return `[Document ${index + 1}] (Source: ${source}, Relevance: ${(result.score * 100).toFixed(1)}%)\n${result.content}`;
+        // Removed explicit score to prevent LLM hesitation on '70%' matches
+        return `[Document: ${source}]\n${result.content}`;
       })
       .join("\n\n---\n\n");
 

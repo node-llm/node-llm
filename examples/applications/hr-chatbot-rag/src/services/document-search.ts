@@ -27,10 +27,22 @@ export class DocumentSearch {
       LIMIT ${topK}
     `;
 
-    return results.map((row) => ({
-      content: row.content,
-      score: Number(row.score),
-      metadata: typeof row.metadata === 'string' ? JSON.parse(row.metadata) : row.metadata,
-    }));
+    return results.map((row) => {
+      let metadata = row.metadata;
+      if (typeof metadata === 'string') {
+        try {
+          metadata = JSON.parse(metadata);
+        } catch (e) {
+          console.warn("[DocumentSearch] Failed to parse metadata string:", metadata);
+          metadata = { source: "unknown" };
+        }
+      }
+      
+      return {
+        content: row.content,
+        score: Number(row.score),
+        metadata: metadata || { source: "unknown" },
+      };
+    });
   }
 }

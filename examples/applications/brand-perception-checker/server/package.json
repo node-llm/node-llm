@@ -13,8 +13,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@node-llm/core": "^1.8.0",
-    "@node-llm/testing": "^0.2.0",
+    "@node-llm/core": "workspace:*",
+    "@node-llm/testing": "workspace:*",
     "axios": "^1.13.2",
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",

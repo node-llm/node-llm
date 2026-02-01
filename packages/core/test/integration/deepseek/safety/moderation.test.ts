@@ -19,6 +19,6 @@ describe("DeepSeek Safety Integration (VCR)", { timeout: 30000 }, () => {
       deepseekApiKey: process.env.DEEPSEEK_API_KEY,
       provider: "deepseek"
     });
-    await expect(llm.moderate("test")).rejects.toThrow(/does not support moderate/i);
+    await expect(llm.moderate("test")).rejects.toThrow(/does not support moderation/i);
   });
 });

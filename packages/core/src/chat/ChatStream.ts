@@ -20,6 +20,9 @@ import { ToolHandler } from "./ToolHandler.js";
 import { logger } from "../utils/logger.js";
 import { ResponseFormat } from "../providers/Provider.js";
 import { ModelRegistry } from "../models/ModelRegistry.js";
+import { Middleware, MiddlewareContext, ToolErrorDirective } from "../types/Middleware.js";
+import { runMiddleware } from "../utils/middleware-runner.js";
+import { randomUUID } from "node:crypto";
 
 /**
  * Internal handler for chat streaming logic.
@@ -87,6 +90,10 @@ export class ChatStream {
         headers: { ...baseOptions.headers, ...requestOptions.headers }
       };
 
+      const requestId = randomUUID();
+      const state: Record<string, unknown> = {};
+      const middlewares = options.middlewares || [];
+
       // Process Multimodal Content
       let messageContent: MessageContent = content;
       const files = [...(requestOptions.images ?? []), ...(requestOptions.files ?? [])];
@@ -105,74 +112,86 @@ export class ChatStream {
 
       messages.push({ role: "user", content: messageContent });
 
-      if (!provider.stream) {
-        throw new Error("Streaming not supported by provider");
-      }
-
-      // Process Schema/Structured Output
-      let responseFormat: ResponseFormat | undefined = options.responseFormat;
-      if (!responseFormat && options.schema) {
-        ChatValidator.validateStructuredOutput(provider, model, true, options);
-
-        const jsonSchema = toJsonSchema(options.schema.definition.schema);
-        responseFormat = {
-          type: "json_schema",
-          json_schema: {
-            name: options.schema.definition.name,
-            description: options.schema.definition.description,
-            strict: options.schema.definition.strict ?? true,
-            schema: jsonSchema
-          }
-        };
-      }
-
-      if (!provider.stream) {
-        throw new Error("Streaming not supported by provider");
-      }
-
-      let isFirst = true;
-      const maxToolCalls = options.maxToolCalls ?? 5;
-      let stepCount = 0;
-
-      const totalUsage: Usage = { input_tokens: 0, output_tokens: 0, total_tokens: 0 };
-      const trackUsage = (u?: Usage) => {
-        if (u) {
-          // Fallback cost calculation if provider didn't return it
-          if (u.cost === undefined) {
-            const withCost = ModelRegistry.calculateCost(u, model, provider.id);
-            u.cost = (withCost as Usage).cost;
-            u.input_cost = (withCost as Usage).input_cost;
-            u.output_cost = (withCost as Usage).output_cost;
-          }
-
-          totalUsage.input_tokens += u.input_tokens;
-          totalUsage.output_tokens += u.output_tokens;
-          totalUsage.total_tokens += u.total_tokens;
-          if (u.cached_tokens) {
-            totalUsage.cached_tokens = (totalUsage.cached_tokens ?? 0) + u.cached_tokens;
-          }
-          if (u.cost !== undefined) {
-            totalUsage.cost = (totalUsage.cost ?? 0) + u.cost;
-          }
-        }
+      // Prepare Middleware Context
+      const context: MiddlewareContext = {
+        requestId,
+        provider: provider.id,
+        model: model,
+        messages: [...systemMessages, ...messages],
+        options: options,
+        state
       };
 
-      while (true) {
-        stepCount++;
-        if (stepCount > maxToolCalls) {
-          throw new Error(
-            `[NodeLLM] Maximum tool execution calls (${maxToolCalls}) exceeded during streaming.`
-          );
+      try {
+        // 1. onRequest Hook
+        await runMiddleware(middlewares, "onRequest", context);
+
+        if (!provider.stream) {
+          throw new Error("Streaming not supported by provider");
         }
 
-        let fullContent = "";
-        let fullReasoning = "";
-        const thinking: ThinkingResult = { text: "" };
-        let toolCalls: ToolCall[] | undefined;
-        let currentTurnUsage: Usage | undefined;
+        // Process Schema/Structured Output
+        let responseFormat: ResponseFormat | undefined = options.responseFormat;
+        if (!responseFormat && options.schema) {
+          ChatValidator.validateStructuredOutput(provider, model, true, options);
 
-        try {
-          let requestMessages = [...systemMessages, ...messages];
+          const jsonSchema = toJsonSchema(options.schema.definition.schema);
+          responseFormat = {
+            type: "json_schema",
+            json_schema: {
+              name: options.schema.definition.name,
+              description: options.schema.definition.description,
+              strict: options.schema.definition.strict ?? true,
+              schema: jsonSchema
+            }
+          };
+        }
+
+        let isFirst = true;
+        const maxToolCalls = options.maxToolCalls ?? 5;
+        let stepCount = 0;
+
+        const totalUsage: Usage = { input_tokens: 0, output_tokens: 0, total_tokens: 0 };
+        const trackUsage = (u?: Usage) => {
+          if (u) {
+            // Fallback cost calculation if provider didn't return it
+            if (u.cost === undefined) {
+              const withCost = ModelRegistry.calculateCost(u, model, provider.id);
+              u.cost = (withCost as Usage).cost;
+              u.input_cost = (withCost as Usage).input_cost;
+              u.output_cost = (withCost as Usage).output_cost;
+            }
+
+            totalUsage.input_tokens += u.input_tokens;
+            totalUsage.output_tokens += u.output_tokens;
+            totalUsage.total_tokens += u.total_tokens;
+            if (u.cached_tokens) {
+              totalUsage.cached_tokens = (totalUsage.cached_tokens ?? 0) + u.cached_tokens;
+            }
+            if (u.cost !== undefined) {
+              totalUsage.cost = (totalUsage.cost ?? 0) + u.cost;
+            }
+          }
+        };
+
+        let assistantResponse: ChatResponseString | undefined;
+
+        while (true) {
+          stepCount++;
+          if (stepCount > maxToolCalls) {
+            throw new Error(
+              `[NodeLLM] Maximum tool execution calls (${maxToolCalls}) exceeded during streaming.`
+            );
+          }
+
+          let fullContent = "";
+          let fullReasoning = "";
+          const thinking: ThinkingResult = { text: "" };
+          let toolCalls: ToolCall[] | undefined;
+          let currentTurnUsage: Usage | undefined;
+
+          context.messages = [...systemMessages, ...messages];
+          let requestMessages = context.messages; // Use up-to-date messages from context
           if (options.onBeforeRequest) {
             const result = await options.onBeforeRequest(requestMessages);
             if (result) {
@@ -231,7 +250,7 @@ export class ChatStream {
             }
           }
 
-          let assistantResponse = new ChatResponseString(
+          assistantResponse = new ChatResponseString(
             fullContent || "",
             currentTurnUsage || { input_tokens: 0, output_tokens: 0, total_tokens: 0 },
             model,
@@ -283,6 +302,9 @@ export class ChatStream {
               }
             }
 
+            // 2. onToolCallStart Hook
+            await runMiddleware(middlewares, "onToolCallStart", context, toolCall);
+
             try {
               const toolResult = await ToolHandler.execute(
                 toolCall,
@@ -290,21 +312,73 @@ export class ChatStream {
                 options.onToolCallStart,
                 options.onToolCallEnd
               );
+
+              // 3. onToolCallEnd Hook
+              await runMiddleware(
+                middlewares,
+                "onToolCallEnd",
+                context,
+                toolCall,
+                toolResult.content
+              );
+
               messages.push(
                 provider.formatToolResultMessage(toolResult.tool_call_id, toolResult.content)
               );
             } catch (error: unknown) {
-              const err = error as Error & { fatal?: boolean; status?: number };
-              const directive = await options.onToolCallError?.(toolCall, err);
+              let currentError = error as Error & { fatal?: boolean; status?: number };
+
+              // 4. onToolCallError Hook
+              const middlewareDirective = await runMiddleware<ToolErrorDirective>(
+                middlewares,
+                "onToolCallError",
+                context,
+                toolCall,
+                currentError
+              );
+
+              const directive =
+                middlewareDirective || (await options.onToolCallError?.(toolCall, currentError));
 
               if (directive === "STOP") {
                 throw error;
               }
 
+              if (directive === "RETRY") {
+                try {
+                  const toolResult = await ToolHandler.execute(
+                    toolCall,
+                    options.tools as unknown as ToolDefinition[],
+                    options.onToolCallStart,
+                    options.onToolCallEnd
+                  );
+                  await runMiddleware(
+                    middlewares,
+                    "onToolCallEnd",
+                    context,
+                    toolCall,
+                    toolResult.content
+                  );
+                  messages.push(
+                    provider.formatToolResultMessage(toolResult.tool_call_id, toolResult.content)
+                  );
+                  continue;
+                } catch (retryError) {
+                  currentError = retryError as Error & { fatal?: boolean; status?: number };
+                  await runMiddleware(
+                    middlewares,
+                    "onToolCallError",
+                    context,
+                    toolCall,
+                    currentError
+                  );
+                }
+              }
+
               messages.push(
                 provider.formatToolResultMessage(
                   toolCall.id,
-                  `Fatal error executing tool '${toolCall.function.name}': ${err.message}`,
+                  `Fatal error executing tool '${toolCall.function.name}': ${currentError.message}`,
                   { isError: true }
                 )
               );
@@ -313,23 +387,36 @@ export class ChatStream {
                 continue;
               }
 
-              const isFatal = err.fatal === true || err.status === 401 || err.status === 403;
+              const isFatal =
+                currentError.fatal === true ||
+                currentError.status === 401 ||
+                currentError.status === 403;
               if (isFatal) {
-                throw err;
+                throw currentError;
               }
 
               logger.error(
                 `Tool execution failed for '${toolCall.function.name}':`,
-                error as Error
+                currentError as Error
               );
             }
           }
-        } catch (error) {
-          if (error instanceof Error && error.name === "AbortError") {
-            // Aborted
-          }
-          throw error;
+          // Loop continues -> streaming next chunk
         }
+
+        // 5. onResponse Hook
+        if (assistantResponse) {
+          await runMiddleware(middlewares, "onResponse", context, assistantResponse!);
+        }
+      } catch (err) {
+        // 6. onError Hook
+        await runMiddleware(middlewares, "onError", context, err);
+
+        if (err instanceof Error && err.name === "AbortError") {
+          // Aborted, still maybe want onError? Middleware logic says "onError".
+          // But rethrow for sure.
+        }
+        throw err;
       }
     };
 

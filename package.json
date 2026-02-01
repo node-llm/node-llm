@@ -4,7 +4,9 @@
   "description": "An opinionated architectural layer for integrating Large Language Models in Node.js.",
   "main": "index.js",
   "workspaces": [
-    "packages/*"
+    "packages/*",
+    "examples/applications/*",
+    "examples/applications/*/server"
   ],
   "scripts": {
     "test": "npm test --workspaces --if-present && npm run test:examples",

@@ -8,6 +8,7 @@
 import { prisma } from "@/lib/db";
 import { llm } from "@/lib/node-llm";
 import { createChat, loadChat, type TableNames, type Chat } from "@node-llm/orm/prisma";
+import { hrChatbotMiddlewares } from "@/lib/middlewares";
 
 // Map ORM table names to our existing schema
 const TABLE_NAMES: TableNames = {
@@ -28,11 +29,18 @@ export const AssistantChat = {
     model?: string;
     provider?: string;
     instructions?: string;
+    maxToolCalls?: number;
     metadata?: Record<string, any>;
     debug?: boolean;
   } = {}): Promise<Chat> {
     // Enable debug logging by default for better visibility during development
-    const chatOptions = { debug: true, ...options, tableNames: TABLE_NAMES };
+    // Include production middlewares for monitoring, auditing, and compliance
+    const chatOptions = { 
+      debug: true, 
+      ...options, 
+      tableNames: TABLE_NAMES,
+      middlewares: hrChatbotMiddlewares
+    };
     return createChat(prisma, llm, chatOptions);
   },
 
@@ -40,7 +48,12 @@ export const AssistantChat = {
    * Load an existing chat session
    */
   async load(chatId: string): Promise<Chat | null> {
-    return loadChat(prisma, llm, chatId, { tableNames: TABLE_NAMES });
+    return loadChat(prisma, llm, chatId, { 
+      tableNames: TABLE_NAMES,
+      middlewares: hrChatbotMiddlewares,
+      maxToolCalls: 10, // Ensure budget is maintained on load
+      debug: true
+    });
   },
 };
 

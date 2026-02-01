@@ -16,6 +16,9 @@ import { createLLM } from "@node-llm/core";
 import { withVCR, describeVCR, configureVCR } from "@node-llm/testing";
 import "dotenv/config";
 
+// Provide dummy API key for VCR replay mode when real key is not available
+const OPENAI_API_KEY = process.env.OPENAI_API_KEY || "sk-dummy-key-for-vcr-replay";
+
 // Global VCR configuration - applies to all tests
 configureVCR({
   mode: "auto",
@@ -28,7 +31,7 @@ describe("Brand Perception: Business Logic Tests", () => {
       it(
         "analyzes brand sentiment",
         withVCR(async () => {
-          const llm = createLLM({ provider: "openai" });
+          const llm = createLLM({ provider: "openai", openaiApiKey: OPENAI_API_KEY });
           const chat = llm.chat("gpt-4o-mini");
           
           const result = await chat.ask(
@@ -43,7 +46,7 @@ describe("Brand Perception: Business Logic Tests", () => {
       it(
         "detects risk signals in brand perception",
         withVCR(async () => {
-          const llm = createLLM({ provider: "openai" });
+          const llm = createLLM({ provider: "openai", openaiApiKey: OPENAI_API_KEY });
           const chat = llm.chat("gpt-4o-mini");
           
           const result = await chat.ask(
@@ -61,7 +64,7 @@ describe("Brand Perception: Business Logic Tests", () => {
       it(
         "compares brand positioning",
         withVCR(async () => {
-          const llm = createLLM({ provider: "openai" });
+          const llm = createLLM({ provider: "openai", openaiApiKey: OPENAI_API_KEY });
           const chat = llm.chat("gpt-4o-mini");
           
           const result = await chat.ask(
@@ -75,7 +78,7 @@ describe("Brand Perception: Business Logic Tests", () => {
       it(
         "streams brand analysis",
         withVCR(async () => {
-          const llm = createLLM({ provider: "openai" });
+          const llm = createLLM({ provider: "openai", openaiApiKey: OPENAI_API_KEY });
           const chat = llm.chat("gpt-4o-mini");
           const chunks: string[] = [];
 

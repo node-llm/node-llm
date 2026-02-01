@@ -9,6 +9,7 @@ import {
   STREAMING_NARRATIVE_PROMPT,
   MARKET_ANALYST_INSTRUCTIONS
 } from "./prompts.js";
+import { productionMiddlewares } from "./middlewares.js";
 
 /**
  * Stage 1: Intrinsic Latent Analysis
@@ -25,7 +26,10 @@ export async function getIntrinsicPerception(brandName) {
   const results = await Promise.all(
     entries.map(async (m) => {
       try {
-        const chat = m.instance.chat(m.model).withSchema(PerceptionSchema).withTemperature(0);
+        const chat = m.instance
+          .chat(m.model, { middlewares: productionMiddlewares })
+          .withSchema(PerceptionSchema)
+          .withTemperature(0);
 
         const response = await chat.ask(INTRINSIC_ANALYSIS_PROMPT(brandName));
         const parsed = response.parsed || {};
@@ -58,7 +62,7 @@ export async function getMarketAudit(brandName) {
 
   try {
     const chat = systemAuditCore
-      .chat("gpt-4o")
+      .chat("gpt-4o", { middlewares: productionMiddlewares })
       .withInstructions(MARKET_ANALYST_INSTRUCTIONS)
       .withSchema(MarketSchema)
       .withTemperature(0)

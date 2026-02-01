@@ -1,2 +1,4 @@
 packages:
   - "packages/*"
+  - "examples/applications/*"
+  - "examples/applications/*/server"

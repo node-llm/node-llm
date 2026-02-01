@@ -68,7 +68,8 @@ export class Chat extends BaseChat {
 
     const coreChat = llmInstance.chat(model || undefined, {
       messages: history,
-      ...this.localOptions
+      ...this.localOptions,
+      middlewares: this.customMiddlewares
     }) as any;
 
     // Register tools
@@ -334,16 +335,38 @@ export class Chat extends BaseChat {
 }
 
 /**
+ * Helper to find the correct table property in the prisma client.
+ * Prisma usually camelCases model names (e.g., AssistantChat -> assistantChat),
+ * but mapping can vary based on configuration.
+ */
+function getTable(prisma: any, tableName: string): any {
+  if (prisma[tableName]) return prisma[tableName];
+
+  // Try case-insensitive match if not found directly
+  const keys = Object.keys(prisma).filter((k) => !k.startsWith("$") && !k.startsWith("_"));
+  const match = keys.find((k) => k.toLowerCase() === tableName.toLowerCase());
+
+  if (match) return prisma[match];
+
+  // If still not found, search for the model name if it's different from the property name
+  // but for now, we'll just throw a clear error
+  throw new Error(
+    `[@node-llm/orm] Prisma table "${tableName}" not found. Available tables: ${keys.join(", ")}`
+  );
+}
+
+/**
  * Convenience method to create a new chat session.
  */
 export async function createChat<T = Record<string, any>>(
-  prisma: PrismaClient,
+  prisma: any,
   llm: NodeLLMCore,
   options: ChatOptions & { tableNames?: TableNames } & T = {} as any
 ): Promise<Chat> {
   const chatTable = options.tableNames?.chat || "llmChat";
 
   // Extract known options so we don't double-pass them or pass them incorrectly
+  // runtime options should NOT be persisted to DB
   const {
     model,
     provider,
@@ -352,16 +375,32 @@ export async function createChat<T = Record<string, any>>(
     tableNames: _tableNames,
     debug: _debug,
     persistence: _persistence,
+    middlewares: _middlewares,
+    maxToolCalls: _maxToolCalls,
+    thinking: _thinking,
+    temperature: _temperature,
+    maxTokens: _maxTokens,
+    headers: _headers,
+    requestTimeout: _requestTimeout,
+    params: _params,
     ...extras
   } = options;
 
-  const record = await (prisma as any)[chatTable].create({
+  if (options.debug) {
+    const keys = Object.keys(prisma).filter((k) => !k.startsWith("$") && !k.startsWith("_"));
+    console.log(
+      `[@node-llm/orm] createChat: table=${chatTable}, availableTables=${keys.join(", ")}`
+    );
+  }
+
+  const table = getTable(prisma, chatTable);
+  const record = await table.create({
     data: {
       model,
       provider,
       instructions,
       metadata: metadata ?? null,
-      ...extras
+      ...(extras as any)
     }
   });
 
@@ -372,16 +411,25 @@ export async function createChat<T = Record<string, any>>(
  * Convenience method to load an existing chat session.
  */
 export async function loadChat(
-  prisma: PrismaClient,
+  prisma: any,
   llm: NodeLLMCore,
   chatId: string,
-  options: ChatOptions & { tableNames?: TableNames } = {}
+  options: ChatOptions & { tableNames?: TableNames; debug?: boolean } = {}
 ): Promise<Chat | null> {
   const chatTable = options.tableNames?.chat || "llmChat";
-  const record = await (prisma as any)[chatTable].findUnique({
+
+  if (options.debug) {
+    const keys = Object.keys(prisma).filter((k) => !k.startsWith("$") && !k.startsWith("_"));
+    console.log(`[@node-llm/orm] loadChat: table=${chatTable}, availableTables=${keys.join(", ")}`);
+  }
+
+  const table = getTable(prisma, chatTable);
+  const record = await table.findUnique({
     where: { id: chatId }
   });
 
   if (!record) return null;
+
+  // Reconstruct chat with options from DB or manual overrides if needed
   return new Chat(prisma, llm, record, options, options.tableNames);
 }

@@ -1,3 +1,4 @@
+import { Middleware } from "../types/Middleware.js";
 import { Message } from "./Message.js";
 import { ToolResolvable } from "./Tool.js";
 import { Schema } from "../schema/Schema.js";
@@ -7,6 +8,7 @@ import { ResponseFormat, ThinkingConfig } from "../providers/Provider.js";
 
 export interface ChatOptions {
   systemPrompt?: string;
+  middlewares?: Middleware[];
   messages?: Message[];
   tools?: ToolResolvable[];
   temperature?: number;

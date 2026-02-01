@@ -104,6 +104,41 @@ const llm = createLLM({
 
 ---
 
+## 🔌 Middleware System
+
+NodeLLM 1.9.0 introduces a powerful lifecycle hook system for audit, security, and observability.
+
+```ts
+import { createLLM, PIIMaskMiddleware, UsageLoggerMiddleware } from "@node-llm/core";
+
+const llm = createLLM({
+  provider: "openai",
+  middlewares: [
+    new PIIMaskMiddleware(), // Redact emails/phone numbers automatically
+    new UsageLoggerMiddleware() // Log structured token usage & costs
+  ]
+});
+
+// All chats created from this instance inherit these middlewares
+const chat = llm.chat("gpt-4o");
+```
+
+### Decisive Tool Safety
+
+Middlewares can control the engine's recovery strategy during tool failures.
+
+```ts
+const safetyMiddleware = {
+  name: "Audit",
+  onToolCallError: async (ctx, tool, error) => {
+    if (tool.function.name === "delete_user") return "STOP"; // Kill the loop
+    return "RETRY"; // Attempt recovery
+  }
+};
+```
+
+---
+
 ## 💾 Ecosystem
 
 Looking for persistence? use **[@node-llm/orm](https://www.npmjs.com/package/@node-llm/orm)**.

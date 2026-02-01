@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import type { Usage } from "@node-llm/core";
+import type { Usage, Middleware } from "@node-llm/core";
 
 export interface ChatRecord {
   id: string;
@@ -31,6 +31,7 @@ export interface ChatOptions {
   maxToolCalls?: number;
   requestTimeout?: number;
   params?: Record<string, any>;
+  middlewares?: Middleware[];
 }
 
 export interface UserHooks {
@@ -52,6 +53,7 @@ export abstract class BaseChat<
   public id: string;
   protected localOptions: any = {};
   protected customTools: any[] = [];
+  protected customMiddlewares: Middleware[] = [];
   protected userHooks: UserHooks = {
     onToolCallStart: [],
     onToolCallEnd: [],
@@ -78,6 +80,11 @@ export abstract class BaseChat<
     this.localOptions.maxToolCalls = options.maxToolCalls;
     this.localOptions.requestTimeout = options.requestTimeout;
     this.localOptions.params = options.params;
+
+    // Initialize middlewares
+    if (options.middlewares) {
+      this.customMiddlewares = options.middlewares;
+    }
   }
 
   protected log(...args: any[]) {
