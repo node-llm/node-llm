@@ -12,10 +12,10 @@ import { dirname, join } from "path";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-const monitoringDir = join(__dirname, "../../monitoring-data");
+const monitoringDir = join(__dirname, "../monitoring-data");
 
 // Create the monitoring router with file adapter
-const fileAdapter = new FileAdapter({ directory: monitoringDir });
+const fileAdapter = new FileAdapter(join(monitoringDir, "monitoring.log"));
 
 export const { GET: monitorGET, POST: monitorPOST } = createMonitoringRouter(fileAdapter, {
   basePath: "/monitor"
