@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.4.0] - 2026-02-01 (@node-llm/orm)
+
+### Features
+
+- **Middleware Support**: Native support for LLM middlewares in `BaseChat` and `Chat` adapters.
+- **Persistence Strictness**: Automatically strips NodeLLM runtime options (middlewares, temperature, thinking, etc.) before persisting chat records to the database.
+- **Improved Table Lookup**: Robust Prisma table detection with case-insensitive matching and improved error messaging.
+
+## [0.4.0] - 2026-02-01 (@node-llm/testing)
+
+### Features
+
+- **Middleware Support**: Added comprehensive middleware orchestration in `Mocker`, allowing testing of middleware logic with mocked LLM calls.
+- **History Tracking**: Refined internal call history tracking with improved metadata capture.
+
 ## [0.3.0] - 2026-01-27 (@node-llm/orm)
 
 ### Features
