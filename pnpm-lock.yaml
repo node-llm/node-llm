@@ -87,8 +87,8 @@ importers:
         specifier: ^1.10.0
         version: 1.10.0
       '@node-llm/monitor':
-        specifier: file:../../../../../node-llm-monitor
-        version: file:../node-llm-monitor(@node-llm/core@1.10.0)(@node-llm/orm@0.4.0(@node-llm/core@1.10.0)(@prisma/client@5.22.0(prisma@5.22.0)))(@prisma/client@5.22.0(prisma@5.22.0))
+        specifier: ^0.1.1
+        version: 0.1.1(@node-llm/core@1.10.0)(@node-llm/orm@0.4.0(@node-llm/core@1.10.0)(@prisma/client@5.22.0(prisma@5.22.0)))(@prisma/client@5.22.0(prisma@5.22.0))
       '@node-llm/testing':
         specifier: ^0.4.0
         version: 0.4.0
@@ -127,8 +127,8 @@ importers:
         specifier: ^1.10.0
         version: 1.10.0
       '@node-llm/monitor':
-        specifier: file:../../../../node-llm-monitor
-        version: file:../node-llm-monitor(@node-llm/core@1.10.0)(@node-llm/orm@0.4.0(@node-llm/core@1.10.0)(@prisma/client@5.22.0(prisma@5.22.0)))(@prisma/client@5.22.0(prisma@5.22.0))
+        specifier: ^0.1.1
+        version: 0.1.1(@node-llm/core@1.10.0)(@node-llm/orm@0.4.0(@node-llm/core@1.10.0)(@prisma/client@5.22.0(prisma@5.22.0)))(@prisma/client@5.22.0(prisma@5.22.0))
       '@node-llm/orm':
         specifier: ^0.4.0
         version: 0.4.0(@node-llm/core@1.10.0)(@prisma/client@5.22.0(prisma@5.22.0))
@@ -806,8 +806,8 @@ packages:
     resolution: {integrity: sha512-Q5m7unmirQB1o63yJ/dnu+jCyVJAdmnaBXkpLMErdRKlb/g0zmCXToOsUvppGIdid1symQE7K0g6njniNcjhlQ==}
     engines: {node: '>=20.0.0'}
 
-  '@node-llm/monitor@file:../node-llm-monitor':
-    resolution: {directory: ../node-llm-monitor, type: directory}
+  '@node-llm/monitor@0.1.1':
+    resolution: {integrity: sha512-puFanaduqJ1/UoSrZvP+9qzuaQECKbIpxTLXvqMgSyqwv7YcXFws4HEfJS1iuex84FTyzMBbyyseOOqXXNf5bg==}
     peerDependencies:
       '@node-llm/core': '>=1.10.0'
       '@node-llm/orm': '>=0.4.0'
@@ -4945,7 +4945,7 @@ snapshots:
       zod: 3.25.76
       zod-to-json-schema: 3.25.1(zod@3.25.76)
 
-  '@node-llm/monitor@file:../node-llm-monitor(@node-llm/core@1.10.0)(@node-llm/orm@0.4.0(@node-llm/core@1.10.0)(@prisma/client@5.22.0(prisma@5.22.0)))(@prisma/client@5.22.0(prisma@5.22.0))':
+  '@node-llm/monitor@0.1.1(@node-llm/core@1.10.0)(@node-llm/orm@0.4.0(@node-llm/core@1.10.0)(@prisma/client@5.22.0(prisma@5.22.0)))(@prisma/client@5.22.0(prisma@5.22.0))':
     dependencies:
       '@node-llm/core': 1.10.0
     optionalDependencies:
@@ -5914,14 +5914,6 @@ snapshots:
       magic-string: 0.30.21
     optionalDependencies:
       vite: 7.3.0(@types/node@25.0.3)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.21.0)(yaml@2.8.2)
-
-  '@vitest/mocker@4.0.17(vite@7.3.0(@types/node@25.1.0)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.21.0)(yaml@2.8.2))':
-    dependencies:
-      '@vitest/spy': 4.0.17
-      estree-walker: 3.0.3
-      magic-string: 0.30.21
-    optionalDependencies:
-      vite: 7.3.0(@types/node@25.1.0)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.21.0)(yaml@2.8.2)
 
   '@vitest/pretty-format@4.0.17':
     dependencies:
@@ -9085,7 +9077,7 @@ snapshots:
   vitest@4.0.17(@types/node@25.1.0)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.21.0)(yaml@2.8.2):
     dependencies:
       '@vitest/expect': 4.0.17
-      '@vitest/mocker': 4.0.17(vite@7.3.0(@types/node@25.1.0)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.21.0)(yaml@2.8.2))
+      '@vitest/mocker': 4.0.17(vite@7.3.0(@types/node@25.0.3)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.21.0)(yaml@2.8.2))
       '@vitest/pretty-format': 4.0.17
       '@vitest/runner': 4.0.17
       '@vitest/snapshot': 4.0.17

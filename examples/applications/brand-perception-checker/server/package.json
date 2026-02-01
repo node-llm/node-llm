@@ -14,7 +14,7 @@
   "license": "ISC",
   "dependencies": {
     "@node-llm/core": "^1.10.0",
-    "@node-llm/monitor": "^0.1.0",
+    "@node-llm/monitor": "^0.1.1",
     "@node-llm/testing": "^0.4.0",
     "axios": "^1.13.2",
     "cors": "^2.8.5",

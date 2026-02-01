@@ -5,6 +5,7 @@
  */
 
 import { createFileMonitor } from "@node-llm/monitor";
+import { existsSync, mkdirSync } from "fs";
 import { fileURLToPath } from "url";
 import { dirname, join } from "path";
 
@@ -13,10 +14,12 @@ const __dirname = dirname(__filename);
 
 // Store monitoring data in a dedicated directory
 const monitoringDir = join(__dirname, "../../monitoring-data");
+if (!existsSync(monitoringDir)) {
+  mkdirSync(monitoringDir, { recursive: true });
+}
 
 // Create monitor middleware using file adapter
-export const monitorMiddleware = createFileMonitor({
-  directory: monitoringDir,
+export const monitorMiddleware = createFileMonitor(join(monitoringDir, "monitoring.log"), {
   captureContent: true
 });
 

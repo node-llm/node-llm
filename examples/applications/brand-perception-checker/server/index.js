@@ -61,10 +61,10 @@ import { monitorGET, monitorPOST } from "./monitor-route.js";
 
 // Handle all monitor routes using app.use for path prefix matching
 app.use("/monitor", async (req, res) => {
-  const request = new Request(`http://localhost${req.url}`, {
+  const request = new Request(`http://localhost${req.originalUrl}`, {
     method: req.method,
     headers: req.headers,
-    body: req.method === "POST" ? JSON.stringify(req.body) : undefined
+    body: (req.method === "POST" || req.method === "PUT") ? JSON.stringify(req.body) : undefined
   });
   
   const handler = req.method === "GET" ? monitorGET : monitorPOST;
