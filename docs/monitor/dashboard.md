@@ -37,27 +37,41 @@ It provides:
 
 ## Integration
 
-### Express / Fastify / Node.js HTTP
+### Express (Recommended)
 
-Use `createMonitorMiddleware` to mount the dashboard on any Express-compatible server:
+The easiest way to integrate the dashboard is using the `api()` method on your monitor instance:
 
 ```typescript
 import express from "express";
-import { Monitor, MemoryAdapter } from "@node-llm/monitor";
-import { createMonitorMiddleware } from "@node-llm/monitor/ui";
+import { Monitor } from "@node-llm/monitor";
 
 const app = express();
+const monitor = Monitor.memory();
 
-// 1. Setup Monitor
-const store = new MemoryAdapter();
-const monitor = new Monitor({ store });
-
-// 2. Mount Dashboard (share the same store)
-app.use(createMonitorMiddleware(store, { basePath: "/monitor" }));
+// Dashboard handles its own routing under basePath
+app.use(monitor.api({ basePath: "/monitor" }));
 
 app.listen(3001, () => {
   console.log("Dashboard at http://localhost:3001/monitor");
 });
+```
+
+### Manual Integration (Non-Express)
+
+For standard Node.js HTTP servers or custom mount logic, use the `MonitorDashboard` class directly:
+
+```typescript
+import { createServer } from "node:http";
+import { MonitorDashboard, MemoryAdapter } from "@node-llm/monitor";
+
+const store = new MemoryAdapter();
+const dashboard = new MonitorDashboard(store, { basePath: "/monitor" });
+
+const server = createServer(async (req, res) => {
+  await dashboard.handleRequest(req, res);
+});
+
+server.listen(3001);
 ```
 
 ### Next.js App Router

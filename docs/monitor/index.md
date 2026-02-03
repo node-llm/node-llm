@@ -24,7 +24,11 @@ NodeLLM Monitor provides production-grade observability for your AI applications
 ### Installation
 
 ```bash
-npm install @node-llm/monitor
+# Core monitor package
+pnpm add @node-llm/monitor
+
+# Optional: OpenTelemetry integration
+pnpm add @node-llm/monitor-otel
 ```
 
 ---
@@ -70,44 +74,43 @@ const response = await chat.ask("Hello!");
 
 ### Built-in Dashboard
 
-Launch a visual dashboard to explore your data:
-
-```typescript
-import { createServer } from "node:http";
-import { MonitorDashboard } from "@node-llm/monitor/ui";
-import { MemoryAdapter } from "@node-llm/monitor";
-
-// Create a store (can also use PrismaAdapter or FileAdapter)
-const store = new MemoryAdapter();
-
-// Create dashboard instance
-const dashboard = new MonitorDashboard(store, { 
-  basePath: "/monitor",
-  cors: false, // Recommended: same-origin only for security
-});
-
-// Start server
-const server = createServer(async (req, res) => {
-  await dashboard.handleRequest(req, res);
-});
-
-server.listen(3001, () => {
-  console.log("Dashboard at http://localhost:3001/monitor");
-});
-```
-
-Or with Express:
+The easiest way to view your telemetry is through the built-in dashboard. You can mount it to any Express server using the ergonomic `monitor.api()` shorthand:
 
 ```typescript
 import express from "express";
-import { MonitorDashboard } from "@node-llm/monitor/ui";
+import { Monitor } from "@node-llm/monitor";
 
 const app = express();
-const dashboard = new MonitorDashboard(store, { basePath: "/monitor" });
+const monitor = Monitor.memory();
 
-app.use(dashboard.middleware());
+// Launch dashboard at http://localhost:3001/monitor
+app.use(monitor.api({ basePath: "/monitor" }));
+
 app.listen(3001);
 ```
+
+For advanced usage or non-Express environments, see the [Dashboard Guide](/monitor/dashboard.html).
+
+---
+
+## OpenTelemetry Bridge
+
+If you are using the **Vercel AI SDK**, LangChain, or any other library instrumented with OpenTelemetry, you can use our zero-code bridge to capture AI-specific metrics.
+
+```typescript
+import { NodeTracerProvider } from "@opentelemetry/sdk-trace-node";
+import { NodeLLMSpanProcessor } from "@node-llm/monitor-otel";
+import { Monitor } from "@node-llm/monitor";
+
+const monitor = Monitor.memory();
+const provider = new NodeTracerProvider();
+
+// The span processor automatically extracts model usage, costs, and tools
+provider.addSpanProcessor(new NodeLLMSpanProcessor(monitor.getStore()));
+provider.register();
+```
+
+See the [OpenTelemetry Guide](/monitor/otel.html) for more details.
 
 ---
 
@@ -237,6 +240,7 @@ console.log(metrics.timeSeries);  // Time series data
 
 - [Prisma Adapter Setup](/monitor/prisma.html) - Production database integration
 - [Dashboard Guide](/monitor/dashboard.html) - Explore the visual interface
+- [OpenTelemetry Guide](/monitor/otel.html) - Instrumented trace extraction
 - [API Reference](/monitor/api.html) - Full API documentation
 - [Blog: NodeLLM Monitor](https://www.eshaiju.com/blog/nodellm-monitor-production-observability) - Deep dive into production observability
 
