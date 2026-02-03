@@ -83,10 +83,10 @@ import { Monitor } from "@node-llm/monitor";
 const app = express();
 const monitor = Monitor.memory();
 
-// Launch dashboard at http://localhost:3001/monitor
+// Launch dashboard at http://localhost:3333/monitor
 app.use(monitor.api({ basePath: "/monitor" }));
 
-app.listen(3001);
+app.listen(3333);
 ```
 
 For advanced usage or non-Express environments, see the [Dashboard Guide](/monitor/dashboard.html).
@@ -243,4 +243,3 @@ console.log(metrics.timeSeries);  // Time series data
 - [OpenTelemetry Guide](/monitor/otel.html) - Instrumented trace extraction
 - [API Reference](/monitor/api.html) - Full API documentation
 - [Blog: NodeLLM Monitor](https://www.eshaiju.com/blog/nodellm-monitor-production-observability) - Deep dive into production observability
-

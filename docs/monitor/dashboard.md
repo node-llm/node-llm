@@ -51,8 +51,8 @@ const monitor = Monitor.memory();
 // Dashboard handles its own routing under basePath
 app.use(monitor.api({ basePath: "/monitor" }));
 
-app.listen(3001, () => {
-  console.log("Dashboard at http://localhost:3001/monitor");
+app.listen(3333, () => {
+  console.log("Dashboard at http://localhost:3333/monitor");
 });
 ```
 
@@ -71,7 +71,7 @@ const server = createServer(async (req, res) => {
   await dashboard.handleRequest(req, res);
 });
 
-server.listen(3001);
+server.listen(3333);
 ```
 
 ### Next.js App Router
@@ -146,12 +146,12 @@ const server = createServer(async (req, res) => {
   await dashboard.handleRequest(req, res);
 });
 
-server.listen(3001, () => {
-  console.log("Dashboard at http://localhost:3001");
+server.listen(3333, () => {
+  console.log("Dashboard at http://localhost:3333");
 });
 ```
 
-See `examples/dashboard.ts` in the repository for a complete implementation.
+See `examples/demo/index.ts` in the repository for a complete implementation.
 
 ---
 
@@ -170,10 +170,10 @@ The dashboard backend exposes these endpoints (relative to your `basePath`):
 
 ```bash
 # Get traces
-curl "http://localhost:3001/monitor/api/traces?limit=10"
+curl "http://localhost:3333/monitor/api/traces?limit=10"
 
 # Get specific request details
-curl "http://localhost:3001/monitor/api/events?requestId=req_12345"
+curl "http://localhost:3333/monitor/api/events?requestId=req_12345"
 ```
 
 
