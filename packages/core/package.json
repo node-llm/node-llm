@@ -60,10 +60,11 @@
     "dev": "tsc -w",
     "lint": "tsc --noEmit",
     "test": "vitest run",
+    "test:docs": "vitest run test/docs",
     "test:watch": "vitest",
     "prepack": "npm run build && cp ../../CHANGELOG.md ./CHANGELOG.md",
     "postpack": "rm ./CHANGELOG.md",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "npm run build && npm run test:docs"
   },
   "dependencies": {
     "zod": "^3.23.8",

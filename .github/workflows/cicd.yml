@@ -10,6 +10,8 @@ on:
       - "pnpm-lock.yaml"
       - "tsconfig.base.json"
       - ".github/workflows/cicd.yml"
+      - "README.md"
+      - "docs/**"
   pull_request:
     branches: ["main"]
     paths:
@@ -19,6 +21,8 @@ on:
       - "pnpm-lock.yaml"
       - "tsconfig.base.json"
       - ".github/workflows/cicd.yml"
+      - "README.md"
+      - "docs/**"
   workflow_call:
 
 # Define default permissions for this workflow
@@ -66,6 +70,21 @@ jobs:
         env:
           # VCR mode - use recorded cassettes
           VCR_MODE: replay
+
+      - name: Verify documentation examples (Core)
+        run: |
+          cd packages/core
+          npm run test:docs
+
+      - name: Verify documentation examples (ORM)
+        run: |
+          cd packages/orm
+          npm run test:docs
+
+      - name: Verify documentation examples (Testing)
+        run: |
+          cd packages/testing
+          npm run test:docs
 
   publish:
     name: Build + Publish

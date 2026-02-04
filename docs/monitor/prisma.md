@@ -152,28 +152,33 @@ const byProvider = await prisma.monitoring_events.groupBy({
 });
 ```
 
----
-
 ## Dashboard Integration
 
-To view your Prisma data in the visual dashboard, mount the dashboard middleware in your application:
+To view your Prisma data in the visual dashboard, you can use the ergonomic `monitor.api()` shorthand for Express-based applications:
 
 ```typescript
 import express from "express";
 import { PrismaClient } from "@prisma/client";
-import { PrismaAdapter } from "@node-llm/monitor";
-import { createMonitorMiddleware } from "@node-llm/monitor/ui";
+import { createPrismaMonitor } from "@node-llm/monitor";
 
 const app = express();
 const prisma = new PrismaClient();
-const adapter = new PrismaAdapter(prisma);
+const monitor = createPrismaMonitor(prisma);
 
-// Mount dashboard (handles its own routing under basePath)
-app.use(createMonitorMiddleware(adapter, { basePath: "/monitor" }));
+// Dashboard handles its own routing under basePath
+app.use(monitor.api({ basePath: "/monitor" }));
 
 app.listen(3001, () => {
   console.log("Dashboard at http://localhost:3001/monitor");
 });
+```
+
+For non-Express environments or manual routing, you can use the `createMonitorMiddleware` factory directly:
+
+```typescript
+import { createMonitorMiddleware, PrismaAdapter } from "@node-llm/monitor";
+const adapter = new PrismaAdapter(prisma);
+app.use(createMonitorMiddleware(adapter, { basePath: "/monitor" }));
 ```
 
 The dashboard provides:

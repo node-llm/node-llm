@@ -10,8 +10,10 @@
   "scripts": {
     "build": "tsc",
     "test": "vitest run",
+    "test:docs": "vitest run test/docs",
     "test:record": "VCR_MODE=record vitest run",
-    "test:vitest": "vitest run"
+    "test:vitest": "vitest run",
+    "prepublishOnly": "npm run build && npm run test:docs"
   },
   "dependencies": {},
   "devDependencies": {

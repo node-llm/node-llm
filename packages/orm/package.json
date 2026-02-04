@@ -24,10 +24,11 @@
   "scripts": {
     "build": "prisma generate --schema=schema.prisma && tsc",
     "test": "vitest run",
+    "test:docs": "vitest run test/docs",
     "test:watch": "vitest",
     "prepack": "npm run build && cp ../../CHANGELOG.md ./CHANGELOG.md",
     "postpack": "rm ./CHANGELOG.md",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "npm run build && npm run test:docs"
   },
   "keywords": [
     "llm",
