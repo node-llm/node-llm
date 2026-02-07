@@ -21,162 +21,35 @@ description: Compose LLM calls into intelligent workflows that route, research, 
 
 ---
 
-This guide shows you how to compose NodeLLM primitives into more sophisticated patterns. Nothing here is magic—it's just tools calling other LLMs.
+This guide covers advanced agentic patterns for when you need more control than the [Agent class](../core-features/agents.html) provides. For most use cases, start with the Agent class first.
 
 ---
 
-## The Core Idea
+## Lower-Level Patterns
 
-An "agent" in NodeLLM is just a tool that happens to call another LLM inside its `execute()` method. That's it. No special framework, no orchestration layer—just composition.
+For cases where you need more control, you can build agents as tools that call other LLMs directly.
 
 ```typescript
-class MyAgent extends Tool {
-  async execute(args) {
-    // This tool IS an agent because it calls another LLM
+import { Tool, z, createLLM } from "@node-llm/core";
+
+class MathTutor extends Tool {
+  name = "math_tutor";
+  description = "Explains math concepts";
+  schema = z.object({ question: z.string() });
+
+  async execute({ question }) {
     const response = await createLLM({ provider: "openai" })
       .chat("gpt-4o")
-      .ask(args.query);
+      .system("You are a math tutor. Explain concepts clearly.")
+      .ask(question);
     return response.content;
   }
 }
-```
 
-Everything below builds on this simple pattern.
-
----
-
-## Model Routing
-
-Route requests to the best model for the job. Useful when you want GPT-4 for code, Claude for creative writing, and Gemini for factual lookups.
-
-```typescript
-import { createLLM, Tool, z } from "@node-llm/core";
-
-class SmartRouter extends Tool {
-  name = "smart_router";
-  description = "Routes to the best model for the task";
-  schema = z.object({
-    query: z.string().describe("The user's request")
-  });
-
-  async execute({ query }) {
-    // Step 1: Classify the task with a fast model
-    const taskType = await this.classify(query);
-
-    // Step 2: Route to specialist
-    const specialists = {
-      code: { provider: "openai", model: "gpt-4o" },
-      creative: { provider: "anthropic", model: "claude-sonnet-4-20250514" },
-      factual: { provider: "gemini", model: "gemini-2.0-flash" }
-    };
-
-    const { provider, model } = specialists[taskType] || specialists.factual;
-    const response = await createLLM({ provider }).chat(model).ask(query);
-    return response.content;
-  }
-
-  private async classify(query: string) {
-    const response = await createLLM({ provider: "openai" })
-      .chat("gpt-4o-mini")
-      .system("Classify as: code, creative, or factual. One word only.")
-      .ask(query);
-    return response.content.toLowerCase().trim();
-  }
-}
-```
-
----
-
-## RAG (Retrieval-Augmented Generation)
-
-Combine vector search with LLM generation. NodeLLM provides `llm.embed()` for embeddings; you bring your own vector store.
-
-This pattern is demonstrated in the [HR Chatbot Example](https://github.com/node-llm/node-llm/tree/main/examples/applications/hr-chatbot-rag).
-
-```typescript
-import { createLLM, Tool, z } from "@node-llm/core";
-import { PrismaClient } from "@prisma/client";
-
-const prisma = new PrismaClient();
+// Use as a tool in a coordinator
 const llm = createLLM({ provider: "openai" });
-
-class KnowledgeSearch extends Tool {
-  name = "search_knowledge";
-  description = "Searches internal documents for relevant context";
-  schema = z.object({
-    query: z.string().describe("What to search for")
-  });
-
-  async execute({ query }) {
-    // 1. Embed the query
-    const embedding = await llm.embed(query);
-
-    // 2. Vector search with pgvector
-    const docs = await prisma.$queryRaw`
-      SELECT title, content
-      FROM documents
-      ORDER BY embedding <-> ${embedding.vector}::vector
-      LIMIT 3
-    `;
-
-    // 3. Format as context
-    return docs.map(d => `[${d.title}]: ${d.content}`).join("\n\n");
-  }
-}
-
-// Usage
-const chat = llm
-  .chat("gpt-4o")
-  .system("Answer based on the search results. Cite sources.")
-  .withTool(new KnowledgeSearch());
-
-await chat.ask("What's our vacation policy?");
-```
-
----
-
-## Multi-Agent Collaboration
-
-Tools can call other tools (via the coordinator), or tools can directly spawn their own LLM calls. Here's the "research then write" pattern:
-
-```typescript
-import { createLLM, Tool, z } from "@node-llm/core";
-
-class Researcher extends Tool {
-  name = "research";
-  description = "Gathers facts about a topic";
-  schema = z.object({ topic: z.string() });
-
-  async execute({ topic }) {
-    const response = await createLLM({ provider: "gemini" })
-      .chat("gemini-2.0-flash")
-      .system("List 5 key facts about the topic.")
-      .ask(topic);
-    return response.content;
-  }
-}
-
-class Writer extends Tool {
-  name = "write";
-  description = "Writes content from research notes";
-  schema = z.object({ notes: z.string() });
-
-  async execute({ notes }) {
-    const response = await createLLM({ provider: "anthropic" })
-      .chat("claude-sonnet-4-20250514")
-      .system("Write a concise article from these notes.")
-      .ask(notes);
-    return response.content;
-  }
-}
-
-// Coordinator orchestrates the flow
-const coordinator = createLLM({ provider: "openai" })
-  .chat("gpt-4o")
-  .system("First research the topic, then write an article.")
-  .withTools([Researcher, Writer]);
-
-await coordinator.ask("Write about TypeScript 5.4 features");
+const chat = llm.chat("gpt-4o").withTool(MathTutor);
+await chat.ask("Help me understand calculus");
 ```
 
 ---
@@ -263,6 +136,7 @@ class RiskyTool extends Tool {
 
 ## Next Steps
 
+- [Agent Class Guide](../core-features/agents.html) — The recommended way to build agents with a declarative DSL
 - [HR Chatbot RAG](https://github.com/node-llm/node-llm/tree/main/examples/applications/hr-chatbot-rag) — Full RAG implementation with Prisma + pgvector
 - [Brand Perception Checker](https://github.com/node-llm/node-llm/tree/main/examples/applications/brand-perception-checker) — Multi-tool agent with web search
 - [Tool Calling Guide](../core-features/tools.html) — Deep dive on tool patterns and safety

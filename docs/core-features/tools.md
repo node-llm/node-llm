@@ -272,6 +272,48 @@ async execute({ date }) {
 }
 ```
 
+### ToolHalt — Early Loop Termination <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v1.11.0+</span>
+
+Sometimes a tool needs to stop the agentic loop immediately without making another LLM call. Use `this.halt()` to return a message directly to the user and break the loop.
+
+```ts
+import { Tool, z } from "@node-llm/core";
+
+class PaymentTool extends Tool {
+  name = "process_payment";
+  description = "Process a payment";
+  schema = z.object({
+    amount: z.number().describe("Amount in dollars"),
+    recipient: z.string().describe("Recipient name")
+  });
+
+  async execute({ amount, recipient }) {
+    // Halt on large amounts — requires human approval
+    if (amount > 10000) {
+      return this.halt(`Payment of $${amount} to ${recipient} requires manager approval.`);
+    }
+
+    // Halt on invalid amounts
+    if (amount <= 0) {
+      return this.halt(`Invalid payment amount: $${amount}. Must be positive.`);
+    }
+
+    // Normal execution continues
+    return { success: true, transactionId: "TXN-123" };
+  }
+}
+```
+
+**When to use `halt()`:**
+- **Security boundaries**: Block dangerous operations (delete, privileged access)
+- **Approval workflows**: Pause for human review on high-stakes actions
+- **Validation failures**: Stop immediately on invalid input instead of retrying
+- **Resource limits**: Halt when quotas or rate limits are exceeded
+
+**Difference from throwing errors:**
+- `throw new ToolError(...)` — Stops the loop and bubbles an exception
+- `return this.halt(...)` — Stops the loop gracefully and returns the message as the final response
+
 ---
 
 ## Advanced: Raw JSON Schema
