@@ -139,6 +139,54 @@ const safetyMiddleware = {
 
 ---
 
+## 🤖 Agent Class
+
+Define reusable, class-configured agents with a declarative DSL:
+
+```ts
+import { Agent, Tool, z } from "@node-llm/core";
+
+class LookupOrderTool extends Tool<{ orderId: string }> {
+  name = "lookup_order";
+  description = "Look up an order by ID";
+  schema = z.object({ orderId: z.string() });
+
+  async execute({ orderId }: { orderId: string }) {
+    return { status: "shipped", eta: "Tomorrow" };
+  }
+}
+
+class SupportAgent extends Agent {
+  static model = "gpt-4.1";
+  static instructions = "You are a helpful support agent.";
+  static tools = [LookupOrderTool];
+  static temperature = 0.2;
+}
+
+// Use anywhere in your app
+const agent = new SupportAgent();
+const response = await agent.ask("Where is order #123?");
+console.log(response.content);
+```
+
+### ToolHalt - Early Loop Termination
+
+Stop the agentic loop early when a definitive answer is found:
+
+```ts
+class FinalAnswerTool extends Tool<{ answer: string }> {
+  name = "final_answer";
+  description = "Return the final answer to the user";
+  schema = z.object({ answer: z.string() });
+
+  async execute({ answer }: { answer: string }) {
+    return this.halt(answer); // Stops the loop, returns this result
+  }
+}
+```
+
+---
+
 ## 💾 Ecosystem
 
 Looking for persistence? use **[@node-llm/orm](https://www.npmjs.com/package/@node-llm/orm)**.

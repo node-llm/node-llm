@@ -63,21 +63,55 @@ function sync() {
     "thoughtSignature"
   ];
 
+  // Check for AgentSession model (v0.5.0+)
+  const hasAgentSession =
+    userSchema.includes("LlmAgentSession") || userSchema.includes("AgentSession");
+
   const missingFields = requiredFields.filter((field) => !userSchema.includes(field));
 
-  if (missingFields.length === 0) {
-    console.log("✓ Schema is already up to date with @node-llm/orm v0.2.0 features.");
+  if (missingFields.length === 0 && hasAgentSession) {
+    console.log("✓ Schema is already up to date with @node-llm/orm v0.5.0 features.");
     return;
   }
 
-  console.log("🛠  Syncing missing fields for Extended Thinking support...");
-  console.log(`\nDetected missing fields: ${missingFields.join(", ")}`);
+  if (missingFields.length > 0) {
+    console.log("🛠  Syncing missing fields for Extended Thinking support...");
+    console.log(`\nDetected missing fields: ${missingFields.join(", ")}`);
+  }
+
+  if (!hasAgentSession) {
+    console.log("\n🤖 Missing AgentSession support (v0.5.0+)");
+    console.log(
+      "   AgentSession enables persistent agent conversations with the 'Code Wins' pattern."
+    );
+    console.log("\n   To add AgentSession, copy the migration from:");
+    console.log("   node_modules/@node-llm/orm/migrations/add_agent_session.sql");
+    console.log("\n   Or add this to your schema.prisma:");
+    console.log(`
+model LlmAgentSession {
+  id         String   @id @default(uuid())
+  agentClass String
+  chatId     String   @unique
+  metadata   Json?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  chat       LlmChat  @relation(fields: [chatId], references: [id], onDelete: Cascade)
+
+  @@index([agentClass])
+  @@index([createdAt])
+}
+
+// Also add to LlmChat:
+// agentSession LlmAgentSession?
+`);
+  }
 
   console.log("\nTo update your schema safely, follow the Reference Schema at:");
   console.log("https://github.com/node-llm/node-llm/blob/main/packages/orm/schema.prisma");
 
   console.log("\nOr run this to generate a versioned migration:");
-  console.log("  npx prisma migrate dev --name add_reasoning_support");
+  console.log("  npx prisma migrate dev --name add_agent_session");
 }
 
 function main() {

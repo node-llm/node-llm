@@ -1,6 +1,16 @@
 import { ToolExecutionMode } from "../constants.js";
 import { ToolError } from "../errors/index.js";
-import { ToolCall, ToolDefinition } from "./Tool.js";
+import { ToolCall, ToolDefinition, ToolHalt } from "./Tool.js";
+
+/**
+ * Result of a tool execution, including halt status
+ */
+export interface ToolExecutionResult {
+  role: "tool";
+  tool_call_id: string;
+  content: string;
+  halted: boolean;
+}
 
 export class ToolHandler {
   static shouldExecuteTools(toolCalls: ToolCall[] | undefined, mode?: ToolExecutionMode): boolean {
@@ -23,7 +33,7 @@ export class ToolHandler {
     tools: ToolDefinition[] | undefined,
     onStart?: (call: ToolCall) => void,
     onEnd?: (call: ToolCall, result: unknown) => void
-  ): Promise<{ role: "tool"; tool_call_id: string; content: string }> {
+  ): Promise<ToolExecutionResult> {
     if (onStart) onStart(toolCall);
 
     const tool = tools?.find((t) => t.function.name === toolCall.function.name);
@@ -31,14 +41,22 @@ export class ToolHandler {
     if (tool?.handler) {
       const args = JSON.parse(toolCall.function.arguments);
       const result = await tool.handler(args);
-      const safeResult = typeof result === "string" ? result : JSON.stringify(result);
+
+      // Check if this is a halt signal
+      const isHalt = typeof result === "object" && result !== null && result instanceof ToolHalt;
+      const content = isHalt
+        ? (result as ToolHalt).content
+        : typeof result === "string"
+          ? result
+          : JSON.stringify(result);
 
       if (onEnd) onEnd(toolCall, result);
 
       return {
         role: "tool",
         tool_call_id: toolCall.id,
-        content: safeResult
+        content,
+        halted: isHalt
       };
     } else {
       throw new ToolError(

@@ -13,99 +13,116 @@ datasource db {
 }
 
 model AssistantChat {
-  id           String             @id @default(uuid())
+  id           String                 @id @default(uuid())
   model        String?
   provider     String?
-  instructions String?            // System instructions
-  metadata     Json?              // JSON metadata
-  createdAt    DateTime           @default(now())
-  updatedAt    DateTime           @updatedAt
+  instructions String? // System instructions
+  metadata     Json? // JSON metadata
+  createdAt    DateTime               @default(now())
+  updatedAt    DateTime               @updatedAt
   messages     AssistantMessage[]
   requests     AssistantRequest[]
+  agentSession AssistantAgentSession?
+}
+
+// Agent Session - Links Agent class to persistent Chat
+// "Code defines behavior, DB provides history"
+model AssistantAgentSession {
+  id         String   @id @default(uuid())
+  agentClass String // Class name for validation (e.g., 'HRPolicyAgent')
+  chatId     String   @unique
+  metadata   Json? // Session context (userId, ticketId, etc.)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  chat AssistantChat @relation(fields: [chatId], references: [id], onDelete: Cascade)
+
+  @@index([agentClass])
+  @@index([createdAt])
 }
 
 model AssistantMessage {
-  id                String              @id @default(uuid())
+  id                String   @id @default(uuid())
   chatId            String
-  role              String             // user, assistant, system, tool
+  role              String // user, assistant, system, tool
   content           String?
-  contentRaw        String?            // JSON raw payload
-  reasoning         String?            // Chain of thought (deprecated)
-  thinkingText      String?            // Extended thinking text
-  thinkingSignature String?            // Cryptographic signature
-  thinkingTokens    Int?               // Tokens spent on thinking
+  contentRaw        String? // JSON raw payload
+  reasoning         String? // Chain of thought (deprecated)
+  thinkingText      String? // Extended thinking text
+  thinkingSignature String? // Cryptographic signature
+  thinkingTokens    Int? // Tokens spent on thinking
   inputTokens       Int?
   outputTokens      Int?
   modelId           String?
   provider          String?
-  createdAt         DateTime            @default(now())
+  createdAt         DateTime @default(now())
 
-  chat         AssistantChat       @relation(fields: [chatId], references: [id], onDelete: Cascade)
-  toolCalls    AssistantToolCall[]
-  requests     AssistantRequest[]
+  chat      AssistantChat       @relation(fields: [chatId], references: [id], onDelete: Cascade)
+  toolCalls AssistantToolCall[]
+  requests  AssistantRequest[]
 }
 
 model AssistantToolCall {
-  id               String           @id @default(uuid())
+  id               String   @id @default(uuid())
   messageId        String
-  toolCallId       String           // ID from the provider
+  toolCallId       String // ID from the provider
   name             String
-  arguments        String           // JSON string
-  thought          String?          // The LLM's reasoning for this tool call
-  thoughtSignature String?          // Cryptographic signature
-  result           String?          // Tool execution result
-  createdAt        DateTime         @default(now())
+  arguments        String // JSON string
+  thought          String? // The LLM's reasoning for this tool call
+  thoughtSignature String? // Cryptographic signature
+  result           String? // Tool execution result
+  createdAt        DateTime @default(now())
 
-  message      AssistantMessage @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  message AssistantMessage @relation(fields: [messageId], references: [id], onDelete: Cascade)
 
   @@unique([messageId, toolCallId])
 }
 
 model DocumentChunk {
-  id        String                 @id @default(uuid())
-  content   String                 // The actual text chunk
+  id        String                @id @default(uuid())
+  content   String // The actual text chunk
   embedding Unsupported("vector")
-  metadata  String?                // JSON: { source: "handbook.pdf", page: 5, section: "Remote Work" }
-  createdAt DateTime               @default(now())
+  metadata  String? // JSON: { source: "handbook.pdf", page: 5, section: "Remote Work" }
+  createdAt DateTime              @default(now())
 
   @@index([createdAt])
 }
 
 model AssistantRequest {
-  id           String   @id @default(uuid())
-  chatId       String
-  messageId    String?  // Optional because requests might fail before message creation or be intermediate
-  
+  id        String  @id @default(uuid())
+  chatId    String
+  messageId String? // Optional because requests might fail before message creation or be intermediate
+
   provider     String
   model        String
   statusCode   Int
-  duration     Int      // milliseconds
+  duration     Int // milliseconds
   inputTokens  Int
   outputTokens Int
   cost         Float?
-  
-  createdAt    DateTime @default(now())
 
-  chat         AssistantChat     @relation(fields: [chatId], references: [id], onDelete: Cascade)
-  message      AssistantMessage? @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  chat    AssistantChat     @relation(fields: [chatId], references: [id], onDelete: Cascade)
+  message AssistantMessage? @relation(fields: [messageId], references: [id], onDelete: Cascade)
 }
 
 model monitoring_events {
-  id             String   @id @default(uuid())
-  eventType      String   // request.start, request.end, tool.start, etc.
-  requestId      String
-  sessionId      String?
-  transactionId  String?
-  time           DateTime @default(now())
-  duration       Int?     // duration in ms
-  cost           Float?
-  cpuTime        Float?
-  gcTime         Float?
-  allocations    Int?
-  payload        Json     // Stores metadata, tokens and optional content
-  createdAt      DateTime @default(now())
-  provider       String
-  model          String
+  id            String   @id @default(uuid())
+  eventType     String // request.start, request.end, tool.start, etc.
+  requestId     String
+  sessionId     String?
+  transactionId String?
+  time          DateTime @default(now())
+  duration      Int? // duration in ms
+  cost          Float?
+  cpuTime       Float?
+  gcTime        Float?
+  allocations   Int?
+  payload       Json // Stores metadata, tokens and optional content
+  createdAt     DateTime @default(now())
+  provider      String
+  model         String
 
   @@index([requestId])
   @@index([sessionId])

@@ -99,6 +99,12 @@ mocker.chat(/hello/i).respond("Greetings!");
 
 // Simulate a Tool Call
 mocker.chat("What's the weather?").callsTool("get_weather", { city: "London" });
+
+// Simulate Multiple Tool Calls (for agents)
+mocker.chat(/book flight/).callsTools([
+  { name: "search_flights", args: { from: "NYC", to: "LAX" } },
+  { name: "check_weather", args: { city: "LAX" } }
+]);
 ```
 
 ### Streaming Mocks 🌊
@@ -114,6 +120,29 @@ mocker.chat("Tell a story").stream(["Once ", "upon ", "a ", "time."]);
 ```typescript
 mocker.paint(/a cat/i).respond({ url: "https://mock.com/cat.png" });
 mocker.embed("text").respond({ vectors: [[0.1, 0.2, 0.3]] });
+```
+
+### Sequence Mocks (Multi-turn) 🔄
+
+For testing agentic conversations with multiple turns:
+
+```typescript
+// Each call consumes the next response
+mocker
+  .chat(/help/)
+  .sequence(["What do you need help with?", "Here's the answer.", "Anything else?"]);
+
+const res1 = await agent.ask("Help me"); // → "What do you need help with?"
+const res2 = await agent.ask("Help more"); // → "Here's the answer."
+const res3 = await agent.ask("Help again"); // → "Anything else?"
+```
+
+### Limited Matches with times() ⏱️
+
+```typescript
+// First 2 calls return "Try again", then falls through
+mocker.chat(/retry/).times(2).respond("Try again");
+mocker.chat(/retry/).respond("Giving up");
 ```
 
 ### Call Verification & History 🕵️‍♀️
@@ -568,6 +597,72 @@ it("handles tool errors in ORM sessions", async () => {
   const chat = await loadChat(prisma, llm, "existing-id");
 
   await expect(chat.ask("Search docs")).rejects.toThrow("DB Timeout");
+});
+```
+
+---
+
+## 🤖 Testing Agents & AgentSessions
+
+When testing the Agent class or AgentSession (from `@node-llm/orm`), the same VCR and Mocker tools apply—they intercept at the provider level.
+
+### VCR with Agents
+
+```typescript
+import { withVCR } from "@node-llm/testing";
+import { SupportAgent } from "./agents/support-agent";
+
+it(
+  "answers support questions",
+  withVCR(async () => {
+    const agent = new SupportAgent();
+    const response = await agent.ask("How do I reset my password?");
+
+    expect(response.content).toContain("password");
+  })
+);
+```
+
+### Mocker with Agents
+
+```typescript
+import { mockLLM } from "@node-llm/testing";
+import { SupportAgent } from "./agents/support-agent";
+
+it("uses tools defined in agent class", async () => {
+  const mocker = mockLLM();
+
+  // Mock the tool call the agent will make
+  mocker.chat(/password/).callsTool("search_docs", { query: "password reset" });
+  mocker.chat().respond("To reset your password, go to Settings > Security.");
+
+  const agent = new SupportAgent();
+  const response = await agent.ask("How do I reset my password?");
+
+  expect(response.content).toContain("Settings");
+  expect(mocker.getCalls()).toHaveLength(2); // Tool call + final response
+});
+```
+
+### Testing AgentSession Persistence
+
+For `AgentSession` from `@node-llm/orm`, mock both the LLM and database:
+
+```typescript
+import { mockLLM } from "@node-llm/testing";
+
+it("resumes session with history", async () => {
+  const mocker = mockLLM();
+  mocker.chat(/continue/).respond("As we discussed earlier...");
+
+  // Create session with mocked LLM
+  const session = await createAgentSession(prismaMock, llm, SupportAgent);
+
+  // Resume later
+  const loaded = await loadAgentSession(prismaMock, llm, SupportAgent, session.id);
+  const response = await loaded.ask("Continue our chat");
+
+  expect(response.content).toContain("discussed earlier");
 });
 ```
 

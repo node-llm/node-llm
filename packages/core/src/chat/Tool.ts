@@ -17,7 +17,35 @@ export interface ToolDefinition {
     description?: string;
     parameters: Record<string, unknown>;
   };
-  handler?: (args: unknown) => Promise<string>;
+  handler?: (args: unknown) => Promise<string | ToolHalt>;
+}
+
+/**
+ * Stops the agentic tool execution loop and returns the content as the final response.
+ * Return this from a tool's execute() method to immediately end the conversation turn.
+ *
+ * @example
+ * ```typescript
+ * class PaymentTool extends Tool {
+ *   async execute({ amount }) {
+ *     if (amount > 10000) {
+ *       return this.halt("Payment requires manager approval. Please contact support.");
+ *     }
+ *     return processPayment(amount);
+ *   }
+ * }
+ * ```
+ */
+export class ToolHalt {
+  constructor(public readonly content: string) {}
+
+  toString(): string {
+    return this.content;
+  }
+
+  toJSON(): { halt: true; content: string } {
+    return { halt: true, content: this.content };
+  }
 }
 
 /**
@@ -52,11 +80,36 @@ export abstract class Tool<T = Record<string, unknown>> {
   public abstract execute(args: T): Promise<unknown>;
 
   /**
+   * Stop the agentic loop and return this message as the final tool result.
+   * Use this when you want to end the conversation turn immediately.
+   *
+   * @example
+   * ```typescript
+   * async execute({ amount }) {
+   *   if (amount > 10000) {
+   *     return this.halt("Payment requires manager approval.");
+   *   }
+   *   return processPayment(amount);
+   * }
+   * ```
+   */
+  protected halt(message: string): ToolHalt {
+    return new ToolHalt(message);
+  }
+
+  /**
    * Internal handler to bridge with LLM providers.
    * Converts any result to a string (usually JSON).
+   * Preserves ToolHalt instances for the execution loop to detect.
    */
-  public async handler(args: T): Promise<string> {
+  public async handler(args: T): Promise<string | ToolHalt> {
     const result = await this.execute(args);
+
+    // Preserve ToolHalt for the execution loop to handle
+    if (result instanceof ToolHalt) {
+      return result;
+    }
+
     if (result === undefined || result === null) return "";
     return typeof result === "string" ? result : JSON.stringify(result);
   }

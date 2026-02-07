@@ -2,6 +2,42 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.11.0] - 2026-02-07 (@node-llm/core)
+
+### Features
+
+- **Agent Class**: Declarative DSL for defining agents with static properties (model, instructions, tools, temperature, thinking, schema).
+- **ToolHalt Mechanism**: Early termination of agentic loops via `this.halt(result)` in Tool.execute().
+- **defineAgent()**: Inline agent definition without creating a class.
+- **Agent Inheritance**: Child agents inherit parent static properties.
+- **Instance Overrides**: Override static properties at instantiation (temperature, maxTokens, etc.).
+
+### Documentation
+
+- Comprehensive Agent documentation with examples for RAG, model routing, and multi-agent patterns.
+- Added doc tests for Agent, Tool, and ToolHalt patterns.
+
+## [0.5.0] - 2026-02-07 (@node-llm/orm)
+
+### Features
+
+- **AgentSession**: Persistent agent conversations following "Code Wins" principle.
+  - `createAgentSession()`: Create new session with metadata.
+  - `loadAgentSession()`: Resume session by ID with class validation.
+  - Agent class defines behavior (model, tools, instructions), database provides history.
+- **Idempotent Migrations**: Safe migration files for LlmAgentSession table.
+- **Custom Table Names**: Support for custom table name mapping.
+
+## [0.5.0] - 2026-02-07 (@node-llm/testing)
+
+### Features
+
+- **Agent Testing Support**:
+  - `mocker.callsTools()`: Mock responses that trigger multiple tool calls.
+  - `mocker.sequence()`: Return different responses for multi-turn agent conversations.
+  - `mocker.times(n)`: Limit mock matches with fallthrough behavior.
+- **Improved Matching**: First-match semantics enable `times()` fallthrough patterns.
+
 ## [1.10.0] - 2026-02-01 (@node-llm/core)
 
 ### Features

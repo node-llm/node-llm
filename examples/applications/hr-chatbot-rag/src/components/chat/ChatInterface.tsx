@@ -12,7 +12,7 @@ import {
   ThunderboltOutlined 
 } from "@ant-design/icons";
 import { AnimatePresence } from "framer-motion";
-import { useChat } from "@/hooks/use-chat";
+import { useChat } from "@/hooks/use-chat"; // OLD: Chat API pattern
 import { ChatHeader } from "./ChatHeader";
 import { ChatMessage } from "./ChatMessage";
 import { ChatInput } from "./ChatInput";
@@ -20,7 +20,7 @@ import { ChatInput } from "./ChatInput";
 const { Text, Title } = Typography;
 
 export default function ChatInterface() {
-  const { messages, isLoading, appendStream } = useChat();
+  const { messages, isLoading, appendStream } = useChat(); // OLD: Chat API pattern
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {

@@ -91,3 +91,60 @@ When adding a required (`non-nullable`) field to a table with existing data:
 1. Generate the migration with `--create-only`.
 2. Edit the SQL to provide a default value for existing rows or make it nullable temporarily.
 3. Apply the migration.
+
+---
+
+## Upgrading to AgentSession (v0.5.0+)
+
+If you're upgrading from a previous version and want to use the new `AgentSession` feature for persistent agent conversations, you'll need to add the `LlmAgentSession` table.
+
+### Option 1: Use the Provided Migration
+
+Copy the pre-built migration file:
+
+```bash
+cp node_modules/@node-llm/orm/migrations/add_agent_session.sql \
+   prisma/migrations/$(date +%Y%m%d%H%M%S)_add_agent_session/migration.sql
+
+npx prisma migrate resolve --applied $(date +%Y%m%d%H%M%S)_add_agent_session
+```
+
+### Option 2: Generate via Prisma
+
+1. Update your `schema.prisma` with the new model:
+
+```prisma
+model LlmAgentSession {
+  id         String   @id @default(uuid())
+  agentClass String   // Class name for validation
+  chatId     String   @unique
+  metadata   Json?    // Session context (userId, ticketId)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  chat       LlmChat  @relation(fields: [chatId], references: [id], onDelete: Cascade)
+
+  @@index([agentClass])
+  @@index([createdAt])
+}
+
+// Add to existing LlmChat model:
+model LlmChat {
+  // ... existing fields
+  agentSession LlmAgentSession?
+}
+```
+
+2. Generate and apply the migration:
+
+```bash
+npx prisma migrate dev --name add_agent_session
+```
+
+### Verify the Upgrade
+
+Run the sync command to confirm your schema is up to date:
+
+```bash
+npx @node-llm/orm sync
+# ✓ Schema is already up to date with @node-llm/orm v0.5.0 features.

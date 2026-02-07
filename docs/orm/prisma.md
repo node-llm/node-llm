@@ -264,3 +264,117 @@ If an API call fails, NodeLLM follows a "clean rollback" strategy:
 3. The error is thrown for your application to handle.
 
 This ensures your database doesn't fill up with "broken" chat turns.
+
+---
+
+## Agent Sessions <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v0.5.0+</span>
+
+For stateful agents that need to persist across requests (e.g., support tickets, user sessions), use `AgentSession`. This wraps an [Agent class](/core-features/agents) with database persistence.
+
+### The "Code Wins" Principle
+
+AgentSession follows a hybrid sovereignty model:
+
+| Aspect | Source | Why |
+|:-------|:-------|:----|
+| Model | Agent class (code) | Deploy upgrades immediately |
+| Tools | Agent class (code) | Only code can execute functions |
+| Instructions | Agent class (code) | Fix prompts without migrations |
+| History | Database | Sacred, never modified |
+
+When you resume a session after deploying new code, the session gets the **new configuration** but **preserves the conversation history**.
+
+### Schema Addition
+
+Add `LlmAgentSession` to your Prisma schema:
+
+```prisma
+model LlmAgentSession {
+  id         String   @id @default(uuid())
+  agentClass String   // Class name for validation (e.g., 'SupportAgent')
+  chatId     String   @unique
+  metadata   Json?    // Session context (userId, ticketId, etc.)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  chat       LlmChat  @relation(fields: [chatId], references: [id], onDelete: Cascade)
+
+  @@index([agentClass])
+  @@index([createdAt])
+}
+
+// Update LlmChat to include the relation
+model LlmChat {
+  // ... existing fields
+  agentSession LlmAgentSession?
+}
+```
+
+### Creating Sessions
+
+```typescript
+import { Agent, Tool, z, createLLM } from "@node-llm/core";
+import { createAgentSession, loadAgentSession } from "@node-llm/orm/prisma";
+
+// Define your agent (config lives in code)
+class SupportAgent extends Agent {
+  static model = "gpt-4.1";
+  static instructions = "You are a helpful support agent. Be concise.";
+  static tools = [LookupOrderTool, CancelOrderTool];
+}
+
+const prisma = new PrismaClient();
+const llm = createLLM({ provider: "openai" });
+
+// Create a new persistent session
+const session = await createAgentSession(prisma, llm, SupportAgent, {
+  metadata: { userId: "user_123", ticketId: "TKT-456" }
+});
+
+await session.ask("Where is my order #789?");
+console.log(session.id); // "abc-123" - save this!
+```
+
+### Resuming Sessions
+
+```typescript
+// Later, in a new request
+const session = await loadAgentSession(prisma, llm, SupportAgent, "abc-123");
+
+if (!session) {
+  throw new Error("Session not found");
+}
+
+// Continues with full history + current code config
+await session.ask("Can you cancel that order?");
+```
+
+### Class Validation
+
+For safety, `loadAgentSession` validates that the stored `agentClass` matches the class you're loading with:
+
+```typescript
+// This throws an error - class mismatch
+await loadAgentSession(prisma, llm, SalesAgent, "support-session-id");
+// Error: Agent class mismatch: session was created with "SupportAgent" 
+//        but attempting to load with "SalesAgent"
+
+// To override (not recommended):
+await loadAgentSession(prisma, llm, SalesAgent, "support-session-id", {
+  skipClassValidation: true
+});
+```
+
+### Session Properties
+
+| Property | Description |
+|:---------|:------------|
+| `session.id` | The AgentSession UUID (for persistence) |
+| `session.chatId` | The underlying LlmChat UUID |
+| `session.metadata` | Session context (userId, ticketId, etc.) |
+| `session.agentClass` | Stored class name |
+| `session.ask()` | Send message with persistence |
+| `session.askStream()` | Stream response with persistence |
+| `session.messages()` | Get all messages from DB |
+| `session.modelId` | Current model (from code) |
+| `session.totalUsage` | Aggregate token usage |

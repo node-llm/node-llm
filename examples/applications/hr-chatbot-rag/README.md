@@ -6,27 +6,39 @@
 
 ---
 
-## 🛠️ How it works: A Bot that Remembers
+## 🛠️ Two Patterns: Chat API vs Agent Pattern
 
-Building a basic chat is easy; building one that stays useful over time is where things get tricky. This project handles:
-1. **Chat History**: Saving every message to PostgreSQL so people can pick up where they left off.
-2. **Policy Search**: Giving the bot access to documents so it doesn't give wrong answers.
-3. **Usage Logging**: Keeping track of how many tokens are used and which tools are called.
+This example demonstrates **two approaches** to building persistent AI chatbots:
 
-### Built with NodeLLM & @node-llm/orm
-The `@node-llm` tools handle the database boilerplate for you:
-- **Core logic**: Handles the chat turns and policy searches.
-- **ORM layer**: Automatically saves the conversation to your database as it happens.
+| URL | Pattern | Description |
+|-----|---------|-------------|
+| `http://localhost:3000/` | **Chat API** | Traditional approach with `AssistantChat.create()` + `withTool()` |
+| `http://localhost:3000/agent` | **Agent Pattern** | New "Code Wins" approach with `HRPolicyAgent` class |
+
+### Chat API (Traditional)
+```typescript
+// Tools attached on each request
+const chat = await AssistantChat.create({ model: "gpt-4o" });
+const response = await chat.withTool(searchDocumentsTool).ask(message);
+```
+
+### Agent Pattern (New) ⭐
+```typescript
+// Tools defined once in the class - "Code Wins"
+class HRPolicyAgent extends Agent {
+  static model = "gpt-4o";
+  static instructions = "You are an HR assistant...";
+  static tools = [SearchHRDocumentsTool];  // Built-in!
+}
+
+// Resume sessions with updated code (model upgrades, prompt fixes apply immediately)
+const session = await HRAgentSession.create();
+const response = await session.ask(message);  // No withTool() needed!
+```
 
 ---
 
 ## 🚀 Getting Started
-
-If you were building this from scratch, you would start by installing the essential packages:
-
-```bash
-npm install @node-llm/core @node-llm/orm
-```
 
 ### 1. Clone & Install
 
@@ -47,9 +59,14 @@ Copy the example environment file and fill in your API keys. A PostgreSQL databa
 cp .env.example .env
 ```
 
-### 3. Setup Database (Migrations)
+Required environment variables:
+```env
+DATABASE_URL="postgresql://user:pass@localhost:5432/hr_chatbot"
+OPENAI_API_KEY="sk-..."
+# or ANTHROPIC_API_KEY for Claude
+```
 
-Initialize your PostgreSQL database with the correct schema and knowledge base.
+### 3. Setup Database
 
 ```bash
 # Apply database migrations
@@ -59,37 +76,44 @@ npm run db:migrate
 npm run seed
 ```
 
----
+### 4. Run the App
 
-## 🧠 The "Convention Over Configuration" Logic
-
-Notice in `src/models/assistant-chat.ts` how the ORM handles the heavy lifting. Instead of manual `prisma.message.create` calls, you simply use:
-
-```typescript
-import { createChat } from "@node-llm/orm/prisma";
-
-// The chat object now automatically persists to the DB
-const chat = await createChat(prisma, llm, {
-  model: "gpt-4o",
-  persistence: { toolCalls: true, requests: true }
-});
-
-await chat.ask("What is our remote work policy?");
+```bash
+npm run dev
 ```
 
+Then visit:
+- **Chat Pattern**: http://localhost:3000/
+- **Agent Pattern**: http://localhost:3000/agent
+
 ---
 
-## 🏗️ Architecture detail
+## 🧠 Key Files
+
+| File | Purpose |
+|------|---------|
+| `src/app/chat-actions.ts` | Chat API server actions (old pattern) |
+| `src/app/agent-actions.ts` | Agent API server actions (new pattern) |
+| `src/agents/hr-policy-agent.ts` | `HRPolicyAgent` class with tools |
+| `src/models/assistant-chat.ts` | `AssistantChat` ORM wrapper |
+| `src/models/hr-agent-session.ts` | `HRAgentSession` ORM wrapper |
+| `src/hooks/use-chat.ts` | React hook for Chat pattern |
+| `src/hooks/use-agent-chat.ts` | React hook for Agent pattern |
+
+---
+
+## 🏗️ Architecture
 
 ### Data Model
-The database schema (managed via Prisma) consists of the following key tables:
+The database schema (managed via Prisma) consists of:
 
 | Table | Purpose |
 |-------|---------|
-| `AssistantChat` | Stores session metadata, model config, and system instructions. |
-| `AssistantMessage` | The logical conversation history (User query + Assistant Answer). |
-| `AssistantToolCall` | Audit log of every tool executed (args, names) during a turn. |
-| `AssistantRequest` | *Optional metrics.* Latency and cost per HTTP request. |
+| `AssistantChat` | Session metadata, model config, system instructions |
+| `AssistantMessage` | Conversation history (user + assistant messages) |
+| `AssistantToolCall` | Audit log of tool executions |
+| `AssistantRequest` | Metrics: latency and token usage |
+| `AssistantAgentSession` | Agent session metadata (new) |
 
 ---
 

@@ -4,8 +4,12 @@ import FetchAdapter from "@pollyjs/adapter-fetch";
 import FSPersister from "@pollyjs/persister-fs";
 import path from "path";
 import { fileURLToPath } from "url";
+import { config } from "dotenv";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+const monorepoRoot = path.resolve(__dirname, "../../../../");
+config({ path: path.join(monorepoRoot, ".env") });
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 Polly.register(NodeHttpAdapter as any);

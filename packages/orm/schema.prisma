@@ -12,53 +12,70 @@ datasource db {
 
 // NodeLLM ORM Models (matches @node-llm/orm schema)
 model LlmChat {
-  id           String       @id @default(uuid())
+  id           String           @id @default(uuid())
   model        String?
   provider     String?
-  instructions String?      // System instructions
-  metadata     Json?         // JSON metadata
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime     @updatedAt
+  instructions String? // System instructions
+  metadata     Json? // JSON metadata
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
   messages     LlmMessage[]
   requests     LlmRequest[]
+  agentSession LlmAgentSession?
+}
+
+// Agent Session - Links Agent class to persistent Chat
+// "Code defines behavior, DB provides history"
+model LlmAgentSession {
+  id         String   @id @default(uuid())
+  agentClass String // Class name for validation (e.g., 'SupportAgent')
+  chatId     String   @unique
+  metadata   Json? // Session context (userId, ticketId, etc.)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  chat LlmChat @relation(fields: [chatId], references: [id], onDelete: Cascade)
+
+  @@index([agentClass])
+  @@index([createdAt])
 }
 
 model LlmMessage {
-  id                String        @id @default(uuid())
+  id                String   @id @default(uuid())
   chatId            String
-  role              String        // user, assistant, system, tool
+  role              String // user, assistant, system, tool
   content           String?
-  contentRaw        String?       // JSON raw payload
-  reasoning         String?       // Chain of thought (deprecated)
-  thinkingText      String?       // Extended thinking text
-  thinkingSignature String?       // Cryptographic signature
-  thinkingTokens    Int?          // Tokens spent on thinking
+  contentRaw        String? // JSON raw payload
+  reasoning         String? // Chain of thought (deprecated)
+  thinkingText      String? // Extended thinking text
+  thinkingSignature String? // Cryptographic signature
+  thinkingTokens    Int? // Tokens spent on thinking
   inputTokens       Int?
   outputTokens      Int?
   modelId           String?
   provider          String?
-  createdAt         DateTime      @default(now())
+  createdAt         DateTime @default(now())
 
-  chat         LlmChat       @relation(fields: [chatId], references: [id], onDelete: Cascade)
-  toolCalls    LlmToolCall[]
-  requests     LlmRequest[]
+  chat      LlmChat       @relation(fields: [chatId], references: [id], onDelete: Cascade)
+  toolCalls LlmToolCall[]
+  requests  LlmRequest[]
 
   @@index([chatId])
   @@index([createdAt])
 }
 
 model LlmToolCall {
-  id               String     @id @default(uuid())
+  id               String   @id @default(uuid())
   messageId        String
-  toolCallId       String     // ID from the provider
+  toolCallId       String // ID from the provider
   name             String
-  arguments        String     // JSON string
-  thought          String?    // The LLM's reasoning for this tool call
-  thoughtSignature String?    // Signature for the thought
-  result           String?    // Tool execution result
-  createdAt        DateTime   @default(now())
+  arguments        String // JSON string
+  thought          String? // The LLM's reasoning for this tool call
+  thoughtSignature String? // Signature for the thought
+  result           String? // Tool execution result
+  createdAt        DateTime @default(now())
 
-  message      LlmMessage @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  message LlmMessage @relation(fields: [messageId], references: [id], onDelete: Cascade)
 
   @@unique([messageId, toolCallId])
   @@index([messageId])
@@ -66,22 +83,22 @@ model LlmToolCall {
 }
 
 model LlmRequest {
-  id           String      @id @default(uuid())
-  chatId       String
-  messageId    String?     // Optional because requests might fail before message creation
-  
+  id        String  @id @default(uuid())
+  chatId    String
+  messageId String? // Optional because requests might fail before message creation
+
   provider     String
   model        String
   statusCode   Int
-  duration     Int         // milliseconds
+  duration     Int // milliseconds
   inputTokens  Int
   outputTokens Int
   cost         Float?
-  
-  createdAt    DateTime    @default(now())
 
-  chat         LlmChat     @relation(fields: [chatId], references: [id], onDelete: Cascade)
-  message      LlmMessage? @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  chat    LlmChat     @relation(fields: [chatId], references: [id], onDelete: Cascade)
+  message LlmMessage? @relation(fields: [messageId], references: [id], onDelete: Cascade)
 
   @@index([chatId])
   @@index([createdAt])

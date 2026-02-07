@@ -7,6 +7,8 @@ export * from "./chat/Chat.js";
 export * from "./chat/ChatStream.js";
 export * from "./streaming/Stream.js";
 export * from "./errors/index.js";
+export { Agent, defineAgent } from "./agent/Agent.js";
+export type { AgentConfig } from "./agent/Agent.js";
 export type { Middleware, MiddlewareContext } from "./types/Middleware.js";
 export * from "./middlewares/index.js";
 

@@ -88,7 +88,7 @@ importers:
         version: 1.10.0
       '@node-llm/monitor':
         specifier: ^0.1.2
-        version: 0.1.2(@node-llm/core@1.10.0)(@node-llm/orm@0.4.0(@node-llm/core@1.10.0)(@prisma/client@5.22.0(prisma@5.22.0)))(@prisma/client@5.22.0(prisma@5.22.0))
+        version: 0.1.2(@node-llm/core@1.10.0)(@prisma/client@5.22.0(prisma@5.22.0))
       '@node-llm/testing':
         specifier: ^0.4.0
         version: 0.4.0
@@ -124,19 +124,19 @@ importers:
         specifier: ^1.3.0
         version: 1.3.0(@ant-design/cssinjs@2.0.3(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(antd@6.2.2(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(next@16.1.6(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       '@node-llm/core':
-        specifier: ^1.10.0
-        version: 1.10.0
+        specifier: workspace:*
+        version: link:../../../packages/core
       '@node-llm/monitor':
         specifier: ^0.1.2
-        version: 0.1.2(@node-llm/core@1.10.0)(@node-llm/orm@0.4.0(@node-llm/core@1.10.0)(@prisma/client@5.22.0(prisma@5.22.0)))(@prisma/client@5.22.0(prisma@5.22.0))
+        version: 0.1.2(@node-llm/core@packages+core)(@node-llm/orm@packages+orm)(@prisma/client@5.22.0(prisma@5.22.0))
       '@node-llm/orm':
-        specifier: ^0.4.0
-        version: 0.4.0(@node-llm/core@1.10.0)(@prisma/client@5.22.0(prisma@5.22.0))
+        specifier: workspace:*
+        version: link:../../../packages/orm
       '@node-llm/testing':
-        specifier: ^0.4.0
-        version: 0.4.0
+        specifier: workspace:*
+        version: link:../../../packages/testing
       '@prisma/client':
-        specifier: ^5.22.0
+        specifier: 5.22.0
         version: 5.22.0(prisma@5.22.0)
       antd:
         specifier: ^6.2.0
@@ -817,13 +817,6 @@ packages:
         optional: true
       '@prisma/client':
         optional: true
-
-  '@node-llm/orm@0.4.0':
-    resolution: {integrity: sha512-9iozaVKpfJZdVGxSAUBpHwHxdLqIYJFwYvJuOOODKK8s73R8RvcWla3xeRdnhkBNoLwiGOtoX/1XEmRYg/kf0w==}
-    hasBin: true
-    peerDependencies:
-      '@node-llm/core': ^1.10.0
-      '@prisma/client': ^5.0.0
 
   '@node-llm/testing@0.4.0':
     resolution: {integrity: sha512-d9xUI86R6KsK5BYIHdBH0gdeDELWOl3bYUv72kN8jmc4ZWyukdodLhhjUqWQOk/DTccym5QFUmSdI79bsXzKEg==}
@@ -4945,16 +4938,17 @@ snapshots:
       zod: 3.25.76
       zod-to-json-schema: 3.25.1(zod@3.25.76)
 
-  '@node-llm/monitor@0.1.2(@node-llm/core@1.10.0)(@node-llm/orm@0.4.0(@node-llm/core@1.10.0)(@prisma/client@5.22.0(prisma@5.22.0)))(@prisma/client@5.22.0(prisma@5.22.0))':
+  '@node-llm/monitor@0.1.2(@node-llm/core@1.10.0)(@prisma/client@5.22.0(prisma@5.22.0))':
     dependencies:
       '@node-llm/core': 1.10.0
     optionalDependencies:
-      '@node-llm/orm': 0.4.0(@node-llm/core@1.10.0)(@prisma/client@5.22.0(prisma@5.22.0))
       '@prisma/client': 5.22.0(prisma@5.22.0)
 
-  '@node-llm/orm@0.4.0(@node-llm/core@1.10.0)(@prisma/client@5.22.0(prisma@5.22.0))':
+  '@node-llm/monitor@0.1.2(@node-llm/core@packages+core)(@node-llm/orm@packages+orm)(@prisma/client@5.22.0(prisma@5.22.0))':
     dependencies:
-      '@node-llm/core': 1.10.0
+      '@node-llm/core': link:packages/core
+    optionalDependencies:
+      '@node-llm/orm': link:packages/orm
       '@prisma/client': 5.22.0(prisma@5.22.0)
 
   '@node-llm/testing@0.4.0': {}

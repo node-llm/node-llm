@@ -123,14 +123,15 @@ console.log(messages); // [{ role: 'user', content: '...' }, { role: 'assistant'
 
 ## Architecture
 
-The ORM tracks four core entities:
+The ORM tracks five core entities:
 
-| Model           | Purpose              | Example                                    |
-| --------------- | -------------------- | ------------------------------------------ |
-| **LlmChat**     | Session container    | Holds model, provider, system instructions |
-| **LlmMessage**  | Conversation history | User queries and assistant responses       |
-| **LlmToolCall** | Tool executions      | Function calls made by the assistant       |
-| **LlmRequest**  | API metrics          | Token usage, latency, cost per API call    |
+| Model               | Purpose              | Example                                    |
+| ------------------- | -------------------- | ------------------------------------------ |
+| **LlmAgentSession** | Agent persistence    | Links Agent class to Chat (v0.5.0+)        |
+| **LlmChat**         | Session container    | Holds model, provider, system instructions |
+| **LlmMessage**      | Conversation history | User queries and assistant responses       |
+| **LlmToolCall**     | Tool executions      | Function calls made by the assistant       |
+| **LlmRequest**      | API metrics          | Token usage, latency, cost per API call    |
 
 ### Data Flow
 
@@ -150,6 +151,91 @@ Chat.ask()
 └─────────────────────────────────────┘
     ↓
 Return Response
+```
+
+## Agent Sessions (v0.5.0+)
+
+For **stateful agents** with persistence, use `AgentSession`. This follows the "Code Wins" principle:
+
+- **Model, Tools, Instructions** → from Agent class (code)
+- **Message History** → from database
+
+### Define an Agent (in @node-llm/core)
+
+```typescript
+import { Agent, Tool, z } from "@node-llm/core";
+
+class LookupOrderTool extends Tool {
+  static definition = {
+    name: "lookup_order",
+    description: "Look up order status",
+    parameters: z.object({ orderId: z.string() })
+  };
+  async execute({ orderId }) {
+    return { status: "shipped", eta: "Tomorrow" };
+  }
+}
+
+class SupportAgent extends Agent {
+  static model = "gpt-4.1";
+  static instructions = "You are a helpful support agent.";
+  static tools = [LookupOrderTool];
+}
+```
+
+### Create & Resume Sessions
+
+```typescript
+import { createAgentSession, loadAgentSession } from "@node-llm/orm/prisma";
+
+// Create a new persistent session
+const session = await createAgentSession(prisma, llm, SupportAgent, {
+  metadata: { userId: "user_123", ticketId: "TKT-456" }
+});
+
+await session.ask("Where is my order #789?");
+console.log(session.id); // "sess_abc123" - save this!
+
+// Resume later (even after code upgrades)
+const session = await loadAgentSession(prisma, llm, SupportAgent, "sess_abc123");
+await session.ask("Can you cancel it?");
+```
+
+### Code Wins Principle
+
+When you deploy a code change (new model, updated tools), resumed sessions use the **new configuration**:
+
+| Aspect       | Source      | Why                             |
+| ------------ | ----------- | ------------------------------- |
+| Model        | Agent class | Immediate upgrades              |
+| Tools        | Agent class | Only code can execute functions |
+| Instructions | Agent class | Deploy prompt fixes immediately |
+| History      | Database    | Sacred, never modified          |
+
+### Schema Addition
+
+Add `LlmAgentSession` to your Prisma schema:
+
+```prisma
+model LlmAgentSession {
+  id         String   @id @default(uuid())
+  agentClass String   // For validation (e.g., 'SupportAgent')
+  chatId     String   @unique
+  metadata   Json?    // Session context (userId, ticketId)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  chat       LlmChat  @relation(fields: [chatId], references: [id], onDelete: Cascade)
+
+  @@index([agentClass])
+  @@index([createdAt])
+}
+
+// Add relation to LlmChat
+model LlmChat {
+  // ... existing fields
+  agentSession LlmAgentSession?
+}
 ```
 
 ## Advanced Usage

@@ -536,8 +536,9 @@ export class Chat<S = unknown> {
 
       const maxToolCalls = options?.maxToolCalls ?? this.options.maxToolCalls ?? 5;
       let stepCount = 0;
+      let haltTriggered = false;
 
-      while (response.tool_calls && response.tool_calls.length > 0) {
+      while (response.tool_calls && response.tool_calls.length > 0 && !haltTriggered) {
         // Dry-run mode: stop after proposing tools
         if (!ToolHandler.shouldExecuteTools(response.tool_calls, this.options.toolExecution)) {
           break;
@@ -586,6 +587,26 @@ export class Chat<S = unknown> {
             this.messages.push(
               this.provider.formatToolResultMessage(toolResult.tool_call_id, toolResult.content)
             );
+
+            // Check if tool signaled a halt - stop the agentic loop
+            if (toolResult.halted) {
+              haltTriggered = true;
+              // Create final response from halt content
+              assistantMessage = new ChatResponseString(
+                toolResult.content,
+                totalUsage,
+                this.model,
+                this.provider.id,
+                undefined,
+                undefined,
+                undefined,
+                "tool_halt"
+              );
+              if (this.options.onEndMessage) {
+                this.options.onEndMessage(assistantMessage);
+              }
+              break; // Exit the for loop
+            }
           } catch (error: unknown) {
             let currentError: unknown = error;
 
@@ -668,6 +689,11 @@ export class Chat<S = unknown> {
               currentError as Error
             );
           }
+        }
+
+        // If halt was triggered, exit the while loop immediately
+        if (haltTriggered) {
+          break;
         }
 
         response = await this.executor.executeChat({

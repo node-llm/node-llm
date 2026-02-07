@@ -259,4 +259,38 @@ describe("readme-mocker", () => {
       expect(mockCall.prompt).toBe("Hello world");
     });
   });
+
+  describe("Multi-tool and Sequence Support", () => {
+    it("callsTools() accepts array of tool definitions", () => {
+      // Per docs: mocker.chat(/book flight/).callsTools([...])
+      mocker = mockLLM();
+      expect(() => {
+        mocker.chat(/book flight/).callsTools([
+          { name: "search_flights", args: { from: "NYC", to: "LAX" } },
+          { name: "check_weather", args: { city: "LAX" } }
+        ]);
+      }).not.toThrow();
+    });
+
+    it("sequence() accepts array of responses", () => {
+      // Per docs: mocker.chat(/help/).sequence([...])
+      mocker = mockLLM();
+      expect(() => {
+        mocker.chat(/help/).sequence([
+          "What do you need help with?",
+          "Here's the answer.",
+          "Anything else?"
+        ]);
+      }).not.toThrow();
+    });
+
+    it("times() limits mock matches", () => {
+      // Per docs: mocker.chat(/retry/).times(2).respond("Try again")
+      mocker = mockLLM();
+      expect(() => {
+        mocker.chat(/retry/).times(2).respond("Try again");
+        mocker.chat(/retry/).respond("Giving up");
+      }).not.toThrow();
+    });
+  });
 });
