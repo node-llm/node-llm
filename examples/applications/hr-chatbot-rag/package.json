@@ -27,7 +27,7 @@
     "@node-llm/core": "workspace:*",
     "@node-llm/monitor": "^0.1.2",
     "@node-llm/orm": "workspace:*",
-    "@node-llm/testing": "^0.4.0",
+    "@node-llm/testing": "workspace:*",
     "@prisma/client": "5.22.0",
     "antd": "^6.2.0",
     "clsx": "^2.1.1",

@@ -1,6 +1,6 @@
 {
   "name": "@node-llm/orm",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "Database persistence layer for NodeLLM - Chat, Message, and ToolCall tracking with streaming support",
   "publishConfig": {
     "access": "public"

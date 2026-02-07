@@ -208,10 +208,12 @@ export class Mocker {
   public sequence(responses: Array<string | MockResponse>): this {
     const lastMock = this.mocks[this.mocks.length - 1];
     if (!lastMock) throw new Error("Mocker: No mock definition started.");
+    if (responses.length === 0)
+      throw new Error("Mocker: sequence() requires at least one response.");
 
     let callIndex = 0;
-    lastMock.response = () => {
-      const response = responses[Math.min(callIndex, responses.length - 1)];
+    lastMock.response = (_request: unknown): MockResponse => {
+      const response = responses[Math.min(callIndex, responses.length - 1)]!;
       callIndex++;
       if (typeof response === "string") {
         return { content: response, text: response };

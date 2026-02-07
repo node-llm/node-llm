@@ -24,6 +24,13 @@ export interface MessageRecord {
   role: string;
   content: string | null;
   createdAt: Date;
+  thinkingText?: string | null;
+  thinkingSignature?: string | null;
+  thinkingTokens?: number | null;
+  inputTokens?: number | null;
+  outputTokens?: number | null;
+  modelId?: string | null;
+  provider?: string | null;
 }
 
 /**
