@@ -1,6 +1,6 @@
 import { test, expect, describe, beforeEach, afterEach } from "vitest";
 import { mockLLM } from "../../src/Mocker.js";
-import { NodeLLM, providerRegistry } from "@node-llm/core";
+import { providerRegistry } from "@node-llm/core";
 import { MockProvider } from "../helpers/MockProvider.js";
 
 describe("Mocker: Debug Information", () => {

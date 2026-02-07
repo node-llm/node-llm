@@ -1,53 +1,50 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import type { PrismaClient } from "@prisma/client";
-import type { NodeLLMCore, ChatChunk, AskOptions, Usage, Message } from "@node-llm/core";
-import { Agent, AgentConfig, ChatOptions } from "@node-llm/core";
+import {
+  ChatOptions,
+  AskOptions,
+  NodeLLMCore,
+  Agent,
+  AgentConfig,
+  Message,
+  ChatChunk,
+  Usage
+} from "@node-llm/core";
 
 /**
- * Database record for an agent session.
+ * Internal interface for dynamic Prisma Client access.
+ * We use 'any' here because PrismaClient has no index signature by default,
+ * making it hard to access models dynamically by string name.
+ */
+type GenericPrismaClient = any;
+
+/**
+ * Record structure for the LLM Agent Session table.
  */
 export interface AgentSessionRecord {
   id: string;
   agentClass: string;
   chatId: string;
-  metadata?: Record<string, any> | null;
+  metadata?: Record<string, unknown> | null;
   createdAt: Date;
   updatedAt: Date;
 }
 
 /**
- * Database record for a message (simplified for session use).
+ * Record structure for the LLM Message table.
  */
 export interface MessageRecord {
   id: string;
   chatId: string;
   role: string;
   content: string | null;
+  contentRaw?: string | null;
+  thinkingText?: string | null;
+  thinkingSignature?: string | null;
+  thinkingTokens?: number | null;
+  inputTokens?: number | null;
+  outputTokens?: number | null;
+  modelId?: string | null;
+  provider?: string | null;
   createdAt: Date;
-}
-
-/**
- * Options for creating an agent session.
- */
-export interface CreateAgentSessionOptions {
-  /** Session-level metadata (userId, ticketId, etc.) */
-  metadata?: Record<string, any>;
-  /** Custom table names */
-  tableNames?: TableNames;
-  /** Enable debug logging */
-  debug?: boolean;
-}
-
-/**
- * Options for loading an agent session.
- */
-export interface LoadAgentSessionOptions {
-  /** Custom table names */
-  tableNames?: TableNames;
-  /** Enable debug logging */
-  debug?: boolean;
-  /** Skip agent class validation (not recommended) */
-  skipClassValidation?: boolean;
 }
 
 /**
@@ -61,13 +58,27 @@ export interface TableNames {
   request?: string;
 }
 
+/**
+ * Internal interface for dynamic Prisma model access
+ */
+interface PrismaModel<T = Record<string, unknown>> {
+  create(args: { data: Record<string, unknown> }): Promise<T>;
+  update(args: { where: { id: string }; data: Record<string, unknown> }): Promise<T>;
+  delete(args: { where: { id: string } }): Promise<void>;
+  findMany(args: {
+    where: Record<string, unknown>;
+    orderBy?: Record<string, string>;
+  }): Promise<T[]>;
+  findUnique(args: { where: { id: string } }): Promise<T | null>;
+}
+
 type AgentClass<T extends Agent = Agent> = (new (
   overrides?: Partial<AgentConfig & ChatOptions>
 ) => T) & {
   name: string;
   model?: string;
   instructions?: string;
-  tools?: any[];
+  tools?: unknown[];
 };
 
 /**
@@ -81,47 +92,51 @@ type AgentClass<T extends Agent = Agent> = (new (
  * ```typescript
  * // Create a new session
  * const session = await createAgentSession(prisma, llm, SupportAgent, {
- *   metadata: { userId: 'user_123' }
+ *   metadata: { userId: "123" }
  * });
- * await session.ask('Hello!');
  *
- * // Resume later
- * const session = await loadAgentSession(prisma, llm, SupportAgent, sessionId);
- * await session.ask('What were we discussing?');
+ * // Resume a session
+ * const session = await loadAgentSession(prisma, llm, SupportAgent, "sess_abc");
+ *
+ * // Agent behavior is always defined in code
+ * const result = await session.ask("Hello");
  * ```
  */
 export class AgentSession<T extends Agent = Agent> {
-  private tables: Required<TableNames>;
-  private agent: T;
+  private currentMessageId: string | null = null;
+  private tableNames: Required<TableNames>;
+  private debug: boolean;
 
   constructor(
-    private prisma: PrismaClient,
+    private prisma: any,
     private llm: NodeLLMCore,
     private AgentClass: AgentClass<T>,
-    public readonly record: AgentSessionRecord,
-    private options: { tableNames?: TableNames; debug?: boolean } = {},
-    history: Message[] = []
+    private record: AgentSessionRecord,
+    tableNames?: TableNames,
+    private agent: T = new AgentClass({
+      llm
+    }),
+    debug: boolean = false
   ) {
-    this.tables = {
-      agentSession: options.tableNames?.agentSession || "llmAgentSession",
-      chat: options.tableNames?.chat || "llmChat",
-      message: options.tableNames?.message || "llmMessage",
-      toolCall: options.tableNames?.toolCall || "llmToolCall",
-      request: options.tableNames?.request || "llmRequest"
+    this.debug = debug;
+    this.tableNames = {
+      agentSession: tableNames?.agentSession || "llmAgentSession",
+      chat: tableNames?.chat || "llmChat",
+      message: tableNames?.message || "llmMessage",
+      toolCall: tableNames?.toolCall || "llmToolCall",
+      request: tableNames?.request || "llmRequest"
     };
-
-    // Instantiate agent with injected history and LLM
-    // "Code Wins" - model, tools, instructions come from AgentClass
-    this.agent = new AgentClass({
-      llm: this.llm,
-      messages: history
-    }) as T;
   }
 
   private log(...args: any[]) {
-    if (this.options.debug) {
-      console.log(`[@node-llm/orm:AgentSession]`, ...args);
+    if (this.debug) {
+      console.log(`[@node-llm/orm]`, ...args);
     }
+  }
+
+  /** Agent instance (for direct access if needed) */
+  get instance(): T {
+    return this.agent;
   }
 
   /** Session ID for persistence */
@@ -135,7 +150,7 @@ export class AgentSession<T extends Agent = Agent> {
   }
 
   /** Session metadata */
-  get metadata(): Record<string, any> | null | undefined {
+  get metadata(): Record<string, unknown> | null | undefined {
     return this.record.metadata;
   }
 
@@ -144,28 +159,52 @@ export class AgentSession<T extends Agent = Agent> {
     return this.record.agentClass;
   }
 
+  /** Model ID used by the agent */
+  get modelId(): string {
+    return this.agent.modelId;
+  }
+
+  /** Cumulative usage for this session (from agent memory) */
+  get totalUsage(): Usage {
+    return this.agent.totalUsage;
+  }
+
+  /** Current in-memory message history */
+  get history(): readonly Message[] {
+    return this.agent.history;
+  }
+
+  /**
+   * Helper to get a typed Prisma model by its dynamic name.
+   */
+  private getModel<R = Record<string, unknown>>(name: string): PrismaModel<R> {
+    return getTable(this.prisma, name) as unknown as PrismaModel<R>;
+  }
+
   /**
    * Send a message and persist the conversation.
    */
   async ask(input: string, options: AskOptions = {}): Promise<MessageRecord> {
-    const messageModel = this.tables.message;
+    const model = this.getModel<MessageRecord>(this.tableNames.message);
 
     // Persist user message
-    const userMessage = await (this.prisma as any)[messageModel].create({
+    await model.create({
       data: { chatId: this.chatId, role: "user", content: input }
     });
 
     // Create placeholder for assistant message
-    const assistantMessage = await (this.prisma as any)[messageModel].create({
+    const assistantMessage = await model.create({
       data: { chatId: this.chatId, role: "assistant", content: null }
     });
+
+    this.currentMessageId = assistantMessage.id;
 
     try {
       // Get response from agent (uses code-defined config + injected history)
       const response = await this.agent.ask(input, options);
 
       // Update assistant message with response
-      return await (this.prisma as any)[messageModel].update({
+      return await model.update({
         where: { id: assistantMessage.id },
         data: {
           content: response.content,
@@ -181,7 +220,7 @@ export class AgentSession<T extends Agent = Agent> {
       });
     } catch (error) {
       // Clean up placeholder on error
-      await (this.prisma as any)[messageModel].delete({ where: { id: assistantMessage.id } });
+      await model.delete({ where: { id: assistantMessage.id } });
       throw error;
     }
   }
@@ -193,249 +232,227 @@ export class AgentSession<T extends Agent = Agent> {
     input: string,
     options: AskOptions = {}
   ): AsyncGenerator<ChatChunk, MessageRecord, undefined> {
-    const messageModel = this.tables.message;
+    const model = this.getModel<MessageRecord>(this.tableNames.message);
 
     // Persist user message
-    await (this.prisma as any)[messageModel].create({
+    await model.create({
       data: { chatId: this.chatId, role: "user", content: input }
     });
 
     // Create placeholder for assistant message
-    const assistantMessage = await (this.prisma as any)[messageModel].create({
+    const assistantMessage = await model.create({
       data: { chatId: this.chatId, role: "assistant", content: null }
     });
+
+    this.currentMessageId = assistantMessage.id;
 
     try {
       const stream = this.agent.stream(input, options);
 
       let fullContent = "";
-      let metadata: any = {};
+      let lastChunk: ChatChunk | null = null;
 
       for await (const chunk of stream) {
-        if (chunk.content) {
-          fullContent += chunk.content;
-        }
-
+        fullContent += chunk.content;
+        lastChunk = chunk;
         yield chunk;
-
-        if (chunk.usage) {
-          metadata = { ...metadata, ...chunk.usage };
-        }
-        if (chunk.thinking) {
-          metadata.thinking = { ...(metadata.thinking || {}), ...chunk.thinking };
-          if (chunk.thinking.text) {
-            metadata.thinking.text = (metadata.thinking.text || "") + chunk.thinking.text;
-          }
-        }
       }
 
-      return await (this.prisma as any)[messageModel].update({
+      // Final update with accumulated result
+      return await model.update({
         where: { id: assistantMessage.id },
         data: {
           content: fullContent,
-          contentRaw: JSON.stringify(metadata),
-          inputTokens: metadata.input_tokens || 0,
-          outputTokens: metadata.output_tokens || 0,
-          thinkingText: metadata.thinking?.text || null,
-          thinkingSignature: metadata.thinking?.signature || null,
-          thinkingTokens: metadata.thinking?.tokens || null,
-          modelId: this.agent.modelId || null,
-          provider: null
+          inputTokens: lastChunk?.usage?.input_tokens || 0,
+          outputTokens: lastChunk?.usage?.output_tokens || 0,
+          thinkingText: lastChunk?.thinking?.text || null,
+          thinkingSignature: lastChunk?.thinking?.signature || null,
+          thinkingTokens: lastChunk?.thinking?.tokens || null,
+          modelId: (lastChunk?.metadata?.model as string) || null,
+          provider: (lastChunk?.metadata?.provider as string) || null
         }
       });
     } catch (error) {
-      await (this.prisma as any)[messageModel].delete({ where: { id: assistantMessage.id } });
+      await model.delete({ where: { id: assistantMessage.id } });
       throw error;
     }
   }
 
   /**
-   * Get all messages for this session.
+   * Returns the current full message history for this session.
    */
   async messages(): Promise<MessageRecord[]> {
-    const messageModel = this.tables.message;
-    return await (this.prisma as any)[messageModel].findMany({
+    const model = this.getModel<MessageRecord>(this.tableNames.message);
+    return await model.findMany({
       where: { chatId: this.chatId },
       orderBy: { createdAt: "asc" }
     });
   }
 
   /**
-   * Get the conversation history from the agent.
+   * Delete the entire session and its history.
    */
-  get history() {
-    return this.agent.history;
-  }
-
-  /**
-   * Get aggregate usage stats.
-   */
-  get totalUsage(): Usage {
-    return this.agent.totalUsage;
-  }
-
-  /**
-   * Get the model being used (from code, not DB).
-   */
-  get modelId(): string {
-    return this.agent.modelId;
+  async delete(): Promise<void> {
+    const chatTable = this.getModel(this.tableNames.chat);
+    await chatTable.delete({ where: { id: this.chatId } });
+    // AgentSession record is deleted via Cascade from LlmChat
   }
 }
 
-// --- Factory Functions ---
-
 /**
- * Helper to find the correct table property in the prisma client.
+ * Options for creating a new agent session.
  */
-function getTable(prisma: any, tableName: string): any {
-  if (prisma[tableName]) return prisma[tableName];
-
-  const keys = Object.keys(prisma).filter((k) => !k.startsWith("$") && !k.startsWith("_"));
-  const match = keys.find((k) => k.toLowerCase() === tableName.toLowerCase());
-
-  if (match) return prisma[match];
-
-  throw new Error(
-    `[@node-llm/orm] Prisma table "${tableName}" not found. Available tables: ${keys.join(", ")}`
-  );
+export interface CreateAgentSessionOptions {
+  metadata?: Record<string, unknown>;
+  tableNames?: TableNames;
+  debug?: boolean;
 }
 
 /**
- * Create a new agent session with persistence.
- *
- * @example
- * ```typescript
- * const session = await createAgentSession(prisma, llm, SupportAgent, {
- *   metadata: { userId: 'user_123', ticketId: 'TKT-456' }
- * });
- *
- * await session.ask('Where is my order?');
- * console.log(session.id); // Save this to resume later
- * ```
+ * Creates a new agent session and its persistent chat record.
  */
 export async function createAgentSession<T extends Agent>(
-  prisma: PrismaClient,
+  prisma: any,
   llm: NodeLLMCore,
   AgentClass: AgentClass<T>,
   options: CreateAgentSessionOptions = {}
 ): Promise<AgentSession<T>> {
-  const tables = {
+  const tableNames = {
     agentSession: options.tableNames?.agentSession || "llmAgentSession",
     chat: options.tableNames?.chat || "llmChat",
     message: options.tableNames?.message || "llmMessage"
   };
 
   if (options.debug) {
-    console.log(`[@node-llm/orm] createAgentSession: agent=${AgentClass.name}`);
+    console.log(`[@node-llm/orm] createAgentSession: agentClass=${AgentClass.name}`);
   }
 
   // 1. Create underlying LlmChat record
-  const chatTable = getTable(prisma, tables.chat);
-  const chatRecord = await chatTable.create({
+  const chatTable = getTable(prisma, tableNames.chat);
+  const chatRecord = (await chatTable.create({
     data: {
       model: AgentClass.model || null,
       provider: null,
       instructions: AgentClass.instructions || null,
       metadata: null // Runtime metadata goes in Chat, session context in AgentSession
     }
-  });
+  })) as unknown as { id: string };
 
   // 2. Create AgentSession record
-  const sessionTable = getTable(prisma, tables.agentSession);
-  const sessionRecord = await sessionTable.create({
+  const sessionTable = getTable(prisma, tableNames.agentSession);
+  const sessionRecord = (await sessionTable.create({
     data: {
       agentClass: AgentClass.name,
       chatId: chatRecord.id,
-      metadata: options.metadata ?? null
+      metadata: options.metadata || null
     }
-  });
+  })) as unknown as AgentSessionRecord;
 
-  // 3. Return wrapped session (no history for new sessions)
-  return new AgentSession<T>(
+  return new AgentSession(
     prisma,
     llm,
     AgentClass,
     sessionRecord,
-    { tableNames: options.tableNames, debug: options.debug },
-    []
+    options.tableNames,
+    undefined,
+    options.debug
   );
 }
 
 /**
- * Load an existing agent session by ID.
- *
- * Follows "Code Wins" sovereignty:
- * - Model, tools, instructions come from AgentClass (code)
- * - Message history comes from database
- *
- * @example
- * ```typescript
- * const session = await loadAgentSession(prisma, llm, SupportAgent, 'sess_abc123');
- * if (!session) {
- *   throw new Error('Session not found');
- * }
- * await session.ask('What were we discussing?');
- * ```
+ * Options for loading an existing agent session.
+ */
+export interface LoadAgentSessionOptions {
+  tableNames?: TableNames;
+  debug?: boolean;
+}
+
+/**
+ * Loads an existing agent session and re-instantiates the agent with history.
  */
 export async function loadAgentSession<T extends Agent>(
-  prisma: PrismaClient,
+  prisma: any,
   llm: NodeLLMCore,
   AgentClass: AgentClass<T>,
   sessionId: string,
   options: LoadAgentSessionOptions = {}
 ): Promise<AgentSession<T> | null> {
-  const tables = {
+  const tableNames = {
     agentSession: options.tableNames?.agentSession || "llmAgentSession",
     chat: options.tableNames?.chat || "llmChat",
     message: options.tableNames?.message || "llmMessage"
   };
 
   if (options.debug) {
-    console.log(
-      `[@node-llm/orm] loadAgentSession: sessionId=${sessionId}, agent=${AgentClass.name}`
-    );
+    console.log(`[@node-llm/orm] loadAgentSession: id=${sessionId}`);
   }
 
   // 1. Find session record
-  const sessionTable = getTable(prisma, tables.agentSession);
-  const sessionRecord = await sessionTable.findUnique({
+  const sessionTable = getTable(prisma, tableNames.agentSession);
+  const sessionRecord = (await sessionTable.findUnique({
     where: { id: sessionId }
-  });
+  })) as unknown as AgentSessionRecord | null;
 
   if (!sessionRecord) {
     return null;
   }
 
-  // 2. Validate agent class matches (safety check)
-  if (!options.skipClassValidation && sessionRecord.agentClass !== AgentClass.name) {
+  // 1.5. Validate Agent Class (Code Wins Sovereignty)
+  if (sessionRecord.agentClass !== AgentClass.name) {
     throw new Error(
-      `[@node-llm/orm] Agent class mismatch: session was created with "${sessionRecord.agentClass}" ` +
-        `but attempting to load with "${AgentClass.name}". ` +
-        `Use skipClassValidation: true to override (not recommended).`
+      `Agent class mismatch: Session "${sessionId}" was created for "${sessionRecord.agentClass}", but is being loaded with "${AgentClass.name}".`
     );
   }
 
-  // 3. Load message history from DB
-  const messageTable = getTable(prisma, tables.message);
-  const messageRecords = await messageTable.findMany({
+  // 2. Load message history
+  const messageTable = getTable(prisma, tableNames.message);
+  const messages = (await messageTable.findMany({
     where: { chatId: sessionRecord.chatId },
     orderBy: { createdAt: "asc" }
-  });
+  })) as unknown as MessageRecord[];
 
-  // 4. Convert to Message format for agent
-  const history: Message[] = messageRecords.map((m: any) => ({
+  // 3. Convert DB messages to NodeLLM Message format
+  const history: Message[] = messages.map((m) => ({
     role: m.role as "user" | "assistant" | "system",
     content: m.content || ""
   }));
 
-  // 5. Return session with injected history
-  // "Code Wins" - AgentClass defines model, tools, instructions
-  return new AgentSession<T>(
+  // 4. Instantiate agent with injected history and LLM
+  // "Code Wins" - model, tools, instructions come from AgentClass
+  const agent = new AgentClass({
+    llm,
+    messages: history
+  }) as T;
+
+  return new AgentSession(
     prisma,
     llm,
     AgentClass,
     sessionRecord,
-    { tableNames: options.tableNames, debug: options.debug },
-    history
+    options.tableNames,
+    agent,
+    options.debug
+  );
+}
+
+/**
+ * Dynamic helper to access Prisma models by name.
+ * Handles both case-sensitive and case-insensitive lookups for flexibility.
+ */
+function getTable(prisma: GenericPrismaClient, tableName: string): PrismaModel {
+  const p = prisma as unknown as Record<string, PrismaModel>;
+
+  // 1. Direct match
+  const table = p[tableName];
+  if (table) return table;
+
+  // 2. Case-insensitive match
+  const keys = Object.keys(prisma).filter((k) => !k.startsWith("$") && !k.startsWith("_"));
+  const match = keys.find((k) => k.toLowerCase() === tableName.toLowerCase());
+
+  if (match && p[match]) return p[match];
+
+  throw new Error(
+    `[@node-llm/orm] Prisma table "${tableName}" not found. Available tables: ${keys.join(", ")}`
   );
 }

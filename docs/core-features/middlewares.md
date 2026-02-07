@@ -35,7 +35,7 @@ In a production environment, you rarely want to call an LLM directly without add
 Middlewares are passed when creating a chat instance. You can pass a single middleware or an array of middlewares.
 
 ```typescript
-import { NodeLLM, Middleware } from "@node-llm/core";
+import { NodeLLM, Middleware, ChatResponseString } from "@node-llm/core";
 
 const myMiddleware: Middleware = {
   name: "MyMiddleware",
@@ -43,7 +43,10 @@ const myMiddleware: Middleware = {
     console.log(`[Request] Sending to ${context.model}`);
   },
   onResponse: async (context, result) => {
-    console.log(`[Response] Received ${result.usage.total_tokens} tokens`);
+    // result is NodeLLMResponse (union of Chat, Image, Transcription, etc.)
+    if (result instanceof ChatResponseString) {
+      console.log(`[Response] Received ${result.usage.total_tokens} tokens`);
+    }
   }
 };
 
@@ -64,7 +67,7 @@ await chat.ask("Hello world");
  interface Middleware {
    name: string;
    onRequest?: (context: MiddlewareContext) => Promise<void> | void;
-   onResponse?: (context: MiddlewareContext, result: ChatResponseString) => Promise<void> | void;
+   onResponse?: (context: MiddlewareContext, result: NodeLLMResponse) => Promise<void> | void;
    onError?: (context: MiddlewareContext, error: Error) => Promise<void> | void;
    
    // Tool Execution Hooks
@@ -73,6 +76,8 @@ await chat.ask("Hello world");
    onToolCallError?: (context: MiddlewareContext, tool: ToolCall, error: Error) => Promise<ToolErrorDirective> | ToolErrorDirective;
  }
  ```
+
+ > **Warning**: Since `v1.10.0`, the `onResponse` hook receives a `NodeLLMResponse` union. You must use a type guard (like `instanceof ChatResponseString`) before accessing chat-specific properties like `usage` or `content`.
  
  ### MiddlewareContext
  The `context` object is persistent across the lifecycle of a single request and provides deep access to the execution state:
@@ -115,8 +120,12 @@ const perfMiddleware = {
   },
   onResponse: async (context, result) => {
     const latency = Date.now() - (context.state.startTime as number);
-    const cost = calculateCost(context.model, result.usage);
-    await db.metrics.create({ model: context.model, latency, cost });
+    
+    // Safety check for usage metrics
+    if (result instanceof ChatResponseString) {
+      const cost = calculateCost(context.model, result.usage);
+      await db.metrics.create({ model: context.model, latency, cost });
+    }
   }
 }
 ```

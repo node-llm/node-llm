@@ -208,10 +208,12 @@ export class Mocker {
   public sequence(responses: Array<string | MockResponse>): this {
     const lastMock = this.mocks[this.mocks.length - 1];
     if (!lastMock) throw new Error("Mocker: No mock definition started.");
+    if (responses.length === 0)
+      throw new Error("Mocker: sequence() requires at least one response.");
 
     let callIndex = 0;
-    lastMock.response = () => {
-      const response = responses[Math.min(callIndex, responses.length - 1)];
+    lastMock.response = (_request: unknown): MockResponse => {
+      const response = responses[Math.min(callIndex, responses.length - 1)]!;
       callIndex++;
       if (typeof response === "string") {
         return { content: response, text: response };
@@ -336,7 +338,7 @@ export class Mocker {
 
           if (EXECUTION_METHODS.includes(methodName)) {
             if (methodName === "stream") {
-              return async function* (this: Mocker, request: ChatRequest) {
+              return async function* (this: any, request: ChatRequest) {
                 this._history.push({
                   method: methodName,
                   args: [request],
@@ -345,7 +347,7 @@ export class Mocker {
                 });
 
                 const matchingMocks = this.mocks.filter(
-                  (m) => m.method === methodName && m.match(request)
+                  (m: MockDefinition) => m.method === methodName && m.match(request)
                 );
                 const mock = matchingMocks[0]; // First match wins (for times() support)
                 if (mock) {
@@ -362,16 +364,17 @@ export class Mocker {
                   return;
                 }
                 if (this.strict) throw new Error("Mocker: Unexpected LLM call to 'stream'");
-                const original = originalValue
-                  ? (originalValue as any).apply(target, [request])
-                  : undefined;
+                const original =
+                  typeof originalValue === "function"
+                    ? (originalValue.apply(target, [request]) as AsyncIterable<unknown>)
+                    : undefined;
                 if (original) yield* original;
               }.bind(this);
             }
 
             // Promise-based methods
             return (async (request: unknown) => {
-              const req = request as any;
+              const req = request as Record<string, unknown>;
               let promptAttr: unknown;
               if (methodName === "chat") promptAttr = req.messages;
               else if (methodName === "embed" || methodName === "moderate") promptAttr = req.input;
@@ -442,7 +445,7 @@ export class Mocker {
                     } as ModerationResponse;
                   }
                   case "listModels": {
-                    return res || [];
+                    return (res as unknown) || [];
                   }
                   default:
                     return res;
@@ -450,7 +453,9 @@ export class Mocker {
               }
 
               if (this.strict) throw new Error(`Mocker: Unexpected LLM call to '${methodName}'`);
-              return originalValue ? (originalValue as any).apply(target, [request]) : undefined;
+              return typeof originalValue === "function"
+                ? originalValue.apply(target, [request])
+                : undefined;
             }).bind(this);
           }
           return originalValue;

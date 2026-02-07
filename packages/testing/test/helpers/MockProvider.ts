@@ -46,30 +46,28 @@ export class MockProvider extends BaseProvider {
     getContextWindow: () => 128000
   };
 
-  chat: Mock<(req: ChatRequest) => Promise<ChatResponse>> = vi.fn(
-    async (req: ChatRequest): Promise<ChatResponse> => {
-      const lastMsg = req.messages[req.messages.length - 1];
-      let contentStr = "nothing";
+  chat = vi.fn(async (req: ChatRequest): Promise<ChatResponse> => {
+    const lastMsg = req.messages[req.messages.length - 1];
+    let contentStr = "nothing";
 
-      if (lastMsg && lastMsg.content) {
-        if (typeof lastMsg.content === "string") {
-          contentStr = lastMsg.content;
-        } else if (Array.isArray(lastMsg.content)) {
-          contentStr = lastMsg.content.map((p) => (p.type === "text" ? p.text : "")).join("");
-        } else {
-          contentStr = String(lastMsg.content);
-        }
+    if (lastMsg && lastMsg.content) {
+      if (typeof lastMsg.content === "string") {
+        contentStr = lastMsg.content;
+      } else if (Array.isArray(lastMsg.content)) {
+        contentStr = lastMsg.content.map((p) => (p.type === "text" ? p.text : "")).join("");
+      } else {
+        contentStr = String(lastMsg.content);
       }
-
-      return {
-        content: `Response to ${contentStr}`,
-        usage: { input_tokens: 10, output_tokens: 10, total_tokens: 20 }
-      };
     }
-  );
 
-  embed: Mock<(req: EmbeddingRequest) => Promise<EmbeddingResponse>> = vi.fn();
-  paint: Mock<(req: ImageRequest) => Promise<ImageResponse>> = vi.fn();
-  transcribe: Mock<(req: TranscriptionRequest) => Promise<TranscriptionResponse>> = vi.fn();
-  moderate: Mock<(req: ModerationRequest) => Promise<ModerationResponse>> = vi.fn();
+    return {
+      content: `Response to ${contentStr}`,
+      usage: { input_tokens: 10, output_tokens: 10, total_tokens: 20 }
+    } as ChatResponse;
+  }) as any;
+
+  embed = vi.fn() as any;
+  paint = vi.fn() as any;
+  transcribe = vi.fn() as any;
+  moderate = vi.fn() as any;
 }

@@ -217,7 +217,7 @@ export class NodeLLMCore {
       });
 
       const imageResult = new GeneratedImage(response);
-      await runMiddleware(middlewares, "onResponse", context, imageResult as any);
+      await runMiddleware(middlewares, "onResponse", context, imageResult);
 
       return imageResult;
     } catch (error) {
@@ -282,7 +282,7 @@ export class NodeLLMCore {
       });
 
       const transcriptionResult = new Transcription(response);
-      await runMiddleware(middlewares, "onResponse", context, transcriptionResult as any);
+      await runMiddleware(middlewares, "onResponse", context, transcriptionResult);
 
       return transcriptionResult;
     } catch (error) {
@@ -343,7 +343,7 @@ export class NodeLLMCore {
       });
 
       const moderationResult = new Moderation(response);
-      await runMiddleware(middlewares, "onResponse", context, moderationResult as any);
+      await runMiddleware(middlewares, "onResponse", context, moderationResult);
 
       return moderationResult;
     } catch (error) {
@@ -407,8 +407,7 @@ export class NodeLLMCore {
 
       const response = await provider.embed(request);
       const embeddingResult = new Embedding(response);
-
-      await runMiddleware(middlewares, "onResponse", context, embeddingResult as any);
+      await runMiddleware(middlewares, "onResponse", context, embeddingResult);
 
       return embeddingResult;
     } catch (error) {

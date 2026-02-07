@@ -2,6 +2,20 @@ import { Message } from "../chat/Message.js";
 import { ChatOptions } from "../chat/ChatOptions.js";
 import { ChatResponseString } from "../chat/ChatResponse.js";
 import { ToolCall } from "../chat/Tool.js";
+import { GeneratedImage } from "../image/GeneratedImage.js";
+import { Transcription } from "../transcription/Transcription.js";
+import { Moderation } from "../moderation/Moderation.js";
+import { Embedding } from "../embedding/Embedding.js";
+
+/**
+ * All possible response types that can be returned by NodeLLM.
+ */
+export type NodeLLMResponse =
+  | ChatResponseString
+  | GeneratedImage
+  | Transcription
+  | Moderation
+  | Embedding;
 
 /**
  * Context passed to all middleware hooks.
@@ -43,22 +57,22 @@ export interface MiddlewareContext {
   /**
    * Options passed to the embedding request (Embedding only).
    */
-  embeddingOptions?: Record<string, any>;
+  embeddingOptions?: Record<string, unknown>;
 
   /**
    * Options passed to the transcription request (Transcription only).
    */
-  transcriptionOptions?: Record<string, any>;
+  transcriptionOptions?: Record<string, unknown>;
 
   /**
    * Options passed to the moderation request (Moderation only).
    */
-  moderationOptions?: Record<string, any>;
+  moderationOptions?: Record<string, unknown>;
 
   /**
    * Options passed to the image generation request (Paint only).
    */
-  imageOptions?: Record<string, any>;
+  imageOptions?: Record<string, unknown>;
 
   /**
    * Shared state storage for passing data between middleware hooks.
@@ -90,7 +104,7 @@ export interface Middleware {
   /**
    * Called after a successful response from the provider.
    */
-  onResponse?(ctx: MiddlewareContext, result: ChatResponseString): Promise<void>;
+  onResponse?(ctx: MiddlewareContext, result: NodeLLMResponse): Promise<void>;
 
   /**
    * Called if an error occurs during execution.

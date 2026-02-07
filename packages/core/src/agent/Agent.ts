@@ -94,7 +94,7 @@ export abstract class Agent<S extends Record<string, unknown> = Record<string, u
    * Hook called when the agent starts a new session (ask/stream).
    * @param context - Initial context including messages/options
    */
-  static onStart(context: { messages: unknown[] }): void | Promise<void> {
+  static onStart(_context: { messages: unknown[] }): void | Promise<void> {
     // Override in subclass
   }
 
@@ -103,7 +103,7 @@ export abstract class Agent<S extends Record<string, unknown> = Record<string, u
    * @param thinking - The content of the thinking trace
    * @param result - The full response object containing the thinking
    */
-  static onThinking(thinking: ThinkingResult, result: ChatResponseString): void | Promise<void> {
+  static onThinking(_thinking: ThinkingResult, _result: ChatResponseString): void | Promise<void> {
     // Override in subclass
   }
 
@@ -111,7 +111,7 @@ export abstract class Agent<S extends Record<string, unknown> = Record<string, u
    * Hook called when a tool execution starts.
    * @param toolCall - The tool call object (id, function name, arguments)
    */
-  static onToolStart(toolCall: unknown): void | Promise<void> {
+  static onToolStart(_toolCall: unknown): void | Promise<void> {
     // Override in subclass
   }
 
@@ -120,7 +120,7 @@ export abstract class Agent<S extends Record<string, unknown> = Record<string, u
    * @param toolCall - The tool call object
    * @param result - The result of the tool execution
    */
-  static onToolEnd(toolCall: unknown, result: unknown): void | Promise<void> {
+  static onToolEnd(_toolCall: unknown, _result: unknown): void | Promise<void> {
     // Override in subclass
   }
 
@@ -129,7 +129,7 @@ export abstract class Agent<S extends Record<string, unknown> = Record<string, u
    * @param toolCall - The tool call object
    * @param error - The error that occurred
    */
-  static onToolError(toolCall: unknown, error: Error): void | Promise<void> {
+  static onToolError(_toolCall: unknown, _error: Error): void | Promise<void> {
     // Override in subclass
   }
 
@@ -137,7 +137,7 @@ export abstract class Agent<S extends Record<string, unknown> = Record<string, u
    * Hook called when the agent completes a response turn.
    * @param result - The final response object
    */
-  static onComplete(result: ChatResponseString): void | Promise<void> {
+  static onComplete(_result: ChatResponseString): void | Promise<void> {
     // Override in subclass
   }
 

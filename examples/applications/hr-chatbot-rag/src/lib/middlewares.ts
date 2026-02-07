@@ -1,4 +1,4 @@
-import { Middleware } from "@node-llm/core";
+import { Middleware, ChatResponseString } from "@node-llm/core";
 
 /**
  * HR Chatbot Middleware Stack
@@ -32,9 +32,11 @@ export const queryLoggingMiddleware: Middleware = {
   },
   
   onResponse: async (ctx, response) => {
-    console.log(
-      `[HR Bot] Response generated (${response.usage?.total_tokens || 0} tokens)`
-    );
+    if (response instanceof ChatResponseString) {
+      console.log(
+        `[HR Bot] Response generated (${response.usage?.total_tokens || 0} tokens)`
+      );
+    }
   }
 };
 
@@ -129,27 +131,29 @@ export const qualityMiddleware: Middleware = {
   name: "QualityChecker",
   
   onResponse: async (ctx, response) => {
-    const content = response.content || "";
-    
-    // Check for "I don't know" type responses
-    const uncertainPhrases = [
-      "i don't have information",
-      "i'm sorry, i don't",
-      "contact the hr department",
-      "not in my current registry"
-    ];
-    
-    const isUncertain = uncertainPhrases.some((phrase) =>
-      content.toLowerCase().includes(phrase)
-    );
-    
-    if (isUncertain) {
-      console.log(
-        `[Quality] Fallback response triggered for request ${ctx.requestId}`
+    if (response instanceof ChatResponseString) {
+      const content = response.content || "";
+
+      // Check for "I don't know" type responses
+      const uncertainPhrases = [
+        "i don't have information",
+        "i'm sorry, i don't",
+        "contact the hr department",
+        "not in my current registry"
+      ];
+
+      const isUncertain = uncertainPhrases.some((phrase) =>
+        content.toLowerCase().includes(phrase)
       );
-      
-      // In production: track fallback rate as a quality metric
-      // await metrics.increment("hr_bot_fallback_responses");
+
+      if (isUncertain) {
+        console.log(
+          `[Quality] Fallback response triggered for request ${ctx.requestId}`
+        );
+
+        // In production: track fallback rate as a quality metric
+        // await metrics.increment("hr_bot_fallback_responses");
+      }
     }
   }
 };
@@ -178,13 +182,16 @@ export const auditMiddleware: Middleware = {
   },
   
   onResponse: async (ctx, response) => {
-    const auditLog = {
+    const auditLog: any = {
       requestId: ctx.requestId,
       timestamp: new Date().toISOString(),
-      tokens: response.usage?.total_tokens,
       status: "success"
     };
-    
+
+    if (response instanceof ChatResponseString) {
+      auditLog.tokens = response.usage?.total_tokens;
+    }
+
     console.log("[Audit]", JSON.stringify(auditLog));
   },
   

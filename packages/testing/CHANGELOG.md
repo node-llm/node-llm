@@ -1,5 +1,20 @@
 # Changelog
 
+## [0.5.0] - 2026-02-07
+
+### Added
+
+- **Agent Testing Support**:
+  - `mocker.callsTools()`: Mock responses that trigger multiple tool calls in one response.
+  - `mocker.sequence()`: Return different responses for multi-turn agent conversations.
+  - `mocker.times(n)`: Limit mock matches with fallthrough to next matching mock.
+- **Improved Matching**: Changed from last-match to first-match semantics, enabling `times()` fallthrough patterns.
+
+### Documentation
+
+- Added "Testing Agents & AgentSessions" section to README.
+- Added doc tests for `callsTools()`, `sequence()`, and `times()` methods.
+
 ## [0.2.0] - 2026-01-26
 
 ### Added

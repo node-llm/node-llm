@@ -19,14 +19,14 @@ export class Serializer {
     if (typeof globalThis.structuredClone === "function") {
       try {
         return globalThis.structuredClone(data);
-      } catch (err) {
+      } catch (_err) {
         // Fallback for types structuredClone might not handle or implementation quirks
       }
     }
     return Serializer.deserialize(Serializer.serialize(data));
   }
 
-  private static replacer(this: any, key: string, value: unknown): unknown {
+  private static replacer(this: Record<string, unknown>, key: string, value: unknown): unknown {
     const originalValue = this[key];
 
     if (originalValue === Infinity) return { $type: "Infinity" };
@@ -56,7 +56,7 @@ export class Serializer {
         name: originalValue.name,
         message: originalValue.message,
         stack: originalValue.stack,
-        cause: (originalValue as any).cause
+        cause: (originalValue as Error).cause
       };
     }
 
@@ -68,19 +68,29 @@ export class Serializer {
     return value;
   }
 
-  private static reviver(key: string, value: unknown): unknown {
+  private static reviver(_key: string, value: unknown): unknown {
     if (value && typeof value === "object" && "$type" in value) {
-      const typedValue = value as { $type: string; value?: any; [key: string]: any };
+      const typedValue = value as {
+        $type: string;
+        value?: any;
+        source?: string;
+        flags?: string;
+        message?: string;
+        name?: string;
+        stack?: string;
+        cause?: unknown;
+        [key: string]: unknown;
+      };
 
       switch (typedValue.$type) {
         case "Date":
-          return new Date(typedValue.value);
+          return new Date(typedValue.value as string);
         case "RegExp":
-          return new RegExp(typedValue.source, typedValue.flags);
+          return new RegExp(typedValue.source as string, typedValue.flags as string);
         case "Map":
-          return new Map(typedValue.value);
+          return new Map(typedValue.value as Array<[unknown, unknown]>);
         case "Set":
-          return new Set(typedValue.value);
+          return new Set(typedValue.value as unknown[]);
         case "Infinity":
           return Infinity;
         case "-Infinity":
@@ -88,9 +98,9 @@ export class Serializer {
         case "NaN":
           return NaN;
         case "Error": {
-          const err = new Error(typedValue.message);
-          err.name = typedValue.name;
-          if (typedValue.stack) err.stack = typedValue.stack;
+          const err = new Error(typedValue.message as string);
+          err.name = typedValue.name as string;
+          if (typedValue.stack) err.stack = typedValue.stack as string;
           if (typedValue.cause) (err as any).cause = typedValue.cause;
           // Restore other properties
           for (const k in typedValue) {
@@ -101,7 +111,7 @@ export class Serializer {
         }
         case "Buffer":
           if (typeof Buffer !== "undefined") {
-            return Buffer.from(typedValue.value, "base64");
+            return Buffer.from(typedValue.value as string, "base64");
           }
           return typedValue.value;
         default:
