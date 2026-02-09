@@ -55,8 +55,17 @@ export default {
     "anthropic": "claude-haiku-4-5-20251001",
     "bedrock": "anthropic.claude-haiku-4-5-20251001-v1:0"
   },
+  "claude-haiku-4.5-eu": {
+    "bedrock": "eu.anthropic.claude-haiku-4-5-20251001-v1:0"
+  },
+  "claude-haiku-4.5-global": {
+    "bedrock": "global.anthropic.claude-haiku-4-5-20251001-v1:0"
+  },
   "claude-haiku-4.5-latest": {
     "anthropic": "claude-haiku-4-5"
+  },
+  "claude-haiku-4.5-us": {
+    "bedrock": "us.anthropic.claude-haiku-4-5-20251001-v1:0"
   },
   "claude-instant": {
     "bedrock": "anthropic.claude-instant-v1"
@@ -73,6 +82,9 @@ export default {
   "claude-opus-4-latest": {
     "anthropic": "claude-opus-4-0"
   },
+  "claude-opus-4-us": {
+    "bedrock": "us.anthropic.claude-opus-4-20250514-v1:0"
+  },
   "claude-opus-4.1": {
     "openrouter": "anthropic/claude-opus-4.1",
     "anthropic": "claude-opus-4-1-20250805",
@@ -81,16 +93,39 @@ export default {
   "claude-opus-4.1-latest": {
     "anthropic": "claude-opus-4-1"
   },
+  "claude-opus-4.1-us": {
+    "bedrock": "us.anthropic.claude-opus-4-1-20250805-v1:0"
+  },
   "claude-opus-4.5": {
     "openrouter": "anthropic/claude-opus-4.5",
     "anthropic": "claude-opus-4-5-20251101",
     "bedrock": "anthropic.claude-opus-4-5-20251101-v1:0"
+  },
+  "claude-opus-4.5-eu": {
+    "bedrock": "eu.anthropic.claude-opus-4-5-20251101-v1:0"
   },
   "claude-opus-4.5-global": {
     "bedrock": "global.anthropic.claude-opus-4-5-20251101-v1:0"
   },
   "claude-opus-4.5-latest": {
     "anthropic": "claude-opus-4-5"
+  },
+  "claude-opus-4.5-us": {
+    "bedrock": "us.anthropic.claude-opus-4-5-20251101-v1:0"
+  },
+  "claude-opus-4.6": {
+    "openrouter": "anthropic/claude-opus-4.6",
+    "anthropic": "claude-opus-4-6",
+    "bedrock": "anthropic.claude-opus-4-6-v1"
+  },
+  "claude-opus-4.6-eu": {
+    "bedrock": "eu.anthropic.claude-opus-4-6-v1"
+  },
+  "claude-opus-4.6-global": {
+    "bedrock": "global.anthropic.claude-opus-4-6-v1"
+  },
+  "claude-opus-4.6-us": {
+    "bedrock": "us.anthropic.claude-opus-4-6-v1"
   },
   "claude-sonnet-3": {
     "anthropic": "claude-3-sonnet-20240229",
@@ -113,16 +148,34 @@ export default {
     "anthropic": "claude-sonnet-4-20250514",
     "bedrock": "anthropic.claude-sonnet-4-20250514-v1:0"
   },
+  "claude-sonnet-4-eu": {
+    "bedrock": "eu.anthropic.claude-sonnet-4-20250514-v1:0"
+  },
+  "claude-sonnet-4-global": {
+    "bedrock": "global.anthropic.claude-sonnet-4-20250514-v1:0"
+  },
   "claude-sonnet-4-latest": {
     "anthropic": "claude-sonnet-4-0"
+  },
+  "claude-sonnet-4-us": {
+    "bedrock": "us.anthropic.claude-sonnet-4-20250514-v1:0"
   },
   "claude-sonnet-4.5": {
     "openrouter": "anthropic/claude-sonnet-4.5",
     "anthropic": "claude-sonnet-4-5-20250929",
     "bedrock": "anthropic.claude-sonnet-4-5-20250929-v1:0"
   },
+  "claude-sonnet-4.5-eu": {
+    "bedrock": "eu.anthropic.claude-sonnet-4-5-20250929-v1:0"
+  },
+  "claude-sonnet-4.5-global": {
+    "bedrock": "global.anthropic.claude-sonnet-4-5-20250929-v1:0"
+  },
   "claude-sonnet-4.5-latest": {
     "anthropic": "claude-sonnet-4-5"
+  },
+  "claude-sonnet-4.5-us": {
+    "bedrock": "us.anthropic.claude-sonnet-4-5-20250929-v1:0"
   },
   "codestral-2508": {
     "openrouter": "mistralai/codestral-2508"
@@ -481,6 +534,9 @@ export default {
     "openai": "gpt-5.2-pro",
     "openrouter": "openai/gpt-5.2-pro"
   },
+  "gpt-5.3-codex": {
+    "openai": "gpt-5.3-codex"
+  },
   "gpt-oss-120b": {
     "gemini": "openai/gpt-oss-120b-maas",
     "openrouter": "openai/gpt-oss-120b",
@@ -662,6 +718,9 @@ export default {
   "mai-ds-r1-free": {
     "openrouter": "microsoft/mai-ds-r1:free"
   },
+  "mimo-v2-flash": {
+    "openrouter": "xiaomi/mimo-v2-flash"
+  },
   "minimax-01": {
     "openrouter": "minimax/minimax-01"
   },
@@ -778,6 +837,9 @@ export default {
   },
   "o4-mini-deep-research": {
     "openai": "o4-mini-deep-research"
+  },
+  "pony-alpha": {
+    "openrouter": "openrouter/pony-alpha"
   },
   "qwen2.5-coder-32b-instruct": {
     "openrouter": "qwen/qwen-2.5-coder-32b-instruct"

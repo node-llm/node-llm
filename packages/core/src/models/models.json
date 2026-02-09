@@ -31,7 +31,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.009Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -66,7 +66,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.009Z"
+      "last_synced": "2026-02-09T09:58:36.422Z"
     }
   },
   {
@@ -82,16 +82,7 @@
       "input": ["text", "image", "video"],
       "output": ["text"]
     },
-    "capabilities": [
-      "streaming",
-      "reasoning",
-      "chat",
-      "vision",
-      "function_calling",
-      "tools",
-      "structured_output",
-      "json_mode"
-    ],
+    "capabilities": ["streaming", "reasoning", "chat", "vision"],
     "pricing": {
       "text_tokens": {
         "standard": {
@@ -103,7 +94,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -138,7 +129,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.009Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -175,7 +166,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.009Z"
+      "last_synced": "2026-02-09T09:58:36.422Z"
     }
   },
   {
@@ -211,7 +202,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.009Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -248,7 +239,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.009Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -285,7 +276,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.009Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -319,7 +310,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.009Z"
+      "last_synced": "2026-02-09T09:58:36.422Z"
     }
   },
   {
@@ -353,7 +344,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.009Z"
+      "last_synced": "2026-02-09T09:58:36.422Z"
     }
   },
   {
@@ -390,7 +381,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.009Z"
+      "last_synced": "2026-02-09T09:58:36.422Z"
     }
   },
   {
@@ -427,7 +418,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.009Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -464,7 +455,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.009Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -501,7 +492,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.009Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -537,7 +528,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.009Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -573,7 +564,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.009Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -609,7 +600,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.009Z"
+      "last_synced": "2026-02-09T09:58:36.422Z"
     }
   },
   {
@@ -647,7 +638,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.009Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -675,7 +666,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.009Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -713,7 +704,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.009Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -751,7 +742,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.009Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -789,7 +780,45 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.009Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
+    }
+  },
+  {
+    "id": "anthropic.claude-opus-4-6-v1",
+    "name": "Claude Opus 4.6",
+    "provider": "bedrock",
+    "family": "claude-opus",
+    "created_at": "2026-02-05 00:00:00 UTC",
+    "context_window": 1000000,
+    "max_output_tokens": 128000,
+    "knowledge_cutoff": "2025-05",
+    "modalities": {
+      "input": ["text", "image", "pdf"],
+      "output": ["text"]
+    },
+    "capabilities": [
+      "streaming",
+      "reasoning",
+      "chat",
+      "vision",
+      "function_calling",
+      "tools",
+      "structured_output",
+      "json_mode"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 5,
+          "output_per_million": 25,
+          "cached_input_per_million": 0.5,
+          "reasoning_output_per_million": 25
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -827,7 +856,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.009Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -865,7 +894,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.009Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -893,7 +922,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.009Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -921,7 +950,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.009Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -958,7 +987,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -996,7 +1025,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -1034,7 +1063,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -1072,7 +1101,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -1110,7 +1139,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -1148,7 +1177,45 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
+    }
+  },
+  {
+    "id": "anthropic/claude-opus-4.6",
+    "name": "Claude Opus 4.6",
+    "provider": "openrouter",
+    "family": "claude-opus",
+    "created_at": "2026-02-05 00:00:00 UTC",
+    "context_window": 1000000,
+    "max_output_tokens": 128000,
+    "knowledge_cutoff": "2025-05-30",
+    "modalities": {
+      "input": ["text", "image", "pdf"],
+      "output": ["text"]
+    },
+    "capabilities": [
+      "streaming",
+      "reasoning",
+      "chat",
+      "vision",
+      "function_calling",
+      "tools",
+      "structured_output",
+      "json_mode"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 5,
+          "output_per_million": 25,
+          "cached_input_per_million": 0.5,
+          "reasoning_output_per_million": 25
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -1186,7 +1253,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -1224,7 +1291,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -1280,7 +1347,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -1315,7 +1382,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -1370,7 +1437,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -1398,7 +1465,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -1426,7 +1493,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -1454,7 +1521,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -1482,7 +1549,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -1574,7 +1641,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.009Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -1611,7 +1678,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.009Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -1648,7 +1715,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.009Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -1685,7 +1752,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.009Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -1753,7 +1820,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.009Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -1791,7 +1858,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.009Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -1856,7 +1923,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.009Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -1921,7 +1988,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.009Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -1958,7 +2025,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.009Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -2020,7 +2087,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.009Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -2082,7 +2149,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.009Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -2120,7 +2187,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.009Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -2182,7 +2249,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.009Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -2244,7 +2311,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.009Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -2310,7 +2377,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.009Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -2348,7 +2415,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.009Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -2386,7 +2453,45 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.009Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
+    }
+  },
+  {
+    "id": "claude-opus-4-6",
+    "name": "Claude Opus 4.6",
+    "provider": "anthropic",
+    "family": "claude-opus",
+    "created_at": "2026-02-05 00:00:00 UTC",
+    "context_window": 200000,
+    "max_output_tokens": 128000,
+    "knowledge_cutoff": "2025-05",
+    "modalities": {
+      "input": ["text", "image", "pdf"],
+      "output": ["text"]
+    },
+    "capabilities": [
+      "streaming",
+      "reasoning",
+      "chat",
+      "vision",
+      "function_calling",
+      "tools",
+      "structured_output",
+      "json_mode"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 5,
+          "output_per_million": 25,
+          "cached_input_per_million": 0.5,
+          "reasoning_output_per_million": 25
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -2424,7 +2529,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.009Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -2490,7 +2595,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.009Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -2552,7 +2657,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.009Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -2614,7 +2719,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.009Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -2680,7 +2785,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.007Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -2696,14 +2801,7 @@
       "input": ["text"],
       "output": ["text"]
     },
-    "capabilities": [
-      "streaming",
-      "chat",
-      "function_calling",
-      "tools",
-      "structured_output",
-      "json_mode"
-    ],
+    "capabilities": ["streaming", "chat"],
     "pricing": {
       "text_tokens": {
         "standard": {
@@ -2715,7 +2813,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -2750,7 +2848,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -2786,7 +2884,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -2814,7 +2912,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.009Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -2849,7 +2947,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.009Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -2884,7 +2982,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.009Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -2912,7 +3010,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.009Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -3072,7 +3170,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.006Z"
+      "last_synced": "2026-02-09T09:58:36.419Z"
     }
   },
   {
@@ -3101,7 +3199,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.007Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -3137,7 +3235,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.009Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -3173,7 +3271,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.009Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -3201,7 +3299,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -3237,7 +3335,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -3273,7 +3371,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -3301,7 +3399,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -3329,7 +3427,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -3357,7 +3455,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -3393,7 +3491,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -3421,7 +3519,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -3457,7 +3555,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -3493,7 +3591,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -3529,7 +3627,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -3565,7 +3663,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -3623,6 +3721,196 @@
     }
   },
   {
+    "id": "eu.anthropic.claude-haiku-4-5-20251001-v1:0",
+    "name": "Claude Haiku 4.5 (EU)",
+    "provider": "bedrock",
+    "family": "claude-haiku",
+    "created_at": "2025-10-15 00:00:00 UTC",
+    "context_window": 200000,
+    "max_output_tokens": 64000,
+    "knowledge_cutoff": "2025-02-28",
+    "modalities": {
+      "input": ["text", "image", "pdf"],
+      "output": ["text"]
+    },
+    "capabilities": [
+      "streaming",
+      "reasoning",
+      "chat",
+      "vision",
+      "function_calling",
+      "tools",
+      "structured_output",
+      "json_mode"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 1,
+          "output_per_million": 5,
+          "cached_input_per_million": 0.1,
+          "reasoning_output_per_million": 5
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "last_synced": "2026-02-09T09:58:36.421Z"
+    }
+  },
+  {
+    "id": "eu.anthropic.claude-opus-4-5-20251101-v1:0",
+    "name": "Claude Opus 4.5 (EU)",
+    "provider": "bedrock",
+    "family": "claude-opus",
+    "created_at": "2025-11-24 00:00:00 UTC",
+    "context_window": 200000,
+    "max_output_tokens": 64000,
+    "knowledge_cutoff": "2025-03-31",
+    "modalities": {
+      "input": ["text", "image", "pdf"],
+      "output": ["text"]
+    },
+    "capabilities": [
+      "streaming",
+      "reasoning",
+      "chat",
+      "vision",
+      "function_calling",
+      "tools",
+      "structured_output",
+      "json_mode"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 5,
+          "output_per_million": 25,
+          "cached_input_per_million": 0.5,
+          "reasoning_output_per_million": 25
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "last_synced": "2026-02-09T09:58:36.422Z"
+    }
+  },
+  {
+    "id": "eu.anthropic.claude-opus-4-6-v1",
+    "name": "Claude Opus 4.6 (EU)",
+    "provider": "bedrock",
+    "family": "claude-opus",
+    "created_at": "2026-02-05 00:00:00 UTC",
+    "context_window": 1000000,
+    "max_output_tokens": 128000,
+    "knowledge_cutoff": "2025-05",
+    "modalities": {
+      "input": ["text", "image", "pdf"],
+      "output": ["text"]
+    },
+    "capabilities": [
+      "streaming",
+      "reasoning",
+      "chat",
+      "vision",
+      "function_calling",
+      "tools",
+      "structured_output",
+      "json_mode"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 5,
+          "output_per_million": 25,
+          "cached_input_per_million": 0.5,
+          "reasoning_output_per_million": 25
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "last_synced": "2026-02-09T09:58:36.422Z"
+    }
+  },
+  {
+    "id": "eu.anthropic.claude-sonnet-4-20250514-v1:0",
+    "name": "Claude Sonnet 4 (EU)",
+    "provider": "bedrock",
+    "family": "claude-sonnet",
+    "created_at": "2025-05-22 00:00:00 UTC",
+    "context_window": 200000,
+    "max_output_tokens": 64000,
+    "knowledge_cutoff": "2024-04",
+    "modalities": {
+      "input": ["text", "image", "pdf"],
+      "output": ["text"]
+    },
+    "capabilities": [
+      "streaming",
+      "reasoning",
+      "chat",
+      "vision",
+      "function_calling",
+      "tools",
+      "structured_output",
+      "json_mode"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 3,
+          "output_per_million": 15,
+          "cached_input_per_million": 0.3,
+          "reasoning_output_per_million": 15
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "last_synced": "2026-02-09T09:58:36.421Z"
+    }
+  },
+  {
+    "id": "eu.anthropic.claude-sonnet-4-5-20250929-v1:0",
+    "name": "Claude Sonnet 4.5 (EU)",
+    "provider": "bedrock",
+    "family": "claude-sonnet",
+    "created_at": "2025-09-29 00:00:00 UTC",
+    "context_window": 200000,
+    "max_output_tokens": 64000,
+    "knowledge_cutoff": "2025-07-31",
+    "modalities": {
+      "input": ["text", "image", "pdf"],
+      "output": ["text"]
+    },
+    "capabilities": [
+      "streaming",
+      "reasoning",
+      "chat",
+      "vision",
+      "function_calling",
+      "tools",
+      "structured_output",
+      "json_mode"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 3,
+          "output_per_million": 15,
+          "cached_input_per_million": 0.3,
+          "reasoning_output_per_million": 15
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "last_synced": "2026-02-09T09:58:36.422Z"
+    }
+  },
+  {
     "id": "featherless/qwerky-72b",
     "name": "Qwerky 72B",
     "provider": "openrouter",
@@ -3647,7 +3935,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -3685,7 +3973,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.007Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -3723,7 +4011,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.007Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -3761,7 +4049,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.007Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -3837,7 +4125,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.007Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -3875,7 +4163,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.007Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -4051,7 +4339,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.007Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -4088,7 +4376,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.007Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -4493,7 +4781,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.007Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -4532,7 +4820,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.007Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -4593,7 +4881,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.007Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -4654,7 +4942,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.007Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -4731,7 +5019,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.007Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -4770,7 +5058,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.007Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -4809,7 +5097,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.007Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -4848,7 +5136,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.007Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -4924,7 +5212,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.007Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -4963,7 +5251,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.007Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -5002,7 +5290,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.007Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -5041,7 +5329,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.007Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -5080,7 +5368,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.007Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -5119,7 +5407,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.007Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -5195,7 +5483,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.007Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -5234,7 +5522,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.007Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -5294,7 +5582,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.007Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -5371,7 +5659,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.007Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -5410,7 +5698,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.007Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -5523,7 +5811,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.007Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -5562,7 +5850,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.007Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -5638,7 +5926,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.007Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -5677,7 +5965,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.007Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -5737,7 +6025,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.007Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -5776,7 +6064,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.007Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -5815,7 +6103,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.007Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -5891,7 +6179,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.007Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -5930,7 +6218,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.007Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -5990,7 +6278,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.007Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -6018,7 +6306,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.007Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -6205,7 +6493,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.007Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -6244,7 +6532,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.007Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -6320,7 +6608,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.007Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -6359,7 +6647,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.007Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -6398,7 +6686,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.007Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -6436,7 +6724,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.007Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -6701,6 +6989,44 @@
     }
   },
   {
+    "id": "global.anthropic.claude-haiku-4-5-20251001-v1:0",
+    "name": "Claude Haiku 4.5 (Global)",
+    "provider": "bedrock",
+    "family": "claude-haiku",
+    "created_at": "2025-10-15 00:00:00 UTC",
+    "context_window": 200000,
+    "max_output_tokens": 64000,
+    "knowledge_cutoff": "2025-02-28",
+    "modalities": {
+      "input": ["text", "image", "pdf"],
+      "output": ["text"]
+    },
+    "capabilities": [
+      "streaming",
+      "reasoning",
+      "chat",
+      "vision",
+      "function_calling",
+      "tools",
+      "structured_output",
+      "json_mode"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 1,
+          "output_per_million": 5,
+          "cached_input_per_million": 0.1,
+          "reasoning_output_per_million": 5
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "last_synced": "2026-02-09T09:58:36.421Z"
+    }
+  },
+  {
     "id": "global.anthropic.claude-opus-4-5-20251101-v1:0",
     "name": "Claude Opus 4.5 (Global)",
     "provider": "bedrock",
@@ -6735,7 +7061,121 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.009Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
+    }
+  },
+  {
+    "id": "global.anthropic.claude-opus-4-6-v1",
+    "name": "Claude Opus 4.6 (Global)",
+    "provider": "bedrock",
+    "family": "claude-opus",
+    "created_at": "2026-02-05 00:00:00 UTC",
+    "context_window": 1000000,
+    "max_output_tokens": 128000,
+    "knowledge_cutoff": "2025-05",
+    "modalities": {
+      "input": ["text", "image", "pdf"],
+      "output": ["text"]
+    },
+    "capabilities": [
+      "streaming",
+      "reasoning",
+      "chat",
+      "vision",
+      "function_calling",
+      "tools",
+      "structured_output",
+      "json_mode"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 5,
+          "output_per_million": 25,
+          "cached_input_per_million": 0.5,
+          "reasoning_output_per_million": 25
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "last_synced": "2026-02-09T09:58:36.421Z"
+    }
+  },
+  {
+    "id": "global.anthropic.claude-sonnet-4-20250514-v1:0",
+    "name": "Claude Sonnet 4 (Global)",
+    "provider": "bedrock",
+    "family": "claude-sonnet",
+    "created_at": "2025-05-22 00:00:00 UTC",
+    "context_window": 200000,
+    "max_output_tokens": 64000,
+    "knowledge_cutoff": "2024-04",
+    "modalities": {
+      "input": ["text", "image", "pdf"],
+      "output": ["text"]
+    },
+    "capabilities": [
+      "streaming",
+      "reasoning",
+      "chat",
+      "vision",
+      "function_calling",
+      "tools",
+      "structured_output",
+      "json_mode"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 3,
+          "output_per_million": 15,
+          "cached_input_per_million": 0.3,
+          "reasoning_output_per_million": 15
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "last_synced": "2026-02-09T09:58:36.421Z"
+    }
+  },
+  {
+    "id": "global.anthropic.claude-sonnet-4-5-20250929-v1:0",
+    "name": "Claude Sonnet 4.5 (Global)",
+    "provider": "bedrock",
+    "family": "claude-sonnet",
+    "created_at": "2025-09-29 00:00:00 UTC",
+    "context_window": 200000,
+    "max_output_tokens": 64000,
+    "knowledge_cutoff": "2025-07-31",
+    "modalities": {
+      "input": ["text", "image", "pdf"],
+      "output": ["text"]
+    },
+    "capabilities": [
+      "streaming",
+      "reasoning",
+      "chat",
+      "vision",
+      "function_calling",
+      "tools",
+      "structured_output",
+      "json_mode"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 3,
+          "output_per_million": 15,
+          "cached_input_per_million": 0.3,
+          "reasoning_output_per_million": 15
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -6763,7 +7203,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.009Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -6799,7 +7239,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.009Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -6834,7 +7274,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.009Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -6872,7 +7312,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -6908,7 +7348,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -6947,7 +7387,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -6986,7 +7426,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -7025,7 +7465,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -7064,7 +7504,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -7103,7 +7543,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -7142,7 +7582,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -7181,7 +7621,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -7220,7 +7660,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -7258,7 +7698,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -7286,7 +7726,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -7314,7 +7754,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -7342,7 +7782,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -7378,7 +7818,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -7414,7 +7854,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -7442,7 +7882,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -7470,7 +7910,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -7498,7 +7938,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -7526,7 +7966,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -7554,7 +7994,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -7614,7 +8054,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.007Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -7816,7 +8256,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.007Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -7968,7 +8408,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.007Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -8095,7 +8535,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.007Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -8196,7 +8636,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.007Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -8297,7 +8737,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.007Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -8456,7 +8896,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.007Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -8548,7 +8988,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.007Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -8612,7 +9052,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.007Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -8676,7 +9116,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.007Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -8853,7 +9293,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -9389,7 +9829,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -9477,7 +9917,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.007Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -9543,7 +9983,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.007Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -9613,7 +10053,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.007Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -9715,7 +10155,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.007Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -9815,7 +10255,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -9968,7 +10408,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.007Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -10062,7 +10502,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -10128,7 +10568,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.007Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -10166,7 +10606,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.007Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -10232,7 +10672,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.007Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -10270,7 +10710,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -10308,7 +10748,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.007Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -10346,7 +10786,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.007Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -10383,7 +10823,45 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.007Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
+    }
+  },
+  {
+    "id": "gpt-5.3-codex",
+    "name": "GPT-5.3 Codex",
+    "provider": "openai",
+    "family": "gpt-codex",
+    "created_at": "2026-02-05 00:00:00 UTC",
+    "context_window": 400000,
+    "max_output_tokens": 128000,
+    "knowledge_cutoff": "2025-08-31",
+    "modalities": {
+      "input": ["text", "image", "pdf"],
+      "output": ["text"]
+    },
+    "capabilities": [
+      "streaming",
+      "reasoning",
+      "chat",
+      "vision",
+      "function_calling",
+      "tools",
+      "structured_output",
+      "json_mode"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 1.75,
+          "output_per_million": 14,
+          "cached_input_per_million": 0.175,
+          "reasoning_output_per_million": 14
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -10812,7 +11290,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -10860,14 +11338,7 @@
       "input": ["text"],
       "output": ["text"]
     },
-    "capabilities": [
-      "streaming",
-      "chat",
-      "function_calling",
-      "tools",
-      "structured_output",
-      "json_mode"
-    ],
+    "capabilities": ["streaming", "chat"],
     "pricing": {
       "text_tokens": {
         "standard": {
@@ -10879,7 +11350,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -10895,15 +11366,7 @@
       "input": ["text"],
       "output": ["text"]
     },
-    "capabilities": [
-      "streaming",
-      "reasoning",
-      "chat",
-      "function_calling",
-      "tools",
-      "structured_output",
-      "json_mode"
-    ],
+    "capabilities": ["streaming", "reasoning", "chat"],
     "pricing": {
       "text_tokens": {
         "standard": {
@@ -10915,7 +11378,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -10931,15 +11394,7 @@
       "input": ["text"],
       "output": ["text"]
     },
-    "capabilities": [
-      "streaming",
-      "chat",
-      "vision",
-      "function_calling",
-      "tools",
-      "structured_output",
-      "json_mode"
-    ],
+    "capabilities": ["streaming", "chat", "vision"],
     "pricing": {
       "text_tokens": {
         "standard": {
@@ -10951,7 +11406,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -10979,7 +11434,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -10995,15 +11450,7 @@
       "input": ["text", "image"],
       "output": ["text"]
     },
-    "capabilities": [
-      "streaming",
-      "chat",
-      "vision",
-      "function_calling",
-      "tools",
-      "structured_output",
-      "json_mode"
-    ],
+    "capabilities": ["streaming", "chat", "vision"],
     "pricing": {
       "text_tokens": {
         "standard": {
@@ -11015,7 +11462,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -11050,7 +11497,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -11086,7 +11533,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -11121,7 +11568,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.009Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -11156,7 +11603,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.009Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -11192,7 +11639,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.009Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -11227,7 +11674,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.009Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -11262,7 +11709,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.009Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -11298,7 +11745,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.009Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -11333,7 +11780,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.009Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -11361,7 +11808,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.009Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -11389,7 +11836,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.009Z"
+      "last_synced": "2026-02-09T09:58:36.422Z"
     }
   },
   {
@@ -11425,7 +11872,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.009Z"
+      "last_synced": "2026-02-09T09:58:36.422Z"
     }
   },
   {
@@ -11461,7 +11908,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.009Z"
+      "last_synced": "2026-02-09T09:58:36.422Z"
     }
   },
   {
@@ -11497,7 +11944,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -11532,7 +11979,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.009Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -11568,7 +12015,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -11603,7 +12050,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -11639,7 +12086,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -11674,7 +12121,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -11708,7 +12155,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.009Z"
+      "last_synced": "2026-02-09T09:58:36.422Z"
     }
   },
   {
@@ -11742,7 +12189,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.009Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -11776,7 +12223,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.009Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -11810,7 +12257,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.009Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -11837,7 +12284,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.009Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -11872,7 +12319,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.009Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -11908,7 +12355,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.009Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -11943,7 +12390,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -11978,7 +12425,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -12013,7 +12460,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -12048,7 +12495,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -12083,7 +12530,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -12118,7 +12565,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -12153,7 +12600,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -12188,7 +12635,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -12224,7 +12671,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -12260,7 +12707,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -12295,7 +12742,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -12331,7 +12778,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -12367,7 +12814,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -12403,7 +12850,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -12437,7 +12884,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.009Z"
+      "last_synced": "2026-02-09T09:58:36.422Z"
     }
   },
   {
@@ -12472,7 +12919,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -12507,7 +12954,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -12542,7 +12989,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -12577,7 +13024,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -12614,7 +13061,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -12649,7 +13096,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -12687,7 +13134,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -12723,7 +13170,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -12739,15 +13186,7 @@
       "input": ["text"],
       "output": ["text"]
     },
-    "capabilities": [
-      "streaming",
-      "reasoning",
-      "chat",
-      "function_calling",
-      "tools",
-      "structured_output",
-      "json_mode"
-    ],
+    "capabilities": ["streaming", "reasoning", "chat"],
     "pricing": {
       "text_tokens": {
         "standard": {
@@ -12759,7 +13198,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -12795,7 +13234,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -12831,7 +13270,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -12866,7 +13305,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.009Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -12900,7 +13339,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.009Z"
+      "last_synced": "2026-02-09T09:58:36.422Z"
     }
   },
   {
@@ -12936,7 +13375,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -12973,7 +13412,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -13009,7 +13448,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -13045,7 +13484,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -13115,7 +13554,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.007Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -13201,7 +13640,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.007Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -13280,7 +13719,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.007Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -13373,7 +13812,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.007Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -13474,7 +13913,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.007Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -13576,7 +14015,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.007Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -13677,7 +14116,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.007Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -13777,7 +14216,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.007Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -13878,7 +14317,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.007Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -13980,7 +14419,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.007Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -14086,7 +14525,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.009Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -14120,7 +14559,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.009Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -14154,7 +14593,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.009Z"
+      "last_synced": "2026-02-09T09:58:36.422Z"
     }
   },
   {
@@ -14188,7 +14627,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.009Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -14225,7 +14664,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -14262,7 +14701,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -14299,7 +14738,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -14336,7 +14775,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -14364,7 +14803,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -14402,7 +14841,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -14441,7 +14880,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -14478,7 +14917,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -14515,7 +14954,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -14552,7 +14991,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -14590,7 +15029,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -14628,7 +15067,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -14666,7 +15105,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -14704,7 +15143,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -14742,7 +15181,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -14780,7 +15219,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -14818,7 +15257,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -14856,7 +15295,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -14893,7 +15332,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -14928,7 +15367,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -14963,7 +15402,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.007Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -14998,7 +15437,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -15033,7 +15472,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -15068,7 +15507,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -15103,7 +15542,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.007Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -15138,7 +15577,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -15173,7 +15612,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -15211,7 +15650,42 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
+    }
+  },
+  {
+    "id": "openrouter/pony-alpha",
+    "name": "Pony Alpha",
+    "provider": "openrouter",
+    "family": "pony",
+    "created_at": "2026-02-06 00:00:00 UTC",
+    "context_window": 200000,
+    "max_output_tokens": 131000,
+    "modalities": {
+      "input": ["text"],
+      "output": ["text"]
+    },
+    "capabilities": [
+      "streaming",
+      "reasoning",
+      "chat",
+      "function_calling",
+      "tools",
+      "structured_output",
+      "json_mode"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 0,
+          "output_per_million": 0,
+          "reasoning_output_per_million": 0
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -15247,7 +15721,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -15284,7 +15758,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -15319,7 +15793,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.009Z"
+      "last_synced": "2026-02-09T09:58:36.422Z"
     }
   },
   {
@@ -15355,7 +15829,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.009Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -15390,7 +15864,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.009Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -15425,7 +15899,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.009Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -15459,7 +15933,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.009Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -15494,7 +15968,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.009Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -15522,7 +15996,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -15558,7 +16032,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -15594,7 +16068,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -15622,7 +16096,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -15658,7 +16132,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -15694,7 +16168,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -15729,7 +16203,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -15764,7 +16238,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -15800,7 +16274,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -15836,7 +16310,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -15871,7 +16345,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -15907,7 +16381,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -15943,7 +16417,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -15979,7 +16453,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -16015,7 +16489,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -16051,7 +16525,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -16086,7 +16560,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -16121,7 +16595,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -16156,7 +16630,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -16191,7 +16665,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -16226,7 +16700,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -16261,7 +16735,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -16296,7 +16770,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -16331,7 +16805,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -16367,7 +16841,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -16403,7 +16877,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -16439,7 +16913,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -16475,7 +16949,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -16549,7 +17023,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -16577,7 +17051,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -16605,7 +17079,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -16697,7 +17171,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.007Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -16762,7 +17236,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.007Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -16827,7 +17301,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.007Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -16897,7 +17371,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -16925,7 +17399,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -16941,7 +17415,15 @@
       "input": ["text"],
       "output": ["text"]
     },
-    "capabilities": ["streaming", "reasoning", "chat"],
+    "capabilities": [
+      "streaming",
+      "reasoning",
+      "chat",
+      "function_calling",
+      "tools",
+      "structured_output",
+      "json_mode"
+    ],
     "pricing": {
       "text_tokens": {
         "standard": {
@@ -16953,7 +17435,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -17063,6 +17545,272 @@
     }
   },
   {
+    "id": "us.anthropic.claude-haiku-4-5-20251001-v1:0",
+    "name": "Claude Haiku 4.5 (US)",
+    "provider": "bedrock",
+    "family": "claude-haiku",
+    "created_at": "2025-10-15 00:00:00 UTC",
+    "context_window": 200000,
+    "max_output_tokens": 64000,
+    "knowledge_cutoff": "2025-02-28",
+    "modalities": {
+      "input": ["text", "image", "pdf"],
+      "output": ["text"]
+    },
+    "capabilities": [
+      "streaming",
+      "reasoning",
+      "chat",
+      "vision",
+      "function_calling",
+      "tools",
+      "structured_output",
+      "json_mode"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 1,
+          "output_per_million": 5,
+          "cached_input_per_million": 0.1,
+          "reasoning_output_per_million": 5
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "last_synced": "2026-02-09T09:58:36.421Z"
+    }
+  },
+  {
+    "id": "us.anthropic.claude-opus-4-1-20250805-v1:0",
+    "name": "Claude Opus 4.1 (US)",
+    "provider": "bedrock",
+    "family": "claude-opus",
+    "created_at": "2025-08-05 00:00:00 UTC",
+    "context_window": 200000,
+    "max_output_tokens": 32000,
+    "knowledge_cutoff": "2025-03-31",
+    "modalities": {
+      "input": ["text", "image", "pdf"],
+      "output": ["text"]
+    },
+    "capabilities": [
+      "streaming",
+      "reasoning",
+      "chat",
+      "vision",
+      "function_calling",
+      "tools",
+      "structured_output",
+      "json_mode"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 15,
+          "output_per_million": 75,
+          "cached_input_per_million": 1.5,
+          "reasoning_output_per_million": 75
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "last_synced": "2026-02-09T09:58:36.421Z"
+    }
+  },
+  {
+    "id": "us.anthropic.claude-opus-4-20250514-v1:0",
+    "name": "Claude Opus 4 (US)",
+    "provider": "bedrock",
+    "family": "claude-opus",
+    "created_at": "2025-05-22 00:00:00 UTC",
+    "context_window": 200000,
+    "max_output_tokens": 32000,
+    "knowledge_cutoff": "2024-04",
+    "modalities": {
+      "input": ["text", "image", "pdf"],
+      "output": ["text"]
+    },
+    "capabilities": [
+      "streaming",
+      "reasoning",
+      "chat",
+      "vision",
+      "function_calling",
+      "tools",
+      "structured_output",
+      "json_mode"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 15,
+          "output_per_million": 75,
+          "cached_input_per_million": 1.5,
+          "reasoning_output_per_million": 75
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "last_synced": "2026-02-09T09:58:36.422Z"
+    }
+  },
+  {
+    "id": "us.anthropic.claude-opus-4-5-20251101-v1:0",
+    "name": "Claude Opus 4.5 (US)",
+    "provider": "bedrock",
+    "family": "claude-opus",
+    "created_at": "2025-11-24 00:00:00 UTC",
+    "context_window": 200000,
+    "max_output_tokens": 64000,
+    "knowledge_cutoff": "2025-03-31",
+    "modalities": {
+      "input": ["text", "image", "pdf"],
+      "output": ["text"]
+    },
+    "capabilities": [
+      "streaming",
+      "reasoning",
+      "chat",
+      "vision",
+      "function_calling",
+      "tools",
+      "structured_output",
+      "json_mode"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 5,
+          "output_per_million": 25,
+          "cached_input_per_million": 0.5,
+          "reasoning_output_per_million": 25
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "last_synced": "2026-02-09T09:58:36.421Z"
+    }
+  },
+  {
+    "id": "us.anthropic.claude-opus-4-6-v1",
+    "name": "Claude Opus 4.6 (US)",
+    "provider": "bedrock",
+    "family": "claude-opus",
+    "created_at": "2026-02-05 00:00:00 UTC",
+    "context_window": 1000000,
+    "max_output_tokens": 128000,
+    "knowledge_cutoff": "2025-05",
+    "modalities": {
+      "input": ["text", "image", "pdf"],
+      "output": ["text"]
+    },
+    "capabilities": [
+      "streaming",
+      "reasoning",
+      "chat",
+      "vision",
+      "function_calling",
+      "tools",
+      "structured_output",
+      "json_mode"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 5,
+          "output_per_million": 25,
+          "cached_input_per_million": 0.5,
+          "reasoning_output_per_million": 25
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "last_synced": "2026-02-09T09:58:36.421Z"
+    }
+  },
+  {
+    "id": "us.anthropic.claude-sonnet-4-20250514-v1:0",
+    "name": "Claude Sonnet 4 (US)",
+    "provider": "bedrock",
+    "family": "claude-sonnet",
+    "created_at": "2025-05-22 00:00:00 UTC",
+    "context_window": 200000,
+    "max_output_tokens": 64000,
+    "knowledge_cutoff": "2024-04",
+    "modalities": {
+      "input": ["text", "image", "pdf"],
+      "output": ["text"]
+    },
+    "capabilities": [
+      "streaming",
+      "reasoning",
+      "chat",
+      "vision",
+      "function_calling",
+      "tools",
+      "structured_output",
+      "json_mode"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 3,
+          "output_per_million": 15,
+          "cached_input_per_million": 0.3,
+          "reasoning_output_per_million": 15
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "last_synced": "2026-02-09T09:58:36.421Z"
+    }
+  },
+  {
+    "id": "us.anthropic.claude-sonnet-4-5-20250929-v1:0",
+    "name": "Claude Sonnet 4.5 (US)",
+    "provider": "bedrock",
+    "family": "claude-sonnet",
+    "created_at": "2025-09-29 00:00:00 UTC",
+    "context_window": 200000,
+    "max_output_tokens": 64000,
+    "knowledge_cutoff": "2025-07-31",
+    "modalities": {
+      "input": ["text", "image", "pdf"],
+      "output": ["text"]
+    },
+    "capabilities": [
+      "streaming",
+      "reasoning",
+      "chat",
+      "vision",
+      "function_calling",
+      "tools",
+      "structured_output",
+      "json_mode"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 3,
+          "output_per_million": 15,
+          "cached_input_per_million": 0.3,
+          "reasoning_output_per_million": 15
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "last_synced": "2026-02-09T09:58:36.421Z"
+    }
+  },
+  {
     "id": "whisper-1",
     "name": "Whisper",
     "provider": "openai",
@@ -17121,7 +17869,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -17157,7 +17905,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -17194,7 +17942,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -17231,7 +17979,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -17268,7 +18016,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -17306,7 +18054,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -17344,7 +18092,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -17381,7 +18129,44 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
+    }
+  },
+  {
+    "id": "xiaomi/mimo-v2-flash",
+    "name": "MiMo-V2-Flash",
+    "provider": "openrouter",
+    "family": "mimo",
+    "created_at": "2025-12-14 00:00:00 UTC",
+    "context_window": 262144,
+    "max_output_tokens": 65536,
+    "knowledge_cutoff": "2024-12",
+    "modalities": {
+      "input": ["text"],
+      "output": ["text"]
+    },
+    "capabilities": [
+      "streaming",
+      "reasoning",
+      "chat",
+      "function_calling",
+      "tools",
+      "structured_output",
+      "json_mode"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 0.1,
+          "output_per_million": 0.3,
+          "cached_input_per_million": 0.01,
+          "reasoning_output_per_million": 0.3
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   },
   {
@@ -17417,7 +18202,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -17453,7 +18238,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -17481,7 +18266,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -17518,7 +18303,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -17555,7 +18340,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -17592,7 +18377,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -17629,7 +18414,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -17664,7 +18449,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.008Z"
+      "last_synced": "2026-02-09T09:58:36.421Z"
     }
   },
   {
@@ -17700,7 +18485,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-02-01T15:48:21.007Z"
+      "last_synced": "2026-02-09T09:58:36.420Z"
     }
   }
 ]
