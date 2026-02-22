@@ -43,7 +43,8 @@ const createMockChat = () => {
     onToolCallStart: vi.fn().mockReturnThis(),
     onToolCallEnd: vi.fn().mockReturnThis(),
     onToolCallError: vi.fn().mockReturnThis(),
-    onEndMessage: vi.fn().mockReturnThis()
+    onEndMessage: vi.fn().mockReturnThis(),
+    afterResponse: vi.fn().mockReturnThis()
   };
   return mockChat;
 };

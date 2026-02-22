@@ -43,6 +43,7 @@ const mockChat = {
   onToolCallEnd: vi.fn().mockReturnThis(),
   onToolCallError: vi.fn().mockReturnThis(),
   onEndMessage: vi.fn().mockReturnThis(),
+  afterResponse: vi.fn().mockReturnThis(),
   ask: vi.fn(),
   messages: [],
   modelId: "agent-model"
