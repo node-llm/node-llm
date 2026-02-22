@@ -150,7 +150,7 @@ describe("Agent", () => {
       new TelemetryAgent();
 
       // Get the callback registered to onEndMessage
-      const callback = mockOnEndMessage.mock.calls[0][0];
+      const callback = mockOnEndMessage.mock.calls[0]![0];
 
       const mockResponse = {
         thinking: { text: "I am thinking" } as ThinkingResult,
@@ -168,7 +168,7 @@ describe("Agent", () => {
 
     it("triggers onToolStart via onToolCallStart callback", async () => {
       new TelemetryAgent();
-      const callback = mockOnToolCallStart.mock.calls[0][0];
+      const callback = mockOnToolCallStart.mock.calls[0]![0];
       const toolCall = { id: "1", function: { name: "test" } };
 
       await callback(toolCall);
@@ -177,7 +177,7 @@ describe("Agent", () => {
 
     it("triggers onToolEnd via onToolCallEnd callback", async () => {
       new TelemetryAgent();
-      const callback = mockOnToolCallEnd.mock.calls[0][0];
+      const callback = mockOnToolCallEnd.mock.calls[0]![0];
       const toolCall = { id: "1" };
       const result = "success";
 
@@ -187,7 +187,7 @@ describe("Agent", () => {
 
     it("triggers onToolError via onToolCallError callback", async () => {
       new TelemetryAgent();
-      const callback = mockOnToolCallError.mock.calls[0][0];
+      const callback = mockOnToolCallError.mock.calls[0]![0];
       const toolCall = { id: "1" };
       const error = new Error("fail");
 
@@ -199,6 +199,58 @@ describe("Agent", () => {
       new TelemetryAgent();
 
       expect(mockBeforeRequest).toHaveBeenCalled();
+    });
+  });
+
+  describe("Lazy Evaluation & Inputs", () => {
+    interface TestInputs {
+      userName: string;
+      workspace: string;
+    }
+
+    class LazyAgent extends Agent<TestInputs> {
+      static model = "gpt-4o";
+      static instructions = (inputs: TestInputs) =>
+        `Hello ${inputs.userName}, welcome to ${inputs.workspace}`;
+      static tools = (inputs: TestInputs) => (inputs.workspace === "admin" ? [MockTool] : []);
+    }
+
+    it("should resolve instructions and tools if inputs are provided in constructor", () => {
+      new LazyAgent({
+        inputs: { userName: "Alice", workspace: "admin" }
+      });
+
+      expect(mockWithInstructions).toHaveBeenCalledWith("Hello Alice, welcome to admin", {
+        replace: true
+      });
+      expect(mockWithTools).toHaveBeenCalledWith([MockTool], { replace: true });
+    });
+
+    it("should resolve lazy config during ask() if inputs are provided", async () => {
+      const agent = new LazyAgent();
+      mockAsk.mockResolvedValue(new ChatResponseString("hi", {} as any, "m", "p"));
+
+      await agent.ask("Hello", {
+        inputs: { userName: "Bob", workspace: "general" }
+      });
+
+      expect(mockWithInstructions).toHaveBeenCalledWith("Hello Bob, welcome to general", {
+        replace: true
+      });
+      expect(mockWithTools).toHaveBeenCalledWith([], { replace: true });
+      expect(mockAsk).toHaveBeenCalledWith(
+        "Hello",
+        expect.objectContaining({ inputs: { userName: "Bob", workspace: "general" } })
+      );
+    });
+
+    it("supports lazy overrides in constructor", () => {
+      new LazyAgent({
+        inputs: { userName: "Charlie", workspace: "dev" },
+        instructions: (i) => `Override: ${i.userName}`
+      });
+
+      expect(mockWithInstructions).toHaveBeenCalledWith("Override: Charlie", { replace: true });
     });
   });
 });

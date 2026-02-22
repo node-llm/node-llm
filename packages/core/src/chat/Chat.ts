@@ -42,6 +42,7 @@ export interface AskOptions {
   requestTimeout?: number;
   thinking?: ThinkingConfig;
   signal?: AbortSignal;
+  inputs?: Record<string, any>;
 }
 
 import { ChatResponseString } from "./ChatResponse.js";
