@@ -83,6 +83,7 @@ vi.mock("@/lib/node-llm", () => {
     onToolCallEnd: vi.fn().mockReturnThis(),
     onToolCallError: vi.fn().mockReturnThis(),
     onEndMessage: vi.fn().mockReturnThis(),
+    afterResponse: vi.fn().mockReturnThis(),
     on: vi.fn().mockReturnThis(),
     messages: [],
     modelId: "gpt-4o",

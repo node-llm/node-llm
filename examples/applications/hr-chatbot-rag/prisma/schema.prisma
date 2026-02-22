@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider        = "prisma-client-js"
   previewFeatures = ["postgresqlExtensions"]
@@ -16,110 +13,102 @@ model AssistantChat {
   id           String                 @id @default(uuid())
   model        String?
   provider     String?
-  instructions String? // System instructions
-  metadata     Json? // JSON metadata
+  instructions String?
   createdAt    DateTime               @default(now())
   updatedAt    DateTime               @updatedAt
+  metadata     Json?
+  agentSession AssistantAgentSession?
   messages     AssistantMessage[]
   requests     AssistantRequest[]
-  agentSession AssistantAgentSession?
 }
 
-// Agent Session - Links Agent class to persistent Chat
-// "Code defines behavior, DB provides history"
 model AssistantAgentSession {
-  id         String   @id @default(uuid())
-  agentClass String // Class name for validation (e.g., 'HRPolicyAgent')
-  chatId     String   @unique
-  metadata   Json? // Session context (userId, ticketId, etc.)
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-
-  chat AssistantChat @relation(fields: [chatId], references: [id], onDelete: Cascade)
+  id         String        @id @default(uuid())
+  agentClass String
+  chatId     String        @unique
+  metadata   Json?
+  createdAt  DateTime      @default(now())
+  updatedAt  DateTime      @updatedAt
+  chat       AssistantChat @relation(fields: [chatId], references: [id], onDelete: Cascade)
 
   @@index([agentClass])
   @@index([createdAt])
 }
 
 model AssistantMessage {
-  id                String   @id @default(uuid())
+  id                String              @id @default(uuid())
   chatId            String
-  role              String // user, assistant, system, tool
+  role              String
   content           String?
-  contentRaw        String? // JSON raw payload
-  reasoning         String? // Chain of thought (deprecated)
-  thinkingText      String? // Extended thinking text
-  thinkingSignature String? // Cryptographic signature
-  thinkingTokens    Int? // Tokens spent on thinking
+  contentRaw        String?
+  reasoning         String?
   inputTokens       Int?
   outputTokens      Int?
   modelId           String?
   provider          String?
-  createdAt         DateTime @default(now())
-
-  chat      AssistantChat       @relation(fields: [chatId], references: [id], onDelete: Cascade)
-  toolCalls AssistantToolCall[]
-  requests  AssistantRequest[]
+  createdAt         DateTime            @default(now())
+  thinkingSignature String?
+  thinkingText      String?
+  thinkingTokens    Int?
+  chat              AssistantChat       @relation(fields: [chatId], references: [id], onDelete: Cascade)
+  requests          AssistantRequest[]
+  toolCalls         AssistantToolCall[]
 }
 
 model AssistantToolCall {
-  id               String   @id @default(uuid())
+  id               String           @id @default(uuid())
   messageId        String
-  toolCallId       String // ID from the provider
+  toolCallId       String
   name             String
-  arguments        String // JSON string
-  thought          String? // The LLM's reasoning for this tool call
-  thoughtSignature String? // Cryptographic signature
-  result           String? // Tool execution result
-  createdAt        DateTime @default(now())
-
-  message AssistantMessage @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  arguments        String
+  thought          String?
+  result           String?
+  createdAt        DateTime         @default(now())
+  thoughtSignature String?
+  message          AssistantMessage @relation(fields: [messageId], references: [id], onDelete: Cascade)
 
   @@unique([messageId, toolCallId])
 }
 
 model DocumentChunk {
   id        String                @id @default(uuid())
-  content   String // The actual text chunk
+  content   String
   embedding Unsupported("vector")
-  metadata  String? // JSON: { source: "handbook.pdf", page: 5, section: "Remote Work" }
+  metadata  String?
   createdAt DateTime              @default(now())
 
   @@index([createdAt])
 }
 
 model AssistantRequest {
-  id        String  @id @default(uuid())
-  chatId    String
-  messageId String? // Optional because requests might fail before message creation or be intermediate
-
+  id           String            @id @default(uuid())
+  chatId       String
+  messageId    String?
   provider     String
   model        String
   statusCode   Int
-  duration     Int // milliseconds
+  duration     Int
   inputTokens  Int
   outputTokens Int
   cost         Float?
-
-  createdAt DateTime @default(now())
-
-  chat    AssistantChat     @relation(fields: [chatId], references: [id], onDelete: Cascade)
-  message AssistantMessage? @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  createdAt    DateTime          @default(now())
+  chat         AssistantChat     @relation(fields: [chatId], references: [id], onDelete: Cascade)
+  message      AssistantMessage? @relation(fields: [messageId], references: [id], onDelete: Cascade)
 }
 
 model monitoring_events {
   id            String   @id @default(uuid())
-  eventType     String // request.start, request.end, tool.start, etc.
+  eventType     String
   requestId     String
   sessionId     String?
   transactionId String?
   time          DateTime @default(now())
-  duration      Int? // duration in ms
+  duration      Int?
   cost          Float?
   cpuTime       Float?
   gcTime        Float?
   allocations   Int?
-  payload       Json // Stores metadata, tokens and optional content
+  payload       Json
   createdAt     DateTime @default(now())
   provider      String
   model         String

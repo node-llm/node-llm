@@ -9,6 +9,7 @@ vi.mock("@/lib/db", () => {
   const store = {
     chats: new Map<string, any>(),
     messages: new Map<string, any>(),
+    sessions: new Map<string, any>(),
   };
 
   const genericMock = {
@@ -30,43 +31,54 @@ vi.mock("@/lib/db", () => {
     })),
   };
 
-  return {
-    prisma: {
-      assistantChat: {
-        ...genericMock,
-        create: vi.fn(async ({ data }) => {
-          const id = data.id || `chat_${Math.random().toString(36).substr(2)}`;
-          const chat = { ...data, id, createdAt: new Date(), updatedAt: new Date() };
-          store.chats.set(id, chat);
-          return chat;
-        }),
-        findUnique: vi.fn(async ({ where }) => store.chats.get(where.id) || null),
-        deleteMany: vi.fn(async () => { store.chats.clear(); return { count: 0 }; }),
-      },
-      assistantMessage: {
-        ...genericMock,
-        create: vi.fn(async ({ data }) => {
-          const id = `msg_${Math.random().toString(36).substr(2)}`;
-          const msg = { ...data, id, createdAt: new Date() };
-          store.messages.set(id, msg);
-          return msg;
-        }),
-        findMany: vi.fn(async ({ where }) => {
-          return Array.from(store.messages.values())
-            .filter(m => m.chatId === where.chatId)
-            .sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime());
-        }),
-        delete: vi.fn(async ({ where }) => {
-            store.messages.delete(where.id);
-            return { id: where.id };
-        }),
-        deleteMany: vi.fn(async () => { store.messages.clear(); return { count: 0 }; }),
-      },
-      assistantToolCall: genericMock,
-      assistantRequest: genericMock,
-      $transaction: vi.fn(async (fn) => fn(prisma)),
-    }
+  const prisma = {
+    assistantChat: {
+      ...genericMock,
+      create: vi.fn(async ({ data }) => {
+        const id = data.id || `chat_${Math.random().toString(36).substr(2)}`;
+        const chat = { ...data, id, createdAt: new Date(), updatedAt: new Date() };
+        store.chats.set(id, chat);
+        return chat;
+      }),
+      findUnique: vi.fn(async ({ where }) => store.chats.get(where.id) || null),
+      deleteMany: vi.fn(async () => { store.chats.clear(); return { count: 0 }; }),
+    },
+    assistantMessage: {
+      ...genericMock,
+      create: vi.fn(async ({ data }) => {
+        const id = `msg_${Math.random().toString(36).substr(2)}`;
+        const msg = { ...data, id, createdAt: new Date() };
+        store.messages.set(id, msg);
+        return msg;
+      }),
+      findMany: vi.fn(async ({ where }) => {
+        return Array.from(store.messages.values())
+          .filter(m => m.chatId === where.chatId)
+          .sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime());
+      }),
+      delete: vi.fn(async ({ where }) => {
+          store.messages.delete(where.id);
+          return { id: where.id };
+      }),
+      deleteMany: vi.fn(async () => { store.messages.clear(); return { count: 0 }; }),
+    },
+    assistantToolCall: genericMock,
+    assistantRequest: genericMock,
+    assistantAgentSession: {
+      ...genericMock,
+      create: vi.fn(async ({ data }) => {
+        const id = data.id || `sess_${Math.random().toString(36).substr(2)}`;
+        const session = { ...data, id, createdAt: new Date(), updatedAt: new Date() };
+        store.sessions.set(id, session);
+        return session;
+      }),
+      findUnique: vi.fn(async ({ where }) => store.sessions.get(where.id) || null),
+      deleteMany: vi.fn(async () => { store.sessions.clear(); return { count: 0 }; }),
+    },
+    $transaction: vi.fn(async (fn) => fn(prisma)),
   };
+
+  return { prisma };
 });
 
 // --- MOCK INFRASTRUCTURE (LLM) ---
@@ -103,6 +115,8 @@ vi.mock("@/lib/node-llm", () => {
     withProvider: () => fluentMock,
     withTool: () => fluentMock,
     withTools: () => fluentMock,
+    withInstructions: () => fluentMock,
+    withSchema: () => fluentMock,
     system: () => fluentMock,
     add: () => fluentMock,
     onToolCallStart: () => fluentMock,
@@ -141,8 +155,12 @@ describeVCR("HR Chatbot Integration", () => {
       expect(res2.chatId).toBe(res1.chatId);
       expect(res2.message.content).toContain("Mock response to: What is the leave policy?");
       
+      const session = await prisma.assistantAgentSession.findUnique({
+        where: { id: res1.chatId }
+      });
+
       const messages = await prisma.assistantMessage.findMany({
-        where: { chatId: res1.chatId },
+        where: { chatId: session!.chatId },
         orderBy: { createdAt: 'asc' }
       });
 
