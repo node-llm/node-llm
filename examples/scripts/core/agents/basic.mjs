@@ -11,7 +11,24 @@ import "dotenv/config";
 import { Agent, Tool, z, defineAgent, createLLM } from "../../../../packages/core/dist/index.js";
 
 // Create an LLM instance to use with agents
-const llm = createLLM({ provider: "openai" });
+// Create an LLM instance or a mock for testing
+let llm;
+if (process.env.OPENAI_API_KEY) {
+  llm = createLLM({ provider: "openai" });
+} else {
+  console.log("⚠️  OPENAI_API_KEY not found. Using mock provider for demonstration.\n");
+  llm = createLLM({ 
+    provider: "openai",
+    adapter: {
+      async execute() {
+        return {
+          content: "Mock response: 15 multiplied by 7 is 105.",
+          usage: { input_tokens: 10, output_tokens: 10, total_tokens: 20 }
+        };
+      }
+    }
+  });
+}
 
 // ============================================================================
 // Example 1: Class-based Agent with Static Properties
@@ -102,6 +119,16 @@ class TechnicalWriter extends BaseAssistant {
 }
 
 // ============================================================================
+// Example 5: Lazy Evaluation & Dynamic Inputs (v1.12.0+)
+// ============================================================================
+
+class ContextualAgent extends Agent {
+  static model = "gpt-4o-mini";
+  // Instructions as a function receiving inputs
+  static instructions = (inputs) => `You are helping ${inputs.user}.`;
+}
+
+// ============================================================================
 // Usage
 // ============================================================================
 
@@ -138,7 +165,15 @@ async function main() {
     temperature: 0.1
   });
   const fastResponse = await fastMathTutor.ask("What is 100 divided by 4?");
-  console.log(`   Response: ${fastResponse}`);
+  console.log(`   Response: ${fastResponse}\n`);
+
+  // Example 5: Lazy Evaluation
+  console.log("5. Lazy Contextual Agent:");
+  const contextualAgent = new ContextualAgent({ llm });
+  const helloResponse = await contextualAgent.ask("Hello", {
+    inputs: { user: "Alice" }
+  });
+  console.log(`   Response: ${helloResponse}`);
 }
 
 main().catch(console.error);
