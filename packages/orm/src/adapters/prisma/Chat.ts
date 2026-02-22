@@ -180,10 +180,10 @@ export class Chat extends BaseChat {
   /**
    * Send a message and persist the conversation.
    */
-  async ask(input: string, options: AskOptions = {}): Promise<MessageRecord> {
+  async ask(message: string, options: AskOptions = {}): Promise<MessageRecord> {
     const messageModel = this.tables.message;
     const userMessage = await (this.prisma as any)[messageModel].create({
-      data: { chatId: this.id, role: "user", content: input }
+      data: { chatId: this.id, role: "user", content: message }
     });
 
     const assistantMessage = await (this.prisma as any)[messageModel].create({
@@ -202,7 +202,7 @@ export class Chat extends BaseChat {
       }));
 
       const coreChat = await this.prepareCoreChat(history, assistantMessage!.id);
-      const response = await coreChat.ask(input, options);
+      const response = await coreChat.ask(message, options);
 
       return await (this.prisma as any)[messageModel].update({
         where: { id: assistantMessage!.id },
@@ -231,12 +231,12 @@ export class Chat extends BaseChat {
    * Yields ChatChunk objects for full visibility of thinking, content, and tools.
    */
   async *askStream(
-    input: string,
+    message: string,
     options: AskOptions = {}
   ): AsyncGenerator<ChatChunk, MessageRecord, undefined> {
     const messageModel = this.tables.message;
     const userMessage = await (this.prisma as any)[messageModel].create({
-      data: { chatId: this.id, role: "user", content: input }
+      data: { chatId: this.id, role: "user", content: message }
     });
 
     const assistantMessage = await (this.prisma as any)[messageModel].create({
@@ -255,7 +255,7 @@ export class Chat extends BaseChat {
       }));
 
       const coreChat = await this.prepareCoreChat(history, assistantMessage!.id);
-      const stream = coreChat.stream(input, options);
+      const stream = coreChat.stream(message, options);
 
       let fullContent = "";
       let metadata: any = {};

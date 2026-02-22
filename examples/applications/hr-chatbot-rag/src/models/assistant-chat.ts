@@ -7,12 +7,17 @@
 
 import { prisma } from "@/lib/db";
 import { llm } from "@/lib/node-llm";
-import { createChat, loadChat, type TableNames, type Chat } from "@node-llm/orm/prisma";
+import { 
+  createAgentSession, 
+  loadAgentSession, 
+  type TableNames, 
+  type AgentSession 
+} from "@node-llm/orm/prisma";
 import { hrChatbotMiddlewares } from "@/lib/middlewares";
-import { HR_ASSISTANT_DEFINITION } from "@/assistants/hr-policy";
+import { HRAssistant, type HRAssistantInputs } from "@/assistants/hr-policy";
 
-// Map ORM table names to our existing schema
 const TABLE_NAMES: TableNames = {
+  agentSession: "assistantAgentSession",
   chat: "assistantChat",
   message: "assistantMessage",
   toolCall: "assistantToolCall",
@@ -27,53 +32,34 @@ export const AssistantChat = {
    * Create a new chat session
    */
   async create(options: {
+    userName?: string;
     model?: string;
     provider?: string;
     instructions?: string;
     maxToolCalls?: number;
-    metadata?: Record<string, any>;
     debug?: boolean;
-  } = {}): Promise<Chat> {
-    // Enable debug logging by default for better visibility during development
-    // Include production middlewares for monitoring, auditing, and compliance
-    const chatOptions = { 
-      debug: true, 
-      ...options, 
+  } = {}): Promise<AgentSession<HRAssistantInputs, HRAssistant>> {
+    return createAgentSession(prisma, llm, HRAssistant, {
+      metadata: { userName: options.userName },
+      debug: options.debug ?? true,
       tableNames: TABLE_NAMES,
-      middlewares: hrChatbotMiddlewares
-    };
-    return createChat(prisma, llm, chatOptions);
+      model: options.model,
+      provider: options.provider,
+      instructions: options.instructions,
+      maxToolCalls: options.maxToolCalls
+    });
   },
 
   /**
    * Load an existing chat session
    */
-  async load(chatId: string): Promise<Chat | null> {
-    // Fetch persisted config to ensure continuity
-    const existing = await prisma.assistantChat.findUnique({
-      where: { id: chatId },
-      select: { model: true, provider: true }
-    });
-
-    if (!existing) {
-      console.warn(`[AssistantChat] Chat ${chatId} not found in DB.`);
-      return null;
-    }
-
-    const { model, provider } = existing;
-
-    console.log(`[AssistantChat] Loading chat ${chatId} with:`, { model, provider, defaultModel: HR_ASSISTANT_DEFINITION.defaultModel });
-
-    return loadChat(prisma, llm, chatId, { 
+  async load(sessionId: string): Promise<AgentSession<HRAssistantInputs, HRAssistant> | null> {
+    return loadAgentSession(prisma, llm, HRAssistant, sessionId, {
       tableNames: TABLE_NAMES,
-      middlewares: hrChatbotMiddlewares,
-      maxToolCalls: 10,
-      debug: true,
-      model: model || HR_ASSISTANT_DEFINITION.defaultModel,
-      provider: provider || HR_ASSISTANT_DEFINITION.defaultProvider,
+      debug: true
     });
   },
 };
 
-// Export the Chat type for use in other modules
-export type { Chat };
+// Export the session type for use in other modules
+export type { AgentSession as Chat };

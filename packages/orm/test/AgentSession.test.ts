@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { Agent, Tool, NodeLLM } from "@node-llm/core";
-import { createAgentSession, loadAgentSession } from "../src/adapters/prisma/AgentSession";
+import { createAgentSession, loadAgentSession } from "../src/adapters/prisma/AgentSession.js";
 
 // --- Mocks ---
 
@@ -12,7 +12,8 @@ const mockPrisma = {
   },
   llmAgentSession: {
     create: vi.fn(),
-    findUnique: vi.fn()
+    findUnique: vi.fn(),
+    update: vi.fn()
   },
   llmMessage: {
     create: vi.fn(),
@@ -42,7 +43,8 @@ const createMockChat = () => {
     onToolCallStart: vi.fn().mockReturnThis(),
     onToolCallEnd: vi.fn().mockReturnThis(),
     onToolCallError: vi.fn().mockReturnThis(),
-    onEndMessage: vi.fn().mockReturnThis()
+    onEndMessage: vi.fn().mockReturnThis(),
+    afterResponse: vi.fn().mockReturnThis()
   };
   return mockChat;
 };
@@ -199,6 +201,132 @@ describe("AgentSession", () => {
           data: expect.objectContaining({ content: "Response" })
         })
       );
+    });
+  });
+
+  describe("Lazy Evaluation & Metadata", () => {
+    interface TestInputs {
+      userName: string;
+    }
+
+    class LazyTestAgent extends Agent<TestInputs> {
+      static model = "gpt-4-lazy";
+      static instructions = (i: TestInputs) => `Hello ${i.userName}`;
+    }
+
+    it("injects metadata as inputs for lazy resolution during load", async () => {
+      mockPrisma.llmAgentSession.findUnique.mockResolvedValue({
+        id: "session-123",
+        chatId: "chat-123",
+        agentClass: "LazyTestAgent",
+        metadata: { userName: "Alice" }
+      });
+      mockPrisma.llmMessage.findMany.mockResolvedValue([]);
+
+      const session = await loadAgentSession(
+        mockPrisma as any,
+        mockLlm,
+        LazyTestAgent as any,
+        "session-123"
+      );
+
+      // Extract the underlying agent's chat instance
+      const mockChat = (session as any).agent.chat;
+      expect(mockChat.withInstructions).toHaveBeenCalledWith("Hello Alice", { replace: true });
+    });
+
+    it("merges turn-level inputs with session metadata during ask()", async () => {
+      mockPrisma.llmAgentSession.findUnique.mockResolvedValue({
+        id: "session-123",
+        chatId: "chat-123",
+        agentClass: "LazyTestAgent",
+        metadata: { userName: "Bob" }
+      });
+      mockPrisma.llmMessage.findMany.mockResolvedValue([]);
+      mockPrisma.llmMessage.create.mockResolvedValue({ id: "msg" });
+      mockPrisma.llmMessage.update.mockResolvedValue({ id: "msg" });
+
+      const session = (await loadAgentSession(
+        mockPrisma as any,
+        mockLlm,
+        LazyTestAgent as any,
+        "session-123"
+      ))!;
+
+      // Mock the instructions resolver again to proof turn-level override
+      LazyTestAgent.instructions = (i: any) => `Hi ${i.userName}, turn: ${i.turn}`;
+
+      await session.ask("Hello", { inputs: { turn: "1" } } as any);
+
+      const mockChat = (session as any).agent.chat;
+      expect(mockChat.ask).toHaveBeenCalledWith(
+        "Hello",
+        expect.objectContaining({
+          inputs: expect.objectContaining({
+            userName: "Bob",
+            turn: "1"
+          })
+        })
+      );
+    });
+  });
+
+  describe("Delegation & Metadata", () => {
+    it("delegates withTool to the underlying agent", async () => {
+      mockPrisma.llmAgentSession.findUnique.mockResolvedValue({
+        agentClass: "TestAgent",
+        metadata: {}
+      });
+      mockPrisma.llmMessage.findMany.mockResolvedValue([]);
+
+      const session = (await loadAgentSession(mockPrisma as any, mockLlm, TestAgent, "123"))!;
+      session.withTool({ name: "extra-tool" });
+
+      expect((session as any).agent.chat.withTools).toHaveBeenCalledWith(
+        [{ name: "extra-tool" }],
+        undefined
+      );
+    });
+
+    it("updates metadata and re-resolves lazy config", async () => {
+      class LazyAgent extends Agent<{ color: string }> {
+        static model = "mock-model";
+        static instructions = (i: any) => `Color is ${i.color}`;
+      }
+
+      mockPrisma.llmAgentSession.findUnique.mockResolvedValue({
+        id: "123",
+        agentClass: "LazyAgent",
+        metadata: { color: "red" }
+      });
+      mockPrisma.llmMessage.findMany.mockResolvedValue([]);
+      mockPrisma.llmAgentSession.update = vi.fn().mockResolvedValue({});
+
+      const session = (await loadAgentSession(
+        mockPrisma as any,
+        mockLlm,
+        LazyAgent as any,
+        "123"
+      ))!;
+
+      // Initial resolution
+      expect((session as any).agent.chat.withInstructions).toHaveBeenCalledWith("Color is red", {
+        replace: true
+      });
+
+      await session.updateMetadata({ color: "blue" });
+
+      // Verify DB update
+      expect(mockPrisma.llmAgentSession.update).toHaveBeenCalledWith(
+        expect.objectContaining({
+          data: { metadata: { color: "blue" } }
+        })
+      );
+
+      // Verify re-resolution
+      expect((session as any).agent.chat.withInstructions).toHaveBeenCalledWith("Color is blue", {
+        replace: true
+      });
     });
   });
 });

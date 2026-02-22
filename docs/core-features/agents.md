@@ -326,6 +326,60 @@ const agent = new AssistantAgent({
 
 ---
 
+## Lazy Configuration & Dynamic Inputs <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v1.12.0+</span>
+
+For agents that need to adapt based on runtime context (e.g., current user, workspace, or environment), `Agent` support **Lazy Evaluation** for instructions and tools.
+
+### Defining Lazy Behavior
+
+Instead of static strings or arrays, use functions that receive a typed `inputs` object:
+
+```typescript
+interface WorkContext {
+  userName: string;
+  workspace: string;
+}
+
+class WorkAssistant extends Agent<WorkContext> {
+  static model = "gpt-4o";
+
+  // Dynamic instructions resolved at runtime
+  static instructions = (inputs: WorkContext) => 
+    `You are helping ${inputs.userName} in the ${inputs.workspace} workspace.`;
+
+  // Dynamic tools resolved at runtime
+  static tools = (inputs: WorkContext) => [
+    new SearchDocs({ scope: inputs.workspace })
+  ];
+}
+```
+
+### Passing Inputs
+
+You can provide inputs during instantiation or at the turn level (via `ask` or `stream`):
+
+```typescript
+// Option A: At instantiation
+const agent = new WorkAssistant({
+  inputs: { userName: "Alice", workspace: "hr" }
+});
+await agent.ask("What is my salary?");
+
+// Option B: At the request level (Explicit context)
+const agent = new WorkAssistant();
+await agent.ask("Hello", {
+  inputs: { userName: "Bob", workspace: "general" }
+});
+```
+
+### Why use Lazy Evaluation?
+
+1.  **Cleaner Controllers:** No more string concatenation in your service objects or API handlers.
+2.  **Type Safety:** Define your `inputs` interface once and get full autocomplete.
+3.  **Code Sovereignty:** Business logic (how to scope a tool) stays inside the Agent class, not scattered across your app.
+
+---
+
 ## Telemetry Hooks <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v1.11.0+</span>
 
 Agent telemetry hooks provide declarative observability for production agents. They enable debugging, cost auditing, latency tracking, and integration with monitoring systems—without cluttering your agent logic.

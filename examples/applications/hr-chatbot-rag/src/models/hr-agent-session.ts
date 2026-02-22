@@ -28,7 +28,7 @@ const TABLE_NAMES: TableNames = {
   request: "assistantRequest",
 };
 
-export type HRSession = AgentSession<HRPolicyAgent>;
+export type HRSession = AgentSession<any, HRPolicyAgent>;
 
 /**
  * HRAgentSession namespace for creating and loading agent sessions

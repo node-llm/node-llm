@@ -2,14 +2,13 @@
 
 import { AssistantChat, type Chat } from "@/models/assistant-chat";
 import { HR_ASSISTANT_DEFINITION } from "@/assistants/hr-policy";
-import { searchDocumentsTool } from "@/tools/search-documents";
 
 export async function sendMessage(chatId: string | null, message: string) {
   let chat: Chat;
 
   if (!chatId) {
     chat = await AssistantChat.create({
-      instructions: HR_ASSISTANT_DEFINITION.instructions,
+      instructions: HR_ASSISTANT_DEFINITION.instructions as string,
       model: HR_ASSISTANT_DEFINITION.defaultModel,
       provider: HR_ASSISTANT_DEFINITION.defaultProvider,
       maxToolCalls: HR_ASSISTANT_DEFINITION.maxToolCalls,
@@ -19,7 +18,7 @@ export async function sendMessage(chatId: string | null, message: string) {
     if (!loadedChat) {
       console.warn(`Chat ${chatId} not found, creating a new session.`);
       chat = await AssistantChat.create({
-        instructions: HR_ASSISTANT_DEFINITION.instructions,
+        instructions: HR_ASSISTANT_DEFINITION.instructions as string,
         model: HR_ASSISTANT_DEFINITION.defaultModel,
         provider: HR_ASSISTANT_DEFINITION.defaultProvider,
         maxToolCalls: HR_ASSISTANT_DEFINITION.maxToolCalls,
@@ -29,7 +28,8 @@ export async function sendMessage(chatId: string | null, message: string) {
     }
   }
 
-  const responseRecord = await chat.withTool(searchDocumentsTool).ask(message);
+  // HRAssistant already includes the search tool in its static configuration
+  const responseRecord = await chat.ask(message);
 
   const stats = await chat.stats();
   console.log(`[Chat Stats] Chat ${chat.id}:`, stats);
@@ -43,7 +43,7 @@ export async function sendMessage(chatId: string | null, message: string) {
 async function getOrCreateChat(chatId: string | null): Promise<Chat> {
   if (!chatId) {
     return await AssistantChat.create({
-      instructions: HR_ASSISTANT_DEFINITION.instructions,
+      instructions: HR_ASSISTANT_DEFINITION.instructions as string,
       model: HR_ASSISTANT_DEFINITION.defaultModel,
       provider: HR_ASSISTANT_DEFINITION.defaultProvider,
       maxToolCalls: HR_ASSISTANT_DEFINITION.maxToolCalls,
@@ -54,7 +54,7 @@ async function getOrCreateChat(chatId: string | null): Promise<Chat> {
   if (!loadedChat) {
     console.warn(`Chat ${chatId} not found, creating a new session.`);
     return await AssistantChat.create({
-      instructions: HR_ASSISTANT_DEFINITION.instructions,
+      instructions: HR_ASSISTANT_DEFINITION.instructions as string,
       model: HR_ASSISTANT_DEFINITION.defaultModel,
       provider: HR_ASSISTANT_DEFINITION.defaultProvider,
       maxToolCalls: HR_ASSISTANT_DEFINITION.maxToolCalls,
@@ -81,7 +81,8 @@ export async function sendMessageStream(
         );
 
         // Stream tokens and thinking
-        for await (const chunk of chat.withTool(searchDocumentsTool).askStream(message)) {
+        // askStream handles both user and assistant message persistence
+        for await (const chunk of chat.askStream(message)) {
           controller.enqueue(
             encoder.encode(JSON.stringify({ type: "chunk", chunk }) + "\n")
           );

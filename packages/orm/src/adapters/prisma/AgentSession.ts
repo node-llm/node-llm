@@ -72,13 +72,13 @@ interface PrismaModel<T = Record<string, unknown>> {
   findUnique(args: { where: { id: string } }): Promise<T | null>;
 }
 
-type AgentClass<T extends Agent = Agent> = (new (
-  overrides?: Partial<AgentConfig & ChatOptions>
+type AgentClass<T extends Agent<any, any> = Agent<any, any>> = (new (
+  overrides?: Partial<AgentConfig<any> & ChatOptions>
 ) => T) & {
   name: string;
   model?: string;
-  instructions?: string;
-  tools?: unknown[];
+  instructions?: unknown;
+  tools?: unknown;
 };
 
 /**
@@ -87,6 +87,7 @@ type AgentClass<T extends Agent = Agent> = (new (
  * Follows "Code Wins" sovereignty:
  * - Model, Tools, Instructions come from the Agent class (code)
  * - Message history comes from the database
+ * - Metadata from DB is injected as 'inputs' for dynamic resolution
  *
  * @example
  * ```typescript
@@ -102,7 +103,10 @@ type AgentClass<T extends Agent = Agent> = (new (
  * const result = await session.ask("Hello");
  * ```
  */
-export class AgentSession<T extends Agent = Agent> {
+export class AgentSession<
+  I extends Record<string, any> = Record<string, any>,
+  T extends Agent<I, any> = Agent<I, any>
+> {
   private currentMessageId: string | null = null;
   private tableNames: Required<TableNames>;
   private debug: boolean;
@@ -114,7 +118,8 @@ export class AgentSession<T extends Agent = Agent> {
     private record: AgentSessionRecord,
     tableNames?: TableNames,
     private agent: T = new AgentClass({
-      llm
+      llm,
+      inputs: record.metadata as I
     }),
     debug: boolean = false
   ) {
@@ -126,6 +131,8 @@ export class AgentSession<T extends Agent = Agent> {
       toolCall: tableNames?.toolCall || "llmToolCall",
       request: tableNames?.request || "llmRequest"
     };
+
+    this.registerHooks();
   }
 
   private log(...args: any[]) {
@@ -150,8 +157,8 @@ export class AgentSession<T extends Agent = Agent> {
   }
 
   /** Session metadata */
-  get metadata(): Record<string, unknown> | null | undefined {
-    return this.record.metadata;
+  get metadata(): I | null | undefined {
+    return this.record.metadata as I;
   }
 
   /** Agent class name */
@@ -182,14 +189,69 @@ export class AgentSession<T extends Agent = Agent> {
   }
 
   /**
+   * Register persistence hooks on the agent.
+   */
+  private registerHooks() {
+    this.agent.onToolCallStart(async (toolCall) => {
+      if (!this.currentMessageId) return;
+      const model = this.getModel(this.tableNames.toolCall);
+      await model.create({
+        data: {
+          messageId: this.currentMessageId,
+          toolCallId: toolCall.id,
+          name: toolCall.function.name,
+          arguments: toolCall.function.arguments
+        }
+      });
+    });
+
+    this.agent.onToolCallEnd(async (toolCall, result) => {
+      if (!this.currentMessageId) return;
+      const model = this.getModel(this.tableNames.toolCall);
+      try {
+        await model.update({
+          where: {
+            messageId_toolCallId: {
+              messageId: this.currentMessageId,
+              toolCallId: toolCall.id
+            }
+          } as any,
+          data: {
+            result: typeof result === "string" ? result : JSON.stringify(result)
+          }
+        });
+      } catch (e) {
+        this.log(`Failed to update tool call result: ${e}`);
+      }
+    });
+
+    this.agent.afterResponse(async (response) => {
+      const model = this.getModel(this.tableNames.request);
+      await model.create({
+        data: {
+          chatId: this.chatId,
+          messageId: this.currentMessageId,
+          provider: response.provider || "unknown",
+          model: response.model || "unknown",
+          statusCode: 200,
+          duration: 0,
+          inputTokens: response.usage?.input_tokens || 0,
+          outputTokens: response.usage?.output_tokens || 0,
+          cost: response.usage?.cost || 0
+        }
+      });
+    });
+  }
+
+  /**
    * Send a message and persist the conversation.
    */
-  async ask(input: string, options: AskOptions = {}): Promise<MessageRecord> {
+  async ask(message: string, options: AskOptions & { inputs?: I } = {}): Promise<MessageRecord> {
     const model = this.getModel<MessageRecord>(this.tableNames.message);
 
     // Persist user message
     await model.create({
-      data: { chatId: this.chatId, role: "user", content: input }
+      data: { chatId: this.chatId, role: "user", content: message }
     });
 
     // Create placeholder for assistant message
@@ -200,8 +262,11 @@ export class AgentSession<T extends Agent = Agent> {
     this.currentMessageId = assistantMessage.id;
 
     try {
+      // Merge turn-level inputs with session metadata
+      const inputs = { ...(this.record.metadata as I), ...options.inputs };
+
       // Get response from agent (uses code-defined config + injected history)
-      const response = await this.agent.ask(input, options);
+      const response = await this.agent.ask(message, { ...options, inputs });
 
       // Update assistant message with response
       return await model.update({
@@ -229,14 +294,14 @@ export class AgentSession<T extends Agent = Agent> {
    * Stream a response and persist the conversation.
    */
   async *askStream(
-    input: string,
-    options: AskOptions = {}
+    message: string,
+    options: AskOptions & { inputs?: I } = {}
   ): AsyncGenerator<ChatChunk, MessageRecord, undefined> {
     const model = this.getModel<MessageRecord>(this.tableNames.message);
 
     // Persist user message
     await model.create({
-      data: { chatId: this.chatId, role: "user", content: input }
+      data: { chatId: this.chatId, role: "user", content: message }
     });
 
     // Create placeholder for assistant message
@@ -247,7 +312,9 @@ export class AgentSession<T extends Agent = Agent> {
     this.currentMessageId = assistantMessage.id;
 
     try {
-      const stream = this.agent.stream(input, options);
+      // Merge turn-level inputs with session metadata
+      const inputs = { ...(this.record.metadata as I), ...options.inputs };
+      const stream = this.agent.stream(message, { ...options, inputs });
 
       let fullContent = "";
       let lastChunk: ChatChunk | null = null;
@@ -279,6 +346,44 @@ export class AgentSession<T extends Agent = Agent> {
   }
 
   /**
+   * Returns a usage summary for this chat session.
+   */
+  async stats(): Promise<Usage> {
+    const requestModel = getTable(this.prisma, this.tableNames.request);
+    const aggregate = await (requestModel as any).aggregate({
+      where: { chatId: this.chatId },
+      _sum: {
+        inputTokens: true,
+        outputTokens: true,
+        cost: true
+      }
+    });
+
+    return {
+      input_tokens: Number(aggregate._sum.inputTokens || 0),
+      output_tokens: Number(aggregate._sum.outputTokens || 0),
+      total_tokens: Number((aggregate._sum.inputTokens || 0) + (aggregate._sum.outputTokens || 0)),
+      cost: Number(aggregate._sum.cost || 0)
+    };
+  }
+
+  /**
+   * Add a tool to the session (turn-level).
+   */
+  withTool(tool: any): this {
+    this.agent.use(tool);
+    return this;
+  }
+
+  /**
+   * Add instructions to the session (turn-level).
+   */
+  withInstructions(instructions: string, options?: { replace?: boolean }): this {
+    this.agent.withInstructions(instructions, options);
+    return this;
+  }
+
+  /**
    * Returns the current full message history for this session.
    */
   async messages(): Promise<MessageRecord[]> {
@@ -297,26 +402,50 @@ export class AgentSession<T extends Agent = Agent> {
     await chatTable.delete({ where: { id: this.chatId } });
     // AgentSession record is deleted via Cascade from LlmChat
   }
+
+  /**
+   * Update session metadata and re-resolve agent configuration.
+   */
+  async updateMetadata(metadata: Partial<I>): Promise<void> {
+    const sessionTable = this.getModel<AgentSessionRecord>(this.tableNames.agentSession);
+    const newMetadata = { ...(this.record.metadata as I), ...metadata };
+
+    await sessionTable.update({
+      where: { id: this.id },
+      data: { metadata: newMetadata as any }
+    });
+
+    this.record.metadata = newMetadata as any;
+
+    // Apply changes to the underlying agent immediately
+    // resolveLazyConfig is private, so we need a cast or make it protected.
+    // Given we are in the same package, we can cast.
+    (this.agent as any).resolveLazyConfig(newMetadata);
+  }
 }
 
 /**
  * Options for creating a new agent session.
  */
-export interface CreateAgentSessionOptions {
-  metadata?: Record<string, unknown>;
+export interface CreateAgentSessionOptions<I = any> {
+  metadata?: I;
   tableNames?: TableNames;
   debug?: boolean;
+  model?: string;
+  provider?: string;
+  instructions?: string;
+  maxToolCalls?: number;
 }
 
 /**
  * Creates a new agent session and its persistent chat record.
  */
-export async function createAgentSession<T extends Agent>(
+export async function createAgentSession<I extends Record<string, any>, T extends Agent<I, any>>(
   prisma: any,
   llm: NodeLLMCore,
   AgentClass: AgentClass<T>,
-  options: CreateAgentSessionOptions = {}
-): Promise<AgentSession<T>> {
+  options: CreateAgentSessionOptions<I> = {}
+): Promise<AgentSession<I, T>> {
   const tableNames = {
     agentSession: options.tableNames?.agentSession || "llmAgentSession",
     chat: options.tableNames?.chat || "llmChat",
@@ -331,9 +460,11 @@ export async function createAgentSession<T extends Agent>(
   const chatTable = getTable(prisma, tableNames.chat);
   const chatRecord = (await chatTable.create({
     data: {
-      model: AgentClass.model || null,
-      provider: null,
-      instructions: AgentClass.instructions || null,
+      model: options.model || AgentClass.model || null,
+      provider: options.provider || null,
+      instructions:
+        options.instructions ||
+        (typeof AgentClass.instructions === "string" ? AgentClass.instructions : null),
       metadata: null // Runtime metadata goes in Chat, session context in AgentSession
     }
   })) as unknown as { id: string };
@@ -344,17 +475,27 @@ export async function createAgentSession<T extends Agent>(
     data: {
       agentClass: AgentClass.name,
       chatId: chatRecord.id,
-      metadata: options.metadata || null
+      metadata: (options.metadata as any) || null
     }
   })) as unknown as AgentSessionRecord;
 
-  return new AgentSession(
+  // 3. Instantiate Agent with overrides
+  const agent = new AgentClass({
+    llm,
+    inputs: sessionRecord.metadata as I,
+    model: options.model,
+    provider: options.provider,
+    instructions: options.instructions,
+    maxToolCalls: options.maxToolCalls
+  });
+
+  return new AgentSession<I, T>(
     prisma,
     llm,
     AgentClass,
     sessionRecord,
     options.tableNames,
-    undefined,
+    agent,
     options.debug
   );
 }
@@ -370,13 +511,13 @@ export interface LoadAgentSessionOptions {
 /**
  * Loads an existing agent session and re-instantiates the agent with history.
  */
-export async function loadAgentSession<T extends Agent>(
+export async function loadAgentSession<I extends Record<string, any>, T extends Agent<I, any>>(
   prisma: any,
   llm: NodeLLMCore,
   AgentClass: AgentClass<T>,
   sessionId: string,
   options: LoadAgentSessionOptions = {}
-): Promise<AgentSession<T> | null> {
+): Promise<AgentSession<I, T> | null> {
   const tableNames = {
     agentSession: options.tableNames?.agentSession || "llmAgentSession",
     chat: options.tableNames?.chat || "llmChat",
@@ -417,14 +558,16 @@ export async function loadAgentSession<T extends Agent>(
     content: m.content || ""
   }));
 
-  // 4. Instantiate agent with injected history and LLM
+  // 4. Instantiate agent with injected history, LLM, AND metadata (as inputs)
   // "Code Wins" - model, tools, instructions come from AgentClass
+  // Metadata from DB handles the lazy resolution of behavior
   const agent = new AgentClass({
     llm,
-    messages: history
+    messages: history,
+    inputs: sessionRecord.metadata as I
   }) as T;
 
-  return new AgentSession(
+  return new AgentSession<I, T>(
     prisma,
     llm,
     AgentClass,

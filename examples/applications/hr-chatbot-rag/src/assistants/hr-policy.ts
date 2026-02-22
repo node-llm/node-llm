@@ -1,9 +1,24 @@
-export const HR_ASSISTANT_DEFINITION = {
-  name: "HR Policy Assistant",
-  description: "Internal chatbot for HR policies and company document queries.",
-  
-  instructions: `
+import { Agent, type ToolResolvable } from "@node-llm/core";
+import { searchDocumentsTool } from "@/tools/search-documents";
+
+export interface HRAssistantInputs {
+  userName?: string;
+}
+
+/**
+ * HRAssistant Agent
+ * 
+ * Uses the new Agent DSL for declarative configuration.
+ */
+export class HRAssistant extends Agent<HRAssistantInputs> {
+  static model = process.env.NODELLM_MODEL || "gpt-4o";
+  static provider = process.env.NODELLM_PROVIDER || "openai";
+  static temperature = 0.5;
+  static maxToolCalls = 10;
+
+  static instructions = (inputs: HRAssistantInputs) => `
 You are the official HR Assistant for our company. 
+${inputs.userName ? `You are currently helping ${inputs.userName}.` : ""}
 
 Core Principles:
 1. ACCURACY: You answer based on the provided HR documents and policies. If multiple documents mention the same topic, synthesize the information for the user.
@@ -14,9 +29,17 @@ Core Principles:
 Context Guidelines:
 - You help employees find information quickly.
 - Cite the source document name in your answer.
-`.trim(),
+`.trim();
 
-  defaultModel: process.env.NODELLM_MODEL || "gpt-4o",
-  defaultProvider: process.env.NODELLM_PROVIDER || "openai",
-  maxToolCalls: 10, // Increase budget for complex multi-document lookups
+  static tools: ToolResolvable[] = [searchDocumentsTool];
+}
+
+/**
+ * @deprecated Use HRAssistant class directly
+ */
+export const HR_ASSISTANT_DEFINITION = {
+  instructions: HRAssistant.instructions({}),
+  defaultModel: HRAssistant.model,
+  defaultProvider: HRAssistant.provider,
+  maxToolCalls: HRAssistant.maxToolCalls
 };
