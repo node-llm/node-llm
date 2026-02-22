@@ -128,6 +128,7 @@ To run the full suite of OpenAI examples:
 - **Parallel Provider Scoring**: `node examples/scripts/openai/core/parallel-scoring.mjs`
 - **Custom API Endpoints**: `node examples/scripts/openai/core/custom-endpoints.mjs`
 - **Custom Provider Implementation**: `node examples/scripts/core/custom-provider.mjs`
+- **Lazy Agent DSL (Dynamic Context)**: `node examples/scripts/core/agents/lazy.mjs`
 
 ---
 
