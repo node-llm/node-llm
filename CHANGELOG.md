@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.12.0] - 2026-02-22 (@node-llm/core)
+
+### Features
+
+- **Lazy Agent Evaluation**: Support for defining `instructions` and `tools` as functions that resolve at runtime based on provided `inputs`.
+- **Runtime Agent Inputs**: Pass dynamic context (e.g., user preferences, scope) via `agent.ask(msg, { inputs })` for per-turn configuration overrides.
+- **Agent Telemetry Hooks**: Integrated delegation of life-cycle events (`onToolCallStart`, `onToolCallEnd`, `afterResponse`) from Agents to underlying Chat instances, enabling declarative observability.
+
+## [0.6.0] - 2026-02-22 (@node-llm/orm)
+
+### Features
+
+- **Automated Agent Persistence**: `AgentSession` now automatically registers internal hooks to persist tool calls and provider request metrics (tokens, latency) to the database.
+- **Dynamic Metadata Updates**: Added `session.updateMetadata()` for mid-conversation context updates with immediate agent re-resolution.
+- **Proof-of-Concept**: Full integration in HR Chatbot example demonstrating persistent multi-turn agent conversations with a complete audit trail.
+
 ## [1.11.0] - 2026-02-07 (@node-llm/core)
 
 ### Features
