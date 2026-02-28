@@ -1,10 +1,19 @@
-import { Provider, ChatRequest, ChatResponse, ModelInfo, ChatChunk } from "../Provider.js";
+import {
+  Provider,
+  ChatRequest,
+  ChatResponse,
+  ModelInfo,
+  ChatChunk,
+  ImageRequest,
+  ImageResponse
+} from "../Provider.js";
 import { BaseProvider } from "../BaseProvider.js";
 import { DEFAULT_XAI_BASE_URL } from "../../constants.js";
 import { XAIChat } from "./Chat.js";
 import { XAIModels } from "./Models.js";
 import { XAIStreaming } from "./Streaming.js";
 import { Capabilities } from "./Capabilities.js";
+import { XAIImage } from "./Image.js";
 
 export interface XAIProviderOptions {
   apiKey: string;
@@ -16,6 +25,7 @@ export class XAIProvider extends BaseProvider implements Provider {
   private readonly chatHandler: XAIChat;
   private readonly streamingHandler: XAIStreaming;
   private readonly modelsHandler: XAIModels;
+  private readonly imageHandler: XAIImage;
 
   public capabilities = {
     supportsVision: (model: string) => Capabilities.supportsVision(model),
@@ -36,6 +46,7 @@ export class XAIProvider extends BaseProvider implements Provider {
     this.chatHandler = new XAIChat(this.baseUrl, options.apiKey);
     this.streamingHandler = new XAIStreaming(this.baseUrl, options.apiKey);
     this.modelsHandler = new XAIModels(this.baseUrl, options.apiKey);
+    this.imageHandler = new XAIImage(this.baseUrl, options.apiKey);
   }
 
   public get id(): string {
@@ -71,5 +82,9 @@ export class XAIProvider extends BaseProvider implements Provider {
 
   async listModels(): Promise<ModelInfo[]> {
     return this.modelsHandler.execute();
+  }
+
+  async paint(request: ImageRequest): Promise<ImageResponse> {
+    return this.imageHandler.execute(request);
   }
 }

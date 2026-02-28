@@ -1,15 +1,35 @@
+const VISION_MODELS = [
+  "grok-2-vision-1212",
+  "grok-4-0709",
+  "grok-4-fast-non-reasoning",
+  "grok-4-fast-reasoning",
+  "grok-4.1-fast-non-reasoning",
+  "grok-4.1-fast-reasoning",
+  "grok-4-1-fast-non-reasoning",
+  "grok-4-1-fast-reasoning"
+];
+
+const REASONING_MODELS = [
+  "grok-3-mini",
+  "grok-4-0709",
+  "grok-4-fast-reasoning",
+  "grok-4.1-fast-reasoning",
+  "grok-4-1-fast-reasoning",
+  "grok-code-fast-1"
+];
+
 export class Capabilities {
   static supportsVision(model: string): boolean {
-    return model.includes("vision") || model.includes("v");
+    return model.includes("vision") || VISION_MODELS.includes(model);
   }
 
   static supportsTools(model: string): boolean {
-    // Most Grok models support tools
+    if (this.supportsImageGeneration(model)) return false;
     return true;
   }
 
   static supportsStructuredOutput(model: string): boolean {
-    // Grok supports structured output (json_object/json_schema) via OpenAI compatibility
+    if (this.supportsImageGeneration(model)) return false;
     return true;
   }
 
@@ -17,8 +37,8 @@ export class Capabilities {
     return false;
   }
 
-  static supportsImageGeneration(_model: string): boolean {
-    return false;
+  static supportsImageGeneration(model: string): boolean {
+    return model.includes("image") || model.includes("imagine");
   }
 
   static supportsTranscription(_model: string): boolean {
@@ -30,14 +50,10 @@ export class Capabilities {
   }
 
   static supportsReasoning(model: string): boolean {
-    // Currently Grok doesn't have a designated 'reasoning' model like o1/deepseek-r1
-    // but they are capable. However, for filtering purposes:
-    return model.includes("reasoning");
+    return model.includes("reasoning") || REASONING_MODELS.includes(model);
   }
 
-  static getContextWindow(model: string): number {
-    if (model.includes("grok-2")) return 128000;
-    if (model.includes("grok-beta")) return 128000;
-    return 128000; // Default for xAI models
+  static getContextWindow(_model: string): number {
+    return 128000;
   }
 }

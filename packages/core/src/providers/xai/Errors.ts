@@ -13,7 +13,9 @@ export async function handleXAIError(response: Response, model?: string): Promis
   let errorData: any = {};
 
   try {
-    errorData = await response.json();
+    const text = await response.text();
+    console.error("XAI ERROR RESPONSE:", text);
+    errorData = JSON.parse(text);
     errorMessage = errorData.error?.message || errorMessage;
   } catch (_e) {
     // Ignore JSON parsing errors
