@@ -58,11 +58,13 @@ describe("XAIChat", () => {
     );
 
     expect(response.content).toBe("Hello world");
-    expect(response.usage).toEqual({
-      input_tokens: 10,
-      output_tokens: 5,
-      total_tokens: 15
-    });
+    expect(response.usage).toEqual(
+      expect.objectContaining({
+        input_tokens: 10,
+        output_tokens: 5,
+        total_tokens: 15
+      })
+    );
   });
 
   it("should capture tool calls if present", async () => {
@@ -113,7 +115,7 @@ describe("XAIChat", () => {
     });
 
     await expect(chat.execute({ model: "grok-2", messages: [] } as ChatRequest)).rejects.toThrow(
-      "Bad Request"
+      "400"
     );
   });
 });

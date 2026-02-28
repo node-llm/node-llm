@@ -15,7 +15,8 @@ describe("ModelRegistry - Filtered Sync Verification", () => {
       "deepseek",
       "openrouter",
       "ollama",
-      "bedrock"
+      "bedrock",
+      "xai"
     ];
 
     // Convert Set to Array for easier comparison
