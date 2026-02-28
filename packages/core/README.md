@@ -2,7 +2,7 @@
 
 <p align="left">
   <a href="https://nodellm.dev/">
-    <img src="https://nodellm.dev/assets/images/logo.jpg" alt="NodeLLM logo" width="300" />
+    <img src="https://nodellm.dev/assets/images/logo.png" alt="NodeLLM logo" width="300" />
   </a>
 </p>
 
