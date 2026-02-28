@@ -14,6 +14,8 @@ export interface NodeLLMConfig {
   ollamaApiBase?: string;
   openrouterApiKey?: string;
   openrouterApiBase?: string;
+  xaiApiKey?: string;
+  xaiApiBase?: string;
   // AWS Bedrock
   bedrockApiKey?: string; // Long-term API key (Bearer token)
   bedrockAccessKeyId?: string; // SigV4: AWS Access Key ID
@@ -44,6 +46,7 @@ import {
   DEFAULT_DEEPSEEK_BASE_URL,
   DEFAULT_OPENROUTER_BASE_URL,
   DEFAULT_OLLAMA_BASE_URL,
+  DEFAULT_XAI_BASE_URL,
   DEFAULT_BEDROCK_REGION,
   ToolExecutionMode
 } from "./constants.js";
@@ -60,6 +63,8 @@ export class Configuration implements NodeLLMConfig {
   private _ollamaApiBase?: string;
   private _openrouterApiKey?: string;
   private _openrouterApiBase?: string;
+  private _xaiApiKey?: string;
+  private _xaiApiBase?: string;
   private _bedrockApiKey?: string;
   private _bedrockAccessKeyId?: string;
   private _bedrockSecretAccessKey?: string;
@@ -153,6 +158,20 @@ export class Configuration implements NodeLLMConfig {
   }
   public set openrouterApiBase(v: string | undefined) {
     this._openrouterApiBase = v;
+  }
+
+  public get xaiApiKey(): string | undefined {
+    return this._xaiApiKey ?? process.env.XAI_API_KEY?.trim();
+  }
+  public set xaiApiKey(v: string | undefined) {
+    this._xaiApiKey = v;
+  }
+
+  public get xaiApiBase(): string | undefined {
+    return this._xaiApiBase ?? process.env.XAI_API_BASE?.trim() ?? DEFAULT_XAI_BASE_URL;
+  }
+  public set xaiApiBase(v: string | undefined) {
+    this._xaiApiBase = v;
   }
 
   // AWS Bedrock configuration

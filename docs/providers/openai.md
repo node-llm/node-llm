@@ -66,3 +66,9 @@ const chat = llm.chat("gpt-4o").withParams({
 ## Custom Endpoints
 
 OpenAI's client is also used for compatible services like Ollama, LocalAI, and Azure OpenAI. See [Custom Endpoints](/advanced/custom_endpoints.html) for details.
+
+---
+
+## Getting an API Key
+
+Sign up and get your API key at [platform.openai.com/api-keys](https://platform.openai.com/api-keys).

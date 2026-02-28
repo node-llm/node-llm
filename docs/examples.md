@@ -151,3 +151,14 @@ A comprehensive list of runnable examples available in the [examples/](https://g
 | [`examples/scripts/openrouter/discovery/models.mjs`](https://github.com/node-llm/node-llm/blob/main/examples/scripts/openrouter/discovery/models.mjs) | Exploring the global model library |
 | [`examples/scripts/openrouter/multimodal/vision.mjs`](https://github.com/node-llm/node-llm/blob/main/examples/scripts/openrouter/multimodal/vision.mjs) | Unified vision API for all models |
 | [`examples/scripts/openrouter/embeddings/create.mjs`](https://github.com/node-llm/node-llm/blob/main/examples/scripts/openrouter/embeddings/create.mjs) | Aggregated embedding services |
+
+### xAI Examples
+
+| Example | Description |
+| :--- | :--- |
+| [`examples/scripts/xai/chat/basic.mjs`](https://github.com/node-llm/node-llm/blob/main/examples/scripts/xai/chat/basic.mjs) | Basic chat with Grok-3 |
+| [`examples/scripts/xai/chat/streaming.mjs`](https://github.com/node-llm/node-llm/blob/main/examples/scripts/xai/chat/streaming.mjs) | Streaming chat responses |
+| [`examples/scripts/xai/chat/structured.mjs`](https://github.com/node-llm/node-llm/blob/main/examples/scripts/xai/chat/structured.mjs) | Structured output with Zod schema |
+| [`examples/scripts/xai/multimodal/vision.mjs`](https://github.com/node-llm/node-llm/blob/main/examples/scripts/xai/multimodal/vision.mjs) | Image analysis with Grok Vision |
+| [`examples/scripts/xai/images/generate.mjs`](https://github.com/node-llm/node-llm/blob/main/examples/scripts/xai/images/generate.mjs) | Image generation with Aurora |
+

@@ -15,7 +15,8 @@ const SUPPORTED_PROVIDERS = [
   "deepseek",
   "openrouter",
   "ollama",
-  "bedrock"
+  "bedrock",
+  "xai"
 ];
 
 const PROVIDER_MAP = {
@@ -41,6 +42,8 @@ const GOLDEN_ALIASES = {
     openrouter: "anthropic/claude-3.7-sonnet",
     bedrock: "anthropic.claude-3-7-sonnet-20250219-v1:0"
   },
+  "grok-3": { xai: "grok-3", openrouter: "x-ai/grok-3" },
+  "grok-2": { xai: "grok-2-1212", openrouter: "x-ai/grok-2-1212" },
   "claude-3-5-haiku": {
     anthropic: "claude-3-5-haiku-20241022",
     openrouter: "anthropic/claude-3.5-haiku",
@@ -338,7 +341,8 @@ ${new Date().toISOString().split("T")[0]}
     "deepseek",
     "openrouter",
     "ollama",
-    "bedrock"
+    "bedrock",
+    "xai"
   ];
   const providerNames = {
     openai: "OpenAI",
@@ -347,7 +351,8 @@ ${new Date().toISOString().split("T")[0]}
     deepseek: "DeepSeek",
     openrouter: "OpenRouter",
     ollama: "Ollama (Local)",
-    bedrock: "Amazon Bedrock"
+    bedrock: "Amazon Bedrock",
+    xai: "xAI"
   };
 
   providerOrder.forEach((provider) => {

@@ -77,3 +77,9 @@ await chat.ask("What happens in this video?", {
   files: ["./video.mp4"]
 });
 ```
+
+---
+
+## Getting an API Key
+
+Sign up and get your API key at [aistudio.google.com/apikey](https://aistudio.google.com/apikey).

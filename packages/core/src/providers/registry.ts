@@ -6,6 +6,7 @@ import { registerDeepSeekProvider } from "./deepseek/index.js";
 import { registerOllamaProvider } from "./ollama/index.js";
 import { registerOpenRouterProvider } from "./openrouter/index.js";
 import { registerBedrockProvider } from "./bedrock/index.js";
+import { registerXAIProvider } from "./xai/index.js";
 
 import { NodeLLMConfig } from "../config.js";
 
@@ -90,5 +91,6 @@ export {
   registerDeepSeekProvider,
   registerOllamaProvider,
   registerOpenRouterProvider,
-  registerBedrockProvider
+  registerBedrockProvider,
+  registerXAIProvider
 };
