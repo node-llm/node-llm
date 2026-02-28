@@ -184,3 +184,16 @@ const embedding = await llm.embed("The concept of general relativity", {
 
 console.log(embedding.vector); // number[]
 ```
+
+---
+
+## Getting Access
+
+Amazon Bedrock access is managed through your AWS account:
+
+1. Sign in at [aws.amazon.com/bedrock](https://aws.amazon.com/bedrock)
+2. Navigate to **Bedrock > Model access** in your AWS Console
+3. Request access to the models you need (Claude, Nova, Titan, etc.)
+4. Create AWS Access Key credentials via **IAM > Users**
+
+No separate API key is needed — NodeLLM uses your `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` directly.

@@ -98,3 +98,16 @@ The following features are **not** supported natively by Ollama's OpenAI-compati
 - **Moderation**: Not supported.
 
 For full feature parity locally, consider using [LocalAI](https://localai.io/) and connecting via the [OpenAI Provider](/providers/openai.html) with a custom `openaiApiBase`.
+
+---
+
+## Getting Started
+
+Ollama is free and runs entirely on your machine — no API key required.
+
+Download and install it from [ollama.com](https://ollama.com), then pull a model:
+
+```bash
+ollama pull llama3
+ollama pull llama3.2-vision  # for vision support
+```

@@ -66,3 +66,9 @@ const chat = llm.chat("deepseek-chat").withParams({
 ## Usage Details
 
 DeepSeek provides OpenAI-compatible endpoints, but `NodeLLM` handles the specific capability differences (like reasoning vs tool support) automatically through its internal registry.
+
+---
+
+## Getting an API Key
+
+Sign up and get your API key at [platform.deepseek.com](https://platform.deepseek.com).

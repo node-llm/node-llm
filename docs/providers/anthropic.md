@@ -73,3 +73,9 @@ await chat.ask("Summarize this document", {
   files: ["./report.pdf"]
 });
 ```
+
+---
+
+## Getting an API Key
+
+Sign up and get your API key at [console.anthropic.com](https://console.anthropic.com).

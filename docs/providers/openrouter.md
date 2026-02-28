@@ -58,3 +58,9 @@ const chat = llm.chat("google/gemini-2.0-flash-exp:free").withParams({
   route: "fallback"
 });
 ```
+
+---
+
+## Getting an API Key
+
+Sign up and get your API key at [openrouter.ai/keys](https://openrouter.ai/keys).
