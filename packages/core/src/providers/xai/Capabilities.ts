@@ -1,3 +1,5 @@
+import { ModelRegistry } from "../../models/ModelRegistry.js";
+
 const VISION_MODELS = [
   "grok-2-vision-1212",
   "grok-4-0709",
@@ -20,40 +22,69 @@ const REASONING_MODELS = [
 
 export class Capabilities {
   static supportsVision(model: string): boolean {
+    const registryModel = ModelRegistry.find(model, "xai");
+    if (registryModel?.capabilities.includes("vision")) return true;
+
     return model.includes("vision") || VISION_MODELS.includes(model);
   }
 
   static supportsTools(model: string): boolean {
     if (this.supportsImageGeneration(model)) return false;
+
+    const registryModel = ModelRegistry.find(model, "xai");
+    if (registryModel?.capabilities.includes("tools")) return true;
+
     return true;
   }
 
   static supportsStructuredOutput(model: string): boolean {
     if (this.supportsImageGeneration(model)) return false;
+
+    const registryModel = ModelRegistry.find(model, "xai");
+    if (registryModel?.capabilities.includes("structured_output")) return true;
+
     return true;
   }
 
-  static supportsEmbeddings(_model: string): boolean {
+  static supportsEmbeddings(model: string): boolean {
+    const registryModel = ModelRegistry.find(model, "xai");
+    if (registryModel?.capabilities.includes("embeddings")) return true;
+
     return false;
   }
 
   static supportsImageGeneration(model: string): boolean {
+    const registryModel = ModelRegistry.find(model, "xai");
+    if (registryModel?.capabilities.includes("image_generation")) return true;
+
     return model.includes("image") || model.includes("imagine");
   }
 
-  static supportsTranscription(_model: string): boolean {
+  static supportsTranscription(model: string): boolean {
+    const registryModel = ModelRegistry.find(model, "xai");
+    if (registryModel?.capabilities.includes("transcription")) return true;
+
     return false;
   }
 
-  static supportsModeration(_model: string): boolean {
+  static supportsModeration(model: string): boolean {
+    const registryModel = ModelRegistry.find(model, "xai");
+    if (registryModel?.capabilities.includes("moderation")) return true;
+
     return false;
   }
 
   static supportsReasoning(model: string): boolean {
+    const registryModel = ModelRegistry.find(model, "xai");
+    if (registryModel?.capabilities.includes("reasoning")) return true;
+
     return model.includes("reasoning") || REASONING_MODELS.includes(model);
   }
 
-  static getContextWindow(_model: string): number {
+  static getContextWindow(model: string): number {
+    const registryModel = ModelRegistry.find(model, "xai");
+    if (registryModel?.context_window) return registryModel.context_window;
+
     return 128000;
   }
 }

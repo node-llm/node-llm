@@ -26,7 +26,7 @@ _Model information enriched by [models.dev](https://models.dev)._
 ## Last Updated
 {: .d-inline-block }
 
-2026-02-22
+2026-02-28
 {: .label .label-green }
 
 ---
@@ -244,8 +244,8 @@ _Model information enriched by [models.dev](https://models.dev)._
 | Model | Context | Max Output | Pricing (per 1M tokens) |
 | :--- | ---: | ---: | :--- |
 | `gemini-2.0-flash` | 1.0M | 8.192k | In: $0.10, Out: $0.40, Cache: $0.03 |
-| `gemini-2.0-flash` | 1.0M | 8.192k | In: $0.10, Out: $0.40, Cache: $0.03 |
 | `gemini-2.0-flash` | 1.0M | 8.192k | In: $0.15, Out: $0.60, Cache: $0.03 |
+| `gemini-2.0-flash` | 1.0M | 8.192k | In: $0.10, Out: $0.40, Cache: $0.03 |
 | `gemini-2.0-flash-001` | 1.0M | 8.192k | In: $0.10, Out: $0.40 |
 | `gemini-2.0-flash-exp` | 1.0M | 8.192k | In: $0.10, Out: $0.40 |
 | `gemini-2.0-flash-exp-image-generation` | 1.0M | 8.192k | In: $0.10, Out: $0.40 |
@@ -356,7 +356,7 @@ _Model information enriched by [models.dev](https://models.dev)._
 | `deepseek-chat` | 128k | 8.192k | In: $0.28, Out: $0.42, Cache: $0.03 |
 | `deepseek-reasoner` | 128k | 128k | In: $0.28, Out: $0.42, Cache: $0.03 |
 
-### OpenRouter (185)
+### OpenRouter (186)
 
 | Model | Context | Max Output | Pricing (per 1M tokens) |
 | :--- | ---: | ---: | :--- |
@@ -376,6 +376,7 @@ _Model information enriched by [models.dev](https://models.dev)._
 | `google/gemini-2.5-pro-preview-06-05` | 1.0M | 65.536k | In: $1.25, Out: $10.00, Cache: $0.31 |
 | `google/gemini-3-flash-preview` | 1.0M | 65.536k | In: $0.50, Out: $3.00, Cache: $0.05 |
 | `google/gemini-3.1-pro-preview` | 1.0M | 65.536k | In: $2.00, Out: $12.00 |
+| `google/gemini-3.1-pro-preview-customtools` | 1.0M | 65.536k | In: $2.00, Out: $12.00 |
 | `openai/gpt-4.1` | 1.0M | 32.768k | In: $2.00, Out: $8.00, Cache: $0.50 |
 | `openai/gpt-4.1-mini` | 1.0M | 32.768k | In: $0.40, Out: $1.60, Cache: $0.10 |
 | `anthropic/claude-opus-4.6` | 1.0M | 128k | In: $5.00, Out: $25.00, Cache: $0.50 |
@@ -646,11 +647,43 @@ _Model information enriched by [models.dev](https://models.dev)._
 | `cohere.command-light-text-v14` | 4.096k | 4.096k | In: $0.30, Out: $0.60 |
 | `cohere.command-text-v14` | 4.096k | 4.096k | In: $1.50, Out: $2.00 |
 
+### xAI (27)
+
+| Model | Context | Max Output | Pricing (per 1M tokens) |
+| :--- | ---: | ---: | :--- |
+| `grok-4-1-fast` | 2.0M | 30k | In: $0.20, Out: $0.50, Cache: $0.05 |
+| `grok-4-1-fast-non-reasoning` | 2.0M | 30k | In: $0.20, Out: $0.50, Cache: $0.05 |
+| `grok-4-fast` | 2.0M | 30k | In: $0.20, Out: $0.50, Cache: $0.05 |
+| `grok-4-fast-non-reasoning` | 2.0M | 30k | In: $0.20, Out: $0.50, Cache: $0.05 |
+| `grok-4` | 256k | 64k | In: $3.00, Out: $15.00, Cache: $0.75 |
+| `grok-code-fast-1` | 256k | 10k | In: $0.20, Out: $1.50, Cache: $0.02 |
+| `grok-2` | 131.072k | 8.192k | In: $2.00, Out: $10.00, Cache: $2.00 |
+| `grok-2-1212` | 131.072k | 8.192k | In: $2.00, Out: $10.00, Cache: $2.00 |
+| `grok-2-latest` | 131.072k | 8.192k | In: $2.00, Out: $10.00, Cache: $2.00 |
+| `grok-3` | 131.072k | 8.192k | In: $3.00, Out: $15.00, Cache: $0.75 |
+| `grok-3-fast` | 131.072k | 8.192k | In: $5.00, Out: $25.00, Cache: $1.25 |
+| `grok-3-fast-latest` | 131.072k | 8.192k | In: $5.00, Out: $25.00, Cache: $1.25 |
+| `grok-3-latest` | 131.072k | 8.192k | In: $3.00, Out: $15.00, Cache: $0.75 |
+| `grok-3-mini` | 131.072k | 8.192k | In: $0.30, Out: $0.50, Cache: $0.07 |
+| `grok-3-mini-fast` | 131.072k | 8.192k | In: $0.60, Out: $4.00, Cache: $0.15 |
+| `grok-3-mini-fast-latest` | 131.072k | 8.192k | In: $0.60, Out: $4.00, Cache: $0.15 |
+| `grok-3-mini-latest` | 131.072k | 8.192k | In: $0.30, Out: $0.50, Cache: $0.07 |
+| `grok-beta` | 131.072k | 4.096k | In: $5.00, Out: $15.00, Cache: $5.00 |
+| `grok-2-1212` | 128k | 8.192k | - |
+| `grok-2-vision-1212` | 128k | 8.192k | - |
+| `grok-3` | 128k | 16.384k | - |
+| `grok-3-mini` | 128k | 16.384k | - |
+| `grok-2-vision` | 8.192k | 4.096k | In: $2.00, Out: $10.00, Cache: $2.00 |
+| `grok-2-vision-1212` | 8.192k | 4.096k | In: $2.00, Out: $10.00, Cache: $2.00 |
+| `grok-2-vision-latest` | 8.192k | 4.096k | In: $2.00, Out: $10.00, Cache: $2.00 |
+| `grok-vision-beta` | 8.192k | 4.096k | In: $5.00, Out: $15.00, Cache: $5.00 |
+| `grok-imagine-image` | - | - | - |
+
 ---
 
 ## Models by Capability
 
-### Function Calling (449)
+### Function Calling (476)
 
 | Model | Provider | Context | Pricing |
 | :--- | :--- | ---: | :--- |
@@ -675,7 +708,7 @@ _Model information enriched by [models.dev](https://models.dev)._
 | `anthropic.claude-opus-4-20250514-v1:0` | bedrock | 200k | In: $15.00, Out: $75.00, Cache: $1.50 |
 | `anthropic.claude-opus-4-5-20251101-v1:0` | bedrock | 200k | In: $5.00, Out: $25.00, Cache: $0.50 |
 
-### Vision (235)
+### Vision (245)
 
 | Model | Provider | Context | Pricing |
 | :--- | :--- | ---: | :--- |
@@ -700,7 +733,7 @@ _Model information enriched by [models.dev](https://models.dev)._
 | `anthropic.claude-sonnet-4-5-20250929-v1:0` | bedrock | 200k | In: $3.00, Out: $15.00, Cache: $0.30 |
 | `anthropic.claude-sonnet-4-6` | bedrock | 200k | In: $3.00, Out: $15.00, Cache: $0.30 |
 
-### Reasoning (243)
+### Reasoning (253)
 
 | Model | Provider | Context | Pricing |
 | :--- | :--- | ---: | :--- |
@@ -725,7 +758,7 @@ _Model information enriched by [models.dev](https://models.dev)._
 | `anthropic/claude-sonnet-4.6` | openrouter | 1.0M | In: $3.00, Out: $15.00, Cache: $0.30 |
 | `claude-3-7-sonnet-20250219` | anthropic | 200k | In: $3.00, Out: $15.00 |
 
-### Streaming (475)
+### Streaming (502)
 
 | Model | Provider | Context | Pricing |
 | :--- | :--- | ---: | :--- |
@@ -750,7 +783,7 @@ _Model information enriched by [models.dev](https://models.dev)._
 | `anthropic.claude-instant-v1` | bedrock | 100k | In: $0.80, Out: $2.40 |
 | `anthropic.claude-opus-4-1-20250805-v1:0` | bedrock | 200k | In: $15.00, Out: $75.00, Cache: $1.50 |
 
-### Structured Output (453)
+### Structured Output (480)
 
 | Model | Provider | Context | Pricing |
 | :--- | :--- | ---: | :--- |
@@ -779,7 +812,7 @@ _Model information enriched by [models.dev](https://models.dev)._
 
 ## Models by Modality
 
-### Vision Models (338)
+### Vision Models (348)
 
 Models that can process images:
 
@@ -801,7 +834,7 @@ Models that can process images:
 | `anthropic.claude-opus-4-1-20250805-v1:0` | bedrock | 200k | In: $15.00, Out: $75.00, Cache: $1.50 |
 | `anthropic.claude-opus-4-20250514-v1:0` | bedrock | 200k | In: $15.00, Out: $75.00, Cache: $1.50 |
 
-### Audio Input Models (81)
+### Audio Input Models (82)
 
 Models that can process audio:
 
@@ -811,8 +844,8 @@ Models that can process audio:
 | `gemini-1.5-flash-8b` | gemini | 1.0M | In: $0.04, Out: $0.15, Cache: $0.01 |
 | `gemini-1.5-pro` | gemini | 1.0M | In: $1.25, Out: $5.00, Cache: $0.31 |
 | `gemini-2.0-flash` | gemini | 1.0M | In: $0.10, Out: $0.40, Cache: $0.03 |
-| `gemini-2.0-flash` | gemini | 1.0M | In: $0.10, Out: $0.40, Cache: $0.03 |
 | `gemini-2.0-flash` | gemini | 1.0M | In: $0.15, Out: $0.60, Cache: $0.03 |
+| `gemini-2.0-flash` | gemini | 1.0M | In: $0.10, Out: $0.40, Cache: $0.03 |
 | `gemini-2.0-flash-lite` | gemini | 1.0M | In: $0.10, Out: $0.40, Cache: $0.03 |
 | `gemini-2.0-flash-lite` | gemini | 1.0M | In: $0.07, Out: $0.30 |
 | `gemini-2.0-flash-lite` | gemini | 1.0M | In: $0.07, Out: $0.30 |
@@ -963,4 +996,4 @@ This is useful for:
 
 ---
 
-**Auto-generated by `npm run sync-models`** • Last updated: 2026-02-22
+**Auto-generated by `npm run sync-models`** • Last updated: 2026-02-28
