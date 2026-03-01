@@ -79,13 +79,19 @@ export class MistralCapabilities {
     return false;
   }
 
-  static supportsTranscription(_modelId: string): boolean {
-    return false;
+  static supportsTranscription(modelId: string): boolean {
+    const model = this.findModel(modelId);
+    if (model?.modalities?.input?.includes("audio")) return true;
+
+    // Voxtral models support transcription
+    return /voxtral/.test(modelId.toLowerCase());
   }
 
   static supportsModeration(modelId: string): boolean {
     const model = this.findModel(modelId);
-    return model?.capabilities?.includes("moderation") || false;
+    if (model?.capabilities?.includes("moderation")) return true;
+
+    return /moderation/.test(modelId.toLowerCase());
   }
 
   static supportsReasoning(_modelId: string): boolean {

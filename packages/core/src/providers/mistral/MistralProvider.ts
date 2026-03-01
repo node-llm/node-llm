@@ -5,7 +5,11 @@ import {
   ModelInfo,
   ChatChunk,
   EmbeddingRequest,
-  EmbeddingResponse
+  EmbeddingResponse,
+  TranscriptionRequest,
+  TranscriptionResponse,
+  ModerationRequest,
+  ModerationResponse
 } from "../Provider.js";
 import { BaseProvider } from "../BaseProvider.js";
 import { DEFAULT_MISTRAL_BASE_URL } from "../../constants.js";
@@ -14,6 +18,8 @@ import { MistralModels } from "./Models.js";
 import { MistralStreaming } from "./Streaming.js";
 import { MistralEmbedding } from "./Embedding.js";
 import { MistralCapabilities } from "./Capabilities.js";
+import { MistralTranscription } from "./Transcription.js";
+import { MistralModeration } from "./Moderation.js";
 
 export interface MistralProviderOptions {
   apiKey: string;
@@ -26,6 +32,8 @@ export class MistralProvider extends BaseProvider implements Provider {
   private readonly streamingHandler: MistralStreaming;
   private readonly modelsHandler: MistralModels;
   private readonly embeddingHandler: MistralEmbedding;
+  private readonly transcriptionHandler: MistralTranscription;
+  private readonly moderationHandler: MistralModeration;
 
   public capabilities = {
     supportsVision: (model: string) => MistralCapabilities.supportsVision(model),
@@ -48,6 +56,8 @@ export class MistralProvider extends BaseProvider implements Provider {
     this.streamingHandler = new MistralStreaming(this.baseUrl, options.apiKey);
     this.modelsHandler = new MistralModels(this.baseUrl, options.apiKey);
     this.embeddingHandler = new MistralEmbedding(this.baseUrl, options.apiKey);
+    this.transcriptionHandler = new MistralTranscription(this.baseUrl, options.apiKey);
+    this.moderationHandler = new MistralModeration(this.baseUrl, options.apiKey);
   }
 
   public apiBase(): string {
@@ -68,6 +78,8 @@ export class MistralProvider extends BaseProvider implements Provider {
 
   public override defaultModel(feature?: string): string {
     if (feature === "embedding" || feature === "embeddings") return "mistral-embed";
+    if (feature === "transcription") return "voxtral-mini-latest";
+    if (feature === "moderation") return "mistral-moderation-latest";
     return "mistral-large-latest";
   }
 
@@ -85,5 +97,13 @@ export class MistralProvider extends BaseProvider implements Provider {
 
   async embed(request: EmbeddingRequest): Promise<EmbeddingResponse> {
     return this.embeddingHandler.execute(request);
+  }
+
+  async transcribe(request: TranscriptionRequest): Promise<TranscriptionResponse> {
+    return this.transcriptionHandler.execute(request);
+  }
+
+  async moderate(request: ModerationRequest): Promise<ModerationResponse> {
+    return this.moderationHandler.execute(request);
   }
 }

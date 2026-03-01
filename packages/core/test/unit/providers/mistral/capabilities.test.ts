@@ -69,4 +69,28 @@ describe("Mistral Capabilities", () => {
       expect(MistralCapabilities.supportsReasoning("mistral-small-latest")).toBe(false);
     });
   });
+
+  describe("supportsTranscription", () => {
+    it("should return true for voxtral models", () => {
+      expect(MistralCapabilities.supportsTranscription("voxtral-mini-latest")).toBe(true);
+      expect(MistralCapabilities.supportsTranscription("voxtral-small-latest")).toBe(true);
+    });
+
+    it("should return false for non-audio models", () => {
+      expect(MistralCapabilities.supportsTranscription("mistral-large-latest")).toBe(false);
+      expect(MistralCapabilities.supportsTranscription("mistral-embed")).toBe(false);
+    });
+  });
+
+  describe("supportsModeration", () => {
+    it("should return true for moderation models", () => {
+      expect(MistralCapabilities.supportsModeration("mistral-moderation-latest")).toBe(true);
+      expect(MistralCapabilities.supportsModeration("mistral-moderation-2411")).toBe(true);
+    });
+
+    it("should return false for non-moderation models", () => {
+      expect(MistralCapabilities.supportsModeration("mistral-large-latest")).toBe(false);
+      expect(MistralCapabilities.supportsModeration("mistral-embed")).toBe(false);
+    });
+  });
 });

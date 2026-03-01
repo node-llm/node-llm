@@ -7,6 +7,8 @@ export * from "./Chat.js";
 export * from "./Models.js";
 export * from "./Capabilities.js";
 export * from "./Embedding.js";
+export * from "./Transcription.js";
+export * from "./Moderation.js";
 
 let registered = false;
 

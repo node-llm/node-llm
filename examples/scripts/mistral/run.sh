@@ -21,6 +21,9 @@ EXAMPLES=(
   "chat/structured.mjs"
   "embeddings/create.mjs"
   "discovery/models.mjs"
+  "safety/moderation.mjs"
+  "multimodal/vision.mjs"
+  "multimodal/transcribe.mjs"
 )
 
 # Run each example (assumes running from project root)
