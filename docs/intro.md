@@ -56,6 +56,10 @@ It is not a "simple API wrapper" or a "prompt engineering tool." NodeLLM deals w
     <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/xai.svg" alt="xAI">
     <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/xai-text.svg" alt="" class="logo-small">
   </div>
+  <div class="provider-logo">
+    <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/mistral-color.svg" alt="Mistral">
+    <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/mistral-text.svg" alt="" class="logo-small">
+  </div>
 </div>
 
 ```text
@@ -63,7 +67,7 @@ It is not a "simple API wrapper" or a "prompt engineering tool." NodeLLM deals w
                    ↓
 NodeLLM (Unified API + State + Security)
                    ↓
- OpenAI | Anthropic | Bedrock | xAI | Ollama
+ OpenAI | Anthropic | Bedrock | xAI | Ollama | Mistral
 ```
 
 ---

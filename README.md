@@ -32,6 +32,9 @@ Integrating multiple LLM providers often means juggling different SDKs, API styl
   &nbsp;&nbsp;&nbsp;&nbsp;
   <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/xai.svg" height="28" />
   <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/xai-text.svg" height="18" />
+  &nbsp;&nbsp;&nbsp;&nbsp;
+  <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/mistral-color.svg" height="28" />
+  <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/mistral-text.svg" height="20" />
 </p>
 
 <br/>
