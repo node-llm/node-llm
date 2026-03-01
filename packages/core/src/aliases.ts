@@ -194,6 +194,10 @@ export default {
   "claude-sonnet-4.6-us": {
     "bedrock": "us.anthropic.claude-sonnet-4-6"
   },
+  "codestral": {
+    "mistral": "codestral-latest",
+    "openrouter": "mistralai/codestral-latest"
+  },
   "codestral-2508": {
     "openrouter": "mistralai/codestral-2508"
   },
@@ -261,6 +265,9 @@ export default {
   "deepseek-v3.2-speciale": {
     "openrouter": "deepseek/deepseek-v3.2-speciale"
   },
+  "devstral-2": {
+    "mistral": "devstral-2512"
+  },
   "devstral-2-2512": {
     "openrouter": "mistralai/devstral-2512"
   },
@@ -268,13 +275,21 @@ export default {
     "openrouter": "mistralai/devstral-2512:free"
   },
   "devstral-medium": {
+    "mistral": "devstral-medium-2507",
     "openrouter": "mistralai/devstral-medium-2507"
   },
   "devstral-small": {
+    "mistral": "devstral-small-2507",
     "openrouter": "mistralai/devstral-small-2505"
   },
   "devstral-small-1.1": {
     "openrouter": "mistralai/devstral-small-2507"
+  },
+  "devstral-small-2": {
+    "mistral": "labs-devstral-small-2512"
+  },
+  "devstral-small-2505": {
+    "mistral": "devstral-small-2505"
   },
   "devstral-small-2505-free": {
     "openrouter": "mistralai/devstral-small-2505:free"
@@ -817,6 +832,12 @@ export default {
   "llama-4-scout-free": {
     "openrouter": "meta-llama/llama-4-scout:free"
   },
+  "magistral-medium": {
+    "mistral": "magistral-medium-latest"
+  },
+  "magistral-small": {
+    "mistral": "magistral-small"
+  },
   "mai-ds-r1-free": {
     "openrouter": "microsoft/mai-ds-r1:free"
   },
@@ -846,36 +867,76 @@ export default {
   "ministral-3-8b": {
     "bedrock": "mistral.ministral-3-8b-instruct"
   },
+  "ministral-3b": {
+    "mistral": "ministral-3b-latest"
+  },
+  "ministral-8b": {
+    "mistral": "ministral-8b-latest"
+  },
+  "mistral-7b": {
+    "mistral": "open-mistral-7b"
+  },
   "mistral-7b-instruct-free": {
     "openrouter": "mistralai/mistral-7b-instruct:free"
   },
   "mistral-7b-instruct-v0.3": {
     "bedrock": "mistral.mistral-7b-instruct-v0:2"
   },
+  "mistral-embed": {
+    "mistral": "mistral-embed"
+  },
   "mistral-large": {
+    "mistral": "mistral-large-latest",
     "bedrock": "mistral.mistral-large-2402-v1:0",
     "openrouter": "mistralai/mistral-large"
+  },
+  "mistral-large-2.1": {
+    "mistral": "mistral-large-2411"
   },
   "mistral-large-24.02": {
     "bedrock": "mistral.mistral-large-2402-v1:0"
   },
+  "mistral-large-3": {
+    "mistral": "mistral-large-2512"
+  },
+  "mistral-medium": {
+    "mistral": "mistral-medium-latest"
+  },
   "mistral-medium-3": {
+    "mistral": "mistral-medium-2505",
     "openrouter": "mistralai/mistral-medium-3"
   },
   "mistral-medium-3.1": {
+    "mistral": "mistral-medium-2508",
     "openrouter": "mistralai/mistral-medium-3.1"
+  },
+  "mistral-nemo": {
+    "mistral": "mistral-nemo"
   },
   "mistral-nemo-free": {
     "openrouter": "mistralai/mistral-nemo:free"
   },
+  "mistral-small": {
+    "mistral": "mistral-small-latest",
+    "openrouter": "mistralai/mistral-small"
+  },
   "mistral-small-3.1-24b-instruct": {
     "openrouter": "mistralai/mistral-small-3.1-24b-instruct"
+  },
+  "mistral-small-3.2": {
+    "mistral": "mistral-small-2506"
   },
   "mistral-small-3.2-24b-free": {
     "openrouter": "mistralai/mistral-small-3.2-24b-instruct:free"
   },
   "mistral-small-3.2-24b-instruct": {
     "openrouter": "mistralai/mistral-small-3.2-24b-instruct"
+  },
+  "mixtral-8x22b": {
+    "mistral": "open-mixtral-8x22b"
+  },
+  "mixtral-8x7b": {
+    "mistral": "open-mixtral-8x7b"
   },
   "mixtral-8x7b-instruct-v0.1": {
     "bedrock": "mistral.mixtral-8x7b-instruct-v0:1"
@@ -949,6 +1010,13 @@ export default {
   },
   "palmyra-x5": {
     "bedrock": "writer.palmyra-x5-v1:0"
+  },
+  "pixtral-12b": {
+    "mistral": "pixtral-12b"
+  },
+  "pixtral-large": {
+    "mistral": "pixtral-large-latest",
+    "openrouter": "mistralai/pixtral-large-latest"
   },
   "qwen2.5-coder-32b-instruct": {
     "openrouter": "qwen/qwen-2.5-coder-32b-instruct"
