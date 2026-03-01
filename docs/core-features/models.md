@@ -78,6 +78,7 @@ The registry includes models from:
 - **Anthropic** (Claude 3.5 Sonnet, Haiku, Opus)
 - **Google Gemini** (Gemini 1.5 Pro, Flash)
 - **Vertex AI** (via Gemini)
+- **Mistral** (Mistral Large, Codestral, Pixtral, Magistral)
 
 ---
 
