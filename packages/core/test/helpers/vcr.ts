@@ -32,6 +32,7 @@ export function setupVCR(recordingName: string, subDir?: string) {
   if (!process.env.DEEPSEEK_API_KEY) process.env.DEEPSEEK_API_KEY = "dummy-key-for-vcr-replay";
   if (!process.env.OPENROUTER_API_KEY) process.env.OPENROUTER_API_KEY = "dummy-key-for-vcr-replay";
   if (!process.env.XAI_API_KEY) process.env.XAI_API_KEY = "dummy-key-for-vcr-replay";
+  if (!process.env.MISTRAL_API_KEY) process.env.MISTRAL_API_KEY = "dummy-key-for-vcr-replay";
 
   if (!process.env.AWS_ACCESS_KEY_ID && !process.env.AWS_BEARER_TOKEN_BEDROCK) {
     process.env.AWS_ACCESS_KEY_ID = "AKIA-DUMMY-KEY";

@@ -56,6 +56,7 @@ export type ProviderName =
   | "deepseek"
   | "openrouter"
   | "ollama"
+  | "mistral"
   | (string & {});
 
 export type ModelCapability =

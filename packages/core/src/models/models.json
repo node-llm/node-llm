@@ -20571,5 +20571,197 @@
       "source": "models.dev",
       "last_synced": "2026-02-28T09:41:00.665Z"
     }
+  },
+  {
+    "id": "mistral-large-latest",
+    "name": "Mistral Large",
+    "provider": "mistral",
+    "family": "mistral-large",
+    "created_at": "2024-02-26 00:00:00 UTC",
+    "context_window": 128000,
+    "max_output_tokens": 8192,
+    "modalities": {
+      "input": ["text"],
+      "output": ["text"]
+    },
+    "capabilities": [
+      "streaming",
+      "chat",
+      "function_calling",
+      "tools",
+      "structured_output",
+      "json_mode"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 2,
+          "output_per_million": 6
+        }
+      }
+    },
+    "metadata": {
+      "source": "manual",
+      "last_synced": "2026-03-01T00:00:00.000Z"
+    }
+  },
+  {
+    "id": "mistral-medium-latest",
+    "name": "Mistral Medium",
+    "provider": "mistral",
+    "family": "mistral-medium",
+    "created_at": "2024-01-01 00:00:00 UTC",
+    "context_window": 32000,
+    "max_output_tokens": 8192,
+    "modalities": {
+      "input": ["text"],
+      "output": ["text"]
+    },
+    "capabilities": [
+      "streaming",
+      "chat",
+      "function_calling",
+      "tools",
+      "structured_output",
+      "json_mode"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 2.7,
+          "output_per_million": 8.1
+        }
+      }
+    },
+    "metadata": {
+      "source": "manual",
+      "last_synced": "2026-03-01T00:00:00.000Z"
+    }
+  },
+  {
+    "id": "mistral-small-latest",
+    "name": "Mistral Small",
+    "provider": "mistral",
+    "family": "mistral-small",
+    "created_at": "2024-01-01 00:00:00 UTC",
+    "context_window": 32000,
+    "max_output_tokens": 8192,
+    "modalities": {
+      "input": ["text"],
+      "output": ["text"]
+    },
+    "capabilities": [
+      "streaming",
+      "chat",
+      "function_calling",
+      "tools",
+      "structured_output",
+      "json_mode"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 0.1,
+          "output_per_million": 0.3
+        }
+      }
+    },
+    "metadata": {
+      "source": "manual",
+      "last_synced": "2026-03-01T00:00:00.000Z"
+    }
+  },
+  {
+    "id": "codestral-latest",
+    "name": "Codestral",
+    "provider": "mistral",
+    "family": "codestral",
+    "created_at": "2024-05-29 00:00:00 UTC",
+    "context_window": 128000,
+    "max_output_tokens": 8192,
+    "modalities": {
+      "input": ["text"],
+      "output": ["text"]
+    },
+    "capabilities": [
+      "streaming",
+      "chat",
+      "function_calling",
+      "tools",
+      "structured_output",
+      "json_mode"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 0.3,
+          "output_per_million": 0.9
+        }
+      }
+    },
+    "metadata": {
+      "source": "manual",
+      "last_synced": "2026-03-01T00:00:00.000Z"
+    }
+  },
+  {
+    "id": "pixtral-large-latest",
+    "name": "Pixtral Large",
+    "provider": "mistral",
+    "family": "pixtral",
+    "created_at": "2024-11-18 00:00:00 UTC",
+    "context_window": 128000,
+    "max_output_tokens": 8192,
+    "modalities": {
+      "input": ["text", "image"],
+      "output": ["text"]
+    },
+    "capabilities": [
+      "streaming",
+      "chat",
+      "vision",
+      "function_calling",
+      "tools",
+      "structured_output",
+      "json_mode"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 2,
+          "output_per_million": 6
+        }
+      }
+    },
+    "metadata": {
+      "source": "manual",
+      "last_synced": "2026-03-01T00:00:00.000Z"
+    }
+  },
+  {
+    "id": "mistral-embed",
+    "name": "Mistral Embed",
+    "provider": "mistral",
+    "family": "mistral-embed",
+    "created_at": "2024-01-01 00:00:00 UTC",
+    "context_window": 8192,
+    "max_output_tokens": null,
+    "modalities": {
+      "input": ["text"],
+      "output": ["embeddings"]
+    },
+    "capabilities": ["embeddings"],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 0.1,
+          "output_per_million": 0
+        }
+      }
+    },
+    "metadata": {
+      "source": "manual",
+      "last_synced": "2026-03-01T00:00:00.000Z"
+    }
   }
 ]
