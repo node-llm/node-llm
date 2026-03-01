@@ -6,7 +6,7 @@ permalink: /llms.txt
 
 > The Backend-First AI SDK for Node.js
 
-NodeLLM is an open-source infrastructure layer for building provider-agnostic, production-grade LLM systems in Node.js. It standardizes integrations across OpenAI, Anthropic, Gemini, DeepSeek, Bedrock, and Ollama into a single, predictable API.
+NodeLLM is an open-source infrastructure layer for building provider-agnostic, production-grade LLM systems in Node.js. It standardizes integrations across OpenAI, Anthropic, Gemini, DeepSeek, Bedrock, OpenRouter, xAI, Ollama, and Mistral into a single, predictable API.
 
 ## Project Details
 
@@ -21,7 +21,7 @@ NodeLLM is an open-source infrastructure layer for building provider-agnostic, p
 
 ## Core Features
 
-- **Provider Agnostic**: Unified API for 540+ models (OpenAI, Anthropic, Gemini, Bedrock, DeepSeek, Ollama).
+- **Provider Agnostic**: Unified API for 540+ models (OpenAI, Anthropic, Gemini, Bedrock, DeepSeek, OpenRouter, xAI, Ollama, Mistral).
 - **Backend-First**: Optimized for long-running processes, CRON jobs, and persistent agents (not just frontend streaming).
 - **Static Model Registry**: Zero-latency, offline access to model metadata (context window, pricing, capabilities).
 - **Middleware Architecture**: Intercept and modify LLM requests/responses globally or locally (PII masking, cost tracking, telemetry).

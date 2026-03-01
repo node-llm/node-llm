@@ -77,7 +77,11 @@ The registry includes models from:
 - **OpenAI** (GPT-4o, GPT-3.5, DALL-E)
 - **Anthropic** (Claude 3.5 Sonnet, Haiku, Opus)
 - **Google Gemini** (Gemini 1.5 Pro, Flash)
-- **Vertex AI** (via Gemini)
+- **DeepSeek** (DeepSeek V3, R1)
+- **AWS Bedrock** (Nova, Titan, Claude)
+- **OpenRouter** (400+ models)
+- **xAI** (Grok)
+- **Ollama** (Local models)
 - **Mistral** (Mistral Large, Codestral, Pixtral, Magistral)
 
 ---

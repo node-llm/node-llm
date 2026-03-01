@@ -43,13 +43,13 @@ await chat.ask("Describe this", { files: ["https://example.com/image.png"] });
 
 ## Provider Support
 
-| File Type | Gemini | OpenAI | Anthropic | Bedrock |
-|-----------|--------|--------|-----------|---------|
-| **Images** | ✅ | ✅ | ✅ | ✅ |
-| **PDFs** | ✅ | ✅ | ✅ | ✅ |
-| **Audio** | ✅ | ✅ | ❌ | ❌ |
-| **Video** | ✅ | ⚠️ | ❌ | ❌ |
-| **Code/Text** | ✅ | ✅ | ✅ | ✅ |
+| File Type | Gemini | OpenAI | Anthropic | Bedrock | Mistral |
+|-----------|--------|--------|-----------|---------|----------|
+| **Images** | ✅ | ✅ | ✅ | ✅ | ✅ (Pixtral) |
+| **PDFs** | ✅ | ✅ | ✅ | ✅ | ❌ |
+| **Audio** | ✅ | ✅ | ❌ | ❌ | ✅ (Voxtral) |
+| **Video** | ✅ | ⚠️ | ❌ | ❌ | ❌ |
+| **Code/Text** | ✅ | ✅ | ✅ | ✅ | ✅ |
 
 _⚠️ = Limited support (e.g., frame extraction)_
 

@@ -107,3 +107,4 @@ Currently, the following models have enhanced reasoning support in `NodeLLM`:
 | `o1-*`, `o3-*`                     | OpenAI    | Effort configuration & token tracking             |
 | `claude-3-7-*`, `claude-*-4-*`     | Anthropic | Budget-based thinking & full text extraction      |
 | `gemini-2.0-flash-thinking-*`      | Gemini    | Full thinking text extraction                     |
+| `magistral-*`                      | Mistral   | Always-on thinking & full text extraction         |
