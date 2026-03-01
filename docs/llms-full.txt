@@ -16,7 +16,7 @@ permalink: /llms.txt
 
 > The Backend-First AI SDK for Node.js
 
-NodeLLM is an open-source infrastructure layer for building provider-agnostic, production-grade LLM systems in Node.js. It standardizes integrations across OpenAI, Anthropic, Gemini, DeepSeek, Bedrock, and Ollama into a single, predictable API.
+NodeLLM is an open-source infrastructure layer for building provider-agnostic, production-grade LLM systems in Node.js. It standardizes integrations across OpenAI, Anthropic, Gemini, DeepSeek, Bedrock, OpenRouter, xAI, Ollama, and Mistral into a single, predictable API.
 
 ## Project Details
 
@@ -31,7 +31,7 @@ NodeLLM is an open-source infrastructure layer for building provider-agnostic, p
 
 ## Core Features
 
-- **Provider Agnostic**: Unified API for 540+ models (OpenAI, Anthropic, Gemini, Bedrock, DeepSeek, Ollama).
+- **Provider Agnostic**: Unified API for 540+ models (OpenAI, Anthropic, Gemini, Bedrock, DeepSeek, OpenRouter, xAI, Ollama, Mistral).
 - **Backend-First**: Optimized for long-running processes, CRON jobs, and persistent agents (not just frontend streaming).
 - **Static Model Registry**: Zero-latency, offline access to model metadata (context window, pricing, capabilities).
 - **Middleware Architecture**: Intercept and modify LLM requests/responses globally or locally (PII masking, cost tracking, telemetry).
@@ -134,6 +134,14 @@ It is not a "simple API wrapper" or a "prompt engineering tool." NodeLLM deals w
     <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/bedrock-color.svg" alt="Bedrock">
     <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/bedrock-text.svg" alt="" class="logo-small">
   </div>
+  <div class="provider-logo">
+    <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/xai.svg" alt="xAI">
+    <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/xai-text.svg" alt="" class="logo-small">
+  </div>
+  <div class="provider-logo">
+    <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/mistral-color.svg" alt="Mistral">
+    <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/mistral-text.svg" alt="" class="logo-small">
+  </div>
 </div>
 
 ```text
@@ -141,7 +149,7 @@ It is not a "simple API wrapper" or a "prompt engineering tool." NodeLLM deals w
                    ↓
 NodeLLM (Unified API + State + Security)
                    ↓
- OpenAI | Anthropic | Bedrock | Ollama
+ OpenAI | Anthropic | Bedrock | xAI | Ollama | Mistral
 ```
 
 ---
@@ -331,7 +339,9 @@ console.log(res.thinking.text); // Full chain-of-thought
 | <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/deepseek-color.svg" height="18"> **DeepSeek**  | Chat (V3), **Extended Thinking (R1)**, Tools, Streaming                                              |
 | <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/bedrock-color.svg" height="18"> **Bedrock**    | Chat, Streaming, Tools, Image Gen (Titan/SD), Embeddings, **Prompt Caching**                         |
 | <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/openrouter.svg" height="18"> **OpenRouter**    | **Aggregator**, Chat, Streaming, Tools, Vision, Embeddings, **Reasoning**                             |
+| <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/xai.svg" height="18"> <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/xai-text.svg" height="12"> **xAI** | Chat, Streaming, Tools, Vision, Images, **Reasoning**                                                |
 | <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/ollama.svg" height="18"> **Ollama**            | **Local Inference**, Chat, Streaming, Tools, Vision, Embeddings                                       |
+| <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/mistral-color.svg" height="18"> **Mistral**        | Chat, Streaming, Tools, Vision, Embeddings, Transcription, Moderation, **Reasoning (Magistral)** |
 
 ---
 
@@ -435,7 +445,9 @@ const llm = createLLM({
   anthropicApiKey: process.env.ANTHROPIC_API_KEY,
   geminiApiKey: process.env.GEMINI_API_KEY,
   deepseekApiKey: process.env.DEEPSEEK_API_KEY,
-  openrouterApiKey: process.env.OPENROUTER_API_KEY
+  openrouterApiKey: process.env.OPENROUTER_API_KEY,
+  xaiApiKey: process.env.XAI_API_KEY,
+  mistralApiKey: process.env.MISTRAL_API_KEY
 });
 ```
 
@@ -487,6 +499,11 @@ const llm = createLLM({
 | `deepseekApiBase`           | DeepSeek API base URL               | `process.env.DEEPSEEK_API_BASE`   |
 | `openrouterApiKey`          | OpenRouter API key                  | `process.env.OPENROUTER_API_KEY`  |
 | `openrouterApiBase`         | OpenRouter API base URL             | `process.env.OPENROUTER_API_BASE` |
+| `xaiApiKey`                 | xAI API key                         | `process.env.XAI_API_KEY`         |
+| `xaiApiBase`                | xAI API base URL                    | `process.env.XAI_API_BASE`        |
+| `mistralApiKey`             | Mistral API key                     | `process.env.MISTRAL_API_KEY`     |
+| `mistralApiBase`            | Mistral API base URL                | `process.env.MISTRAL_API_BASE`    |
+| `ollamaApiBase`             | Ollama API base URL                 | `process.env.OLLAMA_API_BASE`     |
 | `defaultChatModel`          | Default model for `.chat()`         | Provider default                  |
 | `defaultTranscriptionModel` | Default model for `.transcribe()`   | Provider default                  |
 | `defaultModerationModel`    | Default model for `.moderate()`     | Provider default                  |
@@ -968,6 +985,598 @@ await chat.ask("Hello", {
 <!-- END FILE: getting_started/overview.md -->
 ----------------------------------------
 
+<!-- FILE: core-features/agents.md -->
+
+# 📄 core-features/agents.md
+
+---
+layout: default
+title: Agents
+nav_order: 6
+parent: Core Features
+permalink: /core-features/agents
+description: Build intelligent agents with a declarative class-based DSL for model routing, RAG, multi-agent collaboration, and more.
+---
+
+# {{ page.title }}
+{: .no_toc }
+
+{{ page.description }}
+{: .fs-6 .fw-300 }
+
+## Table of contents
+{: .no_toc .text-delta }
+
+1. TOC
+{:toc}
+
+---
+
+The `Agent` class provides a declarative way to define reusable agents with static configuration. This is inspired by Ruby on Rails' class macros and provides a clean DSL for agent definition.
+
+```bash
+npm install @node-llm/core
+```
+
+---
+
+## Basic Usage <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v1.11.0+</span>
+
+Define agents using static properties on a class:
+
+```typescript
+import { Agent, createLLM } from "@node-llm/core";
+
+// Define an agent with static properties
+class AssistantAgent extends Agent {
+  static model = "gpt-4o";
+  static instructions = "You are a helpful assistant. Be concise.";
+  static temperature = 0.7;
+}
+
+// Create and use
+const llm = createLLM({ provider: "openai" });
+const agent = new AssistantAgent({ llm });
+const response = await agent.ask("What is the capital of France?");
+```
+
+
+### Agent Methods
+
+**Instance Methods:**
+
+| Method | Description |
+|:-------|:------------|
+| `ask(prompt)` | Send a message and get a response |
+| `say(prompt)` | Alias for `ask()` |
+| `stream(prompt)` | Stream the response |
+
+**Static Methods** <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v1.11.0+</span>
+
+| Method | Description |
+|:-------|:------------|
+| `Agent.ask(prompt)` | One-liner execution (creates instance automatically) |
+| `Agent.stream(prompt)` | One-liner streaming |
+
+```typescript
+// Static API (one-liner)
+const result = await AssistantAgent.ask("What is TypeScript?");
+
+// Instance API (traditional)
+const agent = new AssistantAgent({ llm });
+const result = await agent.ask("What is TypeScript?");
+```
+
+### Available Static Properties
+
+| Property | Type | Description |
+|:---------|:-----|:------------|
+| `model` | `string` | The model ID to use (e.g., "gpt-4o") |
+| `instructions` | `string` | System prompt for the agent |
+| `tools` | `Tool[]` | Array of Tool classes to register |
+| `temperature` | `number` | Sampling temperature (0-2) |
+| `thinking` | `boolean \| object` | Enable extended thinking (Claude) |
+| `schema` | `ZodSchema` | Output schema for structured responses |
+
+---
+
+## Agents with Tools
+
+Register tools on an agent class:
+
+```typescript
+import { Agent, Tool, z, createLLM } from "@node-llm/core";
+
+class CalculatorTool extends Tool {
+  name = "calculator";
+  description = "Performs arithmetic operations";
+  schema = z.object({
+    a: z.number(),
+    b: z.number(),
+    operation: z.enum(["add", "subtract", "multiply", "divide"])
+  });
+
+  async execute({ a, b, operation }) {
+    const ops = { add: a + b, subtract: a - b, multiply: a * b, divide: a / b };
+    return { result: ops[operation] };
+  }
+}
+
+class MathAgent extends Agent {
+  static model = "gpt-4o";
+  static instructions = "Use the calculator tool to solve math problems.";
+  static tools = [CalculatorTool];
+  static temperature = 0;
+}
+
+const llm = createLLM({ provider: "openai" });
+const agent = new MathAgent({ llm });
+await agent.ask("What is 15 multiplied by 7?"); // Uses the tool automatically
+```
+
+---
+
+## Model Routing Agent
+
+Route requests to the best model for the job:
+
+```typescript
+import { Agent, Tool, z, createLLM } from "@node-llm/core";
+
+class ClassifierTool extends Tool {
+  name = "classify_task";
+  description = "Classifies the task type";
+  schema = z.object({ query: z.string() });
+
+  async execute({ query }) {
+    const response = await createLLM({ provider: "openai" })
+      .chat("gpt-4o-mini")
+      .system("Classify as: code, creative, or factual. One word only.")
+      .ask(query);
+    return { taskType: response.content.toLowerCase().trim() };
+  }
+}
+
+class SmartRouter extends Agent {
+  static model = "gpt-4o";
+  static instructions = "Classify the task, then route to the appropriate specialist.";
+  static tools = [ClassifierTool];
+}
+
+const llm = createLLM({ provider: "openai" });
+const router = new SmartRouter({ llm });
+await router.ask("Write a poem about the ocean");
+```
+
+---
+
+## RAG Agent (Retrieval-Augmented Generation)
+
+Combine vector search with LLM generation:
+
+```typescript
+import { Agent, Tool, z, createLLM } from "@node-llm/core";
+import { PrismaClient } from "@prisma/client";
+
+const prisma = new PrismaClient();
+
+class KnowledgeSearchTool extends Tool {
+  name = "search_knowledge";
+  description = "Searches internal documents for relevant context";
+  schema = z.object({ query: z.string().describe("What to search for") });
+
+  async execute({ query }) {
+    const embedding = await createLLM({ provider: "openai" }).embed(query);
+    const docs = await prisma.$queryRaw`
+      SELECT title, content FROM documents
+      ORDER BY embedding <-> ${embedding.vector}::vector LIMIT 3
+    `;
+    return docs.map(d => `[${d.title}]: ${d.content}`).join("\n\n");
+  }
+}
+
+class RAGAgent extends Agent {
+  static model = "gpt-4o";
+  static instructions = "Answer questions using the knowledge search tool. Cite sources.";
+  static tools = [KnowledgeSearchTool];
+}
+
+const llm = createLLM({ provider: "openai" });
+const agent = new RAGAgent({ llm });
+await agent.ask("What's our vacation policy?");
+```
+
+See the [HR Chatbot Example](https://github.com/node-llm/node-llm/tree/main/examples/applications/hr-chatbot-rag) for a complete RAG implementation.
+
+---
+
+## Multi-Agent Collaboration
+
+Compose specialized agents for complex workflows:
+
+```typescript
+import { Agent, createLLM } from "@node-llm/core";
+
+class ResearchAgent extends Agent {
+  static model = "gemini-2.0-flash";
+  static instructions = "List 5 key facts about the topic. Be concise.";
+}
+
+class WriterAgent extends Agent {
+  static model = "claude-sonnet-4-20250514";
+  static instructions = "Write a compelling article from the provided research notes.";
+}
+
+// Orchestrator: directly coordinates sub-agents
+async function researchAndWrite(topic: string) {
+  // Step 1: Research
+  const researcher = new ResearchAgent({ 
+    llm: createLLM({ provider: "gemini" }) 
+  });
+  const facts = await researcher.ask(`Research: ${topic}`);
+  
+  // Step 2: Write
+  const writer = new WriterAgent({ 
+    llm: createLLM({ provider: "anthropic" }) 
+  });
+  const article = await writer.ask(`Write an article from these facts:\n\n${facts}`);
+  
+  return article;
+}
+
+// Usage
+const result = await researchAndWrite("TypeScript 5.4 features");
+console.log(result);
+```
+
+**Why not wrap in tools?** Direct orchestration is clearer when you control the workflow. Use tools only when the LLM needs to decide *when* to call sub-agents dynamically.
+
+```
+
+---
+
+## Structured Output
+
+Agents support structured output via Zod schemas:
+
+```typescript
+import { Agent, z, createLLM } from "@node-llm/core";
+
+const SentimentSchema = z.object({
+  sentiment: z.enum(["positive", "negative", "neutral"]),
+  confidence: z.number(),
+  keywords: z.array(z.string())
+});
+
+class SentimentAnalyzer extends Agent<z.infer<typeof SentimentSchema>> {
+  static model = "gpt-4o";
+  static instructions = "Analyze the sentiment of the given text.";
+  static schema = SentimentSchema;
+}
+
+const llm = createLLM({ provider: "openai" });
+const analyzer = new SentimentAnalyzer({ llm });
+const result = await analyzer.ask("I love this product!");
+console.log(result.parsed?.sentiment); // "positive"
+```
+
+---
+
+## Inline Definition with `defineAgent()`
+
+For quick one-off agents without creating a class:
+
+```typescript
+import { defineAgent, createLLM } from "@node-llm/core";
+
+const QuickAgent = defineAgent({
+  model: "gpt-4o-mini",
+  instructions: "You are a helpful assistant.",
+  temperature: 0
+});
+
+const llm = createLLM({ provider: "openai" });
+const agent = new QuickAgent({ llm });
+await agent.ask("Hello!");
+```
+
+---
+
+## Agent Inheritance
+
+Agents support class inheritance for specialization:
+
+```typescript
+class BaseAgent extends Agent {
+  static model = "gpt-4o";
+  static temperature = 0;
+}
+
+class CodeReviewer extends BaseAgent {
+  static instructions = "Review code for bugs and suggest improvements.";
+}
+
+class SecurityReviewer extends BaseAgent {
+  static instructions = "Review code for security vulnerabilities.";
+}
+```
+
+---
+
+## Instance Overrides
+
+Override static properties at instantiation:
+
+```typescript
+const agent = new AssistantAgent({
+  llm,
+  temperature: 0.9,    // Override static temperature
+  maxTokens: 500       // Add runtime options
+});
+```
+
+---
+
+## Lazy Configuration & Dynamic Inputs <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v1.12.0+</span>
+
+For agents that need to adapt based on runtime context (e.g., current user, workspace, or environment), `Agent` support **Lazy Evaluation** for instructions and tools.
+
+### Defining Lazy Behavior
+
+Instead of static strings or arrays, use functions that receive a typed `inputs` object:
+
+```typescript
+interface WorkContext {
+  userName: string;
+  workspace: string;
+}
+
+class WorkAssistant extends Agent<WorkContext> {
+  static model = "gpt-4o";
+
+  // Dynamic instructions resolved at runtime
+  static instructions = (inputs: WorkContext) => 
+    `You are helping ${inputs.userName} in the ${inputs.workspace} workspace.`;
+
+  // Dynamic tools resolved at runtime
+  static tools = (inputs: WorkContext) => [
+    new SearchDocs({ scope: inputs.workspace })
+  ];
+}
+```
+
+### Passing Inputs
+
+You can provide inputs during instantiation or at the turn level (via `ask` or `stream`):
+
+```typescript
+// Option A: At instantiation
+const agent = new WorkAssistant({
+  inputs: { userName: "Alice", workspace: "hr" }
+});
+await agent.ask("What is my salary?");
+
+// Option B: At the request level (Explicit context)
+const agent = new WorkAssistant();
+await agent.ask("Hello", {
+  inputs: { userName: "Bob", workspace: "general" }
+});
+```
+
+### Why use Lazy Evaluation?
+
+1.  **Cleaner Controllers:** No more string concatenation in your service objects or API handlers.
+2.  **Type Safety:** Define your `inputs` interface once and get full autocomplete.
+3.  **Code Sovereignty:** Business logic (how to scope a tool) stays inside the Agent class, not scattered across your app.
+
+---
+
+## Telemetry Hooks <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v1.11.0+</span>
+
+Agent telemetry hooks provide declarative observability for production agents. They enable debugging, cost auditing, latency tracking, and integration with monitoring systems—without cluttering your agent logic.
+
+### Available Hooks
+
+| Hook | When Fired | Use Cases |
+|:-----|:-----------|:----------|
+| `onStart(context)` | Agent session begins | Request logging, session initialization |
+| `onThinking(thinking, result)` | Model generates reasoning trace | Debug extended thinking (o1, Claude) |
+| `onToolStart(toolCall)` | Tool execution starts | Latency tracking, audit trails |
+| `onToolEnd(toolCall, result)` | Tool execution completes | Performance metrics, result logging |
+| `onToolError(toolCall, error)` | Tool execution fails | Error tracking, alerting |
+| `onComplete(result)` | Agent turn finishes | Cost logging, response analytics |
+
+### Basic Example
+
+```typescript
+import { Agent, Tool, z } from "@node-llm/core";
+
+class WeatherTool extends Tool {
+  name = "get_weather";
+  description = "Get current weather for a city";
+  schema = z.object({ city: z.string() });
+
+  async execute({ city }) {
+    return `Sunny, 25°C in ${city}`;
+  }
+}
+
+class ObservableAgent extends Agent {
+  static model = "gpt-4o";
+  static tools = [WeatherTool];
+  
+  static onStart(context) {
+    console.log(`[Agent] Started with ${context.messages.length} messages`);
+  }
+
+  static onToolStart(toolCall) {
+    console.log(`[Tool] ${toolCall.function.name} started`);
+    console.time(`tool-${toolCall.id}`);
+  }
+
+  static onToolEnd(toolCall, result) {
+    console.timeEnd(`tool-${toolCall.id}`);
+  }
+
+  static onComplete(result) {
+    console.log(`[Agent] Complete. Tokens: ${result.total_tokens}`);
+  }
+}
+```
+
+### Production Monitoring
+
+Track costs and latency in production:
+
+```typescript
+import { Agent } from "@node-llm/core";
+import { metrics } from "./monitoring";
+
+class ProductionAgent extends Agent {
+  static model = "gpt-4o";
+  
+  static onStart(context) {
+    metrics.increment("agent.requests");
+  }
+
+  static onToolError(toolCall, error) {
+    metrics.increment(`tool.${toolCall.function.name}.errors`);
+    console.error(`Tool ${toolCall.function.name} failed:`, error);
+  }
+
+  static onComplete(result) {
+    metrics.gauge("agent.cost", result.usage.cost);
+    metrics.gauge("agent.tokens", result.total_tokens);
+  }
+}
+```
+
+### Debug Extended Thinking
+
+For models with extended thinking (o1, Claude):
+
+```typescript
+class ThinkingAgent extends Agent {
+  static model = "o1-preview";
+  static thinking = { effort: "high" };
+  
+  static onThinking(thinking, result) {
+    console.log("🧠 Reasoning:", thinking.text);
+    console.log(`Thinking tokens: ${thinking.tokens}`);
+  }
+}
+```
+
+### Async Hooks
+
+All hooks support async operations:
+
+```typescript
+class AuditedAgent extends Agent {
+  static model = "gpt-4o";
+  
+  static async onComplete(result) {
+    await db.metrics.create({
+      model: result.model,
+      tokens: result.total_tokens,
+      cost: result.usage.cost
+    });
+  }
+}
+```
+
+---
+
+## Agent Persistence with @node-llm/orm <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v0.5.0+</span>
+
+For long-running agents that need to persist conversations across requests (e.g., support tickets, chat sessions), use `AgentSession` from `@node-llm/orm`.
+
+```bash
+npm install @node-llm/orm @prisma/client
+```
+
+### Create & Resume Sessions
+
+```typescript
+import { Agent, Tool, z, createLLM } from "@node-llm/core";
+import { createAgentSession, loadAgentSession } from "@node-llm/orm/prisma";
+import { PrismaClient } from "@prisma/client";
+
+const prisma = new PrismaClient();
+const llm = createLLM({ provider: "openai" });
+
+// Define agent (configuration lives in code)
+class SupportAgent extends Agent {
+  static model = "gpt-4.1";
+  static instructions = "You are a helpful support agent.";
+  static tools = [LookupOrderTool, CancelOrderTool];
+}
+
+// Create a persistent session
+const session = await createAgentSession(prisma, llm, SupportAgent, {
+  metadata: { userId: "user_123", ticketId: "TKT-456" }
+});
+
+await session.ask("Where is my order #789?");
+console.log(session.id); // "abc-123" - save this to resume later
+
+// Resume in a later request
+const session = await loadAgentSession(prisma, llm, SupportAgent, "abc-123");
+await session.ask("Can you cancel it?");
+```
+
+### The "Code Wins" Principle
+
+When you resume a session, the agent uses **current code configuration** but **database history**:
+
+| Aspect | Source | Rationale |
+|:-------|:-------|:----------|
+| Model | Agent class | Immediate upgrades when you deploy |
+| Tools | Agent class | Only code can execute functions |
+| Instructions | Agent class | Deploy prompt fixes immediately |
+| History | Database | Sacred, never modified |
+
+This means if you deploy an upgrade (new model, better prompt), all resumed sessions get the improvement automatically.
+
+### Prisma Schema
+
+Add `LlmAgentSession` to your schema:
+
+```prisma
+model LlmAgentSession {
+  id         String   @id @default(uuid())
+  agentClass String   // Validated on load (e.g., 'SupportAgent')
+  chatId     String   @unique
+  metadata   Json?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  chat       LlmChat  @relation(fields: [chatId], references: [id], onDelete: Cascade)
+
+  @@index([agentClass])
+  @@index([createdAt])
+}
+
+model LlmChat {
+  // ... existing fields
+  agentSession LlmAgentSession?
+}
+```
+
+See the [@node-llm/orm documentation](https://node-llm.eshaiju.com/orm/prisma) for full details.
+
+---
+
+## Next Steps
+
+- [Tool Calling Guide](tools.html) — Deep dive on tool patterns and safety
+- [Agentic Workflows](../advanced/agentic-workflows.html) — Advanced patterns like parallel execution and supervisor patterns
+- [HR Chatbot RAG](https://github.com/node-llm/node-llm/tree/main/examples/applications/hr-chatbot-rag) — Full RAG implementation
+
+
+<!-- END FILE: core-features/agents.md -->
+----------------------------------------
+
 <!-- FILE: core-features/audio-transcription.md -->
 
 # 📄 core-features/audio-transcription.md
@@ -1106,7 +1715,7 @@ description: A unified interface for stateful conversations across all providers
 
 ---
 
-`NodeLLM` provides a unified chat interface across all providers (OpenAI, Gemini, Anthropic). It normalizes the differences in their APIs, allowing you to use a single set of methods for interacting with them.
+`NodeLLM` provides a unified chat interface across all supported providers (OpenAI, Anthropic, Gemini, DeepSeek, Bedrock, OpenRouter, xAI, Ollama, Mistral). It normalizes the differences in their APIs, allowing you to use a single set of methods for interacting with them.
 
 ```bash
 npm install @node-llm/core
@@ -1712,7 +2321,7 @@ In a production environment, you rarely want to call an LLM directly without add
 Middlewares are passed when creating a chat instance. You can pass a single middleware or an array of middlewares.
 
 ```typescript
-import { NodeLLM, Middleware } from "@node-llm/core";
+import { NodeLLM, Middleware, ChatResponseString } from "@node-llm/core";
 
 const myMiddleware: Middleware = {
   name: "MyMiddleware",
@@ -1720,7 +2329,10 @@ const myMiddleware: Middleware = {
     console.log(`[Request] Sending to ${context.model}`);
   },
   onResponse: async (context, result) => {
-    console.log(`[Response] Received ${result.usage.total_tokens} tokens`);
+    // result is NodeLLMResponse (union of Chat, Image, Transcription, etc.)
+    if (result instanceof ChatResponseString) {
+      console.log(`[Response] Received ${result.usage.total_tokens} tokens`);
+    }
   }
 };
 
@@ -1741,7 +2353,7 @@ await chat.ask("Hello world");
  interface Middleware {
    name: string;
    onRequest?: (context: MiddlewareContext) => Promise<void> | void;
-   onResponse?: (context: MiddlewareContext, result: ChatResponseString) => Promise<void> | void;
+   onResponse?: (context: MiddlewareContext, result: NodeLLMResponse) => Promise<void> | void;
    onError?: (context: MiddlewareContext, error: Error) => Promise<void> | void;
    
    // Tool Execution Hooks
@@ -1750,6 +2362,8 @@ await chat.ask("Hello world");
    onToolCallError?: (context: MiddlewareContext, tool: ToolCall, error: Error) => Promise<ToolErrorDirective> | ToolErrorDirective;
  }
  ```
+
+ > **Warning**: Since `v1.10.0`, the `onResponse` hook receives a `NodeLLMResponse` union. You must use a type guard (like `instanceof ChatResponseString`) before accessing chat-specific properties like `usage` or `content`.
  
  ### MiddlewareContext
  The `context` object is persistent across the lifecycle of a single request and provides deep access to the execution state:
@@ -1792,8 +2406,12 @@ const perfMiddleware = {
   },
   onResponse: async (context, result) => {
     const latency = Date.now() - (context.state.startTime as number);
-    const cost = calculateCost(context.model, result.usage);
-    await db.metrics.create({ model: context.model, latency, cost });
+    
+    // Safety check for usage metrics
+    if (result instanceof ChatResponseString) {
+      const cost = calculateCost(context.model, result.usage);
+      await db.metrics.create({ model: context.model, latency, cost });
+    }
   }
 }
 ```
@@ -1987,7 +2605,12 @@ The registry includes models from:
 - **OpenAI** (GPT-4o, GPT-3.5, DALL-E)
 - **Anthropic** (Claude 3.5 Sonnet, Haiku, Opus)
 - **Google Gemini** (Gemini 1.5 Pro, Flash)
-- **Vertex AI** (via Gemini)
+- **DeepSeek** (DeepSeek V3, R1)
+- **AWS Bedrock** (Nova, Titan, Claude)
+- **OpenRouter** (400+ models)
+- **xAI** (Grok)
+- **Ollama** (Local models)
+- **Mistral** (Mistral Large, Codestral, Pixtral, Magistral)
 
 ---
 
@@ -2163,6 +2786,37 @@ description: Go beyond text. Learn how to pass images, audio, video, and documen
 ---
 
 Modern LLMs can understand more than just text. `NodeLLM` provides a unified way to pass images, audio, video, and documents to models that support them.
+
+---
+
+## Quick Start
+
+```ts
+// Single file
+await chat.ask("What's in this image?", { files: ["photo.jpg"] });
+
+// Multiple files
+await chat.ask("Analyze these", { 
+  files: ["diagram.png", "report.pdf", "meeting.mp3"] 
+});
+
+// URL or local path
+await chat.ask("Describe this", { files: ["https://example.com/image.png"] });
+```
+
+---
+
+## Provider Support
+
+| File Type | Gemini | OpenAI | Anthropic | Bedrock | Mistral |
+|-----------|--------|--------|-----------|---------|----------|
+| **Images** | ✅ | ✅ | ✅ | ✅ | ✅ (Pixtral) |
+| **PDFs** | ✅ | ✅ | ✅ | ✅ | ❌ |
+| **Audio** | ✅ | ✅ | ❌ | ❌ | ✅ (Voxtral) |
+| **Video** | ✅ | ⚠️ | ❌ | ❌ | ❌ |
+| **Code/Text** | ✅ | ✅ | ✅ | ✅ | ✅ |
+
+_⚠️ = Limited support (e.g., frame extraction)_
 
 ---
 
@@ -2407,6 +3061,7 @@ Currently, the following models have enhanced reasoning support in `NodeLLM`:
 | `o1-*`, `o3-*`                     | OpenAI    | Effort configuration & token tracking             |
 | `claude-3-7-*`, `claude-*-4-*`     | Anthropic | Budget-based thinking & full text extraction      |
 | `gemini-2.0-flash-thinking-*`      | Gemini    | Full thinking text extraction                     |
+| `magistral-*`                      | Mistral   | Always-on thinking & full text extraction         |
 
 
 <!-- END FILE: core-features/reasoning.md -->
@@ -2534,7 +3189,7 @@ for await (const chunk of chat.stream("Weather in Tokyo?")) {
 }
 ```
 
-**Supported Providers:** OpenAI, Anthropic, Gemini, DeepSeek
+**Supported Providers:** OpenAI, Anthropic, Gemini, DeepSeek, Mistral
 
 ---
 
@@ -3607,6 +4262,48 @@ async execute({ date }) {
 }
 ```
 
+### ToolHalt — Early Loop Termination <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v1.11.0+</span>
+
+Sometimes a tool needs to stop the agentic loop immediately without making another LLM call. Use `this.halt()` to return a message directly to the user and break the loop.
+
+```ts
+import { Tool, z } from "@node-llm/core";
+
+class PaymentTool extends Tool {
+  name = "process_payment";
+  description = "Process a payment";
+  schema = z.object({
+    amount: z.number().describe("Amount in dollars"),
+    recipient: z.string().describe("Recipient name")
+  });
+
+  async execute({ amount, recipient }) {
+    // Halt on large amounts — requires human approval
+    if (amount > 10000) {
+      return this.halt(`Payment of $${amount} to ${recipient} requires manager approval.`);
+    }
+
+    // Halt on invalid amounts
+    if (amount <= 0) {
+      return this.halt(`Invalid payment amount: $${amount}. Must be positive.`);
+    }
+
+    // Normal execution continues
+    return { success: true, transactionId: "TXN-123" };
+  }
+}
+```
+
+**When to use `halt()`:**
+- **Security boundaries**: Block dangerous operations (delete, privileged access)
+- **Approval workflows**: Pause for human review on high-stakes actions
+- **Validation failures**: Stop immediately on invalid input instead of retrying
+- **Resource limits**: Halt when quotas or rate limits are exceeded
+
+**Difference from throwing errors:**
+- `throw new ToolError(...)` — Stops the loop and bubbles an exception
+- `return this.halt(...)` — Stops the loop gracefully and returns the message as the final response
+
 ---
 
 ## Advanced: Raw JSON Schema
@@ -3770,6 +4467,12 @@ await chat.ask("Summarize this document", {
   files: ["./report.pdf"]
 });
 ```
+
+---
+
+## Getting an API Key
+
+Sign up and get your API key at [console.anthropic.com](https://console.anthropic.com).
 
 
 <!-- END FILE: providers/anthropic.md -->
@@ -3966,6 +4669,19 @@ const embedding = await llm.embed("The concept of general relativity", {
 console.log(embedding.vector); // number[]
 ```
 
+---
+
+## Getting Access
+
+Amazon Bedrock access is managed through your AWS account:
+
+1. Sign in at [aws.amazon.com/bedrock](https://aws.amazon.com/bedrock)
+2. Navigate to **Bedrock > Model access** in your AWS Console
+3. Request access to the models you need (Claude, Nova, Titan, etc.)
+4. Create AWS Access Key credentials via **IAM > Users**
+
+No separate API key is needed — NodeLLM uses your `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` directly.
+
 
 <!-- END FILE: providers/bedrock.md -->
 ----------------------------------------
@@ -4042,6 +4758,12 @@ const chat = llm.chat("deepseek-chat").withParams({
 ## Usage Details
 
 DeepSeek provides OpenAI-compatible endpoints, but `NodeLLM` handles the specific capability differences (like reasoning vs tool support) automatically through its internal registry.
+
+---
+
+## Getting an API Key
+
+Sign up and get your API key at [platform.deepseek.com](https://platform.deepseek.com).
 
 
 <!-- END FILE: providers/deepseek.md -->
@@ -4131,6 +4853,12 @@ await chat.ask("What happens in this video?", {
 });
 ```
 
+---
+
+## Getting an API Key
+
+Sign up and get your API key at [aistudio.google.com/apikey](https://aistudio.google.com/apikey).
+
 
 <!-- END FILE: providers/gemini.md -->
 ----------------------------------------
@@ -4158,6 +4886,116 @@ back_to_top: false
 
 
 <!-- END FILE: providers/index.md -->
+----------------------------------------
+
+<!-- FILE: providers/mistral.md -->
+
+# 📄 providers/mistral.md
+
+---
+layout: default
+title: Mistral AI
+parent: Providers
+nav_order: 10
+description: Access Mistral AI's powerful language models including Mistral Large, Mistral Small, Codestral, and Pixtral for vision tasks.
+---
+
+# {{ page.title }}
+{: .no_toc }
+
+{{ page.description }}
+{: .fs-6 .fw-300 }
+
+## Table of contents
+{: .no_toc .text-delta }
+
+1. TOC
+{:toc}
+
+---
+
+The Mistral provider offers access to Mistral AI's range of language models, from efficient small models to powerful large models with vision and code capabilities.
+
+---
+
+## Configuration
+
+```ts
+import { createLLM } from "@node-llm/core";
+
+const llm = createLLM({ 
+  provider: "mistral", 
+  mistralApiKey: process.env.MISTRAL_API_KEY // Optional if set in env 
+});
+```
+
+---
+
+## Specific Parameters
+
+You can pass Mistral-specific parameters using `.withParams()`.
+
+```ts
+const chat = llm.chat("mistral-large-latest").withParams({
+  temperature: 0.7,
+  top_p: 0.9,
+  safe_prompt: true
+});
+```
+
+---
+
+## Features
+
+- **Models**:
+  - `mistral-large-latest`: Most capable model for complex tasks.
+  - `mistral-medium-latest`: Balanced performance and efficiency.
+  - `mistral-small-latest`: Fast and cost-effective for simpler tasks.
+  - `codestral-latest`: Optimized for code generation and understanding.
+  - `pixtral-large-latest`: Vision-capable multimodal model.
+  - `mistral-embed`: Text embedding model for semantic search.
+- **Tools**: Supported on all chat models.
+- **Vision**: Supported via `pixtral-large-latest` model.
+- **Streaming**: Full streaming support for all chat models.
+- **Structured Output**: Supported via JSON schema definitions.
+- **Embeddings**: Supported via `mistral-embed` model.
+
+---
+
+## Vision Example
+
+```ts
+import { createLLM, Content } from "@node-llm/core";
+
+const llm = createLLM({ provider: "mistral" });
+
+const response = await llm
+  .chat("pixtral-large-latest")
+  .say(Content.text("What's in this image?").image("https://example.com/photo.jpg"))
+  .then((r) => r.text);
+```
+
+---
+
+## Embeddings Example
+
+```ts
+import { createLLM } from "@node-llm/core";
+
+const llm = createLLM({ provider: "mistral" });
+
+const result = await llm.embed("mistral-embed", "Hello world");
+console.log(result.vectors[0]); // [0.123, -0.456, ...]
+```
+
+---
+
+## Getting an API Key
+
+Sign up and get your API key at [console.mistral.ai](https://console.mistral.ai).
+
+
+<!-- END FILE: providers/mistral.md -->
 ----------------------------------------
 
 <!-- FILE: providers/ollama.md -->
@@ -4265,6 +5103,19 @@ The following features are **not** supported natively by Ollama's OpenAI-compati
 
 For full feature parity locally, consider using [LocalAI](https://localai.io/) and connecting via the [OpenAI Provider](/providers/openai.html) with a custom `openaiApiBase`.
 
+---
+
+## Getting Started
+
+Ollama is free and runs entirely on your machine — no API key required.
+
+Download and install it from [ollama.com](https://ollama.com), then pull a model:
+
+```bash
+ollama pull llama3
+ollama pull llama3.2-vision  # for vision support
+```
+
 
 <!-- END FILE: providers/ollama.md -->
 ----------------------------------------
@@ -4342,6 +5193,12 @@ const chat = llm.chat("gpt-4o").withParams({
 
 OpenAI's client is also used for compatible services like Ollama, LocalAI, and Azure OpenAI. See [Custom Endpoints](/advanced/custom_endpoints.html) for details.
 
+---
+
+## Getting an API Key
+
+Sign up and get your API key at [platform.openai.com/api-keys](https://platform.openai.com/api-keys).
+
 
 <!-- END FILE: providers/openai.md -->
 ----------------------------------------
@@ -4411,8 +5268,203 @@ const chat = llm.chat("google/gemini-2.0-flash-exp:free").withParams({
 });
 ```
 
+---
+
+## Getting an API Key
+
+Sign up and get your API key at [openrouter.ai/keys](https://openrouter.ai/keys).
+
 
 <!-- END FILE: providers/openrouter.md -->
+----------------------------------------
+
+<!-- FILE: providers/xai.md -->
+
+# 📄 providers/xai.md
+
+---
+layout: default
+title: xAI (Grok)
+parent: Providers
+nav_order: 8
+description: Native support for xAI's Grok models including chat, streaming, vision, structured output, reasoning, and image generation.
+---
+
+# {{ page.title }}
+{: .no_toc }
+
+{{ page.description }}
+{: .fs-6 .fw-300 }
+
+## Table of contents
+{: .no_toc .text-delta }
+
+1. TOC
+{:toc}
+
+---
+
+The xAI provider gives you access to the Grok family of models through a clean, NodeLLM-native interface. It supports all core NodeLLM features including streaming, vision, structured outputs, reasoning, and image generation.
+
+---
+
+## Configuration
+
+```ts
+import { createLLM } from "@node-llm/core";
+
+const llm = createLLM({
+  provider: "xai",
+  xaiApiKey: process.env.XAI_API_KEY
+});
+```
+
+Or via environment variables:
+
+```env
+NODELLM_PROVIDER=xai
+XAI_API_KEY=xai-...
+```
+
+Then use zero-config:
+
+```ts
+import { NodeLLM } from "@node-llm/core";
+
+const chat = NodeLLM.chat("grok-3");
+```
+
+---
+
+## Available Models
+
+| Model                  | Features                                        |
+| :--------------------- | :---------------------------------------------- |
+| `grok-3`               | Chat, Streaming, Tools, Structured Output        |
+| `grok-3-mini`          | Chat, Streaming, Tools, **Reasoning**            |
+| `grok-2-1212`          | Chat, Streaming, Tools, Structured Output        |
+| `grok-2-vision-1212`   | Chat, Streaming, **Vision**, Structured Output   |
+| `grok-imagine-image`   | **Image Generation**                            |
+
+For the full list, run:
+
+```ts
+const models = await llm.listModels();
+```
+
+---
+
+## Features
+
+### 💬 Chat
+
+```ts
+const chat = llm.chat("grok-3");
+const response = await chat.ask("Explain event-driven architecture.");
+console.log(response.content);
+```
+
+### ⚡ Streaming
+
+```ts
+for await (const chunk of chat.stream("Tell me about Node.js")) {
+  process.stdout.write(chunk.content || "");
+}
+```
+
+### 👁️ Vision
+
+Use `grok-2-vision-1212` to analyze images by passing mixed content arrays:
+
+```ts
+const chat = llm.chat("grok-2-vision-1212");
+
+const response = await chat.ask([
+  { type: "text", text: "What is in this image?" },
+  { type: "image_url", image_url: { url: "https://example.com/image.jpg" } }
+]);
+```
+
+### ✨ Structured Output
+
+```ts
+import { z } from "@node-llm/core";
+
+const Schema = z.object({
+  name: z.string(),
+  age: z.number(),
+  hobbies: z.array(z.string())
+});
+
+const response = await chat.withSchema(Schema).ask("Create a fictional user profile.");
+console.log(response.parsed); // Fully typed
+```
+
+### 🧠 Reasoning
+
+`grok-3-mini` is a reasoning model. Reasoning tokens are tracked automatically.
+
+```ts
+const chat = llm.chat("grok-3-mini");
+const response = await chat.ask("Solve this logic puzzle: ...");
+
+console.log(response.content);    // Final answer
+console.log(response.usage);      // Includes reasoning_tokens
+```
+
+### 🎨 Image Generation
+
+```ts
+const response = await llm.paint("A futuristic city at night, cyberpunk style", {
+  model: "grok-imagine-image"
+});
+
+console.log(response.url); // URL of generated image
+```
+
+### 🛠️ Tool Calling
+
+```ts
+import { Tool, z } from "@node-llm/core";
+
+class WeatherTool extends Tool {
+  name = "get_weather";
+  description = "Get the current weather for a city";
+  schema = z.object({ city: z.string() });
+
+  async execute({ city }) {
+    return `Sunny in ${city}`;
+  }
+}
+
+const response = await chat.withTool(WeatherTool).ask("What's the weather in London?");
+```
+
+---
+
+## Supported Features Summary
+
+| Feature               | Supported |
+| :-------------------- | :-------: |
+| Chat                  | ✅        |
+| Streaming             | ✅        |
+| Tool Calling          | ✅        |
+| Structured Output     | ✅        |
+| Vision                | ✅        |
+| Image Generation      | ✅        |
+| Reasoning             | ✅        |
+| Embeddings            | ❌        |
+| Transcription         | ❌        |
+| Moderation            | ❌        |
+
+---
+
+## Getting an API Key
+
+Sign up and get your API key at [console.x.ai](https://console.x.ai).
+
+
+<!-- END FILE: providers/xai.md -->
 ----------------------------------------
 
 <!-- FILE: orm/index.md -->
@@ -4563,6 +5615,63 @@ When adding a required (`non-nullable`) field to a table with existing data:
 1. Generate the migration with `--create-only`.
 2. Edit the SQL to provide a default value for existing rows or make it nullable temporarily.
 3. Apply the migration.
+
+---
+
+## Upgrading to AgentSession (v0.5.0+)
+
+If you're upgrading from a previous version and want to use the new `AgentSession` feature for persistent agent conversations, you'll need to add the `LlmAgentSession` table.
+
+### Option 1: Use the Provided Migration
+
+Copy the pre-built migration file:
+
+```bash
+cp node_modules/@node-llm/orm/migrations/add_agent_session.sql \
+   prisma/migrations/$(date +%Y%m%d%H%M%S)_add_agent_session/migration.sql
+
+npx prisma migrate resolve --applied $(date +%Y%m%d%H%M%S)_add_agent_session
+```
+
+### Option 2: Generate via Prisma
+
+1. Update your `schema.prisma` with the new model:
+
+```prisma
+model LlmAgentSession {
+  id         String   @id @default(uuid())
+  agentClass String   // Class name for validation
+  chatId     String   @unique
+  metadata   Json?    // Session context (userId, ticketId)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  chat       LlmChat  @relation(fields: [chatId], references: [id], onDelete: Cascade)
+
+  @@index([agentClass])
+  @@index([createdAt])
+}
+
+// Add to existing LlmChat model:
+model LlmChat {
+  // ... existing fields
+  agentSession LlmAgentSession?
+}
+```
+
+2. Generate and apply the migration:
+
+```bash
+npx prisma migrate dev --name add_agent_session
+```
+
+### Verify the Upgrade
+
+Run the sync command to confirm your schema is up to date:
+
+```bash
+npx @node-llm/orm sync
+# ✓ Schema is already up to date with @node-llm/orm v0.5.0 features.
 
 
 <!-- END FILE: orm/migrations.md -->
@@ -4839,6 +5948,124 @@ If an API call fails, NodeLLM follows a "clean rollback" strategy:
 
 This ensures your database doesn't fill up with "broken" chat turns.
 
+---
+
+## Agent Sessions <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v0.5.0+</span>
+
+For stateful agents that need to persist across requests (e.g., support tickets, user sessions), use `AgentSession`. This wraps an [Agent class](/core-features/agents) with database persistence.
+
+### The "Code Wins" Principle
+
+**The Problem with Traditional Systems:**  
+In traditional AI applications, if you want to resume a conversation, you have to load the implementation details (model, instructions, tools) from the database. If you updated your prompt in the code, the stale database version continues to be used instead of your improved version.
+
+**NodeLLM's Solution:**  
+AgentSession follows a hybrid sovereignty model where **code always wins** for configuration, but **database always wins** for history:
+
+| Aspect | Source | Why |
+|:-------|:-------|:----|
+| Model | Agent class (code) | Deploy upgrades immediately |
+| Tools | Agent class (code) | Only code can execute functions |
+| Instructions | Agent class (code) | Fix prompts without migrations |
+| History | Database | Sacred, never modified |
+
+When you resume a session after deploying new code, the session gets the **new configuration** but **preserves the conversation history**.
+
+### Schema Addition
+
+Add `LlmAgentSession` to your Prisma schema:
+
+```prisma
+model LlmAgentSession {
+  id         String   @id @default(uuid())
+  agentClass String   // Class name for validation (e.g., 'SupportAgent')
+  chatId     String   @unique
+  metadata   Json?    // Session context (userId, ticketId, etc.)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  chat       LlmChat  @relation(fields: [chatId], references: [id], onDelete: Cascade)
+
+  @@index([agentClass])
+  @@index([createdAt])
+}
+
+// Update LlmChat to include the relation
+model LlmChat {
+  // ... existing fields
+  agentSession LlmAgentSession?
+}
+```
+
+### Creating Sessions
+
+```typescript
+import { Agent, Tool, z, createLLM } from "@node-llm/core";
+import { createAgentSession, loadAgentSession } from "@node-llm/orm/prisma";
+
+// Define your agent (config lives in code)
+class SupportAgent extends Agent {
+  static model = "gpt-4.1";
+  static instructions = "You are a helpful support agent. Be concise.";
+  static tools = [LookupOrderTool, CancelOrderTool];
+}
+
+const prisma = new PrismaClient();
+const llm = createLLM({ provider: "openai" });
+
+// Create a new persistent session
+const session = await createAgentSession(prisma, llm, SupportAgent, {
+  metadata: { userId: "user_123", ticketId: "TKT-456" }
+});
+
+await session.ask("Where is my order #789?");
+console.log(session.id); // "abc-123" - save this!
+```
+
+### Resuming Sessions
+
+```typescript
+// Later, in a new request
+const session = await loadAgentSession(prisma, llm, SupportAgent, "abc-123");
+
+if (!session) {
+  throw new Error("Session not found");
+}
+
+// Continues with full history + current code config
+await session.ask("Can you cancel that order?");
+```
+
+### Class Validation
+
+For safety, `loadAgentSession` validates that the stored `agentClass` matches the class you're loading with:
+
+```typescript
+// This throws an error - class mismatch
+await loadAgentSession(prisma, llm, SalesAgent, "support-session-id");
+// Error: Agent class mismatch: session was created with "SupportAgent" 
+//        but attempting to load with "SalesAgent"
+
+// To override (not recommended):
+await loadAgentSession(prisma, llm, SalesAgent, "support-session-id", {
+  skipClassValidation: true
+});
+```
+
+### Session Properties
+
+| Property | Description |
+|:---------|:------------|
+| `session.id` | The AgentSession UUID (for persistence) |
+| `session.chatId` | The underlying LlmChat UUID |
+| `session.metadata` | Session context (userId, ticketId, etc.) |
+| `session.agentClass` | Stored class name |
+| `session.ask()` | Send message with persistence |
+| `session.askStream()` | Stream response with persistence |
+| `session.messages()` | Get all messages from DB |
+| `session.modelId` | Current model (from code) |
+| `session.totalUsage` | Aggregate token usage |
+
 
 <!-- END FILE: orm/prisma.md -->
 ----------------------------------------
@@ -4870,162 +6097,35 @@ description: Compose LLM calls into intelligent workflows that route, research, 
 
 ---
 
-This guide shows you how to compose NodeLLM primitives into more sophisticated patterns. Nothing here is magic—it's just tools calling other LLMs.
+This guide covers advanced agentic patterns for when you need more control than the [Agent class](../core-features/agents.html) provides. For most use cases, start with the Agent class first.
 
 ---
 
-## The Core Idea
+## Lower-Level Patterns
 
-An "agent" in NodeLLM is just a tool that happens to call another LLM inside its `execute()` method. That's it. No special framework, no orchestration layer—just composition.
+For cases where you need more control, you can build agents as tools that call other LLMs directly.
 
 ```typescript
-class MyAgent extends Tool {
-  async execute(args) {
-    // This tool IS an agent because it calls another LLM
+import { Tool, z, createLLM } from "@node-llm/core";
+
+class MathTutor extends Tool {
+  name = "math_tutor";
+  description = "Explains math concepts";
+  schema = z.object({ question: z.string() });
+
+  async execute({ question }) {
     const response = await createLLM({ provider: "openai" })
       .chat("gpt-4o")
-      .ask(args.query);
+      .system("You are a math tutor. Explain concepts clearly.")
+      .ask(question);
     return response.content;
   }
 }
-```
 
-Everything below builds on this simple pattern.
-
----
-
-## Model Routing
-
-Route requests to the best model for the job. Useful when you want GPT-4 for code, Claude for creative writing, and Gemini for factual lookups.
-
-```typescript
-import { createLLM, Tool, z } from "@node-llm/core";
-
-class SmartRouter extends Tool {
-  name = "smart_router";
-  description = "Routes to the best model for the task";
-  schema = z.object({
-    query: z.string().describe("The user's request")
-  });
-
-  async execute({ query }) {
-    // Step 1: Classify the task with a fast model
-    const taskType = await this.classify(query);
-
-    // Step 2: Route to specialist
-    const specialists = {
-      code: { provider: "openai", model: "gpt-4o" },
-      creative: { provider: "anthropic", model: "claude-sonnet-4-20250514" },
-      factual: { provider: "gemini", model: "gemini-2.0-flash" }
-    };
-
-    const { provider, model } = specialists[taskType] || specialists.factual;
-    const response = await createLLM({ provider }).chat(model).ask(query);
-    return response.content;
-  }
-
-  private async classify(query: string) {
-    const response = await createLLM({ provider: "openai" })
-      .chat("gpt-4o-mini")
-      .system("Classify as: code, creative, or factual. One word only.")
-      .ask(query);
-    return response.content.toLowerCase().trim();
-  }
-}
-```
-
----
-
-## RAG (Retrieval-Augmented Generation)
-
-Combine vector search with LLM generation. NodeLLM provides `llm.embed()` for embeddings; you bring your own vector store.
-
-This pattern is demonstrated in the [HR Chatbot Example](https://github.com/node-llm/node-llm/tree/main/examples/applications/hr-chatbot-rag).
-
-```typescript
-import { createLLM, Tool, z } from "@node-llm/core";
-import { PrismaClient } from "@prisma/client";
-
-const prisma = new PrismaClient();
+// Use as a tool in a coordinator
 const llm = createLLM({ provider: "openai" });
-
-class KnowledgeSearch extends Tool {
-  name = "search_knowledge";
-  description = "Searches internal documents for relevant context";
-  schema = z.object({
-    query: z.string().describe("What to search for")
-  });
-
-  async execute({ query }) {
-    // 1. Embed the query
-    const embedding = await llm.embed(query);
-
-    // 2. Vector search with pgvector
-    const docs = await prisma.$queryRaw`
-      SELECT title, content
-      FROM documents
-      ORDER BY embedding <-> ${embedding.vector}::vector
-      LIMIT 3
-    `;
-
-    // 3. Format as context
-    return docs.map(d => `[${d.title}]: ${d.content}`).join("\n\n");
-  }
-}
-
-// Usage
-const chat = llm
-  .chat("gpt-4o")
-  .system("Answer based on the search results. Cite sources.")
-  .withTool(new KnowledgeSearch());
-
-await chat.ask("What's our vacation policy?");
-```
-
----
-
-## Multi-Agent Collaboration
-
-Tools can call other tools (via the coordinator), or tools can directly spawn their own LLM calls. Here's the "research then write" pattern:
-
-```typescript
-import { createLLM, Tool, z } from "@node-llm/core";
-
-class Researcher extends Tool {
-  name = "research";
-  description = "Gathers facts about a topic";
-  schema = z.object({ topic: z.string() });
-
-  async execute({ topic }) {
-    const response = await createLLM({ provider: "gemini" })
-      .chat("gemini-2.0-flash")
-      .system("List 5 key facts about the topic.")
-      .ask(topic);
-    return response.content;
-  }
-}
-
-class Writer extends Tool {
-  name = "write";
-  description = "Writes content from research notes";
-  schema = z.object({ notes: z.string() });
-
-  async execute({ notes }) {
-    const response = await createLLM({ provider: "anthropic" })
-      .chat("claude-sonnet-4-20250514")
-      .system("Write a concise article from these notes.")
-      .ask(notes);
-    return response.content;
-  }
-}
-
-// Coordinator orchestrates the flow
-const coordinator = createLLM({ provider: "openai" })
-  .chat("gpt-4o")
-  .system("First research the topic, then write an article.")
-  .withTools([Researcher, Writer]);
-
-await coordinator.ask("Write about TypeScript 5.4 features");
+const chat = llm.chat("gpt-4o").withTool(MathTutor);
+await chat.ask("Help me understand calculus");
 ```
 
 ---
@@ -5112,6 +6212,7 @@ class RiskyTool extends Tool {
 
 ## Next Steps
 
+- [Agent Class Guide](../core-features/agents.html) — The recommended way to build agents with a declarative DSL
 - [HR Chatbot RAG](https://github.com/node-llm/node-llm/tree/main/examples/applications/hr-chatbot-rag) — Full RAG implementation with Prisma + pgvector
 - [Brand Perception Checker](https://github.com/node-llm/node-llm/tree/main/examples/applications/brand-perception-checker) — Multi-tool agent with web search
 - [Tool Calling Guide](../core-features/tools.html) — Deep dive on tool patterns and safety
@@ -5611,11 +6712,11 @@ Debug logging works for:
 
 - **Chat** (regular and streaming)
 - **Image Generation** (OpenAI, Gemini)
-- **Embeddings** (OpenAI, Gemini, Ollama)
-- **Transcription** (OpenAI, Gemini)
-- **Moderation** (OpenAI)
+- **Embeddings** (OpenAI, Gemini, Ollama, Mistral)
+- **Transcription** (OpenAI, Gemini, Mistral)
+- **Moderation** (OpenAI, Mistral)
 - **Model Alias Resolution** (all providers)
-- **All Providers** (OpenAI, Anthropic, Gemini, DeepSeek)
+- **All Providers** (OpenAI, Anthropic, Gemini, DeepSeek, Bedrock, OpenRouter, xAI, Ollama, Mistral)
 
 The logs include:
 
@@ -6589,6 +7690,21 @@ A comprehensive list of runnable examples available in the [examples/](https://g
 | [`examples/scripts/deepseek/safety/moderation.mjs`](https://github.com/node-llm/node-llm/blob/main/examples/scripts/deepseek/safety/moderation.mjs) | Content moderation |
 | [`examples/scripts/deepseek/multimodal/vision.mjs`](https://github.com/node-llm/node-llm/blob/main/examples/scripts/deepseek/multimodal/vision.mjs) | Vision (V3) |
 
+### Mistral Examples
+
+| Example | Description |
+| :--- | :--- |
+| [`examples/scripts/mistral/chat/basic.mjs`](https://github.com/node-llm/node-llm/blob/main/examples/scripts/mistral/chat/basic.mjs) | Basic chat with Mistral Large |
+| [`examples/scripts/mistral/chat/streaming.mjs`](https://github.com/node-llm/node-llm/blob/main/examples/scripts/mistral/chat/streaming.mjs) | Streaming chat responses |
+| [`examples/scripts/mistral/chat/reasoning.mjs`](https://github.com/node-llm/node-llm/blob/main/examples/scripts/mistral/chat/reasoning.mjs) | Magistral reasoning with thinking |
+| [`examples/scripts/mistral/chat/tools.mjs`](https://github.com/node-llm/node-llm/blob/main/examples/scripts/mistral/chat/tools.mjs) | Function calling with Mistral |
+| [`examples/scripts/mistral/chat/structured.mjs`](https://github.com/node-llm/node-llm/blob/main/examples/scripts/mistral/chat/structured.mjs) | Structured output with Zod |
+| [`examples/scripts/mistral/embeddings/create.mjs`](https://github.com/node-llm/node-llm/blob/main/examples/scripts/mistral/embeddings/create.mjs) | Creating text embeddings |
+| [`examples/scripts/mistral/multimodal/vision.mjs`](https://github.com/node-llm/node-llm/blob/main/examples/scripts/mistral/multimodal/vision.mjs) | Image analysis with Pixtral |
+| [`examples/scripts/mistral/multimodal/transcribe.mjs`](https://github.com/node-llm/node-llm/blob/main/examples/scripts/mistral/multimodal/transcribe.mjs) | Audio transcription |
+| [`examples/scripts/mistral/safety/moderation.mjs`](https://github.com/node-llm/node-llm/blob/main/examples/scripts/mistral/safety/moderation.mjs) | Content moderation |
+| [`examples/scripts/mistral/discovery/models.mjs`](https://github.com/node-llm/node-llm/blob/main/examples/scripts/mistral/discovery/models.mjs) | Listing available models |
+
 ### OpenRouter Examples
 
 | Example | Description |
@@ -6600,6 +7716,17 @@ A comprehensive list of runnable examples available in the [examples/](https://g
 | [`examples/scripts/openrouter/discovery/models.mjs`](https://github.com/node-llm/node-llm/blob/main/examples/scripts/openrouter/discovery/models.mjs) | Exploring the global model library |
 | [`examples/scripts/openrouter/multimodal/vision.mjs`](https://github.com/node-llm/node-llm/blob/main/examples/scripts/openrouter/multimodal/vision.mjs) | Unified vision API for all models |
 | [`examples/scripts/openrouter/embeddings/create.mjs`](https://github.com/node-llm/node-llm/blob/main/examples/scripts/openrouter/embeddings/create.mjs) | Aggregated embedding services |
+
+### xAI Examples
+
+| Example | Description |
+| :--- | :--- |
+| [`examples/scripts/xai/chat/basic.mjs`](https://github.com/node-llm/node-llm/blob/main/examples/scripts/xai/chat/basic.mjs) | Basic chat with Grok-3 |
+| [`examples/scripts/xai/chat/streaming.mjs`](https://github.com/node-llm/node-llm/blob/main/examples/scripts/xai/chat/streaming.mjs) | Streaming chat responses |
+| [`examples/scripts/xai/chat/structured.mjs`](https://github.com/node-llm/node-llm/blob/main/examples/scripts/xai/chat/structured.mjs) | Structured output with Zod schema |
+| [`examples/scripts/xai/multimodal/vision.mjs`](https://github.com/node-llm/node-llm/blob/main/examples/scripts/xai/multimodal/vision.mjs) | Image analysis with Grok Vision |
+| [`examples/scripts/xai/images/generate.mjs`](https://github.com/node-llm/node-llm/blob/main/examples/scripts/xai/images/generate.mjs) | Image generation with Aurora |
+
 
 
 <!-- END FILE: examples.md -->
@@ -6652,14 +7779,14 @@ _Model information enriched by [models.dev](https://models.dev)._
 ## Last Updated
 {: .d-inline-block }
 
-2026-02-01
+2026-03-01
 {: .label .label-green }
 
 ---
 
 ## Models by Provider
 
-### OpenAI (159)
+### OpenAI (161)
 
 | Model | Context | Max Output | Pricing (per 1M tokens) |
 | :--- | ---: | ---: | :--- |
@@ -6698,6 +7825,7 @@ _Model information enriched by [models.dev](https://models.dev)._
 | `gpt-5.2` | 400k | 128k | In: $1.75, Out: $14.00, Cache: $0.17 |
 | `gpt-5.2-codex` | 400k | 128k | In: $1.75, Out: $14.00, Cache: $0.17 |
 | `gpt-5.2-pro` | 400k | 128k | In: $21.00, Out: $168.00 |
+| `gpt-5.3-codex` | 400k | 128k | In: $1.75, Out: $14.00, Cache: $0.17 |
 | `codex-mini-latest` | 200k | 100k | In: $1.50, Out: $6.00, Cache: $0.38 |
 | `codex-mini-latest` | 200k | 100k | In: $1.50, Out: $6.00, Cache: $0.38 |
 | `o1` | 200k | 100k | In: $15.00, Out: $60.00, Cache: $7.50 |
@@ -6765,6 +7893,7 @@ _Model information enriched by [models.dev](https://models.dev)._
 | `gpt-5.1-chat-latest` | 128k | 16.384k | In: $1.25, Out: $10.00, Cache: $0.13 |
 | `gpt-5.1-chat-latest` | 128k | 16.384k | In: $1.25, Out: $10.00, Cache: $0.13 |
 | `gpt-5.2-chat-latest` | 128k | 16.384k | In: $1.75, Out: $14.00, Cache: $0.17 |
+| `gpt-5.3-codex-spark` | 128k | 32k | In: $1.75, Out: $14.00, Cache: $0.17 |
 | `gpt-audio` | 128k | 16.384k | In: $2.50, Out: $10.00 |
 | `gpt-audio-2025-08-28` | 128k | 16.384k | In: $2.50, Out: $10.00 |
 | `gpt-audio-mini` | 128k | 16.384k | In: $0.60, Out: $2.40 |
@@ -6823,7 +7952,7 @@ _Model information enriched by [models.dev](https://models.dev)._
 | `tts-1-hd-1106` | - | - | In: $30.00, Out: $30.00 |
 | `whisper-1` | - | - | In: $0.01 |
 
-### Anthropic (33)
+### Anthropic (35)
 
 | Model | Context | Max Output | Pricing (per 1M tokens) |
 | :--- | ---: | ---: | :--- |
@@ -6853,6 +7982,7 @@ _Model information enriched by [models.dev](https://models.dev)._
 | `claude-opus-4-20250514` | 200k | 32k | In: $15.00, Out: $75.00, Cache: $1.50 |
 | `claude-opus-4-5` | 200k | 64k | In: $5.00, Out: $25.00, Cache: $0.50 |
 | `claude-opus-4-5-20251101` | 200k | 64k | In: $5.00, Out: $25.00, Cache: $0.50 |
+| `claude-opus-4-6` | 200k | 128k | In: $5.00, Out: $25.00, Cache: $0.50 |
 | `claude-sonnet-4-0` | 200k | 64k | In: $3.00, Out: $15.00, Cache: $0.30 |
 | `claude-sonnet-4-20250514` | 200k | 4.096k | In: $3.00, Out: $15.00 |
 | `claude-sonnet-4-20250514` | 200k | 64k | In: $3.00, Out: $15.00, Cache: $0.30 |
@@ -6860,14 +7990,15 @@ _Model information enriched by [models.dev](https://models.dev)._
 | `claude-sonnet-4-5` | 200k | 64k | In: $3.00, Out: $15.00, Cache: $0.30 |
 | `claude-sonnet-4-5-20250929` | 200k | 64k | In: $3.00, Out: $15.00 |
 | `claude-sonnet-4-5-20250929` | 200k | 64k | In: $3.00, Out: $15.00, Cache: $0.30 |
+| `claude-sonnet-4-6` | 200k | 64k | In: $3.00, Out: $15.00, Cache: $0.30 |
 
-### Gemini (96)
+### Gemini (105)
 
 | Model | Context | Max Output | Pricing (per 1M tokens) |
 | :--- | ---: | ---: | :--- |
 | `gemini-2.0-flash` | 1.0M | 8.192k | In: $0.10, Out: $0.40, Cache: $0.03 |
-| `gemini-2.0-flash` | 1.0M | 8.192k | In: $0.10, Out: $0.40, Cache: $0.03 |
 | `gemini-2.0-flash` | 1.0M | 8.192k | In: $0.15, Out: $0.60, Cache: $0.03 |
+| `gemini-2.0-flash` | 1.0M | 8.192k | In: $0.10, Out: $0.40, Cache: $0.03 |
 | `gemini-2.0-flash-001` | 1.0M | 8.192k | In: $0.10, Out: $0.40 |
 | `gemini-2.0-flash-exp` | 1.0M | 8.192k | In: $0.10, Out: $0.40 |
 | `gemini-2.0-flash-exp-image-generation` | 1.0M | 8.192k | In: $0.10, Out: $0.40 |
@@ -6913,6 +8044,10 @@ _Model information enriched by [models.dev](https://models.dev)._
 | `gemini-3-flash-preview` | 1.0M | 65.536k | In: $0.50, Out: $3.00, Cache: $0.05 |
 | `gemini-3-pro-preview` | 1.0M | 65.536k | In: $0.07, Out: $0.30 |
 | `gemini-3-pro-preview` | 1.0M | 65.536k | In: $2.00, Out: $12.00, Cache: $0.20 |
+| `gemini-3.1-pro-preview` | 1.0M | 65.536k | In: $2.00, Out: $12.00, Cache: $0.20 |
+| `gemini-3.1-pro-preview` | 1.0M | 65.536k | In: $2.00, Out: $12.00, Cache: $0.20 |
+| `gemini-3.1-pro-preview-customtools` | 1.0M | 65.536k | In: $2.00, Out: $12.00, Cache: $0.20 |
+| `gemini-3.1-pro-preview-customtools` | 1.0M | 65.536k | In: $2.00, Out: $12.00, Cache: $0.20 |
 | `gemini-exp-1206` | 1.0M | 65.536k | In: $0.07, Out: $0.30 |
 | `gemini-flash-latest` | 1.0M | 65.536k | In: $0.07, Out: $0.30 |
 | `gemini-flash-latest` | 1.0M | 65.536k | In: $0.30, Out: $2.50, Cache: $0.07 |
@@ -6927,13 +8062,18 @@ _Model information enriched by [models.dev](https://models.dev)._
 | `gemini-1.5-flash-8b` | 1.0M | 8.192k | In: $0.04, Out: $0.15, Cache: $0.01 |
 | `gemini-1.5-pro` | 1.0M | 8.192k | In: $1.25, Out: $5.00, Cache: $0.31 |
 | `gemini-3-pro-preview` | 1.0M | 64k | In: $2.00, Out: $12.00, Cache: $0.20 |
-| `zai-org/glm-4.7-maas` | 204.8k | 131.072k | In: $0.60, Out: $2.20 |
+| `meta/llama-4-maverick-17b-128e-instruct-maas` | 524.288k | 8.192k | In: $0.35, Out: $1.15 |
+| `qwen/qwen3-235b-a22b-instruct-2507-maas` | 262.144k | 16.384k | In: $0.22, Out: $0.88 |
+| `zai-org/glm-5-maas` | 204.8k | 131.072k | In: $1.00, Out: $3.20, Cache: $0.10 |
+| `zai-org/glm-4.7-maas` | 200k | 128k | In: $0.60, Out: $2.20 |
+| `deepseek-ai/deepseek-v3.1-maas` | 163.84k | 32.768k | In: $0.60, Out: $1.70 |
 | `gemini-2.5-computer-use-preview-10-2025` | 131.072k | 65.536k | In: $0.07, Out: $0.30 |
 | `gemini-live-2.5-flash-preview-native-audio` | 131.072k | 65.536k | In: $0.50, Out: $2.00 |
 | `gemma-3-27b-it` | 131.072k | 8.192k | In: $0.07, Out: $0.30 |
 | `openai/gpt-oss-120b-maas` | 131.072k | 32.768k | In: $0.09, Out: $0.36 |
 | `openai/gpt-oss-20b-maas` | 131.072k | 32.768k | In: $0.07, Out: $0.25 |
 | `gemini-live-2.5-flash` | 128k | 8k | In: $0.50, Out: $2.00 |
+| `meta/llama-3.3-70b-instruct-maas` | 128k | 8.192k | In: $0.72, Out: $0.72 |
 | `gemini-2.5-flash-lite-preview-06-17` | 65.536k | 65.536k | In: $0.10, Out: $0.40, Cache: $0.03 |
 | `gemini-2.5-flash-image` | 32.768k | 32.768k | In: $0.07, Out: $0.30 |
 | `gemini-2.5-flash-image` | 32.768k | 32.768k | In: $0.30, Out: $30.00, Cache: $0.07 |
@@ -6969,7 +8109,7 @@ _Model information enriched by [models.dev](https://models.dev)._
 | `deepseek-chat` | 128k | 8.192k | In: $0.28, Out: $0.42, Cache: $0.03 |
 | `deepseek-reasoner` | 128k | 128k | In: $0.28, Out: $0.42, Cache: $0.03 |
 
-### OpenRouter (173)
+### OpenRouter (186)
 
 | Model | Context | Max Output | Pricing (per 1M tokens) |
 | :--- | ---: | ---: | :--- |
@@ -6988,11 +8128,16 @@ _Model information enriched by [models.dev](https://models.dev)._
 | `google/gemini-2.5-pro-preview-05-06` | 1.0M | 65.536k | In: $1.25, Out: $10.00, Cache: $0.31 |
 | `google/gemini-2.5-pro-preview-06-05` | 1.0M | 65.536k | In: $1.25, Out: $10.00, Cache: $0.31 |
 | `google/gemini-3-flash-preview` | 1.0M | 65.536k | In: $0.50, Out: $3.00, Cache: $0.05 |
+| `google/gemini-3.1-pro-preview` | 1.0M | 65.536k | In: $2.00, Out: $12.00 |
+| `google/gemini-3.1-pro-preview-customtools` | 1.0M | 65.536k | In: $2.00, Out: $12.00 |
 | `openai/gpt-4.1` | 1.0M | 32.768k | In: $2.00, Out: $8.00, Cache: $0.50 |
 | `openai/gpt-4.1-mini` | 1.0M | 32.768k | In: $0.40, Out: $1.60, Cache: $0.10 |
+| `anthropic/claude-opus-4.6` | 1.0M | 128k | In: $5.00, Out: $25.00, Cache: $0.50 |
 | `anthropic/claude-sonnet-4.5` | 1.0M | 64k | In: $3.00, Out: $15.00, Cache: $0.30 |
+| `anthropic/claude-sonnet-4.6` | 1.0M | 128k | In: $3.00, Out: $15.00, Cache: $0.30 |
 | `minimax/minimax-01` | 1.0M | 1.0M | In: $0.20, Out: $1.10 |
 | `minimax/minimax-m1` | 1.0M | 40k | In: $0.40, Out: $2.20 |
+| `qwen/qwen3.5-plus-02-15` | 1.0M | 65.536k | In: $0.40, Out: $2.40 |
 | `openai/gpt-5` | 400k | 128k | In: $1.25, Out: $10.00 |
 | `openai/gpt-5-chat` | 400k | 128k | In: $1.25, Out: $10.00 |
 | `openai/gpt-5-codex` | 400k | 128k | In: $1.25, Out: $10.00, Cache: $0.13 |
@@ -7023,15 +8168,21 @@ _Model information enriched by [models.dev](https://models.dev)._
 | `qwen/qwen3-next-80b-a3b-instruct` | 262.144k | 262.144k | In: $0.14, Out: $1.40 |
 | `qwen/qwen3-next-80b-a3b-instruct:free` | 262.144k | 262.144k | - |
 | `qwen/qwen3-next-80b-a3b-thinking` | 262.144k | 262.144k | In: $0.14, Out: $1.40 |
+| `qwen/qwen3.5-397b-a17b` | 262.144k | 65.536k | In: $0.60, Out: $3.60 |
+| `xiaomi/mimo-v2-flash` | 262.144k | 65.536k | In: $0.10, Out: $0.30, Cache: $0.01 |
 | `qwen/qwen3-30b-a3b-instruct-2507` | 262k | 262k | In: $0.20, Out: $0.80 |
 | `qwen/qwen3-30b-a3b-thinking-2507` | 262k | 262k | In: $0.20, Out: $0.80 |
 | `kwaipilot/kat-coder-pro:free` | 256k | 65.536k | - |
 | `mistralai/codestral-2508` | 256k | 256k | In: $0.30, Out: $0.90 |
 | `nvidia/nemotron-3-nano-30b-a3b:free` | 256k | 256k | - |
+| `stepfun/step-3.5-flash` | 256k | 256k | In: $0.10, Out: $0.30, Cache: $0.02 |
+| `stepfun/step-3.5-flash:free` | 256k | 256k | - |
 | `x-ai/grok-4` | 256k | 64k | In: $3.00, Out: $15.00, Cache: $0.75 |
 | `x-ai/grok-code-fast-1` | 256k | 10k | In: $0.20, Out: $1.50, Cache: $0.02 |
 | `minimax/minimax-m2.1` | 204.8k | 131.072k | In: $0.30, Out: $1.20 |
+| `minimax/minimax-m2.5` | 204.8k | 131.072k | In: $0.30, Out: $1.20, Cache: $0.03 |
 | `z-ai/glm-4.7` | 204.8k | 131.072k | In: $0.60, Out: $2.20, Cache: $0.11 |
+| `z-ai/glm-5` | 202.752k | 131k | In: $1.00, Out: $3.20, Cache: $0.20 |
 | `anthropic/claude-3.5-haiku` | 200k | 8.192k | In: $0.80, Out: $4.00, Cache: $0.08 |
 | `anthropic/claude-3.7-sonnet` | 200k | 128k | In: $15.00, Out: $75.00, Cache: $1.50 |
 | `anthropic/claude-haiku-4.5` | 200k | 64k | In: $1.00, Out: $5.00, Cache: $0.10 |
@@ -7084,6 +8235,7 @@ _Model information enriched by [models.dev](https://models.dev)._
 | `openai/gpt-oss-20b` | 131.072k | 32.768k | In: $0.05, Out: $0.20 |
 | `openai/gpt-oss-20b:free` | 131.072k | 32.768k | - |
 | `openai/gpt-oss-safeguard-20b` | 131.072k | 65.536k | In: $0.07, Out: $0.30 |
+| `prime-intellect/intellect-3` | 131.072k | 8.192k | In: $0.20, Out: $1.10 |
 | `qwen/qwen3-235b-a22b:free` | 131.072k | 131.072k | - |
 | `qwen/qwen3-coder:exacto` | 131.072k | 32.768k | In: $0.38, Out: $1.53 |
 | `x-ai/grok-3` | 131.072k | 8.192k | In: $3.00, Out: $15.00, Cache: $0.75 |
@@ -7097,6 +8249,7 @@ _Model information enriched by [models.dev](https://models.dev)._
 | `openai/gpt-4o-mini` | 128k | 16.384k | In: $0.15, Out: $0.60, Cache: $0.08 |
 | `openai/gpt-5.1-chat` | 128k | 16.384k | In: $1.25, Out: $10.00, Cache: $0.13 |
 | `openai/gpt-5.2-chat` | 128k | 16.384k | In: $1.75, Out: $14.00, Cache: $0.17 |
+| `openrouter/aurora-alpha` | 128k | 50k | - |
 | `qwen/qwen3-coder-flash` | 128k | 66.536k | In: $0.30, Out: $1.50 |
 | `z-ai/glm-4.5` | 128k | 96k | In: $0.60, Out: $2.20 |
 | `z-ai/glm-4.5-air` | 128k | 96k | In: $0.20, Out: $1.10 |
@@ -7147,13 +8300,18 @@ _Model information enriched by [models.dev](https://models.dev)._
 | `sourceful/riverflow-v2-standard-preview` | 8.192k | 8.192k | - |
 | `bytedance-seed/seedream-4.5` | 4.096k | 4.096k | - |
 
-### Amazon Bedrock (67)
+### Amazon Bedrock (95)
 
 | Model | Context | Max Output | Pricing (per 1M tokens) |
 | :--- | ---: | ---: | :--- |
 | `meta.llama4-scout-17b-instruct-v1:0` | 3.5M | 16.384k | In: $0.17, Out: $0.66 |
+| `writer.palmyra-x5-v1:0` | 1.0M | 8.192k | In: $0.60, Out: $6.00 |
 | `amazon.nova-premier-v1:0` | 1.0M | 16.384k | In: $2.50, Out: $12.50 |
+| `anthropic.claude-opus-4-6-v1` | 1.0M | 128k | In: $5.00, Out: $25.00, Cache: $0.50 |
+| `eu.anthropic.claude-opus-4-6-v1` | 1.0M | 128k | In: $5.00, Out: $25.00, Cache: $0.50 |
+| `global.anthropic.claude-opus-4-6-v1` | 1.0M | 128k | In: $5.00, Out: $25.00, Cache: $0.50 |
 | `meta.llama4-maverick-17b-instruct-v1:0` | 1.0M | 16.384k | In: $0.24, Out: $0.97 |
+| `us.anthropic.claude-opus-4-6-v1` | 1.0M | 128k | In: $5.00, Out: $25.00, Cache: $0.50 |
 | `amazon.nova-lite-v1:0` | 300k | 8.192k | In: $0.06, Out: $0.24, Cache: $0.01 |
 | `amazon.nova-pro-v1:0` | 300k | 8.192k | In: $0.80, Out: $3.20, Cache: $0.20 |
 | `qwen.qwen3-235b-a22b-2507-v1:0` | 262.144k | 131.072k | In: $0.22, Out: $0.88 |
@@ -7163,6 +8321,9 @@ _Model information enriched by [models.dev](https://models.dev)._
 | `ai21.jamba-1-5-large-v1:0` | 256k | 4.096k | In: $2.00, Out: $8.00 |
 | `ai21.jamba-1-5-mini-v1:0` | 256k | 4.096k | In: $0.20, Out: $0.40 |
 | `moonshot.kimi-k2-thinking` | 256k | 256k | In: $0.60, Out: $2.50 |
+| `moonshotai.kimi-k2.5` | 256k | 256k | In: $0.60, Out: $3.00 |
+| `minimax.minimax-m2.1` | 204.8k | 131.072k | In: $0.30, Out: $1.20 |
+| `zai.glm-4.7` | 204.8k | 131.072k | In: $0.60, Out: $2.20 |
 | `minimax.minimax-m2` | 204.608k | 128k | In: $0.30, Out: $1.20 |
 | `google.gemma-3-27b-it` | 202.752k | 8.192k | In: $0.12, Out: $0.20 |
 | `anthropic.claude-3-5-haiku-20241022-v1:0` | 200k | 8.192k | In: $0.80, Out: $4.00, Cache: $0.08 |
@@ -7178,9 +8339,28 @@ _Model information enriched by [models.dev](https://models.dev)._
 | `anthropic.claude-opus-4-5-20251101-v1:0` | 200k | 64k | In: $5.00, Out: $25.00, Cache: $0.50 |
 | `anthropic.claude-sonnet-4-20250514-v1:0` | 200k | 64k | In: $3.00, Out: $15.00, Cache: $0.30 |
 | `anthropic.claude-sonnet-4-5-20250929-v1:0` | 200k | 64k | In: $3.00, Out: $15.00, Cache: $0.30 |
+| `anthropic.claude-sonnet-4-6` | 200k | 64k | In: $3.00, Out: $15.00, Cache: $0.30 |
 | `anthropic.claude-v2:1` | 200k | 4.096k | In: $8.00, Out: $24.00 |
+| `eu.anthropic.claude-haiku-4-5-20251001-v1:0` | 200k | 64k | In: $1.00, Out: $5.00, Cache: $0.10 |
+| `eu.anthropic.claude-opus-4-5-20251101-v1:0` | 200k | 64k | In: $5.00, Out: $25.00, Cache: $0.50 |
+| `eu.anthropic.claude-sonnet-4-20250514-v1:0` | 200k | 64k | In: $3.00, Out: $15.00, Cache: $0.30 |
+| `eu.anthropic.claude-sonnet-4-5-20250929-v1:0` | 200k | 64k | In: $3.00, Out: $15.00, Cache: $0.30 |
+| `eu.anthropic.claude-sonnet-4-6` | 200k | 64k | In: $3.00, Out: $15.00, Cache: $0.30 |
+| `global.anthropic.claude-haiku-4-5-20251001-v1:0` | 200k | 64k | In: $1.00, Out: $5.00, Cache: $0.10 |
 | `global.anthropic.claude-opus-4-5-20251101-v1:0` | 200k | 64k | In: $5.00, Out: $25.00, Cache: $0.50 |
+| `global.anthropic.claude-sonnet-4-20250514-v1:0` | 200k | 64k | In: $3.00, Out: $15.00, Cache: $0.30 |
+| `global.anthropic.claude-sonnet-4-5-20250929-v1:0` | 200k | 64k | In: $3.00, Out: $15.00, Cache: $0.30 |
+| `global.anthropic.claude-sonnet-4-6` | 200k | 64k | In: $3.00, Out: $15.00, Cache: $0.30 |
+| `us.anthropic.claude-haiku-4-5-20251001-v1:0` | 200k | 64k | In: $1.00, Out: $5.00, Cache: $0.10 |
+| `us.anthropic.claude-opus-4-1-20250805-v1:0` | 200k | 32k | In: $15.00, Out: $75.00, Cache: $1.50 |
+| `us.anthropic.claude-opus-4-20250514-v1:0` | 200k | 32k | In: $15.00, Out: $75.00, Cache: $1.50 |
+| `us.anthropic.claude-opus-4-5-20251101-v1:0` | 200k | 64k | In: $5.00, Out: $25.00, Cache: $0.50 |
+| `us.anthropic.claude-sonnet-4-20250514-v1:0` | 200k | 64k | In: $3.00, Out: $15.00, Cache: $0.30 |
+| `us.anthropic.claude-sonnet-4-5-20250929-v1:0` | 200k | 64k | In: $3.00, Out: $15.00, Cache: $0.30 |
+| `us.anthropic.claude-sonnet-4-6` | 200k | 64k | In: $3.00, Out: $15.00, Cache: $0.30 |
+| `zai.glm-4.7-flash` | 200k | 131.072k | In: $0.07, Out: $0.40 |
 | `deepseek.v3-v1:0` | 163.84k | 81.92k | In: $0.58, Out: $1.68 |
+| `deepseek.v3.2-v1:0` | 163.84k | 81.92k | In: $0.62, Out: $1.85 |
 | `google.gemma-3-12b-it` | 131.072k | 8.192k | In: $0.05, Out: $0.10 |
 | `qwen.qwen3-coder-480b-a35b-v1:0` | 131.072k | 65.536k | In: $0.22, Out: $1.80 |
 | `meta.llama3-2-1b-instruct-v1:0` | 131k | 4.096k | In: $0.10, Out: $0.10 |
@@ -7209,6 +8389,7 @@ _Model information enriched by [models.dev](https://models.dev)._
 | `openai.gpt-oss-safeguard-120b` | 128k | 4.096k | In: $0.15, Out: $0.60 |
 | `openai.gpt-oss-safeguard-20b` | 128k | 4.096k | In: $0.07, Out: $0.20 |
 | `mistral.mistral-7b-instruct-v0:2` | 127k | 127k | In: $0.11, Out: $0.11 |
+| `writer.palmyra-x4-v1:0` | 122.88k | 8.192k | In: $2.50, Out: $10.00 |
 | `anthropic.claude-instant-v1` | 100k | 4.096k | In: $0.80, Out: $2.40 |
 | `anthropic.claude-v2` | 100k | 4.096k | In: $8.00, Out: $24.00 |
 | `mistral.mixtral-8x7b-instruct-v0:1` | 32k | 32k | In: $0.70, Out: $0.70 |
@@ -7219,17 +8400,48 @@ _Model information enriched by [models.dev](https://models.dev)._
 | `cohere.command-light-text-v14` | 4.096k | 4.096k | In: $0.30, Out: $0.60 |
 | `cohere.command-text-v14` | 4.096k | 4.096k | In: $1.50, Out: $2.00 |
 
+### xAI (27)
+
+| Model | Context | Max Output | Pricing (per 1M tokens) |
+| :--- | ---: | ---: | :--- |
+| `grok-4-1-fast` | 2.0M | 30k | In: $0.20, Out: $0.50, Cache: $0.05 |
+| `grok-4-1-fast-non-reasoning` | 2.0M | 30k | In: $0.20, Out: $0.50, Cache: $0.05 |
+| `grok-4-fast` | 2.0M | 30k | In: $0.20, Out: $0.50, Cache: $0.05 |
+| `grok-4-fast-non-reasoning` | 2.0M | 30k | In: $0.20, Out: $0.50, Cache: $0.05 |
+| `grok-4` | 256k | 64k | In: $3.00, Out: $15.00, Cache: $0.75 |
+| `grok-code-fast-1` | 256k | 10k | In: $0.20, Out: $1.50, Cache: $0.02 |
+| `grok-2` | 131.072k | 8.192k | In: $2.00, Out: $10.00, Cache: $2.00 |
+| `grok-2-1212` | 131.072k | 8.192k | In: $2.00, Out: $10.00, Cache: $2.00 |
+| `grok-2-latest` | 131.072k | 8.192k | In: $2.00, Out: $10.00, Cache: $2.00 |
+| `grok-3` | 131.072k | 8.192k | In: $3.00, Out: $15.00, Cache: $0.75 |
+| `grok-3-fast` | 131.072k | 8.192k | In: $5.00, Out: $25.00, Cache: $1.25 |
+| `grok-3-fast-latest` | 131.072k | 8.192k | In: $5.00, Out: $25.00, Cache: $1.25 |
+| `grok-3-latest` | 131.072k | 8.192k | In: $3.00, Out: $15.00, Cache: $0.75 |
+| `grok-3-mini` | 131.072k | 8.192k | In: $0.30, Out: $0.50, Cache: $0.07 |
+| `grok-3-mini-fast` | 131.072k | 8.192k | In: $0.60, Out: $4.00, Cache: $0.15 |
+| `grok-3-mini-fast-latest` | 131.072k | 8.192k | In: $0.60, Out: $4.00, Cache: $0.15 |
+| `grok-3-mini-latest` | 131.072k | 8.192k | In: $0.30, Out: $0.50, Cache: $0.07 |
+| `grok-beta` | 131.072k | 4.096k | In: $5.00, Out: $15.00, Cache: $5.00 |
+| `grok-2-1212` | 128k | 8.192k | - |
+| `grok-2-vision-1212` | 128k | 8.192k | - |
+| `grok-3` | 128k | 16.384k | - |
+| `grok-3-mini` | 128k | 16.384k | - |
+| `grok-2-vision` | 8.192k | 4.096k | In: $2.00, Out: $10.00, Cache: $2.00 |
+| `grok-2-vision-1212` | 8.192k | 4.096k | In: $2.00, Out: $10.00, Cache: $2.00 |
+| `grok-2-vision-latest` | 8.192k | 4.096k | In: $2.00, Out: $10.00, Cache: $2.00 |
+| `grok-vision-beta` | 8.192k | 4.096k | In: $5.00, Out: $15.00, Cache: $5.00 |
+| `grok-imagine-image` | - | - | - |
+
 ---
 
 ## Models by Capability
 
-### Function Calling (402)
+### Function Calling (506)
 
 | Model | Provider | Context | Pricing |
 | :--- | :--- | ---: | :--- |
 | `ai21.jamba-1-5-large-v1:0` | bedrock | 256k | In: $2.00, Out: $8.00 |
 | `ai21.jamba-1-5-mini-v1:0` | bedrock | 256k | In: $0.20, Out: $0.40 |
-| `allenai/molmo-2-8b:free` | openrouter | 36.864k | - |
 | `amazon.nova-2-lite-v1:0` | bedrock | 128k | In: $0.33, Out: $2.75 |
 | `amazon.nova-lite-v1:0` | bedrock | 300k | In: $0.06, Out: $0.24, Cache: $0.01 |
 | `amazon.nova-micro-v1:0` | bedrock | 128k | In: $0.04, Out: $0.14, Cache: $0.01 |
@@ -7247,8 +8459,9 @@ _Model information enriched by [models.dev](https://models.dev)._
 | `anthropic.claude-haiku-4-5-20251001-v1:0` | bedrock | 200k | In: $1.00, Out: $5.00, Cache: $0.10 |
 | `anthropic.claude-opus-4-1-20250805-v1:0` | bedrock | 200k | In: $15.00, Out: $75.00, Cache: $1.50 |
 | `anthropic.claude-opus-4-20250514-v1:0` | bedrock | 200k | In: $15.00, Out: $75.00, Cache: $1.50 |
+| `anthropic.claude-opus-4-5-20251101-v1:0` | bedrock | 200k | In: $5.00, Out: $25.00, Cache: $0.50 |
 
-### Vision (199)
+### Vision (256)
 
 | Model | Provider | Context | Pricing |
 | :--- | :--- | ---: | :--- |
@@ -7268,12 +8481,12 @@ _Model information enriched by [models.dev](https://models.dev)._
 | `anthropic.claude-opus-4-1-20250805-v1:0` | bedrock | 200k | In: $15.00, Out: $75.00, Cache: $1.50 |
 | `anthropic.claude-opus-4-20250514-v1:0` | bedrock | 200k | In: $15.00, Out: $75.00, Cache: $1.50 |
 | `anthropic.claude-opus-4-5-20251101-v1:0` | bedrock | 200k | In: $5.00, Out: $25.00, Cache: $0.50 |
+| `anthropic.claude-opus-4-6-v1` | bedrock | 1.0M | In: $5.00, Out: $25.00, Cache: $0.50 |
 | `anthropic.claude-sonnet-4-20250514-v1:0` | bedrock | 200k | In: $3.00, Out: $15.00, Cache: $0.30 |
 | `anthropic.claude-sonnet-4-5-20250929-v1:0` | bedrock | 200k | In: $3.00, Out: $15.00, Cache: $0.30 |
-| `anthropic/claude-3.5-haiku` | openrouter | 200k | In: $0.80, Out: $4.00, Cache: $0.08 |
-| `anthropic/claude-3.7-sonnet` | openrouter | 200k | In: $15.00, Out: $75.00, Cache: $1.50 |
+| `anthropic.claude-sonnet-4-6` | bedrock | 200k | In: $3.00, Out: $15.00, Cache: $0.30 |
 
-### Reasoning (192)
+### Reasoning (255)
 
 | Model | Provider | Context | Pricing |
 | :--- | :--- | ---: | :--- |
@@ -7283,22 +8496,22 @@ _Model information enriched by [models.dev](https://models.dev)._
 | `anthropic.claude-opus-4-1-20250805-v1:0` | bedrock | 200k | In: $15.00, Out: $75.00, Cache: $1.50 |
 | `anthropic.claude-opus-4-20250514-v1:0` | bedrock | 200k | In: $15.00, Out: $75.00, Cache: $1.50 |
 | `anthropic.claude-opus-4-5-20251101-v1:0` | bedrock | 200k | In: $5.00, Out: $25.00, Cache: $0.50 |
+| `anthropic.claude-opus-4-6-v1` | bedrock | 1.0M | In: $5.00, Out: $25.00, Cache: $0.50 |
 | `anthropic.claude-sonnet-4-20250514-v1:0` | bedrock | 200k | In: $3.00, Out: $15.00, Cache: $0.30 |
 | `anthropic.claude-sonnet-4-5-20250929-v1:0` | bedrock | 200k | In: $3.00, Out: $15.00, Cache: $0.30 |
+| `anthropic.claude-sonnet-4-6` | bedrock | 200k | In: $3.00, Out: $15.00, Cache: $0.30 |
 | `anthropic/claude-3.7-sonnet` | openrouter | 200k | In: $15.00, Out: $75.00, Cache: $1.50 |
 | `anthropic/claude-haiku-4.5` | openrouter | 200k | In: $1.00, Out: $5.00, Cache: $0.10 |
 | `anthropic/claude-opus-4` | openrouter | 200k | In: $15.00, Out: $75.00, Cache: $1.50 |
 | `anthropic/claude-opus-4.1` | openrouter | 200k | In: $15.00, Out: $75.00, Cache: $1.50 |
 | `anthropic/claude-opus-4.5` | openrouter | 200k | In: $5.00, Out: $25.00, Cache: $0.50 |
+| `anthropic/claude-opus-4.6` | openrouter | 1.0M | In: $5.00, Out: $25.00, Cache: $0.50 |
 | `anthropic/claude-sonnet-4` | openrouter | 200k | In: $3.00, Out: $15.00, Cache: $0.30 |
 | `anthropic/claude-sonnet-4.5` | openrouter | 1.0M | In: $3.00, Out: $15.00, Cache: $0.30 |
+| `anthropic/claude-sonnet-4.6` | openrouter | 1.0M | In: $3.00, Out: $15.00, Cache: $0.30 |
 | `claude-3-7-sonnet-20250219` | anthropic | 200k | In: $3.00, Out: $15.00 |
-| `claude-3-7-sonnet-20250219` | anthropic | 200k | In: $3.00, Out: $15.00, Cache: $0.30 |
-| `claude-3-7-sonnet-latest` | anthropic | 200k | In: $3.00, Out: $15.00, Cache: $0.30 |
-| `claude-haiku-4-5` | anthropic | 200k | In: $1.00, Out: $5.00, Cache: $0.10 |
-| `claude-haiku-4-5-20251001` | anthropic | 200k | In: $1.00, Out: $5.00, Cache: $0.10 |
 
-### Streaming (422)
+### Streaming (533)
 
 | Model | Provider | Context | Pricing |
 | :--- | :--- | ---: | :--- |
@@ -7323,13 +8536,12 @@ _Model information enriched by [models.dev](https://models.dev)._
 | `anthropic.claude-instant-v1` | bedrock | 100k | In: $0.80, Out: $2.40 |
 | `anthropic.claude-opus-4-1-20250805-v1:0` | bedrock | 200k | In: $15.00, Out: $75.00, Cache: $1.50 |
 
-### Structured Output (396)
+### Structured Output (510)
 
 | Model | Provider | Context | Pricing |
 | :--- | :--- | ---: | :--- |
 | `ai21.jamba-1-5-large-v1:0` | bedrock | 256k | In: $2.00, Out: $8.00 |
 | `ai21.jamba-1-5-mini-v1:0` | bedrock | 256k | In: $0.20, Out: $0.40 |
-| `allenai/molmo-2-8b:free` | openrouter | 36.864k | - |
 | `amazon.nova-2-lite-v1:0` | bedrock | 128k | In: $0.33, Out: $2.75 |
 | `amazon.nova-lite-v1:0` | bedrock | 300k | In: $0.06, Out: $0.24, Cache: $0.01 |
 | `amazon.nova-micro-v1:0` | bedrock | 128k | In: $0.04, Out: $0.14, Cache: $0.01 |
@@ -7347,12 +8559,13 @@ _Model information enriched by [models.dev](https://models.dev)._
 | `anthropic.claude-haiku-4-5-20251001-v1:0` | bedrock | 200k | In: $1.00, Out: $5.00, Cache: $0.10 |
 | `anthropic.claude-opus-4-1-20250805-v1:0` | bedrock | 200k | In: $15.00, Out: $75.00, Cache: $1.50 |
 | `anthropic.claude-opus-4-20250514-v1:0` | bedrock | 200k | In: $15.00, Out: $75.00, Cache: $1.50 |
+| `anthropic.claude-opus-4-5-20251101-v1:0` | bedrock | 200k | In: $5.00, Out: $25.00, Cache: $0.50 |
 
 ---
 
 ## Models by Modality
 
-### Vision Models (302)
+### Vision Models (359)
 
 Models that can process images:
 
@@ -7374,7 +8587,7 @@ Models that can process images:
 | `anthropic.claude-opus-4-1-20250805-v1:0` | bedrock | 200k | In: $15.00, Out: $75.00, Cache: $1.50 |
 | `anthropic.claude-opus-4-20250514-v1:0` | bedrock | 200k | In: $15.00, Out: $75.00, Cache: $1.50 |
 
-### Audio Input Models (76)
+### Audio Input Models (82)
 
 Models that can process audio:
 
@@ -7384,8 +8597,8 @@ Models that can process audio:
 | `gemini-1.5-flash-8b` | gemini | 1.0M | In: $0.04, Out: $0.15, Cache: $0.01 |
 | `gemini-1.5-pro` | gemini | 1.0M | In: $1.25, Out: $5.00, Cache: $0.31 |
 | `gemini-2.0-flash` | gemini | 1.0M | In: $0.10, Out: $0.40, Cache: $0.03 |
-| `gemini-2.0-flash` | gemini | 1.0M | In: $0.10, Out: $0.40, Cache: $0.03 |
 | `gemini-2.0-flash` | gemini | 1.0M | In: $0.15, Out: $0.60, Cache: $0.03 |
+| `gemini-2.0-flash` | gemini | 1.0M | In: $0.10, Out: $0.40, Cache: $0.03 |
 | `gemini-2.0-flash-lite` | gemini | 1.0M | In: $0.10, Out: $0.40, Cache: $0.03 |
 | `gemini-2.0-flash-lite` | gemini | 1.0M | In: $0.07, Out: $0.30 |
 | `gemini-2.0-flash-lite` | gemini | 1.0M | In: $0.07, Out: $0.30 |
@@ -7396,7 +8609,7 @@ Models that can process audio:
 | `gemini-2.5-flash-lite` | gemini | 1.0M | In: $0.10, Out: $0.40, Cache: $0.03 |
 | `gemini-2.5-flash-lite` | gemini | 1.0M | In: $0.10, Out: $0.40, Cache: $0.03 |
 
-### Embedding Models (102)
+### Embedding Models (103)
 
 Models that generate embeddings:
 
@@ -7536,7 +8749,7 @@ This is useful for:
 
 ---
 
-**Auto-generated by `npm run sync-models`** • Last updated: 2026-02-01
+**Auto-generated by `npm run sync-models`** • Last updated: 2026-03-01
 
 
 <!-- END FILE: models/available_models.md -->
@@ -7563,6 +8776,8 @@ description: Built-in web dashboard for visualizing LLM usage, costs, and perfor
 
 ![Dashboard Metrics View](/assets/images/monitor/dashboard-metrics.png)
 
+![Token Analytics](/assets/images/monitor/dashboard-tokens.png)
+
 ## Table of contents
 {: .no_toc .text-delta }
 
@@ -7585,27 +8800,41 @@ It provides:
 
 ## Integration
 
-### Express / Fastify / Node.js HTTP
+### Express (Recommended)
 
-Use `createMonitorMiddleware` to mount the dashboard on any Express-compatible server:
+The easiest way to integrate the dashboard is using the `api()` method on your monitor instance:
 
 ```typescript
 import express from "express";
-import { Monitor, MemoryAdapter } from "@node-llm/monitor";
-import { createMonitorMiddleware } from "@node-llm/monitor/ui";
+import { Monitor } from "@node-llm/monitor";
 
 const app = express();
+const monitor = Monitor.memory();
 
-// 1. Setup Monitor
-const store = new MemoryAdapter();
-const monitor = new Monitor({ store });
+// Dashboard handles its own routing under basePath
+app.use(monitor.api({ basePath: "/monitor" }));
 
-// 2. Mount Dashboard (share the same store)
-app.use(createMonitorMiddleware(store, { basePath: "/monitor" }));
-
-app.listen(3001, () => {
-  console.log("Dashboard at http://localhost:3001/monitor");
+app.listen(3333, () => {
+  console.log("Dashboard at http://localhost:3333/monitor");
 });
+```
+
+### Manual Integration (Non-Express)
+
+For standard Node.js HTTP servers or custom mount logic, use the `MonitorDashboard` class directly:
+
+```typescript
+import { createServer } from "node:http";
+import { MonitorDashboard, MemoryAdapter } from "@node-llm/monitor";
+
+const store = new MemoryAdapter();
+const dashboard = new MonitorDashboard(store, { basePath: "/monitor" });
+
+const server = createServer(async (req, res) => {
+  await dashboard.handleRequest(req, res);
+});
+
+server.listen(3333);
 ```
 
 ### Next.js App Router
@@ -7680,12 +8909,12 @@ const server = createServer(async (req, res) => {
   await dashboard.handleRequest(req, res);
 });
 
-server.listen(3001, () => {
-  console.log("Dashboard at http://localhost:3001");
+server.listen(3333, () => {
+  console.log("Dashboard at http://localhost:3333");
 });
 ```
 
-See `examples/dashboard.ts` in the repository for a complete implementation.
+See `examples/demo/index.ts` in the repository for a complete implementation.
 
 ---
 
@@ -7704,10 +8933,10 @@ The dashboard backend exposes these endpoints (relative to your `basePath`):
 
 ```bash
 # Get traces
-curl "http://localhost:3001/monitor/api/traces?limit=10"
+curl "http://localhost:3333/monitor/api/traces?limit=10"
 
 # Get specific request details
-curl "http://localhost:3001/monitor/api/events?requestId=req_12345"
+curl "http://localhost:3333/monitor/api/events?requestId=req_12345"
 ```
 
 
@@ -7737,6 +8966,8 @@ description: Production observability for NodeLLM. Track costs, latency, token u
 
 ![NodeLLM Monitor Dashboard](/assets/images/monitor/dashboard-metrics.png)
 
+![Token Analytics](/assets/images/monitor/dashboard-tokens.png)
+
 ---
 
 ## Quick Setup
@@ -7746,7 +8977,11 @@ NodeLLM Monitor provides production-grade observability for your AI applications
 ### Installation
 
 ```bash
-npm install @node-llm/monitor
+# Core monitor package
+pnpm add @node-llm/monitor
+
+# Optional: OpenTelemetry integration
+pnpm add @node-llm/monitor-otel
 ```
 
 ---
@@ -7792,44 +9027,43 @@ const response = await chat.ask("Hello!");
 
 ### Built-in Dashboard
 
-Launch a visual dashboard to explore your data:
-
-```typescript
-import { createServer } from "node:http";
-import { MonitorDashboard } from "@node-llm/monitor/ui";
-import { MemoryAdapter } from "@node-llm/monitor";
-
-// Create a store (can also use PrismaAdapter or FileAdapter)
-const store = new MemoryAdapter();
-
-// Create dashboard instance
-const dashboard = new MonitorDashboard(store, { 
-  basePath: "/monitor",
-  cors: false, // Recommended: same-origin only for security
-});
-
-// Start server
-const server = createServer(async (req, res) => {
-  await dashboard.handleRequest(req, res);
-});
-
-server.listen(3001, () => {
-  console.log("Dashboard at http://localhost:3001/monitor");
-});
-```
-
-Or with Express:
+The easiest way to view your telemetry is through the built-in dashboard. You can mount it to any Express server using the ergonomic `monitor.api()` shorthand:
 
 ```typescript
 import express from "express";
-import { MonitorDashboard } from "@node-llm/monitor/ui";
+import { Monitor } from "@node-llm/monitor";
 
 const app = express();
-const dashboard = new MonitorDashboard(store, { basePath: "/monitor" });
+const monitor = Monitor.memory();
 
-app.use(dashboard.middleware());
-app.listen(3001);
+// Launch dashboard at http://localhost:3333/monitor
+app.use(monitor.api({ basePath: "/monitor" }));
+
+app.listen(3333);
 ```
+
+For advanced usage or non-Express environments, see the [Dashboard Guide](/monitor/dashboard.html).
+
+---
+
+## OpenTelemetry Bridge
+
+If you are using the **Vercel AI SDK**, LangChain, or any other library instrumented with OpenTelemetry, you can use our zero-code bridge to capture AI-specific metrics.
+
+```typescript
+import { NodeTracerProvider } from "@opentelemetry/sdk-trace-node";
+import { NodeLLMSpanProcessor } from "@node-llm/monitor-otel";
+import { Monitor } from "@node-llm/monitor";
+
+const monitor = Monitor.memory();
+const provider = new NodeTracerProvider();
+
+// The span processor automatically extracts model usage, costs, and tools
+provider.addSpanProcessor(new NodeLLMSpanProcessor(monitor.getStore()));
+provider.register();
+```
+
+See the [OpenTelemetry Guide](/monitor/otel.html) for more details.
 
 ---
 
@@ -7959,12 +9193,141 @@ console.log(metrics.timeSeries);  // Time series data
 
 - [Prisma Adapter Setup](/monitor/prisma.html) - Production database integration
 - [Dashboard Guide](/monitor/dashboard.html) - Explore the visual interface
+- [OpenTelemetry Guide](/monitor/otel.html) - Instrumented trace extraction
 - [API Reference](/monitor/api.html) - Full API documentation
 - [Blog: NodeLLM Monitor](https://www.eshaiju.com/blog/nodellm-monitor-production-observability) - Deep dive into production observability
 
 
-
 <!-- END FILE: monitor/index.md -->
+----------------------------------------
+
+<!-- FILE: monitor/otel.md -->
+
+# 📄 monitor/otel.md
+
+---
+layout: default
+title: OpenTelemetry
+parent: Monitor & Observability
+nav_order: 3
+permalink: /monitor/otel
+description: Zero-code instrumentation for AI observability. Extract AI metrics from Vercel AI SDK and other OTel-compliant libraries.
+---
+
+# {{ page.title }}
+{: .no_toc }
+
+{{ page.description }}
+{: .fs-6 .fw-300 }
+
+---
+
+## Overview
+
+OpenTelemetry (OTel) is the industry standard for observability. However, standard OTel spans often lack the specific metadata needed for AI applications, such as model names, token counts, and tool execution details.
+
+The `@node-llm/monitor-otel` package bridges this gap. It provides a specialized `NodeLLMSpanProcessor` that intercepts OTel spans, extracts AI-specific telemetry, and routes it directly to your NodeLLM Monitor dashboard.
+
+---
+
+## Installation
+
+```bash
+pnpm add @node-llm/monitor @node-llm/monitor-otel
+```
+
+## Basic Setup
+
+To enable OTel tracking, simply add the `NodeLLMSpanProcessor` to your OpenTelemetry `NodeTracerProvider`.
+
+```typescript
+import { NodeTracerProvider } from "@opentelemetry/sdk-trace-node";
+import { Monitor } from "@node-llm/monitor";
+import { NodeLLMSpanProcessor } from "@node-llm/monitor-otel";
+
+// 1. Initialize your monitor store
+const monitor = Monitor.memory();
+
+// 2. Configure OTel
+const provider = new NodeTracerProvider();
+
+// 3. Register the AI-aware processor
+provider.addSpanProcessor(new NodeLLMSpanProcessor(monitor.getStore()));
+provider.register();
+```
+
+---
+
+## Vercel AI SDK Integration
+
+The [Vercel AI SDK](https://sdk.vercel.ai/docs) has built-in support for OpenTelemetry. To track your calls, enable the `experimental_telemetry` option:
+
+```typescript
+import { generateText } from "ai";
+import { openai } from "@ai-sdk/openai";
+
+const result = await generateText({
+  model: openai("gpt-4o"),
+  prompt: "Write a haiku about monitoring.",
+  experimental_telemetry: {
+    isEnabled: true,
+    functionId: "my-completion-function", // Optional: appear in traces
+  },
+});
+```
+
+The spans emitted by the AI SDK will be automatically converted into NodeLLM Monitor events, including:
+- **Model Name**: (e.g., `gpt-4o`)
+- **Usage**: Input/Output/Total tokens
+- **Cost**: Calculated based on the detected model
+- **TTFT**: Time-to-First-Token for streaming requests
+- **Tool Calls**: Full breakdown of tool execution within the span
+
+---
+
+## Advanced Configuration
+
+The `NodeLLMSpanProcessor` accepts an optional configuration object:
+
+```typescript
+new NodeLLMSpanProcessor(monitor.getStore(), {
+  /**
+   * Whether to capture prompt/completion content in the spans.
+   * Default: false
+   */
+  captureContent: true,
+
+  /**
+   * Custom filter function to skip certain spans.
+   */
+  filter: (span) => {
+    return span.name.startsWith("ai.");
+  },
+
+  /**
+   * Custom error handler for processing failures.
+   */
+  onError: (error, span) => {
+    console.error("Failed to process AI span:", error);
+  },
+});
+```
+
+---
+
+## Multi-Provider Support
+
+The processor automatically handles spans from various AI SDK providers:
+- **OpenAI**
+- **Anthropic**
+- **Google Gemini**
+- **Mistral**
+- **Azure OpenAI**
+
+It maps standard OTel attributes (e.g., `gen_ai.usage.input_tokens`) to NodeLLM Monitor metrics seamlessly.
+
+
+<!-- END FILE: monitor/otel.md -->
 ----------------------------------------
 
 <!-- FILE: monitor/prisma.md -->
@@ -8125,28 +9488,33 @@ const byProvider = await prisma.monitoring_events.groupBy({
 });
 ```
 
----
-
 ## Dashboard Integration
 
-To view your Prisma data in the visual dashboard, mount the dashboard middleware in your application:
+To view your Prisma data in the visual dashboard, you can use the ergonomic `monitor.api()` shorthand for Express-based applications:
 
 ```typescript
 import express from "express";
 import { PrismaClient } from "@prisma/client";
-import { PrismaAdapter } from "@node-llm/monitor";
-import { createMonitorMiddleware } from "@node-llm/monitor/ui";
+import { createPrismaMonitor } from "@node-llm/monitor";
 
 const app = express();
 const prisma = new PrismaClient();
-const adapter = new PrismaAdapter(prisma);
+const monitor = createPrismaMonitor(prisma);
 
-// Mount dashboard (handles its own routing under basePath)
-app.use(createMonitorMiddleware(adapter, { basePath: "/monitor" }));
+// Dashboard handles its own routing under basePath
+app.use(monitor.api({ basePath: "/monitor" }));
 
 app.listen(3001, () => {
   console.log("Dashboard at http://localhost:3001/monitor");
 });
+```
+
+For non-Express environments or manual routing, you can use the `createMonitorMiddleware` factory directly:
+
+```typescript
+import { createMonitorMiddleware, PrismaAdapter } from "@node-llm/monitor";
+const adapter = new PrismaAdapter(prisma);
+app.use(createMonitorMiddleware(adapter, { basePath: "/monitor" }));
 ```
 
 The dashboard provides:
