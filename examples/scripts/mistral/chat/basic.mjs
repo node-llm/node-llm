@@ -1,5 +1,5 @@
 import "dotenv/config";
-import { NodeLLM } from "../../../packages/core/dist/index.js";
+import { NodeLLM } from "../../../../packages/core/dist/index.js";
 
 async function main() {
   const llm = NodeLLM.withProvider("mistral");
