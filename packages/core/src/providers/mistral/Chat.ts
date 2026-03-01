@@ -5,6 +5,12 @@ import { handleMistralError } from "./Errors.js";
 import { mapSystemMessages } from "../utils.js";
 import { fetchWithTimeout } from "../../utils/fetch.js";
 
+interface MistralContentPart {
+  type: "text" | "thinking";
+  content?: string;
+  thinking?: string;
+}
+
 interface MistralChatResponse {
   id: string;
   object: string;
@@ -14,7 +20,7 @@ interface MistralChatResponse {
     index: number;
     message: {
       role: string;
-      content: string | null;
+      content: string | MistralContentPart[] | null;
       tool_calls?: MistralToolCall[];
     };
     finish_reason: string;
@@ -131,6 +137,23 @@ export class MistralChat {
     const choice = json.choices?.[0];
     const message = choice?.message;
 
+    // Parse content - magistral models return array with thinking and text parts
+    let textContent: string | null = null;
+    let reasoningText: string | null = null;
+
+    if (Array.isArray(message?.content)) {
+      // Magistral models: content is array of parts
+      for (const part of message.content) {
+        if (part.type === "thinking" && part.thinking) {
+          reasoningText = (reasoningText || "") + part.thinking;
+        } else if (part.type === "text" && part.content) {
+          textContent = (textContent || "") + part.content;
+        }
+      }
+    } else {
+      textContent = message?.content ?? null;
+    }
+
     // Map tool calls to standard format
     const toolCalls = message?.tool_calls?.map((tc) => ({
       id: tc.id,
@@ -165,11 +188,21 @@ export class MistralChat {
       output_cost: outputCost
     };
 
+    // Build thinking result for reasoning models
+    const thinkingResult = reasoningText
+      ? {
+          text: reasoningText,
+          tokens: undefined
+        }
+      : undefined;
+
     return {
-      content: message?.content ?? null,
+      content: textContent,
       tool_calls: toolCalls,
       usage,
-      finish_reason: choice?.finish_reason ?? null
+      finish_reason: choice?.finish_reason ?? null,
+      thinking: thinkingResult,
+      reasoning: reasoningText
     };
   }
 }

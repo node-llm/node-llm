@@ -94,9 +94,12 @@ export class MistralCapabilities {
     return /moderation/.test(modelId.toLowerCase());
   }
 
-  static supportsReasoning(_modelId: string): boolean {
-    // Mistral doesn't have dedicated reasoning models yet
-    return false;
+  static supportsReasoning(modelId: string): boolean {
+    const model = this.findModel(modelId);
+    if (model?.capabilities?.includes("reasoning")) return true;
+
+    // Magistral models support reasoning
+    return /magistral/.test(modelId.toLowerCase());
   }
 
   static findModel(modelId: string) {

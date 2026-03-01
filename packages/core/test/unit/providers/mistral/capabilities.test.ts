@@ -64,7 +64,13 @@ describe("Mistral Capabilities", () => {
   });
 
   describe("supportsReasoning", () => {
-    it("should return false for all models (no dedicated reasoning models)", () => {
+    it("should return true for magistral models", () => {
+      expect(MistralCapabilities.supportsReasoning("magistral-small-latest")).toBe(true);
+      expect(MistralCapabilities.supportsReasoning("magistral-medium-latest")).toBe(true);
+      expect(MistralCapabilities.supportsReasoning("magistral-medium-2509")).toBe(true);
+    });
+
+    it("should return false for non-reasoning models", () => {
       expect(MistralCapabilities.supportsReasoning("mistral-large-latest")).toBe(false);
       expect(MistralCapabilities.supportsReasoning("mistral-small-latest")).toBe(false);
     });
