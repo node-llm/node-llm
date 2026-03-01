@@ -24,6 +24,37 @@ Modern LLMs can understand more than just text. `NodeLLM` provides a unified way
 
 ---
 
+## Quick Start
+
+```ts
+// Single file
+await chat.ask("What's in this image?", { files: ["photo.jpg"] });
+
+// Multiple files
+await chat.ask("Analyze these", { 
+  files: ["diagram.png", "report.pdf", "meeting.mp3"] 
+});
+
+// URL or local path
+await chat.ask("Describe this", { files: ["https://example.com/image.png"] });
+```
+
+---
+
+## Provider Support
+
+| File Type | Gemini | OpenAI | Anthropic | Bedrock |
+|-----------|--------|--------|-----------|---------|
+| **Images** | ✅ | ✅ | ✅ | ✅ |
+| **PDFs** | ✅ | ✅ | ✅ | ✅ |
+| **Audio** | ✅ | ✅ | ❌ | ❌ |
+| **Video** | ✅ | ⚠️ | ❌ | ❌ |
+| **Code/Text** | ✅ | ✅ | ✅ | ✅ |
+
+_⚠️ = Limited support (e.g., frame extraction)_
+
+---
+
 ## Smart File Handling
 
 You can pass local paths or URLs directly to the `ask` or `stream` method using the `files` (or `images`) option. `NodeLLM` automatically detects the file type and formats it correctly for the specific provider.
