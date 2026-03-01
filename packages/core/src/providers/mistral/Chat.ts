@@ -5,10 +5,15 @@ import { handleMistralError } from "./Errors.js";
 import { mapSystemMessages } from "../utils.js";
 import { fetchWithTimeout } from "../../utils/fetch.js";
 
+interface MistralThinkingPart {
+  type: "text";
+  text: string;
+}
+
 interface MistralContentPart {
   type: "text" | "thinking";
-  content?: string;
-  thinking?: string;
+  text?: string; // For type: "text"
+  thinking?: MistralThinkingPart[]; // For type: "thinking"
 }
 
 interface MistralChatResponse {
@@ -144,10 +149,15 @@ export class MistralChat {
     if (Array.isArray(message?.content)) {
       // Magistral models: content is array of parts
       for (const part of message.content) {
-        if (part.type === "thinking" && part.thinking) {
-          reasoningText = (reasoningText || "") + part.thinking;
-        } else if (part.type === "text" && part.content) {
-          textContent = (textContent || "") + part.content;
+        if (part.type === "thinking" && Array.isArray(part.thinking)) {
+          // thinking is an array of {type: "text", text: "..."} objects
+          for (const thinkingPart of part.thinking) {
+            if (thinkingPart.type === "text" && thinkingPart.text) {
+              reasoningText = (reasoningText || "") + thinkingPart.text;
+            }
+          }
+        } else if (part.type === "text" && part.text) {
+          textContent = (textContent || "") + part.text;
         }
       }
     } else {

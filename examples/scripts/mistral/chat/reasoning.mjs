@@ -2,7 +2,8 @@ import "dotenv/config";
 import { NodeLLM } from "../../../../packages/core/dist/index.js";
 
 async function main() {
-  const llm = NodeLLM.withProvider("mistral");
+  // Use longer timeout for reasoning models - they take more time to think
+  const llm = NodeLLM.withProvider("mistral", { timeout: 120000 });
 
   // Example 1: Math reasoning with magistral-small
   console.log("=== Example 1: Math Reasoning (magistral-small-latest) ===");
@@ -13,9 +14,11 @@ async function main() {
   console.log("\n--- Response ---");
   console.log(mathResponse.content);
 
-  if (mathResponse.reasoning) {
+  // Handle both thinking object and reasoning string
+  const reasoning = mathResponse.thinking?.text || mathResponse.reasoning;
+  if (reasoning) {
     console.log("\n--- Reasoning Trace ---");
-    console.log(mathResponse.reasoning);
+    console.log(typeof reasoning === "string" ? reasoning : JSON.stringify(reasoning, null, 2));
   }
 
   // Example 2: Logic puzzle with magistral-medium
@@ -31,9 +34,11 @@ async function main() {
   console.log("\n--- Response ---");
   console.log(logicResponse.content);
 
-  if (logicResponse.reasoning) {
-    console.log("\n--- Reasoning Trace ---");
-    console.log(logicResponse.reasoning.slice(0, 500) + "...");
+  const logicReasoning = logicResponse.thinking?.text || logicResponse.reasoning;
+  if (logicReasoning) {
+    console.log("\n--- Reasoning Trace (truncated) ---");
+    const text = typeof logicReasoning === "string" ? logicReasoning : JSON.stringify(logicReasoning);
+    console.log(text.slice(0, 500) + "...");
   }
 
   // Example 3: Coding problem
@@ -44,6 +49,13 @@ async function main() {
 
   console.log("\n--- Response ---");
   console.log(codingResponse.content);
+
+  const codingReasoning = codingResponse.thinking?.text || codingResponse.reasoning;
+  if (codingReasoning) {
+    console.log("\n--- Reasoning Trace (truncated) ---");
+    const text = typeof codingReasoning === "string" ? codingReasoning : JSON.stringify(codingReasoning);
+    console.log(text.slice(0, 500) + "...");
+  }
 }
 
 main()
