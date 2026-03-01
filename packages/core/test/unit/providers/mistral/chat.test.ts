@@ -148,4 +148,53 @@ describe("MistralChat", () => {
       } as ChatRequest)
     ).rejects.toThrow();
   });
+
+  it("should parse magistral reasoning response with array content", async () => {
+    // Magistral models return content as array with thinking and text parts
+    const mockResponse = {
+      id: "msg_magistral",
+      choices: [
+        {
+          message: {
+            role: "assistant",
+            content: [
+              {
+                type: "thinking",
+                thinking: [
+                  {
+                    type: "text",
+                    text: "Let me think about this..."
+                  },
+                  {
+                    type: "text",
+                    text: "The answer is 4."
+                  }
+                ]
+              },
+              {
+                type: "text",
+                text: "2 + 2 = 4"
+              }
+            ]
+          },
+          finish_reason: "stop"
+        }
+      ],
+      usage: { prompt_tokens: 10, completion_tokens: 20, total_tokens: 30 }
+    };
+
+    (global.fetch as unknown as Mock).mockResolvedValue({
+      ok: true,
+      json: async () => mockResponse
+    });
+
+    const response = await chat.execute({
+      model: "magistral-small-latest",
+      messages: [{ role: "user", content: "What is 2+2?" }]
+    } as ChatRequest);
+
+    expect(response.content).toBe("2 + 2 = 4");
+    expect(response.reasoning).toBe("Let me think about this...The answer is 4.");
+    expect(response.thinking?.text).toBe("Let me think about this...The answer is 4.");
+  });
 });
