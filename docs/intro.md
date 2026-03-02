@@ -56,6 +56,10 @@ It is not a "simple API wrapper" or a "prompt engineering tool." NodeLLM deals w
     <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/xai.svg" alt="xAI">
     <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/xai-text.svg" alt="" class="logo-small">
   </div>
+  <div class="provider-logo">
+    <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/mistral-color.svg" alt="Mistral">
+    <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/mistral-text.svg" alt="" class="logo-small">
+  </div>
 </div>
 
 ```text
@@ -63,7 +67,7 @@ It is not a "simple API wrapper" or a "prompt engineering tool." NodeLLM deals w
                    ↓
 NodeLLM (Unified API + State + Security)
                    ↓
- OpenAI | Anthropic | Bedrock | xAI | Ollama
+ OpenAI | Anthropic | Bedrock | xAI | Ollama | Mistral
 ```
 
 ---
@@ -255,6 +259,7 @@ console.log(res.thinking.text); // Full chain-of-thought
 | <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/openrouter.svg" height="18"> **OpenRouter**    | **Aggregator**, Chat, Streaming, Tools, Vision, Embeddings, **Reasoning**                             |
 | <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/xai.svg" height="18"> <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/xai-text.svg" height="12"> **xAI** | Chat, Streaming, Tools, Vision, Images, **Reasoning**                                                |
 | <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/ollama.svg" height="18"> **Ollama**            | **Local Inference**, Chat, Streaming, Tools, Vision, Embeddings                                       |
+| <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/mistral-color.svg" height="18"> **Mistral**        | Chat, Streaming, Tools, Vision, Embeddings, Transcription, Moderation, **Reasoning (Magistral)** |
 
 ---
 

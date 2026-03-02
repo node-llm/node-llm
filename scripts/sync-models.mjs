@@ -16,14 +16,16 @@ const SUPPORTED_PROVIDERS = [
   "openrouter",
   "ollama",
   "bedrock",
-  "xai"
+  "xai",
+  "mistral"
 ];
 
 const PROVIDER_MAP = {
   google: "gemini",
   "google-vertex": "gemini",
   vertexai: "gemini",
-  "amazon-bedrock": "bedrock"
+  "amazon-bedrock": "bedrock",
+  mistralai: "mistral"
 };
 
 // High-quality manual overrides for the most common models
@@ -98,8 +100,30 @@ const GOLDEN_ALIASES = {
   "llama-4-maverick": { bedrock: "meta.llama4-maverick-17b-instruct-v1:0" },
   "llama-4-scout": { bedrock: "meta.llama4-scout-17b-instruct-v1:0" },
   "mistral-large": {
+    mistral: "mistral-large-latest",
     bedrock: "mistral.mistral-large-2402-v1:0",
     openrouter: "mistralai/mistral-large"
+  },
+  "mistral-small": {
+    mistral: "mistral-small-latest",
+    openrouter: "mistralai/mistral-small"
+  },
+  "mistral-medium": {
+    mistral: "mistral-medium-latest"
+  },
+  codestral: {
+    mistral: "codestral-latest",
+    openrouter: "mistralai/codestral-latest"
+  },
+  "magistral-small": {
+    mistral: "magistral-small-latest"
+  },
+  "magistral-medium": {
+    mistral: "magistral-medium-latest"
+  },
+  "pixtral-large": {
+    mistral: "pixtral-large-latest",
+    openrouter: "mistralai/pixtral-large-latest"
   },
   "nova-pro": { bedrock: "amazon.nova-pro-v1:0" },
   "nova-lite": { bedrock: "amazon.nova-lite-v1:0" },

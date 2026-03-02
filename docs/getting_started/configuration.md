@@ -77,7 +77,8 @@ const llm = createLLM({
   geminiApiKey: process.env.GEMINI_API_KEY,
   deepseekApiKey: process.env.DEEPSEEK_API_KEY,
   openrouterApiKey: process.env.OPENROUTER_API_KEY,
-  xaiApiKey: process.env.XAI_API_KEY
+  xaiApiKey: process.env.XAI_API_KEY,
+  mistralApiKey: process.env.MISTRAL_API_KEY
 });
 ```
 
@@ -131,6 +132,9 @@ const llm = createLLM({
 | `openrouterApiBase`         | OpenRouter API base URL             | `process.env.OPENROUTER_API_BASE` |
 | `xaiApiKey`                 | xAI API key                         | `process.env.XAI_API_KEY`         |
 | `xaiApiBase`                | xAI API base URL                    | `process.env.XAI_API_BASE`        |
+| `mistralApiKey`             | Mistral API key                     | `process.env.MISTRAL_API_KEY`     |
+| `mistralApiBase`            | Mistral API base URL                | `process.env.MISTRAL_API_BASE`    |
+| `ollamaApiBase`             | Ollama API base URL                 | `process.env.OLLAMA_API_BASE`     |
 | `defaultChatModel`          | Default model for `.chat()`         | Provider default                  |
 | `defaultTranscriptionModel` | Default model for `.transcribe()`   | Provider default                  |
 | `defaultModerationModel`    | Default model for `.moderate()`     | Provider default                  |

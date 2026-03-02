@@ -7,6 +7,7 @@ import { registerOllamaProvider } from "./ollama/index.js";
 import { registerOpenRouterProvider } from "./openrouter/index.js";
 import { registerBedrockProvider } from "./bedrock/index.js";
 import { registerXAIProvider } from "./xai/index.js";
+import { registerMistralProvider } from "./mistral/index.js";
 
 import { NodeLLMConfig } from "../config.js";
 
@@ -92,5 +93,6 @@ export {
   registerOllamaProvider,
   registerOpenRouterProvider,
   registerBedrockProvider,
-  registerXAIProvider
+  registerXAIProvider,
+  registerMistralProvider
 };

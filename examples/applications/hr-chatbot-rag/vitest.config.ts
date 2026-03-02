@@ -19,6 +19,8 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
+      "@node-llm/core": path.resolve(__dirname, "../../../packages/core/dist/index.js"),
+      "@node-llm/testing": path.resolve(__dirname, "../../../packages/testing/dist/index.js"),
     },
   },
 });

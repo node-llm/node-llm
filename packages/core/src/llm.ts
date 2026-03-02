@@ -10,7 +10,8 @@ import {
   registerOllamaProvider,
   registerOpenRouterProvider,
   registerBedrockProvider,
-  registerXAIProvider
+  registerXAIProvider,
+  registerMistralProvider
 } from "./providers/registry.js";
 import { GeneratedImage } from "./image/GeneratedImage.js";
 import { ModelRegistry } from "./models/ModelRegistry.js";
@@ -57,7 +58,8 @@ const PROVIDER_REGISTRARS: Record<string, () => void> = {
   ollama: registerOllamaProvider,
   openrouter: registerOpenRouterProvider,
   bedrock: registerBedrockProvider,
-  xai: registerXAIProvider
+  xai: registerXAIProvider,
+  mistral: registerMistralProvider
 };
 
 export class NodeLLMCore {

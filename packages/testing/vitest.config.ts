@@ -1,6 +1,12 @@
 import { defineConfig } from "vitest/config";
+import path from "path";
 
 export default defineConfig({
+  resolve: {
+    alias: {
+      "@node-llm/core": path.resolve(__dirname, "../core/dist/index.js")
+    }
+  },
   test: {
     globals: true,
     exclude: [

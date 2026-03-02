@@ -116,7 +116,7 @@ for await (const chunk of chat.stream("Weather in Tokyo?")) {
 }
 ```
 
-**Supported Providers:** OpenAI, Anthropic, Gemini, DeepSeek
+**Supported Providers:** OpenAI, Anthropic, Gemini, DeepSeek, Mistral
 
 ---
 

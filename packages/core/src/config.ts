@@ -16,6 +16,8 @@ export interface NodeLLMConfig {
   openrouterApiBase?: string;
   xaiApiKey?: string;
   xaiApiBase?: string;
+  mistralApiKey?: string;
+  mistralApiBase?: string;
   // AWS Bedrock
   bedrockApiKey?: string; // Long-term API key (Bearer token)
   bedrockAccessKeyId?: string; // SigV4: AWS Access Key ID
@@ -47,6 +49,7 @@ import {
   DEFAULT_OPENROUTER_BASE_URL,
   DEFAULT_OLLAMA_BASE_URL,
   DEFAULT_XAI_BASE_URL,
+  DEFAULT_MISTRAL_BASE_URL,
   DEFAULT_BEDROCK_REGION,
   ToolExecutionMode
 } from "./constants.js";
@@ -65,6 +68,8 @@ export class Configuration implements NodeLLMConfig {
   private _openrouterApiBase?: string;
   private _xaiApiKey?: string;
   private _xaiApiBase?: string;
+  private _mistralApiKey?: string;
+  private _mistralApiBase?: string;
   private _bedrockApiKey?: string;
   private _bedrockAccessKeyId?: string;
   private _bedrockSecretAccessKey?: string;
@@ -172,6 +177,20 @@ export class Configuration implements NodeLLMConfig {
   }
   public set xaiApiBase(v: string | undefined) {
     this._xaiApiBase = v;
+  }
+
+  public get mistralApiKey(): string | undefined {
+    return this._mistralApiKey ?? process.env.MISTRAL_API_KEY?.trim();
+  }
+  public set mistralApiKey(v: string | undefined) {
+    this._mistralApiKey = v;
+  }
+
+  public get mistralApiBase(): string | undefined {
+    return this._mistralApiBase ?? process.env.MISTRAL_API_BASE?.trim() ?? DEFAULT_MISTRAL_BASE_URL;
+  }
+  public set mistralApiBase(v: string | undefined) {
+    this._mistralApiBase = v;
   }
 
   // AWS Bedrock configuration

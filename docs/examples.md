@@ -140,6 +140,21 @@ A comprehensive list of runnable examples available in the [examples/](https://g
 | [`examples/scripts/deepseek/safety/moderation.mjs`](https://github.com/node-llm/node-llm/blob/main/examples/scripts/deepseek/safety/moderation.mjs) | Content moderation |
 | [`examples/scripts/deepseek/multimodal/vision.mjs`](https://github.com/node-llm/node-llm/blob/main/examples/scripts/deepseek/multimodal/vision.mjs) | Vision (V3) |
 
+### Mistral Examples
+
+| Example | Description |
+| :--- | :--- |
+| [`examples/scripts/mistral/chat/basic.mjs`](https://github.com/node-llm/node-llm/blob/main/examples/scripts/mistral/chat/basic.mjs) | Basic chat with Mistral Large |
+| [`examples/scripts/mistral/chat/streaming.mjs`](https://github.com/node-llm/node-llm/blob/main/examples/scripts/mistral/chat/streaming.mjs) | Streaming chat responses |
+| [`examples/scripts/mistral/chat/reasoning.mjs`](https://github.com/node-llm/node-llm/blob/main/examples/scripts/mistral/chat/reasoning.mjs) | Magistral reasoning with thinking |
+| [`examples/scripts/mistral/chat/tools.mjs`](https://github.com/node-llm/node-llm/blob/main/examples/scripts/mistral/chat/tools.mjs) | Function calling with Mistral |
+| [`examples/scripts/mistral/chat/structured.mjs`](https://github.com/node-llm/node-llm/blob/main/examples/scripts/mistral/chat/structured.mjs) | Structured output with Zod |
+| [`examples/scripts/mistral/embeddings/create.mjs`](https://github.com/node-llm/node-llm/blob/main/examples/scripts/mistral/embeddings/create.mjs) | Creating text embeddings |
+| [`examples/scripts/mistral/multimodal/vision.mjs`](https://github.com/node-llm/node-llm/blob/main/examples/scripts/mistral/multimodal/vision.mjs) | Image analysis with Pixtral |
+| [`examples/scripts/mistral/multimodal/transcribe.mjs`](https://github.com/node-llm/node-llm/blob/main/examples/scripts/mistral/multimodal/transcribe.mjs) | Audio transcription |
+| [`examples/scripts/mistral/safety/moderation.mjs`](https://github.com/node-llm/node-llm/blob/main/examples/scripts/mistral/safety/moderation.mjs) | Content moderation |
+| [`examples/scripts/mistral/discovery/models.mjs`](https://github.com/node-llm/node-llm/blob/main/examples/scripts/mistral/discovery/models.mjs) | Listing available models |
+
 ### OpenRouter Examples
 
 | Example | Description |
