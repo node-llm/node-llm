@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.14.0] - 2026-03-03 (@node-llm/core)
+
+### Features
+
+- **Mistral Provider**: Full integration with Mistral AI API.
+  - Chat completions with streaming support.
+  - Magistral reasoning models with thinking/reasoning extraction.
+  - Tool calling and structured output with JSON schema.
+  - Embeddings via `mistral-embed` model.
+  - Vision support with Pixtral models.
+  - Audio transcription.
+  - Content moderation.
+  - Model discovery.
+- **Unified API**: Mistral follows the same provider-agnostic interface as OpenAI, Anthropic, Gemini, etc.
+
+### Documentation
+
+- Added Mistral provider guide with configuration and examples.
+- Updated all feature documentation to include Mistral support.
+- Added 10 Mistral example scripts covering chat, streaming, reasoning, tools, structured output, embeddings, vision, transcription, moderation, and model discovery.
+
 ## [1.12.0] - 2026-02-22 (@node-llm/core)
 
 ### Features
