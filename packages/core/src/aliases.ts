@@ -201,6 +201,9 @@ export default {
   "codestral-2508": {
     "openrouter": "mistralai/codestral-2508"
   },
+  "codestral-latest": {
+    "mistral": "codestral-latest"
+  },
   "codex-mini": {
     "openai": "codex-mini-latest"
   },
@@ -274,6 +277,9 @@ export default {
   "devstral-2-2512-free": {
     "openrouter": "mistralai/devstral-2512:free"
   },
+  "devstral-2-latest": {
+    "mistral": "devstral-medium-latest"
+  },
   "devstral-medium": {
     "mistral": "devstral-medium-2507",
     "openrouter": "mistralai/devstral-medium-2507"
@@ -311,6 +317,9 @@ export default {
   },
   "flux.2-pro": {
     "openrouter": "black-forest-labs/flux.2-pro"
+  },
+  "free-models-router": {
+    "openrouter": "openrouter/free"
   },
   "gemini-1.5-flash": {
     "gemini": "gemini-1.5-flash"
@@ -388,6 +397,12 @@ export default {
   "gemini-3-pro-preview": {
     "openrouter": "google/gemini-3-pro-preview",
     "gemini": "gemini-3-pro-preview"
+  },
+  "gemini-3.1-flash-image-preview": {
+    "gemini": "gemini-3.1-flash-image-preview"
+  },
+  "gemini-3.1-flash-lite-preview": {
+    "gemini": "gemini-3.1-flash-lite-preview"
   },
   "gemini-3.1-pro-preview": {
     "openrouter": "google/gemini-3.1-pro-preview",
@@ -586,10 +601,19 @@ export default {
     "openai": "gpt-5.2-pro"
   },
   "gpt-5.3-codex": {
+    "openrouter": "openai/gpt-5.3-codex",
     "openai": "gpt-5.3-codex"
   },
   "gpt-5.3-codex-spark": {
     "openai": "gpt-5.3-codex-spark"
+  },
+  "gpt-5.4": {
+    "openrouter": "openai/gpt-5.4",
+    "openai": "gpt-5.4"
+  },
+  "gpt-5.4-pro": {
+    "openrouter": "openai/gpt-5.4-pro",
+    "openai": "gpt-5.4-pro"
   },
   "gpt-oss-120b": {
     "bedrock": "openai.gpt-oss-120b-1:0",
@@ -685,6 +709,15 @@ export default {
   },
   "grok-4.1-fast-non-reasoning": {
     "xai": "grok-4-1-fast-non-reasoning"
+  },
+  "grok-4.20-experimental-non-reasoning": {
+    "xai": "grok-4.20-experimental-beta-0304-non-reasoning"
+  },
+  "grok-4.20-experimental-reasoning": {
+    "xai": "grok-4.20-experimental-beta-0304-reasoning"
+  },
+  "grok-4.20-multi-agent-experimental": {
+    "xai": "grok-4.20-multi-agent-experimental-beta-0304"
   },
   "grok-beta": {
     "xai": "grok-beta"
@@ -835,11 +868,23 @@ export default {
   "magistral-medium": {
     "mistral": "magistral-medium-latest"
   },
+  "magistral-medium-latest": {
+    "mistral": "magistral-medium-latest"
+  },
   "magistral-small": {
     "mistral": "magistral-small"
   },
   "mai-ds-r1-free": {
     "openrouter": "microsoft/mai-ds-r1:free"
+  },
+  "mercury": {
+    "openrouter": "inception/mercury"
+  },
+  "mercury-2": {
+    "openrouter": "inception/mercury-2"
+  },
+  "mercury-coder": {
+    "openrouter": "inception/mercury-coder"
   },
   "mimo-v2-flash": {
     "openrouter": "xiaomi/mimo-v2-flash"
@@ -867,10 +912,10 @@ export default {
   "ministral-3-8b": {
     "bedrock": "mistral.ministral-3-8b-instruct"
   },
-  "ministral-3b": {
+  "ministral-3b-latest": {
     "mistral": "ministral-3b-latest"
   },
-  "ministral-8b": {
+  "ministral-8b-latest": {
     "mistral": "ministral-8b-latest"
   },
   "mistral-7b": {
@@ -899,6 +944,9 @@ export default {
   "mistral-large-3": {
     "mistral": "mistral-large-2512"
   },
+  "mistral-large-latest": {
+    "mistral": "mistral-large-latest"
+  },
   "mistral-medium": {
     "mistral": "mistral-medium-latest"
   },
@@ -909,6 +957,9 @@ export default {
   "mistral-medium-3.1": {
     "mistral": "mistral-medium-2508",
     "openrouter": "mistralai/mistral-medium-3.1"
+  },
+  "mistral-medium-latest": {
+    "mistral": "mistral-medium-latest"
   },
   "mistral-nemo": {
     "mistral": "mistral-nemo"
@@ -931,6 +982,9 @@ export default {
   },
   "mistral-small-3.2-24b-instruct": {
     "openrouter": "mistralai/mistral-small-3.2-24b-instruct"
+  },
+  "mistral-small-latest": {
+    "mistral": "mistral-small-latest"
   },
   "mixtral-8x22b": {
     "mistral": "open-mixtral-8x22b"
@@ -1017,6 +1071,9 @@ export default {
   "pixtral-large": {
     "mistral": "pixtral-large-latest",
     "openrouter": "mistralai/pixtral-large-latest"
+  },
+  "pixtral-large-latest": {
+    "mistral": "pixtral-large-latest"
   },
   "qwen2.5-coder-32b-instruct": {
     "openrouter": "qwen/qwen-2.5-coder-32b-instruct"
