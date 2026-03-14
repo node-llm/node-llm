@@ -23,7 +23,7 @@ describe("Global MaxTokens Configuration", () => {
     expect((chat as unknown as { options: { maxTokens: number } }).options.maxTokens).toBe(16384);
   });
 
-  it("should use global maxTokens as fallback when not specified", () => {
+  it("should propagate global maxTokens to chat options", () => {
     const llm = createLLM({
       maxTokens: 2048,
       provider: "openai",
@@ -32,10 +32,8 @@ describe("Global MaxTokens Configuration", () => {
 
     const chat = llm.chat("gpt-4o");
 
-    // Chat should fall back to global config
-    expect(
-      (chat as unknown as { options: { maxTokens?: number } }).options.maxTokens
-    ).toBeUndefined();
+    // Chat should receive maxTokens from LLM config
+    expect((chat as unknown as { options: { maxTokens?: number } }).options.maxTokens).toBe(2048);
     expect(llm.config.maxTokens).toBe(2048);
   });
 });

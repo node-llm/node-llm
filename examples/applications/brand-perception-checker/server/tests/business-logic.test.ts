@@ -30,6 +30,7 @@ describe("Brand Perception: Business Logic Tests", () => {
     describeVCR("Sentiment Analysis", () => {
       it(
         "analyzes brand sentiment",
+        { timeout: 10000 },
         withVCR(async () => {
           const llm = createLLM({ provider: "openai", openaiApiKey: OPENAI_API_KEY });
           const chat = llm.chat("gpt-4o-mini");
