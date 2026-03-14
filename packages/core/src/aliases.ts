@@ -2,12 +2,6 @@ export default {
   "aurora-alpha": {
     "openrouter": "openrouter/aurora-alpha"
   },
-  "claude-2": {
-    "bedrock": "anthropic.claude-v2"
-  },
-  "claude-2.1": {
-    "bedrock": "anthropic.claude-v2:1"
-  },
   "claude-3-5-haiku": {
     "anthropic": "claude-3-5-haiku-20241022",
     "openrouter": "anthropic/claude-3.5-haiku",
@@ -70,11 +64,7 @@ export default {
   "claude-haiku-4.5-us": {
     "bedrock": "us.anthropic.claude-haiku-4-5-20251001-v1:0"
   },
-  "claude-instant": {
-    "bedrock": "anthropic.claude-instant-v1"
-  },
   "claude-opus-3": {
-    "bedrock": "anthropic.claude-3-opus-20240229-v1:0",
     "anthropic": "claude-3-opus-20240229"
   },
   "claude-opus-4": {
@@ -131,7 +121,6 @@ export default {
     "bedrock": "us.anthropic.claude-opus-4-6-v1"
   },
   "claude-sonnet-3": {
-    "bedrock": "anthropic.claude-3-sonnet-20240229-v1:0",
     "anthropic": "claude-3-sonnet-20240229"
   },
   "claude-sonnet-3.5": {
@@ -201,17 +190,11 @@ export default {
   "codestral-2508": {
     "openrouter": "mistralai/codestral-2508"
   },
+  "codestral-latest": {
+    "mistral": "codestral-latest"
+  },
   "codex-mini": {
     "openai": "codex-mini-latest"
-  },
-  "command": {
-    "bedrock": "cohere.command-text-v14"
-  },
-  "command-light": {
-    "bedrock": "cohere.command-light-text-v14"
-  },
-  "command-r": {
-    "bedrock": "cohere.command-r-plus-v1:0"
   },
   "deephermes-3-llama-3-8b-preview": {
     "openrouter": "nousresearch/deephermes-3-llama-3-8b-preview"
@@ -259,7 +242,7 @@ export default {
     "openrouter": "deepseek/deepseek-v3.1-terminus:exacto"
   },
   "deepseek-v3.2": {
-    "bedrock": "deepseek.v3.2-v1:0",
+    "bedrock": "deepseek.v3.2",
     "openrouter": "deepseek/deepseek-v3.2"
   },
   "deepseek-v3.2-speciale": {
@@ -268,11 +251,17 @@ export default {
   "devstral-2": {
     "mistral": "devstral-2512"
   },
+  "devstral-2-123b": {
+    "bedrock": "mistral.devstral-2-123b"
+  },
   "devstral-2-2512": {
     "openrouter": "mistralai/devstral-2512"
   },
   "devstral-2-2512-free": {
     "openrouter": "mistralai/devstral-2512:free"
+  },
+  "devstral-2-latest": {
+    "mistral": "devstral-medium-latest"
   },
   "devstral-medium": {
     "mistral": "devstral-medium-2507",
@@ -311,6 +300,9 @@ export default {
   },
   "flux.2-pro": {
     "openrouter": "black-forest-labs/flux.2-pro"
+  },
+  "free-models-router": {
+    "openrouter": "openrouter/free"
   },
   "gemini-1.5-flash": {
     "gemini": "gemini-1.5-flash"
@@ -388,6 +380,13 @@ export default {
   "gemini-3-pro-preview": {
     "openrouter": "google/gemini-3-pro-preview",
     "gemini": "gemini-3-pro-preview"
+  },
+  "gemini-3.1-flash-image-preview": {
+    "gemini": "gemini-3.1-flash-image-preview"
+  },
+  "gemini-3.1-flash-lite-preview": {
+    "openrouter": "google/gemini-3.1-flash-lite-preview",
+    "gemini": "gemini-3.1-flash-lite-preview"
   },
   "gemini-3.1-pro-preview": {
     "openrouter": "google/gemini-3.1-pro-preview",
@@ -586,10 +585,19 @@ export default {
     "openai": "gpt-5.2-pro"
   },
   "gpt-5.3-codex": {
+    "openrouter": "openai/gpt-5.3-codex",
     "openai": "gpt-5.3-codex"
   },
   "gpt-5.3-codex-spark": {
     "openai": "gpt-5.3-codex-spark"
+  },
+  "gpt-5.4": {
+    "openrouter": "openai/gpt-5.4",
+    "openai": "gpt-5.4"
+  },
+  "gpt-5.4-pro": {
+    "openrouter": "openai/gpt-5.4-pro",
+    "openai": "gpt-5.4-pro"
   },
   "gpt-oss-120b": {
     "bedrock": "openai.gpt-oss-120b-1:0",
@@ -686,6 +694,21 @@ export default {
   "grok-4.1-fast-non-reasoning": {
     "xai": "grok-4-1-fast-non-reasoning"
   },
+  "grok-4.20-beta": {
+    "openrouter": "x-ai/grok-4.20-beta"
+  },
+  "grok-4.20-beta-non-reasoning": {
+    "xai": "grok-4.20-beta-latest-non-reasoning"
+  },
+  "grok-4.20-beta-reasoning": {
+    "xai": "grok-4.20-beta-latest-reasoning"
+  },
+  "grok-4.20-multi---agent-beta": {
+    "openrouter": "x-ai/grok-4.20-multi-agent-beta"
+  },
+  "grok-4.20-multi-agent-beta": {
+    "xai": "grok-4.20-multi-agent-beta-latest"
+  },
   "grok-beta": {
     "xai": "grok-beta"
   },
@@ -696,6 +719,9 @@ export default {
   "grok-vision-beta": {
     "xai": "grok-vision-beta"
   },
+  "healer-alpha": {
+    "openrouter": "openrouter/healer-alpha"
+  },
   "hermes-3-405b-instruct-free": {
     "openrouter": "nousresearch/hermes-3-llama-3.1-405b:free"
   },
@@ -705,14 +731,11 @@ export default {
   "hermes-4-70b": {
     "openrouter": "nousresearch/hermes-4-70b"
   },
+  "hunter-alpha": {
+    "openrouter": "openrouter/hunter-alpha"
+  },
   "intellect-3": {
     "openrouter": "prime-intellect/intellect-3"
-  },
-  "jamba-1.5-large": {
-    "bedrock": "ai21.jamba-1-5-large-v1:0"
-  },
-  "jamba-1.5-mini": {
-    "bedrock": "ai21.jamba-1-5-mini-v1:0"
   },
   "kat-coder-pro-free": {
     "openrouter": "kwaipilot/kat-coder-pro:free"
@@ -774,11 +797,8 @@ export default {
     "bedrock": "meta.llama3-3-70b-instruct-v1:0",
     "openrouter": "meta-llama/llama-3.3-70b-instruct"
   },
-  "llama-3-70b-instruct": {
-    "bedrock": "meta.llama3-70b-instruct-v1:0"
-  },
-  "llama-3-8b-instruct": {
-    "bedrock": "meta.llama3-8b-instruct-v1:0"
+  "llama-3.1-405b-instruct": {
+    "bedrock": "meta.llama3-1-405b-instruct-v1:0"
   },
   "llama-3.1-405b-instruct-free": {
     "openrouter": "meta-llama/llama-3.1-405b-instruct:free"
@@ -835,11 +855,26 @@ export default {
   "magistral-medium": {
     "mistral": "magistral-medium-latest"
   },
+  "magistral-medium-latest": {
+    "mistral": "magistral-medium-latest"
+  },
   "magistral-small": {
     "mistral": "magistral-small"
   },
+  "magistral-small-1.2": {
+    "bedrock": "mistral.magistral-small-2509"
+  },
   "mai-ds-r1-free": {
     "openrouter": "microsoft/mai-ds-r1:free"
+  },
+  "mercury": {
+    "openrouter": "inception/mercury"
+  },
+  "mercury-2": {
+    "openrouter": "inception/mercury-2"
+  },
+  "mercury-coder": {
+    "openrouter": "inception/mercury-coder"
   },
   "mimo-v2-flash": {
     "openrouter": "xiaomi/mimo-v2-flash"
@@ -864,13 +899,16 @@ export default {
   "ministral-14b-3.0": {
     "bedrock": "mistral.ministral-3-14b-instruct"
   },
+  "ministral-3-3b": {
+    "bedrock": "mistral.ministral-3-3b-instruct"
+  },
   "ministral-3-8b": {
     "bedrock": "mistral.ministral-3-8b-instruct"
   },
-  "ministral-3b": {
+  "ministral-3b-latest": {
     "mistral": "ministral-3b-latest"
   },
-  "ministral-8b": {
+  "ministral-8b-latest": {
     "mistral": "ministral-8b-latest"
   },
   "mistral-7b": {
@@ -878,9 +916,6 @@ export default {
   },
   "mistral-7b-instruct-free": {
     "openrouter": "mistralai/mistral-7b-instruct:free"
-  },
-  "mistral-7b-instruct-v0.3": {
-    "bedrock": "mistral.mistral-7b-instruct-v0:2"
   },
   "mistral-embed": {
     "mistral": "mistral-embed"
@@ -893,11 +928,12 @@ export default {
   "mistral-large-2.1": {
     "mistral": "mistral-large-2411"
   },
-  "mistral-large-24.02": {
-    "bedrock": "mistral.mistral-large-2402-v1:0"
-  },
   "mistral-large-3": {
+    "bedrock": "mistral.mistral-large-3-675b-instruct",
     "mistral": "mistral-large-2512"
+  },
+  "mistral-large-latest": {
+    "mistral": "mistral-large-latest"
   },
   "mistral-medium": {
     "mistral": "mistral-medium-latest"
@@ -909,6 +945,9 @@ export default {
   "mistral-medium-3.1": {
     "mistral": "mistral-medium-2508",
     "openrouter": "mistralai/mistral-medium-3.1"
+  },
+  "mistral-medium-latest": {
+    "mistral": "mistral-medium-latest"
   },
   "mistral-nemo": {
     "mistral": "mistral-nemo"
@@ -932,14 +971,14 @@ export default {
   "mistral-small-3.2-24b-instruct": {
     "openrouter": "mistralai/mistral-small-3.2-24b-instruct"
   },
+  "mistral-small-latest": {
+    "mistral": "mistral-small-latest"
+  },
   "mixtral-8x22b": {
     "mistral": "open-mixtral-8x22b"
   },
   "mixtral-8x7b": {
     "mistral": "open-mixtral-8x7b"
-  },
-  "mixtral-8x7b-instruct-v0.1": {
-    "bedrock": "mistral.mixtral-8x7b-instruct-v0:1"
   },
   "molmo2-8b-free": {
     "openrouter": "allenai/molmo-2-8b:free"
@@ -970,6 +1009,9 @@ export default {
   },
   "nvidia-nemotron-nano-12b-v2-vl-bf16": {
     "bedrock": "nvidia.nemotron-nano-12b-v2"
+  },
+  "nvidia-nemotron-nano-3-30b": {
+    "bedrock": "nvidia.nemotron-nano-3-30b"
   },
   "nvidia-nemotron-nano-9b": {
     "bedrock": "nvidia.nemotron-nano-9b-v2",
@@ -1017,6 +1059,12 @@ export default {
   "pixtral-large": {
     "mistral": "pixtral-large-latest",
     "openrouter": "mistralai/pixtral-large-latest"
+  },
+  "pixtral-large-25.02": {
+    "bedrock": "mistral.pixtral-large-2502-v1:0"
+  },
+  "pixtral-large-latest": {
+    "mistral": "pixtral-large-latest"
   },
   "qwen2.5-coder-32b-instruct": {
     "openrouter": "qwen/qwen-2.5-coder-32b-instruct"
@@ -1171,9 +1219,6 @@ export default {
   },
   "text-embedding-ada-002": {
     "openai": "text-embedding-ada-002"
-  },
-  "titan-text-g1---express": {
-    "bedrock": "amazon.titan-text-express-v1:0:8k"
   },
   "trinity-large-preview": {
     "openrouter": "arcee-ai/trinity-large-preview:free"
