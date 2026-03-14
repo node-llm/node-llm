@@ -1,6 +1,5 @@
 import { Model } from "./types.js";
-// @ts-ignore - Node 20.9 requires 'assert', but TS 5.3+ enforces 'with'
-import modelsData from "./models.json" assert { type: "json" };
+import modelsData from "./models.json" with { type: "json" };
 import { PricingRegistry } from "./PricingRegistry.js";
 
 export class ModelRegistry {

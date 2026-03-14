@@ -48,7 +48,7 @@
     "url": "https://github.com/node-llm/node-llm/issues"
   },
   "engines": {
-    "node": ">=20.0.0"
+    "node": ">=20.10.0"
   },
   "files": [
     "dist",
