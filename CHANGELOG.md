@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.14.1] - 2026-03-14 (@node-llm/core)
+
+### Bug Fixes
+
+- **Config Propagation**: Fixed `requestTimeout`, `maxTokens`, and `maxToolCalls` not being passed from `createLLM()` config to `Chat` instances (fixes #47).
+- **Node.js 22+ Compatibility**: Changed JSON import syntax from `assert` to `with` for import attributes (requires Node.js 20.10+).
+
+### Security
+
+- Updated `rollup` to 4.59.0 to fix CVE path traversal vulnerability.
+- Updated `undici` to 7.24.1 to fix CVE-2026-1526 WebSocket DoS vulnerability.
+- Updated `flatted` to 3.4.1 to fix CVE DoS vulnerability.
+
 ## [1.14.0] - 2026-03-03 (@node-llm/core)
 
 ### Features
