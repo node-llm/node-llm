@@ -149,10 +149,13 @@ export class NodeLLMCore {
     const rawModel = model || this.defaults.chat || this.provider.defaultModel("chat");
     const resolvedModel = resolveModelAlias(rawModel, this.provider.id);
 
-    // Merge global middlewares with local ones
+    // Merge global middlewares with local ones, and pass instance config values
     const combinedOptions = {
       ...options,
-      middlewares: [...this.middlewares, ...(options.middlewares || [])]
+      middlewares: [...this.middlewares, ...(options.middlewares || [])],
+      requestTimeout: options.requestTimeout ?? this.config.requestTimeout,
+      maxTokens: options.maxTokens ?? this.config.maxTokens,
+      maxToolCalls: options.maxToolCalls ?? this.config.maxToolCalls
     };
 
     return new Chat(this.provider, resolvedModel, combinedOptions, this.retry);
