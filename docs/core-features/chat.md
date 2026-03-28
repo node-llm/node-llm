@@ -220,7 +220,27 @@ const creative = NodeLLM.chat("gpt-4o").withTemperature(0.9);
 
 ---
 
-## Lifecycle Events <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">Enhanced in v1.5.0</span>
+## Predicted Outputs (Latency Optimization) <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v1.15.0+</span>
+
+For tasks that involve minor edits to large existing texts (like code refactoring or document rewriting), you can significantly reduce latency using `.withPrediction(content)`.
+
+Providing the existing content as a "prediction" allows the model to intelligently skip unchanged portions of the response, focusing only on the generation of the deltas.
+
+```ts
+const originalCode = "function foo() { return true; }";
+
+const response = await chat
+  .withPrediction(originalCode)
+  .ask("Change this function to return false. Please use modern arrow syntax.");
+
+// OpenAI streams the known parts almost instantly!
+```
+
+**Note:** This feature is currently supported by OpenAI (`gpt-4o`, `gpt-4o-mini`). `NodeLLM` ensures your code remains portable by ignoring this field on providers that do not yet support output predictions.
+
+---
+
+## Lifecycle Events <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">Enhanced in v1.13.0</span>
 
 Hook into the chat lifecycle for logging, UI updates, audit trails, or debugging.
 

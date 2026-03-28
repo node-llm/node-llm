@@ -68,9 +68,14 @@ console.log(person.hobbies); // ["hiking", "coding"]
 
 You can also provide a raw JSON schema object if you prefer not to use Zod.
 
-**Note for OpenAI:** You must strictly follow OpenAI's requirements, such as setting `additionalProperties: false`.
+**Note for OpenAI:** By default, `NodeLLM` uses OpenAI's "Strict Mode" (which sets `strict: true` and `additionalProperties: false` in the schema). 
+
+You can configure this by setting the `strict` property to `false` in the [Schema constructor](/core-features/models.html#schema).
 
 ```ts
+// OpenAI 100% Strict Mode enabled automatically
+const response = await chat.withSchema(schema).ask("Generate a person");
+```
 const schema = {
   type: "object",
   properties: {

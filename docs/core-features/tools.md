@@ -62,6 +62,20 @@ const chat = llm.chat().withTool(WeatherTool);
 await chat.ask("What is the weather in SF?");
 ```
 
+### OpenAI Strict Mode
+
+For mission-critical tool definitions on OpenAI, you can enable **Strict Mode**. This ensures OpenAI's internal engine guarantees the schema is followed with zero hallucinations.
+
+```ts
+class WeatherTool extends Tool {
+  name = "get_weather";
+  strict = true; // Required: enforces additionalProperties: false and required fields
+  schema = z.object({ ... });
+}
+```
+
+When `strict = true` is set, `NodeLLM` automatically translates your Zod schema into a compliant OpenAI strict schema.
+
 ### Benefits
 
 - **No Boilerplate**: No need to write manual JSON schemas.
