@@ -48,6 +48,7 @@ model monitoring_events {
   cpuTime       Float?
   gcTime        Float?
   allocations   Int?
+  correctionRounds Int?
   payload       Json     // Stores metadata, tokens and optional content
   createdAt     DateTime @default(now())
   provider      String
