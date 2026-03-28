@@ -6,16 +6,17 @@ import { ToolResolvable } from "../chat/Tool.js";
 import { ThinkingConfig, ThinkingResult } from "../providers/Provider.js";
 import { Schema } from "../schema/Schema.js";
 import { NodeLLM, NodeLLMCore } from "../llm.js";
+import { Middleware } from "../types/Middleware.js";
 
 /**
  * A value that can be a static T or a function that returns T based on inputs.
  */
-export type LazyValue<T, I = any> = T | ((inputs: I) => T);
+export type LazyValue<T, I = Record<string, unknown>> = T | ((inputs: I) => T);
 
 /**
  * Configuration options for Agent.
  */
-export interface AgentConfig<I = any> {
+export interface AgentConfig<I = Record<string, unknown>> {
   /** The model ID to use (e.g., "gpt-4o") */
   model?: string;
 
@@ -57,20 +58,23 @@ export interface AgentConfig<I = any> {
 
   /** Optional initial inputs to resolve lazy config immediately */
   inputs?: I;
+
+  /** Middlewares for the agent's chat instance */
+  middlewares?: Middleware[];
 }
 
 /**
  * Base class for creating reusable, class-configured agents.
  */
 export abstract class Agent<
-  I extends Record<string, any> = Record<string, any>,
+  I extends Record<string, unknown> = Record<string, unknown>,
   S extends Record<string, unknown> = Record<string, unknown>
 > {
   // Static configuration properties - override these in subclasses
   static model?: string;
   static provider?: string;
-  static instructions?: LazyValue<string, any>;
-  static tools?: LazyValue<ToolResolvable[], any>;
+  static instructions?: LazyValue<string, Record<string, unknown>>;
+  static tools?: LazyValue<ToolResolvable[], Record<string, unknown>>;
   static temperature?: number;
   static thinking?: ThinkingConfig;
   static schema?: z.ZodType | Schema | Record<string, unknown>;
@@ -79,6 +83,7 @@ export abstract class Agent<
   static maxTokens?: number;
   static maxToolCalls?: number;
   static assumeModelExists?: boolean;
+  static middlewares?: Middleware[];
 
   /**
    * Explicitly declare which inputs this agent expects.
@@ -118,7 +123,7 @@ export abstract class Agent<
   /**
    * Run the agent immediately with a prompt.
    */
-  static async ask<I extends Record<string, any>, S extends Record<string, any>>(
+  static async ask<I extends Record<string, unknown>, S extends Record<string, unknown>>(
     this: new (overrides?: Partial<AgentConfig<I> & ChatOptions>) => Agent<I, S>,
     message: string,
     options?: AskOptions & { inputs?: I }
@@ -130,7 +135,7 @@ export abstract class Agent<
   /**
    * Stream the agent response immediately.
    */
-  static stream<I extends Record<string, any>, S extends Record<string, any>>(
+  static stream<I extends Record<string, unknown>, S extends Record<string, unknown>>(
     this: new (overrides?: Partial<AgentConfig<I> & ChatOptions>) => Agent<I, S>,
     message: string,
     options?: AskOptions & { inputs?: I }
@@ -163,7 +168,8 @@ export abstract class Agent<
       headers: { ...ctor.headers, ...overrides.headers },
       params: { ...ctor.params, ...overrides.params },
       thinking: overrides.thinking ?? ctor.thinking,
-      messages: overrides.messages
+      messages: overrides.messages,
+      middlewares: [...(ctor.middlewares || []), ...(overrides.middlewares || [])]
     };
 
     // Determine model
@@ -301,7 +307,7 @@ export abstract class Agent<
   /**
    * Hook called when a tool call starts.
    */
-  onToolCallStart(handler: (toolCall: any) => void | Promise<void>): this {
+  onToolCallStart(handler: (toolCall: unknown) => void | Promise<void>): this {
     this.chat.onToolCallStart(handler);
     return this;
   }
@@ -309,7 +315,7 @@ export abstract class Agent<
   /**
    * Hook called when a tool call ends.
    */
-  onToolCallEnd(handler: (toolCall: any, result: any) => void | Promise<void>): this {
+  onToolCallEnd(handler: (toolCall: unknown, result: unknown) => void | Promise<void>): this {
     this.chat.onToolCallEnd(handler);
     return this;
   }
@@ -317,7 +323,12 @@ export abstract class Agent<
   /**
    * Hook called when a tool call errors.
    */
-  onToolCallError(handler: (toolCall: any, error: Error) => any): this {
+  onToolCallError(
+    handler: (
+      toolCall: unknown,
+      error: Error
+    ) => "STOP" | "CONTINUE" | "RETRY" | void | Promise<"STOP" | "CONTINUE" | "RETRY" | void>
+  ): this {
     this.chat.onToolCallError(handler);
     return this;
   }
@@ -325,15 +336,17 @@ export abstract class Agent<
   /**
    * Hook called before a request.
    */
-  beforeRequest(handler: (messages: any[]) => any): this {
-    this.chat.beforeRequest(handler);
+  beforeRequest(handler: (messages: unknown[]) => Promise<unknown[] | void>): this {
+    this.chat.beforeRequest(handler as any);
     return this;
   }
 
   /**
    * Hook called after a response.
    */
-  afterResponse(handler: (response: ChatResponseString) => any): this {
+  afterResponse(
+    handler: (response: ChatResponseString) => Promise<ChatResponseString | void>
+  ): this {
     this.chat.afterResponse(handler);
     return this;
   }
@@ -388,14 +401,14 @@ export abstract class Agent<
  * Helper function to define an agent inline without creating a class.
  */
 export function defineAgent<
-  I extends Record<string, any> = Record<string, any>,
+  I extends Record<string, unknown> = Record<string, unknown>,
   S extends Record<string, unknown> = Record<string, unknown>
 >(config: AgentConfig<I>): new (overrides?: Partial<AgentConfig<I> & ChatOptions>) => Agent<I, S> {
   return class extends Agent<I, S> {
     static override model = config.model;
     static override provider = config.provider;
-    static override instructions = config.instructions;
-    static override tools = config.tools;
+    static override instructions = config.instructions as LazyValue<string, any>;
+    static override tools = config.tools as LazyValue<ToolResolvable[], any>;
     static override temperature = config.temperature;
     static override thinking = config.thinking;
     static override schema = config.schema;
@@ -404,5 +417,6 @@ export function defineAgent<
     static override maxTokens = config.maxTokens;
     static override maxToolCalls = config.maxToolCalls;
     static override assumeModelExists = config.assumeModelExists;
+    static override middlewares = config.middlewares;
   };
 }

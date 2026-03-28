@@ -1,5 +1,6 @@
 import { Middleware, MiddlewareContext, RequestDirective } from "../types/Middleware.js";
 import { ChatResponseString } from "../chat/ChatResponse.js";
+import { ToolCall } from "../chat/Tool.js";
 import { logger } from "../utils/logger.js";
 
 export interface SchemaSelfCorrectionOptions {
@@ -66,6 +67,35 @@ Please correct your output to strictly follow the schema and provided types.`
     logger.error(
       `[SchemaSelfCorrection] Max retries (${this.maxRetries}) reached for ${ctx.provider}/${ctx.model}.`
     );
+    return "CONTINUE";
+  }
+
+  async onToolCallError(
+    ctx: MiddlewareContext,
+    toolCall: ToolCall,
+    error: unknown
+  ): Promise<"CONTINUE" | "STOP" | "RETRY"> {
+    // Check if it's a validation error (ZodError)
+    if (error && typeof error === "object" && "name" in error && error.name === "ZodError") {
+      const currentRounds = (ctx.state.correctionRounds as number) || 0;
+
+      if (currentRounds < this.maxRetries) {
+        ctx.state.correctionRounds = currentRounds + 1;
+
+        logger.warn(
+          `[SchemaSelfCorrection] Tool validation failed for '${toolCall.function.name}'. ` +
+            `Round ${currentRounds + 1}/${this.maxRetries}.`
+        );
+
+        // We return CONTINUE here because Chat.ts already handles pushing the error to history
+        // BUT we could potentially change the error message to be more helpful!
+        // However, Chat.ts currently just takes the error.message.
+        // If we want to override the message, we'd need onToolCallError to return a descriptive RETRY or similar.
+        // Currently Chat.ts's onToolCallError only returns "CONTINUE" | "STOP" | "RETRY".
+        return "CONTINUE";
+      }
+    }
+
     return "CONTINUE";
   }
 }

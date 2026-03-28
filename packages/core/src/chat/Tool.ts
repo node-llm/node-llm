@@ -110,7 +110,13 @@ export abstract class Tool<T = Record<string, unknown>> {
    * Preserves ToolHalt instances for the execution loop to detect.
    */
   public async handler(args: T): Promise<string | ToolHalt> {
-    const result = await this.execute(args);
+    // 1. Runtime validation if Zod schema is provided
+    let validatedArgs = args;
+    if (this.schema instanceof z.ZodType) {
+      validatedArgs = this.schema.parse(args) as T;
+    }
+
+    const result = await this.execute(validatedArgs);
 
     // Preserve ToolHalt for the execution loop to handle
     if (result instanceof ToolHalt) {

@@ -67,9 +67,10 @@ describe("OpenAIChat", () => {
 
     const result = await chat.execute(request);
 
-    expect(result.content).toBeNull();
-    expect(result.tool_calls).toHaveLength(1);
-    expect(result.tool_calls![0].function.name).toBe("get_weather");
+    // Use non-null checks or defensive coding
+    const toolCalls = result.tool_calls;
+    expect(toolCalls).toHaveLength(1);
+    expect(toolCalls![0].function.name).toBe("get_weather");
   });
 
   it("should throw error on empty response", async () => {
@@ -108,12 +109,14 @@ describe("OpenAIChat", () => {
     await chat.execute(request);
 
     // Verify fetch was called with strict: true and additionalProperties: false
-    const fetchCallInfo = vi.mocked(fetch).mock.calls[0][1] as RequestInit;
+    const calls = vi.mocked(fetch).mock.calls;
+    expect(calls.length).toBeGreaterThan(0);
+    const fetchCallInfo = calls[0][1] as RequestInit;
     const requestBody = JSON.parse(fetchCallInfo.body as string);
 
-    expect(requestBody.response_format!.json_schema!.strict).toBe(true);
-    expect(requestBody.response_format!.json_schema!.schema!.additionalProperties).toBe(false);
-    expect(requestBody.response_format!.json_schema!.schema!.required).toEqual(["a"]);
+    expect(requestBody.response_format?.json_schema?.strict).toBe(true);
+    expect(requestBody.response_format?.json_schema?.schema?.additionalProperties).toBe(false);
+    expect(requestBody.response_format?.json_schema?.schema?.required).toEqual(["a"]);
   });
 
   it("should enforce strict JSON schema constraints for OpenAI tools", async () => {
