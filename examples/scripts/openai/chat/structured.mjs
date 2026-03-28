@@ -41,9 +41,18 @@ async function main() {
     additionalProperties: false
   };
 
+  const manualResponseFormat = {
+    type: "json_schema",
+    json_schema: {
+      name: "task_schema",
+      strict: true,
+      schema: manualSchema
+    }
+  };
+
   console.log("\n--- Structured Output (Manual JSON Schema) ---");
   const response2 = await chat
-    .withSchema(manualSchema)
+    .withRequestOptions({ responseFormat: manualResponseFormat })
     .ask("Create a high priority task for sending a weekly report by Friday.");
 
   console.log("Parsed Action Item:", response2.parsed.action_item);

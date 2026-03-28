@@ -8,6 +8,7 @@ import { fetchWithTimeout } from "../../utils/fetch.js";
 
 import { OpenAIProvider } from "./OpenAIProvider.js";
 import { mapSystemMessages } from "../utils.js";
+import { enforceStrictSchema } from "../../schema/strict.js";
 
 export class OpenAIStreaming {
   private readonly baseUrl: string;
@@ -54,11 +55,38 @@ export class OpenAIStreaming {
     }
 
     if (request.response_format) {
-      body.response_format = request.response_format;
+      if (
+        request.response_format.type === "json_schema" &&
+        request.response_format.json_schema?.schema &&
+        request.response_format.json_schema.strict === true
+      ) {
+        body.response_format = {
+          type: "json_schema",
+          json_schema: {
+            ...request.response_format.json_schema,
+            schema: enforceStrictSchema(
+              request.response_format.json_schema.schema as Record<string, unknown>
+            )
+          }
+        };
+      } else {
+        body.response_format = request.response_format;
+      }
     }
 
     if (request.tools && request.tools.length > 0) {
-      body.tools = request.tools;
+      body.tools = request.tools.map((tool) => {
+        if (tool.function.strict === true) {
+          return {
+            ...tool,
+            function: {
+              ...tool.function,
+              parameters: enforceStrictSchema(tool.function.parameters as Record<string, unknown>)
+            }
+          };
+        }
+        return tool;
+      });
     }
 
     if (request.thinking?.effort && request.thinking.effort !== "none") {

@@ -15,6 +15,7 @@ export interface ToolDefinition {
   function: {
     name: string;
     description?: string;
+    strict?: boolean;
     parameters: Record<string, unknown>;
   };
   handler?: (args: unknown) => Promise<string | ToolHalt>;
@@ -72,6 +73,12 @@ export abstract class Tool<T = Record<string, unknown>> {
    * Can be a Zod object (for auto-schema + type safety) or a raw JSON Schema.
    */
   public abstract schema: z.ZodObject<z.ZodRawShape> | Record<string, unknown>;
+
+  /**
+   * Whether to enforce strict JSON schema constraints for OpenAI and similar providers.
+   * When true, additionalProperties: false and full required arrays are automatically applied.
+   */
+  public strict?: boolean;
 
   /**
    * The core logic for the tool.
@@ -136,6 +143,7 @@ export abstract class Tool<T = Record<string, unknown>> {
       function: {
         name: this.name,
         description: this.description,
+        strict: this.strict,
         parameters: parameters as Record<string, unknown>
       },
       handler: (args: unknown) => this.handler(args as T)

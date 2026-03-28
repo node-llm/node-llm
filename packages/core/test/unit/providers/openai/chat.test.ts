@@ -69,7 +69,7 @@ describe("OpenAIChat", () => {
 
     expect(result.content).toBeNull();
     expect(result.tool_calls).toHaveLength(1);
-    expect(result.tool_calls![0].function.name).toBe("get_weather");
+    expect(result.tool_calls?.[0]?.function.name).toBe("get_weather");
   });
 
   it("should throw error on empty response", async () => {
@@ -81,5 +81,74 @@ describe("OpenAIChat", () => {
     });
 
     await expect(chat.execute(request)).rejects.toThrow("OpenAI returned empty response");
+  });
+
+  it("should enforce strict JSON schema constraints for OpenAI structured outputs", async () => {
+    const request: ChatRequest = {
+      model: "gpt-4o",
+      messages: [{ role: "user", content: "Extract data" }],
+      response_format: {
+        type: "json_schema",
+        json_schema: {
+          name: "test_schema",
+          strict: true,
+          schema: {
+            type: "object",
+            properties: { a: { type: "string" } }
+          }
+        }
+      }
+    };
+
+    (fetch as unknown as Mock).mockResolvedValue({
+      ok: true,
+      json: () => Promise.resolve({ choices: [{ message: { content: "{}" } }] })
+    });
+
+    await chat.execute(request);
+
+    // Verify fetch was called with strict: true and additionalProperties: false
+    const fetchCallInfo = vi.mocked(fetch).mock.calls[0][1] as RequestInit;
+    const requestBody = JSON.parse(fetchCallInfo.body as string);
+
+    expect(requestBody.response_format?.json_schema?.strict).toBe(true);
+    expect(requestBody.response_format?.json_schema?.schema?.additionalProperties).toBe(false);
+    expect(requestBody.response_format?.json_schema?.schema?.required).toEqual(["a"]);
+  });
+
+  it("should enforce strict JSON schema constraints for OpenAI tools", async () => {
+    const request: ChatRequest = {
+      model: "gpt-4o",
+      messages: [{ role: "user", content: "Weather" }],
+      tools: [
+        {
+          type: "function",
+          function: {
+            name: "get_weather",
+            strict: true,
+            parameters: {
+              type: "object",
+              properties: { location: { type: "string" } }
+            }
+          }
+        }
+      ]
+    };
+
+    (fetch as unknown as Mock).mockResolvedValue({
+      ok: true,
+      json: () => Promise.resolve({ choices: [{ message: { content: "{}" } }] })
+    });
+
+    await chat.execute(request);
+
+    // Verify fetch was called with strict formatting on the tool parameters
+    const fetchCallInfo = vi.mocked(fetch).mock.calls[0][1] as RequestInit;
+    const requestBody = JSON.parse(fetchCallInfo.body as string);
+
+    const tool = requestBody.tools[0];
+    expect(tool.function.strict).toBe(true);
+    expect(tool.function.parameters?.additionalProperties).toBe(false);
+    expect(tool.function.parameters?.required).toEqual(["location"]);
   });
 });
