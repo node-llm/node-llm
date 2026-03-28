@@ -11,12 +11,12 @@ import { Middleware } from "../types/Middleware.js";
 /**
  * A value that can be a static T or a function that returns T based on inputs.
  */
-export type LazyValue<T, I = Record<string, unknown>> = T | ((inputs: I) => T);
+export type LazyValue<T, I = Record<string, any>> = T | ((inputs: I) => T);
 
 /**
  * Configuration options for Agent.
  */
-export interface AgentConfig<I = Record<string, unknown>> {
+export interface AgentConfig<I = Record<string, any>> {
   /** The model ID to use (e.g., "gpt-4o") */
   model?: string;
 
@@ -67,14 +67,14 @@ export interface AgentConfig<I = Record<string, unknown>> {
  * Base class for creating reusable, class-configured agents.
  */
 export abstract class Agent<
-  I extends Record<string, unknown> = Record<string, unknown>,
+  I extends Record<string, any> = Record<string, any>,
   S extends Record<string, unknown> = Record<string, unknown>
 > {
   // Static configuration properties - override these in subclasses
   static model?: string;
   static provider?: string;
-  static instructions?: LazyValue<string, Record<string, unknown>>;
-  static tools?: LazyValue<ToolResolvable[], Record<string, unknown>>;
+  static instructions?: LazyValue<string, Record<string, any>>;
+  static tools?: LazyValue<ToolResolvable[], Record<string, any>>;
   static temperature?: number;
   static thinking?: ThinkingConfig;
   static schema?: z.ZodType | Schema | Record<string, unknown>;
@@ -123,7 +123,7 @@ export abstract class Agent<
   /**
    * Run the agent immediately with a prompt.
    */
-  static async ask<I extends Record<string, unknown>, S extends Record<string, unknown>>(
+  static async ask<I extends Record<string, any>, S extends Record<string, any>>(
     this: new (overrides?: Partial<AgentConfig<I> & ChatOptions>) => Agent<I, S>,
     message: string,
     options?: AskOptions & { inputs?: I }
@@ -135,7 +135,7 @@ export abstract class Agent<
   /**
    * Stream the agent response immediately.
    */
-  static stream<I extends Record<string, unknown>, S extends Record<string, unknown>>(
+  static stream<I extends Record<string, any>, S extends Record<string, any>>(
     this: new (overrides?: Partial<AgentConfig<I> & ChatOptions>) => Agent<I, S>,
     message: string,
     options?: AskOptions & { inputs?: I }
@@ -401,7 +401,7 @@ export abstract class Agent<
  * Helper function to define an agent inline without creating a class.
  */
 export function defineAgent<
-  I extends Record<string, unknown> = Record<string, unknown>,
+  I extends Record<string, any> = Record<string, any>,
   S extends Record<string, unknown> = Record<string, unknown>
 >(config: AgentConfig<I>): new (overrides?: Partial<AgentConfig<I> & ChatOptions>) => Agent<I, S> {
   return class extends Agent<I, S> {
