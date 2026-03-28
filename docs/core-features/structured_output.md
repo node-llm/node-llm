@@ -140,3 +140,38 @@ const companySchema = z.object({
 
 const response = await chat.withSchema(companySchema).ask("Generate a small tech startup");
 ```
+
+---
+
+## 🛡️ Automating Schema Correction (Middleware)
+
+Even with strict schemas, non-OpenAI models (like Claude, Gemini, or local models) can occasionally hallucinate invalid JSON or skip required fields.
+
+You can use the **Schema Self-Correction Middleware** to handle this automatically. If validation fails, `NodeLLM` will catch the error, send it back to the LLM as feedback, and retry the request up to `maxRetries` times.
+
+### Usage
+
+```ts
+import { NodeLLM, SchemaSelfCorrection, z } from "@node-llm/core";
+
+const schema = z.object({ age: z.number() });
+
+const chat = NodeLLM.chat("claude-3-5-sonnet", {
+  schema,
+  // Add the self-correction middleware
+  middlewares: [
+    SchemaSelfCorrection({ maxRetries: 2 })
+  ]
+});
+
+// If Claude returns { "age": "30" } (string), the middleware 
+// will automatically re-prompt: "Error: Expected number, received string at 'age'. Please fix."
+const response = await chat.ask("Get age");
+
+console.log(response.data.age); // Guaranteed to be a number or throws after max retries
+```
+
+### Why use this?
+- **Reliability**: Turn every provider into a "Strict Output" provider.
+- **Clean Logic**: No more manual `try/catch` and retry loops in your application code.
+- **Feedback Loop**: Providing the exact Zod error to the LLM is more effective than generic "Fix this" prompts.

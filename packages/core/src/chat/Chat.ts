@@ -29,7 +29,12 @@ import { ConfigurationError } from "../errors/index.js";
 import { ChatValidator } from "./Validation.js";
 import { ToolHandler } from "./ToolHandler.js";
 import { logger } from "../utils/logger.js";
-import { Middleware, MiddlewareContext, ToolErrorDirective } from "../types/Middleware.js";
+import {
+  Middleware,
+  MiddlewareContext,
+  ToolErrorDirective,
+  RequestDirective
+} from "../types/Middleware.js";
 import { runMiddleware } from "../utils/middleware-runner.js";
 
 export interface AskOptions {
@@ -458,274 +463,69 @@ export class Chat<S = unknown> {
       // 1. onRequest Hook
       await runMiddleware(this.middlewares, "onRequest", context);
 
-      // Re-read mutable context
-      const messagesToUse = context.messages || [];
-
-      const executeOptions = {
-        model: this.model,
-        messages: messagesToUse,
-        tools: this.options.tools as ToolDefinition[],
-        temperature: options?.temperature ?? this.options.temperature,
-        max_tokens: options?.maxTokens ?? this.options.maxTokens ?? config.maxTokens,
-        headers: { ...this.options.headers, ...options?.headers },
-        response_format: responseFormat, // Pass to provider
-        requestTimeout:
-          options?.requestTimeout ?? this.options.requestTimeout ?? config.requestTimeout,
-        thinking: options?.thinking ?? this.options.thinking,
-        prediction: options?.prediction ?? this.options.prediction,
-        signal: options?.signal,
-        ...this.options.params
-      };
-
-      // --- Content Policy Hooks (Input) ---
-      if (this.options.onBeforeRequest) {
-        const result = await this.options.onBeforeRequest(executeOptions.messages);
-        if (result) {
-          executeOptions.messages = result;
-        }
-      }
-
+      let assistantMessage: ChatResponseString;
+      let finalResponse: ChatResponseString & { data: S };
+      let correctionAttempt = 0;
       const totalUsage: Usage = { input_tokens: 0, output_tokens: 0, total_tokens: 0 };
-      const trackUsage = (u?: Usage) => {
-        if (u) {
-          // Fallback cost calculation if provider didn't return it
-          if (u.cost === undefined) {
-            const withCost = ModelRegistry.calculateCost(u, this.model, this.provider.id);
-            u.cost = (withCost as Usage).cost;
-            u.input_cost = (withCost as Usage).input_cost;
-            u.output_cost = (withCost as Usage).output_cost;
-          }
 
-          totalUsage.input_tokens += u.input_tokens;
-          totalUsage.output_tokens += u.output_tokens;
-          totalUsage.total_tokens += u.total_tokens;
-          if (u.cached_tokens) {
-            totalUsage.cached_tokens = (totalUsage.cached_tokens ?? 0) + u.cached_tokens;
-          }
-          if (u.cost !== undefined) {
-            totalUsage.cost = (totalUsage.cost ?? 0) + u.cost;
-          }
-          if (u.input_cost !== undefined) {
-            totalUsage.input_cost = (totalUsage.input_cost ?? 0) + u.input_cost;
-          }
-          if (u.output_cost !== undefined) {
-            totalUsage.output_cost = (totalUsage.output_cost ?? 0) + u.output_cost;
-          }
-        }
-      };
-
-      // First round
-      if (this.options.onNewMessage) this.options.onNewMessage();
-      let response = await this.executor.executeChat(executeOptions);
-      trackUsage(response.usage);
-
-      let assistantMessage = new ChatResponseString(
-        response.content ?? "",
-        response.usage ?? { input_tokens: 0, output_tokens: 0, total_tokens: 0 },
-        this.model,
-        this.provider.id,
-        response.thinking,
-        response.reasoning,
-        response.tool_calls,
-        response.finish_reason,
-        this.options.schema
-      );
-
-      // --- Content Policy Hooks (Output - Turn 1) ---
-      if (this.options.onAfterResponse) {
-        const result = await this.options.onAfterResponse(assistantMessage);
-        if (result) {
-          assistantMessage = result;
-        }
-      }
-
-      this.messages.push({
-        role: "assistant",
-        content: assistantMessage?.toString() || null,
-        tool_calls: response.tool_calls,
-        usage: response.usage
-      });
-
-      if (this.options.onEndMessage && (!response.tool_calls || response.tool_calls.length === 0)) {
-        this.options.onEndMessage(assistantMessage);
-      }
-
-      const maxToolCalls = options?.maxToolCalls ?? this.options.maxToolCalls ?? 5;
-      let stepCount = 0;
-      let haltTriggered = false;
-
-      while (response.tool_calls && response.tool_calls.length > 0 && !haltTriggered) {
-        // Dry-run mode: stop after proposing tools
-        if (!ToolHandler.shouldExecuteTools(response.tool_calls, this.options.toolExecution)) {
-          break;
-        }
-
-        stepCount++;
-        if (stepCount > maxToolCalls) {
-          throw new Error(`[NodeLLM] Maximum tool execution calls (${maxToolCalls}) exceeded.`);
-        }
-
-        for (const toolCall of response.tool_calls) {
-          // Human-in-the-loop: check for approval
-          if (this.options.toolExecution === ToolExecutionMode.CONFIRM) {
-            const approved = await ToolHandler.requestToolConfirmation(
-              toolCall,
-              this.options.onConfirmToolCall
-            );
-            if (!approved) {
-              this.messages.push(
-                this.provider.formatToolResultMessage(toolCall.id, "Action cancelled by user.")
-              );
-              continue;
-            }
-          }
-
-          // 2. onToolCallStart Hook
-          await runMiddleware(this.middlewares, "onToolCallStart", context, toolCall);
-
-          try {
-            const toolResult = await ToolHandler.execute(
-              toolCall,
-              this.options.tools as unknown as ToolDefinition[],
-              this.options.onToolCallStart,
-              this.options.onToolCallEnd
-            );
-
-            // 3. onToolCallEnd Hook
-            await runMiddleware(
-              this.middlewares,
-              "onToolCallEnd",
-              context,
-              toolCall,
-              toolResult.content
-            );
-
-            this.messages.push(
-              this.provider.formatToolResultMessage(toolResult.tool_call_id, toolResult.content)
-            );
-
-            // Check if tool signaled a halt - stop the agentic loop
-            if (toolResult.halted) {
-              haltTriggered = true;
-              // Create final response from halt content
-              assistantMessage = new ChatResponseString(
-                toolResult.content,
-                totalUsage,
-                this.model,
-                this.provider.id,
-                undefined,
-                undefined,
-                undefined,
-                "tool_halt"
-              );
-              if (this.options.onEndMessage) {
-                this.options.onEndMessage(assistantMessage);
-              }
-              break; // Exit the for loop
-            }
-          } catch (error: unknown) {
-            let currentError: unknown = error;
-
-            // 4. onToolCallError Hook
-            const middlewareDirective = await runMiddleware<ToolErrorDirective>(
-              this.middlewares,
-              "onToolCallError",
-              context,
-              toolCall,
-              currentError
-            );
-
-            const directive =
-              middlewareDirective ||
-              (await this.options.onToolCallError?.(toolCall, currentError as Error));
-
-            if (directive === "STOP") {
-              throw currentError;
-            }
-            if (directive === "RETRY") {
-              // ... retry logic (simplified: recurse or duplicate logic? adhering to original logic)
-              // Original logic duplicated the execution block. For brevity in this replacement, I'll simplified retry to "try once more"
-              try {
-                // Retry Hook? Maybe skip start hook on retry or re-run?
-                // Let's assume onToolCallStart fires again for cleanliness?
-                // Or just execute directly to match existing behavior.
-                // Existing logs show we just call ToolHandler.execute again.
-                const toolResult = await ToolHandler.execute(
-                  toolCall,
-                  this.options.tools as unknown as ToolDefinition[],
-                  this.options.onToolCallStart,
-                  this.options.onToolCallEnd
-                );
-                await runMiddleware(
-                  this.middlewares,
-                  "onToolCallEnd",
-                  context,
-                  toolCall,
-                  toolResult.content
-                );
-                this.messages.push(
-                  this.provider.formatToolResultMessage(toolResult.tool_call_id, toolResult.content)
-                );
-                continue;
-              } catch (retryError) {
-                currentError = retryError;
-                await runMiddleware(
-                  this.middlewares,
-                  "onToolCallError",
-                  context,
-                  toolCall,
-                  currentError
-                );
-              }
-            }
-
-            this.messages.push(
-              this.provider.formatToolResultMessage(
-                toolCall.id,
-                `Fatal error executing tool '${toolCall.function.name}': ${(currentError as Error).message}`,
-                { isError: true }
-              )
-            );
-
-            if (directive === "CONTINUE") {
-              continue;
-            }
-
-            // Default short-circuit logic
-            const errorObj = currentError as { fatal?: boolean; status?: number; message?: string };
-            const isFatal =
-              errorObj.fatal === true || errorObj.status === 401 || errorObj.status === 403;
-
-            if (isFatal) {
-              throw currentError;
-            }
-
-            logger.error(
-              `Tool execution failed for '${toolCall.function.name}':`,
-              currentError as Error
-            );
-          }
-        }
-
-        // If halt was triggered, exit the while loop immediately
-        if (haltTriggered) {
-          break;
-        }
-
-        response = await this.executor.executeChat({
+      // Self-Correction Loop
+      while (true) {
+        // Prepare execution options
+        const messagesToUse = context.messages || [];
+        const executeOptions = {
           model: this.model,
-          messages: [...this.systemMessages, ...this.messages], // Use updated history
+          messages: messagesToUse,
           tools: this.options.tools as ToolDefinition[],
           temperature: options?.temperature ?? this.options.temperature,
           max_tokens: options?.maxTokens ?? this.options.maxTokens ?? config.maxTokens,
-          headers: this.options.headers,
+          headers: { ...this.options.headers, ...options?.headers },
           response_format: responseFormat, // Pass to provider
           requestTimeout:
             options?.requestTimeout ?? this.options.requestTimeout ?? config.requestTimeout,
+          thinking: options?.thinking ?? this.options.thinking,
           prediction: options?.prediction ?? this.options.prediction,
           signal: options?.signal,
           ...this.options.params
-        });
+        };
+
+        // --- Content Policy Hooks (Input) ---
+        if (this.options.onBeforeRequest) {
+          const result = await this.options.onBeforeRequest(executeOptions.messages);
+          if (result) {
+            executeOptions.messages = result;
+          }
+        }
+
+        const trackUsage = (u?: Usage) => {
+          if (u) {
+            if (u.cost === undefined) {
+              const withCost = ModelRegistry.calculateCost(u, this.model, this.provider.id);
+              u.cost = (withCost as Usage).cost;
+              u.input_cost = (withCost as Usage).input_cost;
+              u.output_cost = (withCost as Usage).output_cost;
+            }
+
+            totalUsage.input_tokens += u.input_tokens;
+            totalUsage.output_tokens += u.output_tokens;
+            totalUsage.total_tokens += u.total_tokens;
+            if (u.cached_tokens) {
+              totalUsage.cached_tokens = (totalUsage.cached_tokens ?? 0) + u.cached_tokens;
+            }
+            if (u.cost !== undefined) {
+              totalUsage.cost = (totalUsage.cost ?? 0) + u.cost;
+            }
+            if (u.input_cost !== undefined) {
+              totalUsage.input_cost = (totalUsage.input_cost ?? 0) + u.input_cost;
+            }
+            if (u.output_cost !== undefined) {
+              totalUsage.output_cost = (totalUsage.output_cost ?? 0) + u.output_cost;
+            }
+          }
+        };
+
+        // Start generation
+        if (this.options.onNewMessage) this.options.onNewMessage();
+        let response = await this.executor.executeChat(executeOptions);
         trackUsage(response.usage);
 
         assistantMessage = new ChatResponseString(
@@ -740,11 +540,15 @@ export class Chat<S = unknown> {
           this.options.schema
         );
 
+        // --- Content Policy Hooks (Output - Turn 1) ---
         if (this.options.onAfterResponse) {
           const result = await this.options.onAfterResponse(assistantMessage);
-          if (result) assistantMessage = result;
+          if (result) {
+            assistantMessage = result;
+          }
         }
 
+        // Add to history (temporary, might be rolled back on retry)
         this.messages.push({
           role: "assistant",
           content: assistantMessage?.toString() || null,
@@ -758,27 +562,248 @@ export class Chat<S = unknown> {
         ) {
           this.options.onEndMessage(assistantMessage);
         }
+
+        const maxToolCalls = options?.maxToolCalls ?? this.options.maxToolCalls ?? 5;
+        let stepCount = 0;
+        let haltTriggered = false;
+
+        // Tool Calling Loop
+        while (response.tool_calls && response.tool_calls.length > 0 && !haltTriggered) {
+          if (!ToolHandler.shouldExecuteTools(response.tool_calls, this.options.toolExecution)) {
+            break;
+          }
+
+          stepCount++;
+          if (stepCount > maxToolCalls) {
+            throw new Error(`[NodeLLM] Maximum tool execution calls (${maxToolCalls}) exceeded.`);
+          }
+
+          for (const toolCall of response.tool_calls) {
+            if (this.options.toolExecution === ToolExecutionMode.CONFIRM) {
+              const approved = await ToolHandler.requestToolConfirmation(
+                toolCall,
+                this.options.onConfirmToolCall
+              );
+              if (!approved) {
+                this.messages.push(
+                  this.provider.formatToolResultMessage(toolCall.id, "Action cancelled by user.")
+                );
+                continue;
+              }
+            }
+
+            await runMiddleware(this.middlewares, "onToolCallStart", context, toolCall);
+
+            try {
+              const toolResult = await ToolHandler.execute(
+                toolCall,
+                this.options.tools as unknown as ToolDefinition[],
+                this.options.onToolCallStart,
+                this.options.onToolCallEnd
+              );
+
+              await runMiddleware(
+                this.middlewares,
+                "onToolCallEnd",
+                context,
+                toolCall,
+                toolResult.content
+              );
+
+              this.messages.push(
+                this.provider.formatToolResultMessage(toolResult.tool_call_id, toolResult.content)
+              );
+
+              if (toolResult.halted) {
+                haltTriggered = true;
+                assistantMessage = new ChatResponseString(
+                  toolResult.content,
+                  totalUsage,
+                  this.model,
+                  this.provider.id,
+                  undefined,
+                  undefined,
+                  undefined,
+                  "tool_halt"
+                );
+                if (this.options.onEndMessage) {
+                  this.options.onEndMessage(assistantMessage);
+                }
+                break;
+              }
+            } catch (error: unknown) {
+              let currentError: unknown = error;
+              const middlewareDirective = await runMiddleware<ToolErrorDirective>(
+                this.middlewares,
+                "onToolCallError",
+                context,
+                toolCall,
+                currentError
+              );
+
+              const directive =
+                middlewareDirective ||
+                (await this.options.onToolCallError?.(toolCall, currentError as Error));
+
+              if (directive === "STOP") throw currentError;
+              if (directive === "RETRY") {
+                try {
+                  const toolResult = await ToolHandler.execute(
+                    toolCall,
+                    this.options.tools as unknown as ToolDefinition[],
+                    this.options.onToolCallStart,
+                    this.options.onToolCallEnd
+                  );
+                  await runMiddleware(
+                    this.middlewares,
+                    "onToolCallEnd",
+                    context,
+                    toolCall,
+                    toolResult.content
+                  );
+                  this.messages.push(
+                    this.provider.formatToolResultMessage(
+                      toolResult.tool_call_id,
+                      toolResult.content
+                    )
+                  );
+                  continue;
+                } catch (retryError) {
+                  currentError = retryError;
+                  await runMiddleware(
+                    this.middlewares,
+                    "onToolCallError",
+                    context,
+                    toolCall,
+                    currentError
+                  );
+                }
+              }
+
+              this.messages.push(
+                this.provider.formatToolResultMessage(
+                  toolCall.id,
+                  `Fatal error executing tool '${toolCall.function.name}': ${(currentError as Error).message}`,
+                  { isError: true }
+                )
+              );
+
+              if (directive === "CONTINUE") continue;
+
+              const errorObj = currentError as { fatal?: boolean; status?: number };
+              if (errorObj.fatal || errorObj.status === 401 || errorObj.status === 403)
+                throw currentError;
+              logger.error(`Tool execution failed:`, currentError as Error);
+            }
+          }
+
+          if (haltTriggered) break;
+
+          response = await this.executor.executeChat({
+            model: this.model,
+            messages: [...this.systemMessages, ...this.messages],
+            tools: this.options.tools as ToolDefinition[],
+            temperature: options?.temperature ?? this.options.temperature,
+            max_tokens: options?.maxTokens ?? this.options.maxTokens ?? config.maxTokens,
+            headers: this.options.headers,
+            response_format: responseFormat,
+            requestTimeout:
+              options?.requestTimeout ?? this.options.requestTimeout ?? config.requestTimeout,
+            prediction: options?.prediction ?? this.options.prediction,
+            signal: options?.signal,
+            ...this.options.params
+          });
+          trackUsage(response.usage);
+
+          assistantMessage = new ChatResponseString(
+            response.content ?? "",
+            response.usage ?? { input_tokens: 0, output_tokens: 0, total_tokens: 0 },
+            this.model,
+            this.provider.id,
+            response.thinking,
+            response.reasoning,
+            response.tool_calls,
+            response.finish_reason,
+            this.options.schema
+          );
+
+          if (this.options.onAfterResponse) {
+            const result = await this.options.onAfterResponse(assistantMessage);
+            if (result) assistantMessage = result;
+          }
+
+          this.messages.push({
+            role: "assistant",
+            content: assistantMessage?.toString() || null,
+            tool_calls: response.tool_calls,
+            usage: response.usage
+          });
+
+          if (
+            this.options.onEndMessage &&
+            (!response.tool_calls || response.tool_calls.length === 0)
+          ) {
+            this.options.onEndMessage(assistantMessage);
+          }
+        }
+
+        finalResponse = new ChatResponseString(
+          assistantMessage.toString() || "",
+          totalUsage,
+          this.model,
+          this.provider.id,
+          assistantMessage.thinking,
+          assistantMessage.reasoning,
+          response.tool_calls,
+          assistantMessage.finish_reason,
+          this.options.schema
+        ) as unknown as ChatResponseString & { data: S };
+
+        // 5. onResponse Hook
+        const requestDirective = await runMiddleware<RequestDirective>(
+          this.middlewares,
+          "onResponse",
+          context,
+          finalResponse
+        );
+
+        if (requestDirective && typeof requestDirective === "object") {
+          if (requestDirective.action === "RETRY") {
+            // Push feedback to history and try again
+            this.messages.push({
+              role: "user",
+              content: requestDirective.message
+            });
+            correctionAttempt++;
+            continue;
+          }
+          if (requestDirective.action === "REPLACE") {
+            return requestDirective.response as ChatResponseString;
+          }
+        }
+
+        if (requestDirective === "STOP") {
+          throw new Error("[NodeLLM] Execution stopped by middleware.");
+        }
+
+        return finalResponse;
       }
-
-      const finalResponse = new ChatResponseString(
-        assistantMessage.toString() || "",
-        totalUsage,
-        this.model,
-        this.provider.id,
-        assistantMessage.thinking,
-        assistantMessage.reasoning,
-        response.tool_calls,
-        assistantMessage.finish_reason,
-        this.options.schema
-      ) as unknown as ChatResponseString & { data: S };
-
-      // 5. onResponse Hook
-      await runMiddleware(this.middlewares, "onResponse", context, finalResponse);
-
-      return finalResponse;
     } catch (err) {
       // 6. onError Hook
-      await runMiddleware(this.middlewares, "onError", context, err);
+      const errorDirective = await runMiddleware<RequestDirective>(
+        this.middlewares,
+        "onError",
+        context,
+        err
+      );
+      if (
+        errorDirective &&
+        typeof errorDirective === "object" &&
+        errorDirective.action === "RETRY"
+      ) {
+        // ... handled by retry loop?
+        // For now, only onResponse triggers self-correction for simplicity.
+      }
       throw err;
     }
   }
