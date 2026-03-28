@@ -13,7 +13,7 @@ description: Built-in web dashboard for visualizing LLM usage, costs, and perfor
 {{ page.description }}
 {: .fs-6 .fw-300 }
 
-![Dashboard Metrics View](/assets/images/monitor/dashboard-metrics.png)
+![Dashboard Metrics View](/assets/images/monitor/dashboard-overview.png)
 
 ![Token Analytics](/assets/images/monitor/dashboard-tokens.png)
 
@@ -34,6 +34,22 @@ It provides:
 - **Trace Explorer**: Inspect full request/response payloads.
 - **Provider Breakdown**: Compare models and providers.
 - **Time-Series Analysis**: Visual trends over time.
+- **Self-Repair Tracking**: Observe LLM self-correction efficiency.
+
+---
+
+## 🛠 Self-Repair Observability
+
+The dashboard includes first-class support for observing **Schema Self-Correction**. When an agent encounters a validation error (e.g., Zod error, Tool format mismatch) and automatically repairs it, the monitor captures the "Correction Rounds" required.
+
+![Self-Correction Dashboard Card](/assets/images/monitor/dashboard-overview.png)
+
+### Features:
+- **Correction Counter**: See the total number of automated repairs managed by your system across the selected time range.
+- **Trace Badges**: Requests that required correction are clearly marked with a ✨ **Self-Corrected (N)** badge in the trace explorer, where `N` is the number of repair rounds.
+- **Repair History**: Drill down into any trace to see the specific sequence of failures that led to the final successful repair.
+
+![Trace List with Badges](/assets/images/monitor/traces-badges.png)
 
 ---
 
