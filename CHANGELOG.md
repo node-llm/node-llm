@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.15.0] - 2026-03-28 (@node-llm/core)
+
+### Features
+
+- **Schema Self-Correction Middleware**: Automated detection and repair of LLM validation failures.
+  - Intercepts Zod validation errors in structured outputs and provides specific re-prompt feedback.
+  - Integrated with Agent tool-calling to automatically recover from malformed tool arguments.
+  - Configurable `maxRetries` (default: 2) for multi-round correction loops.
+- **Middleware Lifecycle Directives**: Core middleware system now supports `RETRY`, `REPLACE`, `STOP`, and `CONTINUE` directives for fine-grained execution flow control.
+- **Agent Middleware DSL**: Declarative support for middlewares in `Agent` classes and `defineAgent()`.
+
+### Improvements
+
+- **Production-Grade Type Safety**: Hardened `Agent.ts` and `Chat.ts` types to remove usage of `any`, improving reliability and developer ergonomics.
+
+## [0.7.0] - 2026-03-28 (@node-llm/orm)
+
+### Features
+
+- **Enhanced Tool Persistence**: Correctly capture schema-validated tool arguments in `AgentSession` hooks.
+- **Improved Type Safety**: Resolved generic constraint issues in `createAgentSession` to better support user-defined agent interfaces.
+
 ## [1.14.1] - 2026-03-14 (@node-llm/core)
 
 ### Bug Fixes
