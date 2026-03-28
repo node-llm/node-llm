@@ -41,6 +41,7 @@ export interface AskOptions {
   maxToolCalls?: number;
   requestTimeout?: number;
   thinking?: ThinkingConfig;
+  prediction?: string | ContentPart[];
   signal?: AbortSignal;
   inputs?: Record<string, any>;
 }
@@ -285,6 +286,19 @@ export class Chat<S = unknown> {
   }
 
   /**
+   * Provide a prediction of the expected output to reduce latency.
+   * Particularly useful for code-editing agents modifying existing text.
+   */
+  withPrediction(prediction: string | ContentPart[] | null): this {
+    if (prediction === null) {
+      delete this.options.prediction;
+    } else {
+      this.options.prediction = prediction;
+    }
+    return this;
+  }
+
+  /**
    * Enable and configure extended thinking for reasoning models.
    */
   withThinking(config: ThinkingConfig): this {
@@ -458,6 +472,7 @@ export class Chat<S = unknown> {
         requestTimeout:
           options?.requestTimeout ?? this.options.requestTimeout ?? config.requestTimeout,
         thinking: options?.thinking ?? this.options.thinking,
+        prediction: options?.prediction ?? this.options.prediction,
         signal: options?.signal,
         ...this.options.params
       };
@@ -707,6 +722,7 @@ export class Chat<S = unknown> {
           response_format: responseFormat, // Pass to provider
           requestTimeout:
             options?.requestTimeout ?? this.options.requestTimeout ?? config.requestTimeout,
+          prediction: options?.prediction ?? this.options.prediction,
           signal: options?.signal,
           ...this.options.params
         });

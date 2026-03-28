@@ -13,6 +13,8 @@ export interface ResponseFormat {
   [key: string]: unknown;
 }
 
+import { ContentPart } from "../chat/Content.js";
+
 export interface ThinkingConfig {
   /**
    * Effort level for thinking-capable models.
@@ -52,6 +54,7 @@ export interface ChatRequest {
   temperature?: number;
   max_tokens?: number;
   response_format?: ResponseFormat;
+  prediction?: string | ContentPart[];
   headers?: Record<string, string>;
   requestTimeout?: number;
   [key: string]: unknown;
@@ -102,6 +105,7 @@ export interface ProviderCapabilities {
   supportsModeration(modelId: string): boolean;
   supportsReasoning(modelId: string): boolean;
   supportsDeveloperRole(modelId: string): boolean;
+  supportsPrediction?(modelId: string): boolean;
   getContextWindow(modelId: string): number | null;
 }
 

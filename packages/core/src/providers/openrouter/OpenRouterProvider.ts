@@ -20,6 +20,7 @@ export class OpenRouterProvider extends OpenAIProvider {
     supportsModeration: (model: string) => OpenRouterCapabilities.supportsModeration(model),
     supportsReasoning: (model: string) => OpenRouterCapabilities.supportsReasoning(model),
     supportsDeveloperRole: (_model: string) => true,
+    supportsPrediction: (_model: string) => false,
     getContextWindow: (model: string) => OpenRouterCapabilities.getContextWindow(model) || null
   };
 

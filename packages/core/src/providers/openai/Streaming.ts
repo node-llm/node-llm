@@ -89,6 +89,13 @@ export class OpenAIStreaming {
       });
     }
 
+    if (request.prediction) {
+      body.prediction = {
+        type: "content",
+        content: request.prediction
+      };
+    }
+
     if (request.thinking?.effort && request.thinking.effort !== "none") {
       body.reasoning_effort = request.thinking.effort;
     }

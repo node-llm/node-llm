@@ -1,6 +1,7 @@
 import { Middleware } from "../types/Middleware.js";
 import { Message } from "./Message.js";
 import { ToolResolvable } from "./Tool.js";
+import { ContentPart } from "./Content.js";
 import { Schema } from "../schema/Schema.js";
 import { ChatResponseString } from "./ChatResponse.js";
 import { ToolExecutionMode } from "../constants.js";
@@ -22,14 +23,15 @@ export interface ChatOptions {
     error: Error
   ) => "STOP" | "CONTINUE" | "RETRY" | void | Promise<"STOP" | "CONTINUE" | "RETRY" | void>;
   headers?: Record<string, string>;
-  schema?: Schema;
   responseFormat?: ResponseFormat;
+  thinking?: ThinkingConfig;
+  prediction?: string | ContentPart[];
+  schema?: Schema;
   params?: Record<string, unknown>;
   assumeModelExists?: boolean;
   provider?: string;
   maxToolCalls?: number;
   requestTimeout?: number;
-  thinking?: ThinkingConfig;
   toolExecution?: ToolExecutionMode;
   onConfirmToolCall?: (toolCall: unknown) => Promise<boolean> | boolean;
   onBeforeRequest?: (messages: Message[]) => Promise<Message[] | void>;

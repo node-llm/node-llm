@@ -69,7 +69,7 @@ describe("OpenAIChat", () => {
 
     expect(result.content).toBeNull();
     expect(result.tool_calls).toHaveLength(1);
-    expect(result.tool_calls?.[0]?.function.name).toBe("get_weather");
+    expect(result.tool_calls![0].function.name).toBe("get_weather");
   });
 
   it("should throw error on empty response", async () => {
@@ -111,9 +111,9 @@ describe("OpenAIChat", () => {
     const fetchCallInfo = vi.mocked(fetch).mock.calls[0][1] as RequestInit;
     const requestBody = JSON.parse(fetchCallInfo.body as string);
 
-    expect(requestBody.response_format?.json_schema?.strict).toBe(true);
-    expect(requestBody.response_format?.json_schema?.schema?.additionalProperties).toBe(false);
-    expect(requestBody.response_format?.json_schema?.schema?.required).toEqual(["a"]);
+    expect(requestBody.response_format!.json_schema!.strict).toBe(true);
+    expect(requestBody.response_format!.json_schema!.schema!.additionalProperties).toBe(false);
+    expect(requestBody.response_format!.json_schema!.schema!.required).toEqual(["a"]);
   });
 
   it("should enforce strict JSON schema constraints for OpenAI tools", async () => {
@@ -150,5 +150,27 @@ describe("OpenAIChat", () => {
     expect(tool.function.strict).toBe(true);
     expect(tool.function.parameters?.additionalProperties).toBe(false);
     expect(tool.function.parameters?.required).toEqual(["location"]);
+  });
+
+  it("should map prediction outputs to the payload", async () => {
+    const request: ChatRequest = {
+      model: "gpt-4o",
+      messages: [{ role: "user", content: "Rewrite this code" }],
+      prediction: "function foo() { return true; }"
+    };
+
+    (fetch as unknown as Mock).mockResolvedValue({
+      ok: true,
+      json: () => Promise.resolve({ choices: [{ message: { content: "{}" } }] })
+    });
+
+    await chat.execute(request);
+
+    const fetchCallInfo = vi.mocked(fetch).mock.calls[0][1] as RequestInit;
+    const requestBody = JSON.parse(fetchCallInfo.body as string);
+
+    expect(requestBody.prediction).toBeDefined();
+    expect(requestBody.prediction.type).toBe("content");
+    expect(requestBody.prediction.content).toBe("function foo() { return true; }");
   });
 });

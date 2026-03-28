@@ -10,6 +10,10 @@ export class Executor {
   async executeChat(request: ChatRequest): Promise<ChatResponse> {
     let lastError: unknown;
 
+    if (request.prediction && !this.provider.capabilities?.supportsPrediction?.(request.model)) {
+      delete request.prediction;
+    }
+
     for (let attempt = 1; attempt <= this.retry.attempts; attempt++) {
       try {
         return await this.provider.chat(request);

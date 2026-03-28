@@ -42,6 +42,7 @@ export class OpenAIChat {
       headers: _headers,
       requestTimeout: _requestTimeout,
       signal,
+      prediction,
       ...rest
     } = request;
 
@@ -76,6 +77,13 @@ export class OpenAIChat {
         }
         return tool;
       });
+    }
+
+    if (prediction) {
+      body.prediction = {
+        type: "content",
+        content: prediction
+      };
     }
 
     if (response_format) {

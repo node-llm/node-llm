@@ -48,8 +48,8 @@ export class OpenAIProvider extends BaseProvider implements Provider {
     supportsTranscription: (model: string) => Capabilities.supportsTranscription(model),
     supportsModeration: (model: string) => Capabilities.supportsModeration(model),
     supportsReasoning: (model: string) => Capabilities.supportsReasoning(model),
-    supportsDeveloperRole: (modelId: string) =>
-      this.baseUrl.includes("api.openai.com") && Capabilities.supportsDeveloperRole(modelId),
+    supportsDeveloperRole: (model: string) => Capabilities.supportsDeveloperRole(model),
+    supportsPrediction: (model: string) => Capabilities.supportsPrediction(model),
     getContextWindow: (model: string) => Capabilities.getContextWindow(model) || null
   };
 
