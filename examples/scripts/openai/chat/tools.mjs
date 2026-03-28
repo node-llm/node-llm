@@ -5,6 +5,7 @@ import { createLLM, NodeLLM, Tool, z } from "../../../../packages/core/dist/inde
 class WeatherTool extends Tool {
   name = "get_weather";
   description = "Get the current weather for a location";
+  strict = true; // Enforces OpenAI strict schema validation
   schema = z.object({
     location: z.string().describe("City name"),
     unit: z.enum(["celsius", "fahrenheit"]).default("celsius").describe("Temperature unit")
@@ -25,6 +26,7 @@ class WeatherTool extends Tool {
 class TimeTool extends Tool {
   name = "get_current_time";
   description = "Get the current time in a specific timezone";
+  strict = true;
   schema = z.object({
     timezone: z.string().describe("Timezone (e.g., America/New_York)")
   });
@@ -43,6 +45,7 @@ class TimeTool extends Tool {
 class CalculatorTool extends Tool {
   name = "calculate";
   description = "Perform mathematical calculations";
+  strict = true;
   schema = z.object({
     expression: z.string().describe("Mathematical expression to evaluate")
   });

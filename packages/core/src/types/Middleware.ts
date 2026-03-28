@@ -87,6 +87,25 @@ export interface MiddlewareContext {
 export type ToolErrorDirective = "STOP" | "CONTINUE" | "RETRY" | void;
 
 /**
+ * Directives for handling LLM responses or errors.
+ * Useful for automated retries (e.g., self-correction).
+ */
+export type RequestDirective =
+  | {
+      action: "RETRY";
+      /** Feedback message to append to history for the model to see in the next turn */
+      message: string;
+    }
+  | {
+      action: "REPLACE";
+      /** Replace the original response with this one */
+      response: NodeLLMResponse;
+    }
+  | "CONTINUE"
+  | "STOP"
+  | void;
+
+/**
  * Middleware interface for hooking into the LLM execution lifecycle.
  */
 export interface Middleware {
@@ -103,13 +122,14 @@ export interface Middleware {
 
   /**
    * Called after a successful response from the provider.
+   * Can return a directive to tell the engine to retry or stop.
    */
-  onResponse?(ctx: MiddlewareContext, result: NodeLLMResponse): Promise<void>;
+  onResponse?(ctx: MiddlewareContext, result: NodeLLMResponse): Promise<RequestDirective>;
 
   /**
    * Called if an error occurs during execution.
    */
-  onError?(ctx: MiddlewareContext, error: Error): Promise<void>;
+  onError?(ctx: MiddlewareContext, error: Error): Promise<RequestDirective>;
 
   /**
    * Called before a tool is executed.

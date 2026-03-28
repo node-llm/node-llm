@@ -6,7 +6,8 @@ import {
   AgentConfig,
   Message,
   ChatChunk,
-  Usage
+  Usage,
+  ToolCall
 } from "@node-llm/core";
 
 /**
@@ -192,7 +193,8 @@ export class AgentSession<
    * Register persistence hooks on the agent.
    */
   private registerHooks() {
-    this.agent.onToolCallStart(async (toolCall) => {
+    this.agent.onToolCallStart(async (tc) => {
+      const toolCall = tc as ToolCall;
       if (!this.currentMessageId) return;
       const model = this.getModel(this.tableNames.toolCall);
       await model.create({
@@ -205,7 +207,8 @@ export class AgentSession<
       });
     });
 
-    this.agent.onToolCallEnd(async (toolCall, result) => {
+    this.agent.onToolCallEnd(async (tc, result) => {
+      const toolCall = tc as ToolCall;
       if (!this.currentMessageId) return;
       const model = this.getModel(this.tableNames.toolCall);
       try {

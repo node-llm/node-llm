@@ -1,4 +1,4 @@
-import { Middleware, MiddlewareContext } from "../types/Middleware.js";
+import { Middleware, MiddlewareContext, RequestDirective } from "../types/Middleware.js";
 import { ChatResponseString } from "../chat/ChatResponse.js";
 import { logger } from "../utils/logger.js";
 
@@ -21,7 +21,7 @@ export class UsageLoggerMiddleware implements Middleware {
 
   constructor(private options: UsageLoggerOptions = {}) {}
 
-  async onResponse(ctx: MiddlewareContext, result: ChatResponseString): Promise<void> {
+  async onResponse(ctx: MiddlewareContext, result: ChatResponseString): Promise<RequestDirective> {
     const usage = result.usage;
     if (!usage) return;
 
@@ -43,4 +43,11 @@ export class UsageLoggerMiddleware implements Middleware {
 
     logFn(message, data);
   }
+}
+
+/**
+ * Factory function for creating the usage logger middleware.
+ */
+export function UsageLogger(options: UsageLoggerOptions = {}): UsageLoggerMiddleware {
+  return new UsageLoggerMiddleware(options);
 }

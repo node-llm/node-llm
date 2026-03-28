@@ -86,6 +86,34 @@ const result = await agent.ask("What is TypeScript?");
 | `temperature` | `number` | Sampling temperature (0-2) |
 | `thinking` | `boolean \| object` | Enable extended thinking (Claude) |
 | `schema` | `ZodSchema` | Output schema for structured responses |
+| `middlewares` | `Middleware[]` | Middlewares for observation or correction |
+
+---
+
+## 🛡️ Robust Agents with Self-Correction <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v1.15.0+</span>
+
+Even the best models sometimes hallucinate invalid tool arguments or malformed JSON. You can make your agents robust by adding the `SchemaSelfCorrection` middleware.
+
+When validation fails, the agent will catch the error, provide feedback to the model, and retry automatically—all encapsulated within the `ask()` call.
+
+```typescript
+import { Agent, SchemaSelfCorrection, z } from "@node-llm/core";
+
+class ReliableAgent extends Agent {
+  static model = "claude-3-5-sonnet";
+  
+  // Use a Zod schema for structured answers
+  static schema = z.object({
+    analysis: z.string(),
+    confidence: z.number()
+  });
+
+  // Attach correction middleware
+  static middlewares = [
+    SchemaSelfCorrection({ maxRetries: 3 })
+  ];
+}
+```
 
 ---
 

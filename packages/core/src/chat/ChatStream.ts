@@ -199,7 +199,7 @@ export class ChatStream {
             }
           }
 
-          for await (const chunk of provider.stream({
+          const streamRequest: any = {
             model,
             messages: requestMessages,
             tools: options.tools as ToolDefinition[],
@@ -209,9 +209,16 @@ export class ChatStream {
             headers: options.headers,
             requestTimeout: options.requestTimeout ?? config.requestTimeout,
             thinking: options.thinking,
+            prediction: options.prediction,
             signal: abortController.signal,
             ...options.params
-          })) {
+          };
+
+          if (streamRequest.prediction && !provider.capabilities?.supportsPrediction?.(model)) {
+            delete streamRequest.prediction;
+          }
+
+          for await (const chunk of provider.stream(streamRequest)) {
             if (isFirst) {
               if (options.onNewMessage) options.onNewMessage();
               isFirst = false;

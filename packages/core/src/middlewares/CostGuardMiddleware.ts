@@ -1,4 +1,4 @@
-import { Middleware, MiddlewareContext } from "../types/Middleware.js";
+import { Middleware, MiddlewareContext, RequestDirective } from "../types/Middleware.js";
 import { ChatResponseString } from "../chat/ChatResponse.js";
 
 export interface CostGuardOptions {
@@ -26,7 +26,7 @@ export class CostGuardMiddleware implements Middleware {
     }
   }
 
-  async onResponse(ctx: MiddlewareContext, result: ChatResponseString): Promise<void> {
+  async onResponse(ctx: MiddlewareContext, result: ChatResponseString): Promise<RequestDirective> {
     const cost = result.usage?.cost || 0;
     this.accumulatedCost += cost;
 
@@ -37,4 +37,11 @@ export class CostGuardMiddleware implements Middleware {
       );
     }
   }
+}
+
+/**
+ * Factory function for creating the cost guard middleware.
+ */
+export function CostGuard(options: CostGuardOptions): CostGuardMiddleware {
+  return new CostGuardMiddleware(options);
 }

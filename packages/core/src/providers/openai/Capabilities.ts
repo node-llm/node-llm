@@ -91,6 +91,10 @@ export class Capabilities {
     return /gpt-4o|o1|o3/.test(modelId);
   }
 
+  static supportsPrediction(modelId: string): boolean {
+    return /gpt-4o/.test(modelId) || /gpt-4-/.test(modelId);
+  }
+
   static needsMaxCompletionTokens(modelId: string): boolean {
     return /o1|o3/.test(modelId);
   }

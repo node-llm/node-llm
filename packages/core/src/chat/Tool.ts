@@ -15,6 +15,7 @@ export interface ToolDefinition {
   function: {
     name: string;
     description?: string;
+    strict?: boolean;
     parameters: Record<string, unknown>;
   };
   handler?: (args: unknown) => Promise<string | ToolHalt>;
@@ -74,6 +75,12 @@ export abstract class Tool<T = Record<string, unknown>> {
   public abstract schema: z.ZodObject<z.ZodRawShape> | Record<string, unknown>;
 
   /**
+   * Whether to enforce strict JSON schema constraints for OpenAI and similar providers.
+   * When true, additionalProperties: false and full required arrays are automatically applied.
+   */
+  public strict?: boolean;
+
+  /**
    * The core logic for the tool.
    * 'args' will be parsed and validated based on 'schema'.
    */
@@ -103,7 +110,13 @@ export abstract class Tool<T = Record<string, unknown>> {
    * Preserves ToolHalt instances for the execution loop to detect.
    */
   public async handler(args: T): Promise<string | ToolHalt> {
-    const result = await this.execute(args);
+    // 1. Runtime validation if Zod schema is provided
+    let validatedArgs = args;
+    if (this.schema instanceof z.ZodType) {
+      validatedArgs = this.schema.parse(args) as T;
+    }
+
+    const result = await this.execute(validatedArgs);
 
     // Preserve ToolHalt for the execution loop to handle
     if (result instanceof ToolHalt) {
@@ -136,6 +149,7 @@ export abstract class Tool<T = Record<string, unknown>> {
       function: {
         name: this.name,
         description: this.description,
+        strict: this.strict,
         parameters: parameters as Record<string, unknown>
       },
       handler: (args: unknown) => this.handler(args as T)
