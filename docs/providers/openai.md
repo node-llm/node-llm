@@ -6,7 +6,7 @@ nav_order: 1
 description: Full support for the complete range of NodeLLM features including tool calling, vision, image generation, and the advanced Developer role.
 ---
 
-# {{ page.title }}
+# {{ page.title }} <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v1.0.0+</span>
 {: .no_toc }
 
 {{ page.description }}

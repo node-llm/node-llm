@@ -43,7 +43,7 @@ if (model) {
 
 ---
 
-## Discovery by Capability
+## Discovery by Capability <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v0.8.0+</span>
 
 You can filter the registry to find models that match your requirements.
 
@@ -78,11 +78,11 @@ The registry includes models from:
 - **Anthropic** (Claude 3.5 Sonnet, Haiku, Opus)
 - **Google Gemini** (Gemini 1.5 Pro, Flash)
 - **DeepSeek** (DeepSeek V3, R1)
-- **AWS Bedrock** (Nova, Titan, Claude)
+- **AWS Bedrock** (Nova, Titan, Claude) <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v1.8.0+</span>
 - **OpenRouter** (400+ models)
 - **xAI** (Grok)
 - **Ollama** (Local models)
-- **Mistral** (Mistral Large, Codestral, Pixtral, Magistral)
+- **Mistral** (Mistral Large, Codestral, Pixtral, Magistral) <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v1.14.0+</span>
 
 ---
 

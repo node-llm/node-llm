@@ -87,13 +87,14 @@ model LlmRequest {
   chatId    String
   messageId String? // Optional because requests might fail before message creation
 
-  provider     String
-  model        String
-  statusCode   Int
-  duration     Int // milliseconds
-  inputTokens  Int
-  outputTokens Int
-  cost         Float?
+  provider         String
+  model            String
+  statusCode       Int
+  duration         Int // milliseconds
+  inputTokens      Int
+  outputTokens     Int
+  cost             Float?
+  correctionRounds Int?  // Number of self-correction retries (v0.7.0+)
 
   createdAt DateTime @default(now())
 

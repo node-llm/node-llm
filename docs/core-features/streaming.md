@@ -6,7 +6,7 @@ parent: Core Features
 description: Implement real-time user experiences with low-latency responses using standard AsyncIterators and seamless tool execution loops.
 ---
 
-# {{ page.title }}
+# {{ page.title }} <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v1.0.0+</span>
 {: .no_toc }
 
 {{ page.description }}
@@ -65,7 +65,7 @@ for await (const chunk of chat.stream("Hello")) {
 
 ---
 
-## Streaming with Tools <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">New ✨</span>
+## Streaming with Tools <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v1.2.0+</span>
 
 Tools now work seamlessly with streaming! When a model decides to call a tool during streaming, `NodeLLM` automatically:
 
@@ -120,7 +120,7 @@ for await (const chunk of chat.stream("Weather in Tokyo?")) {
 
 ---
 
-## Multimodal & Structured Streaming <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">New ✨</span>
+## Multimodal & Structured Streaming <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v1.2.0+</span>
 
 `chat.stream()` now supports the same advanced features as `chat.ask()`.
 

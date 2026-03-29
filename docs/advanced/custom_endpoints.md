@@ -6,7 +6,7 @@ nav_order: 4
 description: Connect NodeLLM to Azure OpenAI, LiteLLM, Ollama, or any OpenAI-compatible API and use custom models outside the standard registry.
 ---
 
-# {{ page.title }}
+# {{ page.title }} <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v1.0.0+</span>
 {: .no_toc }
 
 {{ page.description }}

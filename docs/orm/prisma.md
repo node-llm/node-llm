@@ -20,7 +20,7 @@ NodeLLM + Prisma made simple. Persist chats, messages, and tool calls automatica
 
 ---
 
-## Understanding the Persistence Flow
+## Understanding the Persistence Flow <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v0.1.0+</span>
 
 Before diving into setup, it’s important to understand how NodeLLM handles message persistence. This design ensures that your database remains the source of truth, even during streaming or complex tool execution loops.
 
@@ -61,15 +61,31 @@ Alternatively, you can manually copy the reference models below. You can customi
 
 ```prisma
 model LlmChat {
-  id           String       @id @default(uuid())
+  id           String           @id @default(uuid())
   model        String?
   provider     String?
   instructions String?      
-  metadata     Json?         // Use Json for metadata
-  createdAt    DateTime     @default(now())
-  updatedAt    DateTime     @updatedAt
+  metadata     Json?            // Use Json for metadata
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
   messages     LlmMessage[]
   requests     LlmRequest[]
+  agentSession LlmAgentSession? // v0.5.0+
+}
+
+// Agent Session - Links Agent class to persistent Chat (v0.5.0+)
+model LlmAgentSession {
+  id         String   @id @default(uuid())
+  agentClass String   // Class name for validation (e.g., 'SupportAgent')
+  chatId     String   @unique
+  metadata   Json?    // Session context (userId, ticketId, etc.)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  chat       LlmChat  @relation(fields: [chatId], references: [id], onDelete: Cascade)
+
+  @@index([agentClass])
+  @@index([createdAt])
 }
 
 model LlmMessage {
@@ -79,9 +95,9 @@ model LlmMessage {
   content           String?
   contentRaw        String?       // JSON raw payload
   reasoning         String?       // Chain of thought (deprecated)
-  thinkingText      String?       // Extended thinking text
-  thinkingSignature String?       // Cryptographic signature
-  thinkingTokens    Int?          // Tokens spent on thinking
+  thinkingText      String?       // Extended thinking text (v0.2.0+)
+  thinkingSignature String?       // Cryptographic signature (v0.2.0+)
+  thinkingTokens    Int?          // Tokens spent on thinking (v0.2.0+)
   inputTokens       Int?
   outputTokens      Int?
   modelId           String?
@@ -91,6 +107,9 @@ model LlmMessage {
   chat         LlmChat       @relation(fields: [chatId], references: [id], onDelete: Cascade)
   toolCalls    LlmToolCall[]
   requests     LlmRequest[]
+
+  @@index([chatId])
+  @@index([createdAt])
 }
 
 model LlmToolCall {
@@ -99,14 +118,16 @@ model LlmToolCall {
   toolCallId       String     // ID from the provider
   name             String
   arguments        String     
-  thought          String?    
-  thoughtSignature String?    
+  thought          String?    // The LLM's reasoning for this tool call
+  thoughtSignature String?    // Signature for the thought
   result           String?    
   createdAt        DateTime   @default(now())
 
   message      LlmMessage @relation(fields: [messageId], references: [id], onDelete: Cascade)
 
   @@unique([messageId, toolCallId])
+  @@index([messageId])
+  @@index([createdAt])
 }
 
 model LlmRequest {
@@ -119,11 +140,15 @@ model LlmRequest {
   duration     Int         // milliseconds
   inputTokens  Int
   outputTokens Int
-  cost         Float?
+  cost             Float?
+  correctionRounds Int?    // Number of self-correction retries (v0.7.0+)
   createdAt    DateTime    @default(now())
 
   chat         LlmChat     @relation(fields: [chatId], references: [id], onDelete: Cascade)
   message      LlmMessage? @relation(fields: [messageId], references: [id], onDelete: Cascade)
+
+  @@index([chatId])
+  @@index([createdAt])
 }
 ```
 
@@ -202,7 +227,7 @@ const history = await chat.messages();
 
 ---
 
-## Analytical Views (Insights)
+## Analytical Views (Insights) <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v0.1.0+</span>
 
 The ORM is great at storing data, but querying it for usage insights (e.g., "How many tokens did this user spend?") can be complex. NodeLLM provides a built-in `stats()` method that aggregates conversation-level metrics efficiently using Prisma's `aggregate` features.
 

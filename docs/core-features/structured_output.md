@@ -6,7 +6,7 @@ nav_order: 3
 description: Force models to return strictly validated JSON data using Zod schemas or manual JSON definitions across all supported providers.
 ---
 
-# {{ page.title }}
+# {{ page.title }} <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v1.0.0+</span>
 {: .no_toc }
 
 {{ page.description }}
@@ -143,7 +143,7 @@ const response = await chat.withSchema(companySchema).ask("Generate a small tech
 
 ---
 
-## 🛡️ Automating Schema Correction (Middleware)
+## 🛡️ Automating Schema Correction (Middleware) <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v1.15.0+</span>
 
 Even with strict schemas, non-OpenAI models (like Claude, Gemini, or local models) can occasionally hallucinate invalid JSON or skip required fields.
 

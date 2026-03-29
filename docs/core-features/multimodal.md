@@ -6,7 +6,7 @@ nav_order: 2
 description: Go beyond text. Learn how to pass images, audio, video, and documents to modern models using NodeLLM’s unified file handling system.
 ---
 
-# {{ page.title }}
+# {{ page.title }} <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v1.0.0+</span>
 {: .no_toc }
 
 {{ page.description }}
@@ -43,7 +43,7 @@ await chat.ask("Describe this", { files: ["https://example.com/image.png"] });
 
 ## Provider Support
 
-| File Type | Gemini | OpenAI | Anthropic | Bedrock | Mistral |
+| File Type | Gemini | OpenAI | Anthropic | Bedrock <span style="background-color: #0d9488; color: white; padding: 1px 4px; border-radius: 3px; font-size: 0.6em;">v1.8.0+</span> | Mistral <span style="background-color: #0d9488; color: white; padding: 1px 4px; border-radius: 3px; font-size: 0.6em;">v1.14.0+</span> |
 |-----------|--------|--------|-----------|---------|----------|
 | **Images** | ✅ | ✅ | ✅ | ✅ | ✅ (Pixtral) |
 | **PDFs** | ✅ | ✅ | ✅ | ✅ | ❌ |

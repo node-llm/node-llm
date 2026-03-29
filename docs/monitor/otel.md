@@ -7,7 +7,7 @@ permalink: /monitor/otel
 description: Zero-code instrumentation for AI observability. Extract AI metrics from Vercel AI SDK and other OTel-compliant libraries.
 ---
 
-# {{ page.title }}
+# {{ page.title }} <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">@node-llm/monitor-otel</span>
 {: .no_toc }
 
 {{ page.description }}

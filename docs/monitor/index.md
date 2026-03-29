@@ -7,7 +7,7 @@ permalink: /monitor
 description: Production observability for NodeLLM. Track costs, latency, token usage, and debug LLM interactions in real-time.
 ---
 
-# {{ page.title }}
+# {{ page.title }} <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">@node-llm/monitor</span>
 {: .no_toc }
 
 {{ page.description }}

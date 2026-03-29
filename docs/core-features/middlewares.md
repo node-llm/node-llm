@@ -157,7 +157,7 @@ If you have two middlewares: `[Logger, Security]`, the execution order for a suc
 
 ---
 
-## Standard Middleware Library
+## Standard Middleware Library <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v1.10.0+</span>
 
 NodeLLM includes a set of pre-built, production-ready middlewares that you can use out of the box.
 
@@ -201,7 +201,7 @@ const chat = NodeLLM.chat("gpt-4o", {
 
 ---
 
-## Global Middlewares
+## Global Middlewares <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v1.10.0+</span>
 
 You can also register middlewares at the global level when creating the LLM instance. These will be applied to **every** chat, embedding, or image generation call made from that instance.
 

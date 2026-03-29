@@ -7,7 +7,7 @@ permalink: /core-features/tools
 description: Give your models the ability to interact with the real world using a clean class-based DSL, automatic execution loops, and built-in safety guards.
 ---
 
-# {{ page.title }}
+# {{ page.title }} <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v1.0.0+</span>
 {: .no_toc }
 
 {{ page.description }}
@@ -33,7 +33,7 @@ npm install @node-llm/core
 
 ---
 
-## Class-Based Tools <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">New ✨</span>
+## Class-Based Tools <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v1.11.0+</span>
 
 The recommended way to define tools is by using the `Tool` class. This provides auto-generated JSON schemas and full type safety using `zod`.
 
@@ -117,7 +117,7 @@ const reply = await chat.ask("What is the weather in London?");
 
 ---
 
-## Tools Work in Streaming Too! <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">New ✨</span>
+## Tools Work in Streaming Too! <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v1.2.0+</span>
 
 Tools now work seamlessly with streaming! The same tool execution happens automatically during streaming:
 

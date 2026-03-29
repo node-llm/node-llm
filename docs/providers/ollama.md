@@ -6,7 +6,7 @@ nav_order: 5
 description: Run Large Language Models locally on your machine with full support for vision, tools, and embeddings while maintaining total data sovereignty.
 ---
 
-# {{ page.title }}
+# {{ page.title }} <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v0.8.0+</span>
 {: .no_toc }
 
 {{ page.description }}

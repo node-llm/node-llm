@@ -7,7 +7,7 @@ permalink: /core-features/chat
 description: A unified interface for stateful conversations across all providers. Learn how to manage history, instructions, and lifecycle hooks.
 ---
 
-# {{ page.title }}
+# {{ page.title }} <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v1.0.0+</span>
 {: .no_toc }
 
 {{ page.description }}
@@ -261,7 +261,7 @@ await chat.ask("What's the weather?");
 
 ---
 
-## 🛡️ Content Policy Hooks
+## 🛡️ Content Policy Hooks <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v1.5.0+</span>
 
 NodeLLM allows you to plug in custom security and compliance logic through asynchronous hooks. This is useful for PII detection, redaction, and enterprise moderation policies.
 
@@ -287,7 +287,7 @@ chat
 
 ---
 
-## Retry Logic & Safety 🛡️
+## Retry Logic & Safety 🛡️ <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v1.5.0+</span>
 
 By default, `NodeLLM` handles network instabilities or temporary provider errors (like 500s or 429 Rate Limits) by retrying the request.
 

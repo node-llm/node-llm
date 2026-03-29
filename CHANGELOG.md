@@ -22,6 +22,7 @@ All notable changes to this project will be documented in this file.
 ### Features
 
 - **Enhanced Tool Persistence**: Correctly capture schema-validated tool arguments in `AgentSession` hooks.
+- **Self-Correction Tracking**: New `correctionRounds` column in `LlmRequest` to track middleware retry attempts when using `SchemaSelfCorrection`.
 - **Improved Type Safety**: Resolved generic constraint issues in `createAgentSession` to better support user-defined agent interfaces.
 
 ## [1.14.1] - 2026-03-14 (@node-llm/core)

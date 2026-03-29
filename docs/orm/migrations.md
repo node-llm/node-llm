@@ -148,3 +148,36 @@ Run the sync command to confirm your schema is up to date:
 ```bash
 npx @node-llm/orm sync
 # ✓ Schema is already up to date with @node-llm/orm v0.5.0 features.
+```
+
+---
+
+## Upgrading for Self-Correction Tracking (v0.7.0+)
+
+Version 0.7.0 added the `correctionRounds` column to track how many self-correction retries occurred during schema validation failures (used with `SchemaSelfCorrection` middleware from `@node-llm/core` v1.15.0+).
+
+### Option 1: Use the Provided Migration
+
+```bash
+cp node_modules/@node-llm/orm/migrations/add_correction_rounds.sql \
+   prisma/migrations/$(date +%Y%m%d%H%M%S)_add_correction_rounds/migration.sql
+
+npx prisma migrate resolve --applied $(date +%Y%m%d%H%M%S)_add_correction_rounds
+```
+
+### Option 2: Manual Migration
+
+Add to your `schema.prisma`:
+
+```prisma
+model LlmRequest {
+  // ... existing fields
+  correctionRounds Int?  // Number of self-correction retries
+}
+```
+
+Then run:
+
+```bash
+npx prisma migrate dev --name add_correction_rounds
+```
