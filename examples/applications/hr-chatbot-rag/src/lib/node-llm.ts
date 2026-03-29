@@ -6,9 +6,11 @@ import "dotenv/config";
 
 /**
  * Advanced monitoring instance for the HR repository.
+ * Captures content with PII scrubbing for compliance.
  */
 const monitor = createPrismaMonitor(prisma, {
-  captureContent: true 
+  captureContent: true,
+  scrubbing: { pii: true, secrets: true }
 });
 
 /**

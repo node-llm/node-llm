@@ -40,6 +40,11 @@ export default function Home() {
            <span className="text-[9px] font-black tracking-widest uppercase text-slate-500">Compliance</span>
            <span className="text-xs font-bold text-slate-900 leading-none">INTERNAL ONLY</span>
         </div>
+        <div className="w-px h-6 bg-slate-300" />
+        <a href="/api/monitor" target="_blank" className="flex flex-col items-center gap-1 hover:opacity-100">
+           <span className="text-[9px] font-black tracking-widest uppercase text-slate-500">Observability</span>
+           <span className="text-xs font-bold text-brand-primary leading-none">MONITOR →</span>
+        </a>
       </footer>
     </main>
   );
