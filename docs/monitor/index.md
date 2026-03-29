@@ -13,9 +13,27 @@ description: Production observability for NodeLLM. Track costs, latency, token u
 {{ page.description }}
 {: .fs-6 .fw-300 }
 
-![NodeLLM Monitor Dashboard](/assets/images/monitor/dashboard-metrics.png)
+![NodeLLM Monitor Dashboard](/assets/images/monitor/dashboard-metrics-en.png)
 
-![Token Analytics](/assets/images/monitor/dashboard-tokens.png)
+---
+
+## 🌍 Internationalization (i18n)
+
+NodeLLM Monitor is built for global teams. The dashboard supports multiple languages and **full Right-to-Left (RTL)** layouts out of the box.
+
+### Features
+- **Dynamic Language Switching**: Toggle between languages instantly without reload.
+- **RTL Support**: Seamlessly switch to Arabic, Hebrew, or Persian with optimized UI layouts.
+- **Extensible Architecture**: Add your own languages or override existing translations with simple YAML files.
+
+| English (LTR) | Arabic (RTL) |
+|:---:|:---:|
+| **Metrics Overview** | **نظرة عامة على المقاييس** |
+| ![](/assets/images/monitor/dashboard-metrics-en.png) | ![](/assets/images/monitor/dashboard-metrics-ar.png) |
+| **Token Analytics** | **تحليل الرموز** |
+| ![](/assets/images/monitor/dashboard-tokens-en.png) | ![](/assets/images/monitor/dashboard-tokens-ar.png) |
+| **Execution Traces** | **تتبعات التنفيذ** |
+| ![](/assets/images/monitor/dashboard-traces-en.png) | ![](/assets/images/monitor/dashboard-traces-ar.png) |
 
 ---
 
