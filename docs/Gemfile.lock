@@ -168,6 +168,7 @@ PLATFORMS
   x86_64-linux-musl
 
 DEPENDENCIES
+  addressable (>= 2.8.9)
   jekyll (~> 4.3)
   just-the-docs
   webrick
