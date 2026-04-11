@@ -88,7 +88,7 @@ export class Capabilities {
   }
 
   static supportsDeveloperRole(modelId: string): boolean {
-    return /gpt-4o|o1|o3/.test(modelId);
+    return /gpt-4o|o1|o3|gpt-5/.test(modelId);
   }
 
   static supportsPrediction(modelId: string): boolean {
@@ -96,7 +96,7 @@ export class Capabilities {
   }
 
   static needsMaxCompletionTokens(modelId: string): boolean {
-    return /o1|o3/.test(modelId);
+    return /o1|o3|gpt-5/.test(modelId);
   }
 
   static getModelType(

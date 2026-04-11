@@ -20,7 +20,33 @@ describe("OpenAI Capabilities", () => {
   it("checks reasoning support", () => {
     expect(Capabilities.supportsReasoning("o1-preview")).toBe(true);
     expect(Capabilities.supportsReasoning("o3-mini")).toBe(true);
+    expect(Capabilities.supportsReasoning("gpt-5")).toBe(true);
+    expect(Capabilities.supportsReasoning("gpt-5.4-nano")).toBe(true);
     expect(Capabilities.supportsReasoning("gpt-4o")).toBe(false);
+  });
+
+  it("checks if model needs max_completion_tokens instead of max_tokens", () => {
+    // Reasoning models (o-series) require max_completion_tokens
+    expect(Capabilities.needsMaxCompletionTokens("o1")).toBe(true);
+    expect(Capabilities.needsMaxCompletionTokens("o1-preview")).toBe(true);
+    expect(Capabilities.needsMaxCompletionTokens("o1-mini")).toBe(true);
+    expect(Capabilities.needsMaxCompletionTokens("o3")).toBe(true);
+    expect(Capabilities.needsMaxCompletionTokens("o3-mini")).toBe(true);
+
+    // GPT-5 family models require max_completion_tokens
+    expect(Capabilities.needsMaxCompletionTokens("gpt-5")).toBe(true);
+    expect(Capabilities.needsMaxCompletionTokens("gpt-5.1")).toBe(true);
+    expect(Capabilities.needsMaxCompletionTokens("gpt-5.2")).toBe(true);
+    expect(Capabilities.needsMaxCompletionTokens("gpt-5.4")).toBe(true);
+    expect(Capabilities.needsMaxCompletionTokens("gpt-5.4-nano")).toBe(true);
+    expect(Capabilities.needsMaxCompletionTokens("gpt-5-mini")).toBe(true);
+    expect(Capabilities.needsMaxCompletionTokens("gpt-5-pro")).toBe(true);
+
+    // Older models use max_tokens
+    expect(Capabilities.needsMaxCompletionTokens("gpt-4o")).toBe(false);
+    expect(Capabilities.needsMaxCompletionTokens("gpt-4o-mini")).toBe(false);
+    expect(Capabilities.needsMaxCompletionTokens("gpt-4-turbo")).toBe(false);
+    expect(Capabilities.needsMaxCompletionTokens("gpt-3.5-turbo")).toBe(false);
   });
 
   it("formats display names correctly", () => {
