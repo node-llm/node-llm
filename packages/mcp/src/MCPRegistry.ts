@@ -7,6 +7,12 @@ export interface DiscoveryOptions {
    * Only include tools with these names.
    */
   filter?: string[];
+
+  /**
+   * Optional prefix to prepend to discovered tool names.
+   * Useful to avoid collisions between different MCP servers.
+   */
+  prefix?: string;
 }
 
 /**
@@ -45,14 +51,19 @@ export class MCPRegistry {
       tools = tools.filter((t) => options.filter!.includes(t.name));
     }
 
-    return tools.map((t) => new MCPTool(this.client, t as any));
+    return tools.map((t) => {
+      const metadata = { ...t };
+      if (options.prefix) {
+        metadata.name = `${options.prefix}${t.name}`;
+      }
+      return new MCPTool(this.client, metadata as any);
+    });
   }
 
   /**
    * Closes the connection to the MCP server.
    */
   async close(): Promise<void> {
-    // Current MCP Client doesnt have an explicit close() but we can
-    // potentially close the transport if needed.
+    await this.client.close();
   }
 }
