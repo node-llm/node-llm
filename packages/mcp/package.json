@@ -19,7 +19,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "example:discovery": "tsx ../../examples/scripts/mcp/core-explorer/capabilities.ts",
-    "example:audit": "tsx ../../examples/scripts/mcp/filesystem/inspect-mcp.ts"
+    "example:audit": "tsx ../../examples/scripts/mcp/filesystem/inspect-mcp.ts",
+    "example:chat": "tsx ../../examples/scripts/mcp/core-explorer/chat-with-mcp.ts"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.6.0"
