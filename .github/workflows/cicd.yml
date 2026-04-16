@@ -94,7 +94,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        package-path: ["packages/core", "packages/orm", "packages/testing"]
+        package-path: ["packages/core", "packages/orm", "packages/testing", "packages/mcp"]
 
     steps:
       - uses: actions/checkout@v4
