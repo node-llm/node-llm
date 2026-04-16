@@ -22,7 +22,7 @@ async function run() {
   });
 
   try {
-    const tools = await mcp.discover();
+    const tools = await mcp.discoverTools();
     console.log(`[Registry] Discovered ${tools.length} browser tools.`);
 
     const llm = createLLM({ provider: "openai" });

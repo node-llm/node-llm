@@ -27,7 +27,7 @@ const mcp = await MCP.connect({
 });
 
 // Discover all tools
-const tools = await mcp.discover();
+const tools = await mcp.discoverTools();
 
 // Use them in a chat
 const chat = llm.chat().withTools(tools);
@@ -39,13 +39,17 @@ await mcp.close();
 
 ## 🛠 Features
 
-### 🔍 Discovery (Phase 1 & 2)
+### 🔍 Discovery Types
 
-Discover all capabilities provided by an MCP server:
+You can discover capabilities individually or all at once:
 
-- **Tools**: Auto-executing functions.
-- **Resources**: Read-only data sources (files, DB metadata, logs).
-- **Prompts**: Standardized prompt templates.
+**Full Manifest (Unified):**
+
+```typescript
+const { tools, resources, prompts } = await mcp.discover();
+```
+
+**Granular Discovery:**
 
 ```typescript
 const tools = await mcp.discoverTools();

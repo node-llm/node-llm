@@ -27,7 +27,7 @@ async function run() {
 
   try {
     // 2. Discover tools (read_file, list_directory, etc.)
-    const tools = await mcp.discover();
+    const tools = await mcp.discoverTools();
     console.log(`[Registry] Discovered ${tools.length} filesystem tools.`);
 
     const llm = createLLM({ provider: "openai" });

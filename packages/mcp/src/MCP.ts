@@ -156,10 +156,20 @@ export class MCP {
 
   /**
    * Convenience method to discover all capabilities at once.
-   * In Phase 1, this returns only tools. In Phase 2+, it aggregates tools, resources, and prompts.
+   * Returns an object containing all discovered tools, resources, and prompts.
    */
-  async discover(options: DiscoveryOptions = {}): Promise<MCPTool[]> {
-    return this.discoverTools(options);
+  async discover(options: DiscoveryOptions = {}): Promise<{
+    tools: MCPTool[];
+    resources: MCPResource[];
+    prompts: MCPPrompt[];
+  }> {
+    const [tools, resources, prompts] = await Promise.all([
+      this.discoverTools(options),
+      this.discoverResources(options),
+      this.discoverPrompts(options)
+    ]);
+
+    return { tools, resources, prompts };
   }
 
   /**

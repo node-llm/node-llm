@@ -143,4 +143,4 @@ The API is structured to enable future phases without breaking changes:
 - **Phase 2**: Resources & Prompts ✅ Complete
 - **Phase 3**: Sampling, Context, and Multi-user hooks (In Progress)
 
-Each phase adds new methods to the `MCP` class while maintaining backward compatibility for tool-based workflows.
+The `mcp.discover()` method returns a unified manifest of all three categories, while `mcp.discoverTools()` provides the focused shorthand for tool-based sessions.

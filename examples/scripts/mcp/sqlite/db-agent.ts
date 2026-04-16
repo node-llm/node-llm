@@ -54,7 +54,7 @@ async function run() {
   });
 
   try {
-    const tools = await mcp.discover();
+    const tools = await mcp.discoverTools();
     console.log(`[Registry] Discovered ${tools.length} database tools.`);
 
     const llm = createLLM({ provider: "openai" });

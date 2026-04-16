@@ -189,7 +189,7 @@ const mcp = await MCP.connect({
   args: ["-y", "@modelcontextprotocol/server-github"]
 });
 
-const tools = await mcp.discover();
+const tools = await mcp.discoverTools();
 await chat.withTools(tools).ask("List my repos");
 ```
 

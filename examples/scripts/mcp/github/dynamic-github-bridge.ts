@@ -23,7 +23,7 @@ async function run() {
 
   try {
     // 2. Discover and register tools
-    const tools = await mcp.discover({ filter: ["list_issues"] });
+    const tools = await mcp.discoverTools({ filter: ["list_issues"] });
 
     const llm = createLLM({ provider: "openai" });
     const chat = llm.chat("gpt-4o-mini").withTools(tools);

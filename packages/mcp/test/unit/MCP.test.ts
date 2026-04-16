@@ -111,4 +111,21 @@ describe("MCP", () => {
       expect(clientInstance.listPrompts).toHaveBeenCalled();
     });
   });
+
+  describe("discover", () => {
+    it("should return all capabilities in one call", async () => {
+      const mcp = new MCP(mockTransport);
+      const clientInstance = vi.mocked(MCPClient.Client).mock.instances[0];
+
+      clientInstance.listTools.mockResolvedValue({ tools: [{ name: "t1" }] } as any);
+      clientInstance.listResources.mockResolvedValue({ resources: [{ uri: "r1" }] } as any);
+      clientInstance.listPrompts.mockResolvedValue({ prompts: [{ name: "p1" }] } as any);
+
+      const result = await mcp.discover();
+
+      expect(result.tools).toHaveLength(1);
+      expect(result.resources).toHaveLength(1);
+      expect(result.prompts).toHaveLength(1);
+    });
+  });
 });

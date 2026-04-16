@@ -212,7 +212,7 @@ const mcp = await MCP.connect({
 });
 
 // Discover and register tools automatically
-const tools = await mcp.discover();
+const tools = await mcp.discoverTools();
 const chat = llm.chat().withTools(tools);
 
 await chat.ask("Create a release for v1.0 on GitHub");
