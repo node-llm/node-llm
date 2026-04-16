@@ -218,7 +218,7 @@ const chat = llm.chat().withTools(tools);
 await chat.ask("Create a release for v1.0 on GitHub");
 ```
 
-**[Full MCP Guide →](packages/mcp/ARCHITECTURE.md)**
+**[Full MCP Guide →](docs/core-features/mcp.md)**
 
 ### 🔍 Comprehensive Debug Logging
 

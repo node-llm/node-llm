@@ -1,14 +1,21 @@
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { Transport } from "@modelcontextprotocol/sdk/shared/transport.js";
 import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
+import { StreamableHTTPClientTransport } from "@modelcontextprotocol/sdk/client/streamableHttp.js";
+import { EventEmitter } from "events";
 import { MCPTool } from "./MCPTool.js";
 import { MCPResource } from "./MCPResource.js";
 import { MCPPrompt } from "./MCPPrompt.js";
+import { MCPResourceTemplate } from "./MCPResourceTemplate.js";
 
 export interface StdioConfig {
   command: string;
   args?: string[];
   env?: Record<string, string>;
+}
+
+export interface SSEConfig {
+  url: string;
 }
 
 export interface DiscoveryOptions {
@@ -27,15 +34,21 @@ export interface DiscoveryOptions {
 /**
  * The main orchestrating engine for MCP integration.
  * Acts as the entry point for connecting to servers and discovering capabilities.
+ *
+ * Emits:
+ * - 'log': When the server sends a log message to stderr
+ * - 'notification': When the server sends a protocol notification
  */
-export class MCP {
+export class MCP extends EventEmitter {
   private client: Client;
   private isConnected: boolean = false;
+  private _connecting?: Promise<void>;
 
   /**
    * Creates an MCP instance from an existing transport.
    */
   constructor(private readonly transport: Transport) {
+    super();
     this.client = new Client(
       {
         name: "node-llm-mcp-host",
@@ -44,9 +57,45 @@ export class MCP {
       {
         capabilities: {
           sampling: {}
+        },
+        // Setup internal notification handlers for protocol events
+        listChanged: {
+          tools: {
+            onChanged: (error, tools) =>
+              this.emit("notification", { type: "tools_changed", error, tools })
+          },
+          resources: {
+            onChanged: (error, resources) =>
+              this.emit("notification", { type: "resources_changed", error, resources })
+          },
+          prompts: {
+            onChanged: (error, prompts) =>
+              this.emit("notification", { type: "prompts_changed", error, prompts })
+          }
         }
       }
     );
+
+    // Setup stderr monitoring if available
+    const stdioTransport = transport as any;
+    if (stdioTransport.stderr) {
+      stdioTransport.stderr.on("data", (chunk: Buffer) => {
+        this.emit("log", chunk.toString());
+      });
+    }
+
+    // Capture explicit protocol logging notifications
+    this.client.setNotificationHandler(
+      { method: "notifications/message" } as any,
+      (notification) => {
+        this.emit("log", (notification.params as any).data);
+      }
+    );
+
+    // Capture all other notifications via fallback
+    (this.client as any).fallbackNotificationHandler = async (notification: any) => {
+      this.emit("notification", notification);
+    };
   }
 
   /**
@@ -60,15 +109,37 @@ export class MCP {
       stderr: "pipe"
     });
 
-    if (transport.stderr) {
-      transport.stderr.on("data", (chunk) => {
-        // We log to stderr so it doesn't pollute actual LLM output
-        process.stderr.write(`[MCP Server] ${chunk.toString()}`);
-      });
-    }
+    return new MCP(transport);
+  }
 
-    const mcp = new MCP(transport);
-    return mcp;
+  /**
+   * Helper to quickly connect to an SSE-based MCP server (HTTP).
+   *
+   */
+  static async connectSSE(config: SSEConfig): Promise<MCP> {
+    const transport = new StreamableHTTPClientTransport(new URL(config.url));
+    return new MCP(transport);
+  }
+
+  /**
+   * Internal helper to handle connection deduplication and thread-safety.
+   */
+  private async ensureConnected(): Promise<void> {
+    if (this.isConnected) return;
+    if (this._connecting) return this._connecting;
+
+    this._connecting = this.client
+      .connect(this.transport)
+      .then(() => {
+        this.isConnected = true;
+        this._connecting = undefined;
+      })
+      .catch((err) => {
+        this._connecting = undefined;
+        throw err;
+      });
+
+    return this._connecting;
   }
 
   /**
@@ -78,26 +149,26 @@ export class MCP {
    * @phase Phase 1
    */
   async discoverTools(options: DiscoveryOptions = {}): Promise<MCPTool[]> {
-    if (!this.isConnected) {
-      await this.client.connect(this.transport);
-      this.isConnected = true;
-    }
+    await this.ensureConnected();
+    try {
+      const response = await this.client.listTools();
+      let tools = response.tools || [];
 
-    const response = await this.client.listTools();
-
-    let tools = response.tools || [];
-
-    if (options.filter) {
-      tools = tools.filter((t) => options.filter!.includes(t.name));
-    }
-
-    return tools.map((t) => {
-      const metadata = { ...t, originalName: t.name };
-      if (options.prefix) {
-        metadata.name = `${options.prefix}${t.name}`;
+      if (options.filter) {
+        tools = tools.filter((t) => options.filter!.includes(t.name));
       }
-      return new MCPTool(this.client, metadata as any);
-    });
+
+      return tools.map((t) => {
+        const metadata = { ...t, originalName: t.name };
+        if (options.prefix) {
+          metadata.name = `${options.prefix}${t.name}`;
+        }
+        return new MCPTool(this.client, metadata as any);
+      });
+    } catch (err) {
+      if (this.isMethodNotFoundError(err)) return [];
+      throw err;
+    }
   }
 
   /**
@@ -106,25 +177,54 @@ export class MCP {
    *
    */
   async discoverResources(options: DiscoveryOptions = {}): Promise<MCPResource[]> {
-    if (!this.isConnected) {
-      await this.client.connect(this.transport);
-      this.isConnected = true;
-    }
+    await this.ensureConnected();
+    try {
+      const response = await this.client.listResources();
+      let resources = response.resources || [];
 
-    const response = await this.client.listResources();
-    let resources = response.resources || [];
-
-    if (options.filter) {
-      resources = resources.filter((r) => options.filter!.includes(r.name));
-    }
-
-    return resources.map((r) => {
-      const metadata = { ...r };
-      if (options.prefix) {
-        metadata.name = `${options.prefix}${r.name}`;
+      if (options.filter) {
+        resources = resources.filter((r) => options.filter!.includes(r.name));
       }
-      return new MCPResource(this.client, metadata);
-    });
+
+      return resources.map((r) => {
+        const metadata = { ...r };
+        if (options.prefix) {
+          metadata.name = `${options.prefix}${r.name}`;
+        }
+        return new MCPResource(this.client, metadata);
+      });
+    } catch (err) {
+      if (this.isMethodNotFoundError(err)) return [];
+      throw err;
+    }
+  }
+
+  /**
+   * Discovers available resource templates from the MCP server.
+   * Returns an array of templates.
+   *
+   */
+  async discoverResourceTemplates(options: DiscoveryOptions = {}): Promise<MCPResourceTemplate[]> {
+    await this.ensureConnected();
+    try {
+      const response = await this.client.listResourceTemplates();
+      let templates = response.resourceTemplates || [];
+
+      if (options.filter) {
+        templates = templates.filter((t: any) => options.filter!.includes(t.name));
+      }
+
+      return templates.map((t: any) => {
+        const metadata = { ...t };
+        if (options.prefix) {
+          metadata.name = `${options.prefix}${t.name}`;
+        }
+        return new MCPResourceTemplate(this.client, metadata);
+      });
+    } catch (err) {
+      if (this.isMethodNotFoundError(err)) return [];
+      throw err;
+    }
   }
 
   /**
@@ -133,25 +233,38 @@ export class MCP {
    *
    */
   async discoverPrompts(options: DiscoveryOptions = {}): Promise<MCPPrompt[]> {
-    if (!this.isConnected) {
-      await this.client.connect(this.transport);
-      this.isConnected = true;
-    }
+    await this.ensureConnected();
+    try {
+      const response = await this.client.listPrompts();
+      let prompts = response.prompts || [];
 
-    const response = await this.client.listPrompts();
-    let prompts = response.prompts || [];
-
-    if (options.filter) {
-      prompts = prompts.filter((p) => options.filter!.includes(p.name));
-    }
-
-    return prompts.map((p) => {
-      const metadata = { ...p };
-      if (options.prefix) {
-        metadata.name = `${options.prefix}${p.name}`;
+      if (options.filter) {
+        prompts = prompts.filter((p) => options.filter!.includes(p.name));
       }
-      return new MCPPrompt(this.client, metadata);
-    });
+
+      return prompts.map((p) => {
+        const metadata = { ...p };
+        if (options.prefix) {
+          metadata.name = `${options.prefix}${p.name}`;
+        }
+        return new MCPPrompt(this.client, metadata);
+      });
+    } catch (err) {
+      if (this.isMethodNotFoundError(err)) return [];
+      throw err;
+    }
+  }
+
+  /**
+   * Internal helper to detect if an error is a "Method Not Found" (capability not supported).
+   */
+  private isMethodNotFoundError(err: any): boolean {
+    return (
+      err.code === -32601 ||
+      err.error?.code === -32601 ||
+      err.message?.includes("-32601") ||
+      err.message?.includes("Method not found")
+    );
   }
 
   /**
@@ -161,15 +274,17 @@ export class MCP {
   async discover(options: DiscoveryOptions = {}): Promise<{
     tools: MCPTool[];
     resources: MCPResource[];
+    resourceTemplates: MCPResourceTemplate[];
     prompts: MCPPrompt[];
   }> {
-    const [tools, resources, prompts] = await Promise.all([
+    const [tools, resources, resourceTemplates, prompts] = await Promise.all([
       this.discoverTools(options),
       this.discoverResources(options),
+      this.discoverResourceTemplates(options),
       this.discoverPrompts(options)
     ]);
 
-    return { tools, resources, prompts };
+    return { tools, resources, resourceTemplates, prompts };
   }
 
   /**

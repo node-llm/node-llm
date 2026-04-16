@@ -176,7 +176,7 @@ class WeatherTool extends Tool {
 await chat.withTool(WeatherTool).ask("Weather in Tokyo?");
 ```
 
-### 🔌 [Model Context Protocol (MCP)](/packages/mcp)
+### 🔌 [Model Context Protocol (MCP)](/core-features/mcp)
 
 Connect NodeLLM to external data sources and tools using the industry-standard MCP. Share tools, resources, and prompt templates across different servers dynamically.
 
