@@ -8,6 +8,7 @@ export class MCPTool extends Tool {
   public name: string;
   public description: string;
   public schema: any;
+  private readonly originalName: string;
 
   constructor(
     private readonly client: any, // Client from @modelcontextprotocol/sdk
@@ -19,6 +20,7 @@ export class MCPTool extends Tool {
   ) {
     super();
     this.name = metadata.name;
+    this.originalName = (metadata as any).originalName || metadata.name;
     this.description = metadata.description || "";
     this.schema = metadata.inputSchema;
   }
@@ -46,7 +48,7 @@ export class MCPTool extends Tool {
    */
   async execute(args: any): Promise<string> {
     const response = await this.client.callTool({
-      name: this.name,
+      name: this.originalName,
       arguments: args
     });
 

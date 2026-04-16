@@ -52,7 +52,7 @@ export class MCPRegistry {
     }
 
     return tools.map((t) => {
-      const metadata = { ...t };
+      const metadata = { ...t, originalName: t.name };
       if (options.prefix) {
         metadata.name = `${options.prefix}${t.name}`;
       }
