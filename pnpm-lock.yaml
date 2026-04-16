@@ -89,6 +89,9 @@ importers:
       '@node-llm/core':
         specifier: workspace:*
         version: link:../../../../packages/core
+      '@node-llm/mcp':
+        specifier: workspace:*
+        version: link:../../../../packages/mcp
       '@node-llm/monitor':
         specifier: ^0.1.2
         version: 0.1.2(@node-llm/core@packages+core)(@node-llm/orm@0.7.1(@node-llm/core@packages+core)(@prisma/client@5.22.0(prisma@5.22.0)))(@prisma/client@5.22.0(prisma@5.22.0))
@@ -246,7 +249,7 @@ importers:
   packages/mcp:
     dependencies:
       '@modelcontextprotocol/sdk':
-        specifier: ^1.6.0
+        specifier: ^1.29.0
         version: 1.29.0(zod@4.3.6)
     devDependencies:
       '@node-llm/core':

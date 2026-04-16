@@ -1,4 +1,5 @@
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
+import { LoggingMessageNotificationSchema } from "@modelcontextprotocol/sdk/types.js";
 import { Transport } from "@modelcontextprotocol/sdk/shared/transport.js";
 import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
 import { StreamableHTTPClientTransport } from "@modelcontextprotocol/sdk/client/streamableHttp.js";
@@ -85,16 +86,23 @@ export class MCP extends EventEmitter {
     }
 
     // Capture explicit protocol logging notifications
-    this.client.setNotificationHandler(
-      { method: "notifications/message" } as any,
-      (notification) => {
-        this.emit("log", (notification.params as any).data);
-      }
-    );
+    this.client.setNotificationHandler(LoggingMessageNotificationSchema, (notification) => {
+      this.emit("log", notification.params.data);
+    });
 
     // Capture all other notifications via fallback
     (this.client as any).fallbackNotificationHandler = async (notification: any) => {
       this.emit("notification", notification);
+    };
+
+    // Global Error & Closure Monitoring
+    this.client.onerror = (error) => {
+      this.emit("error", error);
+    };
+
+    this.client.onclose = () => {
+      this.isConnected = false;
+      this.emit("close");
     };
   }
 

@@ -2,13 +2,11 @@
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "outDir": "dist",
+    "rootDir": "src",
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
     "resolveJsonModule": true,
-    "baseUrl": ".",
-    "paths": {
-      "@node-llm/core": ["../core/src/index.ts"]
-    }
+    "baseUrl": "."
   },
-  "include": ["src", "test"]
+  "include": ["src"]
 }
