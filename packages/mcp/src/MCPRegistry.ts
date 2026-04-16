@@ -2,6 +2,8 @@ import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { Transport } from "@modelcontextprotocol/sdk/shared/transport.js";
 import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
 import { MCPTool } from "./MCPTool.js";
+import { MCPResource } from "./MCPResource.js";
+import { MCPPrompt } from "./MCPPrompt.js";
 
 export interface StdioConfig {
   command: string;
@@ -27,6 +29,7 @@ export interface DiscoveryOptions {
  */
 export class MCPRegistry {
   private client: Client;
+  private isConnected: boolean = false;
 
   /**
    * Creates a registry from an existing transport.
@@ -74,7 +77,10 @@ export class MCPRegistry {
    * @phase Phase 1
    */
   async discoverTools(options: DiscoveryOptions = {}): Promise<MCPTool[]> {
-    await this.client.connect(this.transport);
+    if (!this.isConnected) {
+      await this.client.connect(this.transport);
+      this.isConnected = true;
+    }
 
     const response = await this.client.listTools();
 
@@ -97,22 +103,30 @@ export class MCPRegistry {
    * Discovers available resources from the MCP server.
    * Returns an array of resources.
    *
-   * @phase Phase 2
    */
-  async discoverResources(options: DiscoveryOptions = {}): Promise<any[]> {
-    // TODO: Implement in Phase 2
-    return [];
+  async discoverResources(): Promise<MCPResource[]> {
+    if (!this.isConnected) {
+      await this.client.connect(this.transport);
+      this.isConnected = true;
+    }
+
+    const response = await this.client.listResources();
+    return (response.resources || []).map((r) => new MCPResource(this.client, r));
   }
 
   /**
    * Discovers available prompts from the MCP server.
    * Returns an array of prompts.
    *
-   * @phase Phase 2
    */
-  async discoverPrompts(options: DiscoveryOptions = {}): Promise<any[]> {
-    // TODO: Implement in Phase 2
-    return [];
+  async discoverPrompts(): Promise<MCPPrompt[]> {
+    if (!this.isConnected) {
+      await this.client.connect(this.transport);
+      this.isConnected = true;
+    }
+
+    const response = await this.client.listPrompts();
+    return (response.prompts || []).map((p) => new MCPPrompt(this.client, p));
   }
 
   /**
