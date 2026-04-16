@@ -183,11 +183,11 @@ Connect NodeLLM to external data sources and tools using the industry-standard M
 ```ts
 import { MCP } from "@node-llm/mcp";
 
-// Connect and discover tools automatically
-const mcp = await MCP.connect({
+// Connect with chainable monitoring
+const mcp = (await MCP.connect({
   command: "npx",
   args: ["-y", "@modelcontextprotocol/server-github"]
-});
+})).onLog(e => console.log(e.message));
 
 const tools = await mcp.discoverTools();
 await chat.withTools(tools).ask("List my repos");

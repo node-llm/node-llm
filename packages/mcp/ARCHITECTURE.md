@@ -37,8 +37,24 @@ The primary orchestrating engine and entry point for developers.
 
 - **Discovery**: Connects to a transport and lists all available tools, resources, and prompts.
 - **Namespacing**: Optional `prefix` support to avoid tool name collisions when using multiple servers.
+- **Observability**: Built-in listeners for logging and progress tracking.
 
-## 🛠 Usage Example (v1.0 Basic)
+## DSL (Events)
+
+Inspired by professional-grade Ruby/Rails patterns, the `MCP` class provides a clean, chainable DSL for handling server-side events:
+
+```typescript
+const mcp = await MCP.connect(config);
+
+mcp
+  .onLog(({ level, message }) => {
+    console.log(`[${level.toUpperCase()}] ${message}`);
+  })
+  .onProgress(({ progress, total }) => {
+    console.log(`Progress: ${Math.round((progress / total) * 100)}%`);
+  })
+  .onError((err) => console.error("Protocol Error:", err));
+```
 
 ```typescript
 import { MCP } from "@node-llm/mcp";
@@ -49,7 +65,8 @@ const transport = new StdioClientTransport({
   args: ["-y", "@modelcontextprotocol/server-github"]
 });
 
-const mcp = new MCP(transport);
+const mcp = (await MCP.connect(transport)).onLog((entry) => console.log(entry.message));
+
 const tools = await mcp.discoverTools({ prefix: "github_" });
 
 const chat = llm.chat("gpt-4").withTools(tools);
@@ -68,6 +85,12 @@ interface MCPExecutionResult {
   raw: unknown; // Complete MCP response for debugging
 }
 ```
+
+**Convenience Helpers:**
+
+- `resource.readText()`: Concatenates multi-part resource contents into a single string.
+- `mcp.discover()`: Fetches tools, resources, and prompts in a single parallel operation.
+- `MCP.connectAll(config)`: Initializes multiple servers concurrently from a dictionary.
 
 **Benefits:**
 

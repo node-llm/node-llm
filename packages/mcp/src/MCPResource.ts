@@ -30,4 +30,21 @@ export class MCPResource {
   async read() {
     return this.client.readResource({ uri: this.uri });
   }
+
+  /**
+   * Reads the resource content and returns it as a concatenated string.
+   * Useful for quickly injecting resource content into LLM prompts.
+   */
+  async readText(): Promise<string> {
+    const result = await this.read();
+    if (!result.contents) return "";
+
+    return result.contents
+      .map((c: any) => {
+        if ("text" in c) return c.text;
+        if ("blob" in c) return `[Binary Content: ${c.mimeType || "unknown"}]`;
+        return "";
+      })
+      .join("\n");
+  }
 }

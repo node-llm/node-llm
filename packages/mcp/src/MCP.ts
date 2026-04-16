@@ -1,5 +1,5 @@
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
-import { LoggingMessageNotificationSchema } from "@modelcontextprotocol/sdk/types.js";
+import { LoggingMessageNotificationSchema, ProgressNotificationSchema } from "@modelcontextprotocol/sdk/types.js";
 import { Transport } from "@modelcontextprotocol/sdk/shared/transport.js";
 import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
 import { StreamableHTTPClientTransport } from "@modelcontextprotocol/sdk/client/streamableHttp.js";
@@ -17,6 +17,13 @@ export interface StdioConfig {
 
 export interface SSEConfig {
   url: string;
+}
+
+/**
+ * High-level configuration for multiple MCP servers.
+ */
+export interface MCPConfig {
+  [name: string]: StdioConfig | SSEConfig;
 }
 
 export interface DiscoveryOptions {
@@ -87,7 +94,13 @@ export class MCP extends EventEmitter {
 
     // Capture explicit protocol logging notifications
     this.client.setNotificationHandler(LoggingMessageNotificationSchema, (notification) => {
-      this.emit("log", notification.params.data);
+      const { level, data } = notification.params;
+      this.emit("log", { level, message: data });
+    });
+
+    // Capture Progress notifications
+    this.client.setNotificationHandler(ProgressNotificationSchema, (notification) => {
+      this.emit("progress", notification.params);
     });
 
     // Capture all other notifications via fallback
@@ -104,6 +117,42 @@ export class MCP extends EventEmitter {
       this.isConnected = false;
       this.emit("close");
     };
+  }
+
+  /**
+   * Registers a handler for logging notifications.
+   * Returns 'this' for chaining.
+   */
+  onLog(handler: (entry: { level: string; message: string }) => void): this {
+    this.on("log", handler);
+    return this;
+  }
+
+  /**
+   * Registers a handler for progress notifications.
+   * Returns 'this' for chaining.
+   */
+  onProgress(handler: (params: any) => void): this {
+    this.on("progress", handler);
+    return this;
+  }
+
+  /**
+   * Registers a handler for protocol errors.
+   * Returns 'this' for chaining.
+   */
+  onError(handler: (error: Error) => void): this {
+    this.on("error", handler);
+    return this;
+  }
+
+  /**
+   * Registers a handler for generic protocol notifications.
+   * Returns 'this' for chaining.
+   */
+  onNotification(handler: (notification: any) => void): this {
+    this.on("notification", handler);
+    return this;
   }
 
   /**
@@ -127,6 +176,28 @@ export class MCP extends EventEmitter {
   static async connectSSE(config: SSEConfig): Promise<MCP> {
     const transport = new StreamableHTTPClientTransport(new URL(config.url));
     return new MCP(transport);
+  }
+
+  /**
+   * Connects to multiple MCP servers simultaneously from a configuration object.
+   * Returns a map of server names to MCP instances.
+   */
+  static async connectAll(config: MCPConfig): Promise<Record<string, MCP>> {
+    const instances: Record<string, MCP> = {};
+    const connections = Object.entries(config).map(async ([name, cfg]) => {
+      try {
+        if ("command" in cfg) {
+          instances[name] = await MCP.connect(cfg);
+        } else if ("url" in cfg) {
+          instances[name] = await MCP.connectSSE(cfg);
+        }
+      } catch (err) {
+        console.warn(`[MCP] Failed to connect to server "${name}":`, err);
+      }
+    });
+
+    await Promise.all(connections);
+    return instances;
   }
 
   /**
@@ -267,11 +338,14 @@ export class MCP extends EventEmitter {
    * Internal helper to detect if an error is a "Method Not Found" (capability not supported).
    */
   private isMethodNotFoundError(err: any): boolean {
+    const message = (err.message || "").toLowerCase();
     return (
       err.code === -32601 ||
       err.error?.code === -32601 ||
-      err.message?.includes("-32601") ||
-      err.message?.includes("Method not found")
+      message.includes("-32601") ||
+      message.includes("method not found") ||
+      message.includes("not supported") ||
+      message.includes("does not support")
     );
   }
 

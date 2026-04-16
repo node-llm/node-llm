@@ -20,11 +20,13 @@ import { MCP } from "@node-llm/mcp";
 
 const llm = createLLM();
 
-// Connect to the official Filesystem MCP server
-const mcp = await MCP.connect({
-  command: "npx",
-  args: ["-y", "@modelcontextprotocol/server-filesystem", "/path/to/docs"]
-});
+// Connect and setup logging in one chain
+const mcp = (
+  await MCP.connect({
+    command: "npx",
+    args: ["-y", "@modelcontextprotocol/server-filesystem", "/path/to/docs"]
+  })
+).onLog((e) => console.log(e.message));
 
 // Discover all tools
 const tools = await mcp.discoverTools();
@@ -38,6 +40,33 @@ await mcp.close();
 ```
 
 ## 🛠 Features
+
+### 🛰️ Multi-Server Support
+
+Initialize multiple servers concurrently from a central configuration.
+
+```typescript
+const mcps = await MCP.connectAll({
+  github: { command: "npx", args: ["-y", "@modelcontextprotocol/server-github"] },
+  slack: { url: "https://slack.mcp.example.com/sse" }
+});
+
+const tools = [
+  ...(await mcps.github.discoverTools({ prefix: "gh_" })),
+  ...(await mcps.slack.discoverTools({ prefix: "slack_" }))
+];
+```
+
+### Event DSL
+
+Register listeners using a clean, chainable API inspired by RubyLLM.
+
+```typescript
+mcp
+  .onLog(({ level, message }) => console.log(`[${level}] ${message}`))
+  .onProgress((p) => console.log(`Step ${p.progress} of ${p.total}`))
+  .onError((err) => console.error("Crash:", err));
+```
 
 ### 🔍 Discovery Types
 
@@ -83,7 +112,7 @@ Read server-side resources directly:
 ```typescript
 const resources = await mcp.discoverResources();
 const readme = resources.find((r) => r.name === "README.md");
-const content = await readme.read();
+const text = await readme.readText(); // Concatenated text content
 ```
 
 ## 🌉 Architecture

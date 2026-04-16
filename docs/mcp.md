@@ -28,7 +28,8 @@ graph LR
 ### Features:
 - **Protocol Discovery**: Connect to any MCP server to discover tools, resources, and prompts.
 - **Dynamic Context**: Inject codebase information or database schemas as **Resources**.
-- **Observability**: Real-time logging and notification events for server processes.
+- **Observability**: Real-time logging and progress notifications using a chainable DSL.
+- **Multi-Server Orchestration**: Connect to multiple servers concurrently with a single config.
 
 ---
 
@@ -40,13 +41,12 @@ Connect to any MCP server and expose its tools as native NodeLLM tool objects.
 ```typescript
 import { MCP } from "@node-llm/mcp";
 
-// 1. Connect via Stdio
-const mcp = await MCP.connect({
+// Connect with chainable monitoring
+const mcp = (await MCP.connect({
   command: "npx",
   args: ["-y", "@modelcontextprotocol/server-github"]
-});
+})).onLog(e => console.log(e.message));
 
-// 2. Discover tools and start chat
 const tools = await mcp.discoverTools();
 const chat = llm.chat().withTools(tools);
 
@@ -62,8 +62,8 @@ const resources = await mcp.discoverResources();
 const dbSchema = resources.find(r => r.name === "database_schema");
 
 if (dbSchema) {
-  const content = await dbSchema.read();
-  console.log(content.contents[0].text);
+  const text = await dbSchema.readText(); // Concatenated text content
+  console.log(text);
 }
 ```
 
@@ -90,24 +90,38 @@ if (codeReview) {
 
 ## ⚙️ Infrastructure Details
 
-### 🩺 Monitoring
-The `MCP` class extends `EventEmitter` to provide visibility into the server process.
+### DSL (Monitoring)
+The `MCP` class provides a clean, chainable API for observing server activity.
 
 ```typescript
-const mcp = await MCP.connect({ command: "...", args: ["..."] });
-
-// Server stderr logs
-mcp.on("log", (msg) => {
-  console.log(`[SERVER LOG] ${msg}`);
-});
-
-// Protocol notifications
-mcp.on("notification", (notif) => {
-  console.log(`Protocol event: ${notif.method}`);
-});
+const mcp = (await MCP.connect({ command: "...", args: ["..."] }))
+  .onLog(({ level, message }) => {
+    console.log(`[${level.toUpperCase()}] ${message}`);
+  })
+  .onProgress(({ progress, total }) => {
+    console.log(`Operation Progress: ${progress}/${total}`);
+  })
+  .onError(err => console.error("Protocol Error:", err));
 ```
 
-### 🛡️ Error Handling
+### 🛰️ Multi-Server Orchestration
+Connect to multiple MCP servers simultaneously from a central config.
+
+```typescript
+const mcps = await MCP.connectAll({
+  fs: { command: "npx", args: ["-y", "@modelcontextprotocol/server-filesystem"] },
+  brave: { command: "npx", args: ["-y", "@modelcontextprotocol/server-brave-search"] }
+});
+
+const allTools = [
+  ...await mcps.fs.discoverTools(),
+  ...await mcps.brave.discoverTools()
+];
+```
+
+---
+
+## 🛡️ Error Handling
 NodeLLM handles partial protocol implementations. If a server does not support a specific capability (returning `-32601 Method Not Found`), the discovery methods return an empty list `[]` instead of throwing an error.
 
 ### 🌐 HTTP Transport
@@ -139,6 +153,35 @@ const template = resourceTemplates.find(t => t.name === "Project Logs");
 const resource = await template.resolve({ owner: "eshaiju", repo: "node-llm" });
 const content = await resource.read();
 ```
+
+---
+
+## 📗 API Reference
+
+### `MCP` Class
+
+#### `static async connect(config: StdioConfig): Promise<MCP>`
+Initializes a Stdio-based connection (local process).
+
+#### `static async connectSSE(config: SSEConfig): Promise<MCP>`
+Initializes an HTTP-based connection via Server-Sent Events.
+
+#### `static async connectAll(config: MCPConfig): Promise<Record<string, MCP>>`
+Batch initialization for multiple servers.
+
+#### `async discover(options?: DiscoveryOptions): Promise<Manifest>`
+The master discovery method. Returns tools, resources, and prompts in parallel.
+
+#### `onLog(handler): this`
+Registers a listener for server logs. Returns `{ level: string, message: string }`.
+
+#### `onProgress(handler): this`
+Registers a listener for progress notifications. Returns `{ progress: number, total: number, message?: string }`.
+
+### `MCPResource` Class
+
+#### `async readText(): Promise<string>`
+Helper to fetch and concatenate all text parts of a resource.
 
 ---
 

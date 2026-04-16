@@ -9,7 +9,7 @@ dotenv.config({ path: path.resolve(__dirname, "../.env") });
 
 /**
  * GITHUB MCP EXAMPLE (v1.1)
- * Using the simplified Ruby-style connection helper.
+ * Using the simplified connection helper.
  */
 async function run() {
   console.log("--- Starting Simplified @node-llm/mcp GitHub Example ---");

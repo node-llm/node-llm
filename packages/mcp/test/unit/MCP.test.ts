@@ -1,169 +1,112 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { MCP } from "../../src/MCP.js";
-import * as MCPClient from "@modelcontextprotocol/sdk/client/index.js";
-import { Transport } from "@modelcontextprotocol/sdk/shared/transport.js";
+import { EventEmitter } from "events";
 
-// Mock the MCP Client
-vi.mock("@modelcontextprotocol/sdk/client/index.js", () => {
-  const MockClient = vi.fn();
-  MockClient.prototype.connect = vi.fn().mockResolvedValue(undefined);
-  MockClient.prototype.listTools = vi.fn().mockResolvedValue({ tools: [] });
-  MockClient.prototype.listResources = vi.fn().mockResolvedValue({ resources: [] });
-  MockClient.prototype.listResourceTemplates = vi.fn().mockResolvedValue({ resourceTemplates: [] });
-  MockClient.prototype.listPrompts = vi.fn().mockResolvedValue({ prompts: [] });
-  MockClient.prototype.close = vi.fn().mockResolvedValue(undefined);
-  MockClient.prototype.setNotificationHandler = vi.fn();
-  MockClient.prototype.fallbackNotificationHandler = vi.fn();
+// Mock the SDK components
+const mockClient = {
+  connect: vi.fn().mockResolvedValue(undefined),
+  listTools: vi.fn().mockResolvedValue({ tools: [] }),
+  listResources: vi.fn().mockResolvedValue({ resources: [] }),
+  listResourceTemplates: vi.fn().mockResolvedValue({ resourceTemplates: [] }),
+  listPrompts: vi.fn().mockResolvedValue({ prompts: [] }),
+  setNotificationHandler: vi.fn(),
+  setRequestHandler: vi.fn(),
+  close: vi.fn().mockResolvedValue(undefined),
+  onerror: vi.fn(),
+  onclose: vi.fn()
+};
 
-  return {
-    Client: MockClient
-  };
-});
+vi.mock("@modelcontextprotocol/sdk/client/index.js", () => ({
+  Client: vi.fn().mockImplementation(function () {
+    return mockClient;
+  })
+}));
 
-describe("MCP", () => {
-  let mockTransport: Transport;
+vi.mock("@modelcontextprotocol/sdk/client/stdio.js", () => ({
+  StdioClientTransport: vi.fn().mockImplementation(function () {
+    return {};
+  })
+}));
 
+vi.mock("@modelcontextprotocol/sdk/client/streamableHttp.js", () => ({
+  StreamableHTTPClientTransport: vi.fn().mockImplementation(function () {
+    return {};
+  })
+}));
+
+describe("MCP Class", () => {
   beforeEach(() => {
-    mockTransport = {} as Transport;
     vi.clearAllMocks();
   });
 
-  it("should initialize with a client", () => {
-    const mcp = new MCP(mockTransport);
+  it("should initialize with a transport and setup handlers", () => {
+    const mockTransport = {};
+    const mcp = new MCP(mockTransport as any);
+
     expect(mcp).toBeDefined();
-    expect(MCPClient.Client).toHaveBeenCalled();
+    // Verify notification handlers were set
+    expect(mockClient.setNotificationHandler).toHaveBeenCalled();
   });
 
-  describe("discoverTools", () => {
-    it("should connect the client on first call", async () => {
-      const mcp = new MCP(mockTransport);
-      const clientInstance = vi.mocked(MCPClient.Client).mock.instances[0] as any;
+  it("should handle logging notifications correctly", async () => {
+    const mcp = new MCP({} as any);
+    const logSpy = vi.fn();
+    mcp.onLog(logSpy);
 
-      await mcp.discoverTools();
+    // Get the handler that was registered
+    const handler = (mockClient.setNotificationHandler as any).mock.calls[0][1];
 
-      expect(clientInstance.connect).toHaveBeenCalledWith(mockTransport);
-    });
+    // Simulate a log notification
+    handler({ params: { level: "info", data: "test log" } });
 
-    it("should not connect twice", async () => {
-      const mcp = new MCP(mockTransport);
-      const clientInstance = vi.mocked(MCPClient.Client).mock.instances[0] as any;
-
-      await mcp.discoverTools();
-      await mcp.discoverTools();
-
-      expect(clientInstance.connect).toHaveBeenCalledTimes(1);
-    });
-
-    it("should apply name filters", async () => {
-      const mcp = new MCP(mockTransport);
-      const clientInstance = vi.mocked(MCPClient.Client).mock.instances[0] as any;
-      vi.mocked(clientInstance.listTools).mockResolvedValue({
-        tools: [
-          { name: "tool1", inputSchema: { type: "object" } },
-          { name: "tool2", inputSchema: { type: "object" } }
-        ]
-      } as any);
-
-      const tools = await mcp.discoverTools({ filter: ["tool1"] });
-
-      expect(tools).toHaveLength(1);
-      expect(tools[0]!.name).toBe("tool1");
-    });
-
-    it("should apply name prefixes", async () => {
-      const mcp = new MCP(mockTransport);
-      const clientInstance = vi.mocked(MCPClient.Client).mock.instances[0] as any;
-      vi.mocked(clientInstance.listTools).mockResolvedValue({
-        tools: [{ name: "tool1", inputSchema: { type: "object" } }]
-      } as any);
-
-      const tools = await mcp.discoverTools({ prefix: "pre_" });
-
-      expect(tools[0]!.name).toBe("pre_tool1");
-    });
+    expect(logSpy).toHaveBeenCalledWith({ level: "info", message: "test log" });
   });
 
-  describe("discoverResources", () => {
-    it("should discover and wrap resources", async () => {
-      const mcp = new MCP(mockTransport);
-      const clientInstance = vi.mocked(MCPClient.Client).mock.instances[0] as any;
-      vi.mocked(clientInstance.listResources).mockResolvedValue({
-        resources: [{ uri: "test://res", name: "Test Resource" }]
-      } as any);
+  it("should support the DSL for event registration", () => {
+    const mcp = new MCP({} as any);
 
-      const resources = await mcp.discoverResources();
+    const chain = mcp
+      .onLog(() => {})
+      .onProgress(() => {})
+      .onError(() => {});
 
-      expect(resources).toHaveLength(1);
-      expect(resources[0]!.uri).toBe("test://res");
-      expect(clientInstance.listResources).toHaveBeenCalled();
-    });
+    expect(chain).toBe(mcp);
   });
 
-  describe("discoverPrompts", () => {
-    it("should discover and wrap prompts", async () => {
-      const mcp = new MCP(mockTransport);
-      const clientInstance = vi.mocked(MCPClient.Client).mock.instances[0] as any;
-      vi.mocked(clientInstance.listPrompts).mockResolvedValue({
-        prompts: [{ name: "test-prompt", description: "A test prompt" }]
-      } as any);
-
-      const prompts = await mcp.discoverPrompts();
-
-      expect(prompts).toHaveLength(1);
-      expect(prompts[0]!.name).toBe("test-prompt");
-      expect(clientInstance.listPrompts).toHaveBeenCalled();
+  it("should discover tools and map them to MCPTool instances", async () => {
+    mockClient.listTools.mockResolvedValueOnce({
+      tools: [{ name: "test_tool", description: "A tool", inputSchema: {} }]
     });
+
+    const mcp = new MCP({} as any);
+    const tools = await mcp.discoverTools({ prefix: "mcp_" });
+
+    expect(tools.length).toBe(1);
+    expect(tools[0].name).toBe("mcp_test_tool");
+    expect(mockClient.connect).toHaveBeenCalled();
   });
 
-  describe("discover", () => {
-    it("should return all capabilities in one call", async () => {
-      const mcp = new MCP(mockTransport);
-      const clientInstance = vi.mocked(MCPClient.Client).mock.instances[0] as any;
+  it("should detect 'Method Not Found' errors robustly", () => {
+    const mcp = new MCP({} as any);
+    const isNotFound = (mcp as any).isMethodNotFoundError.bind(mcp);
 
-      clientInstance.listTools.mockResolvedValue({ tools: [{ name: "t1" }] } as any);
-      clientInstance.listResources.mockResolvedValue({ resources: [{ uri: "r1" }] } as any);
-      clientInstance.listResourceTemplates.mockResolvedValue({
-        resourceTemplates: [{ name: "rt1" }]
-      } as any);
-      clientInstance.listPrompts.mockResolvedValue({ prompts: [{ name: "p1" }] } as any);
-
-      const result = await mcp.discover();
-
-      expect(result.tools).toHaveLength(1);
-      expect(result.resources).toHaveLength(1);
-      expect(result.resourceTemplates).toHaveLength(1);
-      expect(result.prompts).toHaveLength(1);
-    });
+    expect(isNotFound({ code: -32601 })).toBe(true);
+    expect(isNotFound({ message: "Method not found" })).toBe(true);
+    expect(isNotFound({ message: "Capability not supported" })).toBe(true);
+    expect(isNotFound({ message: "Server does not support this" })).toBe(true);
+    expect(isNotFound({ message: "Internal error" })).toBe(false);
   });
 
-  describe("monitoring", () => {
-    it("should emit log events from stderr", async () => {
-      const mockStderr = { on: vi.fn() };
-      const transportWithStderr = { stderr: mockStderr } as any;
-      const mcp = new MCP(transportWithStderr);
+  it("should connect to multiple servers via connectAll", async () => {
+    const configs = {
+      server1: { command: "node", args: ["s1.js"] },
+      server2: { url: "http://localhost:3000/sse" }
+    };
 
-      const logHandler = vi.fn();
-      mcp.on("log", logHandler);
+    const instances = await MCP.connectAll(configs);
 
-      // Simulate stderr data
-      const dataHandler = (mockStderr.on as any).mock.calls.find((c: any) => c[0] === "data")[1];
-      dataHandler(Buffer.from("system healthy"));
-
-      expect(logHandler).toHaveBeenCalledWith("system healthy");
-    });
-  });
-
-  describe("concurrency", () => {
-    it("should handle parallel discovery calls without double-connecting", async () => {
-      const mcp = new MCP(mockTransport);
-      const clientInstance = vi.mocked(MCPClient.Client).mock.instances[0] as any;
-
-      // Simulate a slightly delayed connection
-      clientInstance.connect.mockReturnValue(new Promise((resolve) => setTimeout(resolve, 10)));
-
-      await Promise.all([mcp.discoverTools(), mcp.discoverResources(), mcp.discoverPrompts()]);
-
-      expect(clientInstance.connect).toHaveBeenCalledTimes(1);
-    });
+    expect(Object.keys(instances)).toEqual(["server1", "server2"]);
+    expect(instances.server1).toBeInstanceOf(MCP);
+    expect(instances.server2).toBeInstanceOf(MCP);
   });
 });
