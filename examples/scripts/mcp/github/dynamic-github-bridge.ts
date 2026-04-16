@@ -1,64 +1,41 @@
 import { createLLM } from "../../../../packages/core/src/index.js";
 import { MCPRegistry } from "../../../../packages/mcp/src/index.js";
-import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
 import dotenv from "dotenv";
 
 dotenv.config();
 
 /**
- * GITHUB MCP EXAMPLE (v1.0)
- * Demonstrates using the official @node-llm/mcp package to
- * autonomously discover and use tools from a remote server.
+ * GITHUB MCP EXAMPLE (v1.1)
+ * Using the simplified Ruby-style connection helper.
  */
 async function run() {
-  console.log("--- Starting @node-llm/mcp GitHub Example ---");
+  console.log("--- Starting Simplified @node-llm/mcp GitHub Example ---");
 
-  // 1. Initialize the Stdio Transport for the GitHub server
-  const transport = new StdioClientTransport({
+  // 1. Connect to GitHub MCP server in one line
+  const mcp = await MCPRegistry.connect({
     command: "npx",
     args: ["-y", "@modelcontextprotocol/server-github"],
-    env: {
-      ...process.env,
-      GITHUB_PERSONAL_ACCESS_TOKEN: process.env.GITHUB_PERSONAL_ACCESS_TOKEN
-    }
+    env: { GITHUB_PERSONAL_ACCESS_TOKEN: process.env.GITHUB_PERSONAL_ACCESS_TOKEN || "" }
   });
 
-  // 2. Use the MCPRegistry to connect and discover tools
-  const mcp = new MCPRegistry(transport);
-
-  console.log("[Registry] Probing GitHub MCP server...");
-
   try {
-    // We can use prefixes to avoid collisions if we had multiple servers
-    const tools = await mcp.discover({ 
-        prefix: "gh_",
-        filter: ["list_issues"] // In this demo we filter for stability, but we could list all
-    });
-
-    console.log(`[Registry] Successfully discovered ${tools.length} tools.`);
+    // 2. Discover and register tools
+    const tools = await mcp.discover({ filter: ["list_issues"] });
 
     const llm = createLLM({ provider: "openai" });
-    
-    // 3. Inject the discovered tools into the NodeLLM chat session
     const chat = llm.chat("gpt-4o-mini").withTools(tools);
 
-    console.log("\nScenario: Dynamic discovery using @node-llm/mcp package.");
+    console.log("\nScenario: Dynamic discovery with minimal boilerplate.");
     
-    const response = await chat.ask("Look up the most recent issue in 'facebook/react' using your GitHub tools. Just tell me the title of the first one.");
+    const response = await chat.ask("Look up the most recent issue in 'facebook/react'. Just the title.");
 
     console.log("\n--- AI Response ---");
     console.log(response.content);
 
-  } catch (err) {
-    console.error("Discovery Error:", err);
   } finally {
-    // 4. Always close the registry to cleanup child processes
+    // 3. Cleanup
     await mcp.close();
-    console.log("\n[Lifecycle] MCP Connection closed.");
   }
 }
 
-run().catch(err => {
-  console.error("Fatal Error:", err);
-  process.exit(1);
-});
+run().catch(console.error);

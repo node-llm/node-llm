@@ -1,6 +1,13 @@
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { Transport } from "@modelcontextprotocol/sdk/shared/transport.js";
+import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
 import { MCPTool } from "./MCPTool.js";
+
+export interface StdioConfig {
+  command: string;
+  args?: string[];
+  env?: Record<string, string>;
+}
 
 export interface DiscoveryOptions {
   /**
@@ -16,17 +23,19 @@ export interface DiscoveryOptions {
 }
 
 /**
- * The main orchestrator for MCP integration.
- * Handles server connection and tool discovery.
+ * The main orchestrating engine for MCP integration.
  */
 export class MCPRegistry {
   private client: Client;
 
+  /**
+   * Creates a registry from an existing transport.
+   */
   constructor(private readonly transport: Transport) {
     this.client = new Client(
       {
         name: "node-llm-mcp-host",
-        version: "0.1.0"
+        version: "1.0.0"
       },
       {
         capabilities: {
@@ -34,6 +43,19 @@ export class MCPRegistry {
         }
       }
     );
+  }
+
+  /**
+   * Ruby-style helper to quickly connect to a Stdio-based MCP server.
+   */
+  static async connect(config: StdioConfig): Promise<MCPRegistry> {
+    const transport = new StdioClientTransport({
+      command: config.command,
+      args: config.args || [],
+      env: { ...(process.env as any), ...config.env }
+    });
+    const registry = new MCPRegistry(transport);
+    return registry;
   }
 
   /**
