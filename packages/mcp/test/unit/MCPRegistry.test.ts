@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { MCPRegistry } from "../src/MCPRegistry.js";
-import { MCPTool } from "../src/MCPTool.js";
+import { MCPRegistry } from "../../src/MCPRegistry.js";
+import { MCPTool } from "../../src/MCPTool.js";
 
 // Mock the MCP Client
 vi.mock("@modelcontextprotocol/sdk/client/index.js", () => {

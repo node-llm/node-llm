@@ -1,8 +1,11 @@
-import { createLLM } from "../../../../packages/core/src/index.js";
+import { createLLM } from "@node-llm/core";
 import { MCPRegistry } from "../../../../packages/mcp/src/index.js";
 import dotenv from "dotenv";
+import path from "path";
+import { fileURLToPath } from "url";
 
-dotenv.config();
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+dotenv.config({ path: path.resolve(__dirname, "../.env") });
 
 /**
  * GITHUB MCP EXAMPLE (v1.1)

@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { SchemaStabilizer } from "../src/SchemaStabilizer.js";
+import { SchemaStabilizer } from "../../src/SchemaStabilizer.js";
 
 describe("SchemaStabilizer", () => {
   it("should add empty properties to objects that lack them", () => {

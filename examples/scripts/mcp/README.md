@@ -1,34 +1,40 @@
-# MCP Examples (Workaround Patterns)
+# @node-llm/mcp Examples
 
-This directory contains Proof-of-Concept (PoC) demonstrations of how to connect `node-llm` to [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) servers.
+This directory contains production-ready examples of using the `@node-llm/mcp` package to connect NodeLLM to various Model Context Protocol (MCP) servers.
 
-## ⚠️ Important Note
-These are **workaround patterns**. They are designed for low-traffic CLI tools and testing.
-- **Official Support**: We are currently building a first-class `@node-llm/mcp` package for persistent, high-performance connections.
+## 🚀 Examples
 
-## Project Structure
+### 1. `github/dynamic-github-bridge.ts`
+**Category**: Remote API
+Connects to GitHub to manage issues, PRs, and repository data.
+- **Requirement**: `GITHUB_PERSONAL_ACCESS_TOKEN` in `.env`.
+- **Key Feature**: Automatic discovery of tools with prefixing.
 
-### 1. `core-explorer/`
-A real-world demo where the AI uses a local MCP server to explore its own source code.
-- **Included**: `dummy-server.mjs` (the explorer server), `manual-bridge.ts` (the bridge).
-- **Run**: 
-  ```bash
-  cd examples/scripts/mcp/core-explorer
-  npm install
-  npx tsx manual-bridge.ts
-  ```
+### 2. `filesystem/fs-explorer.ts`
+**Category**: Local Infrastructure
+Allows the AI to read and summarize local files in your project.
+- **Key Feature**: Secure local file access within a bounded directory.
 
-### 2. `github/`
-A demo connecting `node-llm` to the official GitHub MCP server to fetch live repository data.
-- **Included**: `github-bridge.ts`.
-- **Requirement**: A `GITHUB_PERSONAL_ACCESS_TOKEN` in the local `.env`.
-- **Run**:
-  ```bash
-  cd examples/scripts/mcp/github
-  npm install
-  npx tsx github-bridge.ts
-  ```
+### 3. `puppeteer/web-browser.ts`
+**Category**: Web Automation
+Enables the AI to browse the live web, click elements, and extract data.
+- **Key Feature**: Fully autonomous web research capabilities.
 
-## Rationale (The Bridge Pattern)
+## 🛠 How to Run
 
-The bridge scripts demonstrate how to wrap the `@modelcontextprotocol/sdk` inside a standard Node-LLM `Tool`. This allows the LLM to autonomously call MCP tools via a standard `Chat` loop.
+1. Ensure you are in the project root.
+2. Ensure your `.env` has the required provider keys (e.g., `OPENAI_API_KEY`).
+3. Run any example using `tsx`:
+
+```bash
+npx tsx examples/scripts/mcp/github/dynamic-github-bridge.ts
+npx tsx examples/scripts/mcp/filesystem/fs-explorer.ts
+npx tsx examples/scripts/mcp/puppeteer/web-browser.ts
+```
+
+## 🏗 Why use @node-llm/mcp?
+
+Instead of manual bridge logic, this package provides:
+- **Persistent Connections**: Uses a long-lived Stdio transport instead of re-opening for every call.
+- **Schema Stabilization**: Automatically fixes third-party JSON schemas for strict LLM providers.
+- **Lifecycle Management**: Simple `connect()` and `close()` patterns (Ruby-inspired).

@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { MCPTool } from "../src/MCPTool.js";
+import { MCPTool } from "../../src/MCPTool.js";
 
 describe("MCPTool", () => {
   const mockClient = {
