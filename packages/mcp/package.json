@@ -17,13 +17,16 @@
   "scripts": {
     "build": "tsc",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "example:discovery": "tsx ../../examples/scripts/mcp/core-explorer/capabilities.ts",
+    "example:audit": "tsx ../../examples/scripts/mcp/filesystem/inspect-mcp.ts"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.6.0"
   },
   "devDependencies": {
     "@node-llm/core": "workspace:*",
+    "tsx": "^4.21.0",
     "typescript": "^5.x"
   },
   "peerDependencies": {

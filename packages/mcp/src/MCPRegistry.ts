@@ -104,14 +104,26 @@ export class MCPRegistry {
    * Returns an array of resources.
    *
    */
-  async discoverResources(): Promise<MCPResource[]> {
+  async discoverResources(options: DiscoveryOptions = {}): Promise<MCPResource[]> {
     if (!this.isConnected) {
       await this.client.connect(this.transport);
       this.isConnected = true;
     }
 
     const response = await this.client.listResources();
-    return (response.resources || []).map((r) => new MCPResource(this.client, r));
+    let resources = response.resources || [];
+
+    if (options.filter) {
+      resources = resources.filter((r) => options.filter!.includes(r.name));
+    }
+
+    return resources.map((r) => {
+      const metadata = { ...r };
+      if (options.prefix) {
+        metadata.name = `${options.prefix}${r.name}`;
+      }
+      return new MCPResource(this.client, metadata);
+    });
   }
 
   /**
@@ -119,14 +131,26 @@ export class MCPRegistry {
    * Returns an array of prompts.
    *
    */
-  async discoverPrompts(): Promise<MCPPrompt[]> {
+  async discoverPrompts(options: DiscoveryOptions = {}): Promise<MCPPrompt[]> {
     if (!this.isConnected) {
       await this.client.connect(this.transport);
       this.isConnected = true;
     }
 
     const response = await this.client.listPrompts();
-    return (response.prompts || []).map((p) => new MCPPrompt(this.client, p));
+    let prompts = response.prompts || [];
+
+    if (options.filter) {
+      prompts = prompts.filter((p) => options.filter!.includes(p.name));
+    }
+
+    return prompts.map((p) => {
+      const metadata = { ...p };
+      if (options.prefix) {
+        metadata.name = `${options.prefix}${p.name}`;
+      }
+      return new MCPPrompt(this.client, metadata);
+    });
   }
 
   /**
