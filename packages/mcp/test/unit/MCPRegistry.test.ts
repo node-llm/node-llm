@@ -34,30 +34,76 @@ describe("MCPRegistry", () => {
     vi.clearAllMocks();
   });
 
-  it("should connect and discover tools", async () => {
-    const registry = new MCPRegistry(mockTransport);
-    const tools = await registry.discover();
+  describe("discoverTools()", () => {
+    it("should connect and discover tools", async () => {
+      const registry = new MCPRegistry(mockTransport);
+      const tools = await registry.discoverTools();
 
-    expect(tools).toHaveLength(2);
-    expect(tools[0]).toBeInstanceOf(MCPTool);
-    expect(tools[0]?.name).toBe("tool1");
-    expect(tools[1]?.name).toBe("tool2");
+      expect(tools).toHaveLength(2);
+      expect(tools[0]).toBeInstanceOf(MCPTool);
+      expect(tools[0]?.name).toBe("tool1");
+      expect(tools[1]?.name).toBe("tool2");
+    });
+
+    it("should filter tools by name if requested", async () => {
+      const registry = new MCPRegistry(mockTransport);
+      const tools = await registry.discoverTools({ filter: ["tool1"] });
+
+      expect(tools).toHaveLength(1);
+      expect(tools[0]?.name).toBe("tool1");
+    });
+
+    it("should apply prefix to tool names if provided", async () => {
+      const registry = new MCPRegistry(mockTransport);
+      const tools = await registry.discoverTools({ prefix: "mcp_" });
+
+      expect(tools[0]?.name).toBe("mcp_tool1");
+      expect(tools[1]?.name).toBe("mcp_tool2");
+    });
+
+    it("should preserve original tool name in metadata", async () => {
+      const registry = new MCPRegistry(mockTransport);
+      const tools = await registry.discoverTools({ prefix: "test_" });
+
+      expect((tools[0] as any).originalName).toBe("tool1");
+    });
   });
 
-  it("should filter tools by name if requested", async () => {
-    const registry = new MCPRegistry(mockTransport);
-    const tools = await registry.discover({ filter: ["tool1"] });
+  describe("discover()", () => {
+    it("should delegate to discoverTools() in Phase 1", async () => {
+      const registry = new MCPRegistry(mockTransport);
+      const tools = await registry.discover();
 
-    expect(tools).toHaveLength(1);
-    expect(tools[0]?.name).toBe("tool1");
+      expect(tools).toHaveLength(2);
+      expect(tools[0]).toBeInstanceOf(MCPTool);
+      expect(tools[0]?.name).toBe("tool1");
+    });
+
+    it("should support same options as discoverTools()", async () => {
+      const registry = new MCPRegistry(mockTransport);
+      const tools = await registry.discover({ prefix: "test_", filter: ["tool2"] });
+
+      expect(tools).toHaveLength(1);
+      expect(tools[0]?.name).toBe("test_tool2");
+    });
   });
 
-  it("should apply prefix to tool names if provided", async () => {
-    const registry = new MCPRegistry(mockTransport);
-    const tools = await registry.discover({ prefix: "mcp_" });
+  describe("discoverResources()", () => {
+    it("should return empty array in Phase 1", async () => {
+      const registry = new MCPRegistry(mockTransport);
+      const resources = await registry.discoverResources();
 
-    expect(tools[0]?.name).toBe("mcp_tool1");
-    expect(tools[1]?.name).toBe("mcp_tool2");
+      expect(resources).toEqual([]);
+    });
+  });
+
+  describe("discoverPrompts()", () => {
+    it("should return empty array in Phase 1", async () => {
+      const registry = new MCPRegistry(mockTransport);
+      const prompts = await registry.discoverPrompts();
+
+      expect(prompts).toEqual([]);
+    });
   });
 
   it("should close transport on close()", async () => {

@@ -1,6 +1,13 @@
 import { Tool, ToolDefinition } from "@node-llm/core";
 import { SchemaStabilizer } from "./SchemaStabilizer.js";
 
+export interface MCPExecutionResult {
+  text?: string;
+  data?: unknown;
+  resources?: any[]; // Resource references
+  raw: unknown; // Raw MCP response
+}
+
 /**
  * A proxy class that converts an MCP Tool into a native NodeLLM Tool.
  */
@@ -46,7 +53,7 @@ export class MCPTool extends Tool {
   /**
    * Executes the tool by calling the MCP server.
    */
-  async execute(args: any): Promise<string> {
+  async execute(args: any): Promise<MCPExecutionResult> {
     try {
       const response = await this.client.callTool({
         name: this.originalName,
@@ -54,18 +61,46 @@ export class MCPTool extends Tool {
       });
 
       if (!response.content || !Array.isArray(response.content)) {
-        return "";
+        return { raw: response };
       }
 
-      // Concatenate all text parts from the MCP result
-      return response.content
-        .filter((part: any) => part.type === "text")
-        .map((part: any) => part.text)
-        .join("\n");
+      // Separate different content types
+      const textParts: string[] = [];
+      const dataParts: unknown[] = [];
+      const resourceParts: any[] = [];
+
+      for (const part of response.content) {
+        switch (part.type) {
+          case "text":
+            textParts.push(part.text);
+            break;
+          case "json":
+            dataParts.push(part.data);
+            break;
+          case "resource":
+            resourceParts.push(part.resource);
+            break;
+          default:
+            // Handle other content types as data
+            dataParts.push(part);
+        }
+      }
+
+      return {
+        text: textParts.length > 0 ? textParts.join("\n") : undefined,
+        data: dataParts.length === 1 ? dataParts[0] : dataParts.length > 1 ? dataParts : undefined,
+        resources: resourceParts.length > 0 ? resourceParts : undefined,
+        raw: response
+      };
     } catch (error: any) {
       // MCP Errors often come with a code and message
       const errorCode = error.code ? ` (Code: ${error.code})` : "";
-      return `MCP Error in ${this.name}: ${error.message}${errorCode}`;
+      const errorMessage = `MCP Error in ${this.name}: ${error.message}${errorCode}`;
+
+      return {
+        text: errorMessage,
+        raw: error
+      };
     }
   }
 }

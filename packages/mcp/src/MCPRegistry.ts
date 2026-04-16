@@ -68,10 +68,12 @@ export class MCPRegistry {
   }
 
   /**
-   * Establishes a connection to the MCP server and discovers available tools.
+   * Discovers available tools from the MCP server.
    * Returns an array of MCPTool instances ready to be used in NodeLLM sessions.
+   *
+   * @phase Phase 1
    */
-  async discover(options: DiscoveryOptions = {}): Promise<MCPTool[]> {
+  async discoverTools(options: DiscoveryOptions = {}): Promise<MCPTool[]> {
     await this.client.connect(this.transport);
 
     const response = await this.client.listTools();
@@ -89,6 +91,36 @@ export class MCPRegistry {
       }
       return new MCPTool(this.client, metadata as any);
     });
+  }
+
+  /**
+   * Discovers available resources from the MCP server.
+   * Returns an array of resources.
+   *
+   * @phase Phase 2
+   */
+  async discoverResources(options: DiscoveryOptions = {}): Promise<any[]> {
+    // TODO: Implement in Phase 2
+    return [];
+  }
+
+  /**
+   * Discovers available prompts from the MCP server.
+   * Returns an array of prompts.
+   *
+   * @phase Phase 2
+   */
+  async discoverPrompts(options: DiscoveryOptions = {}): Promise<any[]> {
+    // TODO: Implement in Phase 2
+    return [];
+  }
+
+  /**
+   * Convenience method to discover all capabilities at once.
+   * In Phase 1, this returns only tools. In Phase 2+, it aggregates tools, resources, and prompts.
+   */
+  async discover(options: DiscoveryOptions = {}): Promise<MCPTool[]> {
+    return this.discoverTools(options);
   }
 
   /**
