@@ -50,7 +50,87 @@ const transport = new StdioClientTransport({
 });
 
 const mcp = new MCPRegistry(transport);
-const tools = await mcp.discover({ prefix: "github_" });
+const tools = await mcp.discoverTools({ prefix: "github_" });
 
-const session = new AgentSession({ tools });
+const chat = llm.chat("gpt-4").withTools(tools);
+const response = await chat.ask("Create a GitHub repository");
 ```
+
+## 📊 Structured Results (Phase 1)
+
+Tool execution returns `MCPExecutionResult` with multiple content types:
+
+```typescript
+interface MCPExecutionResult {
+  text?: string; // Human-readable text output
+  data?: unknown; // Structured JSON data (single or array)
+  resources?: any[]; // Resource references (Phase 2)
+  raw: unknown; // Complete MCP response for debugging
+}
+```
+
+**Benefits:**
+
+- Preserves structured data loss (not concatenated as text)
+- Separates concerns: display vs computation
+- Enables AI to work with actual JSON, not string representations
+- Forward-compatible with Phase 2 (resources, prompts)
+
+**Example:**
+
+```typescript
+const result = await tool.execute({ query: "SELECT * FROM users" });
+console.log(result.text); // "5 rows found"
+console.log(result.data); // [{id:1, name:...}, {...}, ...]
+console.log(result.raw); // Complete MCP response object
+```
+
+## 🤖 Agent Patterns
+
+### Multi-Tool Agent (Tool Discovery)
+
+Combine multiple MCP servers and let the agent choose which tools to use:
+
+```typescript
+const fsTools = await fsRegistry.discoverTools({ prefix: "fs_" });
+const dbTools = await dbRegistry.discoverTools({ prefix: "db_" });
+const allTools = [...fsTools, ...dbTools];
+
+const chat = llm.chat("gpt-4").withTools(allTools);
+const response = await chat.ask("Analyze the codebase");
+```
+
+**See:** [examples/scripts/mcp/agent-flow/multi-tool-agent.ts](../../examples/scripts/mcp/agent-flow/multi-tool-agent.ts)
+
+### Step-by-Step Agent (Orchestration)
+
+For structured workflows with explicit control and audit trails:
+
+```typescript
+class SimpleAgent {
+  steps: AgentStep[] = [];
+
+  async executeStep(objective: string, context: string) {
+    const response = await this.chat.ask(`${objective}. Context: ${context}`);
+    const toolsUsed = response.toolCalls?.map((c) => c.name) || [];
+    this.steps.push({ objective, toolsUsed, result: response.text });
+  }
+
+  getSummary() {
+    return JSON.stringify(this.steps, null, 2);
+  }
+}
+```
+
+**See:** [examples/scripts/mcp/agent-flow/step-agent.ts](../../examples/scripts/mcp/agent-flow/step-agent.ts)
+
+## 🔄 Phase-Based API Design
+
+The API is structured to enable future phases without breaking changes:
+
+- **Phase 1**: Tools only (`discoverTools()`) ✅ Complete
+- **Phase 1 Stubs**: Resources & Prompts (`discoverResources()`, `discoverPrompts()`)
+- **Phase 2**: Full resource/prompt support
+- **Phase 3**: Multi-server composition, lifecycle hooks, notifications
+
+Each phase adds new methods while maintaining backward compatibility.

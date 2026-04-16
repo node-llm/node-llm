@@ -216,6 +216,64 @@ These scripts demonstrate that `NodeLLM` correctly raises errors for features no
 - **Reasoning**: `node examples/scripts/openrouter/chat/reasoning.mjs`
 - **Embeddings**: `node examples/scripts/openrouter/embeddings/create.mjs`
 
+---
+
+## MCP (Model Context Protocol) Examples
+
+Model Context Protocol integration lets LLMs use external tools and resources like filesystems, databases, and APIs through standardized MCP servers.
+
+### 1. Core MCP Examples
+
+**Basic Tool Usage:**
+- `npx tsx examples/scripts/mcp/basic-usage.ts` - Simple single-server tool discovery and execution
+- `npx tsx examples/scripts/mcp/sqlite/db-agent.ts` - SQLite database operations
+
+**Multi-Server Integration:**
+- `npx tsx examples/scripts/mcp/core-explorer/manual-bridge.ts` - Combine multiple tools manually
+
+### 2. Agent Flow Examples (Advanced)
+
+These examples demonstrate sophisticated agent patterns with MCP tools:
+
+**Multi-Tool Agent** (`examples/scripts/mcp/agent-flow/multi-tool-agent.ts`):
+- Combines multiple MCP servers (filesystem + database)
+- Agent autonomously chooses which tools to use
+- Perfect for: complex reasoning, cross-domain analysis
+
+```bash
+npx tsx examples/scripts/mcp/agent-flow/multi-tool-agent.ts
+```
+
+**Step-by-Step Agent** (`examples/scripts/mcp/agent-flow/step-agent.ts`):
+- Structured workflow with explicit step tracking
+- Audit trail and visibility into agent reasoning
+- Perfect for: orchestrated processes, explainable workflows
+
+```bash
+npx tsx examples/scripts/mcp/agent-flow/step-agent.ts
+```
+
+[See Agent Flow README for detailed patterns →](./scripts/mcp/agent-flow/README.md)
+
+### 3. MCP Server Requirements
+
+For MCP examples to work, you need:
+- **Filesystem MCP**: Built into examples (via `@modelcontextprotocol/server-filesystem`)
+- **SQLite MCP**: `uvx mcp-server-sqlite` (installed on-demand)
+- **OpenAI API Key**: Set in `OPENAI_API_KEY` environment variable
+
+### 4. Available MCP Servers
+
+NodeLLM can connect to any MCP server. Popular options:
+- `@modelcontextprotocol/server-filesystem` - File operations
+- `mcp-server-sqlite` - SQLite database operations
+- `mcp-server-postgres` - PostgreSQL operations
+- `mcp-server-web` - Web scraping and HTTP
+- `mcp-server-git` - Git repository operations
+
+[Explore MCP Directory →](https://modelcontextprotocol.io/clients)
+
+---
 
 ## Troubleshooting
 
