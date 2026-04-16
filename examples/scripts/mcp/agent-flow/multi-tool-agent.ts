@@ -1,5 +1,5 @@
 import { createLLM } from "@node-llm/core";
-import { MCPRegistry } from "../../../../packages/mcp/src/index.js";
+import { MCP } from "../../../../packages/mcp/src/index.js";
 import dotenv from "dotenv";
 import path from "path";
 import fs from "fs";
@@ -56,7 +56,7 @@ async function run() {
   console.log("[Agent] Initializing tool registries...\n");
 
   // 1. Setup filesystem tools
-  const fsRegistry = await MCPRegistry.connect({
+  const fsRegistry = await MCP.connect({
     command: findExecutable("npx"),
     args: [
       "-y",
@@ -66,7 +66,7 @@ async function run() {
   });
 
   // 2. Setup SQLite tools
-  const dbRegistry = await MCPRegistry.connect({
+  const dbRegistry = await MCP.connect({
     command: findExecutable("uvx"),
     args: ["mcp-server-sqlite", "--db-path", dbPath]
   });

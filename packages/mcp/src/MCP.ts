@@ -26,13 +26,14 @@ export interface DiscoveryOptions {
 
 /**
  * The main orchestrating engine for MCP integration.
+ * Acts as the entry point for connecting to servers and discovering capabilities.
  */
-export class MCPRegistry {
+export class MCP {
   private client: Client;
   private isConnected: boolean = false;
 
   /**
-   * Creates a registry from an existing transport.
+   * Creates an MCP instance from an existing transport.
    */
   constructor(private readonly transport: Transport) {
     this.client = new Client(
@@ -51,7 +52,7 @@ export class MCPRegistry {
   /**
    * Helper to quickly connect to a Stdio-based MCP server.
    */
-  static async connect(config: StdioConfig): Promise<MCPRegistry> {
+  static async connect(config: StdioConfig): Promise<MCP> {
     const transport = new StdioClientTransport({
       command: config.command,
       args: config.args || [],
@@ -66,8 +67,8 @@ export class MCPRegistry {
       });
     }
 
-    const registry = new MCPRegistry(transport);
-    return registry;
+    const mcp = new MCP(transport);
+    return mcp;
   }
 
   /**

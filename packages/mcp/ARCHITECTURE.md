@@ -31,17 +31,17 @@ A subclass of `node-llm`'s `Tool` that acts as a proxy.
 - **Dynamic Definition**: Generates `ToolDefinition` on the fly based on MCP metadata.
 - **Execution**: Wraps the MCP `callTool` request and concatenates text content results.
 
-### 3. MCPRegistry
+### 3. MCP
 
-The primary entry point for developers.
+The primary orchestrating engine and entry point for developers.
 
-- **Discovery**: Connects to a transport and lists all available tools.
+- **Discovery**: Connects to a transport and lists all available tools, resources, and prompts.
 - **Namespacing**: Optional `prefix` support to avoid tool name collisions when using multiple servers.
 
 ## 🛠 Usage Example (v1.0 Basic)
 
 ```typescript
-import { MCPRegistry } from "@node-llm/mcp";
+import { MCP } from "@node-llm/mcp";
 import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
 
 const transport = new StdioClientTransport({
@@ -49,7 +49,7 @@ const transport = new StdioClientTransport({
   args: ["-y", "@modelcontextprotocol/server-github"]
 });
 
-const mcp = new MCPRegistry(transport);
+const mcp = new MCP(transport);
 const tools = await mcp.discoverTools({ prefix: "github_" });
 
 const chat = llm.chat("gpt-4").withTools(tools);
@@ -75,6 +75,7 @@ interface MCPExecutionResult {
 - Separates concerns: display vs computation
 - Enables AI to work with actual JSON, not string representations
 - Forward-compatible with Phase 2 (resources, prompts)
+- Forward-compatible with Phase 3 (sampling)
 
 **Example:**
 
@@ -92,6 +93,9 @@ console.log(result.raw); // Complete MCP response object
 Combine multiple MCP servers and let the agent choose which tools to use:
 
 ```typescript
+const fsRegistry = await MCP.connect({ command: "...", args: ["..."] });
+const dbRegistry = await MCP.connect({ command: "...", args: ["..."] });
+
 const fsTools = await fsRegistry.discoverTools({ prefix: "fs_" });
 const dbTools = await dbRegistry.discoverTools({ prefix: "db_" });
 const allTools = [...fsTools, ...dbTools];
@@ -124,13 +128,19 @@ class SimpleAgent {
 
 **See:** [examples/scripts/mcp/agent-flow/step-agent.ts](../../examples/scripts/mcp/agent-flow/step-agent.ts)
 
-## 🔄 Phase-Based API Design
+## 🔄 Lifecycle Management
+
+The `MCP` class ensures that connections to server-side processes are managed cleanly:
+
+1. **Lazy Connection**: The client connects only when the first discovery or tool call is made.
+2. **Graceful Shutdown**: Always call `mcp.close()` to terminate the underlying server process and free system resources.
+
+## 📈 Evolving API Design
 
 The API is structured to enable future phases without breaking changes:
 
-- **Phase 1**: Tools only (`discoverTools()`) ✅ Complete
-- **Phase 1 Stubs**: Resources & Prompts (`discoverResources()`, `discoverPrompts()`)
-- **Phase 2**: Full resource/prompt support
-- **Phase 3**: Multi-server composition, lifecycle hooks, notifications
+- **Phase 1**: Tools support ✅ Complete
+- **Phase 2**: Resources & Prompts ✅ Complete
+- **Phase 3**: Sampling, Context, and Multi-user hooks (In Progress)
 
-Each phase adds new methods while maintaining backward compatibility.
+Each phase adds new methods to the `MCP` class while maintaining backward compatibility for tool-based workflows.

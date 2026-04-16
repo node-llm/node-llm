@@ -1,5 +1,5 @@
 import { createLLM } from "@node-llm/core";
-import { MCPRegistry } from "../../../../packages/mcp/src/index.js";
+import { MCP } from "../../../../packages/mcp/src/index.js";
 import dotenv from "dotenv";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -15,7 +15,7 @@ async function run() {
   console.log("--- Starting Simplified @node-llm/mcp GitHub Example ---");
 
   // 1. Connect to GitHub MCP server in one line
-  const mcp = await MCPRegistry.connect({
+  const mcp = await MCP.connect({
     command: "npx",
     args: ["-y", "@modelcontextprotocol/server-github"],
     env: { GITHUB_PERSONAL_ACCESS_TOKEN: process.env.GITHUB_PERSONAL_ACCESS_TOKEN || "" }

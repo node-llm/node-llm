@@ -1,4 +1,4 @@
-export { MCPRegistry, type DiscoveryOptions } from "./MCPRegistry.js";
+export { MCP, type DiscoveryOptions } from "./MCP.js";
 export { MCPTool } from "./MCPTool.js";
 export { MCPResource } from "./MCPResource.js";
 export { MCPPrompt } from "./MCPPrompt.js";

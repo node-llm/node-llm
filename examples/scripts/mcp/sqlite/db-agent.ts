@@ -1,5 +1,5 @@
 import { createLLM } from "@node-llm/core";
-import { MCPRegistry } from "../../../../packages/mcp/src/index.js";
+import { MCP } from "../../../../packages/mcp/src/index.js";
 import dotenv from "dotenv";
 import path from "path";
 import fs from "fs";
@@ -48,7 +48,7 @@ async function run() {
   // (In a real scenario, you'd use an existing DB)
 
   // 1. Connect to SQLite MCP server
-  const mcp = await MCPRegistry.connect({
+  const mcp = await MCP.connect({
     command: findExecutable("uvx"),
     args: ["mcp-server-sqlite", "--db-path", dbPath]
   });

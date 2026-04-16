@@ -1,4 +1,4 @@
-import { MCPRegistry } from "../../../../packages/mcp/src/index.js";
+import { MCP } from "../../../../packages/mcp/src/index.js";
 import path from "path";
 import { fileURLToPath } from "url";
 
@@ -15,7 +15,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 async function run() {
   console.log("--- Connecting to Code Explorer MCP Server ---");
 
-  const registry = await MCPRegistry.connect({
+  const mcp = await MCP.connect({
     command: "node",
     args: [path.join(__dirname, "dummy-server.mjs")]
   });
@@ -23,12 +23,12 @@ async function run() {
   try {
     // 1. Discover Tools
     console.log("\n[Tools Discovery]");
-    const tools = await registry.discoverTools();
+    const tools = await mcp.discoverTools();
     tools.forEach(t => console.log(` - ${t.name}: ${t.description}`));
 
     // 2. Discover Resources
     console.log("\n[Resources Discovery]");
-    const resources = await registry.discoverResources();
+    const resources = await mcp.discoverResources();
     for (const r of resources) {
       console.log(` - ${r.name} (${r.uri}): ${r.description}`);
       
@@ -41,7 +41,7 @@ async function run() {
 
     // 3. Discover Prompts
     console.log("\n[Prompts Discovery]");
-    const prompts = await registry.discoverPrompts();
+    const prompts = await mcp.discoverPrompts();
     for (const p of prompts) {
       console.log(` - ${p.name}: ${p.description}`);
       
@@ -51,7 +51,7 @@ async function run() {
     }
 
   } finally {
-    await registry.close();
+    await mcp.close();
     console.log("\n--- Connection Closed ---");
   }
 }

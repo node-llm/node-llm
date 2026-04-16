@@ -1,5 +1,5 @@
 import { createLLM } from "@node-llm/core";
-import { MCPRegistry } from "../../../../packages/mcp/src/index.js";
+import { MCP } from "../../../../packages/mcp/src/index.js";
 import dotenv from "dotenv";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -20,7 +20,7 @@ async function run() {
 
   // 1. Connect to the Filesystem MCP server
   // We use npx to run the official server-filesystem
-  const mcp = await MCPRegistry.connect({
+  const mcp = await MCP.connect({
     command: "npx",
     args: ["-y", "@modelcontextprotocol/server-filesystem", projectRoot]
   });

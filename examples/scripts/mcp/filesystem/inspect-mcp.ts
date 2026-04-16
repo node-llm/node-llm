@@ -1,5 +1,5 @@
 import { createLLM } from "@node-llm/core";
-import { MCPRegistry } from "../../../../packages/mcp/src/index.js";
+import { MCP } from "../../../../packages/mcp/src/index.js";
 import dotenv from "dotenv";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -32,7 +32,7 @@ async function run() {
   console.log(`Target Directory: ${MCP_PACKAGE_PATH}\n`);
 
   // 1. Connect to the official Filesystem MCP server via npx
-  const registry = await MCPRegistry.connect({
+  const mcp = await MCP.connect({
     command: "npx",
     args: ["-y", "@modelcontextprotocol/server-filesystem", MCP_PACKAGE_PATH]
   });
@@ -40,7 +40,7 @@ async function run() {
   try {
     // 2. Discover available capabilities
     // The filesystem server provides tools for reading/writing/searching
-    const tools = await registry.discoverTools();
+    const tools = await mcp.discoverTools();
     console.log(`[Registry] Discovered ${tools.length} filesystem tools.`);
 
     const llm = createLLM({ provider: "openai" });
@@ -51,7 +51,7 @@ async function run() {
     
     const response = await chat.ask(
       "Look at the files in the 'src' directory. " +
-      "Read 'src/MCPRegistry.ts' and explain how the connection lifecycle is managed."
+      "Read 'src/MCP.ts' and explain how the connection lifecycle is managed."
     );
 
     console.log("--- AI Audit Report ---");
@@ -61,7 +61,7 @@ async function run() {
     console.error("Audit Failed:", err.message);
   } finally {
     // 4. Always close the connection to terminate the MCP server process
-    await registry.close();
+    await mcp.close();
     console.log("\n[Lifecycle] MCP Connection closed.");
   }
 }

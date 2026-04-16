@@ -1,5 +1,5 @@
 import { createLLM } from "@node-llm/core";
-import { MCPRegistry } from "../../../../packages/mcp/src/index.js";
+import { MCP } from "../../../../packages/mcp/src/index.js";
 import dotenv from "dotenv";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -20,7 +20,7 @@ dotenv.config({ path: path.resolve(__dirname, "../.env") });
 async function run() {
   console.log("--- Connecting to Code Explorer ---");
 
-  const registry = await MCPRegistry.connect({
+  const mcp = await MCP.connect({
     command: "node",
     args: [path.join(__dirname, "dummy-server.mjs")]
   });
@@ -28,7 +28,7 @@ async function run() {
   try {
     // 1. Load Context from a Resource
     console.log("[Resource] Fetching project README...");
-    const resources = await registry.discoverResources();
+    const resources = await mcp.discoverResources();
     const readmeResource = resources.find(r => r.uri === "repo://readme");
     
     if (!readmeResource) throw new Error("README resource not found");
@@ -37,7 +37,7 @@ async function run() {
 
     // 2. Load a specialized Prompt Template
     console.log("[Prompt] Resolving 'explain-project' template...");
-    const prompts = await registry.discoverPrompts();
+    const prompts = await mcp.discoverPrompts();
     const explainPrompt = prompts.find(p => p.name === "explain-project");
     
     if (!explainPrompt) throw new Error("Explain prompt not found");
@@ -61,7 +61,7 @@ async function run() {
     console.log(response.content);
 
   } finally {
-    await registry.close();
+    await mcp.close();
     console.log("\n[Lifecycle] MCP Connection closed.");
   }
 }
