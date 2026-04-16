@@ -46,14 +46,23 @@ export class MCPRegistry {
   }
 
   /**
-   * Ruby-style helper to quickly connect to a Stdio-based MCP server.
+   * Helper to quickly connect to a Stdio-based MCP server.
    */
   static async connect(config: StdioConfig): Promise<MCPRegistry> {
     const transport = new StdioClientTransport({
       command: config.command,
       args: config.args || [],
-      env: { ...(process.env as any), ...config.env }
+      env: { ...(process.env as any), ...config.env },
+      stderr: "pipe"
     });
+
+    if (transport.stderr) {
+      transport.stderr.on("data", (chunk) => {
+        // We log to stderr so it doesn't pollute actual LLM output
+        process.stderr.write(`[MCP Server] ${chunk.toString()}`);
+      });
+    }
+
     const registry = new MCPRegistry(transport);
     return registry;
   }

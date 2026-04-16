@@ -47,19 +47,25 @@ export class MCPTool extends Tool {
    * Executes the tool by calling the MCP server.
    */
   async execute(args: any): Promise<string> {
-    const response = await this.client.callTool({
-      name: this.originalName,
-      arguments: args
-    });
+    try {
+      const response = await this.client.callTool({
+        name: this.originalName,
+        arguments: args
+      });
 
-    if (!response.content || !Array.isArray(response.content)) {
-      return "";
+      if (!response.content || !Array.isArray(response.content)) {
+        return "";
+      }
+
+      // Concatenate all text parts from the MCP result
+      return response.content
+        .filter((part: any) => part.type === "text")
+        .map((part: any) => part.text)
+        .join("\n");
+    } catch (error: any) {
+      // MCP Errors often come with a code and message
+      const errorCode = error.code ? ` (Code: ${error.code})` : "";
+      return `MCP Error in ${this.name}: ${error.message}${errorCode}`;
     }
-
-    // Concatenate all text parts from the MCP result
-    return response.content
-      .filter((part: any) => part.type === "text")
-      .map((part: any) => part.text)
-      .join("\n");
   }
 }

@@ -1,5 +1,12 @@
 {
   "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@node-llm/core": ["packages/core/src/index.ts"],
+      "@node-llm/mcp": ["packages/mcp/src/index.ts"]
+    }
+  },
   "include": [
     "packages/*/src/**/*.ts",
     "packages/*/test/**/*.ts",
