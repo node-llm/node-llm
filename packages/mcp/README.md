@@ -119,7 +119,7 @@ const text = await readme.readText(); // Concatenated text content
 
 The `@node-llm/mcp` package acts as a bridge. It consumes the standardized MCP protocol and translates it into native NodeLLM `Tool` objects and context.
 
-For more details on the internals and real-world patterns, see the **[Official Documentation](https://nodellm.dev/core-features/mcp)**.
+For more details on the internals and real-world patterns, see the **[Official Documentation](https://nodellm.dev/mcp.html)**.
 
 ## 📄 License
 
