@@ -2,201 +2,118 @@
 layout: default
 title: Model Context Protocol (MCP)
 nav_order: 6
+description: A standardized boundary for discovering and executing tools, resources, and prompt templates across any compliant server.
 ---
 
-# 🔌 Model Context Protocol (MCP)
+# {{ page.title }} <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">1.15.2+</span>
+{: .no_toc }
 
-NodeLLM acts as an **MCP Host**, allowing you to bridge AI agents to external tools, resources, and prompts provided by any MCP-compliant server.
+{{ page.description }}
+{: .fs-6 .fw-300 }
 
-This avoids writing custom integrations for every API (GitHub, Slack, Postgres) by using a standardized protocol to discover and execute capabilities.
+## Table of contents
+{: .no_toc .text-delta }
+
+1. TOC
+{:toc}
 
 ---
 
-## 🏗️ The Bridge Pattern
+`NodeLLM` acts as an **MCP Host**, providing a standardized boundary for discovering and executing tools, resources, and prompt templates across any compliant server. By implementing the MCP specification, NodeLLM decouples your agent's business logic from the specific API nuances of external services.
 
-NodeLLM connects to an external server (via Stdio or HTTP/SSE) and proxies its capabilities as native NodeLLM objects.
-
-```mermaid
-graph LR
-    Chat[Chat Session] -->|withTools| MCP[MCP Orchestrator]
-    MCP -->|Discovers| Tools[MCPTool]
-    MCP -->|Discovers| Res[MCPResource]
-    MCP -->|Discovers| Pro[MCPPrompt]
-    Tools -->|Execute| Server[External MCP Server]
+```bash
+npm install @node-llm/mcp
 ```
 
-### Features:
-- **Protocol Discovery**: Connect to any MCP server to discover tools, resources, and prompts.
-- **Dynamic Context**: Inject codebase information or database schemas as **Resources**.
-- **Observability**: Real-time logging and progress notifications using a chainable DSL.
-- **Multi-Server Orchestration**: Connect to multiple servers concurrently with a single config.
-
 ---
 
-## ⚡ Capability Discovery
+## Unified Execution Pattern
 
-### 🛠️ Tool Discovery
-Connect to any MCP server and expose its tools as native NodeLLM tool objects.
+The unique advantage of MCP in NodeLLM is the ability to orchestrate tools, resources, and prompts in a single cohesive workflow using the fluent Chat API.
 
-```typescript
+```ts
 import { MCP } from "@node-llm/mcp";
+import { NodeLLM } from "@node-llm/core";
 
-// Connect with chainable monitoring
-const mcp = (await MCP.connect({
+// 1. Initialize the connection
+const github = await MCP.connect({
   command: "npx",
   args: ["-y", "@modelcontextprotocol/server-github"]
-})).onLog(e => console.log(e.message));
+});
 
-const tools = await mcp.discoverTools();
-const chat = llm.chat().withTools(tools);
+// 2. Discover all capabilities (with optional namespacing)
+const { tools, resources, prompts } = await github.discover({ prefix: "gh_" });
 
-await chat.ask("List my top 5 GitHub stars");
-```
+// 3. Resolve context and expert intent
+const reviewPrompt = prompts.find(p => p.name.includes("review"));
+const sourceFile = resources.find(r => r.name.includes("MCP.ts"));
 
-### 📖 Resource Discovery
-Resources provide context like file contents, database schemas, or API docs.
+// 4. Orchestrate in a single session
+const { messages } = await reviewPrompt.get({ 
+  code: await sourceFile.readText() 
+});
 
-```typescript
-// Discover static resources
-const resources = await mcp.discoverResources();
-const dbSchema = resources.find(r => r.name === "database_schema");
-
-if (dbSchema) {
-  const text = await dbSchema.readText(); // Concatenated text content
-  console.log(text);
-}
-```
-
-### 📝 Prompt Discovery
-Server-defined prompt templates that simplify complex instruction sets.
-
-```typescript
-// Discover prompt templates
-const prompts = await mcp.discoverPrompts();
-const codeReview = prompts.find(p => p.name === "Code Review");
-
-if (codeReview) {
-  // Get prompt messages with required parameters
-  const reviewContent = await codeReview.get({ 
-    code: "function main() { ... }" 
-  });
-  
-  // Use messages in a chat session
-  const chat = llm.chat().addMessages(reviewContent.messages);
-}
+const response = await NodeLLM.chat("gpt-4o")
+  .withTools(tools)
+  .addMessages(messages)
+  .ask("Analyze the code and execute tools to fix any bugs found.");
 ```
 
 ---
 
-## ⚙️ Infrastructure Details
+## Infrastructure & Monitoring
 
-### DSL (Monitoring)
-The `MCP` class provides a clean, chainable API for observing server activity.
+The `MCP` class provides a clean, event-driven interface for observing server activity.
 
-```typescript
-const mcp = (await MCP.connect({ command: "...", args: ["..."] }))
-  .onLog(({ level, message }) => {
-    console.log(`[${level.toUpperCase()}] ${message}`);
-  })
-  .onProgress(({ progress, total }) => {
-    console.log(`Operation Progress: ${progress}/${total}`);
-  })
+```ts
+const mcp = (await MCP.connect(config))
+  .onLog(({ level, message }) => console.log(`[${level}] ${message}`))
+  .onProgress(({ progress, total }) => console.log(`Progress: ${progress}/${total}`))
   .onError(err => console.error("Protocol Error:", err));
 ```
 
-### 🛰️ Multi-Server Orchestration
-Connect to multiple MCP servers simultaneously from a central config.
+### Multi-Server Orchestration
 
-```typescript
+You can combine tools from multiple servers effortlessly. NodeLLM treats them as pluggable **Tool Sources**.
+
+```ts
 const mcps = await MCP.connectAll({
-  fs: { command: "npx", args: ["-y", "@modelcontextprotocol/server-filesystem"] },
-  brave: { command: "npx", args: ["-y", "@modelcontextprotocol/server-brave-search"] }
+  docs: { command: "npx", args: ["-y", "@modelcontextprotocol/server-filesystem", "./docs"] },
+  search: { command: "npx", args: ["-y", "@modelcontextprotocol/server-brave-search"] }
 });
 
-const allTools = [
-  ...await mcps.fs.discoverTools(),
-  ...await mcps.brave.discoverTools()
-];
+const chat = llm.chat().withTools([
+  ...(await mcps.docs.discoverTools()),
+  ...(await mcps.search.discoverTools())
+]);
 ```
 
 ---
 
-## 🛡️ Error Handling
-NodeLLM handles partial protocol implementations. If a server does not support a specific capability (returning `-32601 Method Not Found`), the discovery methods return an empty list `[]` instead of throwing an error.
+## API Reference
 
-### 🌐 HTTP Transport
-Supports remote servers over HTTP using the `Streamable HTTP` transport. 
+### MCP (The Host)
 
-```typescript
-const mcp = await MCP.connectSSE({
-  url: "https://mcp-server.example.com/sse"
-});
-```
+| Method | Description |
+| :--- | :--- |
+| `static connect(config)` | Connects to a local server process (Stdio). Accepts `command`, `args`, and `env`. |
+| `static connectSSE(config)` | Connects to a remote server (HTTP/SSE). Accepts `url`. |
+| `discover(options?)` | Master discovery method. Returns `tools`, `resources`, and `prompts`. |
+| `onLog(handler)` | Registers a listener for server logs. |
+| `onProgress(handler)` | Registers a listener for progress notifications. |
+| `close()` | Gracefully disconnects from the server. |
 
----
+### MCPResource
 
-## 🔍 Discovery Manifest
+| Method | Description |
+| :--- | :--- |
+| `read()` | Returns the raw `ResourceContent` from the server. |
+| `readText()` | Helper to fetch and concatenate all text parts of a resource. |
 
-Discover all server capabilities in a single call.
+### MCPPrompt
 
-```typescript
-const { tools, resources, resourceTemplates, prompts } = await mcp.discover({ prefix: "fs_" });
-```
-
-### 🗂️ Resource Templates
-Parameterized URI patterns for dynamic data access.
-
-```typescript
-const template = resourceTemplates.find(t => t.name === "Project Logs");
-
-// Resolve parameters into a concrete resource
-const resource = await template.resolve({ owner: "eshaiju", repo: "node-llm" });
-const content = await resource.read();
-```
+| Method | Description |
+| :--- | :--- |
+| `get(args?)` | Resolves the prompt template with arguments and returns `Message[]`. |
 
 ---
-
-## 📗 API Reference
-
-### `MCP` Class
-
-#### `static async connect(config: StdioConfig): Promise<MCP>`
-Initializes a Stdio-based connection (local process).
-
-#### `static async connectSSE(config: SSEConfig): Promise<MCP>`
-Initializes an HTTP-based connection via Server-Sent Events.
-
-#### `static async connectAll(config: MCPConfig): Promise<Record<string, MCP>>`
-Batch initialization for multiple servers.
-
-#### `async discover(options?: DiscoveryOptions): Promise<Manifest>`
-The master discovery method. Returns tools, resources, and prompts in parallel.
-
-#### `onLog(handler): this`
-Registers a listener for server logs. Returns `{ level: string, message: string }`.
-
-#### `onProgress(handler): this`
-Registers a listener for progress notifications. Returns `{ progress: number, total: number, message?: string }`.
-
-### `MCPResource` Class
-
-#### `async readText(): Promise<string>`
-Helper to fetch and concatenate all text parts of a resource.
-
----
-
-## 📂 Examples
-
-Reference scripts:
-
-- **[Monitor and Templates](https://github.com/node-llm/node-llm/blob/main/examples/scripts/mcp/core-explorer/monitor-and-templates.ts)**: Demonstrates event monitoring and resource templates.
-- **[Filesystem Auditor](https://github.com/node-llm/node-llm/blob/main/examples/scripts/mcp/filesystem/inspect-mcp.ts)**: Uses the Filesystem server to analyze local source code.
-- **[Multi-Tool Agent](https://github.com/node-llm/node-llm/blob/main/examples/scripts/mcp/agent-flow/multi-tool-agent.ts)**: Orchestrates multiple servers.
-
----
-
-## 📋 Project Status
-
-- [x] Phase 1: Tool Execution & Dynamic Proxying
-- [x] Phase 2: Resource/Prompt Discovery & Monitoring
-- [ ] Phase 3: Sampling & Context Hooks (Coming Soon)
