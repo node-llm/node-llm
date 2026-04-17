@@ -228,6 +228,16 @@ export class Chat<S = unknown> {
   }
 
   /**
+   * Add multiple messages to the chat history.
+   */
+  addMessages(messages: Message[]): this {
+    for (const msg of messages) {
+      this.addMessage(msg);
+    }
+    return this;
+  }
+
+  /**
    * Set the temperature for the chat session.
    * Controls randomness: 0.0 (deterministic) to 1.0 (creative).
    */

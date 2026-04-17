@@ -1,6 +1,6 @@
 {
   "name": "@node-llm/core",
-  "version": "1.15.2",
+  "version": "1.15.3",
   "description": "An opinionated architectural layer for integrating Large Language Models in Node.js.",
   "main": "index.js",
   "workspaces": [
@@ -98,7 +98,6 @@
       "lodash-es": ">=4.17.24",
       "esbuild": ">=0.25.0",
       "minimatch": ">=10.2.4",
-      "ajv": "6.14.0",
       "qs": ">=6.14.2",
       "vite": ">=7.3.0"
     }

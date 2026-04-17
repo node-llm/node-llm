@@ -1,0 +1,39 @@
+{
+  "name": "@node-llm/mcp",
+  "version": "0.1.3",
+  "description": "MCP (Model Context Protocol) integration for NodeLLM",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "example:discovery": "tsx ../../examples/scripts/mcp/core-explorer/capabilities.ts",
+    "example:audit": "tsx ../../examples/scripts/mcp/filesystem/inspect-mcp.ts",
+    "example:chat": "tsx ../../examples/scripts/mcp/core-explorer/chat-with-mcp.ts"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.29.0"
+  },
+  "devDependencies": {
+    "@node-llm/core": "workspace:*",
+    "tsx": "^4.21.0",
+    "typescript": "^5.x"
+  },
+  "peerDependencies": {
+    "@node-llm/core": "workspace:*"
+  }
+}

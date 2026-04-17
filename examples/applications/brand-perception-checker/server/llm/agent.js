@@ -3,6 +3,8 @@ import { PerceptionSchema, MarketSchema } from "./schema.js";
 import { SerpTool } from "./tools/serp.tool.js";
 import { logExecutionStep } from "./utils.js";
 import { calculateAlignment, createResilientIntrinsicFallback } from "./logic.js";
+import { MCP } from "@node-llm/mcp";
+import path from "path";
 import {
   INTRINSIC_ANALYSIS_PROMPT,
   MARKET_SYNTHESIS_PROMPT,
@@ -58,15 +60,71 @@ export async function getIntrinsicPerception(brandName) {
  * Orchestrates tools to validate latent data against live market telemetry.
  */
 export async function getMarketAudit(brandName) {
-  logExecutionStep("agent_spawn", `Initializing Market Data Synthesis Analyst`);
-
   try {
+    logExecutionStep("mcp_bridge", `Initializing MCP Protocol Bridge`);
+
+    // 1. Initialize MCP Context for internal knowledge
+    const dataPath = path.resolve(process.cwd(), "data");
+    let guidelinesContent = "No internal guidelines found.";
+
+    try {
+      const fsMcp = await MCP.connect({
+        command: "npx",
+        args: ["-y", "@modelcontextprotocol/server-filesystem", dataPath]
+      });
+
+      // Infrastructure Monitoring: Capture server-side events
+      fsMcp.on("log", (msg) => logExecutionStep("mcp_server_log", `[FS] ${msg}`));
+      fsMcp.on("notification", (notif) => logExecutionStep("mcp_protocol", `[FS] ${notif.method}`));
+      fsMcp.on("error", (err) => logExecutionStep("mcp_error", `[FS] ${err.message}`));
+
+      const resources = await fsMcp.discoverResources();
+      const guidelinesRes = resources.find(r => r.name.toLowerCase().includes("brand-guidelines"));
+      
+      if (guidelinesRes) {
+        logExecutionStep("mcp_resource", `Reading internal guidelines: ${guidelinesRes.name}`);
+        const resData = await guidelinesRes.read();
+        guidelinesContent = resData.contents[0].text;
+      }
+    } catch (err) {
+      logExecutionStep("mcp_warning", `Filesystem MCP failed: ${err.message}. Internal guidelines unavailable.`);
+    }
+
+    // 2. Connect to Search for live data (Resilient Discovery)
+    let mcpTools = [];
+    try {
+      const searchMcp = await MCP.connect({
+        command: "npx",
+        args: ["-y", "@modelcontextprotocol/server-brave-search"],
+        env: { BRAVE_API_KEY: process.env.BRAVE_API_KEY || "" }
+      });
+
+      // Infrastructure Monitoring: Capture search server events
+      searchMcp.on("log", (msg) => logExecutionStep("mcp_server_log", `[SEARCH] ${msg}`));
+      searchMcp.on("notification", (notif) => logExecutionStep("mcp_protocol", `[SEARCH] ${notif.method}`));
+      searchMcp.on("error", (err) => logExecutionStep("mcp_error", `[SEARCH] ${err.message}`));
+
+      mcpTools = await searchMcp.discoverTools();
+      logExecutionStep("mcp_tools", `Discovered ${mcpTools.length} tools from Search MCP`);
+    } catch (err) {
+      logExecutionStep("mcp_warning", `Search MCP failed to initialize: ${err.message}. Falling back to internal tools.`);
+    }
+
     const chat = systemAuditCore
       .chat("gpt-4o", { middlewares: productionMiddlewares })
-      .withInstructions(MARKET_ANALYST_INSTRUCTIONS)
+      .withInstructions(`
+        ${MARKET_ANALYST_INSTRUCTIONS}
+        
+        INTERNAL_BRAND_REFERENCE:
+        ---
+        ${guidelinesContent}
+        ---
+        
+        Compare public perception against these guidelines.
+      `)
       .withSchema(MarketSchema)
       .withTemperature(0)
-      .withTool(new SerpTool())
+      .withTools(mcpTools.length > 0 ? mcpTools : [new SerpTool()]) // Use MCP tools or fallback
       .onToolCallStart((call) => logExecutionStep("tool_call", call.function.name))
       .withToolExecution("auto");
 
@@ -123,6 +181,12 @@ export async function getMarketAudit(brandName) {
  * Provides real-time reasoning trace for the dashboard.
  */
 export async function* getAuditStream(brandName) {
+  logExecutionStep("mcp_prompt", `Searching for Narrative Prompt template...`);
+  
+  // We can discover prompts from our connected MCP servers
+  // For this example, we'll try to find a "Audit Narrative" prompt
+  // In a real app, you might connect to a dedicated prompted-server
+  
   const chat = systemAuditCore
     .chat("gpt-4o")
     .withInstructions(STREAMING_NARRATIVE_PROMPT(brandName));

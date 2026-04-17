@@ -16,6 +16,7 @@ packages/**/dist/
 # =========================
 .env
 .env.*
+!.env.sample
 
 # =========================
 # Logs
@@ -50,3 +51,5 @@ docs/_site/
 docs/.jekyll-cache/
 docs/.jekyll-metadata
 /.agent
+examples/scripts/mcp/package-lock.json
+pnpm-lock.yaml

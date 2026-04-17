@@ -1,0 +1,169 @@
+# @node-llm/mcp Architecture
+
+This document describes the design and components of the Model Context Protocol (MCP) integration for NodeLLM.
+
+## 🌉 The Bridge Pattern
+
+`node-llm` acts as an **MCP Host**. It connects to external **MCP Servers** and surfaces their capabilities as native NodeLLM objects.
+
+```mermaid
+graph TD
+    Agent[Agent/Session] -->|Calls Tool| Proxy[MCPTool Proxy]
+    Proxy -->|Normalize Schema| Stabilizer[SchemaStabilizer]
+    Proxy -->|Execute| SDK[MCP SDK Client]
+    SDK <-->|JSON-RPC| Server[Remote MCP Server]
+```
+
+## 🧩 Core Components
+
+### 1. SchemaStabilizer
+
+Many MCP servers provide JSON Schemas that are syntactically valid but incompatible with strict LLM providers (like OpenAI's structured outputs).
+
+- **Role**: Recursively normalizes schemas.
+- **Key Action**: Ensures `type: "object"` always has a `properties` object.
+- **Cleanup**: Removes non-standard keys like `$schema`.
+
+### 2. MCPTool
+
+A subclass of `node-llm`'s `Tool` that acts as a proxy.
+
+- **Dynamic Definition**: Generates `ToolDefinition` on the fly based on MCP metadata.
+- **Execution**: Wraps the MCP `callTool` request and concatenates text content results.
+
+### 3. MCP
+
+The primary orchestrating engine and entry point for developers.
+
+- **Discovery**: Connects to a transport and lists all available tools, resources, and prompts.
+- **Namespacing**: Optional `prefix` support to avoid tool name collisions when using multiple servers.
+- **Observability**: Built-in listeners for logging and progress tracking.
+
+## DSL (Events)
+
+Inspired by professional-grade Ruby/Rails patterns, the `MCP` class provides a clean, chainable DSL for handling server-side events:
+
+```typescript
+const mcp = await MCP.connect(config);
+
+mcp
+  .onLog(({ level, message }) => {
+    console.log(`[${level.toUpperCase()}] ${message}`);
+  })
+  .onProgress(({ progress, total }) => {
+    console.log(`Progress: ${Math.round((progress / total) * 100)}%`);
+  })
+  .onError((err) => console.error("Protocol Error:", err));
+```
+
+```typescript
+import { MCP } from "@node-llm/mcp";
+import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
+
+const transport = new StdioClientTransport({
+  command: "npx",
+  args: ["-y", "@modelcontextprotocol/server-github"]
+});
+
+const mcp = (await MCP.connect(transport)).onLog((entry) => console.log(entry.message));
+
+const tools = await mcp.discoverTools({ prefix: "github_" });
+
+const chat = llm.chat("gpt-4").withTools(tools);
+const response = await chat.ask("Create a GitHub repository");
+```
+
+## 📊 Structured Results (Phase 1)
+
+Tool execution returns `MCPExecutionResult` with multiple content types:
+
+```typescript
+interface MCPExecutionResult {
+  text?: string; // Human-readable text output
+  data?: unknown; // Structured JSON data (single or array)
+  resources?: any[]; // Resource references (Phase 2)
+  raw: unknown; // Complete MCP response for debugging
+}
+```
+
+**Convenience Helpers:**
+
+- `resource.readText()`: Concatenates multi-part resource contents into a single string.
+- `mcp.discover()`: Fetches tools, resources, and prompts in a single parallel operation.
+- `MCP.connectAll(config)`: Initializes multiple servers concurrently from a dictionary.
+
+**Benefits:**
+
+- Preserves structured data loss (not concatenated as text)
+- Separates concerns: display vs computation
+- Enables AI to work with actual JSON, not string representations
+- Forward-compatible with Phase 2 (resources, prompts)
+- Forward-compatible with Phase 3 (sampling)
+
+**Example:**
+
+```typescript
+const result = await tool.execute({ query: "SELECT * FROM users" });
+console.log(result.text); // "5 rows found"
+console.log(result.data); // [{id:1, name:...}, {...}, ...]
+console.log(result.raw); // Complete MCP response object
+```
+
+## 🤖 Agent Patterns
+
+### Multi-Tool Agent (Tool Discovery)
+
+Combine multiple MCP servers and let the agent choose which tools to use:
+
+```typescript
+const fsRegistry = await MCP.connect({ command: "...", args: ["..."] });
+const dbRegistry = await MCP.connect({ command: "...", args: ["..."] });
+
+const fsTools = await fsRegistry.discoverTools({ prefix: "fs_" });
+const dbTools = await dbRegistry.discoverTools({ prefix: "db_" });
+const allTools = [...fsTools, ...dbTools];
+
+const chat = llm.chat("gpt-4").withTools(allTools);
+const response = await chat.ask("Analyze the codebase");
+```
+
+**See:** [examples/scripts/mcp/agent-flow/multi-tool-agent.ts](../../examples/scripts/mcp/agent-flow/multi-tool-agent.ts)
+
+### Step-by-Step Agent (Orchestration)
+
+For structured workflows with explicit control and audit trails:
+
+```typescript
+class SimpleAgent {
+  steps: AgentStep[] = [];
+
+  async executeStep(objective: string, context: string) {
+    const response = await this.chat.ask(`${objective}. Context: ${context}`);
+    const toolsUsed = response.toolCalls?.map((c) => c.name) || [];
+    this.steps.push({ objective, toolsUsed, result: response.text });
+  }
+
+  getSummary() {
+    return JSON.stringify(this.steps, null, 2);
+  }
+}
+```
+
+**See:** [examples/scripts/mcp/agent-flow/step-agent.ts](../../examples/scripts/mcp/agent-flow/step-agent.ts)
+
+## 🔄 Lifecycle Management
+
+The `MCP` class ensures that connections to server-side processes are managed cleanly:
+
+1. **Lazy Connection**: The client connects only when the first discovery or tool call is made.
+2. **Graceful Shutdown**: Always call `mcp.close()` to terminate the underlying server process and free system resources.
+
+## 📈 Evolving API Design
+
+The API is structured to enable future phases without breaking changes:
+
+- **Phase 1**: Tools support ✅ Complete
+- **Phase 2**: Resources & Prompts ✅ Complete
+- **Phase 3**: Sampling, Context, and Multi-user hooks (In Progress)
+
+The `mcp.discover()` method returns a unified manifest of all three categories, while `mcp.discoverTools()` provides the focused shorthand for tool-based sessions.

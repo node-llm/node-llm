@@ -198,6 +198,28 @@ chat.onToolCallError((call, err) => "STOP");
 
 **[Full Tool Calling Guide →](https://nodellm.dev/core-features/tool-calling)**
 
+### 🔌 Model Context Protocol (MCP)
+
+Connect NodeLLM to hundreds of external data sources and tools using the industry-standard MCP. Share tools, resources, and prompt templates across different servers dynamically.
+
+```ts
+import { MCP } from "@node-llm/mcp";
+
+// Connect to any MCP server (GitHub, Postgres, Slack, etc.)
+const mcp = await MCP.connect({
+  command: "npx",
+  args: ["-y", "@modelcontextprotocol/server-github"]
+});
+
+// Discover and register tools automatically
+const tools = await mcp.discoverTools();
+const chat = llm.chat().withTools(tools);
+
+await chat.ask("Create a release for v1.0 on GitHub");
+```
+
+**[Full MCP Guide →](docs/core-features/mcp.md)**
+
 ### 🔍 Comprehensive Debug Logging
 
 Enable detailed logging for all API requests and responses across every feature and provider:

@@ -176,6 +176,23 @@ class WeatherTool extends Tool {
 await chat.withTool(WeatherTool).ask("Weather in Tokyo?");
 ```
 
+### 🔌 [Model Context Protocol (MCP)](/core-features/mcp)
+
+Connect NodeLLM to external data sources and tools using the industry-standard MCP. Share tools, resources, and prompt templates across different servers dynamically.
+
+```ts
+import { MCP } from "@node-llm/mcp";
+
+// Connect with chainable monitoring
+const mcp = (await MCP.connect({
+  command: "npx",
+  args: ["-y", "@modelcontextprotocol/server-github"]
+})).onLog(e => console.log(e.message));
+
+const tools = await mcp.discoverTools();
+await chat.withTools(tools).ask("List my repos");
+```
+
 ### 💾 [Persistence Layer](/orm/prisma)
 
 Automatically track chat history, tool executions, and API metrics with [**@node-llm/orm**](https://www.npmjs.com/package/@node-llm/orm). Now with full support for **Extended Thinking** persistence.

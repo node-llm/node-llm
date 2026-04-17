@@ -16,6 +16,7 @@ NodeLLM is evolving to support more complex AI-native Node.js applications.
 - **[Extended Thinking](/core-features/reasoning)**: Unified interface for Claude 3.7, DeepSeek R1, and OpenAI o1/o3.
 - **[Professional ORM Support](/orm/prisma)**: Database persistence for Prisma with automated history management and professional migration workflows.
 - **Context Isolation 2.0**: Strict separation of system instructions and conversation turns for enterprise-grade safety.
+- **[Model Context Protocol (MCP)](/core-features/mcp)**: Professional integration for third-party tools, resources, and prompt templates. Phase 2 (Observability & Orchestration) is now stable.
 
 ---
 

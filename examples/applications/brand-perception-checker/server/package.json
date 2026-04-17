@@ -14,6 +14,7 @@
   "license": "ISC",
   "dependencies": {
     "@node-llm/core": "workspace:*",
+    "@node-llm/mcp": "workspace:*",
     "@node-llm/monitor": "^0.1.2",
     "@node-llm/testing": "workspace:*",
     "axios": "^1.13.2",

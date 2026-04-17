@@ -75,7 +75,7 @@ describe("Moderation Unit Tests", () => {
     expect(result.categoryScores.violence).toBe(0.99);
   });
 
-  it("should support Ruby-style aliases", async () => {
+  it("should support aliases", async () => {
     (mockProvider.moderate as unknown as Mock).mockResolvedValueOnce({
       id: "mod-789",
       model: "text-moderation-latest",

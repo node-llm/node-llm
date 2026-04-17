@@ -95,6 +95,12 @@ chat
   .add("user", "What is my name?")
   .add("assistant", "You told me your name is Alice.");
 
+// Rehydrate in bulk <span style="background-color: #0d47a1; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v1.16.2</span>
+chat.addMessages([
+  { role: "user", content: "What is my name?" },
+  { role: "assistant", content: "You told me your name is Alice." }
+]);
+
 const response = await chat.ask("What did I just say?");
 // => "You asked me what your name is."
 ```
