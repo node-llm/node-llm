@@ -17,6 +17,10 @@ All notable changes to this project will be documented in this file.
   - Added `timestamp_granularities` for precise word-level timing in Whisper.
   - Enhanced `Transcription` class with `.meta` and `.raw` getters for DB parity with `ChatResponseString`.
   - Fixed speaker-label preservation across OpenAI and Mistral transcription adapters.
+- **Gemini 2.5 Advanced Support**: 
+  - **Structured Output**: Native `responseJsonSchema` respect with improved `nullable` and `anyOf` mapping.
+  - **Parallel Tool Support**: Grouped tool responses in a single message for higher accuracy.
+  - **Inline Generated Images**: Surface model-generated images (like Gemini Nano) as `attachments` directly in the chat response.
 
 
 ### Improvements

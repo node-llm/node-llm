@@ -598,7 +598,8 @@ export class Chat<S = unknown> {
           response.tool_calls,
           response.finish_reason,
           this.options.schema,
-          response.metadata
+          response.metadata,
+          response.attachments
         );
 
         // --- Content Policy Hooks (Output - Turn 1) ---
@@ -789,7 +790,8 @@ export class Chat<S = unknown> {
             response.tool_calls,
             response.finish_reason,
             this.options.schema,
-            response.metadata
+            response.metadata,
+            response.attachments
           );
 
           if (this.options.onAfterResponse) {

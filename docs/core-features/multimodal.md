@@ -178,3 +178,24 @@ await chat.ask("Analyze these project resources", {
   ]
 });
 ```
+
+---
+
+## Receiving Model-Generated Data (Attachments) <span style="background-color: #0d47a1; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v1.16.0</span>
+
+Some advanced models (like Google's Gemini 2.5 Flash Image) can return images or other binary data directly within the chat response. These are surfaced as **Attachments**.
+
+```ts
+const reply = await chat.ask("Sketch a quick logo for a coffee shop.");
+
+if (reply.attachments?.length > 0) {
+  const image = reply.attachments[0];
+  console.log(`Received ${image.mimeType}`);
+  
+  // binary is base64 encoded
+  fs.writeFileSync("logo.png", Buffer.from(image.data, "base64"));
+}
+```
+
+This provides a unified way to handle generative output without needing separate image generation workflows for every interaction.
+

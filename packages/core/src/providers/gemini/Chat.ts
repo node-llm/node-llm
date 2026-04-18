@@ -127,14 +127,14 @@ export class GeminiChat {
     logger.logResponse("Gemini", response.status, response.statusText, json);
     const candidate = json.candidates?.[0];
 
-    const content =
-      candidate?.content?.parts
-        ?.filter((p) => p.text)
-        .map((p) => p.text)
-        .join("\n") || null;
+    const contentParts = candidate?.content?.parts || [];
+    const content = contentParts
+      .filter((p) => p.text)
+      .map((p) => p.text)
+      .join("\n") || null;
 
-    const tool_calls = candidate?.content?.parts
-      ?.filter((p) => p.functionCall)
+    const tool_calls = contentParts
+      .filter((p) => p.functionCall)
       .map((p) => ({
         id: p.functionCall!.name,
         type: "function" as const,
@@ -142,6 +142,13 @@ export class GeminiChat {
           name: p.functionCall!.name,
           arguments: JSON.stringify(p.functionCall!.args)
         }
+      }));
+
+    const attachments = contentParts
+      .filter((p) => p.inlineData)
+      .map((p) => ({
+        mimeType: p.inlineData!.mimeType,
+        data: p.inlineData!.data
       }));
 
     const usage = json.usageMetadata
@@ -157,7 +164,7 @@ export class GeminiChat {
       ? ModelRegistry.calculateCost(usage, request.model, "gemini")
       : undefined;
 
-    return { content, tool_calls, usage: calculatedUsage };
+    return { content, tool_calls, usage: calculatedUsage, attachments };
   }
 
   private sanitizeSchema(schema: any): any {
@@ -165,8 +172,7 @@ export class GeminiChat {
 
     const sanitized = { ...schema };
 
-    // Remove unsupported fields
-    delete sanitized.additionalProperties;
+    // Clean up internal metadata fields that Gemini definitely rejects
     delete sanitized.$schema;
     delete sanitized.$id;
     delete sanitized.definitions;

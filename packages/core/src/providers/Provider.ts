@@ -93,6 +93,13 @@ export interface Usage {
   output_cost?: number;
 }
 
+export interface Attachment {
+  mimeType: string;
+  data: string; // base64
+  name?: string;
+  [key: string]: unknown;
+}
+
 export interface ChatResponse {
   content: string | null;
   thinking?: ThinkingResult;
@@ -102,6 +109,7 @@ export interface ChatResponse {
   usage?: Usage;
   finish_reason?: string | null;
   metadata?: Record<string, unknown>;
+  attachments?: Attachment[];
 }
 
 export interface ProviderCapabilities {

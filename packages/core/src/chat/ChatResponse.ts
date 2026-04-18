@@ -1,4 +1,4 @@
-import { Usage, ThinkingResult } from "../providers/Provider.js";
+import { Usage, ThinkingResult, Attachment } from "../providers/Provider.js";
 import { ToolCall } from "./Tool.js";
 import { Schema } from "../schema/Schema.js";
 import { extractJson } from "../utils/json.js";
@@ -22,7 +22,8 @@ export class ChatResponseString extends String {
     public readonly tool_calls?: ToolCall[],
     public readonly finish_reason?: string | null,
     public readonly schema?: Schema,
-    public readonly metadata?: Record<string, unknown>
+    public readonly metadata?: Record<string, unknown>,
+    public readonly attachments?: Attachment[]
   ) {
     super(content);
   }
@@ -88,7 +89,8 @@ export class ChatResponseString extends String {
       reasoning: this.reasoning,
       tool_calls: this.tool_calls,
       finish_reason: this.finish_reason,
-      metadata: this.metadata
+      metadata: this.metadata,
+      attachments: this.attachments
     };
   }
 
@@ -117,7 +119,8 @@ export class ChatResponseString extends String {
       this.tool_calls,
       this.finish_reason,
       this.schema,
-      this.metadata
+      this.metadata,
+      this.attachments
     );
   }
 

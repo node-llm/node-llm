@@ -112,7 +112,7 @@ describe("GeminiChat", () => {
 
     const callArgs = JSON.parse((fetch as unknown as Mock).mock.calls[0][1].body);
     expect(callArgs.generationConfig.responseSchema).toBeDefined();
-    expect(callArgs.generationConfig.responseSchema.additionalProperties).toBeUndefined();
+    expect(callArgs.generationConfig.responseSchema.additionalProperties).toBe(false);
   });
 });
 
