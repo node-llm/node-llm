@@ -13,12 +13,22 @@ All notable changes to this project will be documented in this file.
   - Intercepts hallucinated tool calls and returns descriptive "unavailable tool" messages with valid alternatives.
   - Converts Zod validation errors and runtime execution failures into model-readable feedback strings.
 - **Normalized Provider Orchestration**: Unified tool-control behavior across OpenAI, Anthropic, Gemini, Bedrock, and Mistral.
+- **Advanced Transcription**: Deep diarization and word-level timestamp support.
+  - Added `timestamp_granularities` for precise word-level timing in Whisper.
+  - Enhanced `Transcription` class with `.meta` and `.raw` getters for DB parity with `ChatResponseString`.
+  - Fixed speaker-label preservation across OpenAI and Mistral transcription adapters.
+
 
 ### Improvements
 
 - **Code Consolidation**: Unified OpenAI-compatible `tool_choice` normalization logic into a shared utility.
 - **TypeScript Alignment**: Hardened type definitions for `ToolChoice` and provider-specific request bodies.
 - **Enhanced Verification**: New comprehensive unit test suite for tool failure recovery paths and updated example scripts.
+- **Testing DX**: Major upgrades to `@node-llm/testing` mocker.
+  - Added `.throws()` support for chaos engineering and failure simulation.
+  - Improved `.callsTool()` to support simultaneous conversational content.
+  - Surfaced `thinking`, `metadata`, and `reasoning` through the mock execution proxy.
+
 
 ## [1.15.0] - 2026-03-28 (@node-llm/core)
 
