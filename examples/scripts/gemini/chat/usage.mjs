@@ -19,4 +19,4 @@ async function main() {
   console.log(`Total Tokens: ${chat.totalUsage.total_tokens}`);
 }
 
-main().catch(console.error);
+main().catch(e => { console.error(e); process.exit(1); });

@@ -45,6 +45,8 @@ export class GeminiChat {
       max_tokens: _max,
       response_format: _format,
       headers: _headers,
+      tool_choice: _choice,
+      parallel_tool_calls: _parallel,
       requestTimeout,
       ...rest
     } = request;
@@ -72,6 +74,35 @@ export class GeminiChat {
           }))
         }
       ];
+
+      if (request.tool_choice) {
+        const modeMap: Record<string, string> = {
+          auto: "AUTO",
+          required: "ANY",
+          none: "NONE"
+        };
+        const mode = modeMap[request.tool_choice as string];
+        if (mode) {
+          payload.toolConfig = { functionCallingConfig: { mode } };
+        } else if (typeof request.tool_choice === "string") {
+          payload.toolConfig = {
+            functionCallingConfig: {
+              mode: "ANY",
+              allowedFunctionNames: [request.tool_choice]
+            }
+          };
+        } else if (
+          typeof request.tool_choice === "object" &&
+          "function" in (request.tool_choice as any)
+        ) {
+          payload.toolConfig = {
+            functionCallingConfig: {
+              mode: "ANY",
+              allowedFunctionNames: [(request.tool_choice as any).function.name]
+            }
+          };
+        }
+      }
     }
 
     logger.logRequest("Gemini", "POST", url, payload);
@@ -96,14 +127,14 @@ export class GeminiChat {
     logger.logResponse("Gemini", response.status, response.statusText, json);
     const candidate = json.candidates?.[0];
 
-    const content =
-      candidate?.content?.parts
-        ?.filter((p) => p.text)
-        .map((p) => p.text)
-        .join("\n") || null;
+    const contentParts = candidate?.content?.parts || [];
+    const content = contentParts
+      .filter((p) => p.text)
+      .map((p) => p.text)
+      .join("\n") || null;
 
-    const tool_calls = candidate?.content?.parts
-      ?.filter((p) => p.functionCall)
+    const tool_calls = contentParts
+      .filter((p) => p.functionCall)
       .map((p) => ({
         id: p.functionCall!.name,
         type: "function" as const,
@@ -113,11 +144,19 @@ export class GeminiChat {
         }
       }));
 
+    const attachments = contentParts
+      .filter((p) => p.inlineData)
+      .map((p) => ({
+        mimeType: p.inlineData!.mimeType,
+        data: p.inlineData!.data
+      }));
+
     const usage = json.usageMetadata
       ? {
           input_tokens: json.usageMetadata.promptTokenCount,
           output_tokens: json.usageMetadata.candidatesTokenCount,
-          total_tokens: json.usageMetadata.totalTokenCount
+          total_tokens: json.usageMetadata.totalTokenCount,
+          cached_tokens: json.usageMetadata.cachedContentTokenCount
         }
       : undefined;
 
@@ -125,7 +164,7 @@ export class GeminiChat {
       ? ModelRegistry.calculateCost(usage, request.model, "gemini")
       : undefined;
 
-    return { content, tool_calls, usage: calculatedUsage };
+    return { content, tool_calls, usage: calculatedUsage, attachments };
   }
 
   private sanitizeSchema(schema: any): any {
@@ -133,8 +172,7 @@ export class GeminiChat {
 
     const sanitized = { ...schema };
 
-    // Remove unsupported fields
-    delete sanitized.additionalProperties;
+    // Clean up internal metadata fields that Gemini definitely rejects
     delete sanitized.$schema;
     delete sanitized.$id;
     delete sanitized.definitions;

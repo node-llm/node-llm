@@ -50,4 +50,4 @@ async function main() {
   console.log("JSON:", JSON.stringify(response2.parsed, null, 2));
 }
 
-main().catch(console.error);
+main().catch(e => { console.error(e); process.exit(1); });

@@ -49,6 +49,7 @@ export class BedrockStreaming {
       temperature: request.temperature,
       thinking: request.thinking,
       guardrail,
+      toolChoice: request.tool_choice,
       additionalModelRequestFields: request.additionalModelRequestFields as Record<string, any>
     });
 

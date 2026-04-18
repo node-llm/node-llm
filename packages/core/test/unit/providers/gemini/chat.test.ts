@@ -112,6 +112,53 @@ describe("GeminiChat", () => {
 
     const callArgs = JSON.parse((fetch as unknown as Mock).mock.calls[0][1].body);
     expect(callArgs.generationConfig.responseSchema).toBeDefined();
-    expect(callArgs.generationConfig.responseSchema.additionalProperties).toBeUndefined();
+    expect(callArgs.generationConfig.responseSchema.additionalProperties).toBe(false);
+  });
+});
+
+describe("GeminiUsageParsing", () => {
+  const baseUrl = "https://generativelanguage.googleapis.com/v1beta";
+  const apiKey = "test-key";
+  let chat: GeminiChat;
+
+  beforeEach(() => {
+    chat = new GeminiChat(baseUrl, apiKey);
+    vi.stubGlobal("fetch", vi.fn());
+    vi.resetAllMocks();
+  });
+
+  it("should parse cachedContentTokenCount correctly", async () => {
+    const request: ChatRequest = {
+      model: "gemini-1.5-flash",
+      messages: [{ role: "user", content: "Hello" }]
+    };
+
+    (GeminiChatUtils.convertMessages as unknown as Mock).mockResolvedValue({
+      contents: [],
+      systemInstructionParts: []
+    });
+
+    const mockResponse = {
+      candidates: [{ content: { role: "model", parts: [{ text: "Hi" }] } }],
+      usageMetadata: {
+        promptTokenCount: 100,
+        candidatesTokenCount: 20,
+        totalTokenCount: 120,
+        cachedContentTokenCount: 80
+      }
+    };
+
+    (fetch as unknown as Mock).mockResolvedValue({
+      ok: true,
+      json: () => Promise.resolve(mockResponse)
+    });
+
+    const result = await chat.execute(request);
+
+    expect(result.usage?.input_tokens).toBe(100);
+    expect(result.usage?.cached_tokens).toBe(80);
+    // Cost calculation: (100 - 80) / 1M * inputPrice + 80 / 1M * cachedPrice
+    // By default, if registry is not mocked, standard cost calculation logic is used.
+    expect(result.usage?.total_tokens).toBe(120);
   });
 });

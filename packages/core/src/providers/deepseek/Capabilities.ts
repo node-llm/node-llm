@@ -4,59 +4,49 @@ import { ModelPricing } from "../../models/types.js";
 
 export class Capabilities {
   static getCapabilities(modelId: string): string[] {
+    const model = this.findModel(modelId);
+    if (model?.capabilities) {
+      const caps = [...model.capabilities];
+      if (!caps.includes("streaming")) caps.push("streaming");
+      return caps;
+    }
+
     const caps = ["streaming"];
-
-    if (/deepseek-chat/.test(modelId)) {
-      caps.push("function_calling");
-    }
-
-    if (/deepseek-reasoner/.test(modelId)) {
-      caps.push("reasoning");
-    }
+    if (this.supportsTools(modelId)) caps.push("function_calling");
+    if (this.supportsReasoning(modelId)) caps.push("reasoning");
 
     return caps;
   }
 
-  static getContextWindow(modelId: string): number | null {
-    const val = ModelRegistry.getContextWindow(modelId, "deepseek");
-    if (val) return val;
-
-    if (/deepseek-(?:chat|reasoner)/.test(modelId)) {
-      return 128_000;
-    }
-    return 32_768;
+  static getContextWindow(modelId: string): number {
+    return ModelRegistry.getContextWindow(modelId, "deepseek") ?? 32_768;
   }
 
   static getMaxOutputTokens(modelId: string): number | null {
-    if (/deepseek-(?:chat|reasoner)/.test(modelId)) {
-      return 8_192;
-    }
-    return 4_096;
+    return ModelRegistry.getMaxOutputTokens(modelId, "deepseek") ?? 8_192;
   }
 
   static supportsVision(modelId: string): boolean {
-    const model = this.findModel(modelId);
-    return model?.modalities?.input?.includes("image") || false;
+    return ModelRegistry.supports(modelId, "vision", "deepseek");
   }
 
   static supportsTools(modelId: string): boolean {
-    const model = this.findModel(modelId);
-    if (model?.capabilities?.includes("function_calling") || model?.capabilities?.includes("tools"))
-      return true;
-
-    return /deepseek-chat/.test(modelId);
+    return (
+      ModelRegistry.supports(modelId, "tools", "deepseek") ||
+      ModelRegistry.supports(modelId, "function_calling", "deepseek") ||
+      modelId.includes("chat")
+    );
   }
 
   static supportsStructuredOutput(modelId: string): boolean {
-    const model = this.findModel(modelId);
-    if (model?.capabilities?.includes("structured_output")) return true;
-
-    return /deepseek-chat/.test(modelId);
+    return (
+      ModelRegistry.supports(modelId, "structured_output", "deepseek") || modelId.includes("chat")
+    );
   }
 
   static supportsEmbeddings(modelId: string): boolean {
     const model = this.findModel(modelId);
-    return model?.modalities?.output?.includes("embeddings") || false;
+    return model?.modalities?.output?.includes("embeddings") ?? false;
   }
 
   static supportsImageGeneration(_modelId: string): boolean {
@@ -72,10 +62,11 @@ export class Capabilities {
   }
 
   static supportsReasoning(modelId: string): boolean {
-    const model = this.findModel(modelId);
-    if (model?.capabilities?.includes("reasoning")) return true;
+    return ModelRegistry.supports(modelId, "reasoning", "deepseek") || modelId.includes("reasoner");
+  }
 
-    return /deepseek-reasoner/.test(modelId);
+  static supportsToolChoice(_modelId: string): boolean {
+    return true;
   }
 
   static getPricing(modelId: string): ModelPricing | undefined {

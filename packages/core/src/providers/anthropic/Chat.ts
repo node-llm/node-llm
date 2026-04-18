@@ -46,6 +46,8 @@ export class AnthropicChat {
       response_format: _format,
       thinking: _thinking,
       headers: _headers,
+      tool_choice: _choice,
+      parallel_tool_calls: _parallel,
       requestTimeout,
       ...rest
     } = request;
@@ -75,12 +77,24 @@ export class AnthropicChat {
     }
 
     // Map tools
-    if (request.tools && request.tools.length > 0) {
+    if (request.tools && request.tools.length > 0 && request.tool_choice !== "none") {
       body.tools = request.tools.map((tool) => ({
         name: tool.function.name,
         description: tool.function.description,
         input_schema: tool.function.parameters
       }));
+    }
+
+    if (request.tool_choice && request.tool_choice !== "none") {
+      if (request.tool_choice === "auto") {
+        body.tool_choice = { type: "auto" };
+      } else if (request.tool_choice === "required") {
+        body.tool_choice = { type: "any" };
+      } else if (typeof request.tool_choice === "string") {
+        body.tool_choice = { type: "tool", name: request.tool_choice };
+      } else if (typeof request.tool_choice === "object" && "function" in request.tool_choice) {
+        body.tool_choice = { type: "tool", name: request.tool_choice.function.name };
+      }
     }
 
     // Check if any message contains PDF content to add beta header

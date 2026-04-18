@@ -81,3 +81,31 @@ console.log(`Size: ${buffer.length} bytes`);
 const stream = await image.toStream();
 stream.pipe(process.stdout);
 ```
+
+## Editing Existing Images
+
+<span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v1.15+</span>
+
+Some models (like DALL-E 2) can edit an existing image instead of generating from scratch. Use `images` to pass one or more source images, and `mask` to constrain which parts may change.
+
+```ts
+const image = await NodeLLM.paint("Add a hat to the person", {
+  model: "gpt-image-1",
+  images: ["portrait.png"], // The source image
+  mask: "portrait-mask.png"    // Optional mask
+});
+```
+
+`images` accepts local file paths, URLs, or base64 strings.
+
+### Image Variations
+
+If you omit the prompt, the model will generate variations of the provided image.
+
+```ts
+const image = await NodeLLM.paint("", {
+  model: "gpt-image-1",
+  images: ["logo.png"]
+});
+```
+

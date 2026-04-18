@@ -1,6 +1,7 @@
 import { ImageRequest, ImageResponse } from "../Provider.js";
 import { handleGeminiError } from "./Errors.js";
 import { logger } from "../../utils/logger.js";
+import { BinaryUtils } from "../../utils/Binary.js";
 
 export class GeminiImage {
   constructor(
@@ -18,12 +19,26 @@ export class GeminiImage {
       );
     }
 
+    const instance: Record<string, unknown> = {
+      prompt: request.prompt
+    };
+
+    if (request.images && request.images.length > 0) {
+      // For Imagen, typically the first image is the source image
+      const binary = await BinaryUtils.toBase64(request.images[0]!);
+      if (binary) {
+        instance.image = {
+          bytesBase64Encoded: binary.data,
+          mimeType: binary.mimeType
+        };
+      }
+
+      // If more attachments exist, they could be style references
+      // Currently, we'll just handle the first one as primary.
+    }
+
     const body: Record<string, unknown> = {
-      instances: [
-        {
-          prompt: request.prompt
-        }
-      ],
+      instances: [instance],
       parameters: {
         sampleCount: 1
       }

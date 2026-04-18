@@ -4,6 +4,7 @@ import { Capabilities } from "./Capabilities.js";
 import { handleGeminiError } from "./Errors.js";
 import { GeminiGenerateContentResponse } from "./types.js";
 import { GeminiChatUtils } from "./ChatUtils.js";
+import { ModelRegistry } from "../../models/ModelRegistry.js";
 import { logger } from "../../utils/logger.js";
 import { fetchWithTimeout } from "../../utils/fetch.js";
 
@@ -70,7 +71,7 @@ export class GeminiStreaming {
       payload.systemInstruction = { parts: systemInstructionParts };
     }
 
-    if (request.tools && request.tools.length > 0) {
+    if (request.tools && request.tools.length > 0 && request.tool_choice !== "none") {
       payload.tools = [
         {
           functionDeclarations: request.tools.map((t) => ({
@@ -80,6 +81,35 @@ export class GeminiStreaming {
           }))
         }
       ];
+
+      if (request.tool_choice) {
+        const modeMap: Record<string, string> = {
+          auto: "AUTO",
+          required: "ANY",
+          none: "NONE"
+        };
+        const mode = modeMap[request.tool_choice as string];
+        if (mode) {
+          payload.toolConfig = { functionCallingConfig: { mode } };
+        } else if (typeof request.tool_choice === "string") {
+          payload.toolConfig = {
+            functionCallingConfig: {
+              mode: "ANY",
+              allowedFunctionNames: [request.tool_choice]
+            }
+          };
+        } else if (
+          typeof request.tool_choice === "object" &&
+          "function" in (request.tool_choice as any)
+        ) {
+          payload.toolConfig = {
+            functionCallingConfig: {
+              mode: "ANY",
+              allowedFunctionNames: [(request.tool_choice as any).function.name]
+            }
+          };
+        }
+      }
     }
 
     let done = false;
@@ -166,6 +196,19 @@ export class GeminiStreaming {
                     }
                   });
                 }
+              }
+
+              // Capture usage metadata (usually in the last chunk)
+              if (json.usageMetadata) {
+                const usage = {
+                  input_tokens: json.usageMetadata.promptTokenCount,
+                  output_tokens: json.usageMetadata.candidatesTokenCount,
+                  total_tokens: json.usageMetadata.totalTokenCount,
+                  cached_tokens: json.usageMetadata.cachedContentTokenCount
+                };
+
+                const calculatedUsage = ModelRegistry.calculateCost(usage, request.model, "gemini");
+                yield { content: "", usage: calculatedUsage, done: true };
               }
             } catch {
               // Ignore parse errors

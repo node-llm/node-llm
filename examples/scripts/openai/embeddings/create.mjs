@@ -15,4 +15,4 @@ async function main() {
   batch.vectors.forEach((vec, i) => console.log(`Vector ${i}: ${vec.length} dims`));
 }
 
-main().catch(console.error);
+main().catch(e => { console.error(e); process.exit(1); });

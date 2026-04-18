@@ -17,7 +17,10 @@ describe("ModelRegistry - Filtered Sync Verification", () => {
       "ollama",
       "bedrock",
       "xai",
-      "mistral"
+      "mistral",
+      "groq",
+      "perplexity",
+      "azure"
     ];
 
     // Convert Set to Array for easier comparison
@@ -35,7 +38,7 @@ describe("ModelRegistry - Filtered Sync Verification", () => {
   });
 
   it("should find the new OpenAI models like gpt-4o", () => {
-    const gpt4o = ModelRegistry.find("gpt-4o");
+    const gpt4o = ModelRegistry.find("gpt-4o", "openai");
     expect(gpt4o).toBeDefined();
     expect(gpt4o?.provider).toBe("openai");
   });
@@ -49,6 +52,17 @@ describe("ModelRegistry - Filtered Sync Verification", () => {
     expect("cost" in result).toBe(true);
     if ("cost" in result) {
       expect(result.cost).toBe(12.5); // 2.5 + 10
+    }
+  });
+
+  it("should calculate costs for image tokens", () => {
+    // DALL-E 3 standard 1024x1024: $0.040 per image
+    const usage = { image_tokens: 1 };
+    const result = ModelRegistry.calculateCost(usage, "dall-e-3", "openai");
+
+    expect("cost" in result).toBe(true);
+    if ("cost" in result) {
+      expect(result.cost).toBe(0.04);
     }
   });
 

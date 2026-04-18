@@ -15,62 +15,54 @@ export class OllamaCapabilities {
 
   static getContextWindow(modelId: string): number | null {
     const model = this.findModel(modelId);
-    return model?.context_window || 8192;
+    return model?.context_window || 32_768;
   }
 
   static supportsVision(modelId: string): boolean {
-    const model = this.findModel(modelId);
-    if (model) {
-      return (
-        model.modalities?.input?.includes("image") ||
-        model.capabilities?.includes("vision") ||
-        false
-      );
-    }
-
-    // Fallback for custom models not in registry
-    return /vision|llava|moondream|bakllava/.test(modelId.toLowerCase());
+    return (
+      ModelRegistry.supports(modelId, "vision", "ollama") ||
+      modelId.includes("vision") ||
+      modelId.includes("llava")
+    );
   }
 
   static supportsTools(modelId: string): boolean {
-    const model = this.findModel(modelId);
-    if (model?.capabilities?.includes("tools")) return true;
-
-    // Fallback heuristics for models not in registry
-    return /gpt-|claude|gemini|deepseek|llama/.test(modelId.toLowerCase());
+    return (
+      ModelRegistry.supports(modelId, "tools", "ollama") ||
+      ModelRegistry.supports(modelId, "function_calling", "ollama")
+    );
   }
 
   static supportsStructuredOutput(modelId: string): boolean {
-    const model = this.findModel(modelId);
-    return model?.capabilities?.includes("structured_output") || false;
+    return ModelRegistry.supports(modelId, "structured_output", "ollama");
   }
 
   static supportsEmbeddings(modelId: string): boolean {
     const model = this.findModel(modelId);
-    return (
-      model?.modalities?.output?.includes("embeddings") ||
-      model?.capabilities?.includes("embeddings") ||
-      false
-    );
+    return model?.modalities?.output?.includes("embeddings") ?? modelId.includes("embed");
   }
 
   static supportsReasoning(modelId: string): boolean {
-    const model = this.findModel(modelId);
-    return model?.capabilities?.includes("reasoning") || false;
+    return (
+      ModelRegistry.supports(modelId, "reasoning", "ollama") ||
+      modelId.includes("reason") ||
+      modelId.includes("thought")
+    );
   }
 
   static supportsImageGeneration(modelId: string): boolean {
-    const model = this.findModel(modelId);
-    return model?.modalities?.output?.includes("image") || false;
+    return false;
   }
 
   static supportsTranscription(modelId: string): boolean {
-    const model = this.findModel(modelId);
-    return model?.modalities?.input?.includes("audio") || false;
+    return false;
   }
 
   static supportsModeration(modelId: string): boolean {
-    const model = this.findModel(modelId);
-    return model?.modalities?.output?.includes("moderation") || false;
+    return false;
+  }
+
+  static supportsToolChoice(_modelId: string): boolean {
+    return true;
   }
 }

@@ -110,21 +110,29 @@ export abstract class Tool<T = Record<string, unknown>> {
    * Preserves ToolHalt instances for the execution loop to detect.
    */
   public async handler(args: T): Promise<string | ToolHalt> {
-    // 1. Runtime validation if Zod schema is provided
-    let validatedArgs = args;
-    if (this.schema instanceof z.ZodType) {
-      validatedArgs = this.schema.parse(args) as T;
+    try {
+      // 1. Runtime validation if Zod schema is provided
+      let validatedArgs = args;
+      if (this.schema instanceof z.ZodType) {
+        try {
+          validatedArgs = this.schema.parse(args) as T;
+        } catch (validationError: any) {
+          return `Invalid tool arguments: ${validationError.message || validationError}`;
+        }
+      }
+
+      const result = await this.execute(validatedArgs);
+
+      // Preserve ToolHalt for the execution loop to handle
+      if (result instanceof ToolHalt) {
+        return result;
+      }
+
+      if (result === undefined || result === null) return "";
+      return typeof result === "string" ? result : JSON.stringify(result);
+    } catch (error: any) {
+      return `Error executing tool '${this.name}': ${error.message || error}`;
     }
-
-    const result = await this.execute(validatedArgs);
-
-    // Preserve ToolHalt for the execution loop to handle
-    if (result instanceof ToolHalt) {
-      return result;
-    }
-
-    if (result === undefined || result === null) return "";
-    return typeof result === "string" ? result : JSON.stringify(result);
   }
 
   /**

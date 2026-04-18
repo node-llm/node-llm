@@ -81,8 +81,21 @@ describe("GeminiChatUtils", () => {
 
     expect(contents[0]!.parts).toHaveLength(2);
     expect(contents[0]!.parts[0]!.text).toBe("Look");
-    expect(contents[0]!.parts[1]!.inlineData).toBeDefined();
     expect(contents[0]!.parts[1]!.inlineData!.mimeType).toBe("image/png");
     expect(contents[0]!.parts[1]!.inlineData!.data).toBe("base64data");
+  });
+
+  it("should group consecutive tool responses into one message", async () => {
+    const messages: Message[] = [
+      { role: "tool", tool_call_id: "call1", content: "result1" },
+      { role: "tool", tool_call_id: "call2", content: "result2" }
+    ];
+
+    const { contents } = await GeminiChatUtils.convertMessages(messages);
+
+    expect(contents).toHaveLength(1);
+    expect(contents[0]!.parts).toHaveLength(2);
+    expect(contents[0]!.parts[0]!.functionResponse!.name).toBe("call1");
+    expect(contents[0]!.parts[1]!.functionResponse!.name).toBe("call2");
   });
 });

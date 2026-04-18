@@ -8,12 +8,13 @@
 import { Message } from "../../chat/Message.js";
 import { ToolDefinition } from "../../chat/Tool.js";
 import {
+  BedrockToolConfig,
+  BedrockToolSpec,
   BedrockMessage,
   BedrockContentBlock,
-  BedrockConverseRequest,
-  BedrockToolConfig
+  BedrockConverseRequest
 } from "./types.js";
-import { ThinkingConfig } from "../../providers/Provider.js";
+import { ThinkingConfig, ToolChoice } from "../../providers/Provider.js";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Message Conversion
@@ -165,12 +166,15 @@ export function convertMessages(messages: Message[]): {
 /**
  * Convert NodeLLM tool definitions to Bedrock tool config.
  */
-export function convertTools(tools?: ToolDefinition[]): BedrockToolConfig | undefined {
-  if (!tools || tools.length === 0) {
+export function convertTools(
+  tools?: ToolDefinition[],
+  toolChoice?: ToolChoice
+): BedrockToolConfig | undefined {
+  if (!tools || tools.length === 0 || toolChoice === "none") {
     return undefined;
   }
 
-  return {
+  const config: BedrockToolConfig = {
     tools: tools.map((tool) => ({
       toolSpec: {
         name: tool.function.name,
@@ -181,6 +185,20 @@ export function convertTools(tools?: ToolDefinition[]): BedrockToolConfig | unde
       }
     }))
   };
+
+  if (toolChoice) {
+    if (toolChoice === "auto") {
+      config.toolChoice = { auto: {} };
+    } else if (toolChoice === "required") {
+      config.toolChoice = { any: {} };
+    } else if (typeof toolChoice === "string") {
+      config.toolChoice = { tool: { name: toolChoice } };
+    } else if (typeof toolChoice === "object" && "function" in toolChoice) {
+      config.toolChoice = { tool: { name: toolChoice.function.name } };
+    }
+  }
+
+  return config;
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -202,6 +220,7 @@ export function buildConverseRequest(
       guardrailVersion: string;
       trace?: "enabled" | "disabled";
     };
+    toolChoice?: ToolChoice;
     additionalModelRequestFields?: Record<string, any>;
   }
 ): BedrockConverseRequest {
@@ -215,7 +234,7 @@ export function buildConverseRequest(
     request.system = system;
   }
 
-  const toolConfig = convertTools(tools);
+  const toolConfig = convertTools(tools, options?.toolChoice);
   if (toolConfig) {
     request.toolConfig = toolConfig;
   }

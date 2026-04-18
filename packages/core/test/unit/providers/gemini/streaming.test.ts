@@ -313,4 +313,29 @@ describe("GeminiStreaming", () => {
 
     expect(results).toEqual(["Part1", "Part2"]);
   });
+
+  it("yields usage metadata in the final chunk", async () => {
+    const chunks = [
+      'data: {"candidates":[{"content":{"parts":[{"text":"Final text"}]}}]}\n',
+      'data: {"usageMetadata":{"promptTokenCount":10,"candidatesTokenCount":5,"totalTokenCount":15,"cachedContentTokenCount":4}}\n'
+    ];
+
+    vi.mocked(fetchWithTimeout).mockResolvedValue(
+      createMockResponse(chunks) as unknown as Response
+    );
+
+    const chunks_received: any[] = [];
+    for await (const chunk of streaming.execute({
+      model: "gemini-1.5-flash",
+      messages: [{ role: "user", content: "Usage test" }]
+    })) {
+      chunks_received.push(chunk);
+    }
+
+    const usageChunk = chunks_received.find((c) => c.usage);
+    expect(usageChunk).toBeDefined();
+    expect(usageChunk.usage.input_tokens).toBe(10);
+    expect(usageChunk.usage.cached_tokens).toBe(4);
+    expect(usageChunk.done).toBe(true);
+  });
 });

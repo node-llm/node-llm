@@ -18,7 +18,8 @@ describe("Transcription Unit Tests", () => {
       }),
       capabilities: {
         supportsTranscription: vi.fn().mockReturnValue(true)
-      } as unknown
+      } as unknown,
+      formatToolResultMessage: vi.fn()
     } as Provider;
   });
 
@@ -119,6 +120,42 @@ describe("Transcription Unit Tests", () => {
     expect(result.segments![1].speaker).toBe("B");
     expect(result.segments![0].start).toBe(0.5);
   });
+
+  it("should support word-level timestamps via timestamp_granularities", async () => {
+    const llm = createLLM({ provider: mockProvider });
+    await llm.transcribe("test.mp3", { timestamp_granularities: ["word"] });
+
+    expect(mockProvider.transcribe).toHaveBeenCalledWith(
+      expect.objectContaining({
+        timestamp_granularities: ["word"]
+      })
+    );
+  });
+
+  it("should expose .meta and .raw for database persistence", async () => {
+    mockProvider.transcribe = vi.fn().mockResolvedValue({
+      text: "Hello world",
+      model: "whisper-1",
+      duration: 5,
+      segments: [{ id: 0, start: 0, end: 5, text: "Hello world" }],
+      words: [{ word: "Hello", start: 0, end: 2 }, { word: "world", start: 2, end: 5 }]
+    });
+
+    const llm = createLLM({ provider: mockProvider });
+    const result = await llm.transcribe("test.mp3");
+
+    expect(result.meta).toEqual({
+      text: "Hello world",
+      model: "whisper-1",
+      duration: 5,
+      segments: [{ id: 0, start: 0, end: 5, text: "Hello world" }],
+      words: [{ word: "Hello", start: 0, end: 2 }, { word: "world", start: 2, end: 5 }]
+    });
+    expect(result.raw).toEqual(result.meta);
+    expect(result.words).toHaveLength(2);
+    expect(result.words[0].word).toBe("Hello");
+  });
+
 
   it("should support known speaker identification", async () => {
     const llm = createLLM({ provider: mockProvider });

@@ -2,6 +2,42 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.16.0] - 2026-04-18 (@node-llm/core)
+
+### Features
+
+- **Advanced Tool Control**: Precise orchestration of model tool behavior via `choice` and `calls` parameters.
+  - `choice`: Mandatory tool usage (`required`), specific tool forcing (`"tool_name"`), or disabling (`none`).
+  - `calls`: Control over parallel vs. sequential tool execution (`one` vs. `many`).
+- **Robust Tool Error Recovery**: Intelligent handling of tool calling failures to enable model self-correction.
+  - Intercepts hallucinated tool calls and returns descriptive "unavailable tool" messages with valid alternatives.
+  - Converts Zod validation errors and runtime execution failures into model-readable feedback strings.
+- **Normalized Provider Orchestration**: Unified tool-control behavior across OpenAI, Anthropic, Gemini, Bedrock, and Mistral.
+- **Advanced Transcription**: Deep diarization and word-level timestamp support.
+  - Added `timestamp_granularities` for precise word-level timing in Whisper.
+  - Enhanced `Transcription` class with `.meta` and `.raw` getters for DB parity with `ChatResponseString`.
+  - Fixed speaker-label preservation across OpenAI and Mistral transcription adapters.
+- **Gemini 2.5 Advanced Support**:
+  - **Structured Output**: Native `responseJsonSchema` respect with improved `nullable` and `anyOf` mapping.
+  - **Parallel Tool Support**: Grouped tool responses in a single message for higher accuracy.
+  - **Inline Generated Images**: Surface model-generated images (like Gemini Nano) as `attachments` directly in the chat response.
+- **Advanced Image Editing & Manipulation**:
+  - **In-painting & Edits**: Added support for editing existing images via `images` and `mask` parameters.
+  - **Image Variations**: Generate new variations of a source image by providing it to the `paint()` method without a prompt.
+  - **Broad Asset Support**: Seamlessly handle local files, remote URLs, and base64 strings as image sources.
+  - **Multimodal Cost Tracking**: Added `image_tokens` to usage tracking with automated cost calculation in the `ModelRegistry`.
+  - **Enhanced OpenAI Image Support**: Native integration with `/v1/images/edits` and `/v1/images/variations` endpoints, including automatic fallback to `gpt-image-1` (DALL-E 2) for manipulation tasks.
+
+### Improvements
+
+- **Code Consolidation**: Unified OpenAI-compatible `tool_choice` normalization logic into a shared utility.
+- **TypeScript Alignment**: Hardened type definitions for `ToolChoice` and provider-specific request bodies.
+- **Enhanced Verification**: New comprehensive unit test suite for tool failure recovery paths and updated example scripts.
+- **Testing DX**: Major upgrades to `@node-llm/testing` mocker.
+  - Added `.throws()` support for chaos engineering and failure simulation.
+  - Improved `.callsTool()` to support simultaneous conversational content.
+  - Surfaced `thinking`, `metadata`, and `reasoning` through the mock execution proxy.
+
 ## [1.15.0] - 2026-03-28 (@node-llm/core)
 
 ### Features

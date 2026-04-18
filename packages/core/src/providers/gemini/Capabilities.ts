@@ -4,87 +4,26 @@ import { ModelPricing } from "../../models/types.js";
 
 export class Capabilities {
   static getContextWindow(modelId: string): number | null {
-    const val = ModelRegistry.getContextWindow(modelId, "gemini");
-    if (val !== undefined && val !== null) return val;
-
-    const id = this.normalizeModelId(modelId);
-    if (
-      id.match(
-        /gemini-2\.5-pro-exp-03-25|gemini-2\.0-flash|gemini-2\.0-flash-lite|gemini-1\.5-flash|gemini-1\.5-flash-8b/
-      )
-    ) {
-      return 1_048_576;
-    }
-    if (id.match(/gemini-1\.5-pro/)) {
-      return 2_097_152;
-    }
-    if (id.match(/gemini-embedding-exp/)) {
-      return 8_192;
-    }
-    if (id.match(/text-embedding-004|embedding-001/)) {
-      return 2_048;
-    }
-    if (id.match(/aqa/)) {
-      return 7_168;
-    }
-    return 32_768;
+    return ModelRegistry.getContextWindow(modelId, "gemini") ?? 32_768;
   }
 
   static getMaxOutputTokens(modelId: string): number | null {
-    const val = ModelRegistry.getMaxOutputTokens(modelId, "gemini");
-    if (val !== undefined && val !== null) return val;
-
-    const id = this.normalizeModelId(modelId);
-    if (id.match(/gemini-2\.5-pro-exp-03-25/)) {
-      return 64_000;
-    }
-    if (
-      id.match(
-        /gemini-2\.0-flash|gemini-2\.0-flash-lite|gemini-1\.5-flash|gemini-1\.5-flash-8b|gemini-1\.5-pro/
-      )
-    ) {
-      return 8_192;
-    }
-    if (id.match(/text-embedding-004|embedding-001/)) {
-      return 768;
-    }
-    if (id.match(/imagen-3/)) {
-      return 4;
-    }
-    return 4_096;
+    return ModelRegistry.getMaxOutputTokens(modelId, "gemini") ?? 4_096;
   }
 
   static supportsVision(modelId: string): boolean {
-    const model = this.findModel(modelId);
-    if (model?.modalities?.input?.includes("image")) return true;
-
-    const id = this.normalizeModelId(modelId);
-    if (id.match(/text-embedding|embedding-001|aqa/)) {
-      return false;
-    }
-    return !!id.match(/gemini|flash|pro|imagen/);
+    return ModelRegistry.supports(modelId, "vision", "gemini");
   }
 
   static supportsTools(modelId: string): boolean {
-    const model = this.findModel(modelId);
-    if (model?.capabilities?.includes("function_calling")) return true;
-
-    const id = this.normalizeModelId(modelId);
-    if (id.match(/text-embedding|embedding-001|aqa|flash-lite|imagen|gemini-2\.0-flash-lite/)) {
-      return false;
-    }
-    return !!id.match(/gemini|pro|flash/);
+    return (
+      ModelRegistry.supports(modelId, "tools", "gemini") ||
+      ModelRegistry.supports(modelId, "function_calling", "gemini")
+    );
   }
 
   static supportsStructuredOutput(modelId: string): boolean {
-    const model = this.findModel(modelId);
-    if (model?.capabilities?.includes("structured_output")) return true;
-
-    const id = this.normalizeModelId(modelId);
-    if (id.match(/text-embedding|embedding-001|aqa|imagen/)) {
-      return false;
-    }
-    return true;
+    return ModelRegistry.supports(modelId, "structured_output", "gemini");
   }
 
   static supportsSystemInstructions(_modelId: string): boolean {
@@ -92,39 +31,39 @@ export class Capabilities {
   }
 
   static supportsJsonMode(modelId: string): boolean {
-    return this.supportsStructuredOutput(modelId);
+    return (
+      ModelRegistry.supports(modelId, "json_mode", "gemini") ||
+      this.supportsStructuredOutput(modelId)
+    );
   }
 
   static supportsEmbeddings(modelId: string): boolean {
     const model = this.findModel(modelId);
-    if (model?.modalities?.output?.includes("embeddings")) return true;
-
-    const id = this.normalizeModelId(modelId);
-    return !!id.match(/text-embedding|embedding|gemini-embedding/);
+    return model?.modalities?.output?.includes("embeddings") ?? modelId.includes("embedding");
   }
 
   static supportsImageGeneration(modelId: string): boolean {
     const model = this.findModel(modelId);
-    if (
+    return (
       model?.capabilities?.includes("image_generation") ||
-      model?.modalities?.output?.includes("image")
-    )
-      return true;
-
-    const id = this.normalizeModelId(modelId);
-    return !!id.match(/imagen/);
+      model?.modalities?.output?.includes("image") ||
+      modelId.includes("imagen")
+    );
   }
 
   static supportsTranscription(modelId: string): boolean {
     const model = this.findModel(modelId);
-    if (model?.modalities?.input?.includes("audio")) return true;
-
-    const id = this.normalizeModelId(modelId);
-    return !!id.match(/gemini|flash|pro/);
+    return (
+      model?.modalities?.input?.includes("audio") ?? modelId.match(/gemini|flash|pro/) !== null
+    );
   }
 
   static supportsModeration(_modelId: string): boolean {
     return false;
+  }
+
+  static supportsToolChoice(_modelId: string): boolean {
+    return true;
   }
 
   static normalizeTemperature(temperature: number | undefined, _model: string): number | undefined {
@@ -132,33 +71,37 @@ export class Capabilities {
   }
 
   static getModalities(modelId: string): { input: string[]; output: string[] } {
+    const model = this.findModel(modelId);
+    if (model?.modalities) return model.modalities;
+
     const input = ["text"];
     const output = ["text"];
-    const id = this.normalizeModelId(modelId);
 
-    if (this.supportsVision(id)) input.push("image", "video", "audio", "pdf");
-    if (this.supportsImageGeneration(id)) output.push("image");
-    if (this.supportsEmbeddings(id)) output.push("embeddings");
+    if (this.supportsVision(modelId)) input.push("image", "video", "audio", "pdf");
+    if (this.supportsImageGeneration(modelId)) output.push("image");
+    if (this.supportsEmbeddings(modelId)) output.push("embeddings");
 
     return { input, output };
   }
 
   static getCapabilities(modelId: string): string[] {
+    const model = this.findModel(modelId);
+    if (model?.capabilities) {
+      const caps = [...model.capabilities];
+      if (!caps.includes("streaming")) caps.push("streaming");
+      return caps;
+    }
+
     const caps = ["streaming"];
-    const id = this.normalizeModelId(modelId);
-    if (this.supportsTools(id)) caps.push("function_calling");
-    if (this.supportsStructuredOutput(id)) caps.push("structured_output");
-    if (this.supportsEmbeddings(id)) caps.push("embeddings");
-    if (this.supportsImageGeneration(id)) caps.push("image_generation");
+    if (this.supportsTools(modelId)) caps.push("function_calling");
+    if (this.supportsStructuredOutput(modelId)) caps.push("structured_output");
+    if (this.supportsEmbeddings(modelId)) caps.push("embeddings");
+    if (this.supportsImageGeneration(modelId)) caps.push("image_generation");
     return caps;
   }
 
   static getPricing(modelId: string): ModelPricing | undefined {
     return PricingRegistry.getPricing(modelId, "gemini");
-  }
-
-  private static normalizeModelId(modelId: string): string {
-    return modelId.replace("models/", "");
   }
 
   private static findModel(modelId: string) {

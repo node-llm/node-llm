@@ -5,7 +5,7 @@ import { ContentPart } from "./Content.js";
 import { Schema } from "../schema/Schema.js";
 import { ChatResponseString } from "./ChatResponse.js";
 import { ToolExecutionMode } from "../constants.js";
-import { ResponseFormat, ThinkingConfig } from "../providers/Provider.js";
+import { ResponseFormat, ThinkingConfig, ToolChoice } from "../providers/Provider.js";
 
 export interface ChatOptions {
   systemPrompt?: string;
@@ -33,6 +33,8 @@ export interface ChatOptions {
   maxToolCalls?: number;
   requestTimeout?: number;
   toolExecution?: ToolExecutionMode;
+  toolChoice?: ToolChoice;
+  toolCalls?: "one" | "many" | number;
   onConfirmToolCall?: (toolCall: unknown) => Promise<boolean> | boolean;
   onBeforeRequest?: (messages: Message[]) => Promise<Message[] | void>;
   onAfterResponse?: (response: ChatResponseString) => Promise<ChatResponseString | void>;

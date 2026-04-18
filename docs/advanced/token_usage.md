@@ -36,7 +36,7 @@ console.log(response.inputTokens);
 
 // Full Metadata Object (Perfect for DB storage) <span style="background-color: #0d47a1; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v1.6.0</span>
 console.log(response.meta); 
-// => { usage: {...}, model: "...", provider: "...", reasoning: "..." }
+// => { usage: {...}, model: "...", provider: "...", reasoning: "...", metadata: {...} }
 ```
 
 ## Session Totals

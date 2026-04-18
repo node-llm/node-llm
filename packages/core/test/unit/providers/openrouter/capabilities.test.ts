@@ -2,12 +2,27 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { OpenRouterCapabilities } from "../../../../src/providers/openrouter/Capabilities.js";
 import { ModelRegistry } from "../../../../src/models/ModelRegistry.js";
 
-// Mock ModelRegistry.find
-vi.mock("../../../../src/models/ModelRegistry.js", () => ({
-  ModelRegistry: {
-    find: vi.fn()
-  }
-}));
+// Mock ModelRegistry
+vi.mock("../../../../src/models/ModelRegistry.js", () => {
+  const findMock = vi.fn();
+  return {
+    ModelRegistry: {
+      find: findMock,
+      supports: vi.fn((modelId, capability, provider) => {
+        const model = findMock(modelId, provider);
+        if (model?.capabilities?.includes(capability)) return true;
+        if (capability === "vision" && model?.modalities?.input?.includes("image")) return true;
+        if (capability === "embeddings" && model?.modalities?.output?.includes("embeddings"))
+          return true;
+        return false;
+      }),
+      getContextWindow: vi.fn((modelId, provider) => {
+        const model = findMock(modelId, provider);
+        return model?.context_window ?? null;
+      })
+    }
+  };
+});
 
 describe("OpenRouterCapabilities", () => {
   beforeEach(() => {

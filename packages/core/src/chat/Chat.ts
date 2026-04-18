@@ -12,7 +12,8 @@ import {
   Usage,
   ChatChunk,
   ResponseFormat,
-  ThinkingConfig
+  ThinkingConfig,
+  ToolChoice
 } from "../providers/Provider.js";
 import { Executor } from "../executor/Executor.js";
 import { ChatStream } from "./ChatStream.js";
@@ -146,9 +147,16 @@ export class Chat<S = unknown> {
    * Can replace existing tools if options.replace is true.
    *
    * @example
-   * chat.withTools([WeatherTool, new CalculatorTool()], { replace: true });
+   * chat.withTools([WeatherTool, new CalculatorTool()], { replace: true, choice: 'required' });
    */
-  withTools(tools: ToolResolvable[], options?: { replace?: boolean }): this {
+  withTools(
+    tools: ToolResolvable[],
+    options?: {
+      replace?: boolean;
+      choice?: ToolChoice;
+      calls?: "one" | "many" | number;
+    }
+  ): this {
     if (options?.replace) {
       this.options.tools = [];
     }
@@ -157,12 +165,42 @@ export class Chat<S = unknown> {
       this.options.tools = [];
     }
 
+    if (options?.choice) {
+      this.options.toolChoice = options.choice;
+    }
+
+    if (options?.calls) {
+      this.options.toolCalls = options.calls;
+    }
+
     for (const tool of tools) {
       const normalized = this.normalizeTool(tool);
       if (normalized) {
         this.options.tools.push(normalized);
       }
     }
+    return this;
+  }
+
+  /**
+   * Control whether/how tools are called.
+   * - 'auto': (Default) Model decides.
+   * - 'none': Model cannot call tools.
+   * - 'required': Model must call at least one tool.
+   * - string: Force a specific tool by name.
+   */
+  withToolChoice(choice: ToolChoice): this {
+    this.options.toolChoice = choice;
+    return this;
+  }
+
+  /**
+   * Control whether the model may return one or multiple tool calls.
+   * - 'many': (Default) Parallel tool calling allowed.
+   * - 'one' or 1: Only one tool call allowed in a single response.
+   */
+  withToolCalls(calls: "one" | "many" | number): this {
+    this.options.toolCalls = calls;
     return this;
   }
 
@@ -435,6 +473,15 @@ export class Chat<S = unknown> {
       ChatValidator.validateTools(this.provider, this.model, true, this.options);
     }
 
+    if (this.options.toolChoice || this.options.params?.tool_choice) {
+      ChatValidator.validateToolChoice(
+        this.provider,
+        this.model,
+        this.options.toolChoice || this.options.params?.tool_choice,
+        this.options
+      );
+    }
+
     this.messages.push({
       role: "user",
       content: messageContent as MessageContent
@@ -490,6 +537,9 @@ export class Chat<S = unknown> {
           max_tokens: options?.maxTokens ?? this.options.maxTokens ?? config.maxTokens,
           headers: { ...this.options.headers, ...options?.headers },
           response_format: responseFormat, // Pass to provider
+          tool_choice: this.options.toolChoice,
+          parallel_tool_calls:
+            this.options.toolCalls === "one" || this.options.toolCalls === 1 ? false : undefined,
           requestTimeout:
             options?.requestTimeout ?? this.options.requestTimeout ?? config.requestTimeout,
           thinking: options?.thinking ?? this.options.thinking,
@@ -547,7 +597,9 @@ export class Chat<S = unknown> {
           response.reasoning,
           response.tool_calls,
           response.finish_reason,
-          this.options.schema
+          this.options.schema,
+          response.metadata,
+          response.attachments
         );
 
         // --- Content Policy Hooks (Output - Turn 1) ---
@@ -717,6 +769,9 @@ export class Chat<S = unknown> {
             max_tokens: options?.maxTokens ?? this.options.maxTokens ?? config.maxTokens,
             headers: this.options.headers,
             response_format: responseFormat,
+            tool_choice: this.options.toolChoice,
+            parallel_tool_calls:
+              this.options.toolCalls === "one" || this.options.toolCalls === 1 ? false : undefined,
             requestTimeout:
               options?.requestTimeout ?? this.options.requestTimeout ?? config.requestTimeout,
             prediction: options?.prediction ?? this.options.prediction,
@@ -734,7 +789,9 @@ export class Chat<S = unknown> {
             response.reasoning,
             response.tool_calls,
             response.finish_reason,
-            this.options.schema
+            this.options.schema,
+            response.metadata,
+            response.attachments
           );
 
           if (this.options.onAfterResponse) {

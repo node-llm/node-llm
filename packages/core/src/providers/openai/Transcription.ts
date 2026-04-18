@@ -42,6 +42,12 @@ export class OpenAITranscription {
       formData.append("language", request.language);
     }
 
+    if (request.timestamp_granularities) {
+      request.timestamp_granularities.forEach((g) =>
+        formData.append("timestamp_granularities[]", g)
+      );
+    }
+
     const url = buildUrl(this.baseUrl, "/audio/transcriptions");
     logger.logRequest("OpenAI", "POST", url, {
       model: request.model || DEFAULT_MODELS.TRANSCRIPTION,
@@ -69,6 +75,7 @@ export class OpenAITranscription {
       model: string;
       duration?: number;
       segments?: TranscriptionSegment[];
+      words?: { word: string; start: number; end: number }[];
     };
     logger.logResponse("OpenAI", response.status, response.statusText, json);
     return {
@@ -79,8 +86,10 @@ export class OpenAITranscription {
         id: s.id,
         start: s.start,
         end: s.end,
-        text: s.text
-      }))
+        text: s.text,
+        speaker: s.speaker
+      })),
+      words: json.words
     };
   }
 

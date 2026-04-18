@@ -4,75 +4,53 @@ import { ModelPricing } from "../../models/types.js";
 
 export class MistralCapabilities {
   static getCapabilities(modelId: string): string[] {
+    const model = this.findModel(modelId);
+    if (model?.capabilities) {
+      const caps = [...model.capabilities];
+      if (!caps.includes("streaming")) caps.push("streaming");
+      return caps;
+    }
+
     const caps = ["streaming", "chat"];
-
-    if (this.supportsTools(modelId)) {
-      caps.push("function_calling", "tools");
-    }
-
-    if (this.supportsVision(modelId)) {
-      caps.push("vision");
-    }
-
-    if (this.supportsStructuredOutput(modelId)) {
-      caps.push("structured_output", "json_mode");
-    }
+    if (this.supportsTools(modelId)) caps.push("function_calling");
+    if (this.supportsReasoning(modelId)) caps.push("reasoning");
+    if (this.supportsVision(modelId)) caps.push("vision");
+    if (this.supportsStructuredOutput(modelId)) caps.push("structured_output");
 
     return caps;
   }
 
   static getContextWindow(modelId: string): number | null {
-    const val = ModelRegistry.getContextWindow(modelId, "mistral");
-    if (val) return val;
-
-    // Mistral models typically have 32K-128K context
-    if (/mistral-large|codestral/.test(modelId)) {
-      return 128_000;
-    }
-    if (/mistral-medium|mistral-small|pixtral/.test(modelId)) {
-      return 32_000;
-    }
-    return 32_000;
+    return ModelRegistry.getContextWindow(modelId, "mistral") ?? 32_768;
   }
 
   static getMaxOutputTokens(modelId: string): number | null {
-    const model = this.findModel(modelId);
-    if (model?.max_output_tokens) return model.max_output_tokens;
-
-    // Default max output for Mistral models
-    return 8_192;
+    return ModelRegistry.getMaxOutputTokens(modelId, "mistral") ?? 8_192;
   }
 
   static supportsVision(modelId: string): boolean {
-    const model = this.findModel(modelId);
-    if (model?.modalities?.input?.includes("image")) return true;
-
-    // Pixtral models support vision
-    return /pixtral/.test(modelId.toLowerCase());
+    return ModelRegistry.supports(modelId, "vision", "mistral") || modelId.includes("pixtral");
   }
 
   static supportsTools(modelId: string): boolean {
-    const model = this.findModel(modelId);
-    if (model?.capabilities?.includes("function_calling") || model?.capabilities?.includes("tools"))
-      return true;
-
-    // Most Mistral models support tools except embedding models
-    return !/embed/.test(modelId.toLowerCase());
+    return (
+      ModelRegistry.supports(modelId, "tools", "mistral") ||
+      ModelRegistry.supports(modelId, "function_calling", "mistral") ||
+      !modelId.includes("embed")
+    );
   }
 
   static supportsStructuredOutput(modelId: string): boolean {
-    const model = this.findModel(modelId);
-    if (model?.capabilities?.includes("structured_output")) return true;
-
-    // Most Mistral chat models support JSON mode
-    return !/embed/.test(modelId.toLowerCase());
+    return (
+      ModelRegistry.supports(modelId, "structured_output", "mistral") ||
+      ModelRegistry.supports(modelId, "json_mode", "mistral") ||
+      !modelId.includes("embed")
+    );
   }
 
   static supportsEmbeddings(modelId: string): boolean {
     const model = this.findModel(modelId);
-    if (model?.modalities?.output?.includes("embeddings")) return true;
-
-    return /embed/.test(modelId.toLowerCase());
+    return model?.modalities?.output?.includes("embeddings") ?? modelId.includes("embed");
   }
 
   static supportsImageGeneration(_modelId: string): boolean {
@@ -80,26 +58,23 @@ export class MistralCapabilities {
   }
 
   static supportsTranscription(modelId: string): boolean {
-    const model = this.findModel(modelId);
-    if (model?.modalities?.input?.includes("audio")) return true;
-
-    // Voxtral models support transcription
-    return /voxtral/.test(modelId.toLowerCase());
+    return (
+      ModelRegistry.supports(modelId, "transcription", "mistral") || modelId.includes("voxtral")
+    );
   }
 
   static supportsModeration(modelId: string): boolean {
-    const model = this.findModel(modelId);
-    if (model?.capabilities?.includes("moderation")) return true;
-
-    return /moderation/.test(modelId.toLowerCase());
+    return (
+      ModelRegistry.supports(modelId, "moderation", "mistral") || modelId.includes("moderation")
+    );
   }
 
   static supportsReasoning(modelId: string): boolean {
-    const model = this.findModel(modelId);
-    if (model?.capabilities?.includes("reasoning")) return true;
+    return ModelRegistry.supports(modelId, "reasoning", "mistral") || modelId.includes("magistral");
+  }
 
-    // Magistral models support reasoning
-    return /magistral/.test(modelId.toLowerCase());
+  static supportsToolChoice(_modelId: string): boolean {
+    return true;
   }
 
   static findModel(modelId: string) {
@@ -107,9 +82,6 @@ export class MistralCapabilities {
   }
 
   static getPricing(modelId: string): ModelPricing | undefined {
-    const model = this.findModel(modelId);
-    if (model?.pricing) return model.pricing;
-
     return PricingRegistry.getPricing(modelId, "mistral");
   }
 

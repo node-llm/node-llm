@@ -59,10 +59,16 @@ export class ToolHandler {
         halted: isHalt
       };
     } else {
-      throw new ToolError(
-        "Tool not found or no handler provided",
-        toolCall.function?.name ?? "unknown"
-      );
+      // Model tried to call a tool that isn't available
+      const availableTools = tools?.map((t) => t.function.name) || [];
+      const errorMsg = `Model tried to call unavailable tool '${toolCall.function.name}'. Available tools: [${availableTools.join(", ")}].`;
+
+      return {
+        role: "tool",
+        tool_call_id: toolCall.id,
+        content: errorMsg,
+        halted: false
+      };
     }
   }
 }

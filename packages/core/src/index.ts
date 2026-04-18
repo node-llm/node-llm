@@ -42,6 +42,8 @@ export {
   ImageResponse,
   TranscriptionRequest,
   TranscriptionResponse,
+  TranscriptionSegment,
+  TranscriptionWord,
   ModerationRequest,
   ModerationResponse,
   ModerationResult,

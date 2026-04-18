@@ -15,4 +15,4 @@ async function main() {
   console.log("\nUsage:", response.usage);
 }
 
-main().catch(console.error);
+main().catch(e => { console.error(e); process.exit(1); });

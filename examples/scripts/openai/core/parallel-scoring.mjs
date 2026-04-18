@@ -20,7 +20,7 @@ async function scoreAnswerParallel(question, answer) {
   const results = await Promise.all([
     // Each of these returns a scoped instance of NodeLLM
     NodeLLM.withProvider("openai").chat("gpt-4o-mini").ask(prompt),
-    NodeLLM.withProvider("anthropic").chat("claude-3-5-haiku-20241022").ask(prompt),
+    NodeLLM.withProvider("anthropic").chat("claude-3-haiku-20240307").ask(prompt),
     NodeLLM.withProvider("gemini").chat("gemini-2.0-flash").ask(prompt)
   ]);
 

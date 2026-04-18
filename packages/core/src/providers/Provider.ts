@@ -46,10 +46,19 @@ export interface ThinkingResult {
   tokens?: number;
 }
 
+export type ToolChoice =
+  | "auto"
+  | "none"
+  | "required"
+  | { type: "function"; function: { name: string } }
+  | string;
+
 export interface ChatRequest {
   model: string;
   messages: Message[];
   tools?: ToolDefinition[];
+  tool_choice?: ToolChoice;
+  parallel_tool_calls?: boolean;
   thinking?: ThinkingConfig;
   temperature?: number;
   max_tokens?: number;
@@ -77,11 +86,19 @@ export interface Usage {
   output_tokens: number;
   total_tokens: number;
   reasoning_tokens?: number;
+  image_tokens?: number;
   cached_tokens?: number;
   cache_creation_tokens?: number;
   cost?: number;
   input_cost?: number;
   output_cost?: number;
+}
+
+export interface Attachment {
+  mimeType: string;
+  data: string; // base64
+  name?: string;
+  [key: string]: unknown;
 }
 
 export interface ChatResponse {
@@ -93,6 +110,7 @@ export interface ChatResponse {
   usage?: Usage;
   finish_reason?: string | null;
   metadata?: Record<string, unknown>;
+  attachments?: Attachment[];
 }
 
 export interface ProviderCapabilities {
@@ -106,6 +124,7 @@ export interface ProviderCapabilities {
   supportsReasoning(modelId: string): boolean;
   supportsDeveloperRole(modelId: string): boolean;
   supportsPrediction?(modelId: string): boolean;
+  supportsToolChoice?(modelId: string): boolean;
   getContextWindow(modelId: string): number | null;
 }
 
@@ -125,11 +144,14 @@ export interface ModelInfo {
 export interface ImageRequest {
   model?: string;
   prompt: string;
+  images?: string[]; // Source images (for edits or variations)
+  mask?: string; // Mask image (for in-painting)
   size?: string;
   quality?: string;
   n?: number;
   headers?: Record<string, string>;
   requestTimeout?: number;
+  [key: string]: unknown;
 }
 
 export interface ImageResponse {
@@ -147,6 +169,18 @@ export interface TranscriptionRequest {
   speakerNames?: string[];
   speakerReferences?: string[];
   requestTimeout?: number;
+  /**
+   * Granularity of timestamps in the response.
+   * 'word' returns word-level timestamps (useful for subtitle generation).
+   * Defaults to 'segment' if not specified.
+   */
+  timestamp_granularities?: ("word" | "segment")[];
+}
+
+export interface TranscriptionWord {
+  word: string;
+  start: number;
+  end: number;
 }
 
 export interface TranscriptionSegment {
@@ -155,6 +189,7 @@ export interface TranscriptionSegment {
   end: number;
   text: string;
   speaker?: string;
+  words?: TranscriptionWord[];
   [key: string]: unknown;
 }
 
@@ -163,6 +198,7 @@ export interface TranscriptionResponse {
   model: string;
   duration?: number;
   segments?: TranscriptionSegment[];
+  words?: TranscriptionWord[];
 }
 
 export interface ModerationRequest {

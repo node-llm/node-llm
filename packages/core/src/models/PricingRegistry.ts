@@ -49,6 +49,20 @@ export class PricingRegistry {
       pricing: {
         text_tokens: { standard: { input_per_million: 0.5, output_per_million: 1.5 } }
       }
+    },
+    {
+      provider: "openai",
+      pattern: /dall-e-3/,
+      pricing: {
+        images: { standard: { input: 0.04 } }
+      }
+    },
+    {
+      provider: "openai",
+      pattern: /dall-e-2|gpt-image-1/,
+      pricing: {
+        images: { standard: { input: 0.02 } }
+      }
     }
   ];
 

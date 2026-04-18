@@ -34,6 +34,16 @@ async function main() {
 
   console.log("\nResponse:");
   console.log(response.content);
+  console.log("\n");
+
+  // Example 2: Forced Tool Choice
+  console.log("=== Example 2: Forced Specific Tool (choice: 'get_weather') ===");
+  const response2 = await chat
+    .withToolChoice("get_weather")
+    .ask("I'm visiting a new city, tell me about it.");
+
+  console.log("Tool Calls:", response2.tool_calls?.map((tc) => tc.function.name));
+  console.log("Assistant:", response2.content);
 }
 
-main().catch(console.error);
+main().catch(e => { console.error(e); process.exit(1); });

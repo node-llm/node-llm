@@ -11,7 +11,7 @@ describe("Gemini Capabilities", () => {
 
   it("determines correct max output tokens", () => {
     expect(Capabilities.getMaxOutputTokens("gemini-1.5-pro")).toBe(8_192);
-    expect(Capabilities.getMaxOutputTokens("gemini-2.5-pro-exp-03-25")).toBe(64_000);
+    expect(Capabilities.getMaxOutputTokens("gemini-2.5-pro-preview-03-25")).toBe(65_536);
   });
 
   it("checks vision support", () => {

@@ -53,6 +53,20 @@ export class BinaryUtils {
     return null;
   }
 
+  /**
+   * Converts a Base64Data object to a Blob.
+   */
+  static base64ToBlob(binary: Base64Data): Blob {
+    return new Blob([new Uint8Array(this.base64ToBuffer(binary))], { type: binary.mimeType });
+  }
+
+  /**
+   * Converts a Base64Data object to a Buffer.
+   */
+  static base64ToBuffer(binary: Base64Data): Buffer {
+    return Buffer.from(binary.data, "base64");
+  }
+
   private static guessMimeType(filePath: string): string {
     const ext = path.extname(filePath).toLowerCase();
     switch (ext) {
