@@ -73,7 +73,9 @@ export class MistralTranscription {
       id: s.id,
       start: s.start,
       end: s.end,
-      text: s.text
+      text: s.text,
+      speaker: s.speaker as string | undefined,
+      words: s.words as any
     }));
 
     return {

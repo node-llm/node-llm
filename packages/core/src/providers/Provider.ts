@@ -157,6 +157,18 @@ export interface TranscriptionRequest {
   speakerNames?: string[];
   speakerReferences?: string[];
   requestTimeout?: number;
+  /**
+   * Granularity of timestamps in the response.
+   * 'word' returns word-level timestamps (useful for subtitle generation).
+   * Defaults to 'segment' if not specified.
+   */
+  timestamp_granularities?: ("word" | "segment")[];
+}
+
+export interface TranscriptionWord {
+  word: string;
+  start: number;
+  end: number;
 }
 
 export interface TranscriptionSegment {
@@ -165,6 +177,7 @@ export interface TranscriptionSegment {
   end: number;
   text: string;
   speaker?: string;
+  words?: TranscriptionWord[];
   [key: string]: unknown;
 }
 
@@ -173,6 +186,7 @@ export interface TranscriptionResponse {
   model: string;
   duration?: number;
   segments?: TranscriptionSegment[];
+  words?: TranscriptionWord[];
 }
 
 export interface ModerationRequest {

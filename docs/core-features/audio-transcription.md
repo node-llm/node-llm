@@ -52,20 +52,42 @@ await NodeLLM.transcribe("audio.mp3", {
 });
 ```
 
-### Accessing Segments & Timestamps
+### Diarization & Native Word Timestamps <span style="background-color: #0d47a1; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v1.16.0</span>
 
-The `transcribe` method returns a `Transcription` object that contains more than just text. You can access detailed timing information if supported by the provider (e.g., using `response_format: 'verbose_json'` with OpenAI).
+NodeLLM supports speaker identification (diarization) and word-level timestamps.
 
 ```ts
-const response = await NodeLLM.transcribe("interview.mp3", {
-  params: { response_format: "verbose_json" }
+const response = await NodeLLM.transcribe("meeting.mp3", {
+  model: "whisper-1", // or "gpt-4o-transcribe-diarize"
+  timestamp_granularities: ["word", "segment"],
+  speakerNames: ["Alice", "Bob"]
 });
+```
 
+### Accessing Detailed Metadata
+
+The `transcribe` method returns a `Transcription` object that provides rich metadata for analysis and persistence.
+
+```ts
 console.log(`Duration: ${response.duration}s`);
 
+// 1. Iterating through segments
 for (const segment of response.segments) {
-  console.log(`[${segment.start}s - ${segment.end}s]: ${segment.text}`);
+  const speaker = segment.speaker ? `${segment.speaker}: ` : "";
+  console.log(`[${segment.start}s - ${segment.end}s] ${speaker}${segment.text}`);
 }
+
+// 2. Word-level precision (if requested)
+console.log(response.words[0]); 
+// => { word: "Hello", start: 0.5, end: 0.8 }
+
+// 3. Database Persistence
+// Every transcription has a .meta property for easy storage
+const record = {
+  audio_id: "audio_123",
+  transcript: response.text,
+  metadata: response.meta // Full serializable object
+};
 ```
 
 ---
