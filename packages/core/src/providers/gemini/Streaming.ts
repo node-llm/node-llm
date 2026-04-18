@@ -4,6 +4,7 @@ import { Capabilities } from "./Capabilities.js";
 import { handleGeminiError } from "./Errors.js";
 import { GeminiGenerateContentResponse } from "./types.js";
 import { GeminiChatUtils } from "./ChatUtils.js";
+import { ModelRegistry } from "../../models/ModelRegistry.js";
 import { logger } from "../../utils/logger.js";
 import { fetchWithTimeout } from "../../utils/fetch.js";
 
@@ -166,6 +167,19 @@ export class GeminiStreaming {
                     }
                   });
                 }
+              }
+
+              // Capture usage metadata (usually in the last chunk)
+              if (json.usageMetadata) {
+                const usage = {
+                  input_tokens: json.usageMetadata.promptTokenCount,
+                  output_tokens: json.usageMetadata.candidatesTokenCount,
+                  total_tokens: json.usageMetadata.totalTokenCount,
+                  cached_tokens: json.usageMetadata.cachedContentTokenCount
+                };
+
+                const calculatedUsage = ModelRegistry.calculateCost(usage, request.model, "gemini");
+                yield { content: "", usage: calculatedUsage, done: true };
               }
             } catch {
               // Ignore parse errors

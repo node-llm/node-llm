@@ -117,7 +117,8 @@ export class GeminiChat {
       ? {
           input_tokens: json.usageMetadata.promptTokenCount,
           output_tokens: json.usageMetadata.candidatesTokenCount,
-          total_tokens: json.usageMetadata.totalTokenCount
+          total_tokens: json.usageMetadata.totalTokenCount,
+          cached_tokens: json.usageMetadata.cachedContentTokenCount
         }
       : undefined;
 

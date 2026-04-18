@@ -64,6 +64,7 @@ export interface GeminiGenerateContentResponse {
     promptTokenCount: number;
     candidatesTokenCount: number;
     totalTokenCount: number;
+    cachedContentTokenCount?: number;
   };
   modelVersion?: string;
 }
