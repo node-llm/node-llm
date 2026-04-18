@@ -1,4 +1,4 @@
-import { createLLM, Agent, SchemaSelfCorrection, z } from "@node-llm/core";
+import { createLLM, Agent, SchemaSelfCorrection, z } from "../../../packages/core/dist/index.js";
 import { Monitor } from "@node-llm/monitor";
 import dotenv from "dotenv";
 

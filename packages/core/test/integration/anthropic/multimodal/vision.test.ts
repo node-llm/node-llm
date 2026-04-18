@@ -38,7 +38,7 @@ describe("Anthropic Models Integration (VCR)", { timeout: 30000 }, () => {
     polly = setupVCR(task.name, "anthropic");
 
     const llm = createLLM({ provider: "anthropic" });
-    const chat = llm.chat("claude-3-5-haiku-20241022");
+    const chat = llm.chat("claude-3-haiku-20240307");
 
     const path = await import("path");
     const { fileURLToPath } = await import("url");

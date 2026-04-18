@@ -1,4 +1,4 @@
-import { NodeLLM } from "@node-llm/core";
+import { NodeLLM } from "../../../../packages/core/dist/index.js";
 import "dotenv/config";
 
 /**
@@ -33,4 +33,4 @@ async function main() {
   });
 }
 
-main().catch(console.error);
+main().catch(e => { console.error(e); process.exit(1); });

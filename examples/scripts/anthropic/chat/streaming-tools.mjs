@@ -79,4 +79,4 @@ async function main() {
   console.log("\n=== All Anthropic streaming + tools examples completed ===");
 }
 
-main().catch(console.error);
+main().catch(e => { console.error(e); process.exit(1); });

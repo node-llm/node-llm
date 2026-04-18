@@ -76,4 +76,4 @@ async function main() {
   console.log("\n✓ All security patterns demonstrated");
 }
 
-main().catch(console.error);
+main().catch(e => { console.error(e); process.exit(1); });

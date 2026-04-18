@@ -28,4 +28,4 @@ async function main() {
   console.log((await creative.ask("Suggest a Name for a new Coffee Shop.")).content);
 }
 
-main().catch(console.error);
+main().catch(e => { console.error(e); process.exit(1); });

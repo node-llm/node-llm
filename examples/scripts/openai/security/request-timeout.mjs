@@ -62,4 +62,4 @@ async function main() {
   console.log("\n✓ All timeout patterns demonstrated");
 }
 
-main().catch(console.error);
+main().catch(e => { console.error(e); process.exit(1); });

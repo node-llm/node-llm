@@ -57,4 +57,4 @@ async function main() {
   console.log("\n=== All DeepSeek streaming + tools examples completed ===");
 }
 
-main().catch(console.error);
+main().catch(e => { console.error(e); process.exit(1); });

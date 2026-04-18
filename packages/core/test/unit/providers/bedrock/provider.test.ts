@@ -50,7 +50,7 @@ describe("BedrockProvider", () => {
     });
 
     it("should support tools for Claude models", () => {
-      expect(provider.capabilities?.supportsTools("anthropic.claude-3-5-haiku-20241022-v1:0")).toBe(
+      expect(provider.capabilities?.supportsTools("anthropic.claude-3-haiku-20240307-v1:0")).toBe(
         true
       );
     });
@@ -65,7 +65,7 @@ describe("BedrockProvider", () => {
         provider.capabilities?.supportsReasoning("anthropic.claude-3-7-sonnet-20250219-v1:0")
       ).toBe(true);
       expect(
-        provider.capabilities?.supportsReasoning("anthropic.claude-3-5-haiku-20241022-v1:0")
+        provider.capabilities?.supportsReasoning("anthropic.claude-3-haiku-20240307-v1:0")
       ).toBe(false);
     });
 

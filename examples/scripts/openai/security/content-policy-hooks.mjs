@@ -64,4 +64,4 @@ async function main() {
   console.log("Response:", res2.content);
 }
 
-main().catch(console.error);
+main().catch(e => { console.error(e); process.exit(1); });

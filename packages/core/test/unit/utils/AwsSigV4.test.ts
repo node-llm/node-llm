@@ -66,7 +66,7 @@ describe("AwsSigV4", () => {
     it("should extract host correctly from URL", () => {
       const result = signRequest({
         method: "POST",
-        url: "https://bedrock-runtime.us-west-2.amazonaws.com/model/anthropic.claude-3-5-haiku-20241022-v1:0/converse",
+        url: "https://bedrock-runtime.us-west-2.amazonaws.com/model/anthropic.claude-3-haiku-20240307-v1:0/converse",
         body: "{}",
         credentials: testCredentials,
         region: "us-west-2",

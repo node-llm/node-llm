@@ -49,4 +49,4 @@ async function main() {
   console.log("=== All patterns demonstrated ===");
 }
 
-main().catch(console.error);
+main().catch(e => { console.error(e); process.exit(1); });

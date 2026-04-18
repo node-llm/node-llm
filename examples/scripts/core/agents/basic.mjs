@@ -176,4 +176,4 @@ async function main() {
   console.log(`   Response: ${helloResponse}`);
 }
 
-main().catch(console.error);
+main().catch(e => { console.error(e); process.exit(1); });

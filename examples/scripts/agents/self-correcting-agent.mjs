@@ -1,4 +1,4 @@
-import { Agent, Tool, z, createLLM, SchemaSelfCorrection } from "@node-llm/core";
+import { Agent, Tool, z, createLLM, SchemaSelfCorrection } from "../../../packages/core/dist/index.js";
 import "dotenv/config";
 
 // 1. Define a tool with strict validation
@@ -42,4 +42,4 @@ async function main() {
   console.log("Total Tokens:", agent.totalUsage.total_tokens);
 }
 
-main().catch(console.error);
+main().catch(e => { console.error(e); process.exit(1); });

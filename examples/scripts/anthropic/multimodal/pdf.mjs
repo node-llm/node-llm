@@ -19,7 +19,7 @@ async function main() {
     process.exit(1);
   }
 
-  const chat = llm.chat("claude-3-5-haiku-20241022");
+  const chat = llm.chat("claude-3-haiku-20240307");
 
   console.log("Analyzing PDF...");
 
@@ -35,4 +35,4 @@ async function main() {
   }
 }
 
-main().catch(console.error);
+main().catch(e => { console.error(e); process.exit(1); });

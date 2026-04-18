@@ -317,4 +317,4 @@ async function main() {
   console.log(`Total tokens used: ${agent.totalUsage.total_tokens}`);
 }
 
-main().catch(console.error);
+main().catch(e => { console.error(e); process.exit(1); });

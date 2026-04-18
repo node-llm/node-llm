@@ -152,4 +152,4 @@ async function demonstratePIIProtection() {
   console.log("  - Rate-limit PII detection failures");
 }
 
-demonstratePIIProtection().catch(console.error);
+demonstratePIIProtection().catch(e => { console.error(e); process.exit(1); });

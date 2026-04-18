@@ -63,4 +63,4 @@ async function runExample() {
   console.log("AI Response:", res2.content);
 }
 
-runExample().catch(console.error);
+runExample().catch(e => { console.error(e); process.exit(1); });

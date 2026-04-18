@@ -6,9 +6,9 @@ export default {
     "openai": "chatgpt-image-latest"
   },
   "claude-3-5-haiku": {
-    "anthropic": "claude-3-5-haiku-20241022",
+    "anthropic": "claude-3-haiku-20240307",
     "openrouter": "anthropic/claude-3.5-haiku",
-    "bedrock": "anthropic.claude-3-5-haiku-20241022-v1:0"
+    "bedrock": "anthropic.claude-3-haiku-20240307-v1:0"
   },
   "claude-3-5-sonnet": {
     "anthropic": "claude-3-5-sonnet-20241022",
@@ -44,8 +44,8 @@ export default {
   },
   "claude-haiku-3.5": {
     "openrouter": "anthropic/claude-3.5-haiku",
-    "bedrock": "anthropic.claude-3-5-haiku-20241022-v1:0",
-    "anthropic": "claude-3-5-haiku-20241022"
+    "bedrock": "anthropic.claude-3-haiku-20240307-v1:0",
+    "anthropic": "claude-3-haiku-20240307"
   },
   "claude-haiku-3.5-latest": {
     "anthropic": "claude-3-5-haiku-latest"

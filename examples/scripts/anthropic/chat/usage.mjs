@@ -21,4 +21,4 @@ async function main() {
   console.log("\nTotal Session Usage:", chat.totalUsage);
 }
 
-main().catch(console.error);
+main().catch(e => { console.error(e); process.exit(1); });

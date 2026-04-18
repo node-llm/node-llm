@@ -27,4 +27,4 @@ async function main() {
   console.log("(Debug logs should appear for scoped instance only)\n");
 }
 
-main().catch(console.error);
+main().catch(e => { console.error(e); process.exit(1); });

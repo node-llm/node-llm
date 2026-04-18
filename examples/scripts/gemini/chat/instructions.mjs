@@ -22,4 +22,4 @@ async function main() {
   console.log((await factual.ask("What is the capital of France?")).content);
 }
 
-main().catch(console.error);
+main().catch(e => { console.error(e); process.exit(1); });

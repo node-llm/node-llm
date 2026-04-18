@@ -22,7 +22,7 @@ async function main() {
     );
 
     // 2. Inspect a specific model
-    const defaultModel = "anthropic.claude-3-5-haiku-20241022-v1:0";
+    const defaultModel = "anthropic.claude-3-haiku-20240307-v1:0";
     console.log(`\n--- Inspecting '${defaultModel}' ---`);
     const model = models.find(m => m.id === defaultModel || m.metadata?.bedrock_model_id === defaultModel);
 
@@ -43,4 +43,4 @@ async function main() {
   }
 }
 
-main().catch(console.error);
+main().catch(e => { console.error(e); process.exit(1); });

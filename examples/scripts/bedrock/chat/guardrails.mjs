@@ -1,5 +1,5 @@
 import "dotenv/config";
-import { createLLM } from "@node-llm/core";
+import { createLLM } from "../../../../packages/core/dist/index.js";
 
 /**
  * Bedrock Guardrails Example

@@ -210,7 +210,7 @@
     }
   },
   {
-    "id": "anthropic.claude-3-5-haiku-20241022-v1:0",
+    "id": "anthropic.claude-3-haiku-20240307-v1:0",
     "name": "Claude Haiku 3.5",
     "provider": "bedrock",
     "family": "claude-haiku",
@@ -1710,7 +1710,7 @@
     }
   },
   {
-    "id": "claude-3-5-haiku-20241022",
+    "id": "claude-3-haiku-20240307",
     "name": "Claude Haiku 3.5",
     "provider": "anthropic",
     "family": "claude-haiku",

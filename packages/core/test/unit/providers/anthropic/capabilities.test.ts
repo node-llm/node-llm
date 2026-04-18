@@ -10,7 +10,7 @@ describe("Anthropic Capabilities", () => {
   it("determines correct max output tokens", () => {
     expect(Capabilities.getMaxOutputTokens("claude-3-7-sonnet-20250219")).toBe(64000);
     expect(Capabilities.getMaxOutputTokens("claude-3-5-sonnet-20241022")).toBe(8192);
-    expect(Capabilities.getMaxOutputTokens("claude-3-5-haiku-20241022")).toBe(8192);
+    expect(Capabilities.getMaxOutputTokens("claude-3-haiku-20240307")).toBe(8192);
     expect(Capabilities.getMaxOutputTokens("claude-3-opus-20240229")).toBe(4_096); // Updated to use full model ID
     expect(Capabilities.getMaxOutputTokens("claude-2")).toBe(8192);
   });

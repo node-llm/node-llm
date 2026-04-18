@@ -65,4 +65,4 @@ async function main() {
   console.log(JSON.stringify(crmLog.parsed, null, 2));
 }
 
-main().catch(console.error);
+main().catch(e => { console.error(e); process.exit(1); });

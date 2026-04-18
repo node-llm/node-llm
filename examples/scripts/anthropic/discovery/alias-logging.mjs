@@ -28,4 +28,4 @@ async function main() {
   console.log("This helps debug 404 errors by showing the actual model ID being used");
 }
 
-main().catch(console.error);
+main().catch(e => { console.error(e); process.exit(1); });

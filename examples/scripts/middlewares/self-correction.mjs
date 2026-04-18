@@ -1,4 +1,4 @@
-import { NodeLLM, SchemaSelfCorrection, z } from "@node-llm/core";
+import { NodeLLM, SchemaSelfCorrection, z } from "../../../packages/core/dist/index.js";
 
 // 1. Define a strict schema
 const movieSchema = z.object({
