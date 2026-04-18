@@ -16,3 +16,14 @@ export function mapSystemMessages(messages: Message[], supportsDeveloperRole: bo
     return msg;
   });
 }
+
+/**
+ * Normalizes tool choice for OpenAI-compatible providers.
+ */
+export function normalizeOpenAIToolChoice(choice: any): any {
+  if (!choice) return undefined;
+  if (typeof choice === "string" && !["auto", "none", "required"].includes(choice)) {
+    return { type: "function", function: { name: choice } };
+  }
+  return choice;
+}

@@ -29,6 +29,17 @@ async function main() {
   const response = await chat.ask("What is the weather in Tokyo, London, and New York?");
 
   console.log("\nAssistant:", response.content);
+  console.log("\n");
+
+  // Example 2: Disabling parallel calls for strictly sequential logic
+  console.log("=== Disabling Parallel Calls (calls: 'one') ===");
+  const chat2 = llm.chat("gpt-4o-mini")
+    .withTool(WeatherTool)
+    .withToolCalls("one");
+
+  console.log("User: What is the weather in Paris and Berlin?");
+  const response2 = await chat2.ask("What is the weather in Paris and Berlin?");
+  console.log("\nAssistant:", response2.content);
 }
 
 main()

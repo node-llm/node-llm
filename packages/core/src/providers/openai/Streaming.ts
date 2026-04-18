@@ -7,7 +7,7 @@ import { logger } from "../../utils/logger.js";
 import { fetchWithTimeout } from "../../utils/fetch.js";
 
 import { OpenAIProvider } from "./OpenAIProvider.js";
-import { mapSystemMessages } from "../utils.js";
+import { mapSystemMessages, normalizeOpenAIToolChoice } from "../utils.js";
 import { enforceStrictSchema } from "../../schema/strict.js";
 
 export class OpenAIStreaming {
@@ -87,6 +87,13 @@ export class OpenAIStreaming {
         }
         return tool;
       });
+    }
+    if (request.tool_choice) {
+      body.tool_choice = normalizeOpenAIToolChoice(request.tool_choice);
+    }
+
+    if (request.parallel_tool_calls !== undefined) {
+      body.parallel_tool_calls = request.parallel_tool_calls;
     }
 
     if (request.prediction) {

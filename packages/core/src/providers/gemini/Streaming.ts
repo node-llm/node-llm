@@ -71,7 +71,7 @@ export class GeminiStreaming {
       payload.systemInstruction = { parts: systemInstructionParts };
     }
 
-    if (request.tools && request.tools.length > 0) {
+    if (request.tools && request.tools.length > 0 && request.tool_choice !== "none") {
       payload.tools = [
         {
           functionDeclarations: request.tools.map((t) => ({
@@ -81,6 +81,35 @@ export class GeminiStreaming {
           }))
         }
       ];
+
+      if (request.tool_choice) {
+        const modeMap: Record<string, string> = {
+          auto: "AUTO",
+          required: "ANY",
+          none: "NONE"
+        };
+        const mode = modeMap[request.tool_choice as string];
+        if (mode) {
+          payload.toolConfig = { functionCallingConfig: { mode } };
+        } else if (typeof request.tool_choice === "string") {
+          payload.toolConfig = {
+            functionCallingConfig: {
+              mode: "ANY",
+              allowedFunctionNames: [request.tool_choice]
+            }
+          };
+        } else if (
+          typeof request.tool_choice === "object" &&
+          "function" in (request.tool_choice as any)
+        ) {
+          payload.toolConfig = {
+            functionCallingConfig: {
+              mode: "ANY",
+              allowedFunctionNames: [(request.tool_choice as any).function.name]
+            }
+          };
+        }
+      }
     }
 
     let done = false;

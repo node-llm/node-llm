@@ -47,8 +47,21 @@ export class MistralStreaming {
     };
 
     if (max_tokens) body.max_tokens = max_tokens;
-    if (tools && tools.length > 0) body.tools = tools;
+    if (tools && tools.length > 0 && request.tool_choice !== "none") body.tools = tools;
     if (response_format) body.response_format = response_format;
+
+    if (request.tool_choice && request.tool_choice !== "none") {
+      if (request.tool_choice === "required") {
+        body.tool_choice = "any";
+      } else if (
+        typeof request.tool_choice === "string" &&
+        !["auto", "none", "any"].includes(request.tool_choice)
+      ) {
+        body.tool_choice = { type: "function", function: { name: request.tool_choice } };
+      } else {
+        body.tool_choice = request.tool_choice;
+      }
+    }
 
     let done = false;
     // Track tool calls being built across chunks

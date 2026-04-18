@@ -1,13 +1,14 @@
-#!/bin/bash
-set -e
+# Determine script and root directories
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ROOT_DIR="$(cd "$SCRIPT_DIR/../../.." && pwd)"
 
-# Build the package first
+# Build the package from root
 echo "Building package..."
-cd packages/core && npm run build
-cd ../..
+cd "$ROOT_DIR"
+npm run build --workspace=@node-llm/core
 
-# Get API Key
-GEMINI_API_KEY=$(grep "^GEMINI_API_KEY=" .env | cut -d '=' -f2)
+# Get API Key from root .env
+GEMINI_API_KEY=$(grep "^GEMINI_API_KEY=" "$ROOT_DIR/.env" | cut -d '=' -f2 || echo "")
 export GEMINI_API_KEY
 export NODELLM_PROVIDER=gemini
 

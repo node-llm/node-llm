@@ -61,6 +61,8 @@ export class MistralChat {
       response_format,
       thinking: _thinking,
       headers: _headers,
+      tool_choice: _choice,
+      parallel_tool_calls: _parallel,
       requestTimeout,
       signal: _signal,
       ...rest
@@ -87,6 +89,19 @@ export class MistralChat {
 
     if (max_tokens) body.max_tokens = max_tokens;
     if (tools && tools.length > 0) body.tools = tools;
+
+    if (request.tool_choice) {
+      if (request.tool_choice === "required") {
+        body.tool_choice = "any";
+      } else if (
+        typeof request.tool_choice === "string" &&
+        !["auto", "none", "any"].includes(request.tool_choice)
+      ) {
+        body.tool_choice = { type: "function", function: { name: request.tool_choice } };
+      } else {
+        body.tool_choice = request.tool_choice;
+      }
+    }
 
     // Handle structured output for Mistral
     if (response_format) {

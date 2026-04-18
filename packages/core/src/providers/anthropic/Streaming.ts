@@ -48,12 +48,24 @@ export class AnthropicStreaming {
       body.temperature = request.temperature;
     }
 
-    if (request.tools && request.tools.length > 0) {
+    if (request.tools && request.tools.length > 0 && request.tool_choice !== "none") {
       body.tools = request.tools.map((tool) => ({
         name: tool.function.name,
         description: tool.function.description,
         input_schema: tool.function.parameters
       }));
+    }
+
+    if (request.tool_choice && request.tool_choice !== "none") {
+      if (request.tool_choice === "auto") {
+        body.tool_choice = { type: "auto" };
+      } else if (request.tool_choice === "required") {
+        body.tool_choice = { type: "any" };
+      } else if (typeof request.tool_choice === "string") {
+        body.tool_choice = { type: "tool", name: request.tool_choice };
+      } else if (typeof request.tool_choice === "object" && "function" in request.tool_choice) {
+        body.tool_choice = { type: "tool", name: request.tool_choice.function.name };
+      }
     }
 
     if (request.thinking?.budget) {

@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.16.0] - 2026-04-18 (@node-llm/core)
+
+### Features
+
+- **Advanced Tool Control**: Precise orchestration of model tool behavior via `choice` and `calls` parameters.
+  - `choice`: Mandatory tool usage (`required`), specific tool forcing (`"tool_name"`), or disabling (`none`).
+  - `calls`: Control over parallel vs. sequential tool execution (`one` vs. `many`).
+- **Robust Tool Error Recovery**: Intelligent handling of tool calling failures to enable model self-correction.
+  - Intercepts hallucinated tool calls and returns descriptive "unavailable tool" messages with valid alternatives.
+  - Converts Zod validation errors and runtime execution failures into model-readable feedback strings.
+- **Normalized Provider Orchestration**: Unified tool-control behavior across OpenAI, Anthropic, Gemini, Bedrock, and Mistral.
+
+### Improvements
+
+- **Code Consolidation**: Unified OpenAI-compatible `tool_choice` normalization logic into a shared utility.
+- **TypeScript Alignment**: Hardened type definitions for `ToolChoice` and provider-specific request bodies.
+- **Enhanced Verification**: New comprehensive unit test suite for tool failure recovery paths and updated example scripts.
+
 ## [1.15.0] - 2026-03-28 (@node-llm/core)
 
 ### Features

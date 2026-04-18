@@ -134,11 +134,39 @@ See the [Streaming documentation](streaming.html#streaming-with-tools-) for more
 
 ---
 
-## Parallel Tool Calling
+## Tool Choice & Control <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v1.16.0+</span>
 
-If the provider supports it (like OpenAI and Anthropic), the model can call multiple tools in a single turn. `NodeLLM` handles the concurrent execution of these tools automatically.
+You can precisely control how the model uses tools using `choice` and `calls`.
 
-See [examples/scripts/openai/chat/parallel-tools.mjs](https://github.com/node-llm/node-llm/blob/main/examples/scripts/openai/chat/parallel-tools.mjs) for a demo.
+### Tool Choice (choice)
+
+Use `choice` to control whether or how the LLM is allowed to call tools.
+
+- **`auto`**: (Default) The model decides if and which tools to call.
+- **`none`**: Prevents the LLM from calling any tools. It will only output text.
+- **`required`**: Forces the model to call at least one tool.
+- **Specific Tool**: Pass a tool name (string) to force the model to use that specific tool.
+
+```ts
+const chat = llm.chat("gpt-4o")
+  .withTools([WeatherTool, CalculatorTool], { choice: "required" });
+
+// Or update dynamically
+chat.withToolChoice("get_weather");
+```
+
+### Tool Calls (calls)
+
+Use `calls` to control if the model can execute multiple tools in a single turn (Parallel Tool Calling).
+
+- **`many`**: (Default) Allows multiple tool calls in one turn.
+- **`one`**: Restricts the model to a single tool call per turn. This is useful for simpler models or strictly sequential tasks.
+
+See [parallel-tools.mjs](https://github.com/node-llm/node-llm/blob/main/examples/scripts/openai/chat/parallel-tools.mjs) for a demo.
+
+```ts
+chat.withToolCalls("one"); // Force sequential execution
+```
 
 ---
 
@@ -274,12 +302,18 @@ const chat = llm.chat("gpt-4o", {
 });
 ```
 
-### Recoverable Errors (AI Self-Correction)
+### AI Self-Correction (Robust Error Handling) <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">Enhanced in v1.16.0</span>
 
-If you want the model to see the error and try to fix its own parameters, simply return a string or object from your handler. NodeLLM will feed this back to the model as a successful tool result containing error details.
+NodeLLM makes tool calling highly resilient by turning common failures into **self-correction signals** for the model. Instead of throwing app exceptions, it feeds the error details back to the LLM to allow it to recover.
+
+- **Invalid Arguments**: If the model provides arguments that fail Zod validation, the error message is sent back as a tool result. The model can then fix its parameters and try again.
+- **Hallucinated Tools**: If a model tries to call a tool that isn't registered, NodeLLM returns an error listing the available tools.
+- **Execution Failures**: Errors thrown inside your `execute()` method are caught and returned to the model as descriptive strings.
 
 ```ts
 async execute({ date }) {
+  // If you want the model to see the error and try to fix its own parameters,
+  // simply return a string or object from your handler.
   if (!isValid(date)) {
     return { error: "Invalid date format. Please use YYYY-MM-DD." };
   }

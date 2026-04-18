@@ -207,6 +207,9 @@ export class ChatStream {
             max_tokens: options.maxTokens ?? config.maxTokens,
             response_format: responseFormat,
             headers: options.headers,
+            tool_choice: options.toolChoice,
+            parallel_tool_calls:
+              options.toolCalls === "one" || options.toolCalls === 1 ? false : undefined,
             requestTimeout: options.requestTimeout ?? config.requestTimeout,
             thinking: options.thinking,
             prediction: options.prediction,

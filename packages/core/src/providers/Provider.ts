@@ -46,10 +46,19 @@ export interface ThinkingResult {
   tokens?: number;
 }
 
+export type ToolChoice =
+  | "auto"
+  | "none"
+  | "required"
+  | { type: "function"; function: { name: string } }
+  | string;
+
 export interface ChatRequest {
   model: string;
   messages: Message[];
   tools?: ToolDefinition[];
+  tool_choice?: ToolChoice;
+  parallel_tool_calls?: boolean;
   thinking?: ThinkingConfig;
   temperature?: number;
   max_tokens?: number;

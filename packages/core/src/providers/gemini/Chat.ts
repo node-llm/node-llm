@@ -45,6 +45,8 @@ export class GeminiChat {
       max_tokens: _max,
       response_format: _format,
       headers: _headers,
+      tool_choice: _choice,
+      parallel_tool_calls: _parallel,
       requestTimeout,
       ...rest
     } = request;
@@ -72,6 +74,35 @@ export class GeminiChat {
           }))
         }
       ];
+
+      if (request.tool_choice) {
+        const modeMap: Record<string, string> = {
+          auto: "AUTO",
+          required: "ANY",
+          none: "NONE"
+        };
+        const mode = modeMap[request.tool_choice as string];
+        if (mode) {
+          payload.toolConfig = { functionCallingConfig: { mode } };
+        } else if (typeof request.tool_choice === "string") {
+          payload.toolConfig = {
+            functionCallingConfig: {
+              mode: "ANY",
+              allowedFunctionNames: [request.tool_choice]
+            }
+          };
+        } else if (
+          typeof request.tool_choice === "object" &&
+          "function" in (request.tool_choice as any)
+        ) {
+          payload.toolConfig = {
+            functionCallingConfig: {
+              mode: "ANY",
+              allowedFunctionNames: [(request.tool_choice as any).function.name]
+            }
+          };
+        }
+      }
     }
 
     logger.logRequest("Gemini", "POST", url, payload);
