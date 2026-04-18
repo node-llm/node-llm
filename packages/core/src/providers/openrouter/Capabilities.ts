@@ -1,80 +1,62 @@
 import { ModelRegistry } from "../../models/ModelRegistry.js";
 
 export class OpenRouterCapabilities {
-  private static findModel(model: string) {
-    return ModelRegistry.find(model, "openrouter");
+  private static findModel(modelId: string) {
+    return ModelRegistry.find(modelId, "openrouter");
   }
 
-  static supportsVision(model: string): boolean {
-    const info = this.findModel(model);
-    if (info)
-      return info.capabilities.includes("vision") || info.modalities.input.includes("image");
-
-    // Fallback heuristics
+  static supportsVision(modelId: string): boolean {
     return (
-      model.includes("vision") ||
-      model.includes("gpt-4o") ||
-      model.includes("claude-3") ||
-      model.includes("gemini-1.5") ||
-      model.includes("gemini-2.0") ||
-      model.includes("flash") ||
-      model.includes("gemini-pro-vision")
+      ModelRegistry.supports(modelId, "vision", "openrouter") ||
+      /vision|gpt-4o|claude-3|gemini|flash/.test(modelId.toLowerCase())
     );
   }
 
-  static supportsTools(model: string): boolean {
-    const info = this.findModel(model);
-    if (info)
-      return info.capabilities.includes("tools") || info.capabilities.includes("function_calling");
+  static supportsTools(modelId: string): boolean {
+    return (
+      ModelRegistry.supports(modelId, "tools", "openrouter") ||
+      ModelRegistry.supports(modelId, "function_calling", "openrouter") ||
+      true
+    ); // OpenRouter usually supports tools on most modern models
+  }
 
-    // Fallback: Default to true for OpenRouter as most models support tools
-    // but this is the "honest" check we wanted.
+  static supportsStructuredOutput(modelId: string): boolean {
+    return (
+      ModelRegistry.supports(modelId, "structured_output", "openrouter") ||
+      /gpt-4|gpt-3\.5|claude-3/.test(modelId.toLowerCase())
+    );
+  }
+
+  static supportsEmbeddings(modelId: string): boolean {
+    return (
+      ModelRegistry.supports(modelId, "embeddings", "openrouter") || modelId.includes("embedding")
+    );
+  }
+
+  static supportsImageGeneration(_modelId: string): boolean {
+    return false;
+  }
+
+  static supportsTranscription(_modelId: string): boolean {
+    return false;
+  }
+
+  static supportsModeration(_modelId: string): boolean {
+    return false;
+  }
+
+  static supportsReasoning(modelId: string): boolean {
+    return (
+      ModelRegistry.supports(modelId, "reasoning", "openrouter") ||
+      /o1-|o3-|reasoner|-r1|qwq/.test(modelId.toLowerCase())
+    );
+  }
+
+  static supportsToolChoice(_modelId: string): boolean {
     return true;
   }
 
-  static supportsStructuredOutput(model: string): boolean {
-    const info = this.findModel(model);
-    if (info) return info.capabilities.includes("structured_output") || info.id.includes("gpt-4");
-
-    // Fallback heuristics
-    return model.includes("gpt-4") || model.includes("gpt-3.5") || model.includes("claude-3");
-  }
-
-  static supportsEmbeddings(model: string): boolean {
-    const info = this.findModel(model);
-    if (info) return info.capabilities.includes("embeddings");
-
-    // Fallback heuristics
-    return model.includes("embedding") || model.includes("text-sdk");
-  }
-
-  static supportsImageGeneration(_model: string): boolean {
-    return false;
-  }
-
-  static supportsTranscription(_model: string): boolean {
-    return false;
-  }
-
-  static supportsModeration(_model: string): boolean {
-    return false;
-  }
-
-  static supportsReasoning(model: string): boolean {
-    const info = this.findModel(model);
-    if (info) return info.capabilities.includes("reasoning");
-
-    // Fallback heuristics
-    return (
-      model.includes("o1") ||
-      model.includes("o3") ||
-      model.includes("deepseek-r1") ||
-      model.includes("qwq")
-    );
-  }
-
-  static getContextWindow(model: string): number | null {
-    const info = this.findModel(model);
-    return info?.context_window ?? null;
+  static getContextWindow(modelId: string): number | null {
+    return ModelRegistry.getContextWindow(modelId, "openrouter") ?? null;
   }
 }

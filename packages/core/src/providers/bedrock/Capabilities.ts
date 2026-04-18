@@ -10,277 +10,126 @@ import { ModelPricing } from "../../models/types.js";
 // Model Family Patterns
 // ─────────────────────────────────────────────────────────────────────────────
 
-type ModelFamily =
-  | "claude3_opus"
-  | "claude3_sonnet"
-  | "claude3_haiku"
-  | "claude3_5_haiku"
-  | "claude2"
-  | "claude_instant"
-  | "claude4"
-  | "nova"
-  | "nova2"
-  | "other";
-
-const MODEL_FAMILIES: Array<[RegExp, ModelFamily]> = [
-  [/anthropic\.claude-3-opus/, "claude3_opus"],
-  [/anthropic\.claude-3-sonnet/, "claude3_sonnet"],
-  [/anthropic\.claude-3-5-sonnet/, "claude3_sonnet"],
-  [/anthropic\.claude-3-7-sonnet/, "claude3_sonnet"],
-  [/anthropic\.claude-3-haiku/, "claude3_haiku"],
-  [/anthropic\.claude-3-5-haiku/, "claude3_5_haiku"],
-  [/anthropic\.claude-v2/, "claude2"],
-  [/anthropic\.claude-2/, "claude2"],
-  [/anthropic\.claude-instant/, "claude_instant"],
-  [/anthropic\.claude-(opus|sonnet|haiku)-4/, "claude4"],
-  [/amazon\.nova-2/, "nova2"],
-  [/amazon\.nova/, "nova"]
-];
-
-// ─────────────────────────────────────────────────────────────────────────────
-// Pricing (per million tokens)
-// ─────────────────────────────────────────────────────────────────────────────
-
-const PRICES: Record<ModelFamily, { input: number; output: number }> = {
-  claude3_opus: { input: 15.0, output: 75.0 },
-  claude3_sonnet: { input: 3.0, output: 15.0 },
-  claude3_haiku: { input: 0.25, output: 1.25 },
-  claude3_5_haiku: { input: 0.8, output: 4.0 },
-  claude2: { input: 8.0, output: 24.0 },
-  claude_instant: { input: 0.8, output: 2.4 },
-  claude4: { input: 3.0, output: 15.0 }, // Assuming Sonnet 4 as baseline for the family
-  nova: { input: 0.06, output: 0.24 },
-  nova2: { input: 0.03, output: 0.12 }, // Assuming Nova 2 is cheaper as per trend
-  other: { input: 0.1, output: 0.2 }
-};
-
-// ─────────────────────────────────────────────────────────────────────────────
-// Capabilities Class
-// ─────────────────────────────────────────────────────────────────────────────
-
 export class Capabilities {
-  static getModelFamily(modelId: string): ModelFamily {
-    for (const [pattern, family] of MODEL_FAMILIES) {
-      if (pattern.test(modelId)) return family;
-    }
-    return "other";
-  }
-
   static getContextWindow(modelId: string): number | null {
-    const val = ModelRegistry.getContextWindow(modelId, "bedrock");
-    if (val) return val;
-
-    // Claude 2 has 100k, others have 200k
-    if (/anthropic\.claude-2/.test(modelId)) return 100_000;
-    if (/anthropic\.claude/.test(modelId)) return 200_000;
-
-    // DeepSeek
-    if (/deepseek/.test(modelId)) return 128_000;
-
-    // Mistral
-    if (/mistral-large/.test(modelId)) return 128_000;
-    if (/mistral/.test(modelId)) return 32_000;
-
-    // Llama
-    if (/llama/.test(modelId)) return 128_000;
-
-    // Titan
-    if (/titan/.test(modelId)) return 32_000;
-
-    // Nova
-    if (/nova/.test(modelId)) return 300_000;
-
-    return null;
+    return ModelRegistry.getContextWindow(modelId, "bedrock") ?? 128_000;
   }
 
   static getMaxOutputTokens(modelId: string): number | null {
-    const val = ModelRegistry.getMaxOutputTokens(modelId, "bedrock");
-    if (val) return val;
-
-    return 4_096;
+    return ModelRegistry.getMaxOutputTokens(modelId, "bedrock") ?? 4_096;
   }
 
   static supportsChat(modelId: string): boolean {
-    const model = this.findModel(modelId);
-    if (model?.capabilities?.includes("chat")) return true;
-
-    return (
-      /anthropic\.claude/.test(modelId) ||
-      /amazon\.nova/.test(modelId) ||
-      /mistral\.mistral/.test(modelId) ||
-      /meta\.llama/.test(modelId) ||
-      /deepseek/.test(modelId)
-    );
+    return ModelRegistry.supports(modelId, "chat", "bedrock") || !modelId.includes("titan-embed");
   }
 
   static supportsStreaming(modelId: string): boolean {
-    const model = this.findModel(modelId);
-    if (model?.capabilities?.includes("streaming")) return true;
-
     return (
-      /anthropic\.claude/.test(modelId) ||
-      /amazon\.nova/.test(modelId) ||
-      /mistral\.mistral/.test(modelId) ||
-      /meta\.llama/.test(modelId) ||
-      /deepseek/.test(modelId)
+      ModelRegistry.supports(modelId, "streaming", "bedrock") || !modelId.includes("titan-embed")
     );
   }
 
   static supportsVision(modelId: string): boolean {
-    const model = this.findModel(modelId);
-    if (model?.modalities?.input?.includes("image")) return true;
-    if (model?.capabilities?.includes("vision")) return true;
-
-    return /anthropic\.claude-3|anthropic\.claude-4|amazon\.nova/.test(modelId);
+    return (
+      ModelRegistry.supports(modelId, "vision", "bedrock") ||
+      modelId.includes("vision") ||
+      modelId.includes("nova")
+    );
   }
 
   static supportsTools(modelId: string): boolean {
-    const model = this.findModel(modelId);
-    if (model?.capabilities?.includes("tools") || model?.capabilities?.includes("function_calling"))
-      return true;
-
-    return /anthropic\.claude|amazon\.nova|deepseek-chat/.test(modelId);
+    return (
+      ModelRegistry.supports(modelId, "tools", "bedrock") ||
+      ModelRegistry.supports(modelId, "function_calling", "bedrock")
+    );
   }
 
   static supportsJsonMode(modelId: string): boolean {
-    const model = this.findModel(modelId);
-    if (
-      model?.capabilities?.includes("json_mode") ||
-      model?.capabilities?.includes("structured_output")
-    )
-      return true;
-
-    return /anthropic\.claude|amazon\.nova/.test(modelId);
+    return (
+      ModelRegistry.supports(modelId, "json_mode", "bedrock") ||
+      ModelRegistry.supports(modelId, "structured_output", "bedrock")
+    );
   }
 
   static supportsExtendedThinking(modelId: string): boolean {
-    const model = this.findModel(modelId);
-    if (model?.capabilities?.includes("reasoning")) return true;
-
-    return /claude-3-7|deepseek-reasoner|deepseek\.r1/.test(modelId);
+    return ModelRegistry.supports(modelId, "reasoning", "bedrock");
   }
 
   static supportsEmbeddings(modelId: string): boolean {
-    const model = this.findModel(modelId);
-    if (model?.capabilities?.includes("embeddings")) return true;
-
-    return /amazon\.titan-embed/.test(modelId);
+    return (
+      ModelRegistry.supports(modelId, "embeddings", "bedrock") || modelId.includes("titan-embed")
+    );
   }
 
   static supportsImageGeneration(modelId: string): boolean {
-    const model = this.findModel(modelId);
-    if (model?.capabilities?.includes("image_generation")) return true;
-
-    return /amazon\.titan-image-generator|stability\.stable-diffusion/.test(modelId);
+    return (
+      ModelRegistry.supports(modelId, "image_generation", "bedrock") ||
+      modelId.includes("image-generator") ||
+      modelId.includes("stable-diffusion")
+    );
   }
 
-  /**
-   * Check if a model supports audio input.
-   */
-  static supportsAudio(_modelId: string): boolean {
-    return false;
+  static supportsToolChoice(_modelId: string): boolean {
+    return true;
   }
 
-  /**
-   * Get input modalities for a model.
-   */
   static getInputModalities(modelId: string): string[] {
+    const model = this.findModel(modelId);
+    if (model?.modalities?.input) return model.modalities.input;
+
     const modalities = ["text"];
-
-    if (
-      (/anthropic\.claude/.test(modelId) || /amazon\.nova/.test(modelId)) &&
-      this.supportsVision(modelId)
-    ) {
-      modalities.push("image");
-      modalities.push("pdf");
+    if (this.supportsVision(modelId)) {
+      modalities.push("image", "pdf");
     }
-
     return modalities;
   }
 
-  /**
-   * Get output modalities for a model.
-   */
-  static getOutputModalities(_modelId: string): string[] {
-    return ["text"];
+  static getOutputModalities(modelId: string): string[] {
+    const model = this.findModel(modelId);
+    return model?.modalities?.output || ["text"];
   }
 
-  /**
-   * Get all capabilities for a model.
-   */
   static getCapabilities(modelId: string): string[] {
-    const capabilities: string[] = [];
-
-    if (/anthropic\.claude/.test(modelId)) {
-      capabilities.push("streaming");
+    const model = this.findModel(modelId);
+    if (model?.capabilities) {
+      const caps = [...model.capabilities];
+      if (!caps.includes("streaming")) caps.push("streaming");
+      return caps;
     }
 
-    if (this.supportsTools(modelId)) {
-      capabilities.push("function_calling");
-    }
-
-    if (/claude-3-7|nova/.test(modelId)) {
-      capabilities.push("reasoning");
-    }
-
-    if (/claude-3\.5|claude-3-7|nova/.test(modelId)) {
-      capabilities.push("batch");
-      capabilities.push("citations");
-    }
+    const capabilities: string[] = ["streaming"];
+    if (this.supportsTools(modelId)) capabilities.push("function_calling");
+    if (this.supportsExtendedThinking(modelId)) capabilities.push("reasoning");
 
     return capabilities;
   }
 
   static getPricing(modelId: string): ModelPricing | undefined {
-    // Try registry first
-    const registryPricing = PricingRegistry.getPricing(modelId, "bedrock");
-    if (registryPricing) return registryPricing;
-
-    // Fallback to built-in pricing
-    const family = this.getModelFamily(modelId);
-    const prices = PRICES[family];
-
-    return {
-      text_tokens: {
-        standard: {
-          input_per_million: prices.input,
-          output_per_million: prices.output
-        },
-        batch: {
-          input_per_million: prices.input * 0.5,
-          output_per_million: prices.output * 0.5
-        }
-      }
-    };
+    return PricingRegistry.getPricing(modelId, "bedrock");
   }
 
-  /**
-   * Get input price per million tokens.
-   */
-  static getInputPrice(modelId: string): number {
-    const family = this.getModelFamily(modelId);
-    return PRICES[family].input;
+  static getModelFamily(modelId: string): string {
+    const model = this.findModel(modelId);
+    if (model?.family) return model.family;
+
+    if (modelId.includes("claude")) return "claude";
+    if (modelId.includes("mistral")) return "mistral";
+    if (modelId.includes("llama")) return "llama";
+    if (modelId.includes("titan")) return "titan";
+    if (modelId.includes("nova")) return "nova";
+    if (modelId.includes("deepseek")) return "deepseek";
+    return "other";
   }
 
-  /**
-   * Get output price per million tokens.
-   */
-  static getOutputPrice(modelId: string): number {
-    const family = this.getModelFamily(modelId);
-    return PRICES[family].output;
-  }
-
-  /**
-   * Format model ID as display name.
-   */
   static formatDisplayName(modelId: string): string {
+    const model = this.findModel(modelId);
+    if (model?.name && model.name !== modelId) return model.name;
+
     return modelId
       .replace(/-/g, " ")
       .split(".")
       .pop()!
-      .split(" ")
-      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-      .join(" ");
+      .replace(/\b\w/g, (c) => c.toUpperCase());
   }
 
   private static findModel(modelId: string) {

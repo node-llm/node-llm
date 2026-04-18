@@ -1,90 +1,65 @@
 import { ModelRegistry } from "../../models/ModelRegistry.js";
-
-const VISION_MODELS = [
-  "grok-2-vision-1212",
-  "grok-4-0709",
-  "grok-4-fast-non-reasoning",
-  "grok-4-fast-reasoning",
-  "grok-4.1-fast-non-reasoning",
-  "grok-4.1-fast-reasoning",
-  "grok-4-1-fast-non-reasoning",
-  "grok-4-1-fast-reasoning"
-];
-
-const REASONING_MODELS = [
-  "grok-3-mini",
-  "grok-4-0709",
-  "grok-4-fast-reasoning",
-  "grok-4.1-fast-reasoning",
-  "grok-4-1-fast-reasoning",
-  "grok-code-fast-1"
-];
+import { PricingRegistry } from "../../models/PricingRegistry.js";
+import { ModelPricing } from "../../models/types.js";
 
 export class Capabilities {
-  static supportsVision(model: string): boolean {
-    const registryModel = ModelRegistry.find(model, "xai");
-    if (registryModel?.capabilities.includes("vision")) return true;
-
-    return model.includes("vision") || VISION_MODELS.includes(model);
+  static supportsVision(modelId: string): boolean {
+    return ModelRegistry.supports(modelId, "vision", "xai");
   }
 
-  static supportsTools(model: string): boolean {
-    if (this.supportsImageGeneration(model)) return false;
+  static supportsTools(modelId: string): boolean {
+    if (this.supportsImageGeneration(modelId)) return false;
+    return (
+      ModelRegistry.supports(modelId, "tools", "xai") ||
+      ModelRegistry.supports(modelId, "function_calling", "xai") ||
+      !modelId.includes("image")
+    );
+  }
 
-    const registryModel = ModelRegistry.find(model, "xai");
-    if (registryModel?.capabilities.includes("tools")) return true;
+  static supportsStructuredOutput(modelId: string): boolean {
+    if (this.supportsImageGeneration(modelId)) return false;
+    return (
+      ModelRegistry.supports(modelId, "structured_output", "xai") || !modelId.includes("image")
+    );
+  }
 
+  static supportsEmbeddings(modelId: string): boolean {
+    return ModelRegistry.supports(modelId, "embeddings", "xai");
+  }
+
+  static supportsImageGeneration(modelId: string): boolean {
+    return (
+      ModelRegistry.supports(modelId, "image_generation", "xai") ||
+      modelId.includes("image") ||
+      modelId.includes("imagine")
+    );
+  }
+
+  static supportsTranscription(modelId: string): boolean {
+    return ModelRegistry.supports(modelId, "transcription", "xai");
+  }
+
+  static supportsModeration(modelId: string): boolean {
+    return ModelRegistry.supports(modelId, "moderation", "xai");
+  }
+
+  static supportsReasoning(modelId: string): boolean {
+    return ModelRegistry.supports(modelId, "reasoning", "xai") || modelId.includes("reasoning");
+  }
+
+  static supportsToolChoice(_modelId: string): boolean {
     return true;
   }
 
-  static supportsStructuredOutput(model: string): boolean {
-    if (this.supportsImageGeneration(model)) return false;
-
-    const registryModel = ModelRegistry.find(model, "xai");
-    if (registryModel?.capabilities.includes("structured_output")) return true;
-
-    return true;
+  static getContextWindow(modelId: string): number {
+    return ModelRegistry.getContextWindow(modelId, "xai") ?? 128_000;
   }
 
-  static supportsEmbeddings(model: string): boolean {
-    const registryModel = ModelRegistry.find(model, "xai");
-    if (registryModel?.capabilities.includes("embeddings")) return true;
-
-    return false;
+  static getPricing(modelId: string): ModelPricing | undefined {
+    return PricingRegistry.getPricing(modelId, "xai");
   }
 
-  static supportsImageGeneration(model: string): boolean {
-    const registryModel = ModelRegistry.find(model, "xai");
-    if (registryModel?.capabilities.includes("image_generation")) return true;
-
-    return model.includes("image") || model.includes("imagine");
-  }
-
-  static supportsTranscription(model: string): boolean {
-    const registryModel = ModelRegistry.find(model, "xai");
-    if (registryModel?.capabilities.includes("transcription")) return true;
-
-    return false;
-  }
-
-  static supportsModeration(model: string): boolean {
-    const registryModel = ModelRegistry.find(model, "xai");
-    if (registryModel?.capabilities.includes("moderation")) return true;
-
-    return false;
-  }
-
-  static supportsReasoning(model: string): boolean {
-    const registryModel = ModelRegistry.find(model, "xai");
-    if (registryModel?.capabilities.includes("reasoning")) return true;
-
-    return model.includes("reasoning") || REASONING_MODELS.includes(model);
-  }
-
-  static getContextWindow(model: string): number {
-    const registryModel = ModelRegistry.find(model, "xai");
-    if (registryModel?.context_window) return registryModel.context_window;
-
-    return 128000;
+  private static findModel(modelId: string) {
+    return ModelRegistry.find(modelId, "xai");
   }
 }

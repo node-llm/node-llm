@@ -17,7 +17,10 @@ describe("ModelRegistry - Filtered Sync Verification", () => {
       "ollama",
       "bedrock",
       "xai",
-      "mistral"
+      "mistral",
+      "groq",
+      "perplexity",
+      "azure"
     ];
 
     // Convert Set to Array for easier comparison
@@ -35,7 +38,7 @@ describe("ModelRegistry - Filtered Sync Verification", () => {
   });
 
   it("should find the new OpenAI models like gpt-4o", () => {
-    const gpt4o = ModelRegistry.find("gpt-4o");
+    const gpt4o = ModelRegistry.find("gpt-4o", "openai");
     expect(gpt4o).toBeDefined();
     expect(gpt4o?.provider).toBe("openai");
   });

@@ -106,6 +106,7 @@ export interface ProviderCapabilities {
   supportsReasoning(modelId: string): boolean;
   supportsDeveloperRole(modelId: string): boolean;
   supportsPrediction?(modelId: string): boolean;
+  supportsToolChoice?(modelId: string): boolean;
   getContextWindow(modelId: string): number | null;
 }
 

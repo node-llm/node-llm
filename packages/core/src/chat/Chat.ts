@@ -435,6 +435,15 @@ export class Chat<S = unknown> {
       ChatValidator.validateTools(this.provider, this.model, true, this.options);
     }
 
+    if (this.options.params?.tool_choice) {
+      ChatValidator.validateToolChoice(
+        this.provider,
+        this.model,
+        this.options.params.tool_choice,
+        this.options
+      );
+    }
+
     this.messages.push({
       role: "user",
       content: messageContent as MessageContent

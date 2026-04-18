@@ -57,6 +57,7 @@ export abstract class BaseProvider implements Provider {
       supportsModeration: () => false,
       supportsReasoning: () => false,
       supportsDeveloperRole: () => false,
+      supportsToolChoice: () => false,
       getContextWindow: () => null
     };
   }

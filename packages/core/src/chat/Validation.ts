@@ -68,4 +68,22 @@ export class ChatValidator {
       logger.warn(`Skipping structured output capability validation for model ${model}`);
     }
   }
+
+  static validateToolChoice(
+    provider: Provider,
+    model: string,
+    toolChoice: unknown,
+    options: ValidationOptions
+  ) {
+    if (!toolChoice) return;
+
+    if (
+      !options.assumeModelExists &&
+      provider.capabilities &&
+      provider.capabilities.supportsToolChoice &&
+      !provider.capabilities.supportsToolChoice(model)
+    ) {
+      throw new Error(`Model ${model} does not support tool choice.`);
+    }
+  }
 }

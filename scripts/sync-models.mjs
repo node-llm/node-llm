@@ -17,7 +17,10 @@ const SUPPORTED_PROVIDERS = [
   "ollama",
   "bedrock",
   "xai",
-  "mistral"
+  "mistral",
+  "perplexity",
+  "groq",
+  "azure"
 ];
 
 const PROVIDER_MAP = {
@@ -25,7 +28,9 @@ const PROVIDER_MAP = {
   "google-vertex": "gemini",
   vertexai: "gemini",
   "amazon-bedrock": "bedrock",
-  mistralai: "mistral"
+  mistralai: "mistral",
+  "perplexity-agent": "perplexity",
+  "azure-cognitive-services": "azure"
 };
 
 // High-quality manual overrides for the most common models
@@ -180,8 +185,8 @@ async function syncModels() {
         )
           caps.push("reasoning");
 
-        const inputMod = details.modalities?.input || [];
-        const outputMod = details.modalities?.output || [];
+        const inputMod = [...(details.modalities?.input || [])];
+        const outputMod = [...(details.modalities?.output || [])];
 
         if (inputMod.includes("text")) caps.push("chat");
         if (inputMod.includes("image") || details.attachment) caps.push("vision");
@@ -189,6 +194,14 @@ async function syncModels() {
           caps.push("transcription");
         if (outputMod.includes("audio")) caps.push("speech_generation");
         if (outputMod.includes("image")) caps.push("image_generation");
+        if (outputMod.includes("embeddings") || details.id?.includes("embed")) {
+          caps.push("embeddings");
+          if (!outputMod.includes("embeddings")) outputMod.push("embeddings");
+        }
+        if (outputMod.includes("moderation") || details.id?.includes("moderation")) {
+          caps.push("moderation");
+          if (!outputMod.includes("moderation")) outputMod.push("moderation");
+        }
 
         if (details.tool_call) {
           caps.push("function_calling");
@@ -199,17 +212,20 @@ async function syncModels() {
           caps.push("json_mode");
         }
 
-        // Special overrides for DeepSeek Reasoner (R1)
-        if (modelId === "deepseek-reasoner") {
-          // R1 does not support tools/function calling on official API
-          const remove = ["function_calling", "tools", "vision"];
+        // Special overrides for DeepSeek
+        if (modelId === "deepseek-reasoner" || modelId === "deepseek-chat") {
+          // DeepSeek Chat and Reasoner do not support tools/vision on official API usually
+          const remove = ["vision"];
+          if (modelId === "deepseek-reasoner") {
+            remove.push("function_calling", "tools");
+          }
           remove.forEach((cap) => {
             const idx = caps.indexOf(cap);
             if (idx > -1) caps.splice(idx, 1);
           });
-
-          // Ensure reasoning and structured_output are present
-          if (!caps.includes("reasoning")) caps.push("reasoning");
+          if (modelId === "deepseek-reasoner" && !caps.includes("reasoning")) {
+            caps.push("reasoning");
+          }
           if (!caps.includes("structured_output")) caps.push("structured_output");
         }
 
@@ -222,7 +238,7 @@ async function syncModels() {
           context_window: details.limit?.context || 0,
           max_output_tokens: details.limit?.output || 0,
           knowledge_cutoff: details.knowledge,
-          modalities: details.modalities || { input: ["text"], output: ["text"] },
+          modalities: { input: inputMod, output: outputMod },
           capabilities: Array.from(new Set(caps)),
           pricing: {
             text_tokens: {
@@ -239,6 +255,21 @@ async function syncModels() {
             last_synced: new Date().toISOString()
           }
         };
+
+        // Special overrides for Mistral (Non-Pixtral text models)
+        if (
+          targetProvider === "mistral" &&
+          (modelId.includes("large") || modelId.includes("small") || modelId.includes("medium"))
+        ) {
+          // Standard Mistral models on their own API are text-only
+          const remove = ["vision", "reasoning"];
+          modelEntry.capabilities = modelEntry.capabilities.filter((cap) => !remove.includes(cap));
+
+          // Fix modalities
+          if (modelEntry.modalities && modelEntry.modalities.input) {
+            modelEntry.modalities.input = modelEntry.modalities.input.filter((m) => m !== "image");
+          }
+        }
 
         finalModels.push(modelEntry);
 
@@ -366,7 +397,11 @@ ${new Date().toISOString().split("T")[0]}
     "openrouter",
     "ollama",
     "bedrock",
-    "xai"
+    "xai",
+    "mistral",
+    "perplexity",
+    "groq",
+    "azure"
   ];
   const providerNames = {
     openai: "OpenAI",
@@ -376,7 +411,11 @@ ${new Date().toISOString().split("T")[0]}
     openrouter: "OpenRouter",
     ollama: "Ollama (Local)",
     bedrock: "Amazon Bedrock",
-    xai: "xAI"
+    xai: "xAI",
+    mistral: "Mistral",
+    perplexity: "Perplexity",
+    groq: "Groq",
+    azure: "Azure OpenAI"
   };
 
   providerOrder.forEach((provider) => {

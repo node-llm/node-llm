@@ -64,6 +64,6 @@ describe("MistralModels", () => {
 
     const models = await handler.execute();
 
-    expect(models[0].context_window).toBe(128000);
+    expect(models[0].context_window).toBe(262144);
   });
 });

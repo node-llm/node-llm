@@ -6,11 +6,22 @@ export class ModelRegistry {
   private static models: Model[] = modelsData as unknown as Model[];
 
   static find(modelId: string, provider?: string): Model | undefined {
-    return this.models.find(
+    // Exact match
+    const exactMatch = this.models.find(
       (m) =>
         m.id.toLowerCase() === modelId.toLowerCase() &&
         (!provider || m.provider.toLowerCase() === provider.toLowerCase())
     );
+    if (exactMatch) return exactMatch;
+
+    // Fuzzy match (prefix matching)
+    return this.models.find((m) => {
+      if (provider && m.provider.toLowerCase() !== provider.toLowerCase()) return false;
+      return (
+        m.id.toLowerCase().startsWith(modelId.toLowerCase()) ||
+        modelId.toLowerCase().startsWith(m.id.toLowerCase())
+      );
+    });
   }
 
   /**
@@ -51,7 +62,26 @@ export class ModelRegistry {
    */
   static supports(modelId: string, capability: string, provider: string): boolean {
     const model = this.find(modelId, provider);
-    return model?.capabilities.includes(capability) ?? false;
+    if (!model) return false;
+
+    if (model.capabilities.includes(capability)) return true;
+
+    // Fallback for vision: check modalities
+    if (capability === "vision" && model.modalities?.input?.includes("image")) {
+      return true;
+    }
+
+    // Fallback for embeddings: check modalities
+    if (capability === "embeddings" && model.modalities?.output?.includes("embeddings")) {
+      return true;
+    }
+
+    // Fallback for reasoning: check model ID
+    if (capability === "reasoning") {
+      return /o1-|o3-|reasoner|-r1|qwq|3-7/.test(modelId.toLowerCase());
+    }
+
+    return false;
   }
 
   /**
