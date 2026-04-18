@@ -175,11 +175,15 @@ export class NodeLLMCore {
     prompt: string,
     options?: {
       model?: string;
+      images?: string[];
+      mask?: string;
       size?: string;
       quality?: string;
+      n?: number;
       assumeModelExists?: boolean;
       requestTimeout?: number;
       middlewares?: Middleware[];
+      [key: string]: unknown;
     }
   ): Promise<GeneratedImage> {
     const provider = this.ensureProviderSupport("paint");

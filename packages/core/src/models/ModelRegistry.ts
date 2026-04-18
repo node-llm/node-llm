@@ -102,36 +102,48 @@ export class ModelRegistry {
       total_tokens: number;
       cached_tokens?: number;
       reasoning_tokens?: number;
+      image_tokens?: number;
     },
     modelId: string,
     provider: string
   ) {
     const pricing = PricingRegistry.getPricing(modelId, provider);
-    if (!pricing || !pricing.text_tokens?.standard) {
+    if (!pricing) {
       return usage;
     }
 
-    const prices = pricing.text_tokens.standard;
-    const inputPrice = prices.input_per_million || 0;
-    const outputPrice = prices.output_per_million || 0;
+    let inputCost = 0;
+    let outputCost = 0;
 
-    // Fallback for reasoning: if not specified, default to 2.5x standard output price for specific reasoning models
-    // or just standard output price for others.
-    const reasoningPrice =
-      prices.reasoning_output_per_million ??
-      (modelId.includes("reasoner") || modelId.includes("3-7") ? outputPrice * 2.5 : outputPrice);
+    // 1. Text pricing
+    if (pricing.text_tokens?.standard) {
+      const prices = pricing.text_tokens.standard;
+      const inputPrice = prices.input_per_million || 0;
+      const outputPrice = prices.output_per_million || 0;
 
-    const cachedPrice = prices.cached_input_per_million ?? inputPrice / 2;
+      const reasoningPrice =
+        prices.reasoning_output_per_million ??
+        (modelId.includes("reasoner") || modelId.includes("3-7") ? outputPrice * 2.5 : outputPrice);
 
-    const inputCost =
-      ((usage.input_tokens - (usage.cached_tokens || 0)) / 1_000_000) * inputPrice +
-      ((usage.cached_tokens || 0) / 1_000_000) * cachedPrice;
+      const cachedPrice = prices.cached_input_per_million ?? inputPrice / 2;
 
-    const outputTokens = usage.output_tokens - (usage.reasoning_tokens || 0);
-    const reasoningTokens = usage.reasoning_tokens || 0;
+      inputCost +=
+        ((usage.input_tokens - (usage.cached_tokens || 0)) / 1_000_000) * inputPrice +
+        ((usage.cached_tokens || 0) / 1_000_000) * cachedPrice;
 
-    const outputCost =
-      (outputTokens / 1_000_000) * outputPrice + (reasoningTokens / 1_000_000) * reasoningPrice;
+      const outputTokens = usage.output_tokens - (usage.reasoning_tokens || 0);
+      const reasoningTokens = usage.reasoning_tokens || 0;
+
+      outputCost +=
+        (outputTokens / 1_000_000) * outputPrice + (reasoningTokens / 1_000_000) * reasoningPrice;
+    }
+
+    // 2. Image pricing (usually per image, but here we treat image_tokens as 'count' if small, or tokens if large)
+    // RubyLLM v1.15 uses prices directly for images if provide details.
+    if (pricing.images?.standard && usage.image_tokens) {
+      const imagePrice = pricing.images.standard.input || 0;
+      inputCost += usage.image_tokens * imagePrice;
+    }
 
     const totalCost = inputCost + outputCost;
 

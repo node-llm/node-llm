@@ -40,7 +40,9 @@ export class Capabilities {
 
   static supportsImageGeneration(modelId: string): boolean {
     return (
-      ModelRegistry.supports(modelId, "image_generation", "openai") || modelId.includes("dall-e")
+      ModelRegistry.supports(modelId, "image_generation", "openai") ||
+      modelId.includes("dall-e") ||
+      modelId === "gpt-image-1"
     );
   }
 

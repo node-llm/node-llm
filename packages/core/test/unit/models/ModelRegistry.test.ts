@@ -55,6 +55,17 @@ describe("ModelRegistry - Filtered Sync Verification", () => {
     }
   });
 
+  it("should calculate costs for image tokens", () => {
+    // DALL-E 3 standard 1024x1024: $0.040 per image
+    const usage = { image_tokens: 1 };
+    const result = ModelRegistry.calculateCost(usage, "dall-e-3", "openai");
+
+    expect("cost" in result).toBe(true);
+    if ("cost" in result) {
+      expect(result.cost).toBe(0.04);
+    }
+  });
+
   // Note: Ollama models are not in models.dev as they're dynamically fetched from local server
   it("should have models from all major providers", () => {
     const providers = new Set(ModelRegistry.all().map((m) => m.provider));

@@ -17,11 +17,16 @@ All notable changes to this project will be documented in this file.
   - Added `timestamp_granularities` for precise word-level timing in Whisper.
   - Enhanced `Transcription` class with `.meta` and `.raw` getters for DB parity with `ChatResponseString`.
   - Fixed speaker-label preservation across OpenAI and Mistral transcription adapters.
-- **Gemini 2.5 Advanced Support**: 
+- **Gemini 2.5 Advanced Support**:
   - **Structured Output**: Native `responseJsonSchema` respect with improved `nullable` and `anyOf` mapping.
   - **Parallel Tool Support**: Grouped tool responses in a single message for higher accuracy.
   - **Inline Generated Images**: Surface model-generated images (like Gemini Nano) as `attachments` directly in the chat response.
-
+- **Advanced Image Editing & Manipulation**:
+  - **In-painting & Edits**: Added support for editing existing images via `images` and `mask` parameters.
+  - **Image Variations**: Generate new variations of a source image by providing it to the `paint()` method without a prompt.
+  - **Broad Asset Support**: Seamlessly handle local files, remote URLs, and base64 strings as image sources.
+  - **Multimodal Cost Tracking**: Added `image_tokens` to usage tracking with automated cost calculation in the `ModelRegistry`.
+  - **Enhanced OpenAI Image Support**: Native integration with `/v1/images/edits` and `/v1/images/variations` endpoints, including automatic fallback to `gpt-image-1` (DALL-E 2) for manipulation tasks.
 
 ### Improvements
 
@@ -32,7 +37,6 @@ All notable changes to this project will be documented in this file.
   - Added `.throws()` support for chaos engineering and failure simulation.
   - Improved `.callsTool()` to support simultaneous conversational content.
   - Surfaced `thinking`, `metadata`, and `reasoning` through the mock execution proxy.
-
 
 ## [1.15.0] - 2026-03-28 (@node-llm/core)
 

@@ -86,6 +86,7 @@ export interface Usage {
   output_tokens: number;
   total_tokens: number;
   reasoning_tokens?: number;
+  image_tokens?: number;
   cached_tokens?: number;
   cache_creation_tokens?: number;
   cost?: number;
@@ -143,11 +144,14 @@ export interface ModelInfo {
 export interface ImageRequest {
   model?: string;
   prompt: string;
+  images?: string[]; // Source images (for edits or variations)
+  mask?: string; // Mask image (for in-painting)
   size?: string;
   quality?: string;
   n?: number;
   headers?: Record<string, string>;
   requestTimeout?: number;
+  [key: string]: unknown;
 }
 
 export interface ImageResponse {
