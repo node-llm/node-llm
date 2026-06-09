@@ -9,7 +9,7 @@ describe("MODEL_ALIASES Export", () => {
 
   it("should contain known aliases", () => {
     expect(MODEL_ALIASES["claude-3-5-haiku"]).toBeDefined();
-    expect(MODEL_ALIASES["claude-3-5-haiku"]["anthropic"]).toBe("claude-3-haiku-20240307");
+    expect(MODEL_ALIASES["claude-3-5-haiku"]["anthropic"]).toBe("claude-3-5-haiku-20241022");
 
     expect(MODEL_ALIASES["gpt-4o"]).toBeDefined();
     expect(MODEL_ALIASES["gpt-4o"]["openai"]).toBe("gpt-4o");
@@ -35,7 +35,7 @@ describe("MODEL_ALIASES Export", () => {
     expect(typeof resolveModelAlias).toBe("function");
 
     const result = resolveModelAlias("claude-3-5-haiku", "anthropic");
-    expect(result).toBe("claude-3-haiku-20240307");
+    expect(result).toBe("claude-3-5-haiku-20241022");
   });
 
   it("should allow listing all aliases", () => {

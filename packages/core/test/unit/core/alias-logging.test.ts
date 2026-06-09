@@ -20,9 +20,9 @@ describe("Model Alias Resolution Logging", () => {
   it("should log when alias is resolved", () => {
     const result = resolveModelAlias("claude-3-5-haiku", "anthropic");
 
-    expect(result).toBe("claude-3-haiku-20240307");
+    expect(result).toBe("claude-3-5-haiku-20241022");
     expect(debugSpy).toHaveBeenCalledWith(
-      "Resolved model alias 'claude-3-5-haiku' → 'claude-3-haiku-20240307' for provider 'anthropic'"
+      "Resolved model alias 'claude-3-5-haiku' → 'claude-3-5-haiku-20241022' for provider 'anthropic'"
     );
   });
 

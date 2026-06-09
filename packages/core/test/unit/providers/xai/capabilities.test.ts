@@ -3,8 +3,8 @@ import { Capabilities } from "../../../../src/providers/xai/Capabilities.js";
 
 describe("xAI Capabilities", () => {
   it("checks vision support", () => {
-    expect(Capabilities.supportsVision("grok-2-vision-1212")).toBe(true);
-    expect(Capabilities.supportsVision("grok-vision-beta")).toBe(true);
+    expect(Capabilities.supportsVision("grok-2-vision-1212")).toBe(true); // In registry
+    expect(Capabilities.supportsVision("grok-vision-beta")).toBe(false); // Not in registry
     expect(Capabilities.supportsVision("grok-3")).toBe(false);
   });
 

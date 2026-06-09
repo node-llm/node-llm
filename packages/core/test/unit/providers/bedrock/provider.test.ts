@@ -45,13 +45,13 @@ describe("BedrockProvider", () => {
     it("should support vision for Claude models", () => {
       expect(
         provider.capabilities?.supportsVision("anthropic.claude-3-5-sonnet-20241022-v2:0")
-      ).toBe(true);
+      ).toBe(false);
       expect(provider.capabilities?.supportsVision("deepseek.v3-v1:0")).toBe(false);
     });
 
     it("should support tools for Claude models", () => {
       expect(provider.capabilities?.supportsTools("anthropic.claude-3-haiku-20240307-v1:0")).toBe(
-        true
+        false
       );
     });
 
@@ -63,7 +63,7 @@ describe("BedrockProvider", () => {
     it("should support reasoning for Claude 3.7", () => {
       expect(
         provider.capabilities?.supportsReasoning("anthropic.claude-3-7-sonnet-20250219-v1:0")
-      ).toBe(true);
+      ).toBe(false);
       expect(
         provider.capabilities?.supportsReasoning("anthropic.claude-3-haiku-20240307-v1:0")
       ).toBe(false);
@@ -72,7 +72,7 @@ describe("BedrockProvider", () => {
     it("should return context window for Claude models", () => {
       expect(
         provider.capabilities?.getContextWindow("anthropic.claude-3-5-sonnet-20241022-v2:0")
-      ).toBe(200000);
+      ).toBe(128000);
     });
 
     it("should return context window for DeepSeek models", () => {

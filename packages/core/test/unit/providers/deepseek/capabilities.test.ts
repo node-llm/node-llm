@@ -18,8 +18,8 @@ describe("DeepSeek Capabilities", () => {
   });
 
   it("should correct context window", () => {
-    expect(Capabilities.getContextWindow("deepseek-chat")).toBe(131072);
-    expect(Capabilities.getContextWindow("deepseek-reasoner")).toBe(128000);
+    expect(Capabilities.getContextWindow("deepseek-chat")).toBe(1000000);
+    expect(Capabilities.getContextWindow("deepseek-reasoner")).toBe(1000000);
     expect(Capabilities.getContextWindow("unknown-model")).toBe(32768);
   });
 

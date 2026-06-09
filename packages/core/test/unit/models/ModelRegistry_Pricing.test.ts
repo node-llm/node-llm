@@ -18,7 +18,7 @@ describe("PricingRegistry", () => {
   it("should return pricing for deepseek-chat", () => {
     const pricing = PricingRegistry.getPricing("deepseek-chat", "deepseek");
     expect(pricing).toBeDefined();
-    expect(pricing?.text_tokens?.standard?.input_per_million).toBe(0.28);
+    expect(pricing?.text_tokens?.standard?.input_per_million).toBe(0.14);
   });
 
   it("should allow runtime registration", () => {
