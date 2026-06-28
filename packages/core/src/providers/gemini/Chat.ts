@@ -128,10 +128,11 @@ export class GeminiChat {
     const candidate = json.candidates?.[0];
 
     const contentParts = candidate?.content?.parts || [];
-    const content = contentParts
-      .filter((p) => p.text)
-      .map((p) => p.text)
-      .join("\n") || null;
+    const content =
+      contentParts
+        .filter((p) => p.text)
+        .map((p) => p.text)
+        .join("\n") || null;
 
     const tool_calls = contentParts
       .filter((p) => p.functionCall)

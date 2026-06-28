@@ -1,4 +1,8 @@
-import { TranscriptionResponse, TranscriptionSegment, TranscriptionWord } from "../providers/Provider.js";
+import {
+  TranscriptionResponse,
+  TranscriptionSegment,
+  TranscriptionWord
+} from "../providers/Provider.js";
 
 export class Transcription {
   constructor(private readonly response: TranscriptionResponse) {}

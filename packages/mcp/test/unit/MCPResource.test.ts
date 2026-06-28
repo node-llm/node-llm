@@ -3,7 +3,7 @@ import { MCPResource } from "../../src/MCPResource.js";
 
 describe("MCPResource", () => {
   const mockClient = {
-    readResource: vi.fn(),
+    readResource: vi.fn()
   };
 
   it("should initialize with metadata", () => {
