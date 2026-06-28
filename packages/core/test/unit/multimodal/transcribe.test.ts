@@ -138,7 +138,10 @@ describe("Transcription Unit Tests", () => {
       model: "whisper-1",
       duration: 5,
       segments: [{ id: 0, start: 0, end: 5, text: "Hello world" }],
-      words: [{ word: "Hello", start: 0, end: 2 }, { word: "world", start: 2, end: 5 }]
+      words: [
+        { word: "Hello", start: 0, end: 2 },
+        { word: "world", start: 2, end: 5 }
+      ]
     });
 
     const llm = createLLM({ provider: mockProvider });
@@ -149,13 +152,15 @@ describe("Transcription Unit Tests", () => {
       model: "whisper-1",
       duration: 5,
       segments: [{ id: 0, start: 0, end: 5, text: "Hello world" }],
-      words: [{ word: "Hello", start: 0, end: 2 }, { word: "world", start: 2, end: 5 }]
+      words: [
+        { word: "Hello", start: 0, end: 2 },
+        { word: "world", start: 2, end: 5 }
+      ]
     });
     expect(result.raw).toEqual(result.meta);
     expect(result.words).toHaveLength(2);
     expect(result.words[0].word).toBe("Hello");
   });
-
 
   it("should support known speaker identification", async () => {
     const llm = createLLM({ provider: mockProvider });

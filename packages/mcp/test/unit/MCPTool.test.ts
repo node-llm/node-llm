@@ -3,7 +3,7 @@ import { MCPTool } from "../../src/MCPTool.js";
 
 describe("MCPTool", () => {
   const mockClient = {
-    callTool: vi.fn(),
+    callTool: vi.fn()
   };
 
   it("should initialize with metadata", () => {
@@ -56,17 +56,20 @@ describe("MCPTool", () => {
   it("should support original name for protocol calls", async () => {
     mockClient.callTool.mockResolvedValueOnce({ content: [] });
 
-    const tool = new MCPTool(mockClient as any, {
+    const tool = new MCPTool(
+      mockClient as any,
+      {
         name: "prefix_tool",
         inputSchema: {}
-    } as any);
+      } as any
+    );
     // Mimic how MCP.ts sets originalName
     (tool as any).originalName = "tool";
 
     await tool.execute({});
     expect(mockClient.callTool).toHaveBeenCalledWith({
-        name: "tool",
-        arguments: {}
+      name: "tool",
+      arguments: {}
     });
   });
 });
