@@ -22,7 +22,7 @@ description: Force models to return strictly validated JSON data using Zod schem
 
 Ensure the AI returns data exactly matching a specific structure. `NodeLLM` supports strict schema validation using **Zod** (recommended) or manual JSON schemas.
 
-This feature abstracts the provider-specific implementations (like OpenAI's `json_schema`, Gemini's `responseSchema`, or Anthropic's tool-use workarounds) into a single, unified API.
+This feature abstracts the provider-specific implementations (like OpenAI's `json_schema`, Gemini's `responseJsonSchema`, or Anthropic's tool-use workarounds) into a single, unified API.
 
 {: .highlight }
 
@@ -113,7 +113,7 @@ console.log(response.data); // { greeting: "..." } or whatever keys it chose
 | Provider      | Method Used                                | Notes                                                                                                           |
 | :------------ | :----------------------------------------- | :-------------------------------------------------------------------------------------------------------------- |
 | **OpenAI**    | `response_format: { type: "json_schema" }` | Fully supported with strict adherence.                                                                          |
-| **Gemini**    | `responseSchema`                           | Supported natively.                                                                                             |
+| **Gemini**    | `responseJsonSchema`                       | Supported natively.                                                                                             |
 | **Anthropic** | Tool Use (Mock)                            | `NodeLLM` automatically creates a tool definition and forces the model to use it to simulate structured output. |
 
 ---

@@ -31,7 +31,7 @@ export class GeminiChat {
     } else if (request.response_format?.type === "json_schema") {
       generationConfig.responseMimeType = "application/json";
       if (request.response_format.json_schema?.schema) {
-        generationConfig.responseSchema = this.sanitizeSchema(
+        generationConfig.responseJsonSchema = this.sanitizeSchema(
           request.response_format.json_schema.schema
         );
       }

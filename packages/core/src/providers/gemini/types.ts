@@ -39,7 +39,7 @@ export interface GeminiGenerateContentRequest {
     topP?: number;
     topK?: number;
     responseMimeType?: string;
-    responseSchema?: Record<string, unknown>;
+    responseJsonSchema?: Record<string, unknown>;
   };
   safetySettings?: Array<{
     category: string;
