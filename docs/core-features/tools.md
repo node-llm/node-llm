@@ -170,6 +170,31 @@ chat.withToolCalls("one"); // Force sequential execution
 
 ---
 
+## Concurrent Tool Execution <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v1.17.0+</span>
+
+When a model returns multiple independent tool calls in the same turn, NodeLLM executes them one at a time by default. Enable `toolConcurrency` to run them in parallel instead, which can meaningfully cut latency for turns with several unrelated tool calls (e.g. looking up weather in three different cities):
+
+```ts
+const chat = llm.chat("gpt-4o")
+  .withTools([WeatherTool, CalculatorTool])
+  .withToolConcurrency(true);
+
+// If the model calls both tools in one turn, they now run concurrently
+const reply = await chat.ask("What's the weather in Paris and what is 12 * 7?");
+```
+
+You can also enable it globally:
+
+```ts
+import { config } from "@node-llm/core";
+
+config.toolConcurrency = true;
+```
+
+Confirm mode (`toolExecution: "confirm"`) always runs sequentially regardless of this setting, since approval is interactive.
+
+---
+
 ## Loop Protection (Loop Guard) 🛡️
 
 To prevent infinite recursion and runaway costs (where a model keeps calling tools without reaching a conclusion), `NodeLLM` includes a built-in Loop Guard.

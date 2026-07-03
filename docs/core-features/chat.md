@@ -265,6 +265,16 @@ chat
 await chat.ask("What's the weather?");
 ```
 
+Calling one of these hooks more than once registers an additional handler rather than replacing the previous one, so independent concerns (e.g. logging plus a UI update) can each register their own handler without stepping on each other:
+
+```ts
+chat
+  .onEndMessage(logToAuditTrail)
+  .onEndMessage(updateUI); // Both run; the second no longer overwrites the first
+```
+
+`onConfirmToolCall` is the one exception: every registered handler must approve for the call to proceed.
+
 ---
 
 ## 🛡️ Content Policy Hooks <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v1.5.0+</span>
@@ -290,6 +300,8 @@ chat
     }
   });
 ```
+
+Registering multiple `beforeRequest`/`afterResponse` hooks chains them in registration order: each handler receives the previous handler's output, so a redaction hook and a separately-registered logging hook can both run on the same request without one discarding the other.
 
 ---
 
