@@ -176,4 +176,32 @@ describe("Chat Tool Calling", () => {
     expect(provider.requests[0]!.tools).toContain(tool1);
     expect(provider.requests[0]!.tools).toContain(tool2);
   });
+
+  it("carries metadata and attachments through to the final response after a tool call", async () => {
+    const tool = {
+      type: "function" as const,
+      function: { name: "get_weather", parameters: {} },
+      handler: async () => "Sunny"
+    };
+
+    const toolCallResponse: ChatResponse = {
+      content: null,
+      tool_calls: [
+        { id: "c1", type: "function", function: { name: "get_weather", arguments: "{}" } }
+      ]
+    };
+    const finalResponse: ChatResponse = {
+      content: "It's sunny.",
+      metadata: { cache_status: "HIT" },
+      attachments: [{ mimeType: "image/png", data: "base64data" }]
+    };
+
+    const provider = new MockToolProvider([toolCallResponse, finalResponse]);
+    const chat = new Chat(provider, "test-model", { tools: [tool] });
+
+    const response = await chat.ask("What's the weather?");
+
+    expect(response.metadata).toEqual({ cache_status: "HIT" });
+    expect(response.attachments).toEqual([{ mimeType: "image/png", data: "base64data" }]);
+  });
 });

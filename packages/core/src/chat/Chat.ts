@@ -888,7 +888,9 @@ export class Chat<S = unknown> {
           assistantMessage.reasoning,
           response.tool_calls,
           assistantMessage.finish_reason,
-          this.options.schema
+          this.options.schema,
+          assistantMessage.metadata,
+          assistantMessage.attachments
         ) as unknown as ChatResponseString & { data: S };
 
         // 5. onResponse Hook
