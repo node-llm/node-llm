@@ -121,7 +121,7 @@ export class NodeLLMCore {
    * Register a custom LLM provider.
    * Note: This modifies the global provider registry.
    */
-  registerProvider(name: string, factory: () => Provider): void {
+  registerProvider(name: string, factory: (config?: NodeLLMConfig) => Provider): void {
     providerRegistry.register(name, factory);
   }
 
