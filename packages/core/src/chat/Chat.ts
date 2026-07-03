@@ -19,7 +19,7 @@ import { Executor } from "../executor/Executor.js";
 import { ChatStream } from "./ChatStream.js";
 import { Stream } from "../streaming/Stream.js";
 import { ModelRegistry } from "../models/ModelRegistry.js";
-import { ToolDefinition, ToolResolvable } from "./Tool.js";
+import { ToolDefinition, ToolResolvable, ToolCall } from "./Tool.js";
 import { Schema } from "../schema/Schema.js";
 import { toJsonSchema } from "../schema/to-json-schema.js";
 import { randomUUID } from "node:crypto";
@@ -28,7 +28,7 @@ import { config } from "../config.js";
 import { ToolExecutionMode } from "../constants.js";
 import { ConfigurationError } from "../errors/index.js";
 import { ChatValidator } from "./Validation.js";
-import { ToolHandler } from "./ToolHandler.js";
+import { ToolHandler, ToolExecutionResult } from "./ToolHandler.js";
 import { logger } from "../utils/logger.js";
 import {
   Middleware,
@@ -53,6 +53,11 @@ export interface AskOptions {
 }
 
 import { ChatResponseString } from "./ChatResponse.js";
+
+type ToolCallOutcome =
+  | { kind: "cancelled"; toolCall: ToolCall }
+  | { kind: "success"; toolCall: ToolCall; toolResult: ToolExecutionResult }
+  | { kind: "error"; toolCall: ToolCall; error: unknown };
 
 export class Chat<S = unknown> {
   private messages: Message[] = [];
@@ -654,38 +659,37 @@ export class Chat<S = unknown> {
             throw new Error(`[NodeLLM] Maximum tool execution calls (${maxToolCalls}) exceeded.`);
           }
 
-          for (const toolCall of response.tool_calls) {
-            if (this.options.toolExecution === ToolExecutionMode.CONFIRM) {
-              const approved = await ToolHandler.requestToolConfirmation(
-                toolCall,
-                this.options.onConfirmToolCall
+          const runConcurrently =
+            this.options.toolConcurrency &&
+            this.options.toolExecution !== ToolExecutionMode.CONFIRM &&
+            response.tool_calls.length > 1;
+
+          const outcomes: ToolCallOutcome[] = runConcurrently
+            ? await Promise.all(
+                response.tool_calls.map((toolCall) =>
+                  this.executeToolCallOutcome(toolCall, context)
+                )
+              )
+            : await (async () => {
+                const results: ToolCallOutcome[] = [];
+                for (const toolCall of response.tool_calls!) {
+                  results.push(await this.executeToolCallOutcome(toolCall, context));
+                }
+                return results;
+              })();
+
+          for (const outcome of outcomes) {
+            const toolCall = outcome.toolCall;
+
+            if (outcome.kind === "cancelled") {
+              this.messages.push(
+                this.provider.formatToolResultMessage(toolCall.id, "Action cancelled by user.")
               );
-              if (!approved) {
-                this.messages.push(
-                  this.provider.formatToolResultMessage(toolCall.id, "Action cancelled by user.")
-                );
-                continue;
-              }
+              continue;
             }
 
-            await runMiddleware(this.middlewares, "onToolCallStart", context, toolCall);
-
-            try {
-              const toolResult = await ToolHandler.execute(
-                toolCall,
-                this.options.tools as unknown as ToolDefinition[],
-                this.options.onToolCallStart,
-                this.options.onToolCallEnd
-              );
-
-              await runMiddleware(
-                this.middlewares,
-                "onToolCallEnd",
-                context,
-                toolCall,
-                toolResult.content
-              );
-
+            if (outcome.kind === "success") {
+              const { toolResult } = outcome;
               this.messages.push(
                 this.provider.formatToolResultMessage(toolResult.tool_call_id, toolResult.content)
               );
@@ -707,70 +711,68 @@ export class Chat<S = unknown> {
                 }
                 break;
               }
-            } catch (error: unknown) {
-              let currentError: unknown = error;
-              const middlewareDirective = await runMiddleware<ToolErrorDirective>(
-                this.middlewares,
-                "onToolCallError",
-                context,
-                toolCall,
-                currentError
-              );
-
-              const directive =
-                middlewareDirective ||
-                (await this.options.onToolCallError?.(toolCall, currentError as Error));
-
-              if (directive === "STOP") throw currentError;
-              if (directive === "RETRY") {
-                try {
-                  const toolResult = await ToolHandler.execute(
-                    toolCall,
-                    this.options.tools as unknown as ToolDefinition[],
-                    this.options.onToolCallStart,
-                    this.options.onToolCallEnd
-                  );
-                  await runMiddleware(
-                    this.middlewares,
-                    "onToolCallEnd",
-                    context,
-                    toolCall,
-                    toolResult.content
-                  );
-                  this.messages.push(
-                    this.provider.formatToolResultMessage(
-                      toolResult.tool_call_id,
-                      toolResult.content
-                    )
-                  );
-                  continue;
-                } catch (retryError) {
-                  currentError = retryError;
-                  await runMiddleware(
-                    this.middlewares,
-                    "onToolCallError",
-                    context,
-                    toolCall,
-                    currentError
-                  );
-                }
-              }
-
-              this.messages.push(
-                this.provider.formatToolResultMessage(
-                  toolCall.id,
-                  `Fatal error executing tool '${toolCall.function.name}': ${(currentError as Error).message}`,
-                  { isError: true }
-                )
-              );
-
-              if (directive === "CONTINUE") continue;
-
-              const errorObj = currentError as { fatal?: boolean; status?: number };
-              if (errorObj.fatal || errorObj.status === 401 || errorObj.status === 403)
-                throw currentError;
-              logger.error(`Tool execution failed:`, currentError as Error);
+              continue;
             }
+
+            let currentError: unknown = outcome.error;
+            const middlewareDirective = await runMiddleware<ToolErrorDirective>(
+              this.middlewares,
+              "onToolCallError",
+              context,
+              toolCall,
+              currentError
+            );
+
+            const directive =
+              middlewareDirective ||
+              (await this.options.onToolCallError?.(toolCall, currentError as Error));
+
+            if (directive === "STOP") throw currentError;
+            if (directive === "RETRY") {
+              try {
+                const toolResult = await ToolHandler.execute(
+                  toolCall,
+                  this.options.tools as unknown as ToolDefinition[],
+                  this.options.onToolCallStart,
+                  this.options.onToolCallEnd
+                );
+                await runMiddleware(
+                  this.middlewares,
+                  "onToolCallEnd",
+                  context,
+                  toolCall,
+                  toolResult.content
+                );
+                this.messages.push(
+                  this.provider.formatToolResultMessage(toolResult.tool_call_id, toolResult.content)
+                );
+                continue;
+              } catch (retryError) {
+                currentError = retryError;
+                await runMiddleware(
+                  this.middlewares,
+                  "onToolCallError",
+                  context,
+                  toolCall,
+                  currentError
+                );
+              }
+            }
+
+            this.messages.push(
+              this.provider.formatToolResultMessage(
+                toolCall.id,
+                `Fatal error executing tool '${toolCall.function.name}': ${(currentError as Error).message}`,
+                { isError: true }
+              )
+            );
+
+            if (directive === "CONTINUE") continue;
+
+            const errorObj = currentError as { fatal?: boolean; status?: number };
+            if (errorObj.fatal || errorObj.status === 401 || errorObj.status === 403)
+              throw currentError;
+            logger.error(`Tool execution failed:`, currentError as Error);
           }
 
           if (haltTriggered) break;
@@ -901,6 +903,44 @@ export class Chat<S = unknown> {
       this.systemMessages
     );
     return streamer.create(content, options);
+  }
+
+  /**
+   * Runs a single tool call through confirmation + middleware + execution,
+   * returning its outcome instead of mutating shared state directly. Lets the
+   * caller run several of these concurrently via Promise.all and still apply
+   * halt/error/retry handling afterward in the original call order.
+   */
+  private async executeToolCallOutcome(
+    toolCall: ToolCall,
+    context: MiddlewareContext
+  ): Promise<ToolCallOutcome> {
+    if (this.options.toolExecution === ToolExecutionMode.CONFIRM) {
+      const approved = await ToolHandler.requestToolConfirmation(
+        toolCall,
+        this.options.onConfirmToolCall
+      );
+      if (!approved) {
+        return { kind: "cancelled", toolCall };
+      }
+    }
+
+    await runMiddleware(this.middlewares, "onToolCallStart", context, toolCall);
+
+    try {
+      const toolResult = await ToolHandler.execute(
+        toolCall,
+        this.options.tools as unknown as ToolDefinition[],
+        this.options.onToolCallStart,
+        this.options.onToolCallEnd
+      );
+
+      await runMiddleware(this.middlewares, "onToolCallEnd", context, toolCall, toolResult.content);
+
+      return { kind: "success", toolCall, toolResult };
+    } catch (error: unknown) {
+      return { kind: "error", toolCall, error };
+    }
   }
 
   /**
