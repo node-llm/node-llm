@@ -24,6 +24,7 @@ export function registerBedrockProvider() {
       accessKeyId: cfg.bedrockAccessKeyId,
       secretAccessKey: cfg.bedrockSecretAccessKey,
       sessionToken: cfg.bedrockSessionToken,
+      apiBase: cfg.bedrockApiBase,
       guardrailIdentifier: cfg.bedrockGuardrailIdentifier,
       guardrailVersion: cfg.bedrockGuardrailVersion
     };

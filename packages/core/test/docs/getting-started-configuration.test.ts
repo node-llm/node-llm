@@ -109,6 +109,16 @@ describe("getting-started-configuration", () => {
       expect(llm).toBeDefined();
     });
 
+    it("supports bedrockApiBase for routing through a custom endpoint", () => {
+      const llm = createLLM({
+        provider: "fake",
+        bedrockRegion: "us-east-1",
+        bedrockApiKey: "test-bedrock",
+        bedrockApiBase: "https://bedrock-proxy.internal.example.com"
+      });
+      expect(llm).toBeDefined();
+    });
+
     it("supports defaultChatModel option", () => {
       const llm = createLLM({
         provider: "fake",

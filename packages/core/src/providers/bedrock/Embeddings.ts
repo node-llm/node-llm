@@ -37,7 +37,7 @@ export class BedrockEmbeddings {
   constructor(config: BedrockConfig) {
     this.config = config;
     this.authMode = validateBedrockConfig(config);
-    this.baseUrl = getBedrockEndpoint(config.region);
+    this.baseUrl = getBedrockEndpoint(config.region, config.apiBase);
   }
 
   /**

@@ -119,7 +119,7 @@ const llm = createLLM({
 });
 ```
 
-**Note:** Unlike the other providers, Bedrock does not currently support a custom `apiBase`/endpoint override — there is no `bedrockApiBase` config key. Requests always go to the AWS Bedrock endpoint for the configured `bedrockRegion`.
+Like the other providers, Bedrock also supports a custom endpoint override via `bedrockApiBase` (or the `BEDROCK_API_BASE` environment variable) — useful for routing requests through a proxy or private gateway instead of the standard AWS Bedrock endpoint for `bedrockRegion`.
 
 #### Loop Protection & Security Limits
 
@@ -167,6 +167,7 @@ const llm = createLLM({
 | `bedrockSecretAccessKey`    | Bedrock SigV4 secret access key     | `process.env.AWS_SECRET_ACCESS_KEY` |
 | `bedrockSessionToken`       | Bedrock SigV4 session token         | `process.env.AWS_SESSION_TOKEN`   |
 | `bedrockRegion`             | AWS region for Bedrock              | `process.env.AWS_REGION` (`us-east-1`) |
+| `bedrockApiBase`            | Bedrock custom endpoint override    | `process.env.BEDROCK_API_BASE`    |
 | `bedrockGuardrailIdentifier`| Bedrock Guardrail ID                | `process.env.AWS_GUARDRAIL_ID`    |
 | `bedrockGuardrailVersion`   | Bedrock Guardrail version           | `process.env.AWS_GUARDRAIL_VERSION` |
 | `provider`                  | Active provider name (Zero-Config)  | `process.env.NODELLM_PROVIDER`    |

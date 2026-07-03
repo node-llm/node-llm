@@ -23,6 +23,16 @@ describe("BedrockProvider", () => {
       expect(provider.id).toBe("bedrock");
       expect(provider.apiBase()).toBe("https://bedrock-runtime.us-west-2.amazonaws.com");
     });
+
+    it("should use a custom apiBase override instead of the region-based endpoint", () => {
+      const provider = new BedrockProvider({
+        region: "us-east-1",
+        apiKey: "test-api-key",
+        apiBase: "https://bedrock-proxy.internal.example.com"
+      });
+
+      expect(provider.apiBase()).toBe("https://bedrock-proxy.internal.example.com");
+    });
   });
 
   describe("defaultModel", () => {

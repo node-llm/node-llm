@@ -16,7 +16,7 @@ export class BedrockImage {
 
   constructor(config: BedrockConfig) {
     this.config = config;
-    this.baseUrl = getBedrockEndpoint(config.region);
+    this.baseUrl = getBedrockEndpoint(config.region, config.apiBase);
   }
 
   /**
