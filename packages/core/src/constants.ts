@@ -7,6 +7,7 @@ export enum ToolExecutionMode {
 export const DEFAULT_MAX_TOOL_CALLS = 5;
 export const DEFAULT_MAX_RETRIES = 2;
 export const DEFAULT_TOOL_EXECUTION = ToolExecutionMode.AUTO;
+export const DEFAULT_TOOL_CONCURRENCY = false;
 export const DEFAULT_REQUEST_TIMEOUT = 30000; // 30 seconds
 export const DEFAULT_MAX_TOKENS = 4096; // 4K tokens output limit
 

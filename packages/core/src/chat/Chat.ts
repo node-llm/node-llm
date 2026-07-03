@@ -87,6 +87,10 @@ export class Chat<S = unknown> {
       this.options.toolExecution = config.toolExecution || ToolExecutionMode.AUTO;
     }
 
+    if (this.options.toolConcurrency === undefined) {
+      this.options.toolConcurrency = config.toolConcurrency;
+    }
+
     if (options.tools) {
       const toolList = options.tools;
       this.options.tools = []; // Clear and re-add via normalized method
@@ -420,6 +424,16 @@ export class Chat<S = unknown> {
    */
   withToolExecution(mode: ToolExecutionMode): this {
     this.options.toolExecution = mode;
+    return this;
+  }
+
+  /**
+   * Enable or disable concurrent execution of independent tool calls
+   * returned in the same turn. Disabled ("confirm" mode always runs
+   * sequentially since approval is interactive).
+   */
+  withToolConcurrency(enabled: boolean): this {
+    this.options.toolConcurrency = enabled;
     return this;
   }
 

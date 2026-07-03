@@ -33,6 +33,12 @@ export interface NodeLLMConfig {
   requestTimeout?: number;
   maxTokens?: number;
   toolExecution?: ToolExecutionMode;
+  /**
+   * When true, independent tool calls returned in the same turn are executed
+   * concurrently instead of one at a time. Opt-in, overridable per-chat via
+   * `chat.withToolConcurrency()`.
+   */
+  toolConcurrency?: boolean;
   provider?: string;
 }
 
@@ -42,6 +48,7 @@ import {
   DEFAULT_REQUEST_TIMEOUT,
   DEFAULT_MAX_TOKENS,
   DEFAULT_TOOL_EXECUTION,
+  DEFAULT_TOOL_CONCURRENCY,
   DEFAULT_OPENAI_BASE_URL,
   DEFAULT_ANTHROPIC_BASE_URL,
   DEFAULT_GEMINI_BASE_URL,
@@ -262,6 +269,7 @@ export class Configuration implements NodeLLMConfig {
   public requestTimeout: number = DEFAULT_REQUEST_TIMEOUT;
   public maxTokens: number = DEFAULT_MAX_TOKENS;
   public toolExecution: ToolExecutionMode = DEFAULT_TOOL_EXECUTION;
+  public toolConcurrency: boolean = DEFAULT_TOOL_CONCURRENCY;
 
   /**
    * Returns a plain object with all configuration values.

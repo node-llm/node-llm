@@ -64,6 +64,10 @@ export class ChatStream {
     if (!this.options.toolExecution) {
       this.options.toolExecution = config.toolExecution || ToolExecutionMode.AUTO;
     }
+
+    if (this.options.toolConcurrency === undefined) {
+      this.options.toolConcurrency = config.toolConcurrency;
+    }
   }
 
   get history(): readonly Message[] {

@@ -33,6 +33,11 @@ export interface ChatOptions {
   maxToolCalls?: number;
   requestTimeout?: number;
   toolExecution?: ToolExecutionMode;
+  /**
+   * When true, independent tool calls returned in the same turn are executed
+   * concurrently instead of one at a time. Defaults to `config.toolConcurrency`.
+   */
+  toolConcurrency?: boolean;
   toolChoice?: ToolChoice;
   toolCalls?: "one" | "many" | number;
   onConfirmToolCall?: (toolCall: unknown) => Promise<boolean> | boolean;
