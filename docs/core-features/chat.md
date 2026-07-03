@@ -249,7 +249,7 @@ const response = await chat
 
 ---
 
-## Lifecycle Events <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">Enhanced in v1.13.0</span>
+## Lifecycle Events <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">Enhanced in v1.5.0</span>
 
 Hook into the chat lifecycle for logging, UI updates, audit trails, or debugging.
 

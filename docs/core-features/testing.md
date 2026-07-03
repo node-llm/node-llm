@@ -7,7 +7,7 @@ permalink: /core-features/testing
 description: Deterministic testing infrastructure for NodeLLM applications. VCR integration and fluent mocking for reliable AI systems.
 ---
 
-# {{ page.title }} <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v0.5.0+</span>
+# {{ page.title }} <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v0.2.0+</span>
 {: .no_toc }
 
 {{ page.description }}
@@ -36,7 +36,7 @@ Deterministic testing infrastructure for NodeLLM-powered AI systems. Built for e
 
 We believe AI testing should never be flaky or expensive. We provide two distinct strategies:
 
-### 1. VCR (Integration Testing) 📼 <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v0.5.0+</span>
+### 1. VCR (Integration Testing) 📼 <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v0.2.0+</span>
 
 **When to use**: To verify your system works with real LLM responses without paying for every test run.
 
@@ -48,7 +48,7 @@ We believe AI testing should never be flaky or expensive. We provide two distinc
  > When `CI=true`, VCR **will never** record new cassettes.
  > If a matching cassette is missing or mismatched, the test fails immediately.
 
-### 2. Mocker (Unit Testing) 🎭 <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v0.5.0+</span>
+### 2. Mocker (Unit Testing) 🎭 <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v0.2.0+</span>
  
  > ⚠️ **Note**
  > The Mocker does **not** attempt to simulate model intelligence or reasoning.
