@@ -38,6 +38,13 @@ import {
   RequestDirective
 } from "../types/Middleware.js";
 import { runMiddleware } from "../utils/middleware-runner.js";
+import {
+  collectHandlers,
+  runAllHandlers,
+  runDirectiveHandlers,
+  runConfirmHandlers,
+  runChainHandlers
+} from "../utils/handler-stacking.js";
 
 export interface AskOptions {
   images?: string[];
@@ -374,12 +381,12 @@ export class Chat<S = unknown> {
   // --- Event Handlers ---
 
   onNewMessage(handler: () => void): this {
-    this.options.onNewMessage = handler;
+    this.options.onNewMessageHandlers = [...(this.options.onNewMessageHandlers ?? []), handler];
     return this;
   }
 
   onEndMessage(handler: (message: ChatResponseString) => void): this {
-    this.options.onEndMessage = handler;
+    this.options.onEndMessageHandlers = [...(this.options.onEndMessageHandlers ?? []), handler];
     return this;
   }
 
@@ -392,18 +399,23 @@ export class Chat<S = unknown> {
   }
 
   /**
-   * Called when a tool call starts.
+   * Called when a tool call starts. Calling this more than once registers
+   * additional handlers rather than replacing the previous one.
    */
   onToolCallStart(handler: (toolCall: unknown) => void): this {
-    this.options.onToolCallStart = handler;
+    this.options.onToolCallStartHandlers = [
+      ...(this.options.onToolCallStartHandlers ?? []),
+      handler
+    ];
     return this;
   }
 
   /**
-   * Called when a tool call ends successfully.
+   * Called when a tool call ends successfully. Calling this more than once
+   * registers additional handlers rather than replacing the previous one.
    */
   onToolCallEnd(handler: (toolCall: unknown, result: unknown) => void): this {
-    this.options.onToolCallEnd = handler;
+    this.options.onToolCallEndHandlers = [...(this.options.onToolCallEndHandlers ?? []), handler];
     return this;
   }
 
@@ -413,7 +425,10 @@ export class Chat<S = unknown> {
       error: Error
     ) => "STOP" | "CONTINUE" | "RETRY" | void | Promise<"STOP" | "CONTINUE" | "RETRY" | void>
   ): this {
-    this.options.onToolCallError = handler;
+    this.options.onToolCallErrorHandlers = [
+      ...(this.options.onToolCallErrorHandlers ?? []),
+      handler
+    ];
     return this;
   }
 
@@ -440,30 +455,42 @@ export class Chat<S = unknown> {
 
   /**
    * Hook for confirming tool execution in "confirm" mode.
-   * Return true to proceed, false to cancel the specific call.
+   * Return true to proceed, false to cancel the specific call. When multiple
+   * handlers are registered, every one of them must approve.
    */
   onConfirmToolCall(handler: (toolCall: unknown) => Promise<boolean> | boolean): this {
-    this.options.onConfirmToolCall = handler;
+    this.options.onConfirmToolCallHandlers = [
+      ...(this.options.onConfirmToolCallHandlers ?? []),
+      handler
+    ];
     return this;
   }
 
   /**
    * Add a hook to process messages before sending to the LLM.
-   * Useful for PII detection, redaction, and input moderation.
+   * Useful for PII detection, redaction, and input moderation. Multiple
+   * hooks chain: each one's output feeds the next.
    */
   beforeRequest(handler: (messages: Message[]) => Promise<Message[] | void>): this {
-    this.options.onBeforeRequest = handler;
+    this.options.onBeforeRequestHandlers = [
+      ...(this.options.onBeforeRequestHandlers ?? []),
+      handler
+    ];
     return this;
   }
 
   /**
    * Add a hook to process the response before returning it.
-   * Useful for output redaction, compliance, and post-moderation.
+   * Useful for output redaction, compliance, and post-moderation. Multiple
+   * hooks chain: each one's output feeds the next.
    */
   afterResponse(
     handler: (response: ChatResponseString) => Promise<ChatResponseString | void>
   ): this {
-    this.options.onAfterResponse = handler;
+    this.options.onAfterResponseHandlers = [
+      ...(this.options.onAfterResponseHandlers ?? []),
+      handler
+    ];
     return this;
   }
 
@@ -531,6 +558,49 @@ export class Chat<S = unknown> {
       state
     };
 
+    const newMessageHandlers = collectHandlers(
+      this.options.onNewMessage,
+      this.options.onNewMessageHandlers
+    );
+    const endMessageHandlers = collectHandlers(
+      this.options.onEndMessage,
+      this.options.onEndMessageHandlers
+    );
+    const beforeRequestHandlers = collectHandlers(
+      this.options.onBeforeRequest,
+      this.options.onBeforeRequestHandlers
+    );
+    const afterResponseHandlers = collectHandlers(
+      this.options.onAfterResponse,
+      this.options.onAfterResponseHandlers
+    );
+    const toolCallStartHandlers = collectHandlers(
+      this.options.onToolCallStart,
+      this.options.onToolCallStartHandlers
+    );
+    const toolCallEndHandlers = collectHandlers(
+      this.options.onToolCallEnd,
+      this.options.onToolCallEndHandlers
+    );
+    const toolCallErrorHandlers = collectHandlers(
+      this.options.onToolCallError,
+      this.options.onToolCallErrorHandlers
+    );
+    const confirmToolCallHandlers = collectHandlers(
+      this.options.onConfirmToolCall,
+      this.options.onConfirmToolCallHandlers
+    );
+    const combinedToolCallStart = toolCallStartHandlers.length
+      ? (call: unknown) => toolCallStartHandlers.forEach((handler) => handler(call))
+      : undefined;
+    const combinedToolCallEnd = toolCallEndHandlers.length
+      ? (call: unknown, result: unknown) =>
+          toolCallEndHandlers.forEach((handler) => handler(call, result))
+      : undefined;
+    const combinedConfirmToolCall = confirmToolCallHandlers.length
+      ? (call: unknown) => runConfirmHandlers(confirmToolCallHandlers, call)
+      : undefined;
+
     try {
       // 1. onRequest Hook
       await runMiddleware(this.middlewares, "onRequest", context);
@@ -564,12 +634,10 @@ export class Chat<S = unknown> {
         };
 
         // --- Content Policy Hooks (Input) ---
-        if (this.options.onBeforeRequest) {
-          const result = await this.options.onBeforeRequest(executeOptions.messages);
-          if (result) {
-            executeOptions.messages = result;
-          }
-        }
+        executeOptions.messages = await runChainHandlers(
+          beforeRequestHandlers,
+          executeOptions.messages
+        );
 
         const trackUsage = (u?: Usage) => {
           if (u) {
@@ -599,7 +667,7 @@ export class Chat<S = unknown> {
         };
 
         // Start generation
-        if (this.options.onNewMessage) this.options.onNewMessage();
+        await runAllHandlers(newMessageHandlers);
         let response = await this.executor.executeChat(executeOptions);
         trackUsage(response.usage);
 
@@ -618,12 +686,7 @@ export class Chat<S = unknown> {
         );
 
         // --- Content Policy Hooks (Output - Turn 1) ---
-        if (this.options.onAfterResponse) {
-          const result = await this.options.onAfterResponse(assistantMessage);
-          if (result) {
-            assistantMessage = result;
-          }
-        }
+        assistantMessage = await runChainHandlers(afterResponseHandlers, assistantMessage);
 
         // Add to history (temporary, might be rolled back on retry)
         this.messages.push({
@@ -633,11 +696,8 @@ export class Chat<S = unknown> {
           usage: response.usage
         });
 
-        if (
-          this.options.onEndMessage &&
-          (!response.tool_calls || response.tool_calls.length === 0)
-        ) {
-          this.options.onEndMessage(assistantMessage);
+        if (!response.tool_calls || response.tool_calls.length === 0) {
+          await runAllHandlers(endMessageHandlers, assistantMessage);
         }
 
         const maxToolCalls = options?.maxToolCalls ?? this.options.maxToolCalls ?? 5;
@@ -663,7 +723,13 @@ export class Chat<S = unknown> {
 
           const outcomes = await executeToolCallOutcomes(
             response.tool_calls,
-            { ...this.options, tools: this.options.tools as unknown as ToolDefinition[] },
+            {
+              ...this.options,
+              tools: this.options.tools as unknown as ToolDefinition[],
+              onToolCallStart: combinedToolCallStart,
+              onToolCallEnd: combinedToolCallEnd,
+              onConfirmToolCall: combinedConfirmToolCall
+            },
             this.middlewares,
             context,
             runConcurrently
@@ -697,9 +763,7 @@ export class Chat<S = unknown> {
                   undefined,
                   "tool_halt"
                 );
-                if (this.options.onEndMessage) {
-                  this.options.onEndMessage(assistantMessage);
-                }
+                await runAllHandlers(endMessageHandlers, assistantMessage);
                 break;
               }
               continue;
@@ -716,7 +780,7 @@ export class Chat<S = unknown> {
 
             const directive =
               middlewareDirective ||
-              (await this.options.onToolCallError?.(toolCall, currentError as Error));
+              (await runDirectiveHandlers(toolCallErrorHandlers, toolCall, currentError as Error));
 
             if (directive === "STOP") throw currentError;
             if (directive === "RETRY") {
@@ -724,8 +788,8 @@ export class Chat<S = unknown> {
                 const toolResult = await ToolHandler.execute(
                   toolCall,
                   this.options.tools as unknown as ToolDefinition[],
-                  this.options.onToolCallStart,
-                  this.options.onToolCallEnd
+                  combinedToolCallStart,
+                  combinedToolCallEnd
                 );
                 await runMiddleware(
                   this.middlewares,
@@ -801,10 +865,7 @@ export class Chat<S = unknown> {
             response.attachments
           );
 
-          if (this.options.onAfterResponse) {
-            const result = await this.options.onAfterResponse(assistantMessage);
-            if (result) assistantMessage = result;
-          }
+          assistantMessage = await runChainHandlers(afterResponseHandlers, assistantMessage);
 
           this.messages.push({
             role: "assistant",
@@ -813,11 +874,8 @@ export class Chat<S = unknown> {
             usage: response.usage
           });
 
-          if (
-            this.options.onEndMessage &&
-            (!response.tool_calls || response.tool_calls.length === 0)
-          ) {
-            this.options.onEndMessage(assistantMessage);
+          if (!response.tool_calls || response.tool_calls.length === 0) {
+            await runAllHandlers(endMessageHandlers, assistantMessage);
           }
         }
 

@@ -24,6 +24,13 @@ import { Middleware, MiddlewareContext, ToolErrorDirective } from "../types/Midd
 import { runMiddleware } from "../utils/middleware-runner.js";
 import { randomUUID } from "node:crypto";
 import { shouldRunToolCallsConcurrently, executeToolCallOutcomes } from "./ToolCallOutcome.js";
+import {
+  collectHandlers,
+  runAllHandlers,
+  runDirectiveHandlers,
+  runConfirmHandlers,
+  runChainHandlers
+} from "../utils/handler-stacking.js";
 
 /**
  * Internal handler for chat streaming logic.
@@ -98,6 +105,49 @@ export class ChatStream {
       const requestId = randomUUID();
       const state: Record<string, unknown> = {};
       const middlewares = options.middlewares || [];
+
+      const newMessageHandlers = collectHandlers(
+        options.onNewMessage,
+        options.onNewMessageHandlers
+      );
+      const endMessageHandlers = collectHandlers(
+        options.onEndMessage,
+        options.onEndMessageHandlers
+      );
+      const beforeRequestHandlers = collectHandlers(
+        options.onBeforeRequest,
+        options.onBeforeRequestHandlers
+      );
+      const afterResponseHandlers = collectHandlers(
+        options.onAfterResponse,
+        options.onAfterResponseHandlers
+      );
+      const toolCallStartHandlers = collectHandlers(
+        options.onToolCallStart,
+        options.onToolCallStartHandlers
+      );
+      const toolCallEndHandlers = collectHandlers(
+        options.onToolCallEnd,
+        options.onToolCallEndHandlers
+      );
+      const toolCallErrorHandlers = collectHandlers(
+        options.onToolCallError,
+        options.onToolCallErrorHandlers
+      );
+      const confirmToolCallHandlers = collectHandlers(
+        options.onConfirmToolCall,
+        options.onConfirmToolCallHandlers
+      );
+      const combinedToolCallStart = toolCallStartHandlers.length
+        ? (call: unknown) => toolCallStartHandlers.forEach((handler) => handler(call))
+        : undefined;
+      const combinedToolCallEnd = toolCallEndHandlers.length
+        ? (call: unknown, result: unknown) =>
+            toolCallEndHandlers.forEach((handler) => handler(call, result))
+        : undefined;
+      const combinedConfirmToolCall = confirmToolCallHandlers.length
+        ? (call: unknown) => runConfirmHandlers(confirmToolCallHandlers, call)
+        : undefined;
 
       // Process Multimodal Content
       let messageContent: MessageContent = content;
@@ -197,12 +247,7 @@ export class ChatStream {
 
           context.messages = [...systemMessages, ...messages];
           let requestMessages = context.messages; // Use up-to-date messages from context
-          if (options.onBeforeRequest) {
-            const result = await options.onBeforeRequest(requestMessages);
-            if (result) {
-              requestMessages = result;
-            }
-          }
+          requestMessages = await runChainHandlers(beforeRequestHandlers, requestMessages);
 
           const streamRequest: any = {
             model,
@@ -228,7 +273,7 @@ export class ChatStream {
 
           for await (const chunk of provider.stream(streamRequest)) {
             if (isFirst) {
-              if (options.onNewMessage) options.onNewMessage();
+              await runAllHandlers(newMessageHandlers);
               isFirst = false;
             }
 
@@ -277,12 +322,7 @@ export class ChatStream {
             options.schema
           );
 
-          if (options.onAfterResponse) {
-            const result = await options.onAfterResponse(assistantResponse);
-            if (result) {
-              assistantResponse = result;
-            }
-          }
+          assistantResponse = await runChainHandlers(afterResponseHandlers, assistantResponse);
 
           messages.push({
             role: "assistant",
@@ -293,9 +333,7 @@ export class ChatStream {
           });
 
           if (!toolCalls || toolCalls.length === 0) {
-            if (options.onEndMessage) {
-              options.onEndMessage(assistantResponse);
-            }
+            await runAllHandlers(endMessageHandlers, assistantResponse);
             break;
           }
 
@@ -311,7 +349,13 @@ export class ChatStream {
 
           const outcomes = await executeToolCallOutcomes(
             toolCalls,
-            { ...options, tools: options.tools as unknown as ToolDefinition[] },
+            {
+              ...options,
+              tools: options.tools as unknown as ToolDefinition[],
+              onToolCallStart: combinedToolCallStart,
+              onToolCallEnd: combinedToolCallEnd,
+              onConfirmToolCall: combinedConfirmToolCall
+            },
             middlewares,
             context,
             runConcurrently
@@ -347,7 +391,8 @@ export class ChatStream {
             );
 
             const directive =
-              middlewareDirective || (await options.onToolCallError?.(toolCall, currentError));
+              middlewareDirective ||
+              (await runDirectiveHandlers(toolCallErrorHandlers, toolCall, currentError));
 
             if (directive === "STOP") {
               throw currentError;
@@ -358,8 +403,8 @@ export class ChatStream {
                 const toolResult = await ToolHandler.execute(
                   toolCall,
                   options.tools as unknown as ToolDefinition[],
-                  options.onToolCallStart,
-                  options.onToolCallEnd
+                  combinedToolCallStart,
+                  combinedToolCallEnd
                 );
                 await runMiddleware(
                   middlewares,
