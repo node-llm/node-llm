@@ -33,7 +33,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -70,7 +70,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -107,7 +107,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -135,16 +135,16 @@
     "pricing": {
       "text_tokens": {
         "standard": {
-          "input_per_million": 3,
-          "output_per_million": 15,
-          "cached_input_per_million": 0.3,
-          "reasoning_output_per_million": 15
+          "input_per_million": 2,
+          "output_per_million": 10,
+          "cached_input_per_million": 0.2,
+          "reasoning_output_per_million": 10
         }
       }
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -183,7 +183,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -221,7 +221,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -249,16 +249,16 @@
     "pricing": {
       "text_tokens": {
         "standard": {
-          "input_per_million": 0.55,
-          "output_per_million": 3.2,
-          "cached_input_per_million": 0.11,
-          "reasoning_output_per_million": 3.2
+          "input_per_million": 0.66,
+          "output_per_million": 3.41,
+          "cached_input_per_million": 0.14,
+          "reasoning_output_per_million": 3.41
         }
       }
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -296,7 +296,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -334,7 +334,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -369,7 +369,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -395,7 +395,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -421,7 +421,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -448,7 +448,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -476,7 +476,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -503,7 +503,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -539,7 +539,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -576,7 +576,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -612,7 +612,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -649,7 +649,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -685,7 +685,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -721,7 +721,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -756,7 +756,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -792,7 +792,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -828,7 +828,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -855,7 +855,45 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
+    }
+  },
+  {
+    "id": "anthropic.claude-fable-5",
+    "name": "Claude Fable 5",
+    "provider": "bedrock",
+    "family": "claude-fable",
+    "created_at": "2026-06-09 00:00:00 UTC",
+    "context_window": 1000000,
+    "max_output_tokens": 128000,
+    "knowledge_cutoff": "2026-01-31",
+    "modalities": {
+      "input": ["text", "image", "pdf"],
+      "output": ["text"]
+    },
+    "capabilities": [
+      "streaming",
+      "reasoning",
+      "chat",
+      "vision",
+      "function_calling",
+      "tools",
+      "structured_output",
+      "json_mode"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 10,
+          "output_per_million": 50,
+          "cached_input_per_million": 1,
+          "reasoning_output_per_million": 50
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -893,7 +931,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -931,7 +969,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -969,7 +1007,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -1007,7 +1045,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -1045,7 +1083,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -1082,7 +1120,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -1120,7 +1158,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -1158,7 +1196,45 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
+    }
+  },
+  {
+    "id": "anthropic.claude-sonnet-5",
+    "name": "Claude Sonnet 5",
+    "provider": "bedrock",
+    "family": "claude-sonnet",
+    "created_at": "2026-06-30 00:00:00 UTC",
+    "context_window": 1000000,
+    "max_output_tokens": 128000,
+    "knowledge_cutoff": "2026-01-31",
+    "modalities": {
+      "input": ["text", "image", "pdf"],
+      "output": ["text"]
+    },
+    "capabilities": [
+      "streaming",
+      "reasoning",
+      "chat",
+      "vision",
+      "function_calling",
+      "tools",
+      "structured_output",
+      "json_mode"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 2,
+          "output_per_million": 10,
+          "cached_input_per_million": 0.2,
+          "reasoning_output_per_million": 10
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -1195,7 +1271,45 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
+    }
+  },
+  {
+    "id": "anthropic/claude-fable-5",
+    "name": "Claude Fable 5",
+    "provider": "openrouter",
+    "family": "claude-fable",
+    "created_at": "2026-06-09 00:00:00 UTC",
+    "context_window": 1000000,
+    "max_output_tokens": 128000,
+    "knowledge_cutoff": "2026-01-31",
+    "modalities": {
+      "input": ["text", "image", "pdf"],
+      "output": ["text"]
+    },
+    "capabilities": [
+      "streaming",
+      "reasoning",
+      "chat",
+      "vision",
+      "function_calling",
+      "tools",
+      "structured_output",
+      "json_mode"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 10,
+          "output_per_million": 50,
+          "cached_input_per_million": 1,
+          "reasoning_output_per_million": 50
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -1233,7 +1347,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -1271,7 +1385,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -1309,7 +1423,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -1347,7 +1461,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -1385,7 +1499,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -1423,7 +1537,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -1461,7 +1575,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -1499,7 +1613,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -1537,44 +1651,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
-    }
-  },
-  {
-    "id": "anthropic/claude-opus-4.6-fast",
-    "name": "Claude Opus 4.6 (Fast)",
-    "provider": "openrouter",
-    "family": "claude-opus",
-    "created_at": "2026-04-07 00:00:00 UTC",
-    "context_window": 1000000,
-    "max_output_tokens": 128000,
-    "modalities": {
-      "input": ["text", "image", "pdf"],
-      "output": ["text"]
-    },
-    "capabilities": [
-      "streaming",
-      "reasoning",
-      "chat",
-      "vision",
-      "function_calling",
-      "tools",
-      "structured_output",
-      "json_mode"
-    ],
-    "pricing": {
-      "text_tokens": {
-        "standard": {
-          "input_per_million": 30,
-          "output_per_million": 150,
-          "cached_input_per_million": 3,
-          "reasoning_output_per_million": 150
-        }
-      }
-    },
-    "metadata": {
-      "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -1612,7 +1689,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -1649,7 +1726,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -1686,7 +1763,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -1723,7 +1800,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -1761,7 +1838,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -1799,7 +1876,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -1837,7 +1914,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -1875,7 +1952,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -1913,7 +1990,45 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
+    }
+  },
+  {
+    "id": "anthropic/claude-sonnet-5",
+    "name": "Claude Sonnet 5",
+    "provider": "openrouter",
+    "family": "claude-sonnet",
+    "created_at": "2026-06-30 00:00:00 UTC",
+    "context_window": 1000000,
+    "max_output_tokens": 128000,
+    "knowledge_cutoff": "2026-01-31",
+    "modalities": {
+      "input": ["text", "image", "pdf"],
+      "output": ["text"]
+    },
+    "capabilities": [
+      "streaming",
+      "reasoning",
+      "chat",
+      "vision",
+      "function_calling",
+      "tools",
+      "structured_output",
+      "json_mode"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 2,
+          "output_per_million": 10,
+          "cached_input_per_million": 0.2,
+          "reasoning_output_per_million": 10
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -1961,7 +2076,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -1997,7 +2112,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -2032,7 +2147,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -2066,7 +2181,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -2104,7 +2219,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -2142,7 +2257,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -2179,7 +2294,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -2217,7 +2332,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -2255,7 +2370,45 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
+    }
+  },
+  {
+    "id": "au.anthropic.claude-sonnet-5",
+    "name": "Claude Sonnet 5 (AU)",
+    "provider": "bedrock",
+    "family": "claude-sonnet",
+    "created_at": "2026-06-30 00:00:00 UTC",
+    "context_window": 1000000,
+    "max_output_tokens": 128000,
+    "knowledge_cutoff": "2026-01-31",
+    "modalities": {
+      "input": ["text", "image", "pdf"],
+      "output": ["text"]
+    },
+    "capabilities": [
+      "streaming",
+      "reasoning",
+      "chat",
+      "vision",
+      "function_calling",
+      "tools",
+      "structured_output",
+      "json_mode"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 2,
+          "output_per_million": 10,
+          "cached_input_per_million": 0.2,
+          "reasoning_output_per_million": 10
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -2310,7 +2463,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -2346,7 +2499,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -2382,7 +2535,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -2418,7 +2571,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -2454,7 +2607,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -2482,7 +2635,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -2508,7 +2661,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -2534,7 +2687,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -2587,7 +2740,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.550Z"
     }
   },
   {
@@ -2624,7 +2777,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.206Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -2661,7 +2814,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -2698,7 +2851,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -2736,7 +2889,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -2773,7 +2926,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -2810,7 +2963,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -2847,7 +3000,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -2885,7 +3038,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -2922,7 +3075,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -2960,7 +3113,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -2998,7 +3151,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -3036,7 +3189,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -3074,7 +3227,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -3112,7 +3265,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.206Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -3150,7 +3303,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -3188,7 +3341,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -3226,7 +3379,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -3264,7 +3417,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -3302,7 +3455,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -3340,7 +3493,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.206Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -3378,7 +3531,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -3416,7 +3569,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -3454,7 +3607,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -3492,7 +3645,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -3530,7 +3683,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -3568,7 +3721,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.206Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -3606,7 +3759,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -3644,7 +3797,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -3682,7 +3835,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -3720,7 +3873,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.206Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -3758,7 +3911,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -3796,7 +3949,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.206Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -3834,7 +3987,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -3871,7 +4024,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -3909,7 +4062,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -3946,7 +4099,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.206Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -3984,7 +4137,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.206Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -4022,7 +4175,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -4060,7 +4213,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -4098,7 +4251,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -4136,7 +4289,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -4174,7 +4327,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -4212,7 +4365,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -4250,7 +4403,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.206Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -4288,7 +4441,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -4326,7 +4479,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -4364,7 +4517,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.206Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -4402,7 +4555,121 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.206Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
+    }
+  },
+  {
+    "id": "claude-sonnet-5",
+    "name": "Claude Sonnet 5",
+    "provider": "azure",
+    "family": "claude-sonnet",
+    "created_at": "2026-06-30 00:00:00 UTC",
+    "context_window": 1000000,
+    "max_output_tokens": 128000,
+    "knowledge_cutoff": "2026-01-31",
+    "modalities": {
+      "input": ["text", "image", "pdf"],
+      "output": ["text"]
+    },
+    "capabilities": [
+      "streaming",
+      "reasoning",
+      "chat",
+      "vision",
+      "function_calling",
+      "tools",
+      "structured_output",
+      "json_mode"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 2,
+          "output_per_million": 10,
+          "cached_input_per_million": 0.2,
+          "reasoning_output_per_million": 10
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "last_synced": "2026-07-03T17:30:18.551Z"
+    }
+  },
+  {
+    "id": "claude-sonnet-5",
+    "name": "Claude Sonnet 5",
+    "provider": "anthropic",
+    "family": "claude-sonnet",
+    "created_at": "2026-06-30 00:00:00 UTC",
+    "context_window": 1000000,
+    "max_output_tokens": 128000,
+    "knowledge_cutoff": "2026-01-31",
+    "modalities": {
+      "input": ["text", "image", "pdf"],
+      "output": ["text"]
+    },
+    "capabilities": [
+      "streaming",
+      "reasoning",
+      "chat",
+      "vision",
+      "function_calling",
+      "tools",
+      "structured_output",
+      "json_mode"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 2,
+          "output_per_million": 10,
+          "cached_input_per_million": 0.2,
+          "reasoning_output_per_million": 10
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "last_synced": "2026-07-03T17:30:18.551Z"
+    }
+  },
+  {
+    "id": "claude-sonnet-5@default",
+    "name": "Claude Sonnet 5",
+    "provider": "gemini",
+    "family": "claude-sonnet",
+    "created_at": "2026-06-30 00:00:00 UTC",
+    "context_window": 1000000,
+    "max_output_tokens": 128000,
+    "knowledge_cutoff": "2026-01-31",
+    "modalities": {
+      "input": ["text", "image", "pdf"],
+      "output": ["text"]
+    },
+    "capabilities": [
+      "streaming",
+      "reasoning",
+      "chat",
+      "vision",
+      "function_calling",
+      "tools",
+      "structured_output",
+      "json_mode"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 2,
+          "output_per_million": 10,
+          "cached_input_per_million": 0.2,
+          "reasoning_output_per_million": 10
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -4437,7 +4704,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -4472,7 +4739,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -4540,7 +4807,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.201Z"
+      "last_synced": "2026-07-03T17:30:18.550Z"
     }
   },
   {
@@ -4578,7 +4845,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -4616,7 +4883,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.206Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -4644,7 +4911,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -4680,7 +4947,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -4716,7 +4983,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.206Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -4751,7 +5018,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -4786,7 +5053,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.206Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -4821,7 +5088,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -4856,7 +5123,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -4883,7 +5150,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -4910,7 +5177,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.206Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -4937,7 +5204,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -4964,7 +5231,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -4991,7 +5258,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -5018,7 +5285,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -5046,7 +5313,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -5081,7 +5348,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -5116,7 +5383,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -5144,7 +5411,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -5179,7 +5446,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -5329,7 +5596,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -5364,7 +5631,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.206Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -5400,7 +5667,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.206Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -5436,7 +5703,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.206Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -5464,7 +5731,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -5492,7 +5759,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -5528,7 +5795,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -5564,7 +5831,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.206Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -5593,7 +5860,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.206Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -5628,7 +5895,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -5663,7 +5930,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.206Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -5699,7 +5966,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -5735,7 +6002,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -5771,7 +6038,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -5807,7 +6074,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -5835,7 +6102,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -5863,7 +6130,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -5891,7 +6158,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -5928,7 +6195,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.206Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -5956,7 +6223,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -5993,7 +6260,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.206Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -6029,7 +6296,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -6065,7 +6332,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -6101,7 +6368,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -6136,7 +6403,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -6163,16 +6430,16 @@
     "pricing": {
       "text_tokens": {
         "standard": {
-          "input_per_million": 0.2,
-          "output_per_million": 0.77,
+          "input_per_million": 0.24,
+          "output_per_million": 0.9,
           "cached_input_per_million": 0.135,
-          "reasoning_output_per_million": 0.77
+          "reasoning_output_per_million": 0.9
         }
       }
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -6209,7 +6476,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -6245,7 +6512,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -6282,7 +6549,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -6310,7 +6577,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -6347,7 +6614,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -6384,7 +6651,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -6420,7 +6687,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -6429,8 +6696,8 @@
     "provider": "openrouter",
     "family": "deepseek-flash",
     "created_at": "2026-04-24 00:00:00 UTC",
-    "context_window": 1000000,
-    "max_output_tokens": 65536,
+    "context_window": 1048576,
+    "max_output_tokens": 16384,
     "knowledge_cutoff": "2025-05",
     "modalities": {
       "input": ["text"],
@@ -6450,14 +6717,14 @@
         "standard": {
           "input_per_million": 0.09,
           "output_per_million": 0.18,
-          "cached_input_per_million": 0.02,
+          "cached_input_per_million": 0.018,
           "reasoning_output_per_million": 0.18
         }
       }
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -6494,7 +6761,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -6529,7 +6796,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.201Z"
+      "last_synced": "2026-07-03T17:30:18.550Z"
     }
   },
   {
@@ -6564,7 +6831,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.201Z"
+      "last_synced": "2026-07-03T17:30:18.550Z"
     }
   },
   {
@@ -6599,7 +6866,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.201Z"
+      "last_synced": "2026-07-03T17:30:18.550Z"
     }
   },
   {
@@ -6634,7 +6901,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.201Z"
+      "last_synced": "2026-07-03T17:30:18.550Z"
     }
   },
   {
@@ -6669,7 +6936,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.201Z"
+      "last_synced": "2026-07-03T17:30:18.550Z"
     }
   },
   {
@@ -6704,7 +6971,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.201Z"
+      "last_synced": "2026-07-03T17:30:18.550Z"
     }
   },
   {
@@ -6771,7 +7038,7 @@
     "max_output_tokens": 128000,
     "knowledge_cutoff": "2026-01-31",
     "modalities": {
-      "input": ["text", "image"],
+      "input": ["text", "image", "pdf"],
       "output": ["text"]
     },
     "capabilities": [
@@ -6796,7 +7063,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -6834,7 +7101,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -6872,7 +7139,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -6910,7 +7177,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -6948,7 +7215,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -6985,7 +7252,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -7023,7 +7290,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -7061,7 +7328,45 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
+    }
+  },
+  {
+    "id": "eu.anthropic.claude-sonnet-5",
+    "name": "Claude Sonnet 5 (EU)",
+    "provider": "bedrock",
+    "family": "claude-sonnet",
+    "created_at": "2026-06-30 00:00:00 UTC",
+    "context_window": 1000000,
+    "max_output_tokens": 128000,
+    "knowledge_cutoff": "2026-01-31",
+    "modalities": {
+      "input": ["text", "image", "pdf"],
+      "output": ["text"]
+    },
+    "capabilities": [
+      "streaming",
+      "reasoning",
+      "chat",
+      "vision",
+      "function_calling",
+      "tools",
+      "structured_output",
+      "json_mode"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 2.2,
+          "output_per_million": 11,
+          "cached_input_per_million": 0.22,
+          "reasoning_output_per_million": 11
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -7099,7 +7404,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.201Z"
+      "last_synced": "2026-07-03T17:30:18.550Z"
     }
   },
   {
@@ -7237,7 +7542,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.201Z"
+      "last_synced": "2026-07-03T17:30:18.550Z"
     }
   },
   {
@@ -7604,7 +7909,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.201Z"
+      "last_synced": "2026-07-03T17:30:18.550Z"
     }
   },
   {
@@ -7643,7 +7948,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.206Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -7704,7 +8009,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.201Z"
+      "last_synced": "2026-07-03T17:30:18.550Z"
     }
   },
   {
@@ -7775,7 +8080,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.201Z"
+      "last_synced": "2026-07-03T17:30:18.550Z"
     }
   },
   {
@@ -7814,7 +8119,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.206Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -7874,7 +8179,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.201Z"
+      "last_synced": "2026-07-03T17:30:18.550Z"
     }
   },
   {
@@ -7902,7 +8207,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.206Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -7941,7 +8246,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.201Z"
+      "last_synced": "2026-07-03T17:30:18.550Z"
     }
   },
   {
@@ -7980,7 +8285,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.206Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -8077,7 +8382,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.201Z"
+      "last_synced": "2026-07-03T17:30:18.550Z"
     }
   },
   {
@@ -8105,7 +8410,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.206Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -8144,7 +8449,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.201Z"
+      "last_synced": "2026-07-03T17:30:18.550Z"
     }
   },
   {
@@ -8183,7 +8488,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.206Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -8211,7 +8516,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.201Z"
+      "last_synced": "2026-07-03T17:30:18.550Z"
     }
   },
   {
@@ -8250,7 +8555,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.201Z"
+      "last_synced": "2026-07-03T17:30:18.550Z"
     }
   },
   {
@@ -8278,7 +8583,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.201Z"
+      "last_synced": "2026-07-03T17:30:18.550Z"
     }
   },
   {
@@ -8317,7 +8622,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.201Z"
+      "last_synced": "2026-07-03T17:30:18.550Z"
     }
   },
   {
@@ -8356,7 +8661,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.206Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -8395,7 +8700,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.201Z"
+      "last_synced": "2026-07-03T17:30:18.550Z"
     }
   },
   {
@@ -8434,7 +8739,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.206Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -8473,7 +8778,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.201Z"
+      "last_synced": "2026-07-03T17:30:18.550Z"
     }
   },
   {
@@ -8512,7 +8817,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.206Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -8551,7 +8856,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.201Z"
+      "last_synced": "2026-07-03T17:30:18.550Z"
     }
   },
   {
@@ -8590,7 +8895,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.206Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -8629,7 +8934,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.201Z"
+      "last_synced": "2026-07-03T17:30:18.550Z"
     }
   },
   {
@@ -8668,7 +8973,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.206Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -8728,7 +9033,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.201Z"
+      "last_synced": "2026-07-03T17:30:18.550Z"
     }
   },
   {
@@ -8756,7 +9061,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.206Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -8920,7 +9225,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.201Z"
+      "last_synced": "2026-07-03T17:30:18.550Z"
     }
   },
   {
@@ -8959,7 +9264,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.206Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -8998,7 +9303,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.201Z"
+      "last_synced": "2026-07-03T17:30:18.550Z"
     }
   },
   {
@@ -9037,7 +9342,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.206Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -9173,7 +9478,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.201Z"
+      "last_synced": "2026-07-03T17:30:18.550Z"
     }
   },
   {
@@ -9208,7 +9513,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.201Z"
+      "last_synced": "2026-07-03T17:30:18.550Z"
     }
   },
   {
@@ -9221,7 +9526,7 @@
     "max_output_tokens": 128000,
     "knowledge_cutoff": "2026-01-31",
     "modalities": {
-      "input": ["text", "image"],
+      "input": ["text", "image", "pdf"],
       "output": ["text"]
     },
     "capabilities": [
@@ -9246,7 +9551,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -9284,7 +9589,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -9322,7 +9627,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -9360,7 +9665,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -9398,7 +9703,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -9435,7 +9740,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -9473,7 +9778,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -9511,7 +9816,45 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
+    }
+  },
+  {
+    "id": "global.anthropic.claude-sonnet-5",
+    "name": "Claude Sonnet 5 (Global)",
+    "provider": "bedrock",
+    "family": "claude-sonnet",
+    "created_at": "2026-06-30 00:00:00 UTC",
+    "context_window": 1000000,
+    "max_output_tokens": 128000,
+    "knowledge_cutoff": "2026-01-31",
+    "modalities": {
+      "input": ["text", "image", "pdf"],
+      "output": ["text"]
+    },
+    "capabilities": [
+      "streaming",
+      "reasoning",
+      "chat",
+      "vision",
+      "function_calling",
+      "tools",
+      "structured_output",
+      "json_mode"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 2,
+          "output_per_million": 10,
+          "cached_input_per_million": 0.2,
+          "reasoning_output_per_million": 10
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -9539,7 +9882,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -9575,7 +9918,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -9610,7 +9953,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -9649,7 +9992,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -9688,7 +10031,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -9724,7 +10067,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -9763,7 +10106,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -9802,7 +10145,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -9841,7 +10184,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -9880,7 +10223,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -9919,7 +10262,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -9958,7 +10301,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -9997,7 +10340,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -10036,7 +10379,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -10074,7 +10417,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -10111,7 +10454,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -10146,7 +10489,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -10182,7 +10525,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -10221,7 +10564,35 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
+    }
+  },
+  {
+    "id": "google/gemini-3.1-flash-lite-image",
+    "name": "Nano Banana 2 Lite (Gemini 3.1 Flash Lite Image)",
+    "provider": "openrouter",
+    "family": "gemini",
+    "created_at": "2026-06-30 00:00:00 UTC",
+    "context_window": 65536,
+    "max_output_tokens": 66000,
+    "knowledge_cutoff": "2025-01-01",
+    "modalities": {
+      "input": ["image", "text"],
+      "output": ["image", "text"]
+    },
+    "capabilities": ["streaming", "reasoning", "chat", "vision", "image_generation"],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 0.25,
+          "output_per_million": 1.5,
+          "reasoning_output_per_million": 1.5
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -10260,7 +10631,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -10299,7 +10670,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -10338,7 +10709,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -10377,7 +10748,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -10416,7 +10787,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -10444,7 +10815,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -10480,7 +10851,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -10516,7 +10887,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -10544,7 +10915,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -10572,7 +10943,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -10608,7 +10979,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -10644,7 +11015,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -10681,7 +11052,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -10717,7 +11088,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -10744,7 +11115,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -10771,7 +11142,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -10800,7 +11171,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.201Z"
+      "last_synced": "2026-07-03T17:30:18.550Z"
     }
   },
   {
@@ -10855,7 +11226,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -10883,7 +11254,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -10911,7 +11282,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -10939,7 +11310,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -10967,7 +11338,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -10995,7 +11366,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -11050,7 +11421,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -11078,7 +11449,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -11160,7 +11531,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -11188,7 +11559,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.206Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -11251,7 +11622,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.550Z"
     }
   },
   {
@@ -11286,7 +11657,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -11321,7 +11692,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.206Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -11441,7 +11812,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -11476,7 +11847,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -11512,7 +11883,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.550Z"
     }
   },
   {
@@ -11548,7 +11919,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -11584,7 +11955,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -11678,7 +12049,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -11714,7 +12085,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -11751,7 +12122,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.550Z"
     }
   },
   {
@@ -11788,7 +12159,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -11825,7 +12196,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -11894,7 +12265,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.550Z"
     }
   },
   {
@@ -11931,7 +12302,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -11968,7 +12339,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -12037,7 +12408,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.550Z"
     }
   },
   {
@@ -12074,7 +12445,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -12111,7 +12482,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -12238,7 +12609,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.550Z"
     }
   },
   {
@@ -12275,7 +12646,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -12312,7 +12683,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.206Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -12377,7 +12748,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.550Z"
     }
   },
   {
@@ -12414,7 +12785,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.550Z"
     }
   },
   {
@@ -12451,7 +12822,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.550Z"
     }
   },
   {
@@ -12596,7 +12967,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.550Z"
     }
   },
   {
@@ -12633,7 +13004,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -12670,7 +13041,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -13174,7 +13545,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.201Z"
+      "last_synced": "2026-07-03T17:30:18.550Z"
     }
   },
   {
@@ -13212,7 +13583,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -13250,7 +13621,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.206Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -13311,7 +13682,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -13340,7 +13711,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.206Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -13369,7 +13740,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.550Z"
     }
   },
   {
@@ -13407,7 +13778,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.550Z"
     }
   },
   {
@@ -13445,7 +13816,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -13483,7 +13854,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -13521,7 +13892,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.550Z"
     }
   },
   {
@@ -13559,7 +13930,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -13597,7 +13968,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -13667,7 +14038,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.550Z"
     }
   },
   {
@@ -13705,7 +14076,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -13743,7 +14114,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -13812,7 +14183,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.201Z"
+      "last_synced": "2026-07-03T17:30:18.550Z"
     }
   },
   {
@@ -13849,7 +14220,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -13886,7 +14257,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.206Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -14011,7 +14382,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.550Z"
     }
   },
   {
@@ -14052,7 +14423,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -14093,7 +14464,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -14162,7 +14533,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -14203,7 +14574,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -14241,7 +14612,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.550Z"
     }
   },
   {
@@ -14279,7 +14650,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.550Z"
     }
   },
   {
@@ -14320,7 +14691,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -14361,7 +14732,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -14399,7 +14770,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.550Z"
     }
   },
   {
@@ -14437,7 +14808,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -14475,7 +14846,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.550Z"
     }
   },
   {
@@ -14513,7 +14884,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -14551,7 +14922,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -14589,7 +14960,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.550Z"
     }
   },
   {
@@ -14627,7 +14998,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -14665,7 +15036,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -14703,7 +15074,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -14741,7 +15112,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.206Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -14779,7 +15150,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.550Z"
     }
   },
   {
@@ -14817,7 +15188,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.550Z"
     }
   },
   {
@@ -14855,7 +15226,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -14893,7 +15264,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -14930,7 +15301,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.201Z"
+      "last_synced": "2026-07-03T17:30:18.550Z"
     }
   },
   {
@@ -14968,7 +15339,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -15005,7 +15376,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.550Z"
     }
   },
   {
@@ -15043,7 +15414,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.550Z"
     }
   },
   {
@@ -15081,7 +15452,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -15119,7 +15490,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -15157,7 +15528,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.550Z"
     }
   },
   {
@@ -15195,7 +15566,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.550Z"
     }
   },
   {
@@ -15233,7 +15604,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -15271,7 +15642,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -15309,7 +15680,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.550Z"
     }
   },
   {
@@ -15347,7 +15718,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -15385,7 +15756,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -15423,7 +15794,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.550Z"
     }
   },
   {
@@ -15461,7 +15832,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -15499,7 +15870,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -15536,7 +15907,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.550Z"
     }
   },
   {
@@ -15573,7 +15944,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -15610,7 +15981,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -15648,7 +16019,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -15686,7 +16057,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -15724,7 +16095,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -15761,7 +16132,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.550Z"
     }
   },
   {
@@ -15895,7 +16266,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.550Z"
     }
   },
   {
@@ -15923,7 +16294,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -15949,7 +16320,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.550Z"
     }
   },
   {
@@ -15975,7 +16346,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.550Z"
     }
   },
   {
@@ -16003,7 +16374,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -16031,7 +16402,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.550Z"
     }
   },
   {
@@ -16059,7 +16430,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -16327,7 +16698,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -16364,7 +16735,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -16399,7 +16770,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -16435,7 +16806,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -16473,7 +16844,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -16511,7 +16882,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -16547,7 +16918,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.201Z"
+      "last_synced": "2026-07-03T17:30:18.549Z"
     }
   },
   {
@@ -16584,7 +16955,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.201Z"
+      "last_synced": "2026-07-03T17:30:18.549Z"
     }
   },
   {
@@ -16612,7 +16983,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.197Z"
+      "last_synced": "2026-07-03T17:30:18.548Z"
     }
   },
   {
@@ -16649,7 +17020,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.201Z"
+      "last_synced": "2026-07-03T17:30:18.549Z"
     }
   },
   {
@@ -16686,7 +17057,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.201Z"
+      "last_synced": "2026-07-03T17:30:18.549Z"
     }
   },
   {
@@ -16726,7 +17097,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.201Z"
+      "last_synced": "2026-07-03T17:30:18.549Z"
     }
   },
   {
@@ -16752,7 +17123,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.201Z"
+      "last_synced": "2026-07-03T17:30:18.549Z"
     }
   },
   {
@@ -16778,7 +17149,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.201Z"
+      "last_synced": "2026-07-03T17:30:18.549Z"
     }
   },
   {
@@ -16804,7 +17175,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -16830,7 +17201,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -16857,7 +17228,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -16884,7 +17255,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -16919,7 +17290,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -17039,7 +17410,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -17074,7 +17445,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -17109,7 +17480,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -17145,7 +17516,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -17172,7 +17543,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -17199,7 +17570,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -17237,7 +17608,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -17274,7 +17645,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -17312,7 +17683,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -17350,7 +17721,45 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
+    }
+  },
+  {
+    "id": "jp.anthropic.claude-sonnet-5",
+    "name": "Claude Sonnet 5 (JP)",
+    "provider": "bedrock",
+    "family": "claude-sonnet",
+    "created_at": "2026-06-30 00:00:00 UTC",
+    "context_window": 1000000,
+    "max_output_tokens": 128000,
+    "knowledge_cutoff": "2026-01-31",
+    "modalities": {
+      "input": ["text", "image", "pdf"],
+      "output": ["text"]
+    },
+    "capabilities": [
+      "streaming",
+      "reasoning",
+      "chat",
+      "vision",
+      "function_calling",
+      "tools",
+      "structured_output",
+      "json_mode"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 2,
+          "output_per_million": 10,
+          "cached_input_per_million": 0.2,
+          "reasoning_output_per_million": 10
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -17387,7 +17796,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -17424,7 +17833,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -17461,7 +17870,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -17498,7 +17907,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -17535,7 +17944,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -17572,7 +17981,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -17607,7 +18016,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -17642,7 +18051,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.201Z"
+      "last_synced": "2026-07-03T17:30:18.550Z"
     }
   },
   {
@@ -17701,7 +18110,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -17729,7 +18138,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -17765,7 +18174,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -17800,7 +18209,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -17836,7 +18245,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -17872,7 +18281,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.206Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -17908,7 +18317,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -17944,7 +18353,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -17979,7 +18388,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -18014,7 +18423,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -18049,7 +18458,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -18085,7 +18494,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -18121,7 +18530,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -18157,7 +18566,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -18193,7 +18602,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -18228,7 +18637,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.201Z"
+      "last_synced": "2026-07-03T17:30:18.550Z"
     }
   },
   {
@@ -18263,7 +18672,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.201Z"
+      "last_synced": "2026-07-03T17:30:18.550Z"
     }
   },
   {
@@ -18291,7 +18700,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -18319,7 +18728,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -18347,7 +18756,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -18375,7 +18784,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -18403,7 +18812,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.206Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -18438,7 +18847,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -18473,7 +18882,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -18508,7 +18917,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -18543,7 +18952,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -18578,7 +18987,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -18613,7 +19022,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -18641,7 +19050,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -18676,7 +19085,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -18711,7 +19120,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -18739,7 +19148,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -18767,7 +19176,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -18795,7 +19204,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -18823,7 +19232,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -18858,7 +19267,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -18893,7 +19302,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -18929,7 +19338,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -18965,7 +19374,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -19001,7 +19410,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -19029,7 +19438,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -19056,7 +19465,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -19083,7 +19492,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -19118,7 +19527,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -19153,7 +19562,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -19188,7 +19597,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -19224,7 +19633,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -19260,7 +19669,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -19295,7 +19704,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.206Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -19331,7 +19740,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.206Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -19359,35 +19768,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
-    }
-  },
-  {
-    "id": "microsoft/phi-4-mini-instruct",
-    "name": "Phi 4 Mini Instruct",
-    "provider": "openrouter",
-    "family": "phi",
-    "created_at": "2025-10-17 00:00:00 UTC",
-    "context_window": 128000,
-    "max_output_tokens": 128000,
-    "modalities": {
-      "input": ["text"],
-      "output": ["text"]
-    },
-    "capabilities": ["streaming", "chat", "structured_output", "json_mode"],
-    "pricing": {
-      "text_tokens": {
-        "standard": {
-          "input_per_million": 0.08,
-          "output_per_million": 0.35,
-          "cached_input_per_million": 0.08,
-          "reasoning_output_per_million": 0.35
-        }
-      }
-    },
-    "metadata": {
-      "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -19414,7 +19795,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -19449,7 +19830,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -19484,7 +19865,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -19519,7 +19900,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -19547,7 +19928,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -19583,7 +19964,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -19592,8 +19973,8 @@
     "provider": "openrouter",
     "family": "minimax",
     "created_at": "2025-10-27 00:00:00 UTC",
-    "context_window": 196608,
-    "max_output_tokens": 196608,
+    "context_window": 204800,
+    "max_output_tokens": 131072,
     "modalities": {
       "input": ["text"],
       "output": ["text"]
@@ -19611,15 +19992,14 @@
       "text_tokens": {
         "standard": {
           "input_per_million": 0.255,
-          "output_per_million": 1,
-          "cached_input_per_million": 0.03,
-          "reasoning_output_per_million": 1
+          "output_per_million": 1.02,
+          "reasoning_output_per_million": 1.02
         }
       }
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -19647,7 +20027,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -19656,8 +20036,8 @@
     "provider": "openrouter",
     "family": "minimax",
     "created_at": "2025-12-23 00:00:00 UTC",
-    "context_window": 196608,
-    "max_output_tokens": 196608,
+    "context_window": 204800,
+    "max_output_tokens": 131072,
     "modalities": {
       "input": ["text"],
       "output": ["text"]
@@ -19674,16 +20054,16 @@
     "pricing": {
       "text_tokens": {
         "standard": {
-          "input_per_million": 0.29,
-          "output_per_million": 0.95,
+          "input_per_million": 0.3,
+          "output_per_million": 1.2,
           "cached_input_per_million": 0.03,
-          "reasoning_output_per_million": 0.95
+          "reasoning_output_per_million": 1.2
         }
       }
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -19718,7 +20098,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -19753,7 +20133,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -19790,7 +20170,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -19825,7 +20205,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -19860,7 +20240,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -19895,7 +20275,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.201Z"
+      "last_synced": "2026-07-03T17:30:18.550Z"
     }
   },
   {
@@ -19930,7 +20310,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.201Z"
+      "last_synced": "2026-07-03T17:30:18.550Z"
     }
   },
   {
@@ -19957,7 +20337,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.201Z"
+      "last_synced": "2026-07-03T17:30:18.550Z"
     }
   },
   {
@@ -19992,7 +20372,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.201Z"
+      "last_synced": "2026-07-03T17:30:18.550Z"
     }
   },
   {
@@ -20027,7 +20407,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -20062,7 +20442,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -20097,7 +20477,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.201Z"
+      "last_synced": "2026-07-03T17:30:18.550Z"
     }
   },
   {
@@ -20132,7 +20512,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.201Z"
+      "last_synced": "2026-07-03T17:30:18.550Z"
     }
   },
   {
@@ -20167,7 +20547,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.201Z"
+      "last_synced": "2026-07-03T17:30:18.550Z"
     }
   },
   {
@@ -20203,7 +20583,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -20239,7 +20619,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -20274,7 +20654,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.201Z"
+      "last_synced": "2026-07-03T17:30:18.550Z"
     }
   },
   {
@@ -20308,7 +20688,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.201Z"
+      "last_synced": "2026-07-03T17:30:18.550Z"
     }
   },
   {
@@ -20343,7 +20723,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.201Z"
+      "last_synced": "2026-07-03T17:30:18.550Z"
     }
   },
   {
@@ -20378,7 +20758,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.201Z"
+      "last_synced": "2026-07-03T17:30:18.550Z"
     }
   },
   {
@@ -20413,7 +20793,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -20448,7 +20828,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.206Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -20484,7 +20864,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -20520,7 +20900,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.206Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -20555,7 +20935,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.201Z"
+      "last_synced": "2026-07-03T17:30:18.550Z"
     }
   },
   {
@@ -20590,7 +20970,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.201Z"
+      "last_synced": "2026-07-03T17:30:18.550Z"
     }
   },
   {
@@ -20625,7 +21005,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.201Z"
+      "last_synced": "2026-07-03T17:30:18.550Z"
     }
   },
   {
@@ -20659,7 +21039,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -20695,7 +21075,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -20729,7 +21109,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -20764,7 +21144,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -20798,7 +21178,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -20833,7 +21213,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -20868,7 +21248,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -20903,7 +21283,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -20939,7 +21319,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -20976,7 +21356,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -21013,7 +21393,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -21049,7 +21429,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -21085,7 +21465,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -21121,7 +21501,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -21158,7 +21538,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -21195,7 +21575,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -21232,7 +21612,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -21269,7 +21649,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -21305,7 +21685,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -21342,7 +21722,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -21377,7 +21757,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -21414,7 +21794,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -21442,7 +21822,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -21480,7 +21860,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -21508,7 +21888,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -21544,7 +21924,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -21581,7 +21961,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -21618,7 +21998,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -21653,7 +22033,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -21688,7 +22068,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -21723,7 +22103,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -21759,7 +22139,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -21769,7 +22149,7 @@
     "family": "kimi-k2",
     "created_at": "2025-07-11 00:00:00 UTC",
     "context_window": 131072,
-    "max_output_tokens": 32768,
+    "max_output_tokens": 100352,
     "knowledge_cutoff": "2024-12-31",
     "modalities": {
       "input": ["text"],
@@ -21794,7 +22174,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -21804,7 +22184,7 @@
     "family": "kimi-k2",
     "created_at": "2025-09-04 00:00:00 UTC",
     "context_window": 262144,
-    "max_output_tokens": 262144,
+    "max_output_tokens": 100352,
     "knowledge_cutoff": "2024-12-31",
     "modalities": {
       "input": ["text"],
@@ -21829,7 +22209,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -21839,7 +22219,7 @@
     "family": "kimi-thinking",
     "created_at": "2025-11-06 00:00:00 UTC",
     "context_window": 262144,
-    "max_output_tokens": 262144,
+    "max_output_tokens": 100352,
     "knowledge_cutoff": "2024-08",
     "modalities": {
       "input": ["text"],
@@ -21859,14 +22239,14 @@
         "standard": {
           "input_per_million": 0.6,
           "output_per_million": 2.5,
-          "cached_input_per_million": 0.6,
+          "cached_input_per_million": 0.15,
           "reasoning_output_per_million": 2.5
         }
       }
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -21902,7 +22282,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.206Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -21939,7 +22319,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -21968,16 +22348,16 @@
     "pricing": {
       "text_tokens": {
         "standard": {
-          "input_per_million": 0.55,
-          "output_per_million": 3.2,
-          "cached_input_per_million": 0.11,
-          "reasoning_output_per_million": 3.2
+          "input_per_million": 0.66,
+          "output_per_million": 3.41,
+          "cached_input_per_million": 0.14,
+          "reasoning_output_per_million": 3.41
         }
       }
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -22015,7 +22395,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -22042,7 +22422,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -22069,7 +22449,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -22097,7 +22477,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -22125,7 +22505,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -22153,7 +22533,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -22181,7 +22561,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -22209,7 +22589,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -22237,7 +22617,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -22272,7 +22652,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -22307,7 +22687,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -22341,7 +22721,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -22376,7 +22756,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -22411,7 +22791,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -22446,7 +22826,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -22481,7 +22861,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -22518,7 +22898,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -22554,7 +22934,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -22589,7 +22969,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -22624,7 +23004,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -22660,7 +23040,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -22695,7 +23075,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -22722,7 +23102,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -22758,7 +23138,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -22793,7 +23173,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -22831,7 +23211,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.550Z"
     }
   },
   {
@@ -22869,7 +23249,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -22907,7 +23287,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -22976,7 +23356,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -23013,7 +23393,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.206Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -23100,7 +23480,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.550Z"
     }
   },
   {
@@ -23169,7 +23549,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.201Z"
+      "last_synced": "2026-07-03T17:30:18.550Z"
     }
   },
   {
@@ -23207,7 +23587,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -23245,7 +23625,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.206Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -23315,7 +23695,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.550Z"
     }
   },
   {
@@ -23384,7 +23764,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.550Z"
     }
   },
   {
@@ -23421,7 +23801,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -23458,7 +23838,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -23527,7 +23907,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.550Z"
     }
   },
   {
@@ -23596,7 +23976,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.550Z"
     }
   },
   {
@@ -23634,7 +24014,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -23672,7 +24052,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.206Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -23742,7 +24122,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.550Z"
     }
   },
   {
@@ -23849,7 +24229,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.201Z"
+      "last_synced": "2026-07-03T17:30:18.550Z"
     }
   },
   {
@@ -23884,7 +24264,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.201Z"
+      "last_synced": "2026-07-03T17:30:18.550Z"
     }
   },
   {
@@ -23919,7 +24299,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.201Z"
+      "last_synced": "2026-07-03T17:30:18.550Z"
     }
   },
   {
@@ -23954,7 +24334,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.201Z"
+      "last_synced": "2026-07-03T17:30:18.550Z"
     }
   },
   {
@@ -23992,7 +24372,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -24030,7 +24410,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -24065,7 +24445,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -24100,7 +24480,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -24135,7 +24515,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -24170,7 +24550,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -24204,7 +24584,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -24238,7 +24618,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -24273,7 +24653,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -24308,7 +24688,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -24343,7 +24723,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -24371,7 +24751,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -24406,7 +24786,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -24442,7 +24822,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -24477,7 +24857,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -24514,7 +24894,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -24551,7 +24931,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -24588,7 +24968,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -24624,7 +25004,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -24660,7 +25040,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -24697,7 +25077,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -24734,7 +25114,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -24771,7 +25151,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -24808,7 +25188,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -24836,7 +25216,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -24864,7 +25244,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -24902,7 +25282,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -24931,7 +25311,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -24969,7 +25349,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -25006,7 +25386,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -25042,7 +25422,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -25080,7 +25460,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -25118,7 +25498,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -25156,7 +25536,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -25193,7 +25573,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -25231,7 +25611,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -25269,7 +25649,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -25306,7 +25686,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -25344,7 +25724,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -25382,7 +25762,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -25420,7 +25800,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -25458,7 +25838,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -25496,7 +25876,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -25533,7 +25913,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -25571,7 +25951,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -25608,7 +25988,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -25644,7 +26024,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -25682,7 +26062,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -25720,7 +26100,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -25758,7 +26138,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -25794,7 +26174,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -25832,7 +26212,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -25870,7 +26250,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -25907,7 +26287,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -25945,7 +26325,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -25983,7 +26363,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -26020,7 +26400,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -26057,7 +26437,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -26094,7 +26474,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -26130,7 +26510,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -26166,7 +26546,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -26201,7 +26581,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -26236,7 +26616,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.206Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -26271,7 +26651,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -26307,7 +26687,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -26343,7 +26723,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -26378,7 +26758,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.206Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -26414,7 +26794,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -26443,14 +26823,13 @@
         "standard": {
           "input_per_million": 0.075,
           "output_per_million": 0.3,
-          "cached_input_per_million": 0.037,
           "reasoning_output_per_million": 0.3
         }
       }
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -26486,7 +26865,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -26524,7 +26903,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -26552,7 +26931,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -26590,7 +26969,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -26628,7 +27007,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -26666,7 +27045,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -26704,7 +27083,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -26741,7 +27120,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -26779,7 +27158,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -26817,7 +27196,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -26855,7 +27234,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -26892,7 +27271,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -26917,7 +27296,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -26952,7 +27331,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -26977,41 +27356,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
-    }
-  },
-  {
-    "id": "openrouter/owl-alpha",
-    "name": "Owl Alpha",
-    "provider": "openrouter",
-    "family": "alpha",
-    "created_at": "2026-04-28 00:00:00 UTC",
-    "context_window": 1048756,
-    "max_output_tokens": 262144,
-    "modalities": {
-      "input": ["text"],
-      "output": ["text"]
-    },
-    "capabilities": [
-      "streaming",
-      "chat",
-      "function_calling",
-      "tools",
-      "structured_output",
-      "json_mode"
-    ],
-    "pricing": {
-      "text_tokens": {
-        "standard": {
-          "input_per_million": 0,
-          "output_per_million": 0,
-          "reasoning_output_per_million": 0
-        }
-      }
-    },
-    "metadata": {
-      "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -27036,7 +27381,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -27062,7 +27407,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -27098,7 +27443,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -27125,7 +27470,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -27152,7 +27497,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -27179,7 +27524,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -27206,7 +27551,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -27233,7 +27578,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -27261,7 +27606,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -27289,7 +27634,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -27317,7 +27662,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -27345,7 +27690,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -27373,7 +27718,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -27401,7 +27746,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -27429,7 +27774,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -27457,7 +27802,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -27485,7 +27830,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -27513,7 +27858,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.206Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -27541,7 +27886,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -27569,7 +27914,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -27597,7 +27942,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -27625,7 +27970,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.206Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -27653,7 +27998,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -27681,7 +28026,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.206Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -27709,7 +28054,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -27737,7 +28082,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -27772,7 +28117,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -27807,7 +28152,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -27843,7 +28188,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -27879,7 +28224,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -27907,7 +28252,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -27935,7 +28280,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -27963,7 +28308,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -27991,7 +28336,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -28019,7 +28364,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -28047,7 +28392,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -28083,7 +28428,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.201Z"
+      "last_synced": "2026-07-03T17:30:18.550Z"
     }
   },
   {
@@ -28152,7 +28497,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.201Z"
+      "last_synced": "2026-07-03T17:30:18.550Z"
     }
   },
   {
@@ -28187,7 +28532,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -28221,7 +28566,76 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
+    }
+  },
+  {
+    "id": "poolside/laguna-xs-2.1",
+    "name": "Laguna XS 2.1",
+    "provider": "openrouter",
+    "created_at": "2026-07-02 00:00:00 UTC",
+    "context_window": 262144,
+    "max_output_tokens": 32768,
+    "modalities": {
+      "input": ["text"],
+      "output": ["text"]
+    },
+    "capabilities": [
+      "streaming",
+      "reasoning",
+      "chat",
+      "function_calling",
+      "tools",
+      "structured_output",
+      "json_mode"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 0.06,
+          "output_per_million": 0.12,
+          "cached_input_per_million": 0.03,
+          "reasoning_output_per_million": 0.12
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "last_synced": "2026-07-03T17:30:18.553Z"
+    }
+  },
+  {
+    "id": "poolside/laguna-xs-2.1:free",
+    "name": "Laguna XS 2.1 (free)",
+    "provider": "openrouter",
+    "created_at": "2026-07-02 00:00:00 UTC",
+    "context_window": 262144,
+    "max_output_tokens": 32768,
+    "modalities": {
+      "input": ["text"],
+      "output": ["text"]
+    },
+    "capabilities": [
+      "streaming",
+      "reasoning",
+      "chat",
+      "function_calling",
+      "tools",
+      "structured_output",
+      "json_mode"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 0,
+          "output_per_million": 0,
+          "reasoning_output_per_million": 0
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -28256,7 +28670,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -28290,7 +28704,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -28325,7 +28739,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -28361,7 +28775,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -28396,7 +28810,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -28431,7 +28845,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -28466,7 +28880,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -28500,7 +28914,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -28535,7 +28949,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -28570,7 +28984,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -28605,7 +29019,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -28633,7 +29047,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -28669,7 +29083,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -28704,7 +29118,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -28740,7 +29154,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -28769,7 +29183,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -28805,7 +29219,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -28841,7 +29255,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -28876,7 +29290,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -28911,7 +29325,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.206Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -28920,7 +29334,7 @@
     "provider": "openrouter",
     "family": "qwen",
     "created_at": "2025-07-25 00:00:00 UTC",
-    "context_window": 262144,
+    "context_window": 131072,
     "max_output_tokens": 262144,
     "knowledge_cutoff": "2025-06-30",
     "modalities": {
@@ -28939,16 +29353,15 @@
     "pricing": {
       "text_tokens": {
         "standard": {
-          "input_per_million": 0.1,
-          "output_per_million": 0.1,
-          "cached_input_per_million": 0.1,
-          "reasoning_output_per_million": 0.1
+          "input_per_million": 0.1495,
+          "output_per_million": 1.495,
+          "reasoning_output_per_million": 1.495
         }
       }
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -28984,7 +29397,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -29019,7 +29432,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -29028,8 +29441,8 @@
     "provider": "openrouter",
     "family": "qwen",
     "created_at": "2025-08-28 00:00:00 UTC",
-    "context_window": 131072,
-    "max_output_tokens": 131072,
+    "context_window": 81920,
+    "max_output_tokens": 32768,
     "knowledge_cutoff": "2025-06-30",
     "modalities": {
       "input": ["text"],
@@ -29047,16 +29460,15 @@
     "pricing": {
       "text_tokens": {
         "standard": {
-          "input_per_million": 0.08,
-          "output_per_million": 0.4,
-          "cached_input_per_million": 0.08,
-          "reasoning_output_per_million": 0.4
+          "input_per_million": 0.13,
+          "output_per_million": 1.56,
+          "reasoning_output_per_million": 1.56
         }
       }
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -29091,7 +29503,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -29127,7 +29539,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -29136,7 +29548,7 @@
     "provider": "openrouter",
     "family": "qwen",
     "created_at": "2025-04-28 00:00:00 UTC",
-    "context_window": 40960,
+    "context_window": 131072,
     "max_output_tokens": 8192,
     "knowledge_cutoff": "2025-03-31",
     "modalities": {
@@ -29155,16 +29567,15 @@
     "pricing": {
       "text_tokens": {
         "standard": {
-          "input_per_million": 0.05,
-          "output_per_million": 0.4,
-          "cached_input_per_million": 0.05,
-          "reasoning_output_per_million": 0.4
+          "input_per_million": 0.117,
+          "output_per_million": 0.455,
+          "reasoning_output_per_million": 0.455
         }
       }
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -29199,7 +29610,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -29234,7 +29645,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -29270,7 +29681,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -29305,7 +29716,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -29341,7 +29752,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -29376,7 +29787,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -29412,7 +29823,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -29447,7 +29858,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -29482,7 +29893,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -29517,7 +29928,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -29553,7 +29964,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -29590,7 +30001,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -29627,7 +30038,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -29663,7 +30074,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -29700,7 +30111,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -29735,7 +30146,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -29762,15 +30173,15 @@
     "pricing": {
       "text_tokens": {
         "standard": {
-          "input_per_million": 0.08,
-          "output_per_million": 0.5,
-          "reasoning_output_per_million": 0.5
+          "input_per_million": 0.117,
+          "output_per_million": 0.455,
+          "reasoning_output_per_million": 0.455
         }
       }
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -29806,7 +30217,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -29842,7 +30253,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -29878,7 +30289,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -29915,7 +30326,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -29951,7 +30362,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -29987,7 +30398,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -30023,7 +30434,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -30060,7 +30471,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -30096,7 +30507,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -30124,15 +30535,16 @@
     "pricing": {
       "text_tokens": {
         "standard": {
-          "input_per_million": 0.2596,
-          "output_per_million": 2.385,
-          "reasoning_output_per_million": 2.385
+          "input_per_million": 0.285,
+          "output_per_million": 2.4,
+          "cached_input_per_million": 0.15,
+          "reasoning_output_per_million": 2.4
         }
       }
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -30168,7 +30580,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -30204,7 +30616,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -30240,7 +30652,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -30277,7 +30689,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -30313,7 +30725,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -30351,7 +30763,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -30386,7 +30798,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -30414,7 +30826,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -30440,7 +30852,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -30473,13 +30885,14 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
     "id": "sakana/fugu-ultra",
     "name": "Fugu Ultra",
     "provider": "openrouter",
+    "family": "fugu",
     "created_at": "2026-06-24 00:00:00 UTC",
     "context_window": 1000000,
     "max_output_tokens": 128000,
@@ -30509,7 +30922,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -30537,7 +30950,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -30565,7 +30978,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -30601,7 +31014,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -30629,7 +31042,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -30657,7 +31070,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -30684,7 +31097,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -30712,7 +31125,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -30740,7 +31153,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -30795,7 +31208,7 @@
     "provider": "openrouter",
     "created_at": "2026-01-29 00:00:00 UTC",
     "context_window": 262144,
-    "max_output_tokens": 16384,
+    "max_output_tokens": 65536,
     "knowledge_cutoff": "2025-01",
     "modalities": {
       "input": ["text"],
@@ -30813,16 +31226,15 @@
     "pricing": {
       "text_tokens": {
         "standard": {
-          "input_per_million": 0.09,
+          "input_per_million": 0.1,
           "output_per_million": 0.3,
-          "cached_input_per_million": 0.02,
           "reasoning_output_per_million": 0.3
         }
       }
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -30859,7 +31271,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -30885,7 +31297,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -30913,7 +31325,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -30949,7 +31361,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -31041,7 +31453,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.201Z"
+      "last_synced": "2026-07-03T17:30:18.550Z"
     }
   },
   {
@@ -31068,7 +31480,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -31095,7 +31507,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.206Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -31123,7 +31535,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.550Z"
     }
   },
   {
@@ -31150,7 +31562,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -31177,7 +31589,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -31242,7 +31654,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.550Z"
     }
   },
   {
@@ -31269,7 +31681,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -31296,7 +31708,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -31358,7 +31770,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -31385,7 +31797,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -31413,7 +31825,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -31447,7 +31859,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -31580,7 +31992,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -31616,7 +32028,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.205Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -31629,7 +32041,7 @@
     "max_output_tokens": 128000,
     "knowledge_cutoff": "2026-01-31",
     "modalities": {
-      "input": ["text", "image"],
+      "input": ["text", "image", "pdf"],
       "output": ["text"]
     },
     "capabilities": [
@@ -31654,7 +32066,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -31692,7 +32104,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -31730,7 +32142,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -31768,7 +32180,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -31806,7 +32218,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -31844,7 +32256,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -31881,7 +32293,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -31919,7 +32331,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -31957,7 +32369,45 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
+    }
+  },
+  {
+    "id": "us.anthropic.claude-sonnet-5",
+    "name": "Claude Sonnet 5 (US)",
+    "provider": "bedrock",
+    "family": "claude-sonnet",
+    "created_at": "2026-06-30 00:00:00 UTC",
+    "context_window": 1000000,
+    "max_output_tokens": 128000,
+    "knowledge_cutoff": "2026-01-31",
+    "modalities": {
+      "input": ["text", "image", "pdf"],
+      "output": ["text"]
+    },
+    "capabilities": [
+      "streaming",
+      "reasoning",
+      "chat",
+      "vision",
+      "function_calling",
+      "tools",
+      "structured_output",
+      "json_mode"
+    ],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 2,
+          "output_per_million": 10,
+          "cached_input_per_million": 0.2,
+          "reasoning_output_per_million": 10
+        }
+      }
+    },
+    "metadata": {
+      "source": "models.dev",
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -31993,7 +32443,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -32029,7 +32479,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -32065,7 +32515,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -32117,7 +32567,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -32143,7 +32593,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.202Z"
+      "last_synced": "2026-07-03T17:30:18.551Z"
     }
   },
   {
@@ -32178,7 +32628,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -32213,7 +32663,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -32240,7 +32690,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -32278,7 +32728,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -32307,7 +32757,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -32344,7 +32794,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -32381,7 +32831,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -32418,7 +32868,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -32455,7 +32905,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -32493,7 +32943,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -32530,7 +32980,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.554Z"
     }
   },
   {
@@ -32567,7 +33017,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -32604,7 +33054,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -32642,7 +33092,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -32679,7 +33129,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -32717,7 +33167,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -32754,7 +33204,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -32791,7 +33241,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -32827,7 +33277,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -32863,7 +33313,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -32872,7 +33322,7 @@
     "provider": "openrouter",
     "family": "glm",
     "created_at": "2026-04-07 00:00:00 UTC",
-    "context_window": 202752,
+    "context_window": 200000,
     "max_output_tokens": 128000,
     "modalities": {
       "input": ["text"],
@@ -32890,16 +33340,16 @@
     "pricing": {
       "text_tokens": {
         "standard": {
-          "input_per_million": 0.98,
-          "output_per_million": 3.08,
-          "cached_input_per_million": 0.182,
-          "reasoning_output_per_million": 3.08
+          "input_per_million": 0.966,
+          "output_per_million": 3.036,
+          "cached_input_per_million": 0.1794,
+          "reasoning_output_per_million": 3.036
         }
       }
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -32926,7 +33376,7 @@
     "pricing": {
       "text_tokens": {
         "standard": {
-          "input_per_million": 0.95,
+          "input_per_million": 0.93,
           "output_per_million": 3,
           "cached_input_per_million": 0.18,
           "reasoning_output_per_million": 3
@@ -32935,7 +33385,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -32972,7 +33422,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.204Z"
+      "last_synced": "2026-07-03T17:30:18.553Z"
     }
   },
   {
@@ -33008,7 +33458,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.206Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -33044,7 +33494,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.206Z"
+      "last_synced": "2026-07-03T17:30:18.555Z"
     }
   },
   {
@@ -33080,7 +33530,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -33116,7 +33566,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   },
   {
@@ -33151,7 +33601,7 @@
     },
     "metadata": {
       "source": "models.dev",
-      "last_synced": "2026-06-29T04:11:18.203Z"
+      "last_synced": "2026-07-03T17:30:18.552Z"
     }
   }
 ]

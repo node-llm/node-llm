@@ -76,7 +76,9 @@ export default {
   },
   "claude-fable-5": {
     "azure": "claude-fable-5",
-    "anthropic": "claude-fable-5"
+    "anthropic": "claude-fable-5",
+    "bedrock": "anthropic.claude-fable-5",
+    "openrouter": "anthropic/claude-fable-5"
   },
   "claude-fable-5-eu": {
     "bedrock": "eu.anthropic.claude-fable-5"
@@ -173,9 +175,6 @@ export default {
   },
   "claude-opus-4.6-eu": {
     "bedrock": "eu.anthropic.claude-opus-4-6-v1"
-  },
-  "claude-opus-4.6-fast": {
-    "openrouter": "anthropic/claude-opus-4.6-fast"
   },
   "claude-opus-4.6-global": {
     "bedrock": "global.anthropic.claude-opus-4-6-v1"
@@ -295,6 +294,28 @@ export default {
   },
   "claude-sonnet-4.6-us": {
     "bedrock": "us.anthropic.claude-sonnet-4-6"
+  },
+  "claude-sonnet-5": {
+    "azure": "claude-sonnet-5",
+    "anthropic": "claude-sonnet-5",
+    "bedrock": "anthropic.claude-sonnet-5",
+    "openrouter": "anthropic/claude-sonnet-5",
+    "gemini": "claude-sonnet-5@default"
+  },
+  "claude-sonnet-5-au": {
+    "bedrock": "au.anthropic.claude-sonnet-5"
+  },
+  "claude-sonnet-5-eu": {
+    "bedrock": "eu.anthropic.claude-sonnet-5"
+  },
+  "claude-sonnet-5-global": {
+    "bedrock": "global.anthropic.claude-sonnet-5"
+  },
+  "claude-sonnet-5-jp": {
+    "bedrock": "jp.anthropic.claude-sonnet-5"
+  },
+  "claude-sonnet-5-us": {
+    "bedrock": "us.anthropic.claude-sonnet-5"
   },
   "coder-large": {
     "openrouter": "arcee-ai/coder-large"
@@ -1002,6 +1023,12 @@ export default {
   "laguna-m.1-free": {
     "openrouter": "poolside/laguna-m.1:free"
   },
+  "laguna-xs-2.1": {
+    "openrouter": "poolside/laguna-xs-2.1"
+  },
+  "laguna-xs-2.1-free": {
+    "openrouter": "poolside/laguna-xs-2.1:free"
+  },
   "laguna-xs.2": {
     "openrouter": "poolside/laguna-xs.2"
   },
@@ -1358,6 +1385,9 @@ export default {
   "nano-banana-2-gemini-3.1-flash-image": {
     "openrouter": "google/gemini-3.1-flash-image"
   },
+  "nano-banana-2-lite-gemini-3.1-flash-lite-image": {
+    "openrouter": "google/gemini-3.1-flash-lite-image"
+  },
   "nano-banana-pro": {
     "gemini": "gemini-3-pro-image-preview",
     "openrouter": "google/gemini-3-pro-image-preview"
@@ -1496,9 +1526,6 @@ export default {
   "openai-gpt-mini-latest": {
     "openrouter": "~openai/gpt-mini-latest"
   },
-  "owl-alpha": {
-    "openrouter": "openrouter/owl-alpha"
-  },
   "palmyra-x4": {
     "bedrock": "writer.palmyra-x4-v1:0"
   },
@@ -1545,9 +1572,6 @@ export default {
   },
   "phi-4-mini": {
     "azure": "phi-4-mini"
-  },
-  "phi-4-mini-instruct": {
-    "openrouter": "microsoft/phi-4-mini-instruct"
   },
   "phi-4-mini-reasoning": {
     "azure": "phi-4-mini-reasoning"

@@ -26,7 +26,7 @@ _Model information enriched by [models.dev](https://models.dev)._
 ## Last Updated
 {: .d-inline-block }
 
-2026-06-29
+2026-07-03
 {: .label .label-green }
 
 ---
@@ -173,7 +173,7 @@ _Model information enriched by [models.dev](https://models.dev)._
 | `tts-1-hd-1106` | - | - | In: $30.00, Out: $30.00 |
 | `whisper-1` | - | - | In: $0.01 |
 
-### Anthropic (23)
+### Anthropic (24)
 
 | Model | Context | Max Output | Pricing (per 1M tokens) |
 | :--- | ---: | ---: | :--- |
@@ -182,6 +182,7 @@ _Model information enriched by [models.dev](https://models.dev)._
 | `claude-opus-4-7` | 1.0M | 128k | In: $5.00, Out: $25.00, Cache: $0.50 |
 | `claude-opus-4-8` | 1.0M | 128k | In: $5.00, Out: $25.00, Cache: $0.50 |
 | `claude-sonnet-4-6` | 1.0M | 64k | In: $3.00, Out: $15.00, Cache: $0.30 |
+| `claude-sonnet-5` | 1.0M | 128k | In: $2.00, Out: $10.00, Cache: $0.20 |
 | `claude-3-5-sonnet-20240620` | 200k | 8.192k | In: $3.00, Out: $15.00, Cache: $0.30 |
 | `claude-3-5-sonnet-20241022` | 200k | 8.192k | In: $3.00, Out: $15.00, Cache: $0.30 |
 | `claude-3-7-sonnet-20250219` | 200k | 64k | In: $3.00, Out: $15.00, Cache: $0.30 |
@@ -201,7 +202,7 @@ _Model information enriched by [models.dev](https://models.dev)._
 | `claude-sonnet-4-5` | 200k | 64k | In: $3.00, Out: $15.00, Cache: $0.30 |
 | `claude-sonnet-4-5-20250929` | 200k | 64k | In: $3.00, Out: $15.00, Cache: $0.30 |
 
-### Gemini (90)
+### Gemini (91)
 
 | Model | Context | Max Output | Pricing (per 1M tokens) |
 | :--- | ---: | ---: | :--- |
@@ -250,6 +251,7 @@ _Model information enriched by [models.dev](https://models.dev)._
 | `claude-opus-4-7@default` | 1.0M | 128k | In: $5.00, Out: $25.00, Cache: $0.50 |
 | `claude-opus-4-8@default` | 1.0M | 128k | In: $5.00, Out: $25.00, Cache: $0.50 |
 | `claude-sonnet-4-6@default` | 1.0M | 128k | In: $3.00, Out: $15.00, Cache: $0.30 |
+| `claude-sonnet-5@default` | 1.0M | 128k | In: $2.00, Out: $10.00, Cache: $0.20 |
 | `meta/llama-4-maverick-17b-128e-instruct-maas` | 524.288k | 8.192k | In: $0.35, Out: $1.15 |
 | `gemma-4-26b-a4b-it` | 262.144k | 32.768k | - |
 | `gemma-4-31b-it` | 262.144k | 32.768k | - |
@@ -305,7 +307,7 @@ _Model information enriched by [models.dev](https://models.dev)._
 | `deepseek-v4-flash` | 1.0M | 384k | In: $0.14, Out: $0.28, Cache: $0.00 |
 | `deepseek-v4-pro` | 1.0M | 384k | In: $0.43, Out: $0.87, Cache: $0.00 |
 
-### OpenRouter (338)
+### OpenRouter (340)
 
 | Model | Context | Max Output | Pricing (per 1M tokens) |
 | :--- | ---: | ---: | :--- |
@@ -318,9 +320,9 @@ _Model information enriched by [models.dev](https://models.dev)._
 | `openai/gpt-5.4-pro` | 1.1M | 128k | In: $30.00, Out: $180.00 |
 | `openai/gpt-5.5` | 1.1M | 128k | In: $5.00, Out: $30.00, Cache: $0.50 |
 | `openai/gpt-5.5-pro` | 1.1M | 128k | In: $30.00, Out: $180.00 |
-| `openrouter/owl-alpha` | 1.0M | 262.144k | - |
 | `~google/gemini-flash-latest` | 1.0M | 65.536k | In: $1.50, Out: $9.00, Cache: $0.15 |
 | `~google/gemini-pro-latest` | 1.0M | 65.536k | In: $2.00, Out: $12.00, Cache: $0.20 |
+| `deepseek/deepseek-v4-flash` | 1.0M | 16.384k | In: $0.09, Out: $0.18, Cache: $0.02 |
 | `deepseek/deepseek-v4-pro` | 1.0M | 384k | In: $0.43, Out: $0.87, Cache: $0.00 |
 | `google/gemini-2.5-flash` | 1.0M | 65.535k | In: $0.30, Out: $2.50, Cache: $0.03 |
 | `google/gemini-2.5-flash-lite` | 1.0M | 65.535k | In: $0.10, Out: $0.40, Cache: $0.01 |
@@ -338,7 +340,7 @@ _Model information enriched by [models.dev](https://models.dev)._
 | `google/lyria-3-pro-preview` | 1.0M | 65.536k | - |
 | `meta-llama/llama-4-maverick` | 1.0M | 16.384k | In: $0.15, Out: $0.60 |
 | `xiaomi/mimo-v2.5-pro` | 1.0M | 131.072k | In: $0.43, Out: $0.87, Cache: $0.00 |
-| `z-ai/glm-5.2` | 1.0M | 32.768k | In: $0.95, Out: $3.00, Cache: $0.18 |
+| `z-ai/glm-5.2` | 1.0M | 32.768k | In: $0.93, Out: $3.00, Cache: $0.18 |
 | `openai/gpt-4.1` | 1.0M | 32.768k | In: $2.00, Out: $8.00, Cache: $0.50 |
 | `openai/gpt-4.1-mini` | 1.0M | 32.768k | In: $0.40, Out: $1.60, Cache: $0.10 |
 | `openai/gpt-4.1-nano` | 1.0M | 32.768k | In: $0.10, Out: $0.40, Cache: $0.03 |
@@ -346,11 +348,11 @@ _Model information enriched by [models.dev](https://models.dev)._
 | `minimax/minimax-01` | 1.0M | 1.0M | In: $0.20, Out: $1.10 |
 | `~anthropic/claude-fable-latest` | 1.0M | 128k | In: $10.00, Out: $50.00, Cache: $1.00 |
 | `~anthropic/claude-opus-latest` | 1.0M | 128k | In: $5.00, Out: $25.00, Cache: $0.50 |
-| `~anthropic/claude-sonnet-latest` | 1.0M | 128k | In: $3.00, Out: $15.00, Cache: $0.30 |
+| `~anthropic/claude-sonnet-latest` | 1.0M | 128k | In: $2.00, Out: $10.00, Cache: $0.20 |
 | `amazon/nova-2-lite-v1` | 1.0M | 65.535k | In: $0.30, Out: $2.50 |
 | `amazon/nova-premier-v1` | 1.0M | 32k | In: $2.50, Out: $12.50, Cache: $0.63 |
+| `anthropic/claude-fable-5` | 1.0M | 128k | In: $10.00, Out: $50.00, Cache: $1.00 |
 | `anthropic/claude-opus-4.6` | 1.0M | 128k | In: $5.00, Out: $25.00, Cache: $0.50 |
-| `anthropic/claude-opus-4.6-fast` | 1.0M | 128k | In: $30.00, Out: $150.00, Cache: $3.00 |
 | `anthropic/claude-opus-4.7` | 1.0M | 128k | In: $5.00, Out: $25.00, Cache: $0.50 |
 | `anthropic/claude-opus-4.7-fast` | 1.0M | 128k | In: $30.00, Out: $150.00, Cache: $3.00 |
 | `anthropic/claude-opus-4.8` | 1.0M | 128k | In: $5.00, Out: $25.00, Cache: $0.50 |
@@ -358,7 +360,7 @@ _Model information enriched by [models.dev](https://models.dev)._
 | `anthropic/claude-sonnet-4` | 1.0M | 64k | In: $3.00, Out: $15.00, Cache: $0.30 |
 | `anthropic/claude-sonnet-4.5` | 1.0M | 64k | In: $3.00, Out: $15.00, Cache: $0.30 |
 | `anthropic/claude-sonnet-4.6` | 1.0M | 128k | In: $3.00, Out: $15.00, Cache: $0.30 |
-| `deepseek/deepseek-v4-flash` | 1.0M | 65.536k | In: $0.09, Out: $0.18, Cache: $0.02 |
+| `anthropic/claude-sonnet-5` | 1.0M | 128k | In: $2.00, Out: $10.00, Cache: $0.20 |
 | `minimax/minimax-m1` | 1.0M | 40k | In: $0.40, Out: $2.20 |
 | `nvidia/nemotron-3-ultra-550b-a55b:free` | 1.0M | 65.536k | - |
 | `openrouter/fusion` | 1.0M | 128k | - |
@@ -400,7 +402,7 @@ _Model information enriched by [models.dev](https://models.dev)._
 | `amazon/nova-lite-v1` | 300k | 5.12k | In: $0.06, Out: $0.24 |
 | `amazon/nova-pro-v1` | 300k | 5.12k | In: $0.80, Out: $3.20 |
 | `openai/gpt-5.4-image-2` | 272k | 128k | In: $8.00, Out: $15.00, Cache: $2.00 |
-| `~moonshotai/kimi-latest` | 262.144k | 262.144k | In: $0.55, Out: $3.20, Cache: $0.11 |
+| `~moonshotai/kimi-latest` | 262.144k | 262.144k | In: $0.66, Out: $3.41, Cache: $0.14 |
 | `arcee-ai/trinity-large-thinking` | 262.144k | 80k | In: $0.25, Out: $0.80, Cache: $0.06 |
 | `bytedance-seed/seed-1.6` | 262.144k | 32.768k | In: $0.25, Out: $2.00 |
 | `bytedance-seed/seed-1.6-flash` | 262.144k | 32.768k | In: $0.07, Out: $0.30 |
@@ -418,9 +420,9 @@ _Model information enriched by [models.dev](https://models.dev)._
 | `mistralai/mistral-large-2512` | 262.144k | 262.144k | In: $0.50, Out: $1.50, Cache: $0.05 |
 | `mistralai/mistral-medium-3-5` | 262.144k | 262.144k | In: $1.50, Out: $7.50 |
 | `mistralai/mistral-small-2603` | 262.144k | 262.144k | In: $0.15, Out: $0.60, Cache: $0.01 |
-| `moonshotai/kimi-k2-0905` | 262.144k | 262.144k | In: $0.60, Out: $2.50 |
-| `moonshotai/kimi-k2-thinking` | 262.144k | 262.144k | In: $0.60, Out: $2.50, Cache: $0.60 |
-| `moonshotai/kimi-k2.6` | 262.144k | 262.144k | In: $0.55, Out: $3.20, Cache: $0.11 |
+| `moonshotai/kimi-k2-0905` | 262.144k | 100.352k | In: $0.60, Out: $2.50 |
+| `moonshotai/kimi-k2-thinking` | 262.144k | 100.352k | In: $0.60, Out: $2.50, Cache: $0.15 |
+| `moonshotai/kimi-k2.6` | 262.144k | 262.144k | In: $0.66, Out: $3.41, Cache: $0.14 |
 | `moonshotai/kimi-k2.7-code` | 262.144k | 16.384k | In: $0.74, Out: $3.50, Cache: $0.15 |
 | `morph/morph-v3-large` | 262.144k | 131.072k | In: $0.90, Out: $1.90 |
 | `nex-agi/nex-n2-pro` | 262.144k | 262.144k | In: $0.25, Out: $1.00, Cache: $0.03 |
@@ -430,10 +432,11 @@ _Model information enriched by [models.dev](https://models.dev)._
 | `nvidia/nemotron-3-ultra-550b-a55b` | 262.144k | 16.384k | In: $0.50, Out: $2.20, Cache: $0.10 |
 | `poolside/laguna-m.1` | 262.144k | 32.768k | In: $0.20, Out: $0.40, Cache: $0.10 |
 | `poolside/laguna-m.1:free` | 262.144k | 32.768k | - |
+| `poolside/laguna-xs-2.1` | 262.144k | 32.768k | In: $0.06, Out: $0.12, Cache: $0.03 |
+| `poolside/laguna-xs-2.1:free` | 262.144k | 32.768k | - |
 | `poolside/laguna-xs.2` | 262.144k | 32.768k | In: $0.10, Out: $0.20, Cache: $0.05 |
 | `poolside/laguna-xs.2:free` | 262.144k | 32.768k | - |
 | `qwen/qwen3-235b-a22b-2507` | 262.144k | 16.384k | In: $0.09, Out: $0.10 |
-| `qwen/qwen3-235b-a22b-thinking-2507` | 262.144k | 262.144k | In: $0.10, Out: $0.10, Cache: $0.10 |
 | `qwen/qwen3-coder` | 262.144k | 65.536k | In: $0.22, Out: $1.80 |
 | `qwen/qwen3-coder-next` | 262.144k | 262.144k | In: $0.11, Out: $0.80, Cache: $0.07 |
 | `qwen/qwen3-max` | 262.144k | 32.768k | In: $0.78, Out: $3.90, Cache: $0.16 |
@@ -447,10 +450,10 @@ _Model information enriched by [models.dev](https://models.dev)._
 | `qwen/qwen3.5-9b` | 262.144k | 262.144k | In: $0.10, Out: $0.15 |
 | `qwen/qwen3.6-35b-a3b` | 262.144k | 262.144k | In: $0.14, Out: $1.00 |
 | `qwen/qwen3.6-max-preview` | 262.144k | 65.536k | In: $1.04, Out: $6.24 |
-| `stepfun/step-3.5-flash` | 262.144k | 16.384k | In: $0.09, Out: $0.30, Cache: $0.02 |
+| `stepfun/step-3.5-flash` | 262.144k | 65.536k | In: $0.10, Out: $0.30 |
 | `tencent/hy3-preview` | 262.144k | 262.144k | In: $0.06, Out: $0.21, Cache: $0.02 |
 | `z-ai/glm-5-turbo` | 262.144k | 131.072k | In: $1.20, Out: $4.00, Cache: $0.24 |
-| `qwen/qwen3.6-27b` | 262.14k | 262.14k | In: $0.26, Out: $2.38 |
+| `qwen/qwen3.6-27b` | 262.14k | 262.14k | In: $0.28, Out: $2.40, Cache: $0.15 |
 | `qwen/qwen3-coder:free` | 262k | 262k | - |
 | `ai21/jamba-large-1.7` | 256k | 4.096k | In: $2.00, Out: $8.00 |
 | `cohere/command-a` | 256k | 8.192k | In: $2.50, Out: $10.00 |
@@ -464,11 +467,12 @@ _Model information enriched by [models.dev](https://models.dev)._
 | `relace/relace-search` | 256k | 128k | In: $1.00, Out: $3.00 |
 | `stepfun/step-3.7-flash` | 256k | 256k | In: $0.20, Out: $1.15, Cache: $0.04 |
 | `x-ai/grok-build-0.1` | 256k | 256k | In: $1.00, Out: $2.00, Cache: $0.20 |
+| `minimax/minimax-m2` | 204.8k | 131.072k | In: $0.26, Out: $1.02 |
+| `minimax/minimax-m2.1` | 204.8k | 131.072k | In: $0.30, Out: $1.20, Cache: $0.03 |
 | `z-ai/glm-4.6` | 202.752k | 131.072k | In: $0.43, Out: $1.74, Cache: $0.08 |
 | `z-ai/glm-4.7` | 202.752k | 131.072k | In: $0.40, Out: $1.75, Cache: $0.08 |
 | `z-ai/glm-4.7-flash` | 202.752k | 16.384k | In: $0.06, Out: $0.40, Cache: $0.01 |
 | `z-ai/glm-5` | 202.752k | 128k | In: $0.60, Out: $1.92, Cache: $0.12 |
-| `z-ai/glm-5.1` | 202.752k | 128k | In: $0.98, Out: $3.08, Cache: $0.18 |
 | `z-ai/glm-5v-turbo` | 202.752k | 131.072k | In: $1.20, Out: $4.00, Cache: $0.24 |
 | `~anthropic/claude-haiku-latest` | 200k | 64k | In: $1.00, Out: $5.00, Cache: $0.10 |
 | `anthropic/claude-3-haiku` | 200k | 4.096k | In: $0.25, Out: $1.25, Cache: $0.03 |
@@ -489,11 +493,10 @@ _Model information enriched by [models.dev](https://models.dev)._
 | `openrouter/free` | 200k | 8k | - |
 | `perplexity/sonar-pro` | 200k | 8k | In: $3.00, Out: $15.00 |
 | `perplexity/sonar-pro-search` | 200k | 8k | In: $3.00, Out: $15.00 |
-| `minimax/minimax-m2` | 196.608k | 196.608k | In: $0.26, Out: $1.00, Cache: $0.03 |
-| `minimax/minimax-m2.1` | 196.608k | 196.608k | In: $0.29, Out: $0.95, Cache: $0.03 |
+| `z-ai/glm-5.1` | 200k | 128k | In: $0.97, Out: $3.04, Cache: $0.18 |
 | `minimax/minimax-m2.5` | 196.608k | 196.608k | In: $0.12, Out: $0.48 |
 | `minimax/minimax-m2.7` | 196.608k | 196.608k | In: $0.18, Out: $0.72 |
-| `deepseek/deepseek-chat-v3-0324` | 163.84k | 16.384k | In: $0.20, Out: $0.77, Cache: $0.14 |
+| `deepseek/deepseek-chat-v3-0324` | 163.84k | 16.384k | In: $0.24, Out: $0.90, Cache: $0.14 |
 | `deepseek/deepseek-chat-v3.1` | 163.84k | 32.768k | In: $0.21, Out: $0.79, Cache: $0.13 |
 | `deepseek/deepseek-r1-0528` | 163.84k | 32.768k | In: $0.50, Out: $2.15, Cache: $0.35 |
 | `deepseek/deepseek-v3.1-terminus` | 163.84k | 32.768k | In: $0.27, Out: $0.95, Cache: $0.13 |
@@ -522,7 +525,7 @@ _Model information enriched by [models.dev](https://models.dev)._
 | `mistralai/mistral-medium-3` | 131.072k | 131.072k | In: $0.40, Out: $2.00, Cache: $0.04 |
 | `mistralai/mistral-medium-3.1` | 131.072k | 262.144k | In: $0.40, Out: $2.00, Cache: $0.04 |
 | `mistralai/mistral-nemo` | 131.072k | 131.072k | In: $0.02, Out: $0.03 |
-| `moonshotai/kimi-k2` | 131.072k | 32.768k | In: $0.57, Out: $2.30 |
+| `moonshotai/kimi-k2` | 131.072k | 100.352k | In: $0.57, Out: $2.30 |
 | `nousresearch/hermes-3-llama-3.1-405b` | 131.072k | 16.384k | In: $1.00, Out: $1.00 |
 | `nousresearch/hermes-3-llama-3.1-405b:free` | 131.072k | 131.072k | - |
 | `nousresearch/hermes-3-llama-3.1-70b` | 131.072k | 16.384k | In: $0.70, Out: $0.70 |
@@ -535,13 +538,14 @@ _Model information enriched by [models.dev](https://models.dev)._
 | `openai/gpt-oss-20b:free` | 131.072k | 32.768k | - |
 | `openai/gpt-oss-safeguard-20b` | 131.072k | 65.536k | In: $0.07, Out: $0.30, Cache: $0.04 |
 | `qwen/qwen3-235b-a22b` | 131.072k | 8.192k | In: $0.46, Out: $1.82 |
-| `qwen/qwen3-30b-a3b-thinking-2507` | 131.072k | 131.072k | In: $0.08, Out: $0.40, Cache: $0.08 |
+| `qwen/qwen3-235b-a22b-thinking-2507` | 131.072k | 262.144k | In: $0.15, Out: $1.50 |
+| `qwen/qwen3-8b` | 131.072k | 8.192k | In: $0.12, Out: $0.46 |
 | `qwen/qwen3-next-80b-a3b-thinking` | 131.072k | 32.768k | In: $0.10, Out: $0.78 |
 | `qwen/qwen3-vl-235b-a22b-thinking` | 131.072k | 32.768k | In: $0.26, Out: $2.60 |
 | `qwen/qwen3-vl-30b-a3b-instruct` | 131.072k | 32.768k | In: $0.13, Out: $0.52 |
 | `qwen/qwen3-vl-30b-a3b-thinking` | 131.072k | 32.768k | In: $0.13, Out: $1.56 |
 | `qwen/qwen3-vl-32b-instruct` | 131.072k | 32.768k | In: $0.10, Out: $0.42 |
-| `qwen/qwen3-vl-8b-instruct` | 131.072k | 32.768k | In: $0.08, Out: $0.50 |
+| `qwen/qwen3-vl-8b-instruct` | 131.072k | 32.768k | In: $0.12, Out: $0.46 |
 | `qwen/qwen3-vl-8b-thinking` | 131.072k | 32.768k | In: $0.12, Out: $1.36 |
 | `qwen/qwen3.5-397b-a17b` | 131.072k | 64k | In: $0.39, Out: $2.45 |
 | `sao10k/l3.1-euryale-70b` | 131.072k | 16.384k | In: $0.85, Out: $0.85 |
@@ -562,7 +566,6 @@ _Model information enriched by [models.dev](https://models.dev)._
 | `deepseek/deepseek-chat` | 128k | 16k | In: $0.20, Out: $0.80 |
 | `deepseek/deepseek-v3.2` | 128k | 64k | In: $0.23, Out: $0.34, Cache: $0.02 |
 | `inception/mercury-2` | 128k | 50k | In: $0.25, Out: $0.75, Cache: $0.03 |
-| `microsoft/phi-4-mini-instruct` | 128k | 128k | In: $0.08, Out: $0.35, Cache: $0.08 |
 | `mistralai/mistral-large` | 128k | 128k | In: $2.00, Out: $6.00, Cache: $0.20 |
 | `mistralai/mistral-small-3.1-24b-instruct` | 128k | 128k | In: $0.35, Out: $0.56 |
 | `mistralai/mistral-small-3.2-24b-instruct` | 128k | 16.384k | In: $0.07, Out: $0.20 |
@@ -594,10 +597,12 @@ _Model information enriched by [models.dev](https://models.dev)._
 | `perplexity/sonar` | 127.072k | 127.072k | In: $1.00, Out: $1.00 |
 | `baidu/ernie-4.5-vl-424b-a47b` | 123k | 16k | In: $0.42, Out: $1.25 |
 | `morph/morph-v3-fast` | 81.92k | 38k | In: $0.80, Out: $1.20 |
+| `qwen/qwen3-30b-a3b-thinking-2507` | 81.92k | 32.768k | In: $0.13, Out: $1.56 |
 | `meta-llama/llama-3.2-3b-instruct` | 80k | 80k | In: $0.05, Out: $0.34 |
 | `allenai/olmo-3-32b-think` | 65.536k | 65.536k | In: $0.15, Out: $0.50 |
 | `google/gemini-3-pro-image` | 65.536k | 32.768k | In: $2.00, Out: $12.00, Cache: $0.20 |
 | `google/gemini-3-pro-image-preview` | 65.536k | 32.768k | In: $2.00, Out: $12.00, Cache: $0.20 |
+| `google/gemini-3.1-flash-lite-image` | 65.536k | 66k | In: $0.25, Out: $1.50 |
 | `meta-llama/llama-3.3-70b-instruct:free` | 65.536k | 131.072k | - |
 | `minimax/minimax-m2-her` | 65.536k | 2.048k | In: $0.30, Out: $1.20, Cache: $0.03 |
 | `mistralai/mixtral-8x22b-instruct` | 65.536k | 65.536k | In: $2.00, Out: $6.00, Cache: $0.20 |
@@ -609,7 +614,6 @@ _Model information enriched by [models.dev](https://models.dev)._
 | `qwen/qwen3-14b` | 40.96k | 40.96k | In: $0.10, Out: $0.24 |
 | `qwen/qwen3-30b-a3b` | 40.96k | 16.384k | In: $0.12, Out: $0.50 |
 | `qwen/qwen3-32b` | 40.96k | 16.384k | In: $0.08, Out: $0.28 |
-| `qwen/qwen3-8b` | 40.96k | 8.192k | In: $0.05, Out: $0.40, Cache: $0.05 |
 | `aion-labs/aion-rp-llama-3.1-8b` | 32.768k | 32.768k | In: $0.80, Out: $1.60 |
 | `arcee-ai/coder-large` | 32.768k | 32.768k | In: $0.50, Out: $0.80 |
 | `cognitivecomputations/dolphin-mistral-24b-venice-edition:free` | 32.768k | 32.768k | - |
@@ -648,39 +652,46 @@ _Model information enriched by [models.dev](https://models.dev)._
 | `openai/gpt-3.5-turbo-0613` | 4.095k | 4.096k | In: $1.00, Out: $2.00 |
 | `openai/gpt-3.5-turbo-instruct` | 4.095k | 4.096k | In: $1.50, Out: $2.00 |
 
-### Amazon Bedrock (99)
+### Amazon Bedrock (106)
 
 | Model | Context | Max Output | Pricing (per 1M tokens) |
 | :--- | ---: | ---: | :--- |
 | `meta.llama4-scout-17b-instruct-v1:0` | 3.5M | 16.384k | In: $0.17, Out: $0.66 |
 | `us.meta.llama4-scout-17b-instruct-v1:0` | 3.5M | 16.384k | In: $0.17, Out: $0.66 |
 | `writer.palmyra-x5-v1:0` | 1.0M | 8.192k | In: $0.60, Out: $6.00 |
+| `anthropic.claude-fable-5` | 1.0M | 128k | In: $10.00, Out: $50.00, Cache: $1.00 |
 | `anthropic.claude-opus-4-6-v1` | 1.0M | 128k | In: $5.00, Out: $25.00, Cache: $0.50 |
 | `anthropic.claude-opus-4-7` | 1.0M | 128k | In: $5.00, Out: $25.00, Cache: $0.50 |
 | `anthropic.claude-opus-4-8` | 1.0M | 128k | In: $5.00, Out: $25.00, Cache: $0.50 |
 | `anthropic.claude-sonnet-4-6` | 1.0M | 64k | In: $3.00, Out: $15.00, Cache: $0.30 |
+| `anthropic.claude-sonnet-5` | 1.0M | 128k | In: $2.00, Out: $10.00, Cache: $0.20 |
 | `au.anthropic.claude-opus-4-6-v1` | 1.0M | 128k | In: $16.50, Out: $82.50, Cache: $1.65 |
 | `au.anthropic.claude-opus-4-8` | 1.0M | 128k | In: $5.00, Out: $25.00, Cache: $0.50 |
 | `au.anthropic.claude-sonnet-4-6` | 1.0M | 128k | In: $3.30, Out: $16.50, Cache: $0.33 |
+| `au.anthropic.claude-sonnet-5` | 1.0M | 128k | In: $2.00, Out: $10.00, Cache: $0.20 |
 | `eu.anthropic.claude-fable-5` | 1.0M | 128k | In: $11.00, Out: $55.00, Cache: $1.10 |
 | `eu.anthropic.claude-opus-4-6-v1` | 1.0M | 128k | In: $5.50, Out: $27.50, Cache: $0.55 |
 | `eu.anthropic.claude-opus-4-7` | 1.0M | 128k | In: $5.50, Out: $27.50, Cache: $0.55 |
 | `eu.anthropic.claude-opus-4-8` | 1.0M | 128k | In: $5.50, Out: $27.50, Cache: $0.55 |
 | `eu.anthropic.claude-sonnet-4-6` | 1.0M | 64k | In: $3.30, Out: $16.50, Cache: $0.33 |
+| `eu.anthropic.claude-sonnet-5` | 1.0M | 128k | In: $2.20, Out: $11.00, Cache: $0.22 |
 | `global.anthropic.claude-fable-5` | 1.0M | 128k | In: $10.00, Out: $50.00, Cache: $1.00 |
 | `global.anthropic.claude-opus-4-6-v1` | 1.0M | 128k | In: $5.00, Out: $25.00, Cache: $0.50 |
 | `global.anthropic.claude-opus-4-7` | 1.0M | 128k | In: $5.00, Out: $25.00, Cache: $0.50 |
 | `global.anthropic.claude-opus-4-8` | 1.0M | 128k | In: $5.00, Out: $25.00, Cache: $0.50 |
 | `global.anthropic.claude-sonnet-4-6` | 1.0M | 64k | In: $3.00, Out: $15.00, Cache: $0.30 |
+| `global.anthropic.claude-sonnet-5` | 1.0M | 128k | In: $2.00, Out: $10.00, Cache: $0.20 |
 | `jp.anthropic.claude-opus-4-7` | 1.0M | 128k | In: $5.00, Out: $25.00, Cache: $0.50 |
 | `jp.anthropic.claude-opus-4-8` | 1.0M | 128k | In: $5.00, Out: $25.00, Cache: $0.50 |
 | `jp.anthropic.claude-sonnet-4-6` | 1.0M | 64k | In: $3.00, Out: $15.00, Cache: $0.30 |
+| `jp.anthropic.claude-sonnet-5` | 1.0M | 128k | In: $2.00, Out: $10.00, Cache: $0.20 |
 | `meta.llama4-maverick-17b-instruct-v1:0` | 1.0M | 16.384k | In: $0.24, Out: $0.97 |
 | `us.anthropic.claude-fable-5` | 1.0M | 128k | In: $10.00, Out: $50.00, Cache: $1.00 |
 | `us.anthropic.claude-opus-4-6-v1` | 1.0M | 128k | In: $5.00, Out: $25.00, Cache: $0.50 |
 | `us.anthropic.claude-opus-4-7` | 1.0M | 128k | In: $5.00, Out: $25.00, Cache: $0.50 |
 | `us.anthropic.claude-opus-4-8` | 1.0M | 128k | In: $5.00, Out: $25.00, Cache: $0.50 |
 | `us.anthropic.claude-sonnet-4-6` | 1.0M | 64k | In: $3.00, Out: $15.00, Cache: $0.30 |
+| `us.anthropic.claude-sonnet-5` | 1.0M | 128k | In: $2.00, Out: $10.00, Cache: $0.20 |
 | `us.meta.llama4-maverick-17b-instruct-v1:0` | 1.0M | 16.384k | In: $0.24, Out: $0.97 |
 | `xai.grok-4.3` | 1.0M | 131.072k | In: $1.25, Out: $2.50, Cache: $0.20 |
 | `amazon.nova-lite-v1:0` | 300k | 8.192k | In: $0.06, Out: $0.24, Cache: $0.01 |
@@ -845,7 +856,7 @@ _Model information enriched by [models.dev](https://models.dev)._
 | `meta-llama/llama-4-scout-17b-16e-instruct` | 131.072k | 8.192k | In: $0.11, Out: $0.34 |
 | `openai/gpt-oss-120b` | 131.072k | 65.536k | In: $0.15, Out: $0.60, Cache: $0.07 |
 | `openai/gpt-oss-20b` | 131.072k | 65.536k | In: $0.07, Out: $0.30, Cache: $0.04 |
-| `openai/gpt-oss-safeguard-20b` | 131.072k | 65.536k | In: $0.07, Out: $0.30, Cache: $0.04 |
+| `openai/gpt-oss-safeguard-20b` | 131.072k | 65.536k | In: $0.07, Out: $0.30 |
 | `qwen/qwen3-32b` | 131.072k | 40.96k | In: $0.29, Out: $0.59 |
 | `canopylabs/orpheus-arabic-saudi` | 4k | 50k | - |
 | `canopylabs/orpheus-v1-english` | 4k | 50k | - |
@@ -854,7 +865,7 @@ _Model information enriched by [models.dev](https://models.dev)._
 | `whisper-large-v3` | - | - | - |
 | `whisper-large-v3-turbo` | - | - | - |
 
-### Azure OpenAI (203)
+### Azure OpenAI (204)
 
 | Model | Context | Max Output | Pricing (per 1M tokens) |
 | :--- | ---: | ---: | :--- |
@@ -874,6 +885,7 @@ _Model information enriched by [models.dev](https://models.dev)._
 | `gpt-4.1-nano` | 1.0M | 32.768k | In: $0.10, Out: $0.40, Cache: $0.03 |
 | `claude-fable-5` | 1.0M | 128k | In: $10.00, Out: $50.00, Cache: $1.00 |
 | `claude-sonnet-4-6` | 1.0M | 64k | In: $3.00, Out: $15.00, Cache: $0.30 |
+| `claude-sonnet-5` | 1.0M | 128k | In: $2.00, Out: $10.00, Cache: $0.20 |
 | `deepseek-v4-flash` | 1.0M | 384k | In: $0.19, Out: $0.51 |
 | `deepseek-v4-pro` | 1.0M | 384k | In: $1.74, Out: $3.48 |
 | `gpt-5-codex` | 400k | 128k | In: $1.25, Out: $10.00, Cache: $0.13 |
@@ -1066,17 +1078,17 @@ _Model information enriched by [models.dev](https://models.dev)._
 
 ## Models by Capability
 
-### Function Calling (733)
+### Function Calling (745)
 
 | Model | Provider | Context | Pricing |
 | :--- | :--- | ---: | :--- |
 | `~anthropic/claude-fable-latest` | openrouter | 1.0M | In: $10.00, Out: $50.00, Cache: $1.00 |
 | `~anthropic/claude-haiku-latest` | openrouter | 200k | In: $1.00, Out: $5.00, Cache: $0.10 |
 | `~anthropic/claude-opus-latest` | openrouter | 1.0M | In: $5.00, Out: $25.00, Cache: $0.50 |
-| `~anthropic/claude-sonnet-latest` | openrouter | 1.0M | In: $3.00, Out: $15.00, Cache: $0.30 |
+| `~anthropic/claude-sonnet-latest` | openrouter | 1.0M | In: $2.00, Out: $10.00, Cache: $0.20 |
 | `~google/gemini-flash-latest` | openrouter | 1.0M | In: $1.50, Out: $9.00, Cache: $0.15 |
 | `~google/gemini-pro-latest` | openrouter | 1.0M | In: $2.00, Out: $12.00, Cache: $0.20 |
-| `~moonshotai/kimi-latest` | openrouter | 262.144k | In: $0.55, Out: $3.20, Cache: $0.11 |
+| `~moonshotai/kimi-latest` | openrouter | 262.144k | In: $0.66, Out: $3.41, Cache: $0.14 |
 | `~openai/gpt-latest` | openrouter | 1.1M | In: $5.00, Out: $30.00, Cache: $0.50 |
 | `~openai/gpt-mini-latest` | openrouter | 400k | In: $0.75, Out: $4.50, Cache: $0.07 |
 | `ai21/jamba-large-1.7` | openrouter | 256k | In: $2.00, Out: $8.00 |
@@ -1089,19 +1101,19 @@ _Model information enriched by [models.dev](https://models.dev)._
 | `amazon/nova-micro-v1` | openrouter | 128k | In: $0.04, Out: $0.14 |
 | `amazon/nova-premier-v1` | openrouter | 1.0M | In: $2.50, Out: $12.50, Cache: $0.63 |
 | `amazon/nova-pro-v1` | openrouter | 300k | In: $0.80, Out: $3.20 |
-| `anthropic.claude-haiku-4-5-20251001-v1:0` | bedrock | 200k | In: $1.00, Out: $5.00, Cache: $0.10 |
+| `anthropic.claude-fable-5` | bedrock | 1.0M | In: $10.00, Out: $50.00, Cache: $1.00 |
 
-### Vision (486)
+### Vision (498)
 
 | Model | Provider | Context | Pricing |
 | :--- | :--- | ---: | :--- |
 | `~anthropic/claude-fable-latest` | openrouter | 1.0M | In: $10.00, Out: $50.00, Cache: $1.00 |
 | `~anthropic/claude-haiku-latest` | openrouter | 200k | In: $1.00, Out: $5.00, Cache: $0.10 |
 | `~anthropic/claude-opus-latest` | openrouter | 1.0M | In: $5.00, Out: $25.00, Cache: $0.50 |
-| `~anthropic/claude-sonnet-latest` | openrouter | 1.0M | In: $3.00, Out: $15.00, Cache: $0.30 |
+| `~anthropic/claude-sonnet-latest` | openrouter | 1.0M | In: $2.00, Out: $10.00, Cache: $0.20 |
 | `~google/gemini-flash-latest` | openrouter | 1.0M | In: $1.50, Out: $9.00, Cache: $0.15 |
 | `~google/gemini-pro-latest` | openrouter | 1.0M | In: $2.00, Out: $12.00, Cache: $0.20 |
-| `~moonshotai/kimi-latest` | openrouter | 262.144k | In: $0.55, Out: $3.20, Cache: $0.11 |
+| `~moonshotai/kimi-latest` | openrouter | 262.144k | In: $0.66, Out: $3.41, Cache: $0.14 |
 | `~openai/gpt-latest` | openrouter | 1.1M | In: $5.00, Out: $30.00, Cache: $0.50 |
 | `~openai/gpt-mini-latest` | openrouter | 400k | In: $0.75, Out: $4.50, Cache: $0.07 |
 | `amazon.nova-2-lite-v1:0` | bedrock | 128k | In: $0.33, Out: $2.75 |
@@ -1111,22 +1123,22 @@ _Model information enriched by [models.dev](https://models.dev)._
 | `amazon/nova-lite-v1` | openrouter | 300k | In: $0.06, Out: $0.24 |
 | `amazon/nova-premier-v1` | openrouter | 1.0M | In: $2.50, Out: $12.50, Cache: $0.63 |
 | `amazon/nova-pro-v1` | openrouter | 300k | In: $0.80, Out: $3.20 |
+| `anthropic.claude-fable-5` | bedrock | 1.0M | In: $10.00, Out: $50.00, Cache: $1.00 |
 | `anthropic.claude-haiku-4-5-20251001-v1:0` | bedrock | 200k | In: $1.00, Out: $5.00, Cache: $0.10 |
 | `anthropic.claude-opus-4-1-20250805-v1:0` | bedrock | 200k | In: $15.00, Out: $75.00, Cache: $1.50 |
 | `anthropic.claude-opus-4-5-20251101-v1:0` | bedrock | 200k | In: $5.00, Out: $25.00, Cache: $0.50 |
-| `anthropic.claude-opus-4-6-v1` | bedrock | 1.0M | In: $5.00, Out: $25.00, Cache: $0.50 |
 
-### Reasoning (499)
+### Reasoning (513)
 
 | Model | Provider | Context | Pricing |
 | :--- | :--- | ---: | :--- |
 | `~anthropic/claude-fable-latest` | openrouter | 1.0M | In: $10.00, Out: $50.00, Cache: $1.00 |
 | `~anthropic/claude-haiku-latest` | openrouter | 200k | In: $1.00, Out: $5.00, Cache: $0.10 |
 | `~anthropic/claude-opus-latest` | openrouter | 1.0M | In: $5.00, Out: $25.00, Cache: $0.50 |
-| `~anthropic/claude-sonnet-latest` | openrouter | 1.0M | In: $3.00, Out: $15.00, Cache: $0.30 |
+| `~anthropic/claude-sonnet-latest` | openrouter | 1.0M | In: $2.00, Out: $10.00, Cache: $0.20 |
 | `~google/gemini-flash-latest` | openrouter | 1.0M | In: $1.50, Out: $9.00, Cache: $0.15 |
 | `~google/gemini-pro-latest` | openrouter | 1.0M | In: $2.00, Out: $12.00, Cache: $0.20 |
-| `~moonshotai/kimi-latest` | openrouter | 262.144k | In: $0.55, Out: $3.20, Cache: $0.11 |
+| `~moonshotai/kimi-latest` | openrouter | 262.144k | In: $0.66, Out: $3.41, Cache: $0.14 |
 | `~openai/gpt-latest` | openrouter | 1.1M | In: $5.00, Out: $30.00, Cache: $0.50 |
 | `~openai/gpt-mini-latest` | openrouter | 400k | In: $0.75, Out: $4.50, Cache: $0.07 |
 | `aion-labs/aion-1.0` | openrouter | 131.072k | In: $4.00, Out: $8.00 |
@@ -1135,23 +1147,23 @@ _Model information enriched by [models.dev](https://models.dev)._
 | `allenai/olmo-3-32b-think` | openrouter | 65.536k | In: $0.15, Out: $0.50 |
 | `amazon.nova-2-lite-v1:0` | bedrock | 128k | In: $0.33, Out: $2.75 |
 | `amazon/nova-2-lite-v1` | openrouter | 1.0M | In: $0.30, Out: $2.50 |
+| `anthropic.claude-fable-5` | bedrock | 1.0M | In: $10.00, Out: $50.00, Cache: $1.00 |
 | `anthropic.claude-haiku-4-5-20251001-v1:0` | bedrock | 200k | In: $1.00, Out: $5.00, Cache: $0.10 |
 | `anthropic.claude-opus-4-1-20250805-v1:0` | bedrock | 200k | In: $15.00, Out: $75.00, Cache: $1.50 |
 | `anthropic.claude-opus-4-5-20251101-v1:0` | bedrock | 200k | In: $5.00, Out: $25.00, Cache: $0.50 |
 | `anthropic.claude-opus-4-6-v1` | bedrock | 1.0M | In: $5.00, Out: $25.00, Cache: $0.50 |
-| `anthropic.claude-opus-4-7` | bedrock | 1.0M | In: $5.00, Out: $25.00, Cache: $0.50 |
 
-### Streaming (908)
+### Streaming (920)
 
 | Model | Provider | Context | Pricing |
 | :--- | :--- | ---: | :--- |
 | `~anthropic/claude-fable-latest` | openrouter | 1.0M | In: $10.00, Out: $50.00, Cache: $1.00 |
 | `~anthropic/claude-haiku-latest` | openrouter | 200k | In: $1.00, Out: $5.00, Cache: $0.10 |
 | `~anthropic/claude-opus-latest` | openrouter | 1.0M | In: $5.00, Out: $25.00, Cache: $0.50 |
-| `~anthropic/claude-sonnet-latest` | openrouter | 1.0M | In: $3.00, Out: $15.00, Cache: $0.30 |
+| `~anthropic/claude-sonnet-latest` | openrouter | 1.0M | In: $2.00, Out: $10.00, Cache: $0.20 |
 | `~google/gemini-flash-latest` | openrouter | 1.0M | In: $1.50, Out: $9.00, Cache: $0.15 |
 | `~google/gemini-pro-latest` | openrouter | 1.0M | In: $2.00, Out: $12.00, Cache: $0.20 |
-| `~moonshotai/kimi-latest` | openrouter | 262.144k | In: $0.55, Out: $3.20, Cache: $0.11 |
+| `~moonshotai/kimi-latest` | openrouter | 262.144k | In: $0.66, Out: $3.41, Cache: $0.14 |
 | `~openai/gpt-latest` | openrouter | 1.1M | In: $5.00, Out: $30.00, Cache: $0.50 |
 | `~openai/gpt-mini-latest` | openrouter | 400k | In: $0.75, Out: $4.50, Cache: $0.07 |
 | `ai21/jamba-large-1.7` | openrouter | 256k | In: $2.00, Out: $8.00 |
@@ -1166,17 +1178,17 @@ _Model information enriched by [models.dev](https://models.dev)._
 | `amazon.nova-pro-v1:0` | bedrock | 300k | In: $0.80, Out: $3.20, Cache: $0.20 |
 | `amazon/nova-2-lite-v1` | openrouter | 1.0M | In: $0.30, Out: $2.50 |
 
-### Structured Output (781)
+### Structured Output (792)
 
 | Model | Provider | Context | Pricing |
 | :--- | :--- | ---: | :--- |
 | `~anthropic/claude-fable-latest` | openrouter | 1.0M | In: $10.00, Out: $50.00, Cache: $1.00 |
 | `~anthropic/claude-haiku-latest` | openrouter | 200k | In: $1.00, Out: $5.00, Cache: $0.10 |
 | `~anthropic/claude-opus-latest` | openrouter | 1.0M | In: $5.00, Out: $25.00, Cache: $0.50 |
-| `~anthropic/claude-sonnet-latest` | openrouter | 1.0M | In: $3.00, Out: $15.00, Cache: $0.30 |
+| `~anthropic/claude-sonnet-latest` | openrouter | 1.0M | In: $2.00, Out: $10.00, Cache: $0.20 |
 | `~google/gemini-flash-latest` | openrouter | 1.0M | In: $1.50, Out: $9.00, Cache: $0.15 |
 | `~google/gemini-pro-latest` | openrouter | 1.0M | In: $2.00, Out: $12.00, Cache: $0.20 |
-| `~moonshotai/kimi-latest` | openrouter | 262.144k | In: $0.55, Out: $3.20, Cache: $0.11 |
+| `~moonshotai/kimi-latest` | openrouter | 262.144k | In: $0.66, Out: $3.41, Cache: $0.14 |
 | `~openai/gpt-latest` | openrouter | 1.1M | In: $5.00, Out: $30.00, Cache: $0.50 |
 | `~openai/gpt-mini-latest` | openrouter | 400k | In: $0.75, Out: $4.50, Cache: $0.07 |
 | `ai21/jamba-large-1.7` | openrouter | 256k | In: $2.00, Out: $8.00 |
@@ -1195,7 +1207,7 @@ _Model information enriched by [models.dev](https://models.dev)._
 
 ## Models by Modality
 
-### Vision Models (530)
+### Vision Models (542)
 
 Models that can process images:
 
@@ -1204,10 +1216,10 @@ Models that can process images:
 | `~anthropic/claude-fable-latest` | openrouter | 1.0M | In: $10.00, Out: $50.00, Cache: $1.00 |
 | `~anthropic/claude-haiku-latest` | openrouter | 200k | In: $1.00, Out: $5.00, Cache: $0.10 |
 | `~anthropic/claude-opus-latest` | openrouter | 1.0M | In: $5.00, Out: $25.00, Cache: $0.50 |
-| `~anthropic/claude-sonnet-latest` | openrouter | 1.0M | In: $3.00, Out: $15.00, Cache: $0.30 |
+| `~anthropic/claude-sonnet-latest` | openrouter | 1.0M | In: $2.00, Out: $10.00, Cache: $0.20 |
 | `~google/gemini-flash-latest` | openrouter | 1.0M | In: $1.50, Out: $9.00, Cache: $0.15 |
 | `~google/gemini-pro-latest` | openrouter | 1.0M | In: $2.00, Out: $12.00, Cache: $0.20 |
-| `~moonshotai/kimi-latest` | openrouter | 262.144k | In: $0.55, Out: $3.20, Cache: $0.11 |
+| `~moonshotai/kimi-latest` | openrouter | 262.144k | In: $0.66, Out: $3.41, Cache: $0.14 |
 | `~openai/gpt-latest` | openrouter | 1.1M | In: $5.00, Out: $30.00, Cache: $0.50 |
 | `~openai/gpt-mini-latest` | openrouter | 400k | In: $0.75, Out: $4.50, Cache: $0.07 |
 | `amazon.nova-2-lite-v1:0` | bedrock | 128k | In: $0.33, Out: $2.75 |
@@ -1379,4 +1391,4 @@ This is useful for:
 
 ---
 
-**Auto-generated by `npm run sync-models`** • Last updated: 2026-06-29
+**Auto-generated by `npm run sync-models`** • Last updated: 2026-07-03
