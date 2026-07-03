@@ -86,7 +86,7 @@ The `NodeLLMSpanProcessor` accepts an optional configuration object:
 new NodeLLMSpanProcessor(monitor.getStore(), {
   /**
    * Whether to capture prompt/completion content in the spans.
-   * Default: false
+   * Default: true (respects the Vercel AI SDK's recordInputs/recordOutputs settings)
    */
   captureContent: true,
 
@@ -96,6 +96,18 @@ new NodeLLMSpanProcessor(monitor.getStore(), {
   filter: (span) => {
     return span.name.startsWith("ai.");
   },
+
+  /**
+   * Custom transform applied to the resulting MonitoringEvent before it is saved,
+   * letting you enrich or redact data.
+   */
+  transform: (event, span) => event,
+
+  /**
+   * Custom session ID extractor. Defaults to reading
+   * `ai.telemetry.metadata.sessionId` (or `session.id`) from the span.
+   */
+  sessionIdExtractor: (span) => span.attributes["ai.telemetry.metadata.sessionId"],
 
   /**
    * Custom error handler for processing failures.

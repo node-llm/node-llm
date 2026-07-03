@@ -49,9 +49,25 @@ const llm = createLLM({
   provider: "bedrock", 
   bedrockRegion: "us-east-1",
   bedrockAccessKeyId: "AKIA...",
-  bedrockSecretAccessKey: "..."
+  bedrockSecretAccessKey: "...",
+  // Optional: only needed for temporary/STS credentials
+  bedrockSessionToken: "..."
 });
 ```
+
+### 3. API Key (Bearer Token) Authentication
+
+As a simpler alternative to SigV4 credentials, Bedrock also supports long-term API keys generated from the AWS Bedrock console. When `bedrockApiKey` (or the `AWS_BEARER_TOKEN_BEDROCK` environment variable) is set, NodeLLM authenticates using a simple Bearer token instead of signing every request with SigV4. This mode is mutually exclusive with `bedrockAccessKeyId` / `bedrockSecretAccessKey`.
+
+```ts
+const llm = createLLM({
+  provider: "bedrock",
+  bedrockRegion: "us-east-1",
+  bedrockApiKey: process.env.AWS_BEARER_TOKEN_BEDROCK
+});
+```
+
+Note: There is currently no `bedrockApiBase` override — the endpoint is always derived from `bedrockRegion` (`https://bedrock-runtime.<region>.amazonaws.com`).
 
 ---
 
@@ -178,12 +194,13 @@ Generate vector embeddings using Titan Embeddings V2.
 
 ```ts
 const embedding = await llm.embed("The concept of general relativity", {
-  model: "amazon.titan-embed-text-v2:0",
-  dimensions: 1024
+  model: "amazon.titan-embed-text-v2:0"
 });
 
 console.log(embedding.vector); // number[]
 ```
+
+**Note**: The `dimensions` option is not currently forwarded to Bedrock's Titan `InvokeModel` API — the model's default output size (1024 for Titan V2) is always used.
 
 ---
 

@@ -62,8 +62,8 @@ You can pass local paths or URLs directly to the `ask` or `stream` method using 
 **Supported File Types:**
 
 - **Images**: `.jpg`, `.jpeg`, `.png`, `.gif`, `.webp`
-- **Videos**: `.mp4`, `.mpeg`, `.mov`, `.avi`, `.webm`
-- **Audio**: `.wav`, `.mp3`, `.ogg`, `.flac`
+- **Videos**: `.mp4`, `.mpeg`, `.mov`
+- **Audio**: `.wav`, `.mp3`
 - **Documents**: `.pdf`, `.csv`, `.json`, `.xml`, `.md`, `.txt`
 - **Code**: `.js`, `.ts`, `.py`, `.rb`, `.go`, etc.
 
@@ -181,7 +181,7 @@ await chat.ask("Analyze these project resources", {
 
 ---
 
-## Receiving Model-Generated Data (Attachments) <span style="background-color: #0d47a1; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v1.16.0</span>
+## Receiving Model-Generated Data (Attachments) <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v1.16.0+</span>
 
 Some advanced models (like Google's Gemini 2.5 Flash Image) can return images or other binary data directly within the chat response. These are surfaced as **Attachments**.
 

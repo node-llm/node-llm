@@ -7,7 +7,7 @@ permalink: /advanced/security
 description: Learn how NodeLLM acts as an architectural security layer with context isolation, content filtering, human-in-the-loop tool execution, and resource limits.
 ---
 
-# {{ page.title }}
+# {{ page.title }} <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v1.5.0+</span>
 {: .no_toc }
 
 {{ page.description }}
@@ -86,6 +86,8 @@ chat
   .onToolCallError((call, err) => incidentResponse.trigger(`Tool failure: ${err.message}`));
 ```
 
+Calling the same hook (e.g. `onToolCallStart`) more than once registers an **additional** handler rather than replacing the previous one <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v1.17.0+</span> — so independent security layers (e.g. a compliance audit log and a separate anomaly detector) can each register their own hook without silently dropping the other's. `onConfirmToolCall` is the one exception: when multiple handlers are registered, **every** one of them must approve for the call to proceed.
+
 ---
 
 ## 🚦 Tool Execution Policies <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v1.5.0+</span>
@@ -107,6 +109,8 @@ chat.withToolExecution("confirm").onConfirmToolCall(async (call) => {
 
 - **Prevents Destructive Actions**: Stops the model from accidentally deleting data without oversight.
 - **Human-in-the-loop**: Increases trust by ensuring critical business logic remains under human control.
+
+**Note on concurrency:** independent tool calls in the same turn can optionally run in parallel via `toolConcurrency` / `chat.withToolConcurrency()`. In `confirm` mode, execution always stays sequential since approval is interactive — see the [Tools guide](/core-features/tools.html#concurrent-tool-execution) for details.
 
 ---
 

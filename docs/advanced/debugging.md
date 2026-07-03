@@ -73,10 +73,10 @@ const debugAnthropic = NodeLLM.withProvider("anthropic", { debug: true });
 Debug logging works for:
 
 - **Chat** (regular and streaming)
-- **Image Generation** (OpenAI, Gemini)
-- **Embeddings** (OpenAI, Gemini, Ollama, Mistral)
+- **Image Generation** (OpenAI, Gemini, Bedrock)
+- **Embeddings** (OpenAI, Gemini, Ollama, Mistral, Bedrock)
 - **Transcription** (OpenAI, Gemini, Mistral)
-- **Moderation** (OpenAI, Mistral)
+- **Moderation** (OpenAI, Mistral, Bedrock)
 - **Model Alias Resolution** (all providers)
 - **All Providers** (OpenAI, Anthropic, Gemini, DeepSeek, Bedrock, OpenRouter, xAI, Ollama, Mistral)
 

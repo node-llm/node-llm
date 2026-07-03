@@ -126,11 +126,35 @@ interface MonitorDashboardOptions {
   basePath?: string;
   
   /** CORS configuration for API endpoints */
-  cors?: boolean | string | string[];
+  cors?: boolean | string | string[] | { origin: string | string[]; credentials?: boolean };
   
   /** Polling interval (ms) for the UI. Default: 5000 */
   pollInterval?: number;
+
+  /** Enable debug logging. Default: false */
+  debug?: boolean;
+
+  /** Internationalization configuration */
+  i18n?: {
+    /** Custom dashboard title */
+    title?: string;
+    /** Supported languages (e.g. ['en', 'ar']) */
+    supportedLngs?: string[];
+    /** Default language */
+    lng?: string;
+    /** Fallback language */
+    fallbackLng?: string;
+  };
 }
+```
+
+For example, to restrict the dashboard to English and Arabic and set Arabic as the default:
+
+```typescript
+app.use(monitor.api({
+  basePath: "/monitor",
+  i18n: { supportedLngs: ["en", "ar"], lng: "ar" }
+}));
 ```
 
 ### Authentication

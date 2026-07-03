@@ -20,7 +20,7 @@ description: Learn how to manage, override, and fetch LLM pricing data in NodeLL
 
 ---
 
-NodeLLM comes with built-in pricing data for over 9,000 models, updated weekly from [models.dev](https://models.dev). However, you may need to override these prices for custom contracts, handle new models before they enter our registry, or manage pricing for local/custom providers.
+NodeLLM comes with built-in pricing data for hundreds of models across all supported providers, updated regularly from [models.dev](https://models.dev). However, you may need to override these prices for custom contracts, handle new models before they enter our registry, or manage pricing for local/custom providers.
 
 ---
 

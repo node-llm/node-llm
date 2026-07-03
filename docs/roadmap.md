@@ -17,6 +17,7 @@ NodeLLM is evolving to support more complex AI-native Node.js applications.
 - **[Professional ORM Support](/orm/prisma)**: Database persistence for Prisma with automated history management and professional migration workflows.
 - **Context Isolation 2.0**: Strict separation of system instructions and conversation turns for enterprise-grade safety.
 - **[Model Context Protocol (MCP)](/core-features/mcp)**: Professional integration for third-party tools, resources, and prompt templates. Phase 2 (Observability & Orchestration) is now stable.
+- **[Schema Self-Correction Middleware](/core-features/structured_output)**: Automatic detection and repair of structured-output validation failures via re-prompting.
 
 ---
 
@@ -27,7 +28,6 @@ NodeLLM is evolving to support more complex AI-native Node.js applications.
 
 Beyond simple chat loops, we are building structured orchestration patterns for complex multi-step reasoning:
 - **Planner/Executor Loops**: Automated sub-task decomposition.
-- **Self-Correction Patterns**: Native support for LLM-based output validation and retry loops.
 
 ### 🧪 Evaluation Framework
 **Integration Testing for AI.**

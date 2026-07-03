@@ -26,6 +26,7 @@ Track tokens for individual turns or the entire conversation to monitor costs an
 
 Every response object contains usage metadata for that specific interaction.
 
+```ts
 const response = await chat.ask("Hello!");
 
 // Standard Snake Case

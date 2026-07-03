@@ -35,6 +35,17 @@ const llm = createLLM({
 });
 ```
 
+### Custom Endpoint
+
+To route requests through a proxy or Gemini-compatible gateway, override the base URL via `geminiApiBase` (or the `GEMINI_API_BASE` environment variable):
+
+```ts
+const llm = createLLM({
+  provider: "gemini",
+  geminiApiBase: "https://my-proxy.example.com/v1beta"
+});
+```
+
 ---
 
 ## Specific Parameters
@@ -65,6 +76,10 @@ const chat = llm.chat("gemini-1.5-pro").withParams({
 - **Multimodal**: Supports images, audio, and video files directly.
 - **Tools**: Supported.
 - **System Instructions**: Supported.
+- **Structured Output**: Native JSON schema support.
+- **Embeddings**: Vector generation via `text-embedding-004`.
+- **Image Generation**: Imagen model support via `llm.paint()`.
+- **Transcription**: Audio transcription via Gemini's multimodal `generateContent` endpoint.
 
 ---
 
@@ -76,6 +91,48 @@ Gemini is unique in its ability to natively process video files.
 await chat.ask("What happens in this video?", {
   files: ["./video.mp4"]
 });
+```
+
+---
+
+## Embeddings
+
+Generate vector embeddings using Gemini's embedding models.
+
+```ts
+const embedding = await llm.embed("The concept of general relativity", {
+  model: "text-embedding-004"
+});
+
+console.log(embedding.vector); // number[]
+```
+
+---
+
+## Image Generation
+
+Use the `paint()` method to generate images with Imagen.
+
+```ts
+const response = await llm.paint("A futuristic city on Mars, high quality, 4k", {
+  model: "imagen-4.0-generate-001"
+});
+
+await response.save("./mars-city.png");
+```
+
+---
+
+## Transcription
+
+Transcribe audio files using Gemini's native multimodal understanding.
+
+```ts
+const transcription = await llm.transcribe("./meeting.mp3", {
+  model: "gemini-2.0-flash"
+});
+
+console.log(transcription.text);
 ```
 
 ---

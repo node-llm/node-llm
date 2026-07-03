@@ -35,6 +35,17 @@ const llm = createLLM({
 });
 ```
 
+### Custom Endpoint
+
+To route requests through a proxy or Anthropic-compatible gateway, override the base URL via `anthropicApiBase` (or the `ANTHROPIC_API_BASE` environment variable):
+
+```ts
+const llm = createLLM({
+  provider: "anthropic",
+  anthropicApiBase: "https://my-proxy.example.com/v1"
+});
+```
+
 ---
 
 ## Specific Parameters

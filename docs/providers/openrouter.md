@@ -35,6 +35,17 @@ const llm = createLLM({
 });
 ```
 
+### Custom Endpoint
+
+To route requests through a proxy, override the base URL via `openrouterApiBase` (or the `OPENROUTER_API_BASE` environment variable):
+
+```ts
+const llm = createLLM({
+  provider: "openrouter",
+  openrouterApiBase: "https://my-proxy.example.com/api/v1"
+});
+```
+
 ---
 
 ## Features
@@ -45,6 +56,7 @@ const llm = createLLM({
 - **Tools**: Supported for models with function calling capabilities.
 - **Reasoning**: Access chain-of-thought for reasoning-capable models (e.g., DeepSeek R1).
 - **Streaming**: Native streaming support with the advanced `Stream` utility.
+- **Embeddings**: Supported for embedding-capable models routed through OpenRouter.
 
 ---
 

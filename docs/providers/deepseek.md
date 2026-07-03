@@ -35,6 +35,17 @@ const llm = createLLM({
 });
 ```
 
+### Custom Endpoint
+
+To use a self-hosted or proxied DeepSeek-compatible endpoint, override the base URL via `deepseekApiBase` (or the `DEEPSEEK_API_BASE` environment variable):
+
+```ts
+const llm = createLLM({
+  provider: "deepseek",
+  deepseekApiBase: "https://my-proxy.example.com"
+});
+```
+
 ---
 
 ## Specific Parameters

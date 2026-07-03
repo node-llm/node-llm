@@ -99,7 +99,7 @@ Ideal for integrations that pass configuration dynamically or from a centralized
 ```ts
 // All options can be passed together at initialization
 const chat = NodeLLM.chat("gpt-4o", {
-  instructions: "You are a helpful assistant",
+  systemPrompt: "You are a helpful assistant",
   temperature: 0.7,
   maxTokens: 500,
   thinking: { effort: "high" },

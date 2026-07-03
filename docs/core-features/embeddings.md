@@ -72,10 +72,11 @@ const embedding = await NodeLLM.embed("Text", {
 
 For models not in the registry (e.g., Azure deployments or new releases), use `assumeModelExists`.
 
+Unlike `chat()`, the `embed()` options object does not accept a `provider` field — the provider is fixed to whichever `NodeLLM` instance you call it on. To target a specific provider, scope the call with `withProvider()` first:
+
 ```ts
-const embedding = await NodeLLM.embed("Text", {
+const embedding = await NodeLLM.withProvider("openai").embed("Text", {
   model: "new-embedding-v2",
-  provider: "openai",
   assumeModelExists: true
 });
 ```

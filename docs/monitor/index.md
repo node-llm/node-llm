@@ -23,8 +23,9 @@ NodeLLM Monitor is built for global teams. The dashboard supports multiple langu
 
 ### Features
 - **Dynamic Language Switching**: Toggle between languages instantly without reload.
-- **RTL Support**: Seamlessly switch to Arabic, Hebrew, or Persian with optimized UI layouts.
-- **Extensible Architecture**: Add your own languages or override existing translations with simple YAML files.
+- **Built-in Locales**: Ships with English, Spanish, and Arabic (`en`, `es`, `ar`) translations out of the box.
+- **RTL Support**: Seamlessly switch to Arabic with an optimized right-to-left UI layout.
+- **Extensible Architecture**: Add your own languages (e.g. Hebrew, Persian) or override existing translations with simple YAML files via `extendI18n`/`configureI18n`.
 
 | English (LTR) | Arabic (RTL) |
 |:---:|:---:|

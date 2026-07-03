@@ -61,6 +61,10 @@ const chat = llm.chat("gpt-4o").withParams({
 - **Smart Developer Role**: Modern instructions are automatically mapped to the `developer` role for compatible models when using the official API.
 - **Strict Structured Output**: Supports OpenAI's "Strict Mode" for 100% schema adherence.
 - **Predicted Outputs**: Optimize latency for code-editing tasks by providing expected output previews.
+- **Embeddings**: Vector generation via `text-embedding-3-small`/`text-embedding-3-large`.
+- **Image Generation & Editing**: DALL-E and `gpt-image-1` generation, plus in-painting/edits and variations via `paint()`.
+- **Transcription**: Audio transcription via Whisper, including word-level timestamps.
+- **Moderation**: Content moderation via the `omni-moderation`/`text-moderation` model family.
 
 ---
 
