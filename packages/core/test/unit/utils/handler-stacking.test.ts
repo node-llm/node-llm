@@ -57,20 +57,30 @@ describe("runDirectiveHandlers", () => {
   });
 
   it("returns undefined when no handler returns a directive", async () => {
-    const result = await runDirectiveHandlers([() => undefined, () => undefined], "err");
+    const result = await runDirectiveHandlers<[string], "STOP">(
+      [(_name: string) => undefined, (_name: string) => undefined],
+      "err"
+    );
     expect(result).toBeUndefined();
   });
 });
 
 describe("runConfirmHandlers", () => {
   it("approves when there are no handlers", async () => {
-    expect(await runConfirmHandlers([], "call")).toBe(true);
+    expect(await runConfirmHandlers<[string]>([], "call")).toBe(true);
   });
 
   it("requires every handler to approve", async () => {
-    expect(await runConfirmHandlers([() => true, () => true], "call")).toBe(true);
+    expect(
+      await runConfirmHandlers<[string]>([(_call: string) => true, (_call: string) => true], "call")
+    ).toBe(true);
 
-    expect(await runConfirmHandlers([() => true, () => false], "call")).toBe(false);
+    expect(
+      await runConfirmHandlers<[string]>(
+        [(_call: string) => true, (_call: string) => false],
+        "call"
+      )
+    ).toBe(false);
   });
 });
 
