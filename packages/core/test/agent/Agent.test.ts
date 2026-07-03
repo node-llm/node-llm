@@ -94,6 +94,31 @@ describe("Agent", () => {
         })
       );
     });
+
+    it("should pass static toolConcurrency through to the underlying chat", () => {
+      class ConcurrentAgent extends Agent {
+        static model = "gpt-4o";
+        static toolConcurrency = true;
+      }
+
+      new ConcurrentAgent();
+      expect(NodeLLM.chat).toHaveBeenCalledWith(
+        "gpt-4o",
+        expect.objectContaining({
+          toolConcurrency: true
+        })
+      );
+    });
+
+    it("should allow overriding toolConcurrency in the constructor", () => {
+      new TestAgent({ toolConcurrency: true });
+      expect(NodeLLM.chat).toHaveBeenCalledWith(
+        "gpt-4o",
+        expect.objectContaining({
+          toolConcurrency: true
+        })
+      );
+    });
   });
 
   describe("Static Execution API", () => {
