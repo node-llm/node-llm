@@ -23,6 +23,7 @@ import { ModelRegistry } from "../models/ModelRegistry.js";
 import { Middleware, MiddlewareContext, ToolErrorDirective } from "../types/Middleware.js";
 import { runMiddleware } from "../utils/middleware-runner.js";
 import { randomUUID } from "node:crypto";
+import { shouldRunToolCallsConcurrently, executeToolCallOutcomes } from "./ToolCallOutcome.js";
 
 /**
  * Internal handler for chat streaming logic.
@@ -302,118 +303,111 @@ export class ChatStream {
             break;
           }
 
-          for (const toolCall of toolCalls) {
-            if (options.toolExecution === ToolExecutionMode.CONFIRM) {
-              const approved = await ToolHandler.requestToolConfirmation(
-                toolCall,
-                options.onConfirmToolCall
+          const runConcurrently = shouldRunToolCallsConcurrently(
+            options.toolConcurrency,
+            options.toolExecution,
+            toolCalls.length
+          );
+
+          const outcomes = await executeToolCallOutcomes(
+            toolCalls,
+            { ...options, tools: options.tools as unknown as ToolDefinition[] },
+            middlewares,
+            context,
+            runConcurrently
+          );
+
+          for (const outcome of outcomes) {
+            const toolCall = outcome.toolCall;
+
+            if (outcome.kind === "cancelled") {
+              messages.push(
+                provider.formatToolResultMessage(toolCall.id, "Action cancelled by user.")
               );
-              if (!approved) {
-                messages.push(
-                  provider.formatToolResultMessage(toolCall.id, "Action cancelled by user.")
-                );
-                continue;
-              }
+              continue;
             }
 
-            // 2. onToolCallStart Hook
-            await runMiddleware(middlewares, "onToolCallStart", context, toolCall);
-
-            try {
-              const toolResult = await ToolHandler.execute(
-                toolCall,
-                options.tools as unknown as ToolDefinition[],
-                options.onToolCallStart,
-                options.onToolCallEnd
-              );
-
-              // 3. onToolCallEnd Hook
-              await runMiddleware(
-                middlewares,
-                "onToolCallEnd",
-                context,
-                toolCall,
-                toolResult.content
-              );
-
+            if (outcome.kind === "success") {
+              const { toolResult } = outcome;
               messages.push(
                 provider.formatToolResultMessage(toolResult.tool_call_id, toolResult.content)
               );
-            } catch (error: unknown) {
-              let currentError = error as Error & { fatal?: boolean; status?: number };
-
-              // 4. onToolCallError Hook
-              const middlewareDirective = await runMiddleware<ToolErrorDirective>(
-                middlewares,
-                "onToolCallError",
-                context,
-                toolCall,
-                currentError
-              );
-
-              const directive =
-                middlewareDirective || (await options.onToolCallError?.(toolCall, currentError));
-
-              if (directive === "STOP") {
-                throw error;
-              }
-
-              if (directive === "RETRY") {
-                try {
-                  const toolResult = await ToolHandler.execute(
-                    toolCall,
-                    options.tools as unknown as ToolDefinition[],
-                    options.onToolCallStart,
-                    options.onToolCallEnd
-                  );
-                  await runMiddleware(
-                    middlewares,
-                    "onToolCallEnd",
-                    context,
-                    toolCall,
-                    toolResult.content
-                  );
-                  messages.push(
-                    provider.formatToolResultMessage(toolResult.tool_call_id, toolResult.content)
-                  );
-                  continue;
-                } catch (retryError) {
-                  currentError = retryError as Error & { fatal?: boolean; status?: number };
-                  await runMiddleware(
-                    middlewares,
-                    "onToolCallError",
-                    context,
-                    toolCall,
-                    currentError
-                  );
-                }
-              }
-
-              messages.push(
-                provider.formatToolResultMessage(
-                  toolCall.id,
-                  `Fatal error executing tool '${toolCall.function.name}': ${currentError.message}`,
-                  { isError: true }
-                )
-              );
-
-              if (directive === "CONTINUE") {
-                continue;
-              }
-
-              const isFatal =
-                currentError.fatal === true ||
-                currentError.status === 401 ||
-                currentError.status === 403;
-              if (isFatal) {
-                throw currentError;
-              }
-
-              logger.error(
-                `Tool execution failed for '${toolCall.function.name}':`,
-                currentError as Error
-              );
+              continue;
             }
+
+            let currentError = outcome.error as Error & { fatal?: boolean; status?: number };
+
+            // 4. onToolCallError Hook
+            const middlewareDirective = await runMiddleware<ToolErrorDirective>(
+              middlewares,
+              "onToolCallError",
+              context,
+              toolCall,
+              currentError
+            );
+
+            const directive =
+              middlewareDirective || (await options.onToolCallError?.(toolCall, currentError));
+
+            if (directive === "STOP") {
+              throw currentError;
+            }
+
+            if (directive === "RETRY") {
+              try {
+                const toolResult = await ToolHandler.execute(
+                  toolCall,
+                  options.tools as unknown as ToolDefinition[],
+                  options.onToolCallStart,
+                  options.onToolCallEnd
+                );
+                await runMiddleware(
+                  middlewares,
+                  "onToolCallEnd",
+                  context,
+                  toolCall,
+                  toolResult.content
+                );
+                messages.push(
+                  provider.formatToolResultMessage(toolResult.tool_call_id, toolResult.content)
+                );
+                continue;
+              } catch (retryError) {
+                currentError = retryError as Error & { fatal?: boolean; status?: number };
+                await runMiddleware(
+                  middlewares,
+                  "onToolCallError",
+                  context,
+                  toolCall,
+                  currentError
+                );
+              }
+            }
+
+            messages.push(
+              provider.formatToolResultMessage(
+                toolCall.id,
+                `Fatal error executing tool '${toolCall.function.name}': ${currentError.message}`,
+                { isError: true }
+              )
+            );
+
+            if (directive === "CONTINUE") {
+              continue;
+            }
+
+            const isFatal =
+              currentError.fatal === true ||
+              currentError.status === 401 ||
+              currentError.status === 403;
+            if (isFatal) {
+              throw currentError;
+            }
+
+            logger.error(
+              `Tool execution failed for '${toolCall.function.name}':`,
+              currentError as Error
+            );
           }
           // Loop continues -> streaming next chunk
         }
