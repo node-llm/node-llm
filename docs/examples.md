@@ -47,6 +47,8 @@ A comprehensive list of runnable examples available in the [examples/](https://g
 | [`examples/scripts/openai/embeddings/create.mjs`](https://github.com/node-llm/node-llm/blob/main/examples/scripts/openai/embeddings/create.mjs)           | Creating text embeddings            |
 | [`examples/scripts/openai/chat/usage.mjs`](https://github.com/node-llm/node-llm/blob/main/examples/scripts/openai/chat/usage.mjs)                         | Token usage tracking                |
 | [`examples/scripts/openai/chat/parallel-tools.mjs`](https://github.com/node-llm/node-llm/blob/main/examples/scripts/openai/chat/parallel-tools.mjs)       | Parallel tool execution             |
+| [`examples/scripts/openai/chat/tool-concurrency.mjs`](https://github.com/node-llm/node-llm/blob/main/examples/scripts/openai/chat/tool-concurrency.mjs)   | Concurrent tool execution (`toolConcurrency`) |
+| [`examples/scripts/openai/chat/callback-stacking.mjs`](https://github.com/node-llm/node-llm/blob/main/examples/scripts/openai/chat/callback-stacking.mjs) | Registering multiple hooks for the same event |
 | [`examples/scripts/openai/chat/max-tokens.mjs`](https://github.com/node-llm/node-llm/blob/main/examples/scripts/openai/chat/max-tokens.mjs)               | Controlling output length           |
 | [`examples/scripts/openai/chat/streaming-tools.mjs`](https://github.com/node-llm/node-llm/blob/main/examples/scripts/openai/chat/streaming-tools.mjs)     | Tool use with streaming             |
 | [`examples/scripts/openai/chat/instructions.mjs`](https://github.com/node-llm/node-llm/blob/main/examples/scripts/openai/chat/instructions.mjs)           | System prompt instructions          |
