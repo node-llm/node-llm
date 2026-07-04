@@ -174,6 +174,32 @@ export class Chat extends BaseChat {
       });
     }
 
+    if (this.userHooks.onToolCallError.length > 0) {
+      coreChat.onToolCallError(async (call: any, error: Error) => {
+        // First handler to return a directive (STOP/CONTINUE/RETRY) wins,
+        // but every handler still runs so all of them get to observe it.
+        let directive: any;
+        for (const h of this.userHooks.onToolCallError) {
+          const value = await h(call, error);
+          if (value !== undefined && directive === undefined) {
+            directive = value;
+          }
+        }
+        return directive;
+      });
+    }
+
+    if (this.userHooks.onConfirmToolCall.length > 0) {
+      coreChat.onConfirmToolCall(async (call: any) => {
+        // Every registered handler must approve for the call to proceed.
+        for (const h of this.userHooks.onConfirmToolCall) {
+          const approved = await h(call);
+          if (approved === false) return false;
+        }
+        return true;
+      });
+    }
+
     return coreChat;
   }
 

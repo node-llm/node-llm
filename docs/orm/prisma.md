@@ -279,6 +279,31 @@ await chat.withTool(WeatherTool).ask("How is the weather in London?");
 // The 'LlmToolCall' table will contain the 'get_weather' execution details.
 ```
 
+### Concurrent & Confirmed Tool Execution <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v0.8.0+</span>
+
+`createChat`/`loadChat` accept the same `toolConcurrency` and `toolExecution` options as core's `Chat` (or set them fluently with `withToolConcurrency()` / `withToolExecution()`):
+
+```typescript
+import { ToolExecutionMode } from "@node-llm/core";
+
+const chat = await createChat(prisma, llm, {
+  model: "gpt-4o",
+  toolConcurrency: true, // run independent tool calls in the same turn in parallel
+  toolExecution: ToolExecutionMode.CONFIRM
+});
+
+chat.onConfirmToolCall((call) => {
+  return call.function.name !== "delete_account"; // require approval per call
+});
+
+chat.onToolCallError((call, error) => {
+  console.error(`Tool ${call.function.name} failed:`, error);
+  return "STOP"; // or "CONTINUE" / "RETRY"
+});
+```
+
+`onConfirmToolCall` requires every registered handler to approve a call before it runs; `onToolCallError` uses the first handler that returns a directive, while still calling every registered handler so each can observe the failure.
+
 ---
 
 ## Error Handling
