@@ -90,15 +90,50 @@ const chat = llm.chat().withTools([
 
 ---
 
+## Sampling <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v1.17.0+</span>
+
+Sampling inverts the usual direction of MCP: instead of the client asking the server for tools, the **server** asks the **client** to run an LLM completion on its behalf (`sampling/createMessage`). This lets a server offer LLM-powered functionality without holding its own API key — the client decides which model actually answers.
+
+By default `MCP` does not support sampling. Pass a `sampling` handler when connecting to opt in — the `sampling` capability is only advertised to the server once a handler is configured, so servers correctly hide sampling-dependent tools until you do.
+
+```ts
+import { MCP, createLLMSamplingHandler } from "@node-llm/mcp";
+import { createLLM } from "@node-llm/core";
+
+const llm = createLLM({ provider: "openai" });
+
+const mcp = await MCP.connect(
+  { command: "npx", args: ["-y", "some-server-that-uses-sampling"] },
+  { sampling: createLLMSamplingHandler(llm, "gpt-4o-mini") }
+);
+```
+
+`createLLMSamplingHandler` replays the server's request (messages, system prompt, temperature, max tokens) as a NodeLLM chat and maps the response back into the shape the server expects. For full control over the request/response — routing to different models, adding a human-in-the-loop approval step, etc. — pass your own handler function instead:
+
+```ts
+const mcp = await MCP.connect(config, {
+  sampling: async (request) => {
+    // request.messages, request.systemPrompt, request.maxTokens, ...
+    const chat = llm.chat("gpt-4o-mini").withTemperature(request.temperature ?? 1);
+    const response = await chat.ask(request.messages.at(-1)?.content as string);
+    return { model: response.model, role: "assistant", content: { type: "text", text: response.content } };
+  }
+});
+```
+
+**Note**: Multimodal sampling requests (image/audio content blocks) are not yet supported — only text content is extracted from request messages.
+
+---
+
 ## API Reference
 
 ### MCP (The Host)
 
 | Method | Description |
 | :--- | :--- |
-| `static connect(config)` | Connects to a local server process (Stdio). Accepts `command`, `args`, and `env`. |
-| `static connectSSE(config)` | Connects to a remote server (HTTP/SSE). Accepts `url`. |
-| `static connectAll(config)` | Connects to multiple named servers at once. Returns a map of server name → `MCP` instance. |
+| `static connect(config, options?)` | Connects to a local server process (Stdio). Accepts `command`, `args`, and `env`. `options.sampling` configures a [sampling](#sampling-v1170) handler. |
+| `static connectSSE(config, options?)` | Connects to a remote server (HTTP/SSE). Accepts `url`. |
+| `static connectAll(config, options?)` | Connects to multiple named servers at once. Returns a map of server name → `MCP` instance. |
 | `discover(options?)` | Master discovery method. Returns `tools`, `resources`, `resourceTemplates`, and `prompts`. |
 | `discoverTools(options?)` | Discovers only tools. Returns `MCPTool[]`. |
 | `discoverResources(options?)` | Discovers only resources. Returns `MCPResource[]`. |

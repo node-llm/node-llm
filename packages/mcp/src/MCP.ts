@@ -1,5 +1,6 @@
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import {
+  CreateMessageRequestSchema,
   LoggingMessageNotificationSchema,
   ProgressNotificationSchema
 } from "@modelcontextprotocol/sdk/types.js";
@@ -11,6 +12,7 @@ import { MCPTool } from "./MCPTool.js";
 import { MCPResource } from "./MCPResource.js";
 import { MCPPrompt } from "./MCPPrompt.js";
 import { MCPResourceTemplate } from "./MCPResourceTemplate.js";
+import { MCPSamplingOption, resolveSamplingHandler } from "./MCPSampling.js";
 
 export interface StdioConfig {
   command: string;
@@ -42,6 +44,17 @@ export interface DiscoveryOptions {
   prefix?: string;
 }
 
+export interface MCPOptions {
+  /**
+   * Handles `sampling/createMessage` requests from the server (the server
+   * asking the client to run an LLM completion on its behalf). Pass either
+   * a handler function, or `{ llm, model? }` to answer requests using an
+   * existing NodeLLM instance. Omit to leave sampling unsupported — the
+   * capability is only advertised to the server when this is set.
+   */
+  sampling?: MCPSamplingOption;
+}
+
 /**
  * The main orchestrating engine for MCP integration.
  * Acts as the entry point for connecting to servers and discovering capabilities.
@@ -58,8 +71,13 @@ export class MCP extends EventEmitter {
   /**
    * Creates an MCP instance from an existing transport.
    */
-  constructor(private readonly transport: Transport) {
+  constructor(
+    private readonly transport: Transport,
+    options: MCPOptions = {}
+  ) {
     super();
+    const samplingHandler = resolveSamplingHandler(options.sampling);
+
     this.client = new Client(
       {
         name: "node-llm-mcp-host",
@@ -67,7 +85,9 @@ export class MCP extends EventEmitter {
       },
       {
         capabilities: {
-          sampling: {}
+          // Only claim sampling support if a handler is actually wired up —
+          // otherwise servers that rely on it get an unhandled request.
+          ...(samplingHandler ? { sampling: {} } : {})
         },
         // Setup internal notification handlers for protocol events
         listChanged: {
@@ -92,6 +112,18 @@ export class MCP extends EventEmitter {
     if (stdioTransport.stderr) {
       stdioTransport.stderr.on("data", (chunk: Buffer) => {
         this.emit("log", chunk.toString());
+      });
+    }
+
+    // Answer sampling/createMessage requests initiated by the server
+    if (samplingHandler) {
+      this.client.setRequestHandler(CreateMessageRequestSchema, async (request) => {
+        try {
+          return await samplingHandler(request.params);
+        } catch (err) {
+          this.emit("error", err);
+          throw err;
+        }
       });
     }
 
@@ -161,7 +193,7 @@ export class MCP extends EventEmitter {
   /**
    * Helper to quickly connect to a Stdio-based MCP server.
    */
-  static async connect(config: StdioConfig): Promise<MCP> {
+  static async connect(config: StdioConfig, options: MCPOptions = {}): Promise<MCP> {
     const transport = new StdioClientTransport({
       command: config.command,
       args: config.args || [],
@@ -169,30 +201,33 @@ export class MCP extends EventEmitter {
       stderr: "pipe"
     });
 
-    return new MCP(transport);
+    return new MCP(transport, options);
   }
 
   /**
    * Helper to quickly connect to an SSE-based MCP server (HTTP).
    *
    */
-  static async connectSSE(config: SSEConfig): Promise<MCP> {
+  static async connectSSE(config: SSEConfig, options: MCPOptions = {}): Promise<MCP> {
     const transport = new StreamableHTTPClientTransport(new URL(config.url));
-    return new MCP(transport);
+    return new MCP(transport, options);
   }
 
   /**
    * Connects to multiple MCP servers simultaneously from a configuration object.
    * Returns a map of server names to MCP instances.
    */
-  static async connectAll(config: MCPConfig): Promise<Record<string, MCP>> {
+  static async connectAll(
+    config: MCPConfig,
+    options: MCPOptions = {}
+  ): Promise<Record<string, MCP>> {
     const instances: Record<string, MCP> = {};
     const connections = Object.entries(config).map(async ([name, cfg]) => {
       try {
         if ("command" in cfg) {
-          instances[name] = await MCP.connect(cfg);
+          instances[name] = await MCP.connect(cfg, options);
         } else if ("url" in cfg) {
-          instances[name] = await MCP.connectSSE(cfg);
+          instances[name] = await MCP.connectSSE(cfg, options);
         }
       } catch (err) {
         console.warn(`[MCP] Failed to connect to server "${name}":`, err);

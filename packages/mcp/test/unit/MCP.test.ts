@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { MCP } from "../../src/MCP.js";
+import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { EventEmitter } from "events";
 
 // Mock the SDK components
@@ -108,5 +109,62 @@ describe("MCP Class", () => {
     expect(Object.keys(instances)).toEqual(["server1", "server2"]);
     expect(instances.server1).toBeInstanceOf(MCP);
     expect(instances.server2).toBeInstanceOf(MCP);
+  });
+
+  describe("sampling", () => {
+    it("should not advertise the sampling capability when no handler is configured", () => {
+      new MCP({} as any);
+
+      const [, clientOptions] = (Client as unknown as ReturnType<typeof vi.fn>).mock.calls[0];
+      expect(clientOptions.capabilities.sampling).toBeUndefined();
+    });
+
+    it("should advertise sampling and register a request handler when configured", () => {
+      const handler = vi.fn();
+      new MCP({} as any, { sampling: handler });
+
+      const [, clientOptions] = (Client as unknown as ReturnType<typeof vi.fn>).mock.calls[0];
+      expect(clientOptions.capabilities.sampling).toEqual({});
+      expect(mockClient.setRequestHandler).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.any(Function)
+      );
+    });
+
+    it("should invoke the configured handler for incoming sampling requests", async () => {
+      const handler = vi.fn().mockResolvedValue({
+        model: "test-model",
+        role: "assistant",
+        content: { type: "text", text: "hi" }
+      });
+      new MCP({} as any, { sampling: handler });
+
+      const registeredHandler = (mockClient.setRequestHandler as any).mock.calls[0][1];
+
+      const params = { messages: [{ role: "user", content: { type: "text", text: "hello" } }] };
+      const result = await registeredHandler({ params });
+
+      expect(handler).toHaveBeenCalledWith(params);
+      expect(result).toEqual({
+        model: "test-model",
+        role: "assistant",
+        content: { type: "text", text: "hi" }
+      });
+    });
+
+    it("should propagate and emit errors thrown by the sampling handler", async () => {
+      const failure = new Error("sampling failed");
+      const handler = vi.fn().mockRejectedValue(failure);
+      const mcp = new MCP({} as any, { sampling: handler });
+      const errorSpy = vi.fn();
+      mcp.onError(errorSpy);
+
+      const registeredHandler = (mockClient.setRequestHandler as any).mock.calls[0][1];
+
+      await expect(registeredHandler({ params: { messages: [] } })).rejects.toThrow(
+        "sampling failed"
+      );
+      expect(errorSpy).toHaveBeenCalledWith(failure);
+    });
   });
 });

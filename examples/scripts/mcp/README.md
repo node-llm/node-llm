@@ -20,6 +20,11 @@ Allows the AI to read and summarize local files in your project.
 Enables the AI to browse the live web, click elements, and extract data.
 - **Key Feature**: Fully autonomous web research capabilities.
 
+### 4. `core-explorer/sampling.ts`
+**Category**: Protocol Feature
+Connects to a server (`sampling-server.mjs`) that has no LLM of its own — its `summarize_text` tool asks the *client* to run a completion via `sampling/createMessage`, which NodeLLM answers using a real LLM.
+- **Key Feature**: `createLLMSamplingHandler` lets a server offer LLM-powered tools without its own API key; the capability is only advertised to the server when a handler is configured.
+
 ## 🛠 How to Run
 
 1. Ensure you are in the project root.
@@ -30,6 +35,7 @@ Enables the AI to browse the live web, click elements, and extract data.
 npx tsx examples/scripts/mcp/github/dynamic-github-bridge.ts
 npx tsx examples/scripts/mcp/filesystem/fs-explorer.ts
 npx tsx examples/scripts/mcp/puppeteer/web-browser.ts
+npx tsx examples/scripts/mcp/core-explorer/sampling.ts
 ```
 
 ## 🏗 Why use @node-llm/mcp?
