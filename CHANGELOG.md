@@ -2,6 +2,44 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.17.0] - 2026-07-04 (@node-llm/core)
+
+### Features
+
+- **Concurrent Tool Execution**: Opt-in `toolConcurrency` config / `withToolConcurrency()` executes independent tool calls in parallel within `ask()`, `stream()`, and Agent mode instead of one at a time.
+- **Additive Callback Stacking**: `on*()`, `beforeRequest()`, and `afterResponse()` handlers now stack instead of silently overwriting the previous registration, so independent concerns can each register their own hook.
+- **Bedrock Custom Endpoints**: Added `bedrockApiBase` for routing Bedrock requests through a custom endpoint.
+- **`ToolChoice` Export**: Exposed the `ToolChoice` type from the package root for downstream packages (e.g. `@node-llm/orm`).
+
+### Improvements
+
+- **Provider Factory Typing**: Widened `registerProvider()`'s factory type to accept configuration.
+- **Tool Response Fidelity**: Metadata and attachments now carry through to the final tool-call response.
+- **Model Catalog Sync**: Refreshed `models.json` and aliases with the latest provider model catalogs.
+
+## [0.2.0] - 2026-07-04 (@node-llm/mcp)
+
+### Features
+
+- **MCP Sampling Support**: Servers can now request LLM completions from the client via `sampling/createMessage`. `createLLMSamplingHandler()` answers these requests using an existing NodeLLM instance, or pass a custom handler for full control over the response.
+
+## [0.8.0] - 2026-07-04 (@node-llm/orm)
+
+### Features
+
+- **Tool Execution Options**: `withToolConcurrency()`, `withToolExecution()` (`auto` / `confirm` / `dry-run`), `onConfirmToolCall()`, and `onToolCallError()` bring core's tool-orchestration controls to Prisma-backed chats.
+- **Tool Choice & Schema Options**: `withToolChoice()`, `withToolCalls()`, and `withSchema()` are now supported in the ORM adapter.
+
+## [0.5.1] - 2026-07-04 (@node-llm/testing)
+
+### Bug Fixes
+
+- **VCR Auto-Naming Race**: Fixed an async race condition in VCR cassette auto-naming.
+
+### Improvements
+
+- **Peer Dependency**: `vitest` is now declared as a peer dependency instead of a hard dependency, avoiding version resolution conflicts with a consumer's own vitest install.
+
 ## [1.16.0] - 2026-04-18 (@node-llm/core)
 
 ### Features
