@@ -59,6 +59,13 @@ const response = await agent.ask("What is the capital of France?");
 | `ask(prompt)` | Send a message and get a response |
 | `say(prompt)` | Alias for `ask()` |
 | `stream(prompt)` | Stream the response |
+| `withInstructions(text, opts?)` | Add or replace instructions on the underlying chat |
+| `withTools(tools, opts?)` | Add or replace tools on the underlying chat |
+| `use(tool)` | Alias for `withTools([tool])` |
+| `history` (getter) | The conversation history of the underlying chat |
+| `modelId` (getter) | The resolved model ID in use |
+| `totalUsage` (getter) | Aggregate token usage across the conversation |
+| `underlyingChat` (getter) | Access the raw `Chat` instance for advanced operations |
 
 **Static Methods** <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v1.11.0+</span>
 
@@ -81,12 +88,18 @@ const result = await agent.ask("What is TypeScript?");
 | Property | Type | Description |
 |:---------|:-----|:------------|
 | `model` | `string` | The model ID to use (e.g., "gpt-4o") |
+| `provider` | `string` | Force a specific provider (e.g., "openai") |
 | `instructions` | `string` | System prompt for the agent |
 | `tools` | `Tool[]` | Array of Tool classes to register |
 | `temperature` | `number` | Sampling temperature (0-2) |
 | `thinking` | `boolean \| object` | Enable extended thinking (Claude) |
 | `schema` | `ZodSchema` | Output schema for structured responses |
-| `middlewares` | `Middleware[]` | Middlewares for observation or correction |
+| `params` | `Record<string, unknown>` | Provider-specific request parameters |
+| `headers` | `Record<string, string>` | Custom headers for requests |
+| `maxTokens` | `number` | Maximum tokens in the response |
+| `maxToolCalls` | `number` | Maximum tool-call iterations per turn |
+| `assumeModelExists` | `boolean` | Skip registry validation for custom/unlisted models |
+| `middlewares` | `Middleware[]` | Middlewares for observation or correction <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.6em; font-weight: 600; vertical-align: middle;">v1.15.0+</span> |
 
 ---
 
@@ -267,8 +280,6 @@ console.log(result);
 ```
 
 **Why not wrap in tools?** Direct orchestration is clearer when you control the workflow. Use tools only when the LLM needs to decide *when* to call sub-agents dynamically.
-
-```
 
 ---
 

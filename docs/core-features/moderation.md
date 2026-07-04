@@ -64,6 +64,28 @@ console.log(`Violence Score: ${result.category_scores.violence}`);
 - **Self-Harm**: Promoting self-harm or suicide.
 - **Violence**: Promoting or depicting violence.
 
+## Batch Moderation
+
+`NodeLLM.moderate` also accepts an array of strings in a single call. The returned `Moderation` object aggregates every input's result:
+
+```ts
+const result = await NodeLLM.moderate(["First message", "Second message"]);
+
+console.log(result.length); // 2
+console.log(result.flagged); // true if ANY input was flagged
+console.log(result.flaggedCategories); // Categories flagged across ALL inputs
+
+// Iterate per-input results
+for (const item of result) {
+  console.log(item.flagged, item.categories);
+}
+
+// Or access by index
+console.log(result.results[0].flagged);
+```
+
+`result.categories` and `result.category_scores` (used in the examples above) are shorthand for the **first** result — reach for `result.results` when moderating a batch.
+
 ## Integration Patterns
 
 ### Pre-Chat Moderation

@@ -54,6 +54,13 @@ export interface BedrockConfig {
   requestTimeout?: number;
 
   /**
+   * Custom Bedrock Runtime endpoint override (e.g. for routing traffic
+   * through a proxy or private gateway). Defaults to the standard
+   * `https://bedrock-runtime.{region}.amazonaws.com` endpoint when unset.
+   */
+  apiBase?: string;
+
+  /**
    * Default Bedrock Guardrail identifier (ID or ARN).
    */
   guardrailIdentifier?: string;
@@ -94,7 +101,9 @@ export function validateBedrockConfig(config: BedrockConfig): "apiKey" | "sigv4"
 
 /**
  * Build the Bedrock Runtime endpoint URL for a given region.
+ * Pass `apiBase` to route through a custom endpoint (e.g. a proxy/gateway)
+ * instead of the standard AWS Bedrock Runtime URL.
  */
-export function getBedrockEndpoint(region: string): string {
-  return `https://bedrock-runtime.${region}.amazonaws.com`;
+export function getBedrockEndpoint(region: string, apiBase?: string): string {
+  return apiBase || `https://bedrock-runtime.${region}.amazonaws.com`;
 }

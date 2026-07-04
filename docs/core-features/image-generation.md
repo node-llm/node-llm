@@ -84,7 +84,7 @@ stream.pipe(process.stdout);
 
 ## Editing Existing Images
 
-<span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v1.15+</span>
+<span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v1.16.0+</span>
 
 Some models (like DALL-E 2) can edit an existing image instead of generating from scratch. Use `images` to pass one or more source images, and `mask` to constrain which parts may change.
 

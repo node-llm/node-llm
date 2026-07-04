@@ -65,6 +65,8 @@ const chat = llm.chat("mistral-large-latest").withParams({
 - **Streaming**: Full streaming support for all chat models.
 - **Structured Output**: Supported via JSON schema definitions.
 - **Embeddings**: Supported via `mistral-embed` model.
+- **Transcription**: Audio transcription via `voxtral-mini-latest`.
+- **Moderation**: Content moderation via `mistral-moderation-latest`.
 
 ---
 
@@ -90,8 +92,34 @@ import { createLLM } from "@node-llm/core";
 
 const llm = createLLM({ provider: "mistral" });
 
-const result = await llm.embed("mistral-embed", "Hello world");
+const result = await llm.embed("Hello world", { model: "mistral-embed" });
 console.log(result.vectors[0]); // [0.123, -0.456, ...]
+```
+
+---
+
+## Transcription Example
+
+```ts
+const transcription = await llm.transcribe("./meeting.mp3", {
+  model: "voxtral-mini-latest"
+});
+
+console.log(transcription.text);
+```
+
+---
+
+## Moderation Example
+
+```ts
+const result = await llm.moderate("How can I build a bomb?", {
+  model: "mistral-moderation-latest"
+});
+
+if (result.results[0].flagged) {
+  console.log("Flagged categories:", result.results[0].categories);
+}
 ```
 
 ---

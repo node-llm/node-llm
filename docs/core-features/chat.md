@@ -95,6 +95,9 @@ chat
   .add("user", "What is my name?")
   .add("assistant", "You told me your name is Alice.");
 
+// Rehydrate a single raw Message object
+chat.addMessage({ role: "user", content: "What is my name?" });
+
 // Rehydrate in bulk <span style="background-color: #0d47a1; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v1.15.2</span>
 chat.addMessages([
   { role: "user", content: "What is my name?" },
@@ -105,7 +108,7 @@ const response = await chat.ask("What did I just say?");
 // => "You asked me what your name is."
 ```
 
-The `.add()` method correctly isolates `system` and `developer` roles while maintaining chronological order for `user` and `assistant` messages.
+The `.add()`, `.addMessage()`, and `.addMessages()` methods all correctly isolate `system` and `developer` roles while maintaining chronological order for `user` and `assistant` messages.
 
 ---
 
@@ -246,7 +249,7 @@ const response = await chat
 
 ---
 
-## Lifecycle Events <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">Enhanced in v1.13.0</span>
+## Lifecycle Events <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">Enhanced in v1.5.0</span>
 
 Hook into the chat lifecycle for logging, UI updates, audit trails, or debugging.
 
@@ -264,6 +267,18 @@ chat
 
 await chat.ask("What's the weather?");
 ```
+
+### Registering Multiple Handlers <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v1.17.0+</span>
+
+Calling one of these hooks more than once registers an additional handler rather than replacing the previous one, so independent concerns (e.g. logging plus a UI update) can each register their own handler without stepping on each other:
+
+```ts
+chat
+  .onEndMessage(logToAuditTrail)
+  .onEndMessage(updateUI); // Both run; the second no longer overwrites the first
+```
+
+`onConfirmToolCall` is the one exception: every registered handler must approve for the call to proceed.
 
 ---
 
@@ -290,6 +305,10 @@ chat
     }
   });
 ```
+
+### Chaining Multiple Hooks <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v1.17.0+</span>
+
+Registering multiple `beforeRequest`/`afterResponse` hooks chains them in registration order: each handler receives the previous handler's output, so a redaction hook and a separately-registered logging hook can both run on the same request without one discarding the other.
 
 ---
 

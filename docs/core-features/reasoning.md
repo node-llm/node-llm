@@ -32,13 +32,13 @@ description: Access the inner thoughts and chain-of-thought process of advanced 
 You can control the reasoning behavior using the `.withThinking()` or `.withEffort()` methods. This is particularly useful for models like `o3-mini` or `claude-3-7-sonnet`.
 
 ### Setting Effort Level
-Effort levels (low, medium, high) allow you to balance between speed/cost and reasoning depth.
+Effort levels (low, medium, high) allow you to balance between speed/cost and reasoning depth. Pass `"none"` to explicitly disable thinking on models that support turning it off.
 
 ```ts
 import { NodeLLM } from "@node-llm/core";
 
 const chat = NodeLLM.chat("o3-mini")
-  .withEffort("high"); // Options: "low", "medium", "high"
+  .withEffort("high"); // Options: "low", "medium", "high", "none"
 
 const response = await chat.ask("Solve this complex architecture problem...");
 ```

@@ -62,5 +62,6 @@ Context Guidelines:
   
   static tools = [SearchHRDocumentsTool];
   static maxToolCalls = 10;
+  static toolConcurrency = true;
   static temperature = 0;
 }

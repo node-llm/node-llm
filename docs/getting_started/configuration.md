@@ -94,6 +94,33 @@ const llm = createLLM({
 });
 ```
 
+#### AWS Bedrock
+
+Bedrock uses AWS-native credentials rather than a single API key. NodeLLM supports two authentication styles:
+
+```typescript
+// Option A: Long-term Bearer token (simplest)
+const llm = createLLM({
+  provider: "bedrock",
+  bedrockApiKey: process.env.AWS_BEARER_TOKEN_BEDROCK,
+  bedrockRegion: "us-east-1"
+});
+
+// Option B: SigV4 credentials (Access Key / Secret / optional Session Token)
+const llm = createLLM({
+  provider: "bedrock",
+  bedrockAccessKeyId: process.env.AWS_ACCESS_KEY_ID,
+  bedrockSecretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+  bedrockSessionToken: process.env.AWS_SESSION_TOKEN, // optional
+  bedrockRegion: process.env.AWS_REGION,
+  // Optional: attach an AWS Bedrock Guardrail
+  bedrockGuardrailIdentifier: process.env.AWS_GUARDRAIL_ID,
+  bedrockGuardrailVersion: process.env.AWS_GUARDRAIL_VERSION
+});
+```
+
+Like the other providers, Bedrock also supports a custom endpoint override via `bedrockApiBase` (or the `BEDROCK_API_BASE` environment variable) — useful for routing requests through a proxy or private gateway instead of the standard AWS Bedrock endpoint for `bedrockRegion`.
+
 #### Loop Protection & Security Limits
 
 Prevent runaway costs, infinite loops, and hanging requests by setting execution and timeout limits:
@@ -135,6 +162,16 @@ const llm = createLLM({
 | `mistralApiKey`             | Mistral API key                     | `process.env.MISTRAL_API_KEY`     |
 | `mistralApiBase`            | Mistral API base URL                | `process.env.MISTRAL_API_BASE`    |
 | `ollamaApiBase`             | Ollama API base URL                 | `process.env.OLLAMA_API_BASE`     |
+| `bedrockApiKey`             | Bedrock long-term Bearer token      | `process.env.AWS_BEARER_TOKEN_BEDROCK` |
+| `bedrockAccessKeyId`        | Bedrock SigV4 access key ID         | `process.env.AWS_ACCESS_KEY_ID`   |
+| `bedrockSecretAccessKey`    | Bedrock SigV4 secret access key     | `process.env.AWS_SECRET_ACCESS_KEY` |
+| `bedrockSessionToken`       | Bedrock SigV4 session token         | `process.env.AWS_SESSION_TOKEN`   |
+| `bedrockRegion`             | AWS region for Bedrock              | `process.env.AWS_REGION` (`us-east-1`) |
+| `bedrockApiBase`            | Bedrock custom endpoint override    | `process.env.BEDROCK_API_BASE`    |
+| `bedrockGuardrailIdentifier`| Bedrock Guardrail ID                | `process.env.AWS_GUARDRAIL_ID`    |
+| `bedrockGuardrailVersion`   | Bedrock Guardrail version           | `process.env.AWS_GUARDRAIL_VERSION` |
+| `provider`                  | Active provider name (Zero-Config)  | `process.env.NODELLM_PROVIDER`    |
+| `debug`                     | Verbose request/response logging    | `process.env.NODELLM_DEBUG === "true"` |
 | `defaultChatModel`          | Default model for `.chat()`         | Provider default                  |
 | `defaultTranscriptionModel` | Default model for `.transcribe()`   | Provider default                  |
 | `defaultModerationModel`    | Default model for `.moderate()`     | Provider default                  |
@@ -143,6 +180,8 @@ const llm = createLLM({
 | `maxRetries`                | Max retries for provider errors     | `2`                               |
 | `requestTimeout`            | Request timeout in milliseconds     | `30000` (30s)                     |
 | `maxTokens`                 | Max output tokens per request       | `4096`                            |
+| `toolExecution`             | Tool execution mode (`auto`/`confirm`/`dry-run`) | `auto`               |
+| `toolConcurrency`           | Run independent tool calls in the same turn concurrently ([see Tools guide](/core-features/tools.html#concurrent-tool-execution)) | `false` |
 | `retry`                     | Retry configuration (legacy)        | `{ attempts: 1, delayMs: 0 }`     |
 
 ---

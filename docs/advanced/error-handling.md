@@ -197,8 +197,11 @@ See [Tool Error Handling](../core-features/tools.html#error-handling--flow-contr
 
 NodeLLM automatically retries transient errors:
 
-- **Retried**: `RateLimitError` (429), `ServerError` (500+), `ServiceUnavailableError`
-- **Not retried**: `BadRequestError` (400), `UnauthorizedError` (401), `ForbiddenError` (403), `ContextWindowExceededError`, `InsufficientQuotaError`
+- **Retried**: `RateLimitError` (429, including its subclass `InsufficientQuotaError`), `ServerError` (500+, including its subclass `ServiceUnavailableError`)
+- **Not retried**: `BadRequestError` (400), `ContextWindowExceededError`, `UnauthorizedError` (401), `ForbiddenError` (403)
+
+> **Note on `InsufficientQuotaError`**
+> Because `InsufficientQuotaError` extends `RateLimitError`, it is currently retried like any other 429. If you're out of credits, retries will simply fail again after each backoff — consider catching `InsufficientQuotaError` specifically to short-circuit and alert instead of waiting for retries to exhaust.
 
 > **Why not retry on Context Window Overflows?**
 > A `ContextWindowExceededError` (400) is considered a client-side logic error. Retrying with the same payload would consistently fail. By identifying this specific error, developers can implement smarter recovery logic, such as trimming chat history or summarizing previous turns before retrying manually.
@@ -208,7 +211,7 @@ Configure retry behavior:
 ```typescript
 const llm = createLLM({
   provider: "openai",
-  maxRetries: 3  // Default: 3
+  maxRetries: 2  // Default: 2 (2 retries after the initial attempt)
 });
 ```
 

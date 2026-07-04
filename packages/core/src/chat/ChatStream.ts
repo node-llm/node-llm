@@ -23,6 +23,14 @@ import { ModelRegistry } from "../models/ModelRegistry.js";
 import { Middleware, MiddlewareContext, ToolErrorDirective } from "../types/Middleware.js";
 import { runMiddleware } from "../utils/middleware-runner.js";
 import { randomUUID } from "node:crypto";
+import { shouldRunToolCallsConcurrently, executeToolCallOutcomes } from "./ToolCallOutcome.js";
+import {
+  collectHandlers,
+  runAllHandlers,
+  runDirectiveHandlers,
+  runConfirmHandlers,
+  runChainHandlers
+} from "../utils/handler-stacking.js";
 
 /**
  * Internal handler for chat streaming logic.
@@ -64,6 +72,10 @@ export class ChatStream {
     if (!this.options.toolExecution) {
       this.options.toolExecution = config.toolExecution || ToolExecutionMode.AUTO;
     }
+
+    if (this.options.toolConcurrency === undefined) {
+      this.options.toolConcurrency = config.toolConcurrency;
+    }
   }
 
   get history(): readonly Message[] {
@@ -93,6 +105,49 @@ export class ChatStream {
       const requestId = randomUUID();
       const state: Record<string, unknown> = {};
       const middlewares = options.middlewares || [];
+
+      const newMessageHandlers = collectHandlers(
+        options.onNewMessage,
+        options.onNewMessageHandlers
+      );
+      const endMessageHandlers = collectHandlers(
+        options.onEndMessage,
+        options.onEndMessageHandlers
+      );
+      const beforeRequestHandlers = collectHandlers(
+        options.onBeforeRequest,
+        options.onBeforeRequestHandlers
+      );
+      const afterResponseHandlers = collectHandlers(
+        options.onAfterResponse,
+        options.onAfterResponseHandlers
+      );
+      const toolCallStartHandlers = collectHandlers(
+        options.onToolCallStart,
+        options.onToolCallStartHandlers
+      );
+      const toolCallEndHandlers = collectHandlers(
+        options.onToolCallEnd,
+        options.onToolCallEndHandlers
+      );
+      const toolCallErrorHandlers = collectHandlers(
+        options.onToolCallError,
+        options.onToolCallErrorHandlers
+      );
+      const confirmToolCallHandlers = collectHandlers(
+        options.onConfirmToolCall,
+        options.onConfirmToolCallHandlers
+      );
+      const combinedToolCallStart = toolCallStartHandlers.length
+        ? (call: unknown) => toolCallStartHandlers.forEach((handler) => handler(call))
+        : undefined;
+      const combinedToolCallEnd = toolCallEndHandlers.length
+        ? (call: unknown, result: unknown) =>
+            toolCallEndHandlers.forEach((handler) => handler(call, result))
+        : undefined;
+      const combinedConfirmToolCall = confirmToolCallHandlers.length
+        ? (call: unknown) => runConfirmHandlers(confirmToolCallHandlers, call)
+        : undefined;
 
       // Process Multimodal Content
       let messageContent: MessageContent = content;
@@ -192,12 +247,7 @@ export class ChatStream {
 
           context.messages = [...systemMessages, ...messages];
           let requestMessages = context.messages; // Use up-to-date messages from context
-          if (options.onBeforeRequest) {
-            const result = await options.onBeforeRequest(requestMessages);
-            if (result) {
-              requestMessages = result;
-            }
-          }
+          requestMessages = await runChainHandlers(beforeRequestHandlers, requestMessages);
 
           const streamRequest: any = {
             model,
@@ -223,7 +273,7 @@ export class ChatStream {
 
           for await (const chunk of provider.stream(streamRequest)) {
             if (isFirst) {
-              if (options.onNewMessage) options.onNewMessage();
+              await runAllHandlers(newMessageHandlers);
               isFirst = false;
             }
 
@@ -272,12 +322,7 @@ export class ChatStream {
             options.schema
           );
 
-          if (options.onAfterResponse) {
-            const result = await options.onAfterResponse(assistantResponse);
-            if (result) {
-              assistantResponse = result;
-            }
-          }
+          assistantResponse = await runChainHandlers(afterResponseHandlers, assistantResponse);
 
           messages.push({
             role: "assistant",
@@ -288,9 +333,7 @@ export class ChatStream {
           });
 
           if (!toolCalls || toolCalls.length === 0) {
-            if (options.onEndMessage) {
-              options.onEndMessage(assistantResponse);
-            }
+            await runAllHandlers(endMessageHandlers, assistantResponse);
             break;
           }
 
@@ -298,118 +341,118 @@ export class ChatStream {
             break;
           }
 
-          for (const toolCall of toolCalls) {
-            if (options.toolExecution === ToolExecutionMode.CONFIRM) {
-              const approved = await ToolHandler.requestToolConfirmation(
-                toolCall,
-                options.onConfirmToolCall
+          const runConcurrently = shouldRunToolCallsConcurrently(
+            options.toolConcurrency,
+            options.toolExecution,
+            toolCalls.length
+          );
+
+          const outcomes = await executeToolCallOutcomes(
+            toolCalls,
+            {
+              ...options,
+              tools: options.tools as unknown as ToolDefinition[],
+              onToolCallStart: combinedToolCallStart,
+              onToolCallEnd: combinedToolCallEnd,
+              onConfirmToolCall: combinedConfirmToolCall
+            },
+            middlewares,
+            context,
+            runConcurrently
+          );
+
+          for (const outcome of outcomes) {
+            const toolCall = outcome.toolCall;
+
+            if (outcome.kind === "cancelled") {
+              messages.push(
+                provider.formatToolResultMessage(toolCall.id, "Action cancelled by user.")
               );
-              if (!approved) {
-                messages.push(
-                  provider.formatToolResultMessage(toolCall.id, "Action cancelled by user.")
-                );
-                continue;
-              }
+              continue;
             }
 
-            // 2. onToolCallStart Hook
-            await runMiddleware(middlewares, "onToolCallStart", context, toolCall);
-
-            try {
-              const toolResult = await ToolHandler.execute(
-                toolCall,
-                options.tools as unknown as ToolDefinition[],
-                options.onToolCallStart,
-                options.onToolCallEnd
-              );
-
-              // 3. onToolCallEnd Hook
-              await runMiddleware(
-                middlewares,
-                "onToolCallEnd",
-                context,
-                toolCall,
-                toolResult.content
-              );
-
+            if (outcome.kind === "success") {
+              const { toolResult } = outcome;
               messages.push(
                 provider.formatToolResultMessage(toolResult.tool_call_id, toolResult.content)
               );
-            } catch (error: unknown) {
-              let currentError = error as Error & { fatal?: boolean; status?: number };
-
-              // 4. onToolCallError Hook
-              const middlewareDirective = await runMiddleware<ToolErrorDirective>(
-                middlewares,
-                "onToolCallError",
-                context,
-                toolCall,
-                currentError
-              );
-
-              const directive =
-                middlewareDirective || (await options.onToolCallError?.(toolCall, currentError));
-
-              if (directive === "STOP") {
-                throw error;
-              }
-
-              if (directive === "RETRY") {
-                try {
-                  const toolResult = await ToolHandler.execute(
-                    toolCall,
-                    options.tools as unknown as ToolDefinition[],
-                    options.onToolCallStart,
-                    options.onToolCallEnd
-                  );
-                  await runMiddleware(
-                    middlewares,
-                    "onToolCallEnd",
-                    context,
-                    toolCall,
-                    toolResult.content
-                  );
-                  messages.push(
-                    provider.formatToolResultMessage(toolResult.tool_call_id, toolResult.content)
-                  );
-                  continue;
-                } catch (retryError) {
-                  currentError = retryError as Error & { fatal?: boolean; status?: number };
-                  await runMiddleware(
-                    middlewares,
-                    "onToolCallError",
-                    context,
-                    toolCall,
-                    currentError
-                  );
-                }
-              }
-
-              messages.push(
-                provider.formatToolResultMessage(
-                  toolCall.id,
-                  `Fatal error executing tool '${toolCall.function.name}': ${currentError.message}`,
-                  { isError: true }
-                )
-              );
-
-              if (directive === "CONTINUE") {
-                continue;
-              }
-
-              const isFatal =
-                currentError.fatal === true ||
-                currentError.status === 401 ||
-                currentError.status === 403;
-              if (isFatal) {
-                throw currentError;
-              }
-
-              logger.error(
-                `Tool execution failed for '${toolCall.function.name}':`,
-                currentError as Error
-              );
+              continue;
             }
+
+            let currentError = outcome.error as Error & { fatal?: boolean; status?: number };
+
+            // 4. onToolCallError Hook
+            const middlewareDirective = await runMiddleware<ToolErrorDirective>(
+              middlewares,
+              "onToolCallError",
+              context,
+              toolCall,
+              currentError
+            );
+
+            const directive =
+              middlewareDirective ||
+              (await runDirectiveHandlers(toolCallErrorHandlers, toolCall, currentError));
+
+            if (directive === "STOP") {
+              throw currentError;
+            }
+
+            if (directive === "RETRY") {
+              try {
+                const toolResult = await ToolHandler.execute(
+                  toolCall,
+                  options.tools as unknown as ToolDefinition[],
+                  combinedToolCallStart,
+                  combinedToolCallEnd
+                );
+                await runMiddleware(
+                  middlewares,
+                  "onToolCallEnd",
+                  context,
+                  toolCall,
+                  toolResult.content
+                );
+                messages.push(
+                  provider.formatToolResultMessage(toolResult.tool_call_id, toolResult.content)
+                );
+                continue;
+              } catch (retryError) {
+                currentError = retryError as Error & { fatal?: boolean; status?: number };
+                await runMiddleware(
+                  middlewares,
+                  "onToolCallError",
+                  context,
+                  toolCall,
+                  currentError
+                );
+              }
+            }
+
+            messages.push(
+              provider.formatToolResultMessage(
+                toolCall.id,
+                `Fatal error executing tool '${toolCall.function.name}': ${currentError.message}`,
+                { isError: true }
+              )
+            );
+
+            if (directive === "CONTINUE") {
+              continue;
+            }
+
+            const isFatal =
+              currentError.fatal === true ||
+              currentError.status === 401 ||
+              currentError.status === 403;
+            if (isFatal) {
+              throw currentError;
+            }
+
+            logger.error(
+              `Tool execution failed for '${toolCall.function.name}':`,
+              currentError as Error
+            );
           }
           // Loop continues -> streaming next chunk
         }

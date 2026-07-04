@@ -37,16 +37,21 @@ A comprehensive list of runnable examples available in the [examples/](https://g
 | :---------------------------------------------------------------------------------------------------------------------------------------- | :---------------------------------- |
 | [`examples/scripts/openai/chat/basic.mjs`](https://github.com/node-llm/node-llm/blob/main/examples/scripts/openai/chat/basic.mjs)                         | Basic chat with streaming           |
 | [`examples/scripts/openai/chat/events.mjs`](https://github.com/node-llm/node-llm/blob/main/examples/scripts/openai/chat/events.mjs)                       | Lifecycle hooks (onNewMessage, etc) |
-| [`examples/scripts/openai/chat/tools.mjs`](https://github.com/node-llm/node-llm/blob/main/examples/scripts/openai/chat/tools.mjs)                         | Automatic tool execution            |
-| [`examples/scripts/openai/chat/tool-dsl.mjs`](https://github.com/node-llm/node-llm/blob/main/examples/scripts/openai/chat/tool-dsl.mjs)                   | Class-based Tool DSL                |
+| [`examples/scripts/openai/chat/tools.mjs`](https://github.com/node-llm/node-llm/blob/main/examples/scripts/openai/chat/tools.mjs)                         | Automatic tool execution with the class-based Tool DSL |
+| [`examples/scripts/openai/chat/raw-json.mjs`](https://github.com/node-llm/node-llm/blob/main/examples/scripts/openai/chat/raw-json.mjs)                   | Defining tools with raw JSON Schema |
+| [`examples/scripts/openai/chat/tool-choice.mjs`](https://github.com/node-llm/node-llm/blob/main/examples/scripts/openai/chat/tool-choice.mjs)             | Forcing/disabling tool choice        |
 | [`examples/scripts/openai/chat/structured.mjs`](https://github.com/node-llm/node-llm/blob/main/examples/scripts/openai/chat/structured.mjs)               | Zod schema validation               |
+| [`examples/scripts/openai/chat/predicted-outputs.mjs`](https://github.com/node-llm/node-llm/blob/main/examples/scripts/openai/chat/predicted-outputs.mjs) | Predicted Outputs for low-latency code edits |
 | [`examples/scripts/openai/multimodal/vision.mjs`](https://github.com/node-llm/node-llm/blob/main/examples/scripts/openai/multimodal/vision.mjs)           | Image analysis via URL              |
 | [`examples/scripts/openai/multimodal/files.mjs`](https://github.com/node-llm/node-llm/blob/main/examples/scripts/openai/multimodal/files.mjs)             | Analyzing local files               |
 | [`examples/scripts/openai/images/generate.mjs`](https://github.com/node-llm/node-llm/blob/main/examples/scripts/openai/images/generate.mjs)               | DALL-E 3 Generation                 |
+| [`examples/scripts/openai/multimodal/image_edit.mjs`](https://github.com/node-llm/node-llm/blob/main/examples/scripts/openai/multimodal/image_edit.mjs)   | In-painting, edits, and variations  |
 | [`examples/scripts/openai/safety/moderation.mjs`](https://github.com/node-llm/node-llm/blob/main/examples/scripts/openai/safety/moderation.mjs)           | Custom safety thresholds            |
 | [`examples/scripts/openai/embeddings/create.mjs`](https://github.com/node-llm/node-llm/blob/main/examples/scripts/openai/embeddings/create.mjs)           | Creating text embeddings            |
 | [`examples/scripts/openai/chat/usage.mjs`](https://github.com/node-llm/node-llm/blob/main/examples/scripts/openai/chat/usage.mjs)                         | Token usage tracking                |
 | [`examples/scripts/openai/chat/parallel-tools.mjs`](https://github.com/node-llm/node-llm/blob/main/examples/scripts/openai/chat/parallel-tools.mjs)       | Parallel tool execution             |
+| [`examples/scripts/openai/chat/tool-concurrency.mjs`](https://github.com/node-llm/node-llm/blob/main/examples/scripts/openai/chat/tool-concurrency.mjs)   | Concurrent tool execution (`toolConcurrency`) |
+| [`examples/scripts/openai/chat/callback-stacking.mjs`](https://github.com/node-llm/node-llm/blob/main/examples/scripts/openai/chat/callback-stacking.mjs) | Registering multiple hooks for the same event |
 | [`examples/scripts/openai/chat/max-tokens.mjs`](https://github.com/node-llm/node-llm/blob/main/examples/scripts/openai/chat/max-tokens.mjs)               | Controlling output length           |
 | [`examples/scripts/openai/chat/streaming-tools.mjs`](https://github.com/node-llm/node-llm/blob/main/examples/scripts/openai/chat/streaming-tools.mjs)     | Tool use with streaming             |
 | [`examples/scripts/openai/chat/instructions.mjs`](https://github.com/node-llm/node-llm/blob/main/examples/scripts/openai/chat/instructions.mjs)           | System prompt instructions          |
@@ -62,12 +67,11 @@ A comprehensive list of runnable examples available in the [examples/](https://g
 | Example | Description |
 | :--- | :--- |
 | [`examples/scripts/gemini/chat/basic.mjs`](https://github.com/node-llm/node-llm/blob/main/examples/scripts/gemini/chat/basic.mjs) | Streaming chat with Gemini 1.5 |
-| [`examples/scripts/gemini/chat/json_mode.mjs`](https://github.com/node-llm/node-llm/blob/main/examples/scripts/gemini/chat/json_mode.mjs) | Native JSON mode |
-| [`examples/scripts/gemini/multimodal/video.mjs`](https://github.com/node-llm/node-llm/blob/main/examples/scripts/gemini/multimodal/video.mjs) | Analyzing video files |
-| [`examples/scripts/gemini/multimodal/audio.mjs`](https://github.com/node-llm/node-llm/blob/main/examples/scripts/gemini/multimodal/audio.mjs) | Native audio understanding |
 | [`examples/scripts/gemini/multimodal/files.mjs`](https://github.com/node-llm/node-llm/blob/main/examples/scripts/gemini/multimodal/files.mjs) | Multi-file context |
 | [`examples/scripts/gemini/embeddings/create.mjs`](https://github.com/node-llm/node-llm/blob/main/examples/scripts/gemini/embeddings/create.mjs) | Creating text embeddings |
 | [`examples/scripts/gemini/chat/structured.mjs`](https://github.com/node-llm/node-llm/blob/main/examples/scripts/gemini/chat/structured.mjs) | Structured output with Zod |
+| [`examples/scripts/gemini/chat/raw-json.mjs`](https://github.com/node-llm/node-llm/blob/main/examples/scripts/gemini/chat/raw-json.mjs) | Defining tools with raw JSON Schema |
+| [`examples/scripts/gemini/multimodal/nano_banana.mjs`](https://github.com/node-llm/node-llm/blob/main/examples/scripts/gemini/multimodal/nano_banana.mjs) | Inline generated images (Nano Banana) |
 | [`examples/scripts/gemini/chat/usage.mjs`](https://github.com/node-llm/node-llm/blob/main/examples/scripts/gemini/chat/usage.mjs) | Token usage tracking |
 | [`examples/scripts/gemini/chat/parallel-tools.mjs`](https://github.com/node-llm/node-llm/blob/main/examples/scripts/gemini/chat/parallel-tools.mjs) | Parallel tool execution |
 | [`examples/scripts/gemini/chat/max-tokens.mjs`](https://github.com/node-llm/node-llm/blob/main/examples/scripts/gemini/chat/max-tokens.mjs) | Controlling output length |
@@ -89,7 +93,8 @@ A comprehensive list of runnable examples available in the [examples/](https://g
 | Example | Description |
 | :--- | :--- |
 | [`examples/scripts/anthropic/chat/basic.mjs`](https://github.com/node-llm/node-llm/blob/main/examples/scripts/anthropic/chat/basic.mjs) | Claude 3.5 Sonnet Chat |
-| [`examples/scripts/anthropic/chat/tool_use.mjs`](https://github.com/node-llm/node-llm/blob/main/examples/scripts/anthropic/chat/tool_use.mjs) | Tool calling with Claude |
+| [`examples/scripts/anthropic/chat/tools.mjs`](https://github.com/node-llm/node-llm/blob/main/examples/scripts/anthropic/chat/tools.mjs) | Tool calling with Claude |
+| [`examples/scripts/anthropic/chat/raw-json.mjs`](https://github.com/node-llm/node-llm/blob/main/examples/scripts/anthropic/chat/raw-json.mjs) | Defining tools with raw JSON Schema |
 | [`examples/scripts/anthropic/multimodal/pdf.mjs`](https://github.com/node-llm/node-llm/blob/main/examples/scripts/anthropic/multimodal/pdf.mjs) | Native PDF analysis |
 | [`examples/scripts/anthropic/multimodal/vision.mjs`](https://github.com/node-llm/node-llm/blob/main/examples/scripts/anthropic/multimodal/vision.mjs) | Image understanding |
 | [`examples/scripts/anthropic/embeddings/create.mjs`](https://github.com/node-llm/node-llm/blob/main/examples/scripts/anthropic/embeddings/create.mjs) | Creating embeddings (Voyage AI) |
@@ -127,6 +132,7 @@ A comprehensive list of runnable examples available in the [examples/](https://g
 | [`examples/scripts/deepseek/chat/reasoning.mjs`](https://github.com/node-llm/node-llm/blob/main/examples/scripts/deepseek/chat/reasoning.mjs) | DeepSeek-R1 reasoning tracking |
 | [`examples/scripts/deepseek/chat/streaming.mjs`](https://github.com/node-llm/node-llm/blob/main/examples/scripts/deepseek/chat/streaming.mjs) | Streaming chat responses |
 | [`examples/scripts/deepseek/chat/tools.mjs`](https://github.com/node-llm/node-llm/blob/main/examples/scripts/deepseek/chat/tools.mjs) | Function calling with DeepSeek |
+| [`examples/scripts/deepseek/chat/raw-json.mjs`](https://github.com/node-llm/node-llm/blob/main/examples/scripts/deepseek/chat/raw-json.mjs) | Defining tools with raw JSON Schema |
 | [`examples/scripts/deepseek/chat/structured.mjs`](https://github.com/node-llm/node-llm/blob/main/examples/scripts/deepseek/chat/structured.mjs) | Structured JSON output |
 | [`examples/scripts/deepseek/embeddings/basic.mjs`](https://github.com/node-llm/node-llm/blob/main/examples/scripts/deepseek/embeddings/basic.mjs) | Generating embeddings |
 | [`examples/scripts/deepseek/chat/usage.mjs`](https://github.com/node-llm/node-llm/blob/main/examples/scripts/deepseek/chat/usage.mjs) | Token usage tracking |
@@ -173,7 +179,40 @@ A comprehensive list of runnable examples available in the [examples/](https://g
 | :--- | :--- |
 | [`examples/scripts/xai/chat/basic.mjs`](https://github.com/node-llm/node-llm/blob/main/examples/scripts/xai/chat/basic.mjs) | Basic chat with Grok-3 |
 | [`examples/scripts/xai/chat/streaming.mjs`](https://github.com/node-llm/node-llm/blob/main/examples/scripts/xai/chat/streaming.mjs) | Streaming chat responses |
+| [`examples/scripts/xai/chat/tools.mjs`](https://github.com/node-llm/node-llm/blob/main/examples/scripts/xai/chat/tools.mjs) | Function calling with Grok |
 | [`examples/scripts/xai/chat/structured.mjs`](https://github.com/node-llm/node-llm/blob/main/examples/scripts/xai/chat/structured.mjs) | Structured output with Zod schema |
 | [`examples/scripts/xai/multimodal/vision.mjs`](https://github.com/node-llm/node-llm/blob/main/examples/scripts/xai/multimodal/vision.mjs) | Image analysis with Grok Vision |
 | [`examples/scripts/xai/images/generate.mjs`](https://github.com/node-llm/node-llm/blob/main/examples/scripts/xai/images/generate.mjs) | Image generation with Aurora |
+| [`examples/scripts/xai/discovery/models.mjs`](https://github.com/node-llm/node-llm/blob/main/examples/scripts/xai/discovery/models.mjs) | Listing available models |
+
+### Amazon Bedrock Examples
+
+| Example | Description |
+| :--- | :--- |
+| [`examples/scripts/bedrock/chat/basic.mjs`](https://github.com/node-llm/node-llm/blob/main/examples/scripts/bedrock/chat/basic.mjs) | Basic chat via the Converse API |
+| [`examples/scripts/bedrock/chat/streaming.mjs`](https://github.com/node-llm/node-llm/blob/main/examples/scripts/bedrock/chat/streaming.mjs) | Streaming chat responses |
+| [`examples/scripts/bedrock/chat/tools.mjs`](https://github.com/node-llm/node-llm/blob/main/examples/scripts/bedrock/chat/tools.mjs) | Function calling |
+| [`examples/scripts/bedrock/chat/vision.mjs`](https://github.com/node-llm/node-llm/blob/main/examples/scripts/bedrock/chat/vision.mjs) | Multimodal vision with Claude/Nova |
+| [`examples/scripts/bedrock/chat/thinking.mjs`](https://github.com/node-llm/node-llm/blob/main/examples/scripts/bedrock/chat/thinking.mjs) | Extended thinking (Claude 3.7 / DeepSeek R1) |
+| [`examples/scripts/bedrock/chat/nova.mjs`](https://github.com/node-llm/node-llm/blob/main/examples/scripts/bedrock/chat/nova.mjs) | Amazon Nova model family |
+| [`examples/scripts/bedrock/chat/guardrails.mjs`](https://github.com/node-llm/node-llm/blob/main/examples/scripts/bedrock/chat/guardrails.mjs) | Guardrail trace assessments |
+| [`examples/scripts/bedrock/chat/moderation.mjs`](https://github.com/node-llm/node-llm/blob/main/examples/scripts/bedrock/chat/moderation.mjs) | Standalone moderation via Guardrails |
+| [`examples/scripts/bedrock/chat/extra_fields.mjs`](https://github.com/node-llm/node-llm/blob/main/examples/scripts/bedrock/chat/extra_fields.mjs) | `additionalModelRequestFields` escape hatch |
+| [`examples/scripts/bedrock/chat/usage.mjs`](https://github.com/node-llm/node-llm/blob/main/examples/scripts/bedrock/chat/usage.mjs) | Token usage tracking |
+| [`examples/scripts/bedrock/chat/max-tokens.mjs`](https://github.com/node-llm/node-llm/blob/main/examples/scripts/bedrock/chat/max-tokens.mjs) | Controlling output length |
+| [`examples/scripts/bedrock/chat/instructions.mjs`](https://github.com/node-llm/node-llm/blob/main/examples/scripts/bedrock/chat/instructions.mjs) | System prompt instructions |
+| [`examples/scripts/bedrock/chat/params.mjs`](https://github.com/node-llm/node-llm/blob/main/examples/scripts/bedrock/chat/params.mjs) | Custom model parameters |
+| [`examples/scripts/bedrock/embeddings/basic.mjs`](https://github.com/node-llm/node-llm/blob/main/examples/scripts/bedrock/embeddings/basic.mjs) | Titan Embeddings V2 |
+| [`examples/scripts/bedrock/image/titan.mjs`](https://github.com/node-llm/node-llm/blob/main/examples/scripts/bedrock/image/titan.mjs) | Titan Image Generator |
+| [`examples/scripts/bedrock/discovery/models.mjs`](https://github.com/node-llm/node-llm/blob/main/examples/scripts/bedrock/discovery/models.mjs) | Listing available models |
+
+### MCP Examples
+
+| Example | Description |
+| :--- | :--- |
+| [`examples/scripts/mcp/github/dynamic-github-bridge.ts`](https://github.com/node-llm/node-llm/blob/main/examples/scripts/mcp/github/dynamic-github-bridge.ts) | Connects to GitHub to manage issues, PRs, and repository data |
+| [`examples/scripts/mcp/filesystem/fs-explorer.ts`](https://github.com/node-llm/node-llm/blob/main/examples/scripts/mcp/filesystem/fs-explorer.ts) | Reads and summarizes local files within a bounded directory |
+| [`examples/scripts/mcp/puppeteer/web-browser.ts`](https://github.com/node-llm/node-llm/blob/main/examples/scripts/mcp/puppeteer/web-browser.ts) | Autonomous web browsing, clicking, and data extraction |
+
+See [`examples/scripts/mcp/README.md`](https://github.com/node-llm/node-llm/blob/main/examples/scripts/mcp/README.md) for setup requirements and how to run these with `tsx`.
 

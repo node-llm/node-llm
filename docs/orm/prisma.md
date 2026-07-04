@@ -385,14 +385,11 @@ For safety, `loadAgentSession` validates that the stored `agentClass` matches th
 ```typescript
 // This throws an error - class mismatch
 await loadAgentSession(prisma, llm, SalesAgent, "support-session-id");
-// Error: Agent class mismatch: session was created with "SupportAgent" 
-//        but attempting to load with "SalesAgent"
-
-// To override (not recommended):
-await loadAgentSession(prisma, llm, SalesAgent, "support-session-id", {
-  skipClassValidation: true
-});
+// Error: Agent class mismatch: Session "support-session-id" was created for
+//        "SupportAgent", but is being loaded with "SalesAgent".
 ```
+
+There is currently no option to bypass this check — `loadAgentSession` always validates the stored `agentClass` against the class you pass in.
 
 ### Session Properties
 
@@ -407,3 +404,9 @@ await loadAgentSession(prisma, llm, SalesAgent, "support-session-id", {
 | `session.messages()` | Get all messages from DB |
 | `session.modelId` | Current model (from code) |
 | `session.totalUsage` | Aggregate token usage |
+| `session.instance` | The underlying `Agent` instance, for direct access |
+| `session.history` | Current in-memory message history |
+| `session.withTool(tool)` | Add a turn-level tool to the session |
+| `session.withInstructions(text)` | Add turn-level instructions to the session |
+| `session.updateMetadata(partial)` | Merge and persist new metadata, re-resolving agent config |
+| `session.delete()` | Delete the session's underlying chat (and cascade the session record) |

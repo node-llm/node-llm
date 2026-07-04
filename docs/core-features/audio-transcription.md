@@ -52,7 +52,7 @@ await NodeLLM.transcribe("audio.mp3", {
 });
 ```
 
-### Diarization & Native Word Timestamps <span style="background-color: #0d47a1; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v1.16.0</span>
+### Diarization & Native Word Timestamps <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v1.16.0+</span>
 
 NodeLLM supports speaker identification (diarization) and word-level timestamps.
 

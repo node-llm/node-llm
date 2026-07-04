@@ -74,8 +74,6 @@ You can configure this by setting the `strict` property to `false` in the [Schem
 
 ```ts
 // OpenAI 100% Strict Mode enabled automatically
-const response = await chat.withSchema(schema).ask("Generate a person");
-```
 const schema = {
   type: "object",
   properties: {
@@ -114,7 +112,7 @@ console.log(response.data); // { greeting: "..." } or whatever keys it chose
 | :------------ | :----------------------------------------- | :-------------------------------------------------------------------------------------------------------------- |
 | **OpenAI**    | `response_format: { type: "json_schema" }` | Fully supported with strict adherence.                                                                          |
 | **Gemini**    | `responseJsonSchema`                       | Supported natively.                                                                                             |
-| **Anthropic** | Tool Use (Mock)                            | `NodeLLM` automatically creates a tool definition and forces the model to use it to simulate structured output. |
+| **Anthropic** | System Prompt Injection                    | `NodeLLM` embeds the JSON schema in the system prompt with an explicit instruction to respond only with matching JSON. |
 
 ---
 

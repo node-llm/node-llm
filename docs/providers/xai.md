@@ -42,6 +42,17 @@ NODELLM_PROVIDER=xai
 XAI_API_KEY=xai-...
 ```
 
+### Custom Endpoint
+
+To route requests through a proxy, override the base URL via `xaiApiBase` (or the `XAI_API_BASE` environment variable):
+
+```ts
+const llm = createLLM({
+  provider: "xai",
+  xaiApiBase: "https://my-proxy.example.com/v1"
+});
+```
+
 Then use zero-config:
 
 ```ts

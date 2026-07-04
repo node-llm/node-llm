@@ -5,7 +5,7 @@ nav_order: 6
 description: A standardized boundary for discovering and executing tools, resources, and prompt templates across any compliant server.
 ---
 
-# {{ page.title }} <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">1.15.2+</span>
+# {{ page.title }} <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v1.15.2+</span>
 {: .no_toc }
 
 {{ page.description }}
@@ -42,7 +42,7 @@ const github = await MCP.connect({
 });
 
 // 2. Discover all capabilities (with optional namespacing)
-const { tools, resources, prompts } = await github.discover({ prefix: "gh_" });
+const { tools, resources, resourceTemplates, prompts } = await github.discover({ prefix: "gh_" });
 
 // 3. Resolve context and expert intent
 const reviewPrompt = prompts.find(p => p.name.includes("review"));
@@ -98,10 +98,19 @@ const chat = llm.chat().withTools([
 | :--- | :--- |
 | `static connect(config)` | Connects to a local server process (Stdio). Accepts `command`, `args`, and `env`. |
 | `static connectSSE(config)` | Connects to a remote server (HTTP/SSE). Accepts `url`. |
-| `discover(options?)` | Master discovery method. Returns `tools`, `resources`, and `prompts`. |
+| `static connectAll(config)` | Connects to multiple named servers at once. Returns a map of server name → `MCP` instance. |
+| `discover(options?)` | Master discovery method. Returns `tools`, `resources`, `resourceTemplates`, and `prompts`. |
+| `discoverTools(options?)` | Discovers only tools. Returns `MCPTool[]`. |
+| `discoverResources(options?)` | Discovers only resources. Returns `MCPResource[]`. |
+| `discoverResourceTemplates(options?)` | Discovers only resource templates. Returns `MCPResourceTemplate[]`. |
+| `discoverPrompts(options?)` | Discovers only prompts. Returns `MCPPrompt[]`. |
 | `onLog(handler)` | Registers a listener for server logs. |
 | `onProgress(handler)` | Registers a listener for progress notifications. |
+| `onError(handler)` | Registers a listener for protocol errors. |
+| `onNotification(handler)` | Registers a listener for generic protocol notifications. |
 | `close()` | Gracefully disconnects from the server. |
+
+Each `discover*` method accepts a `DiscoveryOptions` object: `filter` (only include items with these names) and `prefix` (prepend a namespace to discovered names, e.g. `"gh_"`).
 
 ### MCPResource
 
@@ -110,10 +119,17 @@ const chat = llm.chat().withTools([
 | `read()` | Returns the raw `ResourceContent` from the server. |
 | `readText()` | Helper to fetch and concatenate all text parts of a resource. |
 
+### MCPResourceTemplate
+
+| Property / Method | Description |
+| :--- | :--- |
+| `name`, `description`, `uriTemplate`, `mimeType` | Metadata describing the template. |
+| `resolve(args)` | Substitutes `{placeholders}` in the URI template and returns a concrete `MCPResource`. |
+
 ### MCPPrompt
 
 | Method | Description |
 | :--- | :--- |
-| `get(args?)` | Resolves the prompt template with arguments and returns `Message[]`. |
+| `get(args?)` | Resolves the prompt template with arguments and returns the server's prompt result (`{ description?, messages }`). |
 
 ---

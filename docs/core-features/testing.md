@@ -7,7 +7,7 @@ permalink: /core-features/testing
 description: Deterministic testing infrastructure for NodeLLM applications. VCR integration and fluent mocking for reliable AI systems.
 ---
 
-# {{ page.title }} <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v0.5.0+</span>
+# {{ page.title }} <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v0.2.0+</span>
 {: .no_toc }
 
 {{ page.description }}
@@ -36,7 +36,7 @@ Deterministic testing infrastructure for NodeLLM-powered AI systems. Built for e
 
 We believe AI testing should never be flaky or expensive. We provide two distinct strategies:
 
-### 1. VCR (Integration Testing) 📼 <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v0.5.0+</span>
+### 1. VCR (Integration Testing) 📼 <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v0.2.0+</span>
 
 **When to use**: To verify your system works with real LLM responses without paying for every test run.
 
@@ -48,7 +48,7 @@ We believe AI testing should never be flaky or expensive. We provide two distinc
  > When `CI=true`, VCR **will never** record new cassettes.
  > If a matching cassette is missing or mismatched, the test fails immediately.
 
-### 2. Mocker (Unit Testing) 🎭 <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v0.5.0+</span>
+### 2. Mocker (Unit Testing) 🎭 <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v0.2.0+</span>
  
  > ⚠️ **Note**
  > The Mocker does **not** attempt to simulate model intelligence or reasoning.
@@ -66,7 +66,7 @@ We believe AI testing should never be flaky or expensive. We provide two distinc
 
 ### Basic Interaction
 
-Wrap your tests in `withVCR` to automatically record interactions the first time they run.
+Wrap your tests in `withVCR` to replay interactions from a cassette.
 
 ```typescript
 import { withVCR } from "@node-llm/testing";
@@ -79,6 +79,9 @@ it(
   })
 );
 ```
+
+> ⚠️ **Note**
+> The default `auto` mode replays an existing cassette, but it does **not** silently record a new one the first time a test runs — it fails fast with a "cassette not found" error instead. Record the cassette explicitly first (`VCR_MODE=record npm test`, or `withVCR({ mode: "record" }, ...)`), then subsequent runs replay it automatically in `auto` mode.
 
 ### Hierarchical Organization (Convention-Based Mode) 📂
 
@@ -160,6 +163,33 @@ mocker.chat(/hello/i).respond("Greetings!");
 
 // Simulate a Tool Call
 mocker.chat("What's the weather?").callsTool("get_weather", { city: "London" });
+
+// Simulate multiple simultaneous tool calls (e.g. for agents)
+mocker.chat(/book flight/).callsTools([
+  { name: "search_flights", args: { from: "NYC", to: "LAX" } },
+  { name: "check_weather", args: { city: "LAX" } }
+]);
+
+// Match any message in the conversation, not just the last user message
+mocker.placeholder("sunny").respond("It is a beautiful sunny day in London!");
+```
+
+### Sequences & Limited Matches 🔄
+
+For multi-turn agent conversations, `.sequence()` returns a different response on each successive call (the last entry repeats once exhausted):
+
+```typescript
+mocker
+  .chat(/help/)
+  .sequence(["What do you need help with?", "Here's the answer.", "Anything else?"]);
+```
+
+`.times(n)` limits how many times a mock can match before falling through to the next matching definition — useful for testing retry logic:
+
+```typescript
+// First 2 calls return "Try again", then falls through to the mock below
+mocker.chat(/retry/).times(2).respond("Try again");
+mocker.chat(/retry/).respond("Giving up");
 ```
 
 ### Streaming Mocks 🌊
@@ -212,7 +242,7 @@ Choose the right tool for your test:
 Does your test need to verify behavior against REAL LLM responses?
 ├─ YES → Use VCR (integration testing)
 │   ├─ Do you need to record the first time and replay afterward?
-│   │   └─ YES → Use VCR in "record" or "auto" mode
+│   │   └─ YES → Record once with `VCR_MODE=record`, then use "auto" mode to replay
 │   ├─ Are you testing in CI/CD? (No live API calls allowed)
 │   │   └─ YES → Set VCR_MODE=replay in CI
 │   └─ Need custom scrubbing for sensitive data?
@@ -389,14 +419,14 @@ await vcr.stop();
 
 **Error**: `Error: Cassette file not found`
 
-**Cause**: VCR is in `replay` mode but the cassette doesn't exist yet.
+**Cause**: VCR is in `replay` (or `auto`, which resolves to a strict lookup) mode but the cassette doesn't exist yet.
 
 **Solution**:
 ```bash
-# Record it first
+# Record it first — "auto" mode never records automatically, it must be explicit
 VCR_MODE=record npm test
 
-# Or use auto mode (records if missing, replays if exists)
+# Then subsequent runs replay automatically in the default "auto" mode
 VCR_MODE=auto npm test
 ```
 

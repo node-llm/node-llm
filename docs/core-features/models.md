@@ -6,7 +6,7 @@ nav_order: 6
 description: Programmatically discover available models, their capabilities, and real-time costs using our built-in registry powered by models.dev.
 ---
 
-# {{ page.title }}
+# {{ page.title }} <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v1.0.0+</span>
 {: .no_toc }
 
 {{ page.description }}
@@ -83,6 +83,41 @@ The registry includes models from:
 - **xAI** (Grok)
 - **Ollama** (Local models)
 - **Mistral** (Mistral Large, Codestral, Pixtral, Magistral) <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v1.14.0+</span>
+
+---
+
+## Usage & Cost Tracking
+
+Every `ChatResponseString` returned from `chat.ask()` carries a `.usage` object plus convenience getters, so you can log spend without querying the registry yourself.
+
+```ts
+const response = await chat.ask("Summarize this document");
+
+console.log(response.input_tokens); // Prompt tokens
+console.log(response.output_tokens); // Completion tokens
+console.log(response.cached_tokens); // Tokens served from a provider cache <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.6em; font-weight: 600; vertical-align: middle;">v1.5.2+</span>
+console.log(response.usage.cache_creation_tokens); // Tokens written to a new prompt cache (Anthropic)
+
+console.log(response.cost); // Total cost in USD
+console.log(response.input_cost); // Cost attributable to input tokens
+console.log(response.output_cost); // Cost attributable to output tokens
+```
+
+### Manual Cost Calculation
+
+You can also calculate cost for a raw usage object (e.g., persisted usage loaded from your database) using `ModelRegistry.calculateCost()`:
+
+```ts
+import { ModelRegistry } from "@node-llm/core";
+
+const priced = ModelRegistry.calculateCost(
+  { input_tokens: 1000, output_tokens: 500, total_tokens: 1500, cached_tokens: 200 },
+  "gpt-4o",
+  "openai"
+);
+
+console.log(priced.cost); // Computed total cost in USD
+```
 
 ---
 

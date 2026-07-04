@@ -66,14 +66,14 @@ await chat.ask("Hello world");
  ```typescript
  interface Middleware {
    name: string;
-   onRequest?: (context: MiddlewareContext) => Promise<void> | void;
-   onResponse?: (context: MiddlewareContext, result: NodeLLMResponse) => Promise<void> | void;
-   onError?: (context: MiddlewareContext, error: Error) => Promise<void> | void;
+   onRequest?: (context: MiddlewareContext) => Promise<void>;
+   onResponse?: (context: MiddlewareContext, result: NodeLLMResponse) => Promise<RequestDirective>;
+   onError?: (context: MiddlewareContext, error: Error) => Promise<RequestDirective>;
    
    // Tool Execution Hooks
-   onToolCallStart?: (context: MiddlewareContext, tool: ToolCall) => Promise<void> | void;
-   onToolCallEnd?: (context: MiddlewareContext, tool: ToolCall, result: unknown) => Promise<void> | void;
-   onToolCallError?: (context: MiddlewareContext, tool: ToolCall, error: Error) => Promise<ToolErrorDirective> | ToolErrorDirective;
+   onToolCallStart?: (context: MiddlewareContext, tool: ToolCall) => Promise<void>;
+   onToolCallEnd?: (context: MiddlewareContext, tool: ToolCall, result: unknown) => Promise<void>;
+   onToolCallError?: (context: MiddlewareContext, tool: ToolCall, error: Error) => Promise<ToolErrorDirective>;
  }
  ```
 
@@ -154,6 +154,42 @@ If you have two middlewares: `[Logger, Security]`, the execution order for a suc
 7. `Logger.onToolCallEnd`
 8. `Security.onResponse`
 9. `Logger.onResponse`
+
+---
+
+## Lifecycle Directives (RETRY | REPLACE | STOP) <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v1.15.0+</span>
+
+`onResponse` and `onError` aren't limited to observing — they can return a `RequestDirective` to control what happens next:
+
+```typescript
+type RequestDirective =
+  | { action: "RETRY"; message: string }   // Push `message` to history and ask the model again
+  | { action: "REPLACE"; response: NodeLLMResponse } // Swap in a different response entirely
+  | "CONTINUE" // Proceed normally (equivalent to returning nothing)
+  | "STOP"     // Abort the request and throw
+  | void;
+```
+
+This is what powers the [Schema Self-Correction Middleware](/core-features/structured_output): when the response fails schema validation, its `onResponse` hook returns `{ action: "RETRY", message: "..." }` with the Zod error, which appends that message to the conversation and re-asks the model — all without your application code needing a manual retry loop.
+
+```typescript
+const validatingMiddleware: Middleware = {
+  name: "Validator",
+  onResponse: async (context, result) => {
+    if (result instanceof ChatResponseString && !result.isValid) {
+      return {
+        action: "RETRY",
+        message: `Your last response was invalid: ${result.validationError?.message}. Please try again.`
+      };
+    }
+    // Returning nothing (or "CONTINUE") proceeds normally.
+  }
+};
+```
+
+When multiple middlewares are registered, the **first non-void directive wins** (subsequent middlewares in the reverse-order chain still run, but their directive is ignored once one has already been captured).
+
+`onToolCallError` uses a similar (smaller) directive type, `ToolErrorDirective`, covered in the [Tool Calling docs](/core-features/tools).
 
 ---
 

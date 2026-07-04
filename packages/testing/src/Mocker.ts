@@ -14,7 +14,8 @@ import {
   ChatChunk,
   ToolCall,
   ModerationResult,
-  MessageContent
+  MessageContent,
+  ThinkingResult
 } from "@node-llm/core";
 
 export interface MockResponse {
@@ -35,6 +36,9 @@ export interface MockResponse {
   results?: ModerationResult[];
   revised_prompt?: string;
   id?: string;
+  thinking?: ThinkingResult;
+  reasoning?: string | null;
+  metadata?: Record<string, unknown>;
 }
 
 export type MockMatcher = (request: unknown) => boolean;
@@ -148,13 +152,17 @@ export class Mocker {
     });
   }
 
-  public callsTool(name: string, args: Record<string, unknown> = {}): this {
+  public callsTool(
+    name: string,
+    args: Record<string, unknown> = {},
+    content: string | null = null
+  ): this {
     const lastMock = this.mocks[this.mocks.length - 1];
     if (!lastMock || lastMock.method !== "chat") {
       throw new Error("Mocker: .callsTool() must follow a .chat() definition.");
     }
     lastMock.response = {
-      content: null,
+      content,
       tool_calls: [
         {
           id: `call_${Math.random().toString(36).slice(2, 9)}`,
@@ -177,13 +185,16 @@ export class Mocker {
    *   { name: "check_weather", args: { city: "LAX" } }
    * ]);
    */
-  public callsTools(tools: Array<{ name: string; args?: Record<string, unknown> }>): this {
+  public callsTools(
+    tools: Array<{ name: string; args?: Record<string, unknown> }>,
+    content: string | null = null
+  ): this {
     const lastMock = this.mocks[this.mocks.length - 1];
     if (!lastMock || lastMock.method !== "chat") {
       throw new Error("Mocker: .callsTools() must follow a .chat() definition.");
     }
     lastMock.response = {
-      content: null,
+      content,
       tool_calls: tools.map((t) => ({
         id: `call_${Math.random().toString(36).slice(2, 9)}`,
         type: "function" as const,
@@ -292,6 +303,22 @@ export class Mocker {
     } else {
       lastMock.response = response;
     }
+    return this;
+  }
+
+  /**
+   * Immediately throw an error when this mock is executed.
+   * Useful for chaos engineering (testing retries, failovers, rate-limit handling).
+   *
+   * @example
+   * mocker.chat(/crash/).throws("429 Too Many Requests");
+   */
+  public throws(error: Error | string): this {
+    const lastMock = this.mocks[this.mocks.length - 1];
+    if (!lastMock) throw new Error("Mocker: No mock definition started.");
+    lastMock.response = {
+      error: error instanceof Error ? error : new Error(error)
+    };
     return this;
   }
 
@@ -405,10 +432,13 @@ export class Mocker {
                         res.content !== undefined && res.content !== null
                           ? String(res.content)
                           : null,
+                      thinking: res.thinking,
+                      reasoning: res.reasoning,
                       tool_calls: res.tool_calls || [],
                       usage: res.usage || { input_tokens: 10, output_tokens: 10, total_tokens: 20 },
                       finish_reason:
-                        res.finish_reason || (res.tool_calls?.length ? "tool_calls" : "stop")
+                        res.finish_reason || (res.tool_calls?.length ? "tool_calls" : "stop"),
+                      metadata: res.metadata
                     } as ChatResponse;
                   }
                   case "embed": {

@@ -85,7 +85,7 @@ export class BedrockProvider extends BaseProvider implements Provider {
   }
 
   public apiBase(): string {
-    return getBedrockEndpoint(this.config.region);
+    return getBedrockEndpoint(this.config.region, this.config.apiBase);
   }
 
   public headers(): Record<string, string> {

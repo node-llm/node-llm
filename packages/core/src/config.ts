@@ -24,6 +24,7 @@ export interface NodeLLMConfig {
   bedrockSecretAccessKey?: string; // SigV4: AWS Secret Access Key
   bedrockSessionToken?: string; // SigV4: Optional session token
   bedrockRegion?: string; // AWS Region (e.g., "us-east-1")
+  bedrockApiBase?: string; // Custom endpoint override (e.g. for a proxy/gateway)
   bedrockGuardrailIdentifier?: string; // AWS Guardrail ID
   bedrockGuardrailVersion?: string; // AWS Guardrail Version
   // General options
@@ -33,6 +34,12 @@ export interface NodeLLMConfig {
   requestTimeout?: number;
   maxTokens?: number;
   toolExecution?: ToolExecutionMode;
+  /**
+   * When true, independent tool calls returned in the same turn are executed
+   * concurrently instead of one at a time. Opt-in, overridable per-chat via
+   * `chat.withToolConcurrency()`.
+   */
+  toolConcurrency?: boolean;
   provider?: string;
 }
 
@@ -42,6 +49,7 @@ import {
   DEFAULT_REQUEST_TIMEOUT,
   DEFAULT_MAX_TOKENS,
   DEFAULT_TOOL_EXECUTION,
+  DEFAULT_TOOL_CONCURRENCY,
   DEFAULT_OPENAI_BASE_URL,
   DEFAULT_ANTHROPIC_BASE_URL,
   DEFAULT_GEMINI_BASE_URL,
@@ -75,6 +83,7 @@ export class Configuration implements NodeLLMConfig {
   private _bedrockSecretAccessKey?: string;
   private _bedrockSessionToken?: string;
   private _bedrockRegion?: string;
+  private _bedrockApiBase?: string;
   private _bedrockGuardrailIdentifier?: string;
   private _bedrockGuardrailVersion?: string;
   private _debug?: boolean;
@@ -229,6 +238,13 @@ export class Configuration implements NodeLLMConfig {
     this._bedrockRegion = v;
   }
 
+  public get bedrockApiBase(): string | undefined {
+    return this._bedrockApiBase ?? process.env.BEDROCK_API_BASE?.trim();
+  }
+  public set bedrockApiBase(v: string | undefined) {
+    this._bedrockApiBase = v;
+  }
+
   public get bedrockGuardrailIdentifier(): string | undefined {
     return this._bedrockGuardrailIdentifier ?? process.env.AWS_GUARDRAIL_ID?.trim();
   }
@@ -262,6 +278,7 @@ export class Configuration implements NodeLLMConfig {
   public requestTimeout: number = DEFAULT_REQUEST_TIMEOUT;
   public maxTokens: number = DEFAULT_MAX_TOKENS;
   public toolExecution: ToolExecutionMode = DEFAULT_TOOL_EXECUTION;
+  public toolConcurrency: boolean = DEFAULT_TOOL_CONCURRENCY;
 
   /**
    * Returns a plain object with all configuration values.

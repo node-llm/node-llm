@@ -70,5 +70,17 @@ describe("Bedrock Config", () => {
         "https://bedrock-runtime.eu-west-1.amazonaws.com"
       );
     });
+
+    it("should prefer a custom apiBase override when provided", () => {
+      expect(getBedrockEndpoint("us-east-1", "https://bedrock-proxy.internal.example.com")).toBe(
+        "https://bedrock-proxy.internal.example.com"
+      );
+    });
+
+    it("should fall back to the region-based endpoint when apiBase is undefined", () => {
+      expect(getBedrockEndpoint("us-east-1", undefined)).toBe(
+        "https://bedrock-runtime.us-east-1.amazonaws.com"
+      );
+    });
   });
 });
