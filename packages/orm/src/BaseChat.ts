@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import type { Usage, Middleware, ToolExecutionMode } from "@node-llm/core";
+import type { Usage, Middleware, ToolExecutionMode, ToolChoice } from "@node-llm/core";
 
 export interface ChatRecord {
   id: string;
@@ -31,6 +31,9 @@ export interface ChatOptions {
   maxToolCalls?: number;
   toolConcurrency?: boolean;
   toolExecution?: ToolExecutionMode;
+  toolChoice?: ToolChoice;
+  toolCalls?: "one" | "many" | number;
+  schema?: any;
   requestTimeout?: number;
   params?: Record<string, any>;
   middlewares?: Middleware[];
@@ -86,6 +89,9 @@ export abstract class BaseChat<
     this.localOptions.maxToolCalls = options.maxToolCalls;
     this.localOptions.toolConcurrency = options.toolConcurrency;
     this.localOptions.toolExecution = options.toolExecution;
+    this.localOptions.toolChoice = options.toolChoice;
+    this.localOptions.toolCalls = options.toolCalls;
+    this.localOptions.schema = options.schema;
     this.localOptions.requestTimeout = options.requestTimeout;
     this.localOptions.params = options.params;
 
@@ -179,6 +185,23 @@ export abstract class BaseChat<
    */
   withToolExecution(mode: ToolExecutionMode): this {
     this.localOptions.toolExecution = mode;
+    return this;
+  }
+
+  /**
+   * Forces, forbids, or requires a specific tool for the next request.
+   */
+  withToolChoice(choice: ToolChoice): this {
+    this.localOptions.toolChoice = choice;
+    return this;
+  }
+
+  /**
+   * Restricts how many tool calls the model may return in a single turn:
+   * "one" (sequential), "many" (default), or an exact number.
+   */
+  withToolCalls(calls: "one" | "many" | number): this {
+    this.localOptions.toolCalls = calls;
     return this;
   }
 

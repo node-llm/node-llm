@@ -48,7 +48,8 @@ export {
   ModerationResponse,
   ModerationResult,
   EmbeddingRequest,
-  EmbeddingResponse
+  EmbeddingResponse,
+  ToolChoice
 } from "./providers/Provider.js";
 export { resolveModelAlias } from "./model_aliases.js";
 export { default as MODEL_ALIASES } from "./aliases.js";
