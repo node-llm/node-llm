@@ -76,9 +76,14 @@ describe("AgentSession", () => {
         metadata: { userId: "user-1" }
       });
 
-      const session = await createAgentSession(mockPrisma as any, mockLlm, TestAgent, {
-        metadata: { userId: "user-1" }
-      });
+      const session = await createAgentSession<Record<string, any>, TestAgent>(
+        mockPrisma as any,
+        mockLlm,
+        TestAgent,
+        {
+          metadata: { userId: "user-1" }
+        }
+      );
 
       // Verify DB calls
       expect(mockPrisma.llmChat.create).toHaveBeenCalledWith(
@@ -211,7 +216,10 @@ describe("AgentSession", () => {
 
     class LazyTestAgent extends Agent<TestInputs> {
       static model = "gpt-4-lazy";
-      static instructions = (i: TestInputs) => `Hello ${i.userName}`;
+      // Static members can't reference the class's own generic type parameter
+      // in TypeScript, so this matches the base class's static signature
+      // (Record<string, any>) and narrows internally.
+      static instructions = (i: Record<string, any>) => `Hello ${(i as TestInputs).userName}`;
     }
 
     it("injects metadata as inputs for lazy resolution during load", async () => {

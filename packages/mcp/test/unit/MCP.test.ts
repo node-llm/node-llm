@@ -83,7 +83,7 @@ describe("MCP Class", () => {
     const tools = await mcp.discoverTools({ prefix: "mcp_" });
 
     expect(tools.length).toBe(1);
-    expect(tools[0].name).toBe("mcp_test_tool");
+    expect(tools[0]!.name).toBe("mcp_test_tool");
     expect(mockClient.connect).toHaveBeenCalled();
   });
 

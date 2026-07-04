@@ -70,8 +70,8 @@ describe("Mocker: Multi-tool and Sequence Support", () => {
       .ask("Book a flight to LA");
 
     expect(res.tool_calls).toHaveLength(2);
-    expect(res.tool_calls[0].function.name).toBe("search_flights");
-    expect(res.tool_calls[1].function.name).toBe("check_weather");
+    expect(res.tool_calls![0]!.function.name).toBe("search_flights");
+    expect(res.tool_calls![1]!.function.name).toBe("check_weather");
   });
 
   test("sequence() returns different responses on consecutive calls", async () => {

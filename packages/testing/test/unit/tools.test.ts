@@ -38,7 +38,7 @@ describe("Mocker Feature: Tool Call Support", () => {
       .ask("What is the weather?");
 
     expect(res1.tool_calls).toBeDefined();
-    const toolCall = res1.tool_calls![0];
+    const toolCall = res1.tool_calls![0]!;
 
     const chat = llm
       .chat("mock-model")
