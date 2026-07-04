@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import type { Usage, Middleware } from "@node-llm/core";
+import type { Usage, Middleware, ToolExecutionMode, ToolChoice } from "@node-llm/core";
 
 export interface ChatRecord {
   id: string;
@@ -29,6 +29,11 @@ export interface ChatOptions {
   maxTokens?: number;
   headers?: Record<string, string>;
   maxToolCalls?: number;
+  toolConcurrency?: boolean;
+  toolExecution?: ToolExecutionMode;
+  toolChoice?: ToolChoice;
+  toolCalls?: "one" | "many" | number;
+  schema?: any;
   requestTimeout?: number;
   params?: Record<string, any>;
   middlewares?: Middleware[];
@@ -37,6 +42,8 @@ export interface ChatOptions {
 export interface UserHooks {
   onToolCallStart: ((call: any) => void | Promise<void>)[];
   onToolCallEnd: ((call: any, result: any) => void | Promise<void>)[];
+  onToolCallError: ((call: any, error: Error) => any | Promise<any>)[];
+  onConfirmToolCall: ((call: any) => boolean | Promise<boolean>)[];
   afterResponse: ((resp: any) => any | Promise<any>)[];
   onNewMessage: (() => void | Promise<void>)[];
   onEndMessage: ((message: any) => void | Promise<void>)[];
@@ -57,6 +64,8 @@ export abstract class BaseChat<
   protected userHooks: UserHooks = {
     onToolCallStart: [],
     onToolCallEnd: [],
+    onToolCallError: [],
+    onConfirmToolCall: [],
     afterResponse: [],
     onNewMessage: [],
     onEndMessage: [],
@@ -78,6 +87,11 @@ export abstract class BaseChat<
     this.localOptions.maxTokens = options.maxTokens;
     this.localOptions.headers = options.headers;
     this.localOptions.maxToolCalls = options.maxToolCalls;
+    this.localOptions.toolConcurrency = options.toolConcurrency;
+    this.localOptions.toolExecution = options.toolExecution;
+    this.localOptions.toolChoice = options.toolChoice;
+    this.localOptions.toolCalls = options.toolCalls;
+    this.localOptions.schema = options.schema;
     this.localOptions.requestTimeout = options.requestTimeout;
     this.localOptions.params = options.params;
 
@@ -156,6 +170,41 @@ export abstract class BaseChat<
     return this.withThinking({ effort });
   }
 
+  /**
+   * Runs independent tool calls within the same turn concurrently instead
+   * of sequentially. See core's Tools guide for details.
+   */
+  withToolConcurrency(enabled: boolean): this {
+    this.localOptions.toolConcurrency = enabled;
+    return this;
+  }
+
+  /**
+   * Controls how tool calls are executed: "auto" (default), "confirm"
+   * (calls onConfirmToolCall before each execution), or "dry-run".
+   */
+  withToolExecution(mode: ToolExecutionMode): this {
+    this.localOptions.toolExecution = mode;
+    return this;
+  }
+
+  /**
+   * Forces, forbids, or requires a specific tool for the next request.
+   */
+  withToolChoice(choice: ToolChoice): this {
+    this.localOptions.toolChoice = choice;
+    return this;
+  }
+
+  /**
+   * Restricts how many tool calls the model may return in a single turn:
+   * "one" (sequential), "many" (default), or an exact number.
+   */
+  withToolCalls(calls: "one" | "many" | number): this {
+    this.localOptions.toolCalls = calls;
+    return this;
+  }
+
   // --- Hook Registration ---
 
   onToolCallStart(callback: (call: any) => void | Promise<void>): this {
@@ -174,6 +223,26 @@ export abstract class BaseChat<
 
   onToolResult(callback: (result: any) => void | Promise<void>): this {
     return this.onToolCallEnd((_call, result) => callback(result));
+  }
+
+  /**
+   * Registers a handler run when a tool call throws. Return "STOP",
+   * "CONTINUE", or "RETRY" to control recovery; the first handler to return
+   * a directive wins, but every registered handler still runs.
+   */
+  onToolCallError(callback: (call: any, error: Error) => any | Promise<any>): this {
+    this.userHooks.onToolCallError.push(callback);
+    return this;
+  }
+
+  /**
+   * Registers an approval handler used when toolExecution is "confirm".
+   * Every registered handler must approve (return true) for the call to
+   * proceed.
+   */
+  onConfirmToolCall(callback: (call: any) => boolean | Promise<boolean>): this {
+    this.userHooks.onConfirmToolCall.push(callback);
+    return this;
   }
 
   afterResponse(callback: (resp: any) => any | Promise<any>): this {

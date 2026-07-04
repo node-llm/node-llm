@@ -279,6 +279,48 @@ await chat.withTool(WeatherTool).ask("How is the weather in London?");
 // The 'LlmToolCall' table will contain the 'get_weather' execution details.
 ```
 
+### Concurrent & Confirmed Tool Execution <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v0.8.0+</span>
+
+`createChat`/`loadChat` accept the same `toolConcurrency` and `toolExecution` options as core's `Chat` (or set them fluently with `withToolConcurrency()` / `withToolExecution()`):
+
+```typescript
+import { ToolExecutionMode } from "@node-llm/core";
+
+const chat = await createChat(prisma, llm, {
+  model: "gpt-4o",
+  toolConcurrency: true, // run independent tool calls in the same turn in parallel
+  toolExecution: ToolExecutionMode.CONFIRM
+});
+
+chat.onConfirmToolCall((call) => {
+  return call.function.name !== "delete_account"; // require approval per call
+});
+
+chat.onToolCallError((call, error) => {
+  console.error(`Tool ${call.function.name} failed:`, error);
+  return "STOP"; // or "CONTINUE" / "RETRY"
+});
+```
+
+### Tool Choice & Structured Output <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v0.8.0+</span>
+
+`toolChoice` and `toolCalls` mirror core's `Chat` for forcing/restricting tool calls, and `schema` (or `.withSchema()`) enables structured output:
+
+```typescript
+import { z } from "zod";
+
+const chat = await createChat(prisma, llm, {
+  model: "gpt-4o",
+  toolChoice: { type: "function", function: { name: "get_weather" } }, // force a specific tool
+  toolCalls: "one", // restrict to one tool call per turn instead of running several in parallel
+  schema: z.object({ summary: z.string() })
+});
+```
+
+`withToolChoice()` / `withToolCalls()` are available fluently too. A `schema` passed at `createChat()`/`loadChat()` time is applied via the same normalization as `.withSchema()`, so a raw Zod schema works either way.
+
+`onConfirmToolCall` requires every registered handler to approve a call before it runs; `onToolCallError` uses the first handler that returns a directive, while still calling every registered handler so each can observe the failure.
+
 ---
 
 ## Error Handling
