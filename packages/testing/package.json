@@ -1,6 +1,6 @@
 {
   "name": "@node-llm/testing",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "Deterministic testing for NodeLLM powered AI systems",
   "publishConfig": {
     "access": "public"
