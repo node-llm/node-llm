@@ -7,15 +7,22 @@ import { Serializer } from "./Serializer.js";
 // Internal state for nested scoping (Feature 12)
 const currentVCRScopes: string[] = [];
 
-// Try to import Vitest's expect to get test state
-let vitestExpect: { getState?: () => { currentTestName?: string } } | undefined;
-try {
-  // @ts-ignore
-  import("vitest").then((m) => {
-    vitestExpect = m.expect;
-  });
-} catch {
-  // Not in vitest env
+type VitestExpect = { getState?: () => { currentTestName?: string } };
+
+/**
+ * Lazily resolves Vitest's `expect` to read the current test name for
+ * cassette auto-naming. Resolved on demand (rather than at module load)
+ * since `import()` is async and can't be awaited at the top level here -
+ * resolving it eagerly would race whatever first calls withVCR().
+ */
+async function resolveVitestExpect(): Promise<VitestExpect | undefined> {
+  try {
+    const m = await import("vitest");
+    return m.expect as unknown as VitestExpect;
+  } catch {
+    // Not in a vitest env
+    return undefined;
+  }
 }
 
 export type VCRMode = "record" | "replay" | "auto" | "passthrough";
@@ -344,9 +351,12 @@ export function withVCR(
       options.scope = capturedScopes;
     }
 
-    if (!name && vitestExpect?.getState) {
-      const state = vitestExpect.getState();
-      name = state.currentTestName || "unnamed-test";
+    if (!name) {
+      const vitestExpect = await resolveVitestExpect();
+      if (vitestExpect?.getState) {
+        const state = vitestExpect.getState();
+        name = state.currentTestName || "unnamed-test";
+      }
     }
 
     if (!name) throw new Error("VCR: Could not determine cassette name.");
