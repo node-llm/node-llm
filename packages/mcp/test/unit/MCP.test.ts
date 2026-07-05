@@ -26,7 +26,8 @@ vi.mock("@modelcontextprotocol/sdk/client/index.js", () => ({
 vi.mock("@modelcontextprotocol/sdk/client/stdio.js", () => ({
   StdioClientTransport: vi.fn().mockImplementation(function () {
     return {};
-  })
+  }),
+  getDefaultEnvironment: vi.fn(() => ({ PATH: "/usr/bin" }))
 }));
 
 vi.mock("@modelcontextprotocol/sdk/client/streamableHttp.js", () => ({

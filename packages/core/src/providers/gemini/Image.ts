@@ -1,4 +1,6 @@
 import { ImageRequest, ImageResponse } from "../Provider.js";
+import { config } from "../../config.js";
+import { fetchWithTimeout } from "../../utils/fetch.js";
 import { handleGeminiError } from "./Errors.js";
 import { logger } from "../../utils/logger.js";
 import { BinaryUtils } from "../../utils/Binary.js";
@@ -46,13 +48,17 @@ export class GeminiImage {
 
     logger.logRequest("Gemini", "POST", url, body);
 
-    const response = await fetch(url, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
+    const response = await fetchWithTimeout(
+      url,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(body)
       },
-      body: JSON.stringify(body)
-    });
+      config.requestTimeout
+    );
 
     if (!response.ok) {
       await handleGeminiError(response, modelId);

@@ -128,6 +128,7 @@ Prevent runaway costs, infinite loops, and hanging requests by setting execution
 ```typescript
 const llm = createLLM({
   maxToolCalls: 5, // Stop after 5 sequential tool execution turns
+  maxCorrections: 5, // Stop after 5 middleware-driven self-correction retries
   maxRetries: 2, // Retry network/server errors 2 times
   requestTimeout: 30000, // Timeout requests after 30 seconds (default)
   maxTokens: 4096 // Limit output to 4K tokens (default)
@@ -137,7 +138,8 @@ const llm = createLLM({
 **Security Benefits:**
 
 - **`maxToolCalls`**: Prevents infinite tool execution loops
-- **`maxRetries`**: Prevents retry storms that could exhaust resources
+- **`maxCorrections`**: Caps middleware-driven `RETRY` loops (e.g. schema self-correction) so a misbehaving middleware can't retry — and bill — indefinitely
+- **`maxRetries`**: Prevents retry storms that could exhaust resources. Retries use exponential backoff with jitter and honor a provider's `Retry-After` header
 - **`requestTimeout`**: Prevents hanging requests and DoS attacks
 - **`maxTokens`**: Prevents excessive output generation and cost overruns
 
@@ -177,7 +179,8 @@ const llm = createLLM({
 | `defaultModerationModel`    | Default model for `.moderate()`     | Provider default                  |
 | `defaultEmbeddingModel`     | Default model for `.embed()`        | Provider default                  |
 | `maxToolCalls`              | Max sequential tool execution turns | `5`                               |
-| `maxRetries`                | Max retries for provider errors     | `2`                               |
+| `maxCorrections`            | Max middleware-driven self-correction retries | `5`                     |
+| `maxRetries`                | Max retries for provider errors (exponential backoff + jitter, honors `Retry-After`) | `2` |
 | `requestTimeout`            | Request timeout in milliseconds     | `30000` (30s)                     |
 | `maxTokens`                 | Max output tokens per request       | `4096`                            |
 | `toolExecution`             | Tool execution mode (`auto`/`confirm`/`dry-run`) | `auto`               |

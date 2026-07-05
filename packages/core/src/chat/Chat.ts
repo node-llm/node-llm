@@ -25,7 +25,7 @@ import { toJsonSchema } from "../schema/to-json-schema.js";
 import { randomUUID } from "node:crypto";
 import { z } from "zod";
 import { config } from "../config.js";
-import { ToolExecutionMode } from "../constants.js";
+import { ToolExecutionMode, DEFAULT_MAX_CORRECTIONS } from "../constants.js";
 import { ConfigurationError } from "../errors/index.js";
 import { ChatValidator } from "./Validation.js";
 import { ToolHandler } from "./ToolHandler.js";
@@ -53,6 +53,7 @@ export interface AskOptions {
   maxTokens?: number;
   headers?: Record<string, string>;
   maxToolCalls?: number;
+  maxCorrections?: number;
   requestTimeout?: number;
   thinking?: ThinkingConfig;
   prediction?: string | ContentPart[];
@@ -903,6 +904,13 @@ export class Chat<S = unknown> {
 
         if (requestDirective && typeof requestDirective === "object") {
           if (requestDirective.action === "RETRY") {
+            const maxCorrections =
+              options?.maxCorrections ?? this.options.maxCorrections ?? DEFAULT_MAX_CORRECTIONS;
+            if (correctionAttempt >= maxCorrections) {
+              throw new Error(
+                `[NodeLLM] Maximum self-correction retries (${maxCorrections}) exceeded.`
+              );
+            }
             // Push feedback to history and try again
             this.messages.push({
               role: "user",

@@ -41,6 +41,20 @@ describe("ToolHandler Recovery", () => {
     expect(result.content).toContain("Expected string, received number");
   });
 
+  it("should recover from malformed JSON arguments instead of throwing", async () => {
+    const toolCall = {
+      id: "call_bad_json",
+      type: "function" as const,
+      function: { name: "test_tool", arguments: '{"arg": ' } // truncated / invalid JSON
+    };
+
+    const result = await ToolHandler.execute(toolCall, [new TestTool().toLLMTool()]);
+
+    expect(result.tool_call_id).toBe("call_bad_json");
+    expect(result.content).toContain("not valid JSON");
+    expect(result.halted).toBe(false);
+  });
+
   it("should catch execution errors and return them as strings", async () => {
     const toolCall = {
       id: "call_789",

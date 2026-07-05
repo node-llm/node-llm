@@ -172,6 +172,8 @@ type RequestDirective =
 
 This is what powers the [Schema Self-Correction Middleware](/core-features/structured_output): when the response fails schema validation, its `onResponse` hook returns `{ action: "RETRY", message: "..." }` with the Zod error, which appends that message to the conversation and re-asks the model — all without your application code needing a manual retry loop.
 
+`RETRY` directives are bounded by the `maxCorrections` limit (default `5`). If a middleware keeps returning `RETRY` past that limit, the request throws instead of looping — a safety net against a misbehaving middleware retrying (and billing) indefinitely. Raise or lower it per-request via `chat.ask(prompt, { maxCorrections })` or globally in [configuration](/getting-started/configuration).
+
 ```typescript
 const validatingMiddleware: Middleware = {
   name: "Validator",

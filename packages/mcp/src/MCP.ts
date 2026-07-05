@@ -5,7 +5,10 @@ import {
   ProgressNotificationSchema
 } from "@modelcontextprotocol/sdk/types.js";
 import { Transport } from "@modelcontextprotocol/sdk/shared/transport.js";
-import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
+import {
+  StdioClientTransport,
+  getDefaultEnvironment
+} from "@modelcontextprotocol/sdk/client/stdio.js";
 import { StreamableHTTPClientTransport } from "@modelcontextprotocol/sdk/client/streamableHttp.js";
 import { EventEmitter } from "events";
 import { MCPTool } from "./MCPTool.js";
@@ -18,6 +21,14 @@ export interface StdioConfig {
   command: string;
   args?: string[];
   env?: Record<string, string>;
+  /**
+   * When true, the spawned server inherits the parent's full `process.env`.
+   * This exposes every secret in the environment (API keys, cloud credentials)
+   * to a third-party subprocess, so it is off by default: the server instead
+   * receives only a minimal safe allowlist (PATH, HOME, etc.) merged with any
+   * explicit `env` you provide. Enable only for servers you fully trust.
+   */
+  inheritEnv?: boolean;
 }
 
 export interface SSEConfig {
@@ -194,10 +205,17 @@ export class MCP extends EventEmitter {
    * Helper to quickly connect to a Stdio-based MCP server.
    */
   static async connect(config: StdioConfig, options: MCPOptions = {}): Promise<MCP> {
+    // By default, hand the subprocess only a minimal safe env (PATH, HOME, …)
+    // so a third-party server can't read the parent's secrets. Full inheritance
+    // is opt-in via `inheritEnv`.
+    const baseEnv = config.inheritEnv
+      ? (process.env as Record<string, string>)
+      : getDefaultEnvironment();
+
     const transport = new StdioClientTransport({
       command: config.command,
       args: config.args || [],
-      env: { ...(process.env as any), ...config.env },
+      env: { ...baseEnv, ...config.env },
       stderr: "pipe"
     });
 

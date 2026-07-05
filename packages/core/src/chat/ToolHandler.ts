@@ -39,7 +39,20 @@ export class ToolHandler {
     const tool = tools?.find((t) => t.function.name === toolCall.function.name);
 
     if (tool?.handler) {
-      const args = JSON.parse(toolCall.function.arguments);
+      let args: unknown;
+      try {
+        args = JSON.parse(toolCall.function.arguments);
+      } catch {
+        // The model produced malformed JSON for the tool arguments. Return a
+        // recoverable error the model can correct on the next turn instead of
+        // throwing and aborting the whole agentic loop.
+        return {
+          role: "tool",
+          tool_call_id: toolCall.id,
+          content: `Error: arguments for tool '${toolCall.function.name}' were not valid JSON. Please call the tool again with a valid JSON arguments object.`,
+          halted: false
+        };
+      }
       const result = await tool.handler(args);
 
       // Check if this is a halt signal

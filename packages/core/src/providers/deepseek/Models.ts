@@ -1,4 +1,6 @@
 import { ModelInfo } from "../Provider.js";
+import { config } from "../../config.js";
+import { fetchWithTimeout } from "../../utils/fetch.js";
 import { Capabilities } from "./Capabilities.js";
 import { ModelRegistry } from "../../models/ModelRegistry.js";
 
@@ -20,12 +22,16 @@ export class DeepSeekModels {
   ) {}
 
   async execute(): Promise<ModelInfo[]> {
-    const response = await fetch(`${this.baseUrl}/models`, {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${this.apiKey}`
-      }
-    });
+    const response = await fetchWithTimeout(
+      `${this.baseUrl}/models`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${this.apiKey}`
+        }
+      },
+      config.requestTimeout
+    );
 
     if (!response.ok) {
       // Fallback to local registry

@@ -1,4 +1,6 @@
 import { ModelInfo } from "../Provider.js";
+import { config } from "../../config.js";
+import { fetchWithTimeout } from "../../utils/fetch.js";
 
 interface OpenRouterModelData {
   id: string;
@@ -29,12 +31,16 @@ export class OpenRouterModels {
   ) {}
 
   async execute(): Promise<ModelInfo[]> {
-    const response = await fetch(`${this.baseUrl}/models`, {
-      headers: {
-        Authorization: `Bearer ${this.apiKey}`,
-        "Content-Type": "application/json"
-      }
-    });
+    const response = await fetchWithTimeout(
+      `${this.baseUrl}/models`,
+      {
+        headers: {
+          Authorization: `Bearer ${this.apiKey}`,
+          "Content-Type": "application/json"
+        }
+      },
+      config.requestTimeout
+    );
 
     if (!response.ok) {
       throw new Error(`OpenRouter API error: ${response.status}`);

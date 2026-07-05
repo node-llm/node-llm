@@ -5,6 +5,9 @@ export enum ToolExecutionMode {
 }
 
 export const DEFAULT_MAX_TOOL_CALLS = 5;
+// Caps how many times a middleware may drive a self-correction RETRY before
+// the loop gives up, preventing an unbounded (and billable) request loop.
+export const DEFAULT_MAX_CORRECTIONS = 5;
 export const DEFAULT_MAX_RETRIES = 2;
 export const DEFAULT_TOOL_EXECUTION = ToolExecutionMode.AUTO;
 export const DEFAULT_TOOL_CONCURRENCY = false;

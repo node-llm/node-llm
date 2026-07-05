@@ -1,5 +1,13 @@
 import { config } from "../config.js";
 
+/**
+ * Masks credentials passed as URL query parameters (e.g. Gemini's `?key=...`)
+ * so they never reach stdout or a log aggregator when debug logging is on.
+ */
+function redactUrl(url: string): string {
+  return url.replace(/([?&](?:key|api_key|apikey|access_token|token)=)[^&#]+/gi, "$1[REDACTED]");
+}
+
 class Logger {
   private isDebugEnabled(): boolean {
     return config.debug === true;
@@ -17,7 +25,7 @@ class Logger {
    */
   logRequest(provider: string, method: string, url: string, body?: unknown): void {
     if (this.isDebugEnabled()) {
-      console.log(`[NodeLLM] [${provider}] Request: ${method} ${url}`);
+      console.log(`[NodeLLM] [${provider}] Request: ${method} ${redactUrl(url)}`);
       if (body) {
         console.log(JSON.stringify(body, null, 2));
       }

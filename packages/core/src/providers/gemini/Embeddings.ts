@@ -1,4 +1,6 @@
 import { EmbeddingRequest, EmbeddingResponse } from "../Provider.js";
+import { config } from "../../config.js";
+import { fetchWithTimeout } from "../../utils/fetch.js";
 import { GeminiBatchEmbedRequest, GeminiBatchEmbedResponse, GeminiEmbedRequest } from "./types.js";
 import { handleGeminiError } from "./Errors.js";
 import { logger } from "../../utils/logger.js";
@@ -31,11 +33,15 @@ export class GeminiEmbeddings {
 
     logger.logRequest("Gemini", "POST", url, payload);
 
-    const response = await fetch(url, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload)
-    });
+    const response = await fetchWithTimeout(
+      url,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      },
+      config.requestTimeout
+    );
 
     if (!response.ok) {
       await handleGeminiError(response, modelId);
