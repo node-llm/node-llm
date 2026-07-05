@@ -99,4 +99,3 @@ for await (const chunk of chat.stream("Write a poem")) {
 - [Multimodal](/core-features/multimodal.html): Send images, audio, and documents.
 - [Tool Calling](/core-features/tools.html): Give your AI ability to execute code.
 - [Deterministic Testing](/core-features/testing): Setup reliable, zero-cost integration tests.
-- [Migration Guide (v1.6)](/getting_started/migration-v1-6): Moving from legacy mutable versions.

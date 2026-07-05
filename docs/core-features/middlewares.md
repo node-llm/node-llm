@@ -50,7 +50,7 @@ const myMiddleware: Middleware = {
   }
 };
 
-const chat = NodeLLM.chat("gpt-4o", {
+const chat = NodeLLM.chat("gpt-5", {
   middlewares: [myMiddleware]
 });
 
@@ -203,7 +203,7 @@ Automatically redacts sensitive information like emails, phone numbers, and cred
 ```typescript
 import { NodeLLM, PIIMaskMiddleware } from "@node-llm/core";
 
-const chat = NodeLLM.chat("gpt-4o", {
+const chat = NodeLLM.chat("gpt-5", {
   middlewares: [new PIIMaskMiddleware({ mask: "[SECRET]" })]
 });
 ```
@@ -214,7 +214,7 @@ Monitors accumulated cost during a session (especially useful for multi-turn too
 ```typescript
 import { NodeLLM, CostGuardMiddleware } from "@node-llm/core";
 
-const chat = NodeLLM.chat("gpt-4o", {
+const chat = NodeLLM.chat("gpt-5", {
   middlewares: [
     new CostGuardMiddleware({ 
       maxCost: 0.05, // $0.05 budget
@@ -230,7 +230,7 @@ Standardizes telemetry by logging token usage, request IDs, and calculated costs
 ```typescript
 import { NodeLLM, UsageLoggerMiddleware } from "@node-llm/core";
 
-const chat = NodeLLM.chat("gpt-4o", {
+const chat = NodeLLM.chat("gpt-5", {
   middlewares: [new UsageLoggerMiddleware({ prefix: "MY-APP" })]
 });
 ```
@@ -250,7 +250,7 @@ const llm = createLLM({
 });
 
 // This chat will automatically use the global UsageLoggerMiddleware
-const chat = llm.chat("gpt-4o");
+const chat = llm.chat("gpt-5");
 ```
 
 ---
@@ -263,7 +263,7 @@ When using the ORM, you can pass middlewares directly to the `createChat` call. 
 import { createChat } from "@node-llm/orm/prisma";
 
 const chat = await createChat(prisma, llm, {
-  model: "gpt-4o",
+  model: "gpt-5",
   middlewares: [new UsageLoggerMiddleware()]
 });
 ```

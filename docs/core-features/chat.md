@@ -39,7 +39,7 @@ import { NodeLLM } from "@node-llm/core";
 
 // 1. Get a chat instance
 // (No setup required if NODELLM_PROVIDER is in env)
-const chat = NodeLLM.chat("gpt-4o-mini");
+const chat = NodeLLM.chat("gpt-5-mini");
 
 // 2. Ask a question
 const response = await chat.ask("What is the capital of France?");
@@ -67,7 +67,7 @@ Guide the AI's behavior, personality, or constraints using system prompts. You c
 
 ```ts
 // Option 1: Set at initialization
-const chat = llm.chat("gpt-4o", {
+const chat = llm.chat("gpt-5", {
   systemPrompt: "You are a helpful assistant that answers in rhyming couplets."
 });
 
@@ -88,7 +88,7 @@ await chat.ask("Hello");
 While NodeLLM handles history automatically during a session, you can manually inject messages into the conversation. This is especially useful for **Session Rehydration** from a database.
 
 ```ts
-const chat = NodeLLM.chat("gpt-4o");
+const chat = NodeLLM.chat("gpt-5");
 
 // Rehydrate previous turns from your DB
 chat
@@ -118,7 +118,7 @@ Some providers offer beta features or require specific headers (like for observa
 
 ```ts
 // Enable Anthropic's beta features
-const chat = llm.chat("claude-3-5-sonnet").withRequestOptions({
+const chat = llm.chat("claude-sonnet-5").withRequestOptions({
   headers: {
     "anthropic-beta": "max-tokens-3-5-sonnet-2024-07-15"
   }
@@ -141,7 +141,7 @@ const systemBlock = {
   cache_control: { type: "ephemeral" }
 };
 
-const chat = llm.chat("claude-3-5-sonnet", {
+const chat = llm.chat("claude-sonnet-5", {
   systemPrompt: systemBlock as any // Cast if strict types complain
 });
 ```
@@ -184,16 +184,16 @@ const tenant2 = NodeLLM.withProvider("openai", {
 });
 
 // No interference - each has its own config
-await Promise.all([tenant1.chat("gpt-4o").ask(prompt), tenant2.chat("gpt-4o").ask(prompt)]);
+await Promise.all([tenant1.chat("gpt-5").ask(prompt), tenant2.chat("gpt-5").ask(prompt)]);
 ```
 
 **Multi-provider parallelism:**
 
 ```ts
 const [gpt, claude, gemini] = await Promise.all([
-  NodeLLM.withProvider("openai").chat("gpt-4o").ask(prompt),
-  NodeLLM.withProvider("anthropic").chat("claude-3-5-sonnet").ask(prompt),
-  NodeLLM.withProvider("gemini").chat("gemini-2.0-flash").ask(prompt)
+  NodeLLM.withProvider("openai").chat("gpt-5").ask(prompt),
+  NodeLLM.withProvider("anthropic").chat("claude-sonnet-5").ask(prompt),
+  NodeLLM.withProvider("gemini").chat("gemini-flash-latest").ask(prompt)
 ]);
 ```
 
@@ -208,7 +208,7 @@ app.post("/chat", async (req, res) => {
     openaiApiKey: userApiKey
   });
 
-  const response = await llm.chat("gpt-4o").ask(req.body.message);
+  const response = await llm.chat("gpt-5").ask(req.body.message);
   res.json(response);
 });
 ```
@@ -221,10 +221,10 @@ Adjust the randomness of the model's responses using `.withTemperature(0.0 - 1.0
 
 ```ts
 // Deterministic / Factual (Low Temperature)
-const factual = NodeLLM.chat("gpt-4o").withTemperature(0.0);
+const factual = NodeLLM.chat("gpt-5").withTemperature(0.0);
 
 // Creative / Random (High Temperature)
-const creative = NodeLLM.chat("gpt-4o").withTemperature(0.9);
+const creative = NodeLLM.chat("gpt-5").withTemperature(0.9);
 ```
 
 ---
@@ -245,7 +245,7 @@ const response = await chat
 // OpenAI streams the known parts almost instantly!
 ```
 
-**Note:** This feature is currently supported by OpenAI (`gpt-4o`, `gpt-4o-mini`). `NodeLLM` ensures your code remains portable by ignoring this field on providers that do not yet support output predictions.
+**Note:** This feature is currently supported by OpenAI (`gpt-5`, `gpt-5-mini`). `NodeLLM` ensures your code remains portable by ignoring this field on providers that do not yet support output predictions.
 
 ---
 
@@ -375,7 +375,7 @@ Inspired by modern LLM architectures (like OpenAI's Developer Role), NodeLLM int
 ### How It Works
 
 - **Implicit Untangling**: If you pass a mixed array of messages to the Chat constructor, NodeLLM automatically identifies and isolates system-level instructions.
-- **Dynamic Role Mapping**: On the official OpenAI API, instructions for modern models (`gpt-4o`, `o1`, `o3`) are automatically promoted to the high-privilege `developer` role.
+- **Dynamic Role Mapping**: On the official OpenAI API, instructions for modern models (`gpt-5`, `o1`, `o3`) are automatically promoted to the high-privilege `developer` role.
 - **Safe Fallbacks**: For older models or local providers (like Ollama or DeepSeek), NodeLLM safely maps instructions back to the standard `system` role to ensure perfect compatibility.
 
 This behavior is **enabled by default** for all chats.

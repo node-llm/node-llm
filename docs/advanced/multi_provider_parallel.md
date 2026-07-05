@@ -42,9 +42,9 @@ The most elegant way to run multiple providers is using `.withProvider()`. This 
 import { NodeLLM } from "@node-llm/core";
 
 const [score1, score2, score3] = await Promise.all([
-  NodeLLM.withProvider("openai").chat("gpt-4o").ask(prompt),
-  NodeLLM.withProvider("anthropic").chat("claude-3-5-sonnet").ask(prompt),
-  NodeLLM.withProvider("gemini").chat("gemini-2.0-flash").ask(prompt)
+  NodeLLM.withProvider("openai").chat("gpt-5").ask(prompt),
+  NodeLLM.withProvider("anthropic").chat("claude-sonnet-5").ask(prompt),
+  NodeLLM.withProvider("gemini").chat("gemini-flash-latest").ask(prompt)
 ]);
 ```
 

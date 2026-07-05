@@ -44,7 +44,7 @@ const personSchema = z.object({
   hobbies: z.array(z.string()).describe("List of hobbies")
 });
 
-const chat = NodeLLM.chat("gpt-4o-mini");
+const chat = NodeLLM.chat("gpt-5-mini");
 
 // Use .withSchema() to enforce the structure
 const response = await chat
@@ -154,7 +154,7 @@ import { NodeLLM, SchemaSelfCorrection, z } from "@node-llm/core";
 
 const schema = z.object({ age: z.number() });
 
-const chat = NodeLLM.chat("claude-3-5-sonnet", {
+const chat = NodeLLM.chat("claude-sonnet-5", {
   schema,
   // Add the self-correction middleware
   middlewares: [

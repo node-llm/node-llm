@@ -53,7 +53,7 @@ const llm = createLLM({
 Gemini uses `generationConfig` and `safetySettings`.
 
 ```ts
-const chat = llm.chat("gemini-1.5-pro").withParams({
+const chat = llm.chat("gemini-pro-latest").withParams({
   generationConfig: {
     topP: 0.8,
     topK: 40,
@@ -72,7 +72,7 @@ const chat = llm.chat("gemini-1.5-pro").withParams({
 
 ## Features
 
-- **Models**: `gemini-1.5-pro`, `gemini-1.5-flash`, `gemini-2.0-flash`.
+- **Models**: `gemini-pro-latest`, `gemini-flash-latest`, `gemini-flash-lite-latest`.
 - **Multimodal**: Supports images, audio, and video files directly.
 - **Tools**: Supported.
 - **System Instructions**: Supported.
@@ -129,7 +129,7 @@ Transcribe audio files using Gemini's native multimodal understanding.
 
 ```ts
 const transcription = await llm.transcribe("./meeting.mp3", {
-  model: "gemini-2.0-flash"
+  model: "gemini-flash-latest"
 });
 
 console.log(transcription.text);

@@ -125,7 +125,7 @@ const usage = {
   total_tokens: 1500
 };
 
-const costInfo = ModelRegistry.calculateCost(usage, "gpt-4o", "openai");
+const costInfo = ModelRegistry.calculateCost(usage, "gpt-5", "openai");
 console.log(costInfo.cost); // Total cost in USD
 ```
 
@@ -136,7 +136,7 @@ console.log(costInfo.cost); // Total cost in USD
 For models that support specialized features, you can define more granular pricing:
 
 ```ts
-PricingRegistry.register("openai", "o1-preview", {
+PricingRegistry.register("openai", "o3", {
   text_tokens: {
     standard: {
       input_per_million: 15.0,

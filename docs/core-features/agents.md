@@ -38,7 +38,7 @@ import { Agent, createLLM } from "@node-llm/core";
 
 // Define an agent with static properties
 class AssistantAgent extends Agent {
-  static model = "gpt-4o";
+  static model = "gpt-5";
   static instructions = "You are a helpful assistant. Be concise.";
   static temperature = 0.7;
 }
@@ -87,7 +87,7 @@ const result = await agent.ask("What is TypeScript?");
 
 | Property | Type | Description |
 |:---------|:-----|:------------|
-| `model` | `string` | The model ID to use (e.g., "gpt-4o") |
+| `model` | `string` | The model ID to use (e.g., "gpt-5") |
 | `provider` | `string` | Force a specific provider (e.g., "openai") |
 | `instructions` | `string` | System prompt for the agent |
 | `tools` | `Tool[]` | Array of Tool classes to register |
@@ -113,7 +113,7 @@ When validation fails, the agent will catch the error, provide feedback to the m
 import { Agent, SchemaSelfCorrection, z } from "@node-llm/core";
 
 class ReliableAgent extends Agent {
-  static model = "claude-3-5-sonnet";
+  static model = "claude-sonnet-5";
   
   // Use a Zod schema for structured answers
   static schema = z.object({
@@ -153,7 +153,7 @@ class CalculatorTool extends Tool {
 }
 
 class MathAgent extends Agent {
-  static model = "gpt-4o";
+  static model = "gpt-5";
   static instructions = "Use the calculator tool to solve math problems.";
   static tools = [CalculatorTool];
   static temperature = 0;
@@ -180,7 +180,7 @@ class ClassifierTool extends Tool {
 
   async execute({ query }) {
     const response = await createLLM({ provider: "openai" })
-      .chat("gpt-4o-mini")
+      .chat("gpt-5-mini")
       .system("Classify as: code, creative, or factual. One word only.")
       .ask(query);
     return { taskType: response.content.toLowerCase().trim() };
@@ -188,7 +188,7 @@ class ClassifierTool extends Tool {
 }
 
 class SmartRouter extends Agent {
-  static model = "gpt-4o";
+  static model = "gpt-5";
   static instructions = "Classify the task, then route to the appropriate specialist.";
   static tools = [ClassifierTool];
 }
@@ -226,7 +226,7 @@ class KnowledgeSearchTool extends Tool {
 }
 
 class RAGAgent extends Agent {
-  static model = "gpt-4o";
+  static model = "gpt-5";
   static instructions = "Answer questions using the knowledge search tool. Cite sources.";
   static tools = [KnowledgeSearchTool];
 }
@@ -248,7 +248,7 @@ Compose specialized agents for complex workflows:
 import { Agent, createLLM } from "@node-llm/core";
 
 class ResearchAgent extends Agent {
-  static model = "gemini-2.0-flash";
+  static model = "gemini-flash-latest";
   static instructions = "List 5 key facts about the topic. Be concise.";
 }
 
@@ -297,7 +297,7 @@ const SentimentSchema = z.object({
 });
 
 class SentimentAnalyzer extends Agent<z.infer<typeof SentimentSchema>> {
-  static model = "gpt-4o";
+  static model = "gpt-5";
   static instructions = "Analyze the sentiment of the given text.";
   static schema = SentimentSchema;
 }
@@ -318,7 +318,7 @@ For quick one-off agents without creating a class:
 import { defineAgent, createLLM } from "@node-llm/core";
 
 const QuickAgent = defineAgent({
-  model: "gpt-4o-mini",
+  model: "gpt-5-mini",
   instructions: "You are a helpful assistant.",
   temperature: 0
 });
@@ -336,7 +336,7 @@ Agents support class inheritance for specialization:
 
 ```typescript
 class BaseAgent extends Agent {
-  static model = "gpt-4o";
+  static model = "gpt-5";
   static temperature = 0;
 }
 
@@ -380,7 +380,7 @@ interface WorkContext {
 }
 
 class WorkAssistant extends Agent<WorkContext> {
-  static model = "gpt-4o";
+  static model = "gpt-5";
 
   // Dynamic instructions resolved at runtime
   static instructions = (inputs: WorkContext) => 
@@ -450,7 +450,7 @@ class WeatherTool extends Tool {
 }
 
 class ObservableAgent extends Agent {
-  static model = "gpt-4o";
+  static model = "gpt-5";
   static tools = [WeatherTool];
   
   static onStart(context) {
@@ -481,7 +481,7 @@ import { Agent } from "@node-llm/core";
 import { metrics } from "./monitoring";
 
 class ProductionAgent extends Agent {
-  static model = "gpt-4o";
+  static model = "gpt-5";
   
   static onStart(context) {
     metrics.increment("agent.requests");
@@ -505,7 +505,7 @@ For models with extended thinking (o1, Claude):
 
 ```typescript
 class ThinkingAgent extends Agent {
-  static model = "o1-preview";
+  static model = "o3";
   static thinking = { effort: "high" };
   
   static onThinking(thinking, result) {
@@ -521,7 +521,7 @@ All hooks support async operations:
 
 ```typescript
 class AuditedAgent extends Agent {
-  static model = "gpt-4o";
+  static model = "gpt-5";
   
   static async onComplete(result) {
     await db.metrics.create({

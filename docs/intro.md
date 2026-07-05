@@ -9,7 +9,7 @@ permalink: /docs/intro
   <img src="/assets/images/logo.png" alt="NodeLLM" width="200" />
 </p>
 
-# Introduction
+# One API for every LLM provider
 
 [![npm version](https://badge.fury.io/js/@node-llm%2Fcore.svg)](https://www.npmjs.com/package/@node-llm/core)
 [![GitHub Repository](https://img.shields.io/badge/GitHub-node--llm-blue?logo=github)](https://github.com/node-llm/node-llm)
@@ -17,11 +17,28 @@ permalink: /docs/intro
 [![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-**The Provider-Agnostic LLM Runtime for Node.js.**
+**NodeLLM is the backend runtime for building reliable, testable, provider-agnostic AI systems in Node.js.** Nine providers, one predictable API — with normalized streaming, automatic tool loops, deterministic testing, and first-class observability built in.
 
-**NodeLLM is a backend orchestration layer designed for building reliable, testable, and provider-agnostic AI systems.**
+```bash
+npm install @node-llm/core
+```
 
-It is not a "simple API wrapper" or a "prompt engineering tool." NodeLLM deals with the hard infrastructure problems: normalizing streaming across providers, managing tool execution loops, enforcing timeouts, and enabling first-class testing and telemetry.
+```ts
+import { createLLM } from "@node-llm/core";
+
+const llm = createLLM({ provider: "anthropic" });
+const chat = llm.chat("claude-sonnet-5");
+
+// Same code works for OpenAI, Gemini, Bedrock, Ollama, and more —
+// switch providers with config, not a rewrite.
+const response = await chat.ask("Explain event-driven architecture");
+console.log(response.content);
+
+// Streaming is a standard AsyncIterator on every provider
+for await (const chunk of chat.stream("Now explain it to a five-year-old")) {
+  process.stdout.write(chunk.content);
+}
+```
 
 <p class="fs-4 text-grey-dk-000 mb-3">Unified support for</p>
 <div class="provider-icons">
@@ -62,103 +79,45 @@ It is not a "simple API wrapper" or a "prompt engineering tool." NodeLLM deals w
   </div>
 </div>
 
+[Quick Start](/getting-started/quick-start){: .btn .btn-primary .mr-2 }
+[View on GitHub](https://github.com/node-llm/node-llm){: .btn }
+
+---
+
+## Why NodeLLM?
+
+Most AI SDKs optimize for getting a response to the user fast (frontend/edge). NodeLLM optimizes for **system reliability** — it's built for API servers, workers, cron jobs, and agents, where the hard problems are infrastructure problems:
+
+- **Decoupling** — isolate business logic from the rapid churn of model versions. Switch providers via config, not code rewrites.
+- **Production safety** — timeouts that protect the event loop, circuit breaking, redaction, and audit logging.
+- **Determinism** — record/replay your AI interactions with VCR cassettes; unit-test agents with a fluent mocker.
+- **One mental model** — identical behavior for streaming, tool loops, structured output, and vision across every provider.
+
+| Feature            | NodeLLM                       | Official SDKs               | Impact                    |
+| :----------------- | :---------------------------- | :-------------------------- | :------------------------ |
+| **Provider Logic** | Transparently handled         | Exposed to your code        | **Low coupling**          |
+| **Streaming**      | Standard `AsyncIterator`      | Vendor-specific events      | **Predictable data flow** |
+| **Tool Loops**     | Automated recursion           | Manual implementation       | **Less boilerplate**      |
+| **Files/Vision**   | Intelligent path/URL handling | Base64/Buffer management    | **Cleaner service layer** |
+| **Configuration**  | Centralized & global          | Per-instance initialization | **Easier lifecycle mgmt** |
+
+NodeLLM is **not** a thin wrapper around vendor SDKs, a UI streaming library like Vercel AI SDK, or a prompt-engineering framework. It sits between your app and the providers, and owns the messy middle:
+
 ```text
                 Your App
                    ↓
 NodeLLM (Unified API + State + Security)
                    ↓
- OpenAI | Anthropic | Bedrock | xAI | Ollama | Mistral
+ OpenAI | Anthropic | Gemini | Bedrock | xAI | Ollama | ...
 ```
 
 ---
 
-## 🛑 What NodeLLM is NOT
+## What you can build with it
 
-To understand NodeLLM, you must understand what it is **NOT**.
+### Auto-executing tools
 
-NodeLLM is **NOT**:
-
-- ❌ **A thin wrapper** around vendor SDKs (like `openai` or `@anthropic-ai/sdk`)
-- ❌ **A UI streaming library** (like Vercel AI SDK)
-- ❌ **A prompt-only framework**
-
-NodeLLM **IS**:
-
-- ✅ **A Backend Runtime**: Designed for workers, cron jobs, agents, and API servers.
-- ✅ **Provider Agnostic**: Switches providers via config, not code rewrites.
-- ✅ **Contract Driven**: Guarantees identical behavior for Tools and Streaming across all models.
-- ✅ **Infrastructure First**: Built for evals, telemetry, retries, and circuit breaking.
-
----
-
-## 🏗️ The "Infrastructure-First" Approach
-
-Most AI SDKs optimize for "getting a response to the user fast" (Frontend/Edge). NodeLLM optimizes for **system reliability** (Backend).
-
-It is designed for architects and platform engineers who need:
-
-- **Strict Process Protection**: Preventing hung requests from stalling event loops.
-- **Normalized Persistence**: Treating chat interactions as database records via `@node-llm/orm`.
-- **Determinism**: Testing your AI logic with VCR recordings and time-travel debugging.
-
-### Strategic Goals
-
-- **Decoupling**: Isolate your business logic from the rapid churn of AI model versions.
-- **Production Safety**: Native support for circuit breaking, redaction, and audit logging.
-- **Predictability**: A unified Mental Model for streaming, structured outputs, and vision.
-
----
-
-## ⚡ The 5-Minute Path
-
-```ts
-import { createLLM } from "@node-llm/core";
-
-// 1. Explicit Initialization (Preferred)
-const llm = createLLM({ provider: "openai" });
-const chat = llm.chat("gpt-4o");
-
-// 2. Chat (High-level request/response)
-const response = await chat.ask("Explain event-driven architecture");
-console.log(response.content);
-
-// 3. Streaming (Standard AsyncIterator)
-for await (const chunk of chat.stream("Explain event-driven architecture")) {
-  process.stdout.write(chunk.content);
-}
-```
-
----
-
-## 🚀 Why Use This Over Official SDKs?
-
-| Feature            | NodeLLM                       | Official SDKs               | Architectural Impact      |
-| :----------------- | :---------------------------- | :-------------------------- | :------------------------ |
-| **Provider Logic** | Transparently Handled         | Exposed to your code        | **Low Coupling**          |
-| **Streaming**      | Standard `AsyncIterator`      | Vendor-specific Events      | **Predictable Data Flow** |
-| **Tool Loops**     | Automated Recursion           | Manual implementation       | **Reduced Boilerplate**   |
-| **Files/Vision**   | Intelligent Path/URL handling | Base64/Buffer management    | **Cleaner Service Layer** |
-| **Configuration**  | Centralized & Global          | Per-instance initialization | **Easier Lifecycle Mgmt** |
-
----
-
-## 🔮 Capabilities
-
-### 💬 Unified Chat
-
-Stop rewriting code for every provider. `NodeLLM` normalizes inputs and outputs into a single, predictable mental model.
-
-```ts
-import { createLLM } from "@node-llm/core";
-
-const llm = createLLM({ provider: "openai" });
-const chat = llm.chat("gpt-4o");
-await chat.ask("Hello world");
-```
-
-### 🛠️ Auto-Executing Tools
-
-Define tools once using our clean **Class-Based DSL**; NodeLLM manages the recursive execution loop for you.
+Define a tool once with the class-based DSL; NodeLLM runs the recursive execution loop for you — no manual "check for tool_calls, execute, re-send" plumbing.
 
 ```ts
 import { Tool, z } from "@node-llm/core";
@@ -176,14 +135,13 @@ class WeatherTool extends Tool {
 await chat.withTool(WeatherTool).ask("Weather in Tokyo?");
 ```
 
-### 🔌 [Model Context Protocol (MCP)](/core-features/mcp)
+### Model Context Protocol (MCP)
 
-Connect NodeLLM to external data sources and tools using the industry-standard MCP. Share tools, resources, and prompt templates across different servers dynamically.
+Connect to external data sources and tools over the industry-standard [MCP](/mcp.html). Discover tools, resources, and prompt templates from any server dynamically.
 
 ```ts
 import { MCP } from "@node-llm/mcp";
 
-// Connect with chainable monitoring
 const mcp = (await MCP.connect({
   command: "npx",
   args: ["-y", "@modelcontextprotocol/server-github"]
@@ -193,66 +151,9 @@ const tools = await mcp.discoverTools();
 await chat.withTools(tools).ask("List my repos");
 ```
 
-### 💾 [Persistence Layer](/orm/prisma)
+### Extended thinking
 
-Automatically track chat history, tool executions, and API metrics with [**@node-llm/orm**](https://www.npmjs.com/package/@node-llm/orm). Now with full support for **Extended Thinking** persistence.
-
-```ts
-import { createChat } from "@node-llm/orm/prisma";
-
-// Chat state is automatically saved to your database (Postgres/MySQL/SQLite)
-const chat = await createChat(prisma, llm, { model: "claude-3-7-sonnet" });
-
-await chat.withThinking({ budget: 16000 }).ask("Develop a strategy");
-```
-
-### 🧪 [Deterministic Testing](/core-features/testing)
-
-Validate your AI agents with **VCR cassettes** (record/replay) and a **Fluent Mocker** for unit tests. No more flaky or expensive test runs. Powered by [**@node-llm/testing**](https://www.npmjs.com/package/@node-llm/testing).
-
-```ts
-import { vcr, Mocker } from "@node-llm/testing";
-
-// 1. Integration Tests (VCR)
-await vcr.useCassette("pricing_flow", async () => {
-  const res = await chat.ask("How much?");
-  expect(res.content).toContain("$20/mo");
-});
-
-// 2. Unit Tests (Mocker)
-const mock = new Mocker()
-  .chat("Next step?")
-  .respond("Login User")
-  .callsTool("getCurrentUser", { id: 1 });
-```
-
-### 🛡️ [Security & Compliance](/advanced/security)
-
-Implement custom security, PII detection, and compliance logic using pluggable asynchronous hooks (`beforeRequest` and `afterResponse`).
-
-### 🔧 Strategic Configuration
-
-NodeLLM provides a flexible configuration system designed for enterprise usage:
-
-```ts
-// Switch providers at the framework level
-const llm = createLLM({ provider: "anthropic" });
-```
-
-### ⚡ Scoped Parallelism
-
-Run multiple providers in parallel safely without global configuration side effects using isolated contexts.
-
-```ts
-const [gpt, claude] = await Promise.all([
-  NodeLLM.withProvider("openai").chat("gpt-4o").ask(prompt),
-  NodeLLM.withProvider("anthropic").chat("claude-3-5-sonnet").ask(prompt)
-]);
-```
-
-### 🧠 [Extended Thinking](/core-features/reasoning)
-
-Direct access to the thought process of modern reasoning models like **Claude 3.7**, **DeepSeek R1**, or **OpenAI o1/o3** using a unified interface.
+Direct, unified access to the reasoning of models like Claude, DeepSeek R1, and OpenAI's o-series — one interface, every provider.
 
 ```ts
 const res = await chat
@@ -262,34 +163,88 @@ const res = await chat
 console.log(res.thinking.text); // Full chain-of-thought
 ```
 
+### Persistence with your database
+
+Track chat history, tool executions, and API metrics automatically with [@node-llm/orm](/orm/prisma) — Postgres, MySQL, or SQLite via Prisma, including extended-thinking persistence.
+
+```ts
+import { createChat } from "@node-llm/orm/prisma";
+
+const chat = await createChat(prisma, llm, { model: "claude-sonnet-5" });
+await chat.withThinking({ budget: 16000 }).ask("Develop a strategy");
+```
+
+### Deterministic testing
+
+No more flaky, expensive AI tests. Record real interactions once with **VCR cassettes**, replay them forever; mock tool-calling flows with the **fluent mocker** — powered by [@node-llm/testing](/core-features/testing).
+
+```ts
+import { vcr, Mocker } from "@node-llm/testing";
+
+// Integration tests: record once, replay deterministically
+await vcr.useCassette("pricing_flow", async () => {
+  const res = await chat.ask("How much?");
+  expect(res.content).toContain("$20/mo");
+});
+
+// Unit tests: no network at all
+const mock = new Mocker()
+  .chat("Next step?")
+  .respond("Login User")
+  .callsTool("getCurrentUser", { id: 1 });
+```
+
+### Multi-provider parallelism
+
+Run providers side by side with isolated contexts — no global-config side effects.
+
+```ts
+const [gpt, claude] = await Promise.all([
+  NodeLLM.withProvider("openai").chat("gpt-5").ask(prompt),
+  NodeLLM.withProvider("anthropic").chat("claude-sonnet-5").ask(prompt)
+]);
+```
+
+### Images, embeddings, audio, and more
+
+The same `llm` handle covers [image generation](/core-features/image-generation.html), [embeddings](/core-features/embeddings.html), [transcription](/core-features/audio-transcription.html), [moderation](/core-features/moderation.html), and [structured output](/core-features/structured_output.html) — see the full [Core Features](/core-features) section.
+
+### Security & compliance
+
+Plug custom security, PII detection, and compliance logic into asynchronous [`beforeRequest` and `afterResponse` hooks](/advanced/security) — enforce policy at the framework level, not per call site.
+
 ---
 
-## 📋 Supported Providers
+## Supported providers
 
-| Provider                                                                                                                             | Supported Features                                                                                    |
-| :----------------------------------------------------------------------------------------------------------------------------------- | :---------------------------------------------------------------------------------------------------- |
-| <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/openai.svg" height="18"> **OpenAI**            | Chat, Streaming, Tools, Vision, Audio, Images, Transcription, **Reasoning**, **Smart Developer Role** |
-| <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/gemini-color.svg" height="18"> **Gemini**      | Chat, Streaming, Tools, Vision, Audio, Video, Embeddings                                              |
-| <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/anthropic-text.svg" height="12"> **Anthropic** | Chat, Streaming, Tools, Vision, PDF, Structured Output, **Extended Thinking (Claude 3.7)**            |
-| <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/deepseek-color.svg" height="18"> **DeepSeek**  | Chat (V3), **Extended Thinking (R1)**, Tools, Streaming                                              |
-| <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/bedrock-color.svg" height="18"> **Bedrock**    | Chat, Streaming, Tools, Image Gen (Titan/SD), Embeddings, **Prompt Caching**                         |
-| <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/openrouter.svg" height="18"> **OpenRouter**    | **Aggregator**, Chat, Streaming, Tools, Vision, Embeddings, **Reasoning**                             |
-| <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/xai.svg" height="18"> <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/xai-text.svg" height="12"> **xAI** | Chat, Streaming, Tools, Vision, Images, **Reasoning**                                                |
-| <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/ollama.svg" height="18"> **Ollama**            | **Local Inference**, Chat, Streaming, Tools, Vision, Embeddings                                       |
-| <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/mistral-color.svg" height="18"> **Mistral**        | Chat, Streaming, Tools, Vision, Embeddings, Transcription, Moderation, **Reasoning (Magistral)** |
+| Provider                                                                                                                             | Supported Features                                                                             |
+| :------------------------------------------------------------------------------------------------------------------------------------ | :---------------------------------------------------------------------------------------------- |
+| <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/openai.svg" height="18"> **OpenAI**            | Chat, Streaming, Tools, Vision, Audio, Images, Transcription, Reasoning, Smart Developer Role  |
+| <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/anthropic-text.svg" height="12"> **Anthropic** | Chat, Streaming, Tools, Vision, PDF, Structured Output, Extended Thinking, Prompt Caching      |
+| <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/gemini-color.svg" height="18"> **Gemini**      | Chat, Streaming, Tools, Vision, Audio, Video, Embeddings                                       |
+| <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/deepseek-color.svg" height="18"> **DeepSeek**  | Chat, Extended Thinking (R1), Tools, Streaming                                                 |
+| <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/bedrock-color.svg" height="18"> **Bedrock**    | Chat, Streaming, Tools, Image Gen, Embeddings, Prompt Caching                                  |
+| <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/openrouter.svg" height="18"> **OpenRouter**    | Aggregator: Chat, Streaming, Tools, Vision, Embeddings, Reasoning                              |
+| <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/xai.svg" height="18"> **xAI**                  | Chat, Streaming, Tools, Vision, Images, Reasoning                                              |
+| <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/ollama.svg" height="18"> **Ollama**            | Local Inference: Chat, Streaming, Tools, Vision, Embeddings                                    |
+| <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/mistral-color.svg" height="18"> **Mistral**    | Chat, Streaming, Tools, Vision, Embeddings, Transcription, Moderation, Reasoning               |
 
----
-
-## 🤝 Contributing
-
-We welcome contributions! Please see our [Contributing Guide](https://github.com/node-llm/node-llm/blob/main/CONTRIBUTING.md) for more details on how to get started.
+The [model registry](/available-models) tracks current model IDs, capabilities, and pricing across all providers — kept in sync automatically.
 
 ---
 
-## 🫶 Credits
+## Next steps
 
-Heavily inspired by the elegant design of [RubyLLM](https://rubyllm.com/).
+- [Quick Start](/getting-started/quick-start) — chat, images, and embeddings in 5 minutes
+- [Configuration](/getting-started/configuration) — API keys, defaults, and per-request overrides
+- [Tool Calling](/core-features/tools) — give your AI the ability to execute code
+- [Testing](/core-features/testing) — reliable, zero-cost integration tests
+- [Examples](/examples.html) — complete, runnable scripts for every feature
 
 ---
 
-**Upgrading to v1.6.0?** Read the [Migration Guide](/getting_started/migration-v1-6.html) to understand the new strict provider requirements and typed error hierarchy.
+## Contributing & credits
+
+We welcome contributions — see the [Contributing Guide](https://github.com/node-llm/node-llm/blob/main/CONTRIBUTING.md) to get started.
+
+NodeLLM is heavily inspired by the elegant design of [RubyLLM](https://rubyllm.com/). 🫶

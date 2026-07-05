@@ -34,7 +34,7 @@ Understanding these components will help you use the framework effectively.
 The primary interface for conversational AI. `NodeLLM.chat()` creates a stateful object that manages conversation history.
 
 ```ts
-const chat = llm.chat("gpt-4o");
+const chat = llm.chat("gpt-5");
 ```
 
 ### Providers
@@ -82,7 +82,7 @@ NodeLLM supports two primary styles of configuration to match your preferred arc
 Ideal for step-by-step configuration and readable "action" chains.
 
 ```ts
-const chat = NodeLLM.chat("claude-3-7-sonnet")
+const chat = NodeLLM.chat("claude-sonnet-5")
   .withInstructions("You are a logic expert")
   .withTemperature(0.2)
   .withThinking({ budget: 16000 });
@@ -98,7 +98,7 @@ Ideal for integrations that pass configuration dynamically or from a centralized
 
 ```ts
 // All options can be passed together at initialization
-const chat = NodeLLM.chat("gpt-4o", {
+const chat = NodeLLM.chat("gpt-5", {
   systemPrompt: "You are a helpful assistant",
   temperature: 0.7,
   maxTokens: 500,

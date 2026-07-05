@@ -29,7 +29,7 @@ description: Access the inner thoughts and chain-of-thought process of advanced 
 
 ## Configuring Thinking <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v1.7.0+</span>
 
-You can control the reasoning behavior using the `.withThinking()` or `.withEffort()` methods. This is particularly useful for models like `o3-mini` or `claude-3-7-sonnet`.
+You can control the reasoning behavior using the `.withThinking()` or `.withEffort()` methods. This is particularly useful for models like `o3` or `claude-sonnet-5`.
 
 ### Setting Effort Level
 Effort levels (low, medium, high) allow you to balance between speed/cost and reasoning depth. Pass `"none"` to explicitly disable thinking on models that support turning it off.
@@ -37,7 +37,7 @@ Effort levels (low, medium, high) allow you to balance between speed/cost and re
 ```ts
 import { NodeLLM } from "@node-llm/core";
 
-const chat = NodeLLM.chat("o3-mini")
+const chat = NodeLLM.chat("o3")
   .withEffort("high"); // Options: "low", "medium", "high", "none"
 
 const response = await chat.ask("Solve this complex architecture problem...");
@@ -105,6 +105,6 @@ Currently, the following models have enhanced reasoning support in `NodeLLM`:
 | :--------------------------------- | :-------- | :------------------------------------------------ |
 | `deepseek-reasoner`                | DeepSeek  | Full text extraction                              |
 | `o1-*`, `o3-*`                     | OpenAI    | Effort configuration & token tracking             |
-| `claude-3-7-*`, `claude-*-4-*`     | Anthropic | Budget-based thinking & full text extraction      |
-| `gemini-2.0-flash-thinking-*`      | Gemini    | Full thinking text extraction                     |
+| `claude-sonnet-5`, `claude-opus-4-*`     | Anthropic | Budget-based thinking & full text extraction      |
+| `gemini-flash-thinking-*`      | Gemini    | Full thinking text extraction                     |
 | `magistral-*`                      | Mistral   | Always-on thinking & full text extraction         |

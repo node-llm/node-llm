@@ -60,7 +60,7 @@ import { generateText } from "ai";
 import { openai } from "@ai-sdk/openai";
 
 const result = await generateText({
-  model: openai("gpt-4o"),
+  model: openai("gpt-5"),
   prompt: "Write a haiku about monitoring.",
   experimental_telemetry: {
     isEnabled: true,
@@ -70,7 +70,7 @@ const result = await generateText({
 ```
 
 The spans emitted by the AI SDK will be automatically converted into NodeLLM Monitor events, including:
-- **Model Name**: (e.g., `gpt-4o`)
+- **Model Name**: (e.g., `gpt-5`)
 - **Usage**: Input/Output/Total tokens
 - **Cost**: Calculated based on the detected model
 - **TTFT**: Time-to-First-Token for streaming requests

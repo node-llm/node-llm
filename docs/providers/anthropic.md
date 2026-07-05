@@ -53,7 +53,7 @@ const llm = createLLM({
 You can pass Anthropic-specific parameters or custom headers.
 
 ```ts
-const chat = llm.chat("claude-3-5-sonnet-20241022").withParams({
+const chat = llm.chat("claude-sonnet-5").withParams({
   top_k: 50,
   top_p: 0.9,
   // Custom headers if needed
@@ -67,11 +67,11 @@ const chat = llm.chat("claude-3-5-sonnet-20241022").withParams({
 
 ## Features
 
-- **Models**: `claude-3-7-sonnet`, `claude-3-5-sonnet`, `claude-3-opus`, `claude-3-haiku`.
+- **Models**: `claude-sonnet-5`, `claude-opus-4-8`, `claude-haiku-4-5`, `claude-fable-5`.
 - **Vision**: Analyzes images.
 - **PDF Support**: Can read and analyze PDF documents natively.
 - **Tools**: Fully supported.
-- **Reasoning**: Support for Extended Thinking and token-based pricing for `claude-3-7`.
+- **Reasoning**: Support for Extended Thinking and token-based thinking budgets on supported Claude models.
 
 ---
 

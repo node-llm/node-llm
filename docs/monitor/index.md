@@ -83,7 +83,7 @@ const monitor = Monitor.memory({
 
 const llm = createLLM({
   provider: "openai",
-  model: "gpt-4o-mini",
+  model: "gpt-5-mini",
   openaiApiKey: process.env.OPENAI_API_KEY,
   middlewares: [monitor], // Monitor IS the middleware
 });

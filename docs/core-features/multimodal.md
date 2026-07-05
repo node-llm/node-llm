@@ -71,10 +71,10 @@ You can pass local paths or URLs directly to the `ask` or `stream` method using 
 
 ## Working with Images (Vision)
 
-Vision-capable models (like `gpt-4o`, `claude-3-5-sonnet`, `gemini-1.5-pro`) can analyze images.
+Vision-capable models (like `gpt-5`, `claude-sonnet-5`, `gemini-pro-latest`) can analyze images.
 
 ```ts
-const chat = NodeLLM.chat("gpt-4o");
+const chat = NodeLLM.chat("gpt-5");
 
 // Analyze a local image
 await chat.ask("What's in this image?", {
@@ -96,10 +96,10 @@ await chat.ask("Compare the design of these two apps", {
 
 ## Working with Audio
 
-Audio-capable models (like `gemini-1.5-flash`) can listen to audio files and answer questions about them.
+Audio-capable models (like `gemini-flash-latest`) can listen to audio files and answer questions about them.
 
 ```ts
-const chat = NodeLLM.chat("gemini-1.5-flash");
+const chat = NodeLLM.chat("gemini-flash-latest");
 
 // Summarize a meeting recording
 await chat.ask("Summarize the key decisions in this meeting", {
@@ -121,7 +121,7 @@ _Note: For pure transcription without chat, see [Audio Transcription](/core-feat
 Video analysis is currently supported primarily by Google Gemini and limited OpenAI models. `NodeLLM` handles the upload and reference process seamlessly.
 
 ```ts
-const chat = NodeLLM.chat("gemini-1.5-pro");
+const chat = NodeLLM.chat("gemini-pro-latest");
 
 await chat.ask("What happens in this video?", {
   files: ["./demo_video.mp4"]
@@ -139,7 +139,7 @@ You can provide full documents for analysis.
 For text-based files, `NodeLLM` reads the content and passes it as text context to the model.
 
 ```ts
-const chat = NodeLLM.chat("claude-3-5-sonnet");
+const chat = NodeLLM.chat("claude-sonnet-5");
 
 // Analyze code
 await chat.ask("Explain potential bugs in this code", {

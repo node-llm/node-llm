@@ -65,7 +65,7 @@ const llm = createLLM({
 OpenRouter supports various unique parameters that can be passed via `.withParams()`:
 
 ```ts
-const chat = llm.chat("google/gemini-2.0-flash-exp:free").withParams({
+const chat = llm.chat("google/gemini-2.5-flash:free").withParams({
   transforms: ["middle-out"], // OpenRouter specific compression
   route: "fallback"
 });

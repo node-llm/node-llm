@@ -56,7 +56,7 @@ const debugAnthropic = NodeLLM.withProvider("anthropic", { debug: true });
 ```text
 [NodeLLM] [OpenAI] Request: POST https://api.openai.com/v1/chat/completions
 {
-  "model": "gpt-4o",
+  "model": "gpt-5",
   "messages": [...],
   "tools": [...]
 }
@@ -93,7 +93,7 @@ The logs include:
 When debug mode is enabled, you'll see logs showing how model aliases are resolved:
 
 ```text
-[NodeLLM Debug] Resolved model alias 'claude-3-5-haiku' → 'claude-3-5-haiku-20241022' for provider 'anthropic'
+[NodeLLM Debug] Resolved model alias 'claude-haiku-4-5' → 'claude-haiku-4-5-20251001' for provider 'anthropic'
 [NodeLLM Debug] No alias mapping found for 'custom-model' with provider 'anthropic', using as-is
 ```
 

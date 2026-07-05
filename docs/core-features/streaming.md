@@ -29,7 +29,7 @@ For real-time interactions, `NodeLLM` supports streaming responses via standard 
 Use the `stream()` method on a chat instance to get an iterator.
 
 ```ts
-const chat = NodeLLM.chat("gpt-4o");
+const chat = NodeLLM.chat("gpt-5");
 
 process.stdout.write("Assistant: ");
 
@@ -88,7 +88,7 @@ class WeatherTool extends Tool {
   }
 }
 
-const chat = NodeLLM.chat("gpt-4o").withTool(WeatherTool);
+const chat = NodeLLM.chat("gpt-5").withTool(WeatherTool);
 
 // Tool is automatically executed during streaming!
 for await (const chunk of chat.stream("What's the weather in Paris?")) {
@@ -102,7 +102,7 @@ for await (const chunk of chat.stream("What's the weather in Paris?")) {
 You can also listen to tool execution events:
 
 ```ts
-const chat = NodeLLM.chat("gpt-4o")
+const chat = NodeLLM.chat("gpt-5")
   .withTool(WeatherTool)
   .onToolCall((call) => {
     console.log(`\n[Tool Called: ${call.function.name}]`);
@@ -129,7 +129,7 @@ for await (const chunk of chat.stream("Weather in Tokyo?")) {
 Pass images, audio, or documents just like you would with a standard request.
 
 ```ts
-const chat = NodeLLM.chat("gpt-4o");
+const chat = NodeLLM.chat("gpt-5");
 
 for await (const chunk of chat.stream("What's in this image?", {
   images: ["./analysis.png"]
@@ -188,7 +188,7 @@ app.get("/chat", async (req, res) => {
   res.setHeader("Content-Type", "text/plain; charset=utf-8");
   res.setHeader("Transfer-Encoding", "chunked");
 
-  const chat = NodeLLM.chat("gpt-4o-mini");
+  const chat = NodeLLM.chat("gpt-5-mini");
 
   try {
     for await (const chunk of chat.stream(req.query.q as string)) {

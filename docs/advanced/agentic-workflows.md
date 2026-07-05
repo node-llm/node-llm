@@ -39,7 +39,7 @@ class MathTutor extends Tool {
 
   async execute({ question }) {
     const response = await createLLM({ provider: "openai" })
-      .chat("gpt-4o")
+      .chat("gpt-5")
       .system("You are a math tutor. Explain concepts clearly.")
       .ask(question);
     return response.content;
@@ -48,7 +48,7 @@ class MathTutor extends Tool {
 
 // Use as a tool in a coordinator
 const llm = createLLM({ provider: "openai" });
-const chat = llm.chat("gpt-4o").withTool(MathTutor);
+const chat = llm.chat("gpt-5").withTool(MathTutor);
 await chat.ask("Help me understand calculus");
 ```
 
@@ -65,9 +65,9 @@ async function analyzeContent(text: string) {
   const llm = createLLM({ provider: "openai" });
 
   const [sentiment, summary, topics] = await Promise.all([
-    llm.chat("gpt-4o-mini").ask(`Sentiment (positive/negative/neutral): ${text}`),
-    llm.chat("gpt-4o-mini").ask(`One-sentence summary: ${text}`),
-    llm.chat("gpt-4o-mini").ask(`Extract 3 topics: ${text}`)
+    llm.chat("gpt-5-mini").ask(`Sentiment (positive/negative/neutral): ${text}`),
+    llm.chat("gpt-5-mini").ask(`One-sentence summary: ${text}`),
+    llm.chat("gpt-5-mini").ask(`Extract 3 topics: ${text}`)
   ]);
 
   return {
@@ -95,14 +95,14 @@ async function reviewCode(code: string) {
       .system("Security review. List vulnerabilities.")
       .ask(code),
     createLLM({ provider: "openai" })
-      .chat("gpt-4o")
+      .chat("gpt-5")
       .system("Performance review. List bottlenecks.")
       .ask(code)
   ]);
 
   // Synthesize
   return createLLM({ provider: "openai" })
-    .chat("gpt-4o")
+    .chat("gpt-5")
     .system("Combine these reviews into actionable recommendations.")
     .ask(`Security:\n${security.content}\n\nPerformance:\n${performance.content}`);
 }

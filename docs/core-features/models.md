@@ -31,7 +31,7 @@ You can look up any supported model to check its context window, costs, and feat
 ```ts
 import { createLLM } from "@node-llm/core";
 
-const model = NodeLLM.models.find("gpt-4o");
+const model = NodeLLM.models.find("gpt-5");
 
 if (model) {
   console.log(`Provider: ${model.provider}`);
@@ -112,7 +112,7 @@ import { ModelRegistry } from "@node-llm/core";
 
 const priced = ModelRegistry.calculateCost(
   { input_tokens: 1000, output_tokens: 500, total_tokens: 1500, cached_tokens: 200 },
-  "gpt-4o",
+  "gpt-5",
   "openai"
 );
 

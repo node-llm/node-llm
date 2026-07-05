@@ -99,7 +99,7 @@ try {
     console.warn("Rate limited. Waiting before retry...");
     await sleep(5000);
   } else if (error instanceof CapabilityError) {
-    console.error("This model doesn't support images. Try gpt-4o.");
+    console.error("This model doesn't support images. Try gpt-5.");
   } else if (error instanceof ServerError) {
     console.error("Provider is having issues. Try again later.");
   } else {
@@ -123,7 +123,7 @@ try {
   if (error instanceof APIError) {
     console.log(`Status: ${error.status}`);       // e.g. 429
     console.log(`Provider: ${error.provider}`);   // e.g. "openai"
-    console.log(`Model: ${error.model}`);         // e.g. "gpt-4o"
+    console.log(`Model: ${error.model}`);         // e.g. "gpt-5"
     console.log(`Body:`, error.body);             // Raw error response
   }
 }

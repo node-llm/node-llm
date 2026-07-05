@@ -107,7 +107,7 @@ Use the fluent `.withTool()` or `.withTools()` API to register tools for a chat 
 
 ```ts
 // Append tools
-const chat = llm.chat("gpt-4o").withTools([WeatherTool, CalculatorTool]);
+const chat = llm.chat("gpt-5").withTools([WeatherTool, CalculatorTool]);
 
 // Replace all existing tools with a new list
 chat.withTools([SearchTool], { replace: true });
@@ -122,7 +122,7 @@ const reply = await chat.ask("What is the weather in London?");
 Tools now work seamlessly with streaming! The same tool execution happens automatically during streaming:
 
 ```ts
-const chat = llm.chat("gpt-4o").withTool(WeatherTool);
+const chat = llm.chat("gpt-5").withTool(WeatherTool);
 
 // Tool is automatically executed during streaming
 for await (const chunk of chat.stream("What's the weather in Paris?")) {
@@ -148,7 +148,7 @@ Use `choice` to control whether or how the LLM is allowed to call tools.
 - **Specific Tool**: Pass a tool name (string) to force the model to use that specific tool.
 
 ```ts
-const chat = llm.chat("gpt-4o")
+const chat = llm.chat("gpt-5")
   .withTools([WeatherTool, CalculatorTool], { choice: "required" });
 
 // Or update dynamically
@@ -175,7 +175,7 @@ chat.withToolCalls("one"); // Force sequential execution
 When a model returns multiple independent tool calls in the same turn, NodeLLM executes them one at a time by default. Enable `toolConcurrency` to run them in parallel instead, which can meaningfully cut latency for turns with several unrelated tool calls (e.g. looking up weather in three different cities):
 
 ```ts
-const chat = llm.chat("gpt-4o")
+const chat = llm.chat("gpt-5")
   .withTools([WeatherTool, CalculatorTool])
   .withToolConcurrency(true);
 
@@ -310,7 +310,7 @@ The hook can return one of three directives:
 - **`"RETRY"`** <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v1.15.0+</span>: Immediately re-execute the same tool call once. If the retry also fails, the error is reported back to the model as usual.
 
 ```ts
-const chat = llm.chat("gpt-4o", {
+const chat = llm.chat("gpt-5", {
   onToolCallError: (toolCall, error) => {
     // 1. Critical Tool: Stop everything
     if (toolCall.function.name === "process_payment") {

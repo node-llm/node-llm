@@ -255,8 +255,8 @@ Run multiple providers in parallel safely without any side effects:
 
 ```ts
 const [gpt, claude] = await Promise.all([
-  NodeLLM.withProvider("openai").chat("gpt-4o").ask(prompt),
-  NodeLLM.withProvider("anthropic").chat("claude-3-5-sonnet").ask(prompt)
+  NodeLLM.withProvider("openai").chat("gpt-5").ask(prompt),
+  NodeLLM.withProvider("anthropic").chat("claude-sonnet-5").ask(prompt)
 ]);
 ```
 

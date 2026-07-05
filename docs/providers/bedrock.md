@@ -85,7 +85,7 @@ const llm = createLLM({
 ## Features <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v1.8.0+</span>
 
 - **Models**: Access to `amazon.titan`, `anthropic.claude`, `meta.llama3`, `mistral`, `cohere`, and `amazon.nova`.
-- **Cross-Region Inference**: Natively supports inference profiles (e.g., `us.anthropic.claude-3-5-sonnet...`) for higher throughput.
+- **Cross-Region Inference**: Natively supports inference profiles (e.g., `us.anthropic.claude-sonnet-5...`) for higher throughput.
 - **Image Generation**: First-class support for **Titan Image Generator** and **Stable Diffusion**.
 - **Prompt Caching**: Save up to 90% on costs with Claude and Nova models.
 - **Multimodal**: Send images to Claude and Nova models easily.
@@ -121,7 +121,7 @@ Use the standard `cache_control: { type: "ephemeral" }` API (same as Anthropic) 
 
 ```ts
 // System Prompt Caching
-const chat = llm.chat("anthropic.claude-3-5-sonnet-20240620-v1:0");
+const chat = llm.chat("anthropic.claude-sonnet-5");
 
 // Automatically creates a Bedrock 'cachePoint'
 chat.add("system", [
@@ -145,7 +145,7 @@ To improve resilience and throughput, you can use Bedrock's **Inference Profiles
 
 ```ts
 // Use a US Cross-Region inference profile
-const chat = llm.chat("us.anthropic.claude-3-5-sonnet-20241022-v2:0");
+const chat = llm.chat("us.anthropic.claude-sonnet-5");
 
 const response = await chat.ask("Hello from global infrastructure!");
 ```

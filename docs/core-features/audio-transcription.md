@@ -58,7 +58,7 @@ NodeLLM supports speaker identification (diarization) and word-level timestamps.
 
 ```ts
 const response = await NodeLLM.transcribe("meeting.mp3", {
-  model: "whisper-1", // or "gpt-4o-transcribe-diarize"
+  model: "whisper-1", // or "gpt-5-transcribe-diarize"
   timestamp_granularities: ["word", "segment"],
   speakerNames: ["Alice", "Bob"]
 });
@@ -98,11 +98,11 @@ There are two ways to work with audio:
 
 1.  **Transcription (`NodeLLM.transcribe`)**: Best when you need the verbatim text.
     - _Result_: "Hello everyone today we are..."
-2.  **Multimodal Chat (`chat.ask`)**: Best when you need to **analyze** or **summarize** the audio directly, without seeing the raw text first. Supported by models like `gemini-1.5-pro` and `gpt-4o`.
+2.  **Multimodal Chat (`chat.ask`)**: Best when you need to **analyze** or **summarize** the audio directly, without seeing the raw text first. Supported by models like `gemini-pro-latest` and `gpt-5`.
 
 ```ts
 // Multimodal Chat Example
-const chat = NodeLLM.chat("gemini-1.5-pro");
+const chat = NodeLLM.chat("gemini-pro-latest");
 
 await chat.ask("What is the main topic of this podcast?", {
   files: ["podcast.mp3"]

@@ -53,7 +53,7 @@ const { messages } = await reviewPrompt.get({
   code: await sourceFile.readText() 
 });
 
-const response = await NodeLLM.chat("gpt-4o")
+const response = await NodeLLM.chat("gpt-5")
   .withTools(tools)
   .addMessages(messages)
   .ask("Analyze the code and execute tools to fix any bugs found.");
@@ -104,7 +104,7 @@ const llm = createLLM({ provider: "openai" });
 
 const mcp = await MCP.connect(
   { command: "npx", args: ["-y", "some-server-that-uses-sampling"] },
-  { sampling: createLLMSamplingHandler(llm, "gpt-4o-mini") }
+  { sampling: createLLMSamplingHandler(llm, "gpt-5-mini") }
 );
 ```
 
@@ -114,7 +114,7 @@ const mcp = await MCP.connect(
 const mcp = await MCP.connect(config, {
   sampling: async (request) => {
     // request.messages, request.systemPrompt, request.maxTokens, ...
-    const chat = llm.chat("gpt-4o-mini").withTemperature(request.temperature ?? 1);
+    const chat = llm.chat("gpt-5-mini").withTemperature(request.temperature ?? 1);
     const response = await chat.ask(request.messages.at(-1)?.content as string);
     return { model: response.model, role: "assistant", content: { type: "text", text: response.content } };
   }

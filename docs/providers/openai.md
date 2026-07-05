@@ -42,7 +42,7 @@ const llm = createLLM({
 You can pass OpenAI-specific parameters using `.withParams()`.
 
 ```ts
-const chat = llm.chat("gpt-4o").withParams({
+const chat = llm.chat("gpt-5").withParams({
   seed: 42, // for deterministic output
   user: "user-123", // for user tracking
   presence_penalty: 0.5,
@@ -54,8 +54,8 @@ const chat = llm.chat("gpt-4o").withParams({
 
 ## Features
 
-- **Models**: `gpt-4o`, `gpt-4o-mini`, `gpt-4-turbo`, etc.
-- **Vision**: Specific models like `gpt-4o` support image analysis.
+- **Models**: `gpt-5`, `gpt-5-mini`, `o3`, `o4-mini`, etc.
+- **Vision**: Specific models like `gpt-5` support image analysis.
 - **Tools**: Fully supported, including parallel tool execution.
 - **Reasoning**: Automatic tracking of reasoning tokens and costs for `o1` and `o3` models.
 - **Smart Developer Role**: Modern instructions are automatically mapped to the `developer` role for compatible models when using the official API.
@@ -76,7 +76,7 @@ OpenAI's "Strict Mode" ensures that the model's output exactly matches your JSON
 By default, `NodeLLM` enables strict mode when you use `.withSchema()`.
 
 ```ts
-const chat = llm.chat("gpt-4o-mini").withSchema(myZodSchema);
+const chat = llm.chat("gpt-5-mini").withSchema(myZodSchema);
 // Internally sets strict: true and enforces additionalProperties: false
 ```
 

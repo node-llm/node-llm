@@ -182,7 +182,7 @@ The ORM Chat implementation provides a fluent API that mirrors the core NodeLLM 
 ```typescript
 // Start a new session with reasoning enabled by default
 const chat = await createChat(prisma, llm, {
-  model: "claude-3-7-sonnet",
+  model: "claude-sonnet-5",
   instructions: "You are a helpful assistant.",
   thinking: { budget: 16000 }
 });
@@ -261,7 +261,7 @@ const tableNames = {
 };
 
 const chat = await createChat(prisma, llm, { 
-  model: "gpt-4o",
+  model: "gpt-5",
   tableNames: tableNames 
 });
 ```
@@ -287,7 +287,7 @@ await chat.withTool(WeatherTool).ask("How is the weather in London?");
 import { ToolExecutionMode } from "@node-llm/core";
 
 const chat = await createChat(prisma, llm, {
-  model: "gpt-4o",
+  model: "gpt-5",
   toolConcurrency: true, // run independent tool calls in the same turn in parallel
   toolExecution: ToolExecutionMode.CONFIRM
 });
@@ -310,7 +310,7 @@ chat.onToolCallError((call, error) => {
 import { z } from "zod";
 
 const chat = await createChat(prisma, llm, {
-  model: "gpt-4o",
+  model: "gpt-5",
   toolChoice: { type: "function", function: { name: "get_weather" } }, // force a specific tool
   toolCalls: "one", // restrict to one tool call per turn instead of running several in parallel
   schema: z.object({ summary: z.string() })

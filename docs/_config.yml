@@ -12,6 +12,18 @@ aux_links:
   "Blog": "https://www.eshaiju.com/blog"
 aux_links_new_tab: true
 
+# Enables {: .note } / {: .tip } / {: .warning } callout boxes in markdown
+callouts:
+  note:
+    title: Note
+    color: blue
+  tip:
+    title: Tip
+    color: green
+  warning:
+    title: Warning
+    color: yellow
+
 heading_anchors: false
 search_enabled: true
 back_to_top: true

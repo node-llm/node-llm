@@ -436,7 +436,7 @@
       <div class="code-window">
         <!-- Tab 1: Orchestration -->
         <div id="orchestration" class="code-content active">
-<pre><code><span class="kw">const</span> chat = NodeLLM.<span class="fn">chat</span>(<span class="str">"gpt-4o"</span>);
+<pre><code><span class="kw">const</span> chat = NodeLLM.<span class="fn">chat</span>(<span class="str">"gpt-5"</span>);
 <span class="kw">await</span> chat.<span class="fn">withTool</span>(DatabaseTool);
 
 <span class="com">// Automates tools & real-time streaming</span>
@@ -481,7 +481,7 @@ console.<span class="fn">log</span>(res.content);</code></pre>
 
 <span class="com">// Auto-persisted history, costs, & tokens</span>
 <span class="kw">const</span> chat = <span class="kw">await</span> <span class="fn">createChat</span>(prisma, NodeLLM, { 
-  model: <span class="str">"gpt-4o"</span> 
+  model: <span class="str">"gpt-5"</span> 
 });
 
 <span class="com">// DB state is managed automatically</span>
