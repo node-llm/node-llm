@@ -1,0 +1,209 @@
+// NodeLLM theme — component polish.
+// This file is imported dead last by just-the-docs (after modules, callouts,
+// and the per-page nav-activation styles), so plain selectors here win the
+// cascade without `!important`, as long as specificity is >= the rule being
+// overridden.
+
+// ---------------------------------------------------------------------
+// Global
+// ---------------------------------------------------------------------
+
+* {
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  letter-spacing: -0.01em;
+}
+
+.main-content h2 {
+  padding-bottom: $sp-2;
+  border-bottom: 1px solid $border-color;
+}
+
+hr {
+  border: 0;
+  border-top: 1px solid $border-color;
+}
+
+// ---------------------------------------------------------------------
+// Header & sidebar
+// ---------------------------------------------------------------------
+
+.side-bar {
+  border-right: 1px solid $border-color;
+}
+
+#main-header {
+  border-bottom: 1px solid $border-color;
+}
+
+.search-input-wrap {
+  border: 1px solid $border-color;
+  transition: box-shadow 150ms ease, border-color 150ms ease;
+
+  &:focus-within {
+    border-color: $link-color;
+    box-shadow: 0 0 0 3px rgba($link-color, 0.15);
+  }
+}
+
+// ---------------------------------------------------------------------
+// Navigation — rounded "pill" highlight on the current page link
+// (`.active` is added client-side by just-the-docs.js; see activateNav())
+// ---------------------------------------------------------------------
+
+.nav-list-link {
+  border-radius: $border-radius;
+  transition: background-color 120ms ease, color 120ms ease;
+}
+
+// The built-in `.nav-list .nav-list-item .nav-list-link.active`/`:hover`
+// selectors paint a gray `background-image` gradient at higher specificity
+// than a bare `.nav-list-link.active` rule, which would otherwise muddy
+// this green pill. Match that selector shape so ours wins outright.
+.nav-list .nav-list-item .nav-list-link.active {
+  color: $link-color;
+  font-weight: 600;
+  background-color: rgba($link-color, 0.1);
+  background-image: none;
+}
+
+.nav-list .nav-list-item .nav-list-link:hover {
+  background-color: rgba($link-color, 0.08);
+  background-image: none;
+}
+
+// ---------------------------------------------------------------------
+// Breadcrumbs
+// ---------------------------------------------------------------------
+
+.breadcrumb-nav-list-item {
+  color: $grey-dk-000;
+
+  a {
+    color: $grey-dk-000;
+
+    &:hover {
+      color: $link-color;
+    }
+  }
+}
+
+// ---------------------------------------------------------------------
+// In-page table of contents (kramdown `{:toc}` output)
+// ---------------------------------------------------------------------
+
+#markdown-toc {
+  // Extra left padding compensates for the theme's counter numbers, which
+  // are drawn with `left: -1.6em` relative to each `li` — without this,
+  // the digits land almost flush against the box border instead of
+  // sitting comfortably inside it.
+  padding: $sp-4 $sp-5 $sp-4 2.75rem;
+  background-color: $sidebar-color;
+  border: 1px solid $border-color;
+  border-radius: $border-radius;
+
+  li {
+    margin-top: $sp-2;
+  }
+
+  a {
+    font-weight: 500;
+  }
+}
+
+// ---------------------------------------------------------------------
+// Code blocks — dark, branded, with real OneDark syntax colors instead
+// of a flattened single-color override.
+// ---------------------------------------------------------------------
+
+$code-block-background: #1f2937;
+
+@import "vendor/OneDarkJekyll/syntax";
+
+div.highlighter-rouge,
+figure.highlight,
+.highlight,
+pre.highlight,
+.highlight pre {
+  background: $code-block-background;
+}
+
+div.highlighter-rouge > button,
+figure.highlight > button {
+  background-color: $code-block-background;
+  border-color: $code-block-background;
+  color: $grey-lt-300;
+
+  svg {
+    fill: $grey-lt-300;
+  }
+}
+
+// Inline code stays light, with a distinct accent color so it reads
+// clearly against body copy instead of blending into the paragraph.
+:not(pre, figure) > code {
+  color: #db2777;
+  background-color: $grey-lt-000;
+  border-color: $border-color;
+  font-size: 0.85em;
+}
+
+// ---------------------------------------------------------------------
+// Blockquotes — used as lightweight callouts throughout the docs
+// ---------------------------------------------------------------------
+
+blockquote {
+  padding: $sp-4;
+  color: $body-text-color;
+  background-color: rgba($link-color, 0.06);
+  border-left: 4px solid $link-color;
+  border-radius: 0 $border-radius $border-radius 0;
+}
+
+// ---------------------------------------------------------------------
+// Provider icon row (used on the intro page)
+// ---------------------------------------------------------------------
+
+.provider-icons {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: $sp-5;
+  margin: $sp-4 0 $sp-5;
+}
+
+.provider-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+
+  img {
+    height: 24px;
+    width: auto;
+    transition: transform 150ms ease;
+
+    &.logo-small {
+      height: 18px;
+    }
+  }
+
+  &:hover img {
+    transform: translateY(-2px);
+  }
+}
+
+// ---------------------------------------------------------------------
+// Footer
+// ---------------------------------------------------------------------
+
+.site-footer {
+  color: $grey-dk-000;
+  border-top: 1px solid $border-color;
+}

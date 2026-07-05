@@ -12,10 +12,6 @@ aux_links:
   "Blog": "https://www.eshaiju.com/blog"
 aux_links_new_tab: true
 
-# Custom CSS for logo sizing
-custom_css:
-  - assets/css/custom.css
-
 heading_anchors: false
 search_enabled: true
 back_to_top: true

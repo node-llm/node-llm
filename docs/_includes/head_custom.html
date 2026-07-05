@@ -10,34 +10,10 @@
   gtag("config", "G-6Z9CNYDJ49");
 </script>
 
-<!-- Custom overrides moved to assets/css/custom.css to prevent clashing -->
-<style>
-  /* Restore brand colors */
-  :root {
-    --accent-green: #50a04f;
-  }
-  a {
-    color: var(--accent-green) !important;
-  }
-  .btn-primary {
-    background-color: var(--accent-green) !important;
-    border-color: var(--accent-green) !important;
-  }
-  .nav-list-link:hover, .nav-list-expander:hover {
-    color: var(--accent-green) !important;
-  }
-  .nav-list-item.active > .nav-list-link {
-    color: var(--accent-green) !important;
-  }
-
-  /* Minimal head fixes */
-  .provider-icons {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1.5rem;
-    align-items: center;
-  }
-</style>
+<!-- Brand fonts: theme colors/spacing live in _sass/custom/{setup,custom}.scss -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 
 {% if page.back_to_top == false %}
 <style>

@@ -1,0 +1,27 @@
+// NodeLLM theme — variable overrides.
+// This file is imported by just-the-docs right after its own defaults are
+// set (support/_variables.scss) and before color_schemes/light.scss and
+// modules.scss consume them, so plain (non-!default) reassignment here wins
+// for the whole theme without needing `!important` anywhere downstream.
+
+// Typography
+$body-font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+  "Helvetica Neue", Arial, sans-serif;
+$mono-font-family: "JetBrains Mono", "SFMono-Regular", Menlo, Consolas, monospace;
+$body-line-height: 1.55;
+$content-line-height: 1.7;
+
+// Shape
+$border-radius: 8px;
+
+// Brand palette
+// Text links need a slightly darker green than the brand swatch for
+// AA contrast on white; filled buttons use the brand swatch directly
+// since white-on-green already has plenty of contrast.
+$link-color: #3f8a3e;
+$btn-primary-color: #50a04f;
+$sidebar-color: #fbfbfb;
+$border-color: #e4e4e7;
+$body-heading-color: #18181b;
+$body-text-color: #3f3f46;
+$search-background-color: #f4f4f5;
