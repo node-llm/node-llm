@@ -1,4 +1,6 @@
 import { ModelInfo } from "../Provider.js";
+import { config } from "../../config.js";
+import { fetchWithTimeout } from "../../utils/fetch.js";
 import { MistralCapabilities } from "./Capabilities.js";
 import { ModelRegistry } from "../../models/ModelRegistry.js";
 
@@ -21,13 +23,17 @@ export class MistralModels {
   ) {}
 
   async execute(): Promise<ModelInfo[]> {
-    const response = await fetch(`${this.baseUrl}/models`, {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${this.apiKey}`,
-        Accept: "application/json"
-      }
-    });
+    const response = await fetchWithTimeout(
+      `${this.baseUrl}/models`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${this.apiKey}`,
+          Accept: "application/json"
+        }
+      },
+      config.requestTimeout
+    );
 
     if (!response.ok) {
       // Fallback to local registry

@@ -2,6 +2,9 @@ import fs from "fs";
 import path from "path";
 import { logger } from "./logger.js";
 
+/** Max size (bytes) for a remotely-fetched binary, buffered fully into memory. */
+const MAX_REMOTE_BYTES = 50 * 1024 * 1024;
+
 export interface Base64Data {
   data: string;
   mimeType: string;
@@ -24,7 +27,16 @@ export class BinaryUtils {
       try {
         const response = await fetch(url);
         if (!response.ok) return null;
+        const declared = Number(response.headers.get("content-length"));
+        if (Number.isFinite(declared) && declared > MAX_REMOTE_BYTES) {
+          logger.error(`Remote file exceeds ${MAX_REMOTE_BYTES}-byte limit: ${url}`);
+          return null;
+        }
         const buffer = await response.arrayBuffer();
+        if (buffer.byteLength > MAX_REMOTE_BYTES) {
+          logger.error(`Remote file exceeds ${MAX_REMOTE_BYTES}-byte limit: ${url}`);
+          return null;
+        }
         const base64 = Buffer.from(buffer).toString("base64");
         const mimeType = response.headers.get("content-type") || this.guessMimeType(url);
         return {

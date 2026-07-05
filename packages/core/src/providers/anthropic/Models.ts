@@ -1,4 +1,6 @@
 import { ModelInfo } from "../Provider.js";
+import { config } from "../../config.js";
+import { fetchWithTimeout } from "../../utils/fetch.js";
 import { Capabilities } from "./Capabilities.js";
 import { ModelRegistry } from "../../models/ModelRegistry.js";
 
@@ -10,14 +12,18 @@ export class AnthropicModels {
 
   async execute(): Promise<ModelInfo[]> {
     try {
-      const response = await fetch(`${this.baseUrl}/models`, {
-        method: "GET",
-        headers: {
-          "x-api-key": this.apiKey,
-          "anthropic-version": "2023-06-01",
-          "content-type": "application/json"
-        }
-      });
+      const response = await fetchWithTimeout(
+        `${this.baseUrl}/models`,
+        {
+          method: "GET",
+          headers: {
+            "x-api-key": this.apiKey,
+            "anthropic-version": "2023-06-01",
+            "content-type": "application/json"
+          }
+        },
+        config.requestTimeout
+      );
 
       if (response.ok) {
         const { data } = (await response.json()) as {

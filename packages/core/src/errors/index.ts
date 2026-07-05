@@ -107,9 +107,19 @@ export class AuthenticationError extends APIError {
  * 429 - Rate limit exceeded
  */
 export class RateLimitError extends APIError {
-  constructor(message: string, body: unknown, provider?: string, model?: string) {
+  /** Seconds to wait before retrying, parsed from a `Retry-After` response header when present. */
+  public retryAfter?: number;
+
+  constructor(
+    message: string,
+    body: unknown,
+    provider?: string,
+    model?: string,
+    retryAfter?: number
+  ) {
     super(message, 429, body, provider, model);
     this.name = "RateLimitError";
+    this.retryAfter = retryAfter;
   }
 }
 

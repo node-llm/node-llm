@@ -47,6 +47,7 @@ export interface ChatOptions {
   assumeModelExists?: boolean;
   provider?: string;
   maxToolCalls?: number;
+  maxCorrections?: number;
   requestTimeout?: number;
   toolExecution?: ToolExecutionMode;
   /**

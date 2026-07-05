@@ -1,4 +1,6 @@
 import { EmbeddingRequest, EmbeddingResponse } from "../Provider.js";
+import { config } from "../../config.js";
+import { fetchWithTimeout } from "../../utils/fetch.js";
 import { logger } from "../../utils/logger.js";
 import { handleMistralError } from "./Errors.js";
 import { MistralCapabilities } from "./Capabilities.js";
@@ -40,15 +42,19 @@ export class MistralEmbedding {
     const url = `${this.baseUrl}/embeddings`;
     logger.logRequest("Mistral Embeddings", "POST", url, body);
 
-    const response = await fetch(url, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${this.apiKey}`,
-        "Content-Type": "application/json",
-        Accept: "application/json"
+    const response = await fetchWithTimeout(
+      url,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${this.apiKey}`,
+          "Content-Type": "application/json",
+          Accept: "application/json"
+        },
+        body: JSON.stringify(body)
       },
-      body: JSON.stringify(body)
-    });
+      config.requestTimeout
+    );
 
     if (!response.ok) {
       await handleMistralError(response, model);

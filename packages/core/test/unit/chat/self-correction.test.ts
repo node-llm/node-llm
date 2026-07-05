@@ -5,6 +5,35 @@ import { Provider, ChatResponse } from "../../../src/providers/Provider.js";
 import { z } from "zod";
 
 describe("SchemaSelfCorrectionMiddleware", () => {
+  it("should bound self-correction retries so a RETRY-always middleware can't loop forever", async () => {
+    let callCount = 0;
+    const mockProvider: Partial<Provider> = {
+      id: "mock",
+      chat: vi.fn().mockImplementation(async () => {
+        callCount++;
+        return {
+          content: "anything",
+          usage: { input_tokens: 1, output_tokens: 1, total_tokens: 2 }
+        } as ChatResponse;
+      }),
+      defaultModel: () => "mock-model"
+    };
+
+    const alwaysRetry = {
+      onResponse: async () => ({ action: "RETRY" as const, message: "try again" })
+    };
+
+    const llm = createLLM({ provider: mockProvider as Provider });
+    const chat = llm.chat("mock-model", {
+      maxCorrections: 3,
+      middlewares: [alwaysRetry]
+    });
+
+    await expect(chat.ask("go")).rejects.toThrow(/Maximum self-correction retries/);
+    // initial call + 3 correction attempts = 4 provider calls, then it stops
+    expect(callCount).toBe(4);
+  });
+
   it("should retry when validation fails and succeed on second attempt", async () => {
     const schema = z.object({
       name: z.string(),

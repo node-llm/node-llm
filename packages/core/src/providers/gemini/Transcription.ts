@@ -1,4 +1,6 @@
 import { TranscriptionRequest, TranscriptionResponse } from "../Provider.js";
+import { config } from "../../config.js";
+import { fetchWithTimeout } from "../../utils/fetch.js";
 import { handleGeminiError } from "./Errors.js";
 import { BinaryUtils } from "../../utils/Binary.js";
 import { GeminiGenerateContentRequest, GeminiGenerateContentResponse } from "./types.js";
@@ -53,13 +55,17 @@ export class GeminiTranscription {
 
     logger.logRequest("Gemini", "POST", url, payload);
 
-    const response = await fetch(url, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
+    const response = await fetchWithTimeout(
+      url,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(payload)
       },
-      body: JSON.stringify(payload)
-    });
+      config.requestTimeout
+    );
 
     if (!response.ok) {
       await handleGeminiError(response, model);

@@ -125,13 +125,39 @@ const mcp = await MCP.connect(config, {
 
 ---
 
+## Environment & Secrets
+
+A stdio MCP server is a **subprocess you launch**, and any environment variable it inherits is fully readable by that server's code. To avoid handing a third-party server every secret in your process, NodeLLM does **not** pass your full `process.env` to the subprocess by default. Instead it forwards only a minimal safe allowlist (`PATH`, `HOME`, and similar), merged with any variables you pass explicitly via `env`.
+
+```ts
+// Pass only what the server actually needs:
+const github = await MCP.connect({
+  command: "npx",
+  args: ["-y", "@modelcontextprotocol/server-github"],
+  env: { GITHUB_TOKEN: process.env.GITHUB_TOKEN! }
+});
+```
+
+If you fully trust the server and want it to inherit the complete parent environment, opt in with `inheritEnv: true`:
+
+```ts
+const local = await MCP.connect({
+  command: "./my-trusted-server",
+  inheritEnv: true // exposes all of process.env — use only for servers you control
+});
+```
+
+Any keys in `env` are merged on top of the base environment in both modes.
+
+---
+
 ## API Reference
 
 ### MCP (The Host)
 
 | Method | Description |
 | :--- | :--- |
-| `static connect(config, options?)` | Connects to a local server process (Stdio). Accepts `command`, `args`, and `env`. `options.sampling` configures a [sampling](#sampling-v1170) handler. |
+| `static connect(config, options?)` | Connects to a local server process (Stdio). Accepts `command`, `args`, `env`, and `inheritEnv` (see [Environment & Secrets](#environment--secrets)). `options.sampling` configures a [sampling](#sampling-v1170) handler. |
 | `static connectSSE(config, options?)` | Connects to a remote server (HTTP/SSE). Accepts `url`. |
 | `static connectAll(config, options?)` | Connects to multiple named servers at once. Returns a map of server name → `MCP` instance. |
 | `discover(options?)` | Master discovery method. Returns `tools`, `resources`, `resourceTemplates`, and `prompts`. |

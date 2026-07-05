@@ -2,6 +2,30 @@ import { promises as fs } from "fs";
 import * as path from "path";
 import { ContentPart } from "../chat/Content.js";
 
+/**
+ * Maximum size (bytes) for a remotely-fetched attachment. Caps memory use and
+ * limits the blast radius if an untrusted URL is ever passed here (the fetched
+ * body is buffered fully into memory as base64). 50 MB comfortably covers
+ * images, audio, and PDFs sent to providers.
+ */
+const MAX_REMOTE_BYTES = 50 * 1024 * 1024;
+
+async function readCapped(response: Response, source: string): Promise<ArrayBuffer> {
+  const declared = Number(response.headers.get("content-length"));
+  if (Number.isFinite(declared) && declared > MAX_REMOTE_BYTES) {
+    throw new Error(
+      `Remote file ${source} is ${declared} bytes, exceeding the ${MAX_REMOTE_BYTES}-byte limit.`
+    );
+  }
+  const buffer = await response.arrayBuffer();
+  if (buffer.byteLength > MAX_REMOTE_BYTES) {
+    throw new Error(
+      `Remote file ${source} is ${buffer.byteLength} bytes, exceeding the ${MAX_REMOTE_BYTES}-byte limit.`
+    );
+  }
+  return buffer;
+}
+
 const MIME_TYPES: Record<string, string> = {
   ".jpg": "image/jpeg",
   ".jpeg": "image/jpeg",
@@ -53,7 +77,8 @@ const TEXT_EXTENSIONS = new Set([
   ".xml",
   ".yml",
   ".yaml",
-  ".env",
+  // ".env" intentionally excluded: silently inlining a dotenv file would leak
+  // secrets into the prompt sent to the provider.
   ".csv",
   ".go",
   ".java",
@@ -71,7 +96,7 @@ export class FileLoader {
         const response = await fetch(filePath);
         if (!response.ok) throw new Error(`Failed to fetch file: ${response.statusText}`);
 
-        const buffer = await response.arrayBuffer();
+        const buffer = await readCapped(response, filePath);
         const contentTypeFull = response.headers.get("content-type") || "image/jpeg";
         const contentType = (contentTypeFull.split(";")[0] ?? "image/jpeg").trim();
         const base64 = Buffer.from(buffer).toString("base64");

@@ -1,4 +1,6 @@
 import { ModelInfo } from "../Provider.js";
+import { config } from "../../config.js";
+import { fetchWithTimeout } from "../../utils/fetch.js";
 import { Capabilities } from "./Capabilities.js";
 import { ModelRegistry } from "../../models/ModelRegistry.js";
 import { GeminiListModelsResponse } from "./types.js";
@@ -11,12 +13,16 @@ export class GeminiModels {
 
   async execute(): Promise<ModelInfo[]> {
     try {
-      const response = await fetch(`${this.baseUrl}/models?key=${this.apiKey}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json"
-        }
-      });
+      const response = await fetchWithTimeout(
+        `${this.baseUrl}/models?key=${this.apiKey}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json"
+          }
+        },
+        config.requestTimeout
+      );
 
       if (response.ok) {
         const { models } = (await response.json()) as GeminiListModelsResponse;

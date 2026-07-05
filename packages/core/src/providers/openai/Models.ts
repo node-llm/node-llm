@@ -1,4 +1,6 @@
 import { ModelInfo } from "../Provider.js";
+import { config } from "../../config.js";
+import { fetchWithTimeout } from "../../utils/fetch.js";
 import { Capabilities } from "./Capabilities.js";
 import { ModelRegistry } from "../../models/ModelRegistry.js";
 import { buildUrl } from "./utils.js";
@@ -53,13 +55,17 @@ export class OpenAIModels {
   async execute(): Promise<ModelInfo[]> {
     const provider = this.getProviderName();
     try {
-      const response = await fetch(buildUrl(this.baseUrl, "/models"), {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${this.apiKey}`,
-          "Content-Type": "application/json"
-        }
-      });
+      const response = await fetchWithTimeout(
+        buildUrl(this.baseUrl, "/models"),
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${this.apiKey}`,
+            "Content-Type": "application/json"
+          }
+        },
+        config.requestTimeout
+      );
 
       if (response.ok) {
         const { data } = (await response.json()) as {
