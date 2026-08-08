@@ -38,9 +38,10 @@ export const AssistantChat = {
     instructions?: string;
     maxToolCalls?: number;
     debug?: boolean;
+    metadata?: Record<string, any>;
   } = {}): Promise<AgentSession<HRAssistantInputs, HRAssistant>> {
     return createAgentSession(prisma, llm, HRAssistant, {
-      metadata: { userName: options.userName },
+      metadata: { userName: options.userName, ...options.metadata },
       debug: options.debug ?? true,
       tableNames: TABLE_NAMES,
       model: options.model,
