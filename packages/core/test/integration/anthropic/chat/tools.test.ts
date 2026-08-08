@@ -52,7 +52,7 @@ describe("Anthropic Tool Calling Integration (VCR)", { timeout: 30000 }, () => {
       anthropicApiKey: process.env.ANTHROPIC_API_KEY,
       provider: "anthropic"
     });
-    const chat = llm.chat("claude-3-haiku-20240307").withTool(WeatherTool);
+    const chat = llm.chat("claude-haiku-4-5-20251001").withTool(WeatherTool);
 
     const response = await chat.ask("What is the weather in Paris?");
 

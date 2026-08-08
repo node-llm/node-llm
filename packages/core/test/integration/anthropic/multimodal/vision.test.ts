@@ -19,7 +19,7 @@ describe("Anthropic Models Integration (VCR)", { timeout: 30000 }, () => {
       anthropicApiKey: process.env.ANTHROPIC_API_KEY,
       provider: "anthropic"
     });
-    const chat = llm.chat("claude-3-haiku-20240307");
+    const chat = llm.chat("claude-haiku-4-5-20251001");
 
     // A small 1x1 transparent GIF base64
     const base64Image = "R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
@@ -38,7 +38,7 @@ describe("Anthropic Models Integration (VCR)", { timeout: 30000 }, () => {
     polly = setupVCR(task.name, "anthropic");
 
     const llm = createLLM({ provider: "anthropic" });
-    const chat = llm.chat("claude-3-haiku-20240307");
+    const chat = llm.chat("claude-haiku-4-5-20251001");
 
     const path = await import("path");
     const { fileURLToPath } = await import("url");

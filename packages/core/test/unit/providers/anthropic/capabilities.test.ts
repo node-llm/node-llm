@@ -8,26 +8,26 @@ describe("Anthropic Capabilities", () => {
   });
 
   it("determines correct max output tokens", () => {
-    expect(Capabilities.getMaxOutputTokens("claude-3-7-sonnet-20250219")).toBe(64000);
-    expect(Capabilities.getMaxOutputTokens("claude-3-5-sonnet-20241022")).toBe(8192);
-    expect(Capabilities.getMaxOutputTokens("claude-3-haiku-20240307")).toBe(4096);
-    expect(Capabilities.getMaxOutputTokens("claude-3-opus-20240229")).toBe(4_096); // Updated to use full model ID
-    expect(Capabilities.getMaxOutputTokens("claude-2")).toBe(8192);
+    expect(Capabilities.getMaxOutputTokens("claude-sonnet-4-5-20250929")).toBe(64000);
+    expect(Capabilities.getMaxOutputTokens("claude-haiku-4-5-20251001")).toBe(64000);
+    expect(Capabilities.getMaxOutputTokens("claude-opus-4-5-20251101")).toBe(64000);
+    expect(Capabilities.getMaxOutputTokens("claude-opus-5")).toBe(128000);
+    expect(Capabilities.getMaxOutputTokens("claude-2")).toBe(8192); // unknown model -> fallback
   });
 
   it("checks vision support", () => {
-    expect(Capabilities.supportsVision("claude-3-7-sonnet")).toBe(true);
-    expect(Capabilities.supportsVision("claude-2")).toBe(false); // Claude 2 doesn't support vision
+    expect(Capabilities.supportsVision("claude-sonnet-4-5")).toBe(true);
+    expect(Capabilities.supportsVision("claude-2")).toBe(false); // unknown model -> false
   });
 
   it("checks tool support", () => {
-    expect(Capabilities.supportsTools("claude-3-opus")).toBe(true);
+    expect(Capabilities.supportsTools("claude-opus-4-5-20251101")).toBe(true);
     expect(Capabilities.supportsTools("claude-2")).toBe(false);
   });
 
   it("checks extended thinking support", () => {
-    expect(Capabilities.supportsExtendedThinking("claude-3-7-sonnet")).toBe(true);
-    expect(Capabilities.supportsExtendedThinking("claude-3-5-sonnet")).toBe(false);
+    expect(Capabilities.supportsExtendedThinking("claude-sonnet-4-5")).toBe(true);
+    expect(Capabilities.supportsExtendedThinking("claude-2")).toBe(false);
   });
 
   it("gets correct pricing", () => {

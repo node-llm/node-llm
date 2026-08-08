@@ -19,7 +19,7 @@ describe("Anthropic Structured Output (VCR)", { timeout: 30000 }, () => {
       anthropicApiKey: process.env.ANTHROPIC_API_KEY,
       provider: "anthropic"
     });
-    const chat = llm.chat("claude-3-haiku-20240307");
+    const chat = llm.chat("claude-haiku-4-5-20251001");
 
     const schema = z.object({
       name: z.string(),

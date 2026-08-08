@@ -30,11 +30,11 @@ describe("ModelRegistry - Filtered Sync Verification", () => {
     });
   });
 
-  it("should find the new models like Claude 3.7", () => {
-    const claude37 = ModelRegistry.find("claude-3-7-sonnet-20250219");
-    expect(claude37).toBeDefined();
-    expect(claude37?.name).toBe("Claude Sonnet 3.7");
-    expect(claude37?.context_window).toBe(200000);
+  it("should find the new models like Claude Sonnet 4.5", () => {
+    const sonnet45 = ModelRegistry.find("claude-sonnet-4-5-20250929");
+    expect(sonnet45).toBeDefined();
+    expect(sonnet45?.name).toBe("Claude Sonnet 4.5");
+    expect(sonnet45?.context_window).toBe(1000000);
   });
 
   it("should find the new OpenAI models like gpt-4o", () => {
