@@ -10,7 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.29.0",
+    "@modelcontextprotocol/sdk": "^1.30.0",
     "@node-llm/core": "^1.15.2",
     "dotenv": "^17.4.2"
   }

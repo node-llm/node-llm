@@ -17,7 +17,7 @@
     "@node-llm/mcp": "workspace:*",
     "@node-llm/monitor": "^0.1.2",
     "@node-llm/testing": "workspace:*",
-    "axios": "^1.13.2",
+    "axios": "^1.19.0",
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
     "express": "^5.2.1",
