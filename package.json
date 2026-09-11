@@ -86,7 +86,7 @@
     "semantic-release": "^25.0.2",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.53.0",
-    "vitest": "^4.0.17"
+    "vitest": "^5.0.0"
   },
   "dependencies": {
     "dotenv": "^17.2.3"

@@ -18,10 +18,10 @@
   "dependencies": {},
   "devDependencies": {
     "@node-llm/core": "workspace:*",
-    "vitest": "^4.0.0",
+    "vitest": "^5.0.0",
     "typescript": "^5.0.0"
   },
   "peerDependencies": {
-    "vitest": "^4.0.0"
+    "vitest": "^5.0.0"
   }
 }
