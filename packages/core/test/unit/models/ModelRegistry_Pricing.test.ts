@@ -15,10 +15,10 @@ describe("PricingRegistry", () => {
     expect(pricing?.text_tokens?.standard?.input_per_million).toBe(0.5);
   });
 
-  it("should return pricing for deepseek-chat", () => {
-    const pricing = PricingRegistry.getPricing("deepseek-chat", "deepseek");
+  it("should return pricing for the synced DeepSeek OpenRouter model", () => {
+    const pricing = PricingRegistry.getPricing("deepseek/deepseek-chat", "openrouter");
     expect(pricing).toBeDefined();
-    expect(pricing?.text_tokens?.standard?.input_per_million).toBe(0.14);
+    expect(pricing?.text_tokens?.standard?.input_per_million).toBe(0.2574);
   });
 
   it("should allow runtime registration", () => {

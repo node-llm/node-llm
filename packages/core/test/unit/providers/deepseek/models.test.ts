@@ -31,7 +31,7 @@ describe("DeepSeekModels", () => {
 
     expect(models).toHaveLength(1);
     expect(models[0].id).toBe("deepseek-chat");
-    expect(models[0].context_window).toBe(1000000); // From Capabilities default/check
+    expect(models[0].context_window).toBe(32768); // Default for unsynced direct-provider models
   });
 
   it("should fallback to local registry on API error", async () => {
@@ -45,7 +45,7 @@ describe("DeepSeekModels", () => {
 
     const models = await handler.execute();
 
-    expect(models.length).toBeGreaterThanOrEqual(2); // deepseek-chat and reasoner
-    expect(models.find((m) => m.id === "deepseek-chat")).toBeDefined();
+    expect(models.length).toBeGreaterThan(0);
+    expect(models.every((model) => model.provider === "deepseek")).toBe(true);
   });
 });

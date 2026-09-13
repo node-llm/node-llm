@@ -21,7 +21,7 @@ describe("Gemini Capabilities", () => {
 
   it("checks tool support", () => {
     expect(Capabilities.supportsTools("gemini-1.5-pro")).toBe(false); // Not in registry
-    expect(Capabilities.supportsTools("gemini-2.0-flash-lite")).toBe(true); // In registry
+    expect(Capabilities.supportsTools("gemini-2.0-flash-001")).toBe(true); // In registry
   });
 
   it("checks structured output support", () => {

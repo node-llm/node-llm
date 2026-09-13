@@ -33,26 +33,14 @@ describe("Gemini Multi-modal Integration (VCR)", { timeout: 30000 }, () => {
     expect(response.usage.input_tokens).toBeGreaterThan(0);
   });
 
-  it("should transcribe audio", async ({ task }) => {
-    polly = setupVCR(task.name, "gemini");
-
+  it("should reject transcription for models without audio support", async () => {
     const llm = createLLM({
       geminiApiKey: process.env.GEMINI_API_KEY,
       provider: "gemini"
     });
 
-    const path = await import("path");
-    const { fileURLToPath } = await import("url");
-    const __dirname = path.dirname(fileURLToPath(import.meta.url));
-    const audioPath = path.resolve(
-      __dirname,
-      "../../../../../../examples/scripts/audio/sample-0.mp3"
-    );
-
-    const response = await llm.transcribe(audioPath, { model: "gemini-2.0-flash" });
-
-    expect(response.text).toBeDefined();
-    expect(response.text.length).toBeGreaterThan(0);
-    expect(response.model).toBe("gemini-2.0-flash");
+    await expect(
+      llm.transcribe("unused-audio-path", { model: "gemini-2.0-flash" })
+    ).rejects.toThrow("does not support transcription");
   });
 });

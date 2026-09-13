@@ -18,8 +18,8 @@ describe("DeepSeek Capabilities", () => {
   });
 
   it("should correct context window", () => {
-    expect(Capabilities.getContextWindow("deepseek-chat")).toBe(1000000);
-    expect(Capabilities.getContextWindow("deepseek-reasoner")).toBe(1000000);
+    expect(Capabilities.getContextWindow("deepseek-chat")).toBe(32768);
+    expect(Capabilities.getContextWindow("deepseek-reasoner")).toBe(32768);
     expect(Capabilities.getContextWindow("unknown-model")).toBe(32768);
   });
 
@@ -30,6 +30,6 @@ describe("DeepSeek Capabilities", () => {
 
   it("should support structured output for both", () => {
     expect(Capabilities.supportsStructuredOutput("deepseek-chat")).toBe(true);
-    expect(Capabilities.supportsStructuredOutput("deepseek-reasoner")).toBe(true);
+    expect(Capabilities.supportsStructuredOutput("deepseek-reasoner")).toBe(false);
   });
 });

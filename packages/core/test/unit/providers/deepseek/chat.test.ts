@@ -61,12 +61,7 @@ describe("DeepSeekChat", () => {
     expect(response.usage).toEqual({
       input_tokens: 10,
       output_tokens: 5,
-      total_tokens: 15,
-      cached_tokens: undefined,
-      cache_creation_tokens: undefined,
-      cost: expect.any(Number),
-      input_cost: expect.any(Number),
-      output_cost: expect.any(Number)
+      total_tokens: 15
     });
   });
 
