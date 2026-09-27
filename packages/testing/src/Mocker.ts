@@ -17,6 +17,7 @@ import {
   MessageContent,
   ThinkingResult
 } from "@node-llm/core";
+import { isExecutionMethod, isStreamingExecutionMethod } from "./executionMethods.js";
 
 export interface MockResponse {
   content?: string | null;
@@ -56,16 +57,6 @@ export interface MockerDebugInfo {
   totalMocks: number;
   methods: string[];
 }
-
-const EXECUTION_METHODS = [
-  "chat",
-  "stream",
-  "paint",
-  "transcribe",
-  "moderate",
-  "embed",
-  "listModels"
-];
 
 export interface MockerOptions {
   /**
@@ -363,8 +354,8 @@ export class Mocker {
 
           if (methodName === "id") return target.id;
 
-          if (EXECUTION_METHODS.includes(methodName)) {
-            if (methodName === "stream") {
+          if (isExecutionMethod(methodName)) {
+            if (isStreamingExecutionMethod(methodName)) {
               return async function* (this: any, request: ChatRequest) {
                 this._history.push({
                   method: methodName,

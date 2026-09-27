@@ -3,6 +3,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { Scrubber } from "./Scrubber.js";
 import { Serializer } from "./Serializer.js";
+import { isExecutionMethod, isStreamingExecutionMethod } from "./executionMethods.js";
 
 // Internal state for nested scoping (Feature 12)
 const currentVCRScopes: string[] = [];
@@ -266,16 +267,6 @@ export class VCR {
   }
 }
 
-const EXECUTION_METHODS = [
-  "chat",
-  "stream",
-  "paint",
-  "transcribe",
-  "moderate",
-  "embed",
-  "listModels"
-];
-
 export function setupVCR(name: string, options: VCROptions = {}) {
   const vcr = new VCR(name, options);
 
@@ -285,9 +276,9 @@ export function setupVCR(name: string, options: VCROptions = {}) {
         const originalValue = Reflect.get(target, prop, receiver);
         const method = prop.toString();
 
-        if (typeof originalValue === "function" && EXECUTION_METHODS.includes(method)) {
+        if (typeof originalValue === "function" && isExecutionMethod(method)) {
           return function (...args: unknown[]) {
-            if (method === "stream") {
+            if (isStreamingExecutionMethod(method)) {
               return vcr.executeStream(method, originalValue.bind(target), args[0]);
             }
             return vcr.execute(method, originalValue.bind(target), args[0]);
