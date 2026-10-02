@@ -19539,6 +19539,60 @@
     }
   },
   {
+    "id": "jev-latest",
+    "name": "Jev",
+    "provider": "typesafe",
+    "family": "jev",
+    "created_at": "2026-09-10 18:38:01 UTC",
+    "context_window": null,
+    "max_output_tokens": null,
+    "modalities": {
+      "input": ["text"],
+      "output": ["judgment"]
+    },
+    "capabilities": ["judgment"],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 0.042,
+          "output_per_million": 0
+        }
+      }
+    },
+    "metadata": {
+      "source": "typesafe",
+      "description": "The latest iteration of TypeSafe's System One Model: Jev",
+      "last_synced": "2026-10-02T00:00:00.000Z"
+    }
+  },
+  {
+    "id": "jev-preview",
+    "name": "Jev Preview",
+    "provider": "typesafe",
+    "family": "jev",
+    "created_at": "2026-09-10 18:39:06 UTC",
+    "context_window": null,
+    "max_output_tokens": null,
+    "modalities": {
+      "input": ["text"],
+      "output": ["judgment"]
+    },
+    "capabilities": ["judgment"],
+    "pricing": {
+      "text_tokens": {
+        "standard": {
+          "input_per_million": 0.042,
+          "output_per_million": 0
+        }
+      }
+    },
+    "metadata": {
+      "source": "typesafe",
+      "description": "A preview version of `jev-latest`: should be better in most ways",
+      "last_synced": "2026-10-02T00:00:00.000Z"
+    }
+  },
+  {
     "id": "jp.amazon.nova-2-lite-v1:0",
     "name": "Nova 2 Lite (JP)",
     "provider": "bedrock",

@@ -17,6 +17,7 @@ const DEFAULT_EXECUTION_METHODS = [
   "transcribe",
   "moderate",
   "embed",
+  "judge",
   "listModels"
 ] as const;
 

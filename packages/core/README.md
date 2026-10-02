@@ -39,6 +39,7 @@
 | <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/openrouter.svg" height="18"> **OpenRouter**    | 540+ models, Chat, Streaming, Tools, Vision, Embeddings, **Reasoning**                           |
 | <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/ollama.svg" height="18"> **Ollama**            | **Local Inference**, Chat, Streaming, Tools, Vision, Embeddings                                  |
 | <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/mistral-color.svg" height="18"> **Mistral**    | Chat, Streaming, Tools, Vision, Embeddings, Transcription, Moderation, **Reasoning (Magistral)** |
+| <img src="https://nodellm.dev/assets/images/providers/typesafe.svg" height="18"> **TypeSafe**                                        | **Judgments**: typed probability, choice and score answers (Jev)                                 |
 
 ---
 

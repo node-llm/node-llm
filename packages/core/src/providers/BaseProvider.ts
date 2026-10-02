@@ -14,6 +14,8 @@ import {
   ModerationResponse,
   EmbeddingRequest,
   EmbeddingResponse,
+  JudgmentRequest,
+  JudgmentResponse,
   ProviderCapabilities
 } from "./Provider.js";
 
@@ -85,6 +87,10 @@ export abstract class BaseProvider implements Provider {
 
   async embed?(_request: EmbeddingRequest): Promise<EmbeddingResponse> {
     this.throwUnsupportedError("embed");
+  }
+
+  async judge?(_request: JudgmentRequest): Promise<JudgmentResponse> {
+    this.throwUnsupportedError("judge");
   }
 
   formatToolResultMessage(

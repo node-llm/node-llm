@@ -38,6 +38,10 @@ export interface MockResponse {
   revised_prompt?: string;
   id?: string;
   thinking?: ThinkingResult;
+  /** Judgment answers keyed by question name (judge mocks only). */
+  answers?: Record<string, unknown>;
+  /** The model a judgment reports (judge mocks only). */
+  model?: string;
   reasoning?: string | null;
   metadata?: Record<string, unknown>;
 }
@@ -276,6 +280,25 @@ export class Mocker {
     });
   }
 
+  /**
+   * Mocks a judgment. Matches on the judged input: an exact string, a pattern
+   * tested against the input (structured input is matched as JSON), or any
+   * input when omitted. Follow with `.respond({ answers })`.
+   *
+   * @example
+   * mocker.judge(/refund/).respond({
+   *   answers: { urgent: { type: "probability", probability: 0.9 } }
+   * });
+   */
+  public judge(input?: string | RegExp): this {
+    return this.addMock("judge", (req: unknown) => {
+      if (!input) return true;
+      const raw = (req as { input?: unknown }).input;
+      const text = typeof raw === "string" ? raw : JSON.stringify(raw);
+      return input instanceof RegExp ? input.test(text) : text === input;
+    });
+  }
+
   public moderate(input?: string | string[] | RegExp): this {
     return this.addMock("moderate", (req: unknown) => {
       const modReq = req as ModerationRequest;
@@ -398,6 +421,7 @@ export class Mocker {
               else if (methodName === "embed" || methodName === "moderate") promptAttr = req.input;
               else if (methodName === "paint") promptAttr = req.prompt;
               else if (methodName === "transcribe") promptAttr = req.file;
+              else if (methodName === "judge") promptAttr = req.input;
 
               this._history.push({
                 method: methodName,
@@ -467,6 +491,13 @@ export class Mocker {
                   }
                   case "listModels": {
                     return (res as unknown) || [];
+                  }
+                  case "judge": {
+                    return {
+                      model: res.model ?? "mock-judge",
+                      answers: res.answers ?? {},
+                      usage: res.usage || { input_tokens: 0, output_tokens: 0, total_tokens: 0 }
+                    };
                   }
                   default:
                     return res;

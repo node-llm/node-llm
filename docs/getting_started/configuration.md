@@ -163,6 +163,8 @@ const llm = createLLM({
 | `xaiApiBase`                | xAI API base URL                    | `process.env.XAI_API_BASE`        |
 | `mistralApiKey`             | Mistral API key                     | `process.env.MISTRAL_API_KEY`     |
 | `mistralApiBase`            | Mistral API base URL                | `process.env.MISTRAL_API_BASE`    |
+| `typesafeApiKey`            | TypeSafe (Jev) key for judgments    | `process.env.TYPESAFE_API_KEY` (or `JEV_API_KEY`) |
+| `typesafeApiBase`           | System One endpoint                 | `process.env.TYPESAFE_API_BASE` (`https://api.typesafe.ai`) |
 | `ollamaApiBase`             | Ollama API base URL                 | `process.env.OLLAMA_API_BASE`     |
 | `bedrockApiKey`             | Bedrock long-term Bearer token      | `process.env.AWS_BEARER_TOKEN_BEDROCK` |
 | `bedrockAccessKeyId`        | Bedrock SigV4 access key ID         | `process.env.AWS_ACCESS_KEY_ID`   |

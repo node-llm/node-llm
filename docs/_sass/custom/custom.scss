@@ -194,6 +194,13 @@ blockquote {
     }
   }
 
+  // For a provider with a logo mark but no wordmark image.
+  .logo-wordmark {
+    font-size: 1.05rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+
   &:hover img {
     transform: translateY(-2px);
   }

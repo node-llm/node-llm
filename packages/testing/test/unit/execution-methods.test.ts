@@ -46,11 +46,12 @@ describe("execution method registry", () => {
       "transcribe",
       "moderate",
       "embed",
+      "judge",
       "listModels"
     ]) {
       expect(isExecutionMethod(method)).toBe(true);
     }
-    expect(getExecutionMethods()).toHaveLength(7);
+    expect(getExecutionMethods()).toHaveLength(8);
   });
 
   it("treats only stream as streaming by default", () => {
@@ -82,7 +83,7 @@ describe("execution method registry", () => {
     registerExecutionMethod("speak");
     resetExecutionMethods();
     expect(isExecutionMethod("speak")).toBe(false);
-    expect(getExecutionMethods()).toHaveLength(7);
+    expect(getExecutionMethods()).toHaveLength(8);
   });
 });
 

@@ -1,5 +1,6 @@
 import { Message } from "../chat/Message.js";
 import { ToolDefinition, ToolCall } from "../chat/Tool.js";
+import type { NamedQuestion, JsonValue } from "../judge/Question.js";
 
 export interface ResponseFormat {
   type: "text" | "json_object" | "json_schema";
@@ -248,6 +249,7 @@ export interface Provider {
   transcribe?(request: TranscriptionRequest): Promise<TranscriptionResponse>;
   moderate?(request: ModerationRequest): Promise<ModerationResponse>;
   embed?(request: EmbeddingRequest): Promise<EmbeddingResponse>;
+  judge?(request: JudgmentRequest): Promise<JudgmentResponse>;
   defaultModel(feature?: string): string;
   capabilities?: ProviderCapabilities;
   formatToolResultMessage(
@@ -255,4 +257,41 @@ export interface Provider {
     content: string,
     options?: { isError?: boolean }
   ): Message;
+}
+
+/** Input a judgment is asked about: text, or JSON-compatible structured data. */
+export type JudgmentInput = string | JsonValue[] | { [key: string]: JsonValue };
+
+export interface JudgmentRequest {
+  model: string;
+  input: JudgmentInput;
+  /** Validated questions, in declaration order. */
+  questions: NamedQuestion[];
+  /** Provider-specific fields merged into the request body. */
+  providerOptions?: Record<string, unknown>;
+  requestTimeout?: number;
+}
+
+/** One answer as returned by a provider, before it is wrapped for the caller. */
+export type JudgmentAnswerData =
+  | { type: "probability"; probability: number }
+  | {
+      type: "choice";
+      choice: string;
+      probabilities: Record<string, number>;
+      confidence: number;
+    }
+  | {
+      type: "score";
+      score: number;
+      probabilities: Record<number, number>;
+      confidence: number;
+    };
+
+export interface JudgmentResponse {
+  /** The model that answered, which can be more specific than the one requested. */
+  model: string;
+  answers: Record<string, JudgmentAnswerData>;
+  usage: Usage;
+  raw?: unknown;
 }

@@ -8,6 +8,7 @@ import { registerOpenRouterProvider } from "./openrouter/index.js";
 import { registerBedrockProvider } from "./bedrock/index.js";
 import { registerXAIProvider } from "./xai/index.js";
 import { registerMistralProvider } from "./mistral/index.js";
+import { registerTypeSafeProvider } from "./typesafe/index.js";
 
 import { NodeLLMConfig } from "../config.js";
 
@@ -94,5 +95,6 @@ export {
   registerOpenRouterProvider,
   registerBedrockProvider,
   registerXAIProvider,
-  registerMistralProvider
+  registerMistralProvider,
+  registerTypeSafeProvider
 };

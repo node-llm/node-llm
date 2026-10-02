@@ -11,7 +11,8 @@ import {
   registerOpenRouterProvider,
   registerBedrockProvider,
   registerXAIProvider,
-  registerMistralProvider
+  registerMistralProvider,
+  registerTypeSafeProvider
 } from "./providers/registry.js";
 import { GeneratedImage } from "./image/GeneratedImage.js";
 import { ModelRegistry } from "./models/ModelRegistry.js";
@@ -24,7 +25,8 @@ import { EmbeddingRequest } from "./providers/Provider.js";
 import {
   ProviderNotConfiguredError,
   UnsupportedFeatureError,
-  ModelCapabilityError
+  ModelCapabilityError,
+  ConfigurationError
 } from "./errors/index.js";
 import { resolveModelAlias } from "./model_aliases.js";
 import { logger } from "./utils/logger.js";
@@ -32,6 +34,10 @@ import { logger } from "./utils/logger.js";
 import { config, NodeLLMConfig, Configuration } from "./config.js";
 import { Middleware, MiddlewareContext } from "./types/Middleware.js";
 import { runMiddleware } from "./utils/middleware-runner.js";
+import { JudgmentInput } from "./providers/Provider.js";
+import { QuestionMap, normalizeQuestions, isJudgmentInput } from "./judge/Question.js";
+import { JudgmentResult, buildJudgment } from "./judge/Judgment.js";
+import { DEFAULT_MODELS } from "./constants.js";
 import { randomUUID } from "node:crypto";
 
 export interface RetryOptions {
@@ -47,6 +53,7 @@ type LLMConfig = {
   defaultTranscriptionModel?: string;
   defaultModerationModel?: string;
   defaultEmbeddingModel?: string;
+  defaultJudgmentModel?: string;
 } & Omit<Partial<NodeLLMConfig>, "provider">;
 
 // Provider registration map
@@ -59,7 +66,8 @@ const PROVIDER_REGISTRARS: Record<string, () => void> = {
   openrouter: registerOpenRouterProvider,
   bedrock: registerBedrockProvider,
   xai: registerXAIProvider,
-  mistral: registerMistralProvider
+  mistral: registerMistralProvider,
+  typesafe: registerTypeSafeProvider
 };
 
 export class NodeLLMCore {
@@ -76,6 +84,7 @@ export class NodeLLMCore {
       transcription?: string;
       moderation?: string;
       embedding?: string;
+      judgment?: string;
     } = {}
   ) {
     Object.freeze(this.config);
@@ -95,6 +104,9 @@ export class NodeLLMCore {
   get defaultEmbeddingModel(): string | undefined {
     return this.defaults.embedding;
   }
+  get defaultJudgmentModel(): string | undefined {
+    return this.defaults.judgment;
+  }
 
   /**
    * Returns a scoped LLM instance configured for a specific provider.
@@ -113,7 +125,8 @@ export class NodeLLMCore {
       defaultChatModel: this.defaults.chat,
       defaultTranscriptionModel: this.defaults.transcription,
       defaultModerationModel: this.defaults.moderation,
-      defaultEmbeddingModel: this.defaults.embedding
+      defaultEmbeddingModel: this.defaults.embedding,
+      defaultJudgmentModel: this.defaults.judgment
     });
   }
 
@@ -426,6 +439,122 @@ export class NodeLLMCore {
       throw error;
     }
   }
+
+  /**
+   * Asks typed questions about one input and returns a typed answer for each:
+   * a probability, a choice among named options, or a score on a scale.
+   *
+   * The provider follows the model: `jev-latest` (the default) is answered by
+   * TypeSafe whichever provider this instance is scoped to. Pass `provider` to
+   * route explicitly, for example to a Jev-compatible local server configured
+   * through `typesafeApiBase`.
+   *
+   * Each call judges only the input given; it keeps no conversation history.
+   *
+   * @example
+   * const judgment = await NodeLLM.judge("Please refund the duplicate charge today.", {
+   *   questions: {
+   *     urgent: probability("Does this need attention today?"),
+   *     team: choice("Which team should handle this?", { billing: "Payments", other: null })
+   *   }
+   * });
+   * judgment.urgent.probability; // 0.91
+   * judgment.team.choice;        // "billing"
+   */
+  async judge<const Q extends QuestionMap>(
+    input: JudgmentInput,
+    options: {
+      questions: Q;
+      model?: string;
+      provider?: string;
+      /** Provider-specific fields merged into the request body. */
+      providerOptions?: Record<string, unknown>;
+      requestTimeout?: number;
+      middlewares?: Middleware[];
+    }
+  ): Promise<JudgmentResult<Q>> {
+    if (!isJudgmentInput(input)) {
+      throw new Error(
+        "Judgment input must be text, an object, or an array of JSON-compatible values"
+      );
+    }
+    const questions = normalizeQuestions(options.questions);
+    const model = options.model || this.defaults.judgment || DEFAULT_MODELS.JUDGMENT;
+    const provider = this.judgmentProvider(model, options.provider);
+
+    if (!provider.judge) {
+      throw new UnsupportedFeatureError(provider.id, "judge");
+    }
+
+    const context: MiddlewareContext = {
+      requestId: randomUUID(),
+      provider: provider.id,
+      model,
+      judgmentInput: input,
+      judgmentOptions: options as unknown as Record<string, unknown>,
+      state: {}
+    };
+    const middlewares = [...this.middlewares, ...(options.middlewares || [])];
+
+    try {
+      await runMiddleware(middlewares, "onRequest", context);
+
+      const response = await provider.judge({
+        model,
+        input: (context.judgmentInput as JudgmentInput) ?? input,
+        questions,
+        providerOptions: options.providerOptions,
+        requestTimeout: options.requestTimeout ?? this.config.requestTimeout
+      });
+
+      // Priced by the requested model, which is what the registry knows; the
+      // response names the exact build that answered (jev-latest comes back as
+      // e.g. jev-1.13.0). An unpriced model leaves cost undefined rather than a
+      // guessed number.
+      const usage = ModelRegistry.calculateCost(response.usage, model, provider.id);
+      const judgment = buildJudgment<Q>({ ...response, usage }, questions);
+
+      await runMiddleware(middlewares, "onResponse", context, judgment);
+      return judgment;
+    } catch (error) {
+      await runMiddleware(middlewares, "onError", context, error as Error);
+      throw error;
+    }
+  }
+
+  /**
+   * Picks the provider that answers judgments for a model: an explicit choice
+   * first, then the registry's owner of a known judgment model, then this
+   * instance's own provider - which is how a model the registry does not know,
+   * such as one on a local Jev-compatible server, reaches the provider it was
+   * scoped to.
+   */
+  private judgmentProvider(model: string, explicit?: string): Provider {
+    const known = ModelRegistry.find(model);
+    const owner =
+      explicit ??
+      (known &&
+      known.id.toLowerCase() === model.toLowerCase() &&
+      known.capabilities?.includes("judgment")
+        ? known.provider
+        : undefined);
+
+    if (!owner || owner === this.provider?.id) {
+      if (!this.provider) {
+        // Guessing a provider for an unknown model would send the request (and
+        // the credentials) somewhere the caller did not choose.
+        throw new ConfigurationError(
+          `Unknown judgment model '${model}': no provider is known to serve it. ` +
+            `Pass \`provider\` (for example "typesafe"), or call judge on ` +
+            `NodeLLM.withProvider("typesafe").`
+        );
+      }
+      return this.provider;
+    }
+
+    PROVIDER_REGISTRARS[owner]?.();
+    return providerRegistry.resolve(owner, this.config);
+  }
 }
 
 export { Transcription, Moderation, Embedding, ModelRegistry, PricingRegistry };
@@ -479,7 +608,8 @@ export function createLLM(options: LLMConfig = {}): NodeLLMCore {
     chat: options.defaultChatModel,
     transcription: options.defaultTranscriptionModel,
     moderation: options.defaultModerationModel,
-    embedding: options.defaultEmbeddingModel
+    embedding: options.defaultEmbeddingModel,
+    judgment: options.defaultJudgmentModel
   };
 
   return new NodeLLMCore(baseConfig, providerInstance, retry, options.middlewares || [], defaults);
