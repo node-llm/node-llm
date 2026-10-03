@@ -2,6 +2,49 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.18.0] - 2026-10-03 (@node-llm/core)
+
+### Features
+
+- **Judgments**: `NodeLLM.judge()` asks TypeSafe's Jev models (`jev-latest`, `jev-preview`) yes/no, multiple-choice and scored questions about a piece of state, and returns calibrated probabilities and confidence per answer. Build questions with `probability()`, `choice()` and `score()`, or reuse a set with `defineJudge()`. Configure with `typesafeApiKey` (`TYPESAFE_API_KEY`, or `JEV_API_KEY`). Usage is priced at $0.042 per million input tokens.
+- **Typed Structured Output**: `withSchema(zodSchema)` now infers the schema's type, so `response.data` from `Chat#ask()` and `Agent#ask()`/`say()` is typed instead of `unknown`.
+
+### Bug Fixes
+
+- **`schema` Chat Option**: A Zod schema or plain JSON Schema passed as the `schema` option no longer throws when the request is built; it is converted as `withSchema()` does.
+- **Tool Typing**: `Tool`'s argument type defaults to `Record<string, any>`, so `execute({ location })` overrides compile and the tool is accepted by `withTool()`. Tool-call hooks (`onToolCall`, `onToolCallStart`, `onToolCallEnd`, `onConfirmToolCall` and the Agent hooks) receive a `ToolCall`.
+- **Tool Execution Mode**: `withToolExecution()`, the `toolExecution` chat option and the `createLLM` config accept the mode's string value (`"confirm"`) as well as the enum member.
+- **Transcription Options**: `transcribe()` accepts `timestamp_granularities`.
+
+### Improvements
+
+- **Model Catalog Sync**: Refreshed `models.json` and aliases with the latest provider model catalogs.
+- **Docs**: Every code example in the docs and READMEs now compiles and runs; broken links and retired model IDs are fixed.
+
+### Compatibility
+
+- Annotating a chat with a data type before setting a schema, as in `const chat: Chat<Person> = NodeLLM.chat()`, no longer compiles. Use `NodeLLM.chat().withSchema(PersonSchema)`, which infers the type.
+
+## [0.3.0] - 2026-10-03 (@node-llm/mcp)
+
+### Features
+
+- **`MCPPrompt.getMessages()`**: Resolves a prompt and returns NodeLLM messages, ready for `chat.addMessages()`. Converts text, images, audio and resources. `get()` still returns MCP's own format, which a chat cannot send.
+
+### Bug Fixes
+
+- **Installable from npm**: The `@node-llm/core` peer dependency was published as `workspace:*`, so `npm install @node-llm/mcp` failed with `EUNSUPPORTEDPROTOCOL`. It is now `^1.17.0`.
+
+## [0.6.0] - 2026-10-03 (@node-llm/testing)
+
+### Features
+
+- **Judgment Mocking**: `mocker.judge()` mocks `NodeLLM.judge()` calls, and VCR records and replays them.
+
+### Improvements
+
+- **Shared Method Registry**: VCR and the Mocker intercept provider methods from one shared registry, so a new provider method is covered by both.
+
 ## [1.17.0] - 2026-07-04 (@node-llm/core)
 
 ### Features

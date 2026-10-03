@@ -1,6 +1,6 @@
 {
   "name": "@node-llm/mcp",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "MCP (Model Context Protocol) integration for NodeLLM",
   "type": "module",
   "main": "dist/index.js",
@@ -34,6 +34,6 @@
     "typescript": "^5.x"
   },
   "peerDependencies": {
-    "@node-llm/core": "workspace:*"
+    "@node-llm/core": "^1.17.0"
   }
 }
