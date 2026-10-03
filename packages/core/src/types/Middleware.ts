@@ -70,6 +70,17 @@ export interface MiddlewareContext {
   moderationOptions?: Record<string, unknown>;
 
   /**
+   * Options for the judgment request (Judgment only).
+   */
+  judgmentOptions?: Record<string, unknown>;
+
+  /**
+   * The input a judgment is asked about (Judgment only). Text or JSON-compatible
+   * structured data. Mutating it in `onRequest` affects the actual call.
+   */
+  judgmentInput?: unknown;
+
+  /**
    * Options passed to the image generation request (Paint only).
    */
   imageOptions?: Record<string, unknown>;

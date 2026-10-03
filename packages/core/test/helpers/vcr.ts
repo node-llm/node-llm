@@ -18,7 +18,17 @@ Polly.register(FetchAdapter as any);
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 Polly.register(FSPersister as any);
 
-export function setupVCR(recordingName: string, subDir?: string) {
+export function setupVCR(
+  recordingName: string,
+  subDir?: string,
+  options: {
+    /**
+     * Persist error responses too. Off by default, matching Polly; turn it on
+     * only for a test that asserts how a real error response is handled.
+     */
+    recordFailedRequests?: boolean;
+  } = {}
+) {
   let recordingsDir = path.resolve(__dirname, "../__cassettes__");
   if (subDir) {
     recordingsDir = path.join(recordingsDir, subDir);
@@ -33,6 +43,9 @@ export function setupVCR(recordingName: string, subDir?: string) {
   if (!process.env.OPENROUTER_API_KEY) process.env.OPENROUTER_API_KEY = "dummy-key-for-vcr-replay";
   if (!process.env.XAI_API_KEY) process.env.XAI_API_KEY = "dummy-key-for-vcr-replay";
   if (!process.env.MISTRAL_API_KEY) process.env.MISTRAL_API_KEY = "dummy-key-for-vcr-replay";
+  if (!process.env.TYPESAFE_API_KEY && !process.env.JEV_API_KEY) {
+    process.env.TYPESAFE_API_KEY = "dummy-key-for-vcr-replay";
+  }
 
   if (!process.env.AWS_ACCESS_KEY_ID && !process.env.AWS_BEARER_TOKEN_BEDROCK) {
     process.env.AWS_ACCESS_KEY_ID = "AKIA-DUMMY-KEY";
@@ -86,6 +99,7 @@ export function setupVCR(recordingName: string, subDir?: string) {
     },
     mode: mode,
     recordIfMissing: process.env.VCR_MODE === "record",
+    recordFailedRequests: options.recordFailedRequests ?? false,
     flushRequestsOnStop: true
   });
 

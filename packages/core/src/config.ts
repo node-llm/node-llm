@@ -18,6 +18,10 @@ export interface NodeLLMConfig {
   xaiApiBase?: string;
   mistralApiKey?: string;
   mistralApiBase?: string;
+  /** TypeSafe (System One / Jev) key for judgments. */
+  typesafeApiKey?: string;
+  /** System One endpoint; point it at any Jev-compatible server. */
+  typesafeApiBase?: string;
   // AWS Bedrock
   bedrockApiKey?: string; // Long-term API key (Bearer token)
   bedrockAccessKeyId?: string; // SigV4: AWS Access Key ID
@@ -58,6 +62,7 @@ import {
   DEFAULT_OLLAMA_BASE_URL,
   DEFAULT_XAI_BASE_URL,
   DEFAULT_MISTRAL_BASE_URL,
+  DEFAULT_TYPESAFE_BASE_URL,
   DEFAULT_BEDROCK_REGION,
   ToolExecutionMode,
   ToolExecutionModeInput
@@ -79,6 +84,8 @@ export class Configuration implements NodeLLMConfig {
   private _xaiApiBase?: string;
   private _mistralApiKey?: string;
   private _mistralApiBase?: string;
+  private _typesafeApiKey?: string;
+  private _typesafeApiBase?: string;
   private _bedrockApiKey?: string;
   private _bedrockAccessKeyId?: string;
   private _bedrockSecretAccessKey?: string;
@@ -201,6 +208,27 @@ export class Configuration implements NodeLLMConfig {
   }
   public set mistralApiBase(v: string | undefined) {
     this._mistralApiBase = v;
+  }
+
+  public get typesafeApiKey(): string | undefined {
+    // TYPESAFE_API_KEY matches the provider's name; JEV_API_KEY is accepted too.
+    return (
+      this._typesafeApiKey ??
+      process.env.TYPESAFE_API_KEY?.trim() ??
+      process.env.JEV_API_KEY?.trim()
+    );
+  }
+  public set typesafeApiKey(v: string | undefined) {
+    this._typesafeApiKey = v;
+  }
+
+  public get typesafeApiBase(): string | undefined {
+    return (
+      this._typesafeApiBase ?? process.env.TYPESAFE_API_BASE?.trim() ?? DEFAULT_TYPESAFE_BASE_URL
+    );
+  }
+  public set typesafeApiBase(v: string | undefined) {
+    this._typesafeApiBase = v;
   }
 
   // AWS Bedrock configuration

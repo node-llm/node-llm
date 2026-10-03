@@ -20,7 +20,8 @@ describe("ModelRegistry - Filtered Sync Verification", () => {
       "mistral",
       "groq",
       "perplexity",
-      "azure"
+      "azure",
+      "typesafe"
     ];
 
     // Convert Set to Array for easier comparison

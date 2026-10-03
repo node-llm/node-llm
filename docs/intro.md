@@ -77,6 +77,10 @@ for await (const chunk of chat.stream("Now explain it to a five-year-old")) {
     <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/mistral-color.svg" alt="Mistral">
     <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/mistral-text.svg" alt="" class="logo-small">
   </div>
+  <div class="provider-logo">
+    <img src="/assets/images/providers/typesafe.svg" alt="TypeSafe">
+    <span class="logo-wordmark">TypeSafe</span>
+  </div>
 </div>
 
 [Quick Start](/getting-started/quick-start){: .btn .btn-primary .mr-2 }
@@ -227,6 +231,7 @@ Plug custom security, PII detection, and compliance logic into asynchronous [`be
 | <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/xai.svg" height="18"> **xAI**                  | Chat, Streaming, Tools, Vision, Images, Reasoning                                              |
 | <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/ollama.svg" height="18"> **Ollama**            | Local Inference: Chat, Streaming, Tools, Vision, Embeddings                                    |
 | <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/mistral-color.svg" height="18"> **Mistral**    | Chat, Streaming, Tools, Vision, Embeddings, Transcription, Moderation, Reasoning               |
+| <img src="/assets/images/providers/typesafe.svg" height="18"> **TypeSafe** | Judgments: typed probability, choice and score answers (Jev) |
 
 The [model registry](/available-models) tracks current model IDs, capabilities, and pricing across all providers — kept in sync automatically.
 

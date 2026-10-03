@@ -29,11 +29,14 @@ export const DEFAULT_OLLAMA_BASE_URL = "http://localhost:11434/v1";
 export const DEFAULT_XAI_BASE_URL = "https://api.x.ai/v1";
 export const DEFAULT_MISTRAL_BASE_URL = "https://api.mistral.ai/v1";
 
+export const DEFAULT_TYPESAFE_BASE_URL = "https://api.typesafe.ai";
+
 export const DEFAULT_MODELS = {
   TRANSCRIPTION: "whisper-1",
   MODERATION: "omni-moderation-latest",
   EMBEDDING: "text-embedding-3-small",
-  IMAGE: "dall-e-3"
+  IMAGE: "dall-e-3",
+  JUDGMENT: "jev-latest"
 } as const;
 
 export const DEFAULT_BEDROCK_REGION = "us-east-1";
