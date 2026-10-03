@@ -1,10 +1,10 @@
 import { Middleware } from "../types/Middleware.js";
 import { Message } from "./Message.js";
-import { ToolResolvable } from "./Tool.js";
+import { ToolResolvable, ToolCall } from "./Tool.js";
 import { ContentPart } from "./Content.js";
 import { Schema } from "../schema/Schema.js";
 import { ChatResponseString } from "./ChatResponse.js";
-import { ToolExecutionMode } from "../constants.js";
+import { ToolExecutionModeInput } from "../constants.js";
 import { ResponseFormat, ThinkingConfig, ToolChoice } from "../providers/Provider.js";
 
 export interface ChatOptions {
@@ -16,10 +16,10 @@ export interface ChatOptions {
   maxTokens?: number;
   onNewMessage?: () => void;
   onEndMessage?: (message: ChatResponseString) => void;
-  onToolCallStart?: (toolCall: unknown) => void;
-  onToolCallEnd?: (toolCall: unknown, result: unknown) => void;
+  onToolCallStart?: (toolCall: ToolCall) => void;
+  onToolCallEnd?: (toolCall: ToolCall, result: unknown) => void;
   onToolCallError?: (
-    toolCall: unknown,
+    toolCall: ToolCall,
     error: Error
   ) => "STOP" | "CONTINUE" | "RETRY" | void | Promise<"STOP" | "CONTINUE" | "RETRY" | void>;
   /**
@@ -30,11 +30,11 @@ export interface ChatOptions {
    */
   onNewMessageHandlers?: Array<() => void>;
   onEndMessageHandlers?: Array<(message: ChatResponseString) => void>;
-  onToolCallStartHandlers?: Array<(toolCall: unknown) => void>;
-  onToolCallEndHandlers?: Array<(toolCall: unknown, result: unknown) => void>;
+  onToolCallStartHandlers?: Array<(toolCall: ToolCall) => void>;
+  onToolCallEndHandlers?: Array<(toolCall: ToolCall, result: unknown) => void>;
   onToolCallErrorHandlers?: Array<
     (
-      toolCall: unknown,
+      toolCall: ToolCall,
       error: Error
     ) => "STOP" | "CONTINUE" | "RETRY" | void | Promise<"STOP" | "CONTINUE" | "RETRY" | void>
   >;
@@ -49,7 +49,7 @@ export interface ChatOptions {
   maxToolCalls?: number;
   maxCorrections?: number;
   requestTimeout?: number;
-  toolExecution?: ToolExecutionMode;
+  toolExecution?: ToolExecutionModeInput;
   /**
    * When true, independent tool calls returned in the same turn are executed
    * concurrently instead of one at a time. Defaults to `config.toolConcurrency`.
@@ -57,10 +57,10 @@ export interface ChatOptions {
   toolConcurrency?: boolean;
   toolChoice?: ToolChoice;
   toolCalls?: "one" | "many" | number;
-  onConfirmToolCall?: (toolCall: unknown) => Promise<boolean> | boolean;
+  onConfirmToolCall?: (toolCall: ToolCall) => Promise<boolean> | boolean;
   onBeforeRequest?: (messages: Message[]) => Promise<Message[] | void>;
   onAfterResponse?: (response: ChatResponseString) => Promise<ChatResponseString | void>;
-  onConfirmToolCallHandlers?: Array<(toolCall: unknown) => Promise<boolean> | boolean>;
+  onConfirmToolCallHandlers?: Array<(toolCall: ToolCall) => Promise<boolean> | boolean>;
   onBeforeRequestHandlers?: Array<(messages: Message[]) => Promise<Message[] | void>>;
   onAfterResponseHandlers?: Array<
     (response: ChatResponseString) => Promise<ChatResponseString | void>

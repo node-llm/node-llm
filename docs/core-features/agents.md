@@ -80,7 +80,7 @@ const result = await AssistantAgent.ask("What is TypeScript?");
 
 // Instance API (traditional)
 const agent = new AssistantAgent({ llm });
-const result = await agent.ask("What is TypeScript?");
+const reply = await agent.ask("What is TypeScript?");
 ```
 
 ### Available Static Properties
@@ -146,7 +146,7 @@ class CalculatorTool extends Tool {
     operation: z.enum(["add", "subtract", "multiply", "divide"])
   });
 
-  async execute({ a, b, operation }) {
+  async execute({ a, b, operation }: { a: number; b: number; operation: "add" | "subtract" | "multiply" | "divide" }) {
     const ops = { add: a + b, subtract: a - b, multiply: a * b, divide: a / b };
     return { result: ops[operation] };
   }
@@ -178,7 +178,7 @@ class ClassifierTool extends Tool {
   description = "Classifies the task type";
   schema = z.object({ query: z.string() });
 
-  async execute({ query }) {
+  async execute({ query }: { query: string }) {
     const response = await createLLM({ provider: "openai" })
       .chat("gpt-5-mini")
       .system("Classify as: code, creative, or factual. One word only.")
@@ -215,7 +215,7 @@ class KnowledgeSearchTool extends Tool {
   description = "Searches internal documents for relevant context";
   schema = z.object({ query: z.string().describe("What to search for") });
 
-  async execute({ query }) {
+  async execute({ query }: { query: string }) {
     const embedding = await createLLM({ provider: "openai" }).embed(query);
     const docs = await prisma.$queryRaw`
       SELECT title, content FROM documents
@@ -253,7 +253,7 @@ class ResearchAgent extends Agent {
 }
 
 class WriterAgent extends Agent {
-  static model = "claude-sonnet-4-20250514";
+  static model = "claude-sonnet-5";
   static instructions = "Write a compelling article from the provided research notes.";
 }
 
@@ -296,7 +296,8 @@ const SentimentSchema = z.object({
   keywords: z.array(z.string())
 });
 
-class SentimentAnalyzer extends Agent<z.infer<typeof SentimentSchema>> {
+// Agent<Inputs, Output>: the schema's type is the second type argument.
+class SentimentAnalyzer extends Agent<Record<string, any>, z.infer<typeof SentimentSchema>> {
   static model = "gpt-5";
   static instructions = "Analyze the sentiment of the given text.";
   static schema = SentimentSchema;
@@ -305,7 +306,7 @@ class SentimentAnalyzer extends Agent<z.infer<typeof SentimentSchema>> {
 const llm = createLLM({ provider: "openai" });
 const analyzer = new SentimentAnalyzer({ llm });
 const result = await analyzer.ask("I love this product!");
-console.log(result.parsed?.sentiment); // "positive"
+console.log(result.data.sentiment); // "positive" - typed and validated
 ```
 
 ---
@@ -405,8 +406,8 @@ const agent = new WorkAssistant({
 await agent.ask("What is my salary?");
 
 // Option B: At the request level (Explicit context)
-const agent = new WorkAssistant();
-await agent.ask("Hello", {
+const assistant = new WorkAssistant();
+await assistant.ask("Hello", {
   inputs: { userName: "Bob", workspace: "general" }
 });
 ```
@@ -444,7 +445,7 @@ class WeatherTool extends Tool {
   description = "Get current weather for a city";
   schema = z.object({ city: z.string() });
 
-  async execute({ city }) {
+  async execute({ city }: { city: string }) {
     return `Sunny, 25°C in ${city}`;
   }
 }
@@ -506,7 +507,7 @@ For models with extended thinking (o1, Claude):
 ```typescript
 class ThinkingAgent extends Agent {
   static model = "o3";
-  static thinking = { effort: "high" };
+  static thinking = { effort: "high" } as const;
   
   static onThinking(thinking, result) {
     console.log("🧠 Reasoning:", thinking.text);
@@ -553,8 +554,9 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 const llm = createLLM({ provider: "openai" });
 
-// Define agent (configuration lives in code)
-class SupportAgent extends Agent {
+// Define agent (configuration lives in code). The session metadata is the
+// agent's input type.
+class SupportAgent extends Agent<{ userId: string; ticketId: string }> {
   static model = "gpt-4.1";
   static instructions = "You are a helpful support agent.";
   static tools = [LookupOrderTool, CancelOrderTool];
@@ -569,8 +571,8 @@ await session.ask("Where is my order #789?");
 console.log(session.id); // "abc-123" - save this to resume later
 
 // Resume in a later request
-const session = await loadAgentSession(prisma, llm, SupportAgent, "abc-123");
-await session.ask("Can you cancel it?");
+const resumed = await loadAgentSession(prisma, llm, SupportAgent, "abc-123");
+await resumed?.ask("Can you cancel it?");
 ```
 
 ### The "Code Wins" Principle

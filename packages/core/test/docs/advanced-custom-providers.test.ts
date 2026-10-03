@@ -17,7 +17,7 @@ import {
   ServerError,
   providerRegistry
 } from "../../src/index.js";
-import type { Provider } from "../../src/types/index.js";
+import type { Provider } from "../../src/providers/Provider.js";
 
 describe("advanced-custom-providers", () => {
   describe("BaseProvider Extension", () => {

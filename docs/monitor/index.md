@@ -83,7 +83,7 @@ const monitor = Monitor.memory({
 
 const llm = createLLM({
   provider: "openai",
-  model: "gpt-5-mini",
+  defaultChatModel: "gpt-5-mini",
   openaiApiKey: process.env.OPENAI_API_KEY,
   middlewares: [monitor], // Monitor IS the middleware
 });
@@ -262,5 +262,5 @@ console.log(metrics.timeSeries);  // Time series data
 - [Prisma Adapter Setup](/monitor/prisma.html) - Production database integration
 - [Dashboard Guide](/monitor/dashboard.html) - Explore the visual interface
 - [OpenTelemetry Guide](/monitor/otel.html) - Instrumented trace extraction
-- [API Reference](/monitor/api.html) - Full API documentation
+- [API Endpoints](/monitor/dashboard.html#api-endpoints) - The monitor's HTTP API
 - [Blog: NodeLLM Monitor](https://www.eshaiju.com/blog/nodellm-monitor-production-observability) - Deep dive into production observability

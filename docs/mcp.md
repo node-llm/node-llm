@@ -48,9 +48,10 @@ const { tools, resources, resourceTemplates, prompts } = await github.discover({
 const reviewPrompt = prompts.find(p => p.name.includes("review"));
 const sourceFile = resources.find(r => r.name.includes("MCP.ts"));
 
-// 4. Orchestrate in a single session
-const { messages } = await reviewPrompt.get({ 
-  code: await sourceFile.readText() 
+// 4. Orchestrate in a single session. getMessages() converts the prompt into
+//    NodeLLM messages; get() returns MCP's own format, which chat cannot send.
+const messages = await reviewPrompt.getMessages({
+  code: await sourceFile.readText()
 });
 
 const response = await NodeLLM.chat("gpt-5")
@@ -192,5 +193,6 @@ Each `discover*` method accepts a `DiscoveryOptions` object: `filter` (only incl
 | Method | Description |
 | :--- | :--- |
 | `get(args?)` | Resolves the prompt template with arguments and returns the server's prompt result (`{ description?, messages }`). |
+| `getMessages(args?)` | Resolves the prompt and returns NodeLLM messages, ready for `chat.addMessages()`. Converts text, images, audio and resources; use this rather than passing `get()`'s MCP-format messages to a chat. |
 
 ---

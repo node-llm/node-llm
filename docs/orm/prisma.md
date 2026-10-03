@@ -387,8 +387,9 @@ model LlmChat {
 import { Agent, Tool, z, createLLM } from "@node-llm/core";
 import { createAgentSession, loadAgentSession } from "@node-llm/orm/prisma";
 
-// Define your agent (config lives in code)
-class SupportAgent extends Agent {
+// Define your agent (config lives in code). The session metadata is the
+// agent's input type.
+class SupportAgent extends Agent<{ userId: string; ticketId: string }> {
   static model = "gpt-4.1";
   static instructions = "You are a helpful support agent. Be concise.";
   static tools = [LookupOrderTool, CancelOrderTool];

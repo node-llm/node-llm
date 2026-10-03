@@ -83,7 +83,7 @@ const monitor = createPrismaMonitor(prisma);
 
 const llm = createLLM({
   provider: "openai",
-  model: "gpt-5-mini",
+  defaultChatModel: "gpt-5-mini",
   openaiApiKey: process.env.OPENAI_API_KEY,
   middlewares: [monitor],
 });
@@ -247,8 +247,8 @@ If you get "monitoring_events table not found", ensure:
 
 If using custom table names, ensure your Prisma client types match:
 
-```typescript
-// Generate types after schema changes
+```bash
+# Generate types after schema changes
 npx prisma generate
 ```
 

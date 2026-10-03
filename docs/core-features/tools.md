@@ -40,17 +40,20 @@ The recommended way to define tools is by using the `Tool` class. This provides 
 ```ts
 import { NodeLLM, Tool, z } from "@node-llm/core";
 
-class WeatherTool extends Tool {
+const weatherSchema = z.object({
+  location: z.string().describe("The city and state, e.g. San Francisco, CA"),
+  unit: z.enum(["celsius", "fahrenheit"]).default("celsius")
+});
+
+// Pass the schema's type so execute() is fully typed.
+class WeatherTool extends Tool<z.infer<typeof weatherSchema>> {
   name = "get_weather";
   description = "Get the current weather for a location";
 
   // Auto-generates JSON Schema
-  schema = z.object({
-    location: z.string().describe("The city and state, e.g. San Francisco, CA"),
-    unit: z.enum(["celsius", "fahrenheit"]).default("celsius")
-  });
+  schema = weatherSchema;
 
-  async execute({ location, unit }) {
+  async execute({ location, unit }: z.infer<typeof weatherSchema>) {
     // Your business logic
     const weather = await fetchWeather(location);
     return { temp: 22, unit, condition: "Sunny" };
@@ -79,7 +82,7 @@ When `strict = true` is set, `NodeLLM` automatically translates your Zod schema 
 ### Benefits
 
 - **No Boilerplate**: No need to write manual JSON schemas.
-- **Type Safety**: `execute()` arguments are automatically typed from your schema.
+- **Type Safety**: declare the tool as `Tool<z.infer<typeof schema>>` and `execute()` is fully typed from your schema. (TypeScript cannot infer it from the `schema` property alone, so without the type argument the arguments are `Record<string, any>`.)
 - **Self-Documenting**: The Zod `.describe()` calls are automatically pulled into the tool's description for the LLM.
 
 ### Defining Parameters with Zod
@@ -130,7 +133,7 @@ for await (const chunk of chat.stream("What's the weather in Paris?")) {
 }
 ```
 
-See the [Streaming documentation](streaming.html#streaming-with-tools-) for more details.
+See the [Streaming documentation](streaming.html#streaming-with-tools) for more details.
 
 ---
 
@@ -171,6 +174,7 @@ chat.withToolCalls("one"); // Force sequential execution
 ---
 
 ## Concurrent Tool Execution <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v1.17.0+</span>
+{: #concurrent-tool-execution }
 
 When a model returns multiple independent tool calls in the same turn, NodeLLM executes them one at a time by default. Enable `toolConcurrency` to run them in parallel instead, which can meaningfully cut latency for turns with several unrelated tool calls (e.g. looking up weather in three different cities):
 
@@ -256,7 +260,7 @@ class HistoryTool extends Tool {
   // Add provider-specific metadata
   cache_control = { type: 'ephemeral' };
 
-  async execute({ limit }) {
+  async execute({ limit }: { limit: number }) {
     return [...];
   }
 
@@ -274,6 +278,7 @@ class HistoryTool extends Tool {
 ---
 
 ## Error Handling & Flow Control <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v1.5.1+</span>
+{: #error-handling--flow-control }
 
 `NodeLLM` handles tool errors intelligently to prevent infinite retry loops through a combination of automatic infrastructure protection and manual flow control.
 
@@ -287,10 +292,14 @@ Fatal errors include:
 - **Explicit Fatal Errors**: Any error thrown using the `ToolError` class with `fatal: true`.
 
 ```ts
-import { Tool, ToolError } from "@node-llm/core";
+import { Tool, ToolError, z } from "@node-llm/core";
 
-class DatabaseTool extends Tool {
-  async execute({ query }) {
+class DatabaseTool extends Tool<{ query: string }> {
+  name = "db_tool";
+  description = "Run a read-only query";
+  schema = z.object({ query: z.string() });
+
+  async execute({ query }: { query: string }) {
     if (isMalicious(query)) {
       // Force the agent to stop immediately
       throw new ToolError("Security Violation", "db_tool", true);
@@ -342,7 +351,7 @@ NodeLLM makes tool calling highly resilient by turning common failures into **se
 - **Execution Failures**: Errors thrown inside your `execute()` method are caught and returned to the model as descriptive strings.
 
 ```ts
-async execute({ date }) {
+async execute({ date }: { date: string }) {
   // If you want the model to see the error and try to fix its own parameters,
   // simply return a string or object from your handler.
   if (!isValid(date)) {
@@ -366,7 +375,7 @@ class PaymentTool extends Tool {
     recipient: z.string().describe("Recipient name")
   });
 
-  async execute({ amount, recipient }) {
+  async execute({ amount, recipient }: { amount: number; recipient: string }) {
     // Halt on large amounts — requires human approval
     if (amount > 10000) {
       return this.halt(`Payment of $${amount} to ${recipient} requires manager approval.`);
@@ -414,7 +423,7 @@ class CustomTool extends Tool {
     required: ["sku"]
   };
 
-  async execute({ sku, limit }) {
+  async execute({ sku, limit }: { sku: string; limit?: number }) {
     // Arguments are still passed as a single object
     return { status: "found" };
   }

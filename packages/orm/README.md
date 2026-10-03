@@ -165,18 +165,18 @@ For **stateful agents** with persistence, use `AgentSession`. This follows the "
 ```typescript
 import { Agent, Tool, z } from "@node-llm/core";
 
-class LookupOrderTool extends Tool {
-  static definition = {
-    name: "lookup_order",
-    description: "Look up order status",
-    parameters: z.object({ orderId: z.string() })
-  };
-  async execute({ orderId }) {
+class LookupOrderTool extends Tool<{ orderId: string }> {
+  name = "lookup_order";
+  description = "Look up order status";
+  schema = z.object({ orderId: z.string() });
+
+  async execute({ orderId }: { orderId: string }) {
     return { status: "shipped", eta: "Tomorrow" };
   }
 }
 
-class SupportAgent extends Agent {
+// The session metadata is the agent's input type.
+class SupportAgent extends Agent<{ userId: string; ticketId: string }> {
   static model = "gpt-4.1";
   static instructions = "You are a helpful support agent.";
   static tools = [LookupOrderTool];
@@ -197,8 +197,8 @@ await session.ask("Where is my order #789?");
 console.log(session.id); // "sess_abc123" - save this!
 
 // Resume later (even after code upgrades)
-const session = await loadAgentSession(prisma, llm, SupportAgent, "sess_abc123");
-await session.ask("Can you cancel it?");
+const resumed = await loadAgentSession(prisma, llm, SupportAgent, "sess_abc123");
+await resumed?.ask("Can you cancel it?");
 ```
 
 ### Code Wins Principle
@@ -252,8 +252,8 @@ const chat = await createChat(prisma, llm, {
 });
 
 // Stream tokens in real-time
-for await (const token of chat.askStream("Tell me a story")) {
-  process.stdout.write(token); // Print each token immediately
+for await (const chunk of chat.askStream("Tell me a story")) {
+  process.stdout.write(chunk.content); // Print each token immediately
 }
 
 // Message is automatically persisted after streaming completes
@@ -302,10 +302,10 @@ const tableNames = {
 };
 
 // Create chat with custom table names
-const chat = await createChat(prisma, llm, { model: "gpt-4" }, tableNames);
+const chat = await createChat(prisma, llm, { model: "gpt-4", tableNames });
 
 // Load chat (must use same table names)
-const loaded = await loadChat(prisma, llm, chatId, tableNames);
+const loaded = await loadChat(prisma, llm, chatId, { tableNames });
 ```
 
 **Note**: Your Prisma schema model names must match the table names you specify. For example:

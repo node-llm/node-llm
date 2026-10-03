@@ -70,7 +70,15 @@ You can also provide a raw JSON schema object if you prefer not to use Zod.
 
 **Note for OpenAI:** By default, `NodeLLM` uses OpenAI's "Strict Mode" (which sets `strict: true` and `additionalProperties: false` in the schema). 
 
-You can configure this by setting the `strict` property to `false` in the [Schema constructor](/core-features/models.html#schema).
+To turn it off, build the schema with `strict: false` and pass it to `withSchema()`:
+
+```ts
+import { Schema } from "@node-llm/core";
+
+chat.withSchema(Schema.fromJson("person", schema, { strict: false }));
+```
+
+`Schema.fromZod(name, zodSchema, { strict: false })` does the same for a Zod schema.
 
 ```ts
 // OpenAI 100% Strict Mode enabled automatically
@@ -155,12 +163,11 @@ import { NodeLLM, SchemaSelfCorrection, z } from "@node-llm/core";
 const schema = z.object({ age: z.number() });
 
 const chat = NodeLLM.chat("claude-sonnet-5", {
-  schema,
   // Add the self-correction middleware
   middlewares: [
     SchemaSelfCorrection({ maxRetries: 2 })
   ]
-});
+}).withSchema(schema); // withSchema() types response.data from the schema
 
 // If Claude returns { "age": "30" } (string), the middleware 
 // will automatically re-prompt: "Error: Expected number, received string at 'age'. Please fix."

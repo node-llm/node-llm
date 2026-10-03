@@ -37,7 +37,7 @@ export interface NodeLLMConfig {
   maxRetries?: number;
   requestTimeout?: number;
   maxTokens?: number;
-  toolExecution?: ToolExecutionMode;
+  toolExecution?: ToolExecutionModeInput;
   /**
    * When true, independent tool calls returned in the same turn are executed
    * concurrently instead of one at a time. Opt-in, overridable per-chat via
@@ -64,7 +64,8 @@ import {
   DEFAULT_MISTRAL_BASE_URL,
   DEFAULT_TYPESAFE_BASE_URL,
   DEFAULT_BEDROCK_REGION,
-  ToolExecutionMode
+  ToolExecutionMode,
+  ToolExecutionModeInput
 } from "./constants.js";
 
 export class Configuration implements NodeLLMConfig {

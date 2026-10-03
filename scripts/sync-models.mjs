@@ -510,15 +510,18 @@ You can access this data programmatically using the registry:
 \`\`\`ts
 import { NodeLLM } from "@node-llm/core";
 
-// Get metadata for a specific model
-const model = await NodeLLM.model("gpt-4o");
+// Look up a model in the bundled registry (no network call)
+const model = NodeLLM.models.find("gpt-4o");
 
-console.log(model.context_window); // 128000
-console.log(model.pricing.text_tokens.standard.input_per_million); // 2.5
-console.log(model.capabilities); // ["vision", "function_calling", ...]
+console.log(model?.context_window); // 128000
+console.log(model?.pricing?.text_tokens?.standard?.input_per_million); // 2.5
+console.log(model?.capabilities); // ["streaming", "chat", "vision", ...]
 
-// Get all models in the registry
-const allModels = await NodeLLM.listModels();
+// Every model in the registry
+const allModels = NodeLLM.models.all();
+
+// The models your configured provider serves right now (a live API call)
+const liveModels = await NodeLLM.listModels();
 \`\`\`
 
 ---

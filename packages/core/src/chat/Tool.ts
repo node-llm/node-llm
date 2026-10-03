@@ -18,7 +18,10 @@ export interface ToolDefinition {
     strict?: boolean;
     parameters: Record<string, unknown>;
   };
-  handler?: (args: unknown) => Promise<string | ToolHalt>;
+  // Arguments are parsed from the model's JSON; `any` lets a handler declare
+  // their shape, which `unknown` rejected.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  handler?: (args: any) => Promise<string | ToolHalt>;
 }
 
 /**
@@ -27,8 +30,8 @@ export interface ToolDefinition {
  *
  * @example
  * ```typescript
- * class PaymentTool extends Tool {
- *   async execute({ amount }) {
+ * class PaymentTool extends Tool<{ amount: number }> {
+ *   async execute({ amount }: { amount: number }) {
  *     if (amount > 10000) {
  *       return this.halt("Payment requires manager approval. Please contact support.");
  *     }
@@ -56,8 +59,30 @@ export type ToolResolvable = Tool | { new (): Tool } | ToolDefinition;
 
 /**
  * Subclass this to create tools with auto-generated schemas and type safety.
+ *
+ * Pass the argument type for a fully typed `execute`:
+ *
+ * ```typescript
+ * const schema = z.object({ location: z.string() });
+ *
+ * class WeatherTool extends Tool<z.infer<typeof schema>> {
+ *   name = "get_weather";
+ *   description = "Get the current weather for a location";
+ *   schema = schema;
+ *
+ *   async execute({ location }: z.infer<typeof schema>) {
+ *     return `Sunny in ${location}`;
+ *   }
+ * }
+ * ```
+ *
+ * Without it, the arguments default to `Record<string, any>`, so a subclass can
+ * declare `execute` with its own argument shape. (With `Record<string, unknown>`
+ * an `execute({ location })` override was not assignable to the base method,
+ * and the class was then rejected by `withTool`.)
  */
-export abstract class Tool<T = Record<string, unknown>> {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- see the note above
+export abstract class Tool<T = Record<string, any>> {
   /**
    * The name of the tool (must match [a-zA-Z0-9_-]+).
    */
@@ -92,7 +117,7 @@ export abstract class Tool<T = Record<string, unknown>> {
    *
    * @example
    * ```typescript
-   * async execute({ amount }) {
+   * async execute({ amount }: { amount: number }) {
    *   if (amount > 10000) {
    *     return this.halt("Payment requires manager approval.");
    *   }

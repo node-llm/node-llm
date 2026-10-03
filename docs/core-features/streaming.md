@@ -66,6 +66,7 @@ for await (const chunk of chat.stream("Hello")) {
 ---
 
 ## Streaming with Tools <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v1.2.0+</span>
+{: #streaming-with-tools }
 
 Tools now work seamlessly with streaming! When a model decides to call a tool during streaming, `NodeLLM` automatically:
 
@@ -83,7 +84,7 @@ class WeatherTool extends Tool {
     location: z.string().describe("The city e.g. Paris")
   });
 
-  async execute({ location }) {
+  async execute({ location }: { location: string }) {
     return { location, temp: 22, condition: "sunny" };
   }
 }

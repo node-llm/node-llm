@@ -1,4 +1,4 @@
-import { ToolExecutionMode } from "../constants.js";
+import { ToolExecutionMode, ToolExecutionModeInput } from "../constants.js";
 import { ToolError } from "../errors/index.js";
 import { ToolCall, ToolDefinition, ToolHalt } from "./Tool.js";
 
@@ -13,7 +13,10 @@ export interface ToolExecutionResult {
 }
 
 export class ToolHandler {
-  static shouldExecuteTools(toolCalls: ToolCall[] | undefined, mode?: ToolExecutionMode): boolean {
+  static shouldExecuteTools(
+    toolCalls: ToolCall[] | undefined,
+    mode?: ToolExecutionModeInput
+  ): boolean {
     if (!toolCalls || toolCalls.length === 0) return false;
     if (mode === ToolExecutionMode.DRY_RUN) return false;
     return true;

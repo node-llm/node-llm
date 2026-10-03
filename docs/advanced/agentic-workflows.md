@@ -37,7 +37,7 @@ class MathTutor extends Tool {
   description = "Explains math concepts";
   schema = z.object({ question: z.string() });
 
-  async execute({ question }) {
+  async execute({ question }: { question: string }) {
     const response = await createLLM({ provider: "openai" })
       .chat("gpt-5")
       .system("You are a math tutor. Explain concepts clearly.")
@@ -91,7 +91,7 @@ async function reviewCode(code: string) {
   // Parallel specialist reviews
   const [security, performance] = await Promise.all([
     createLLM({ provider: "anthropic" })
-      .chat("claude-sonnet-4-20250514")
+      .chat("claude-sonnet-5")
       .system("Security review. List vulnerabilities.")
       .ask(code),
     createLLM({ provider: "openai" })
@@ -112,11 +112,17 @@ async function reviewCode(code: string) {
 
 ## Error Handling in Agents
 
-Agents should handle failures gracefully. See the [Tools guide](../core-features/tools.html#error-handling--flow-control-) for details.
+Agents should handle failures gracefully. See the [Tools guide](../core-features/tools.html#error-handling--flow-control) for details.
 
 ```typescript
-class RiskyTool extends Tool {
-  async execute(args) {
+import { Tool, ToolError, z } from "@node-llm/core";
+
+class RiskyTool extends Tool<{ query: string }> {
+  name = "risky_query";
+  description = "Run a query against the data store";
+  schema = z.object({ query: z.string() });
+
+  async execute(args: { query: string }) {
     // Recoverable: return error for LLM to retry
     if (!args.query) {
       return { error: "Query is required" };
@@ -127,7 +133,7 @@ class RiskyTool extends Tool {
       throw new ToolError("Blocked dangerous query", this.name, true);
     }
 
-    return await this.doWork(args);
+    return await runQuery(args.query);
   }
 }
 ```

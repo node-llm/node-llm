@@ -126,12 +126,12 @@ Define a tool once with the class-based DSL; NodeLLM runs the recursive executio
 ```ts
 import { Tool, z } from "@node-llm/core";
 
-class WeatherTool extends Tool {
+class WeatherTool extends Tool<{ loc: string }> {
   name = "get_weather";
   description = "Get current weather";
   schema = z.object({ loc: z.string() });
 
-  async handler({ loc }) {
+  async execute({ loc }: { loc: string }) {
     return `Sunny in ${loc}`;
   }
 }
@@ -183,19 +183,18 @@ await chat.withThinking({ budget: 16000 }).ask("Develop a strategy");
 No more flaky, expensive AI tests. Record real interactions once with **VCR cassettes**, replay them forever; mock tool-calling flows with the **fluent mocker** — powered by [@node-llm/testing](/core-features/testing).
 
 ```ts
-import { vcr, Mocker } from "@node-llm/testing";
+import { withVCR, Mocker } from "@node-llm/testing";
 
 // Integration tests: record once, replay deterministically
-await vcr.useCassette("pricing_flow", async () => {
+it("quotes the price", withVCR("pricing_flow", async () => {
   const res = await chat.ask("How much?");
   expect(res.content).toContain("$20/mo");
-});
+}));
 
 // Unit tests: no network at all
 const mock = new Mocker()
   .chat("Next step?")
-  .respond("Login User")
-  .callsTool("getCurrentUser", { id: 1 });
+  .callsTool("getCurrentUser", { id: 1 }, "Login User");
 ```
 
 ### Multi-provider parallelism

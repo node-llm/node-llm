@@ -120,7 +120,7 @@ describe("core-features-agents", () => {
         static instructions = "System prompt";
         static tools = [TestTool];
         static temperature = 0.5;
-        static thinking = true;
+        static thinking = { effort: "high" } as const;
         static schema = TestSchema;
       }
 
@@ -128,7 +128,7 @@ describe("core-features-agents", () => {
       expect(FullAgent.instructions).toBe("System prompt");
       expect(FullAgent.tools).toContain(TestTool);
       expect(FullAgent.temperature).toBe(0.5);
-      expect(FullAgent.thinking).toBe(true);
+      expect(FullAgent.thinking).toEqual({ effort: "high" });
       expect(FullAgent.schema).toBe(TestSchema);
     });
   });

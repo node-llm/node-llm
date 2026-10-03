@@ -105,7 +105,9 @@ const llm = createLLM({
   bedrockApiKey: process.env.AWS_BEARER_TOKEN_BEDROCK,
   bedrockRegion: "us-east-1"
 });
+```
 
+```typescript
 // Option B: SigV4 credentials (Access Key / Secret / optional Session Token)
 const llm = createLLM({
   provider: "bedrock",
@@ -128,17 +130,21 @@ Prevent runaway costs, infinite loops, and hanging requests by setting execution
 ```typescript
 const llm = createLLM({
   maxToolCalls: 5, // Stop after 5 sequential tool execution turns
-  maxCorrections: 5, // Stop after 5 middleware-driven self-correction retries
   maxRetries: 2, // Retry network/server errors 2 times
   requestTimeout: 30000, // Timeout requests after 30 seconds (default)
   maxTokens: 4096 // Limit output to 4K tokens (default)
+});
+
+// maxCorrections is set per chat, not on createLLM
+const chat = llm.chat("gpt-5", {
+  maxCorrections: 5 // Stop after 5 middleware-driven self-correction retries
 });
 ```
 
 **Security Benefits:**
 
 - **`maxToolCalls`**: Prevents infinite tool execution loops
-- **`maxCorrections`**: Caps middleware-driven `RETRY` loops (e.g. schema self-correction) so a misbehaving middleware can't retry — and bill — indefinitely
+- **`maxCorrections`** (per chat): Caps middleware-driven `RETRY` loops (e.g. schema self-correction) so a misbehaving middleware can't retry — and bill — indefinitely
 - **`maxRetries`**: Prevents retry storms that could exhaust resources. Retries use exponential backoff with jitter and honor a provider's `Retry-After` header
 - **`requestTimeout`**: Prevents hanging requests and DoS attacks
 - **`maxTokens`**: Prevents excessive output generation and cost overruns

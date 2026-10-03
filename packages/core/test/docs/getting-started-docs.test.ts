@@ -127,11 +127,11 @@ describe("getting-started-overview", () => {
     });
 
     it("Direct Configuration Object pattern", () => {
-      // Per docs: NodeLLM.chat("gpt-4o", { instructions: "...", temperature: 0.7, ... })
+      // Per docs: NodeLLM.chat("gpt-4o", { systemPrompt: "...", temperature: 0.7, ... })
       const llm = createLLM({ provider: "fake" });
 
       const chat = llm.chat("fake-model", {
-        instructions: "You are a helpful assistant",
+        systemPrompt: "You are a helpful assistant",
         temperature: 0.7,
         maxTokens: 500
       });

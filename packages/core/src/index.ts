@@ -23,7 +23,7 @@ export type {
 } from "./judge/Question.js";
 export { Judgment, ProbabilityAnswer, ChoiceAnswer, ScoreAnswer } from "./judge/Judgment.js";
 export type { Answer, AnswerFor, AnswersOf, JudgmentResult } from "./judge/Judgment.js";
-export type { AgentConfig } from "./agent/Agent.js";
+export type { AgentConfig, DefinedAgent } from "./agent/Agent.js";
 export type { Middleware, MiddlewareContext } from "./types/Middleware.js";
 export * from "./middlewares/index.js";
 
@@ -72,6 +72,7 @@ export {
 } from "./providers/Provider.js";
 export { resolveModelAlias } from "./model_aliases.js";
 export { default as MODEL_ALIASES } from "./aliases.js";
+export type { ToolExecutionModeInput } from "./constants.js";
 export {
   ToolExecutionMode,
   DEFAULT_MAX_TOOL_CALLS,

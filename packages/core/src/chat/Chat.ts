@@ -19,13 +19,17 @@ import { Executor } from "../executor/Executor.js";
 import { ChatStream } from "./ChatStream.js";
 import { Stream } from "../streaming/Stream.js";
 import { ModelRegistry } from "../models/ModelRegistry.js";
-import { ToolDefinition, ToolResolvable } from "./Tool.js";
+import { ToolDefinition, ToolResolvable, ToolCall } from "./Tool.js";
 import { Schema } from "../schema/Schema.js";
 import { toJsonSchema } from "../schema/to-json-schema.js";
 import { randomUUID } from "node:crypto";
 import { z } from "zod";
 import { config } from "../config.js";
-import { ToolExecutionMode, DEFAULT_MAX_CORRECTIONS } from "../constants.js";
+import {
+  ToolExecutionMode,
+  ToolExecutionModeInput,
+  DEFAULT_MAX_CORRECTIONS
+} from "../constants.js";
 import { ConfigurationError } from "../errors/index.js";
 import { ChatValidator } from "./Validation.js";
 import { ToolHandler } from "./ToolHandler.js";
@@ -77,6 +81,22 @@ export class Chat<S = unknown> {
   ) {
     this.middlewares = options.middlewares || [];
     this.executor = new Executor(provider, retryConfig);
+
+    // A Zod object or plain JSON Schema passed as the `schema` option was stored
+    // as-is, and the request builders then read `.definition` off it and
+    // crashed. Convert those the way withSchema() does. Anything already shaped
+    // like a Schema - an instance, or an object carrying `definition` - is left
+    // exactly as it was.
+    const rawSchema = options.schema as unknown;
+    if (
+      rawSchema instanceof z.ZodType ||
+      (rawSchema &&
+        typeof rawSchema === "object" &&
+        !(rawSchema instanceof Schema) &&
+        !("definition" in rawSchema))
+    ) {
+      this.withSchema(rawSchema as Record<string, unknown>);
+    }
 
     if (options.systemPrompt) {
       this.withInstructions(options.systemPrompt);
@@ -335,10 +355,17 @@ export class Chat<S = unknown> {
    * Enforce a specific schema for the output.
    * Can accept a Schema object or a Zod schema/JSON Schema directly.
    */
+  // A Zod schema gets its own overload so the response type is inferred from
+  // it; in the single union signature, a Zod object also matched the
+  // Record<string, unknown> branch and T fell back to unknown. The second
+  // overload is the original signature, so every call that compiled before
+  // still does - including one passing a value typed as the whole union.
+  withSchema<T>(schema: z.ZodType<T>): Chat<T>;
+  withSchema<T = unknown>(schema: Schema | z.ZodType<T> | Record<string, unknown> | null): Chat<T>;
   withSchema<T>(schema: Schema | z.ZodType<T> | Record<string, unknown> | null): Chat<T> {
     if (schema === null) {
       this.options.schema = undefined;
-      return this as unknown as Chat<unknown>;
+      return this as unknown as Chat<T>;
     }
 
     if (schema instanceof Schema) {
@@ -391,7 +418,7 @@ export class Chat<S = unknown> {
     return this;
   }
 
-  onToolCall(handler: (toolCall: unknown) => void): this {
+  onToolCall(handler: (toolCall: ToolCall) => void): this {
     return this.onToolCallStart(handler);
   }
 
@@ -403,7 +430,7 @@ export class Chat<S = unknown> {
    * Called when a tool call starts. Calling this more than once registers
    * additional handlers rather than replacing the previous one.
    */
-  onToolCallStart(handler: (toolCall: unknown) => void): this {
+  onToolCallStart(handler: (toolCall: ToolCall) => void): this {
     this.options.onToolCallStartHandlers = [
       ...(this.options.onToolCallStartHandlers ?? []),
       handler
@@ -415,14 +442,14 @@ export class Chat<S = unknown> {
    * Called when a tool call ends successfully. Calling this more than once
    * registers additional handlers rather than replacing the previous one.
    */
-  onToolCallEnd(handler: (toolCall: unknown, result: unknown) => void): this {
+  onToolCallEnd(handler: (toolCall: ToolCall, result: unknown) => void): this {
     this.options.onToolCallEndHandlers = [...(this.options.onToolCallEndHandlers ?? []), handler];
     return this;
   }
 
   onToolCallError(
     handler: (
-      toolCall: unknown,
+      toolCall: ToolCall,
       error: Error
     ) => "STOP" | "CONTINUE" | "RETRY" | void | Promise<"STOP" | "CONTINUE" | "RETRY" | void>
   ): this {
@@ -439,7 +466,7 @@ export class Chat<S = unknown> {
    * - "confirm": Call onConfirmToolCall before executing each tool.
    * - "dry-run": Propose tool calls but do not execute them.
    */
-  withToolExecution(mode: ToolExecutionMode): this {
+  withToolExecution(mode: ToolExecutionModeInput): this {
     this.options.toolExecution = mode;
     return this;
   }
@@ -459,7 +486,7 @@ export class Chat<S = unknown> {
    * Return true to proceed, false to cancel the specific call. When multiple
    * handlers are registered, every one of them must approve.
    */
-  onConfirmToolCall(handler: (toolCall: unknown) => Promise<boolean> | boolean): this {
+  onConfirmToolCall(handler: (toolCall: ToolCall) => Promise<boolean> | boolean): this {
     this.options.onConfirmToolCallHandlers = [
       ...(this.options.onConfirmToolCallHandlers ?? []),
       handler
@@ -498,7 +525,12 @@ export class Chat<S = unknown> {
   /**
    * Ask the model a question
    */
-  async ask(content: string | ContentPart[], options?: AskOptions): Promise<ChatResponseString> {
+  // Typed by the chat's schema: response.data is the schema's type after
+  // withSchema(), and unknown (as before) when no schema is set.
+  async ask(
+    content: string | ContentPart[],
+    options?: AskOptions
+  ): Promise<ChatResponseString & { data: S }> {
     const requestId = randomUUID();
     const state: Record<string, unknown> = {};
 
@@ -592,14 +624,14 @@ export class Chat<S = unknown> {
       this.options.onConfirmToolCallHandlers
     );
     const combinedToolCallStart = toolCallStartHandlers.length
-      ? (call: unknown) => toolCallStartHandlers.forEach((handler) => handler(call))
+      ? (call: ToolCall) => toolCallStartHandlers.forEach((handler) => handler(call))
       : undefined;
     const combinedToolCallEnd = toolCallEndHandlers.length
-      ? (call: unknown, result: unknown) =>
+      ? (call: ToolCall, result: unknown) =>
           toolCallEndHandlers.forEach((handler) => handler(call, result))
       : undefined;
     const combinedConfirmToolCall = confirmToolCallHandlers.length
-      ? (call: unknown) => runConfirmHandlers(confirmToolCallHandlers, call)
+      ? (call: ToolCall) => runConfirmHandlers(confirmToolCallHandlers, call)
       : undefined;
 
     try {
@@ -920,7 +952,7 @@ export class Chat<S = unknown> {
             continue;
           }
           if (requestDirective.action === "REPLACE") {
-            return requestDirective.response as ChatResponseString;
+            return requestDirective.response as ChatResponseString & { data: S };
           }
         }
 

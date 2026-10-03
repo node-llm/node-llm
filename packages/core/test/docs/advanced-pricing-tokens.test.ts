@@ -107,10 +107,8 @@ describe("advanced-token-usage", () => {
       const llm = createLLM({ provider: "fake" });
       const response = await llm.chat("fake-model").ask("Hello!");
 
-      // FakeProvider may not return usage, but the property should exist
-      expect("input_tokens" in response || response.input_tokens === undefined).toBe(
-        true
-      );
+      // The usage accessors exist on every response, whatever the provider reports.
+      expect(typeof response.input_tokens).toBe("number");
     });
 
     it("response contains inputTokens (camelCase alias)", async () => {
@@ -118,10 +116,8 @@ describe("advanced-token-usage", () => {
       const llm = createLLM({ provider: "fake" });
       const response = await llm.chat("fake-model").ask("Hello!");
 
-      // camelCase alias should be available
-      expect("inputTokens" in response || response.inputTokens === undefined).toBe(
-        true
-      );
+      // camelCase alias should be available and agree with snake_case
+      expect(response.inputTokens).toBe(response.input_tokens);
     });
 
     it("response contains meta object", async () => {
