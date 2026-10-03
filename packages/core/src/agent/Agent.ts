@@ -2,7 +2,7 @@ import { z } from "zod";
 import { Chat, AskOptions } from "../chat/Chat.js";
 import { ChatOptions } from "../chat/ChatOptions.js";
 import { ChatResponseString } from "../chat/ChatResponse.js";
-import { ToolResolvable } from "../chat/Tool.js";
+import { ToolResolvable, ToolCall } from "../chat/Tool.js";
 import { ThinkingConfig, ThinkingResult } from "../providers/Provider.js";
 import { Schema } from "../schema/Schema.js";
 import { NodeLLM, NodeLLMCore } from "../llm.js";
@@ -106,15 +106,15 @@ export abstract class Agent<
     // Override in subclass
   }
 
-  static onToolStart(_toolCall: unknown): void | Promise<void> {
+  static onToolStart(_toolCall: ToolCall): void | Promise<void> {
     // Override in subclass
   }
 
-  static onToolEnd(_toolCall: unknown, _result: unknown): void | Promise<void> {
+  static onToolEnd(_toolCall: ToolCall, _result: unknown): void | Promise<void> {
     // Override in subclass
   }
 
-  static onToolError(_toolCall: unknown, _error: Error): void | Promise<void> {
+  static onToolError(_toolCall: ToolCall, _error: Error): void | Promise<void> {
     // Override in subclass
   }
 
@@ -131,7 +131,7 @@ export abstract class Agent<
     this: new (overrides?: Partial<AgentConfig<I> & ChatOptions>) => Agent<I, S>,
     message: string,
     options?: AskOptions & { inputs?: I }
-  ): Promise<ChatResponseString> {
+  ): Promise<ChatResponseString & { data: S }> {
     const agent = new this({ ...options });
     return agent.ask(message, options);
   }
@@ -302,17 +302,21 @@ export abstract class Agent<
   /**
    * Send a message to the agent and get a response.
    */
-  async ask(message: string, options?: AskOptions & { inputs?: I }): Promise<ChatResponseString> {
+  // Typed by the agent's schema type S, as Chat#ask is by its schema.
+  async ask(
+    message: string,
+    options?: AskOptions & { inputs?: I }
+  ): Promise<ChatResponseString & { data: S }> {
     if (options?.inputs) {
       this.resolveLazyConfig(options.inputs);
     }
-    return this.chat.ask(message, options);
+    return this.chat.ask(message, options) as Promise<ChatResponseString & { data: S }>;
   }
 
   /**
    * Hook called when a tool call starts.
    */
-  onToolCallStart(handler: (toolCall: unknown) => void | Promise<void>): this {
+  onToolCallStart(handler: (toolCall: ToolCall) => void | Promise<void>): this {
     this.chat.onToolCallStart(handler);
     return this;
   }
@@ -320,7 +324,7 @@ export abstract class Agent<
   /**
    * Hook called when a tool call ends.
    */
-  onToolCallEnd(handler: (toolCall: unknown, result: unknown) => void | Promise<void>): this {
+  onToolCallEnd(handler: (toolCall: ToolCall, result: unknown) => void | Promise<void>): this {
     this.chat.onToolCallEnd(handler);
     return this;
   }
@@ -330,7 +334,7 @@ export abstract class Agent<
    */
   onToolCallError(
     handler: (
-      toolCall: unknown,
+      toolCall: ToolCall,
       error: Error
     ) => "STOP" | "CONTINUE" | "RETRY" | void | Promise<"STOP" | "CONTINUE" | "RETRY" | void>
   ): this {
@@ -359,7 +363,10 @@ export abstract class Agent<
   /**
    * Alias for ask()
    */
-  async say(message: string, options?: AskOptions & { inputs?: I }): Promise<ChatResponseString> {
+  async say(
+    message: string,
+    options?: AskOptions & { inputs?: I }
+  ): Promise<ChatResponseString & { data: S }> {
     return this.ask(message, options);
   }
 
@@ -405,10 +412,23 @@ export abstract class Agent<
 /**
  * Helper function to define an agent inline without creating a class.
  */
+/**
+ * The class defineAgent returns: constructible like any agent, and carrying the
+ * static configuration and one-liner API (`model`, `instructions`, `ask`,
+ * `stream`, ...) that a hand-written subclass has. Previously only the
+ * constructor was typed, so `MyAgent.ask(...)` did not compile.
+ */
+export type DefinedAgent<
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- matches Agent's own constraint
+  I extends Record<string, any> = Record<string, any>,
+  S extends Record<string, unknown> = Record<string, unknown>
+> = (new (overrides?: Partial<AgentConfig<I> & ChatOptions>) => Agent<I, S>) &
+  Omit<typeof Agent, "prototype">;
+
 export function defineAgent<
   I extends Record<string, any> = Record<string, any>,
   S extends Record<string, unknown> = Record<string, unknown>
->(config: AgentConfig<I>): new (overrides?: Partial<AgentConfig<I> & ChatOptions>) => Agent<I, S> {
+>(config: AgentConfig<I>): DefinedAgent<I, S> {
   return class extends Agent<I, S> {
     static override model = config.model;
     static override provider = config.provider;

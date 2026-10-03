@@ -245,6 +245,8 @@ export class NodeLLMCore {
       language?: string;
       speakerNames?: string[];
       speakerReferences?: string[];
+      /** Word and/or segment timestamps, where the provider supports them. */
+      timestamp_granularities?: ("word" | "segment")[];
       assumeModelExists?: boolean;
       requestTimeout?: number;
       middlewares?: Middleware[];

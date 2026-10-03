@@ -139,14 +139,14 @@ export class ChatStream {
         options.onConfirmToolCallHandlers
       );
       const combinedToolCallStart = toolCallStartHandlers.length
-        ? (call: unknown) => toolCallStartHandlers.forEach((handler) => handler(call))
+        ? (call: ToolCall) => toolCallStartHandlers.forEach((handler) => handler(call))
         : undefined;
       const combinedToolCallEnd = toolCallEndHandlers.length
-        ? (call: unknown, result: unknown) =>
+        ? (call: ToolCall, result: unknown) =>
             toolCallEndHandlers.forEach((handler) => handler(call, result))
         : undefined;
       const combinedConfirmToolCall = confirmToolCallHandlers.length
-        ? (call: unknown) => runConfirmHandlers(confirmToolCallHandlers, call)
+        ? (call: ToolCall) => runConfirmHandlers(confirmToolCallHandlers, call)
         : undefined;
 
       // Process Multimodal Content

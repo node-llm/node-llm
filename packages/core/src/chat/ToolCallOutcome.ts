@@ -1,5 +1,5 @@
 import { ToolCall, ToolDefinition } from "./Tool.js";
-import { ToolExecutionMode } from "../constants.js";
+import { ToolExecutionMode, ToolExecutionModeInput } from "../constants.js";
 import { ToolHandler, ToolExecutionResult } from "./ToolHandler.js";
 import { Middleware, MiddlewareContext } from "../types/Middleware.js";
 import { runMiddleware } from "../utils/middleware-runner.js";
@@ -11,10 +11,10 @@ export type ToolCallOutcome =
 
 export interface ToolCallExecutionOptions {
   tools?: ToolDefinition[];
-  toolExecution?: ToolExecutionMode;
-  onConfirmToolCall?: (toolCall: unknown) => Promise<boolean> | boolean;
-  onToolCallStart?: (toolCall: unknown) => void;
-  onToolCallEnd?: (toolCall: unknown, result: unknown) => void;
+  toolExecution?: ToolExecutionModeInput;
+  onConfirmToolCall?: (toolCall: ToolCall) => Promise<boolean> | boolean;
+  onToolCallStart?: (toolCall: ToolCall) => void;
+  onToolCallEnd?: (toolCall: ToolCall, result: unknown) => void;
 }
 
 /**
@@ -60,7 +60,7 @@ async function executeToolCallOutcome(
  */
 export function shouldRunToolCallsConcurrently(
   toolConcurrency: boolean | undefined,
-  toolExecution: ToolExecutionMode | undefined,
+  toolExecution: ToolExecutionModeInput | undefined,
   callCount: number
 ): boolean {
   return Boolean(toolConcurrency) && toolExecution !== ToolExecutionMode.CONFIRM && callCount > 1;

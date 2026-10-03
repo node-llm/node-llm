@@ -95,21 +95,29 @@ export class ModelRegistry {
   /**
    * Calculate cost for usage.
    */
-  static calculateCost(
-    usage: {
+  /**
+   * Returns the usage with `input_cost`, `output_cost` and `cost` added when the
+   * model has known pricing. Without pricing the usage comes back unchanged and
+   * the cost fields are undefined - declared on the return type either way, so
+   * callers can read `.cost` without a cast.
+   */
+  static calculateCost<
+    U extends {
       input_tokens: number;
       output_tokens: number;
       total_tokens: number;
       cached_tokens?: number;
       reasoning_tokens?: number;
       image_tokens?: number;
-    },
+    }
+  >(
+    usage: U,
     modelId: string,
     provider: string
-  ) {
+  ): U & { input_cost?: number; output_cost?: number; cost?: number } {
     const pricing = PricingRegistry.getPricing(modelId, provider);
     if (!pricing) {
-      return usage;
+      return usage as U & { input_cost?: number; output_cost?: number; cost?: number };
     }
 
     let inputCost = 0;
