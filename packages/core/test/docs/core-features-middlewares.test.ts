@@ -219,7 +219,7 @@ describe("core-features-middlewares", () => {
       const piiMiddleware: Middleware = {
         name: "PIIRedactor",
         onRequest: async (context) => {
-          context.messages.forEach(msg => {
+          context.messages?.forEach(msg => {
             if (typeof msg.content === "string") {
               msg.content = msg.content.replace(/\b\d{4}-\d{4}-\d{4}-\d{4}\b/g, "[REDACTED_CC]");
             }

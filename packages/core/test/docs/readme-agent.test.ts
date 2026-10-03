@@ -74,7 +74,8 @@ describe("README: ToolHalt", () => {
     const tool = new FinalAnswerTool();
     expect(tool.name).toBe("final_answer");
     expect(tool.description).toContain("final answer");
-    expect(typeof tool.halt).toBe("function");
+    // halt() is protected: callable from execute(), not from outside the tool.
+    expect(typeof (tool as unknown as { halt: unknown }).halt).toBe("function");
   });
 
   it("halt() returns a ToolHalt instance", async () => {

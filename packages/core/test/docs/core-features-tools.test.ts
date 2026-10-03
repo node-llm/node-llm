@@ -64,7 +64,7 @@ describe("core-features-tools", () => {
       expect(llmTool.function.name).toBe("get_weather");
       expect(llmTool.function.description).toBe("Get the current weather");
       expect(llmTool.function.parameters.type).toBe("object");
-      expect(llmTool.function.parameters.properties.location).toBeDefined();
+      expect((llmTool.function.parameters.properties as Record<string, unknown>).location).toBeDefined();
     });
 
     it("Tool execute() is callable", async () => {
@@ -326,7 +326,7 @@ describe("core-features-tools", () => {
       const llmTool = tool.toLLMTool();
 
       expect(llmTool.function.name).toBe("custom_lookup");
-      expect(llmTool.function.parameters.properties.sku).toBeDefined();
+      expect((llmTool.function.parameters.properties as Record<string, unknown>).sku).toBeDefined();
     });
   });
 
