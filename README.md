@@ -133,7 +133,9 @@ const llm = createLLM({
   anthropicApiKey: process.env.ANTHROPIC_API_KEY,
   ollamaApiBase: process.env.OLLAMA_API_BASE
 });
+```
 
+```ts
 // Support for Custom Endpoints (e.g., Azure or LocalAI)
 const llm = createLLM({
   openaiApiKey: process.env.AZURE_KEY,

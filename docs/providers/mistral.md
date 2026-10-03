@@ -73,14 +73,15 @@ const chat = llm.chat("mistral-large-latest").withParams({
 ## Vision Example
 
 ```ts
-import { createLLM, Content } from "@node-llm/core";
+import { createLLM } from "@node-llm/core";
 
 const llm = createLLM({ provider: "mistral" });
 
 const response = await llm
   .chat("pixtral-large-latest")
-  .say(Content.text("What's in this image?").image("https://example.com/photo.jpg"))
-  .then((r) => r.text);
+  .ask("What's in this image?", { files: ["https://example.com/photo.jpg"] });
+
+console.log(response.content);
 ```
 
 ---

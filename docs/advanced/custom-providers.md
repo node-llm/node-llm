@@ -42,6 +42,9 @@ To create a new provider, extend `BaseProvider` and implement the abstract metho
 import { NodeLLM, BaseProvider, ChatRequest, ChatResponse } from "@node-llm/core";
 
 class MyCustomProvider extends BaseProvider {
+  private apiKey: string;
+  private region: string;
+
   constructor(config: { apiKey: string; region: string }) {
     super();
     this.apiKey = config.apiKey;
@@ -281,7 +284,7 @@ PricingRegistry.register("my-custom-service", "my-model-v1", {
 });
 ```
 
-For more details on managing costs, see the [Model Pricing](./pricing.md) guide.
+For more details on managing costs, see the [Model Pricing](/advanced/pricing) guide.
 
 ## Deep Dive
 

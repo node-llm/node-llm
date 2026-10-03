@@ -162,8 +162,14 @@ When building tools, decide how errors should surface:
 If the LLM might fix the issue (e.g., bad parameters), return an error object:
 
 ```typescript
-class WeatherTool extends Tool {
-  async execute({ location }) {
+import { Tool, z } from "@node-llm/core";
+
+class WeatherTool extends Tool<{ location: string }> {
+  name = "get_weather";
+  description = "Get the current weather for a city";
+  schema = z.object({ location: z.string() });
+
+  async execute({ location }: { location: string }) {
     if (!location) {
       return { error: "Location is required. Please provide a city name." };
     }
@@ -177,10 +183,14 @@ class WeatherTool extends Tool {
 If the error is unrecoverable, throw it to stop the agent loop:
 
 ```typescript
-import { ToolError } from "@node-llm/core";
+import { Tool, ToolError, z } from "@node-llm/core";
 
-class DatabaseTool extends Tool {
-  async execute({ query }) {
+class DatabaseTool extends Tool<{ query: string }> {
+  name = "database";
+  description = "Run a read-only query";
+  schema = z.object({ query: z.string() });
+
+  async execute({ query }: { query: string }) {
     if (query.includes("DROP")) {
       throw new ToolError("Dangerous query blocked", "database", true);
     }
@@ -189,7 +199,7 @@ class DatabaseTool extends Tool {
 }
 ```
 
-See [Tool Error Handling](../core-features/tools.html#error-handling--flow-control-) for more patterns.
+See [Tool Error Handling](../core-features/tools.html#error-handling--flow-control) for more patterns.
 
 ---
 

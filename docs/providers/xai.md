@@ -159,7 +159,7 @@ class WeatherTool extends Tool {
   description = "Get the current weather for a city";
   schema = z.object({ city: z.string() });
 
-  async execute({ city }) {
+  async execute({ city }: { city: string }) {
     return `Sunny in ${city}`;
   }
 }
