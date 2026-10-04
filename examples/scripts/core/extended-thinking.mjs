@@ -2,7 +2,7 @@
  * Extended Thinking Example
  * 
  * Demonstrates how to use the "Extended Thinking" feature with models like
- * OpenAI o3-mini and Anthropic Claude 3.7.
+ * OpenAI o3-mini and Anthropic Claude Sonnet 5.
  */
 
 import { NodeLLM } from "../../../packages/core/dist/index.js";
@@ -29,15 +29,18 @@ async function main() {
   console.log("\n[Answer]");
   console.log(response.content);
 
-  console.log("\n--- Claude 4 with Thinking Budget ---");
+  console.log("\n--- Claude Sonnet 5 with Adaptive Thinking ---");
   
   const anthropic = NodeLLM.withProvider("anthropic", {
     anthropicApiKey: process.env.ANTHROPIC_API_KEY
   });
   
   try {
-    const claudeChat = anthropic.chat("claude-sonnet-4-20250514")
-      .withThinking({ budget: 2000 });
+    // Sonnet 5 thinks adaptively and does not accept a fixed budget, so pick
+    // an effort level instead. Its thinking text is hidden unless you ask for
+    // a summary.
+    const claudeChat = anthropic.chat("claude-sonnet-5")
+      .withThinking({ effort: "medium", display: "summarized" });
 
     const stream = claudeChat.stream("Analyze the security implications of using JWTs for session management.");
     

@@ -20,15 +20,25 @@ export interface ThinkingConfig {
   /**
    * Effort level for thinking-capable models.
    * 'low', 'medium', 'high' map to provider-specific qualitative settings.
+   * 'xhigh' and 'max' are accepted by newer models (e.g. Claude Opus 4.7+, Sonnet 5).
    * 'none' disables thinking if the model allows it.
    */
-  effort?: "low" | "medium" | "high" | "none";
+  effort?: ThinkingEffort;
 
   /**
    * Maximum budget (in tokens) dedicated to thinking.
+   * Not accepted by models that only think adaptively (e.g. Claude Opus 4.7+, Sonnet 5).
    */
   budget?: number;
+
+  /**
+   * How much thinking text the provider returns (Anthropic).
+   * Newer Claude models omit it by default; pass 'summarized' to read it.
+   */
+  display?: "summarized" | "omitted";
 }
+
+export type ThinkingEffort = "low" | "medium" | "high" | "xhigh" | "max" | "none";
 
 export interface ThinkingResult {
   /**

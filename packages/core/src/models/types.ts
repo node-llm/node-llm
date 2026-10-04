@@ -31,6 +31,18 @@ export interface ModelPricing {
   };
 }
 
+/**
+ * A thinking control a model accepts, as published by models.dev.
+ * e.g. { type: "effort", values: ["low", "high"] } or { type: "budget_tokens", min: 1024 }.
+ */
+export interface ReasoningOption {
+  type: "effort" | "budget_tokens" | "toggle" | (string & {});
+  values?: string[];
+  min?: number;
+  max?: number;
+  default?: string | number;
+}
+
 export interface Model {
   id: string;
   name: string;

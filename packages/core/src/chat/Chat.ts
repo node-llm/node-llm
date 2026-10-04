@@ -13,6 +13,7 @@ import {
   ChatChunk,
   ResponseFormat,
   ThinkingConfig,
+  ThinkingEffort,
   ToolChoice
 } from "../providers/Provider.js";
 import { Executor } from "../executor/Executor.js";
@@ -402,7 +403,7 @@ export class Chat<S = unknown> {
   /**
    * Shortcut to set thinking effort.
    */
-  withEffort(effort: "low" | "medium" | "high" | "none"): this {
+  withEffort(effort: ThinkingEffort): this {
     return this.withThinking({ effort });
   }
 
