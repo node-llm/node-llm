@@ -1,7 +1,7 @@
 import { ChatRequest, ChatChunk } from "../Provider.js";
 import { Capabilities } from "./Capabilities.js";
 import { handleAnthropicError } from "./Errors.js";
-import { formatSystemPrompt, formatMessages } from "./Utils.js";
+import { formatSystemPrompt, formatMessages, applyThinking } from "./Utils.js";
 import { AnthropicMessageRequest } from "./types.js";
 import { logger } from "../../utils/logger.js";
 import { fetchWithTimeout } from "../../utils/fetch.js";
@@ -68,15 +68,7 @@ export class AnthropicStreaming {
       }
     }
 
-    if (request.thinking?.budget) {
-      body.thinking = {
-        type: "enabled",
-        budget_tokens: request.thinking.budget
-      };
-      if (!request.max_tokens) {
-        body.max_tokens = Math.max(maxTokens, request.thinking.budget + 1024);
-      }
-    }
+    applyThinking(body, request.thinking, Boolean(request.max_tokens));
 
     // Check if any message contains PDF content to add beta header
     const hasPdf = messages.some(

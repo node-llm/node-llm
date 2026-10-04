@@ -252,7 +252,10 @@ async function syncModels() {
           },
           metadata: {
             source: "models.dev",
-            last_synced: new Date().toISOString()
+            last_synced: new Date().toISOString(),
+            // Which thinking controls the model takes (effort levels, budget_tokens,
+            // toggle). Providers read this to pick the request shape.
+            ...(details.reasoning_options ? { reasoning_options: details.reasoning_options } : {})
           }
         };
 

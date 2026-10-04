@@ -32,13 +32,13 @@ description: Access the inner thoughts and chain-of-thought process of advanced 
 You can control the reasoning behavior using the `.withThinking()` or `.withEffort()` methods. This is particularly useful for models like `o3` or `claude-sonnet-5`.
 
 ### Setting Effort Level
-Effort levels (low, medium, high) allow you to balance between speed/cost and reasoning depth. Pass `"none"` to explicitly disable thinking on models that support turning it off.
+Effort levels (low, medium, high) allow you to balance between speed/cost and reasoning depth. Newer models also accept `"xhigh"` and `"max"`. Pass `"none"` to explicitly disable thinking on models that support turning it off.
 
 ```ts
 import { NodeLLM } from "@node-llm/core";
 
 const chat = NodeLLM.chat("o3")
-  .withEffort("high"); // Options: "low", "medium", "high", "none"
+  .withEffort("high"); // Options: "low", "medium", "high", "xhigh", "max", "none"
 
 const response = await chat.ask("Solve this complex architecture problem...");
 ```
@@ -51,6 +51,26 @@ const response = await chat.ask("Solve this puzzle", {
   thinking: { budget: 16000 }
 });
 ```
+
+### Claude Models
+
+Claude generations take thinking settings in one of two ways, and `NodeLLM` picks the request shape from the model registry:
+
+- **Adaptive thinking** (Claude Opus 4.7 and later, Sonnet 5 and later, Fable): the model decides how much to think. Set an `effort`; these models reject a fixed `budget` with a 400 error.
+- **Budget thinking** (Sonnet 4.5, Haiku 4.5, Opus 4.5, Opus 4.6, Sonnet 4.6): set a `budget` in tokens. On these models `effort` alone is not sent; pass a `budget` with it.
+
+Newer Claude models hide their thinking text by default. Pass `display: "summarized"` to get a readable summary in `response.thinking.text`. Thinking is billed the same either way.
+
+```ts
+const chat = NodeLLM.chat("claude-sonnet-5")
+  .withThinking({ effort: "high", display: "summarized" });
+
+// Budget generations
+const older = NodeLLM.chat("claude-haiku-4-5")
+  .withThinking({ budget: 8000 });
+```
+
+Adaptive thinking may skip thinking on simple prompts, so `response.thinking` can be empty even when it is enabled. With a forced tool choice (`withToolChoice("required")` or a named tool), the thinking block is left out because Claude rejects the two together; the effort level is still sent.
 
 ---
 
@@ -105,6 +125,7 @@ Currently, the following models have enhanced reasoning support in `NodeLLM`:
 | :--------------------------------- | :-------- | :------------------------------------------------ |
 | `deepseek-reasoner`                | DeepSeek  | Full text extraction                              |
 | `o1-*`, `o3-*`                     | OpenAI    | Effort configuration & token tracking             |
-| `claude-sonnet-5`, `claude-opus-4-*`     | Anthropic | Budget-based thinking & full text extraction      |
+| `claude-sonnet-5`, `claude-opus-4-7`+    | Anthropic | Adaptive thinking with effort & summarized text   |
+| `claude-sonnet-4-5`, `claude-haiku-4-5`  | Anthropic | Budget-based thinking & full text extraction      |
 | `gemini-flash-thinking-*`      | Gemini    | Full thinking text extraction                     |
 | `magistral-*`                      | Mistral   | Always-on thinking & full text extraction         |

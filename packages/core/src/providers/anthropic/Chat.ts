@@ -6,7 +6,7 @@ import { handleAnthropicError } from "./Errors.js";
 import { ModelRegistry } from "../../models/ModelRegistry.js";
 import { logger } from "../../utils/logger.js";
 import { fetchWithTimeout } from "../../utils/fetch.js";
-import { formatSystemPrompt, formatMessages } from "./Utils.js";
+import { formatSystemPrompt, formatMessages, applyThinking } from "./Utils.js";
 import { DEFAULT_MAX_TOKENS } from "../../constants.js";
 
 export class AnthropicChat {
@@ -61,17 +61,6 @@ export class AnthropicChat {
       ...rest
     };
 
-    if (_thinking?.budget) {
-      body.thinking = {
-        type: "enabled",
-        budget_tokens: _thinking.budget
-      };
-      // Extended thinking models require a larger max_tokens
-      if (!request.max_tokens) {
-        body.max_tokens = Math.max(maxTokens, _thinking.budget + 1024);
-      }
-    }
-
     if (request.temperature !== undefined) {
       body.temperature = request.temperature;
     }
@@ -96,6 +85,8 @@ export class AnthropicChat {
         body.tool_choice = { type: "tool", name: request.tool_choice.function.name };
       }
     }
+
+    applyThinking(body, _thinking, Boolean(request.max_tokens));
 
     // Check if any message contains PDF content to add beta header
     const hasPdf = messages.some(

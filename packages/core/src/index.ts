@@ -51,6 +51,7 @@ export {
   ChatResponse,
   ChatChunk,
   ThinkingConfig,
+  ThinkingEffort,
   ThinkingResult,
   Usage,
   ImageRequest,

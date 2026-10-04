@@ -1,4 +1,4 @@
-import { Model } from "./types.js";
+import { Model, ReasoningOption } from "./types.js";
 import modelsData from "./models.json" with { type: "json" };
 import { PricingRegistry } from "./PricingRegistry.js";
 
@@ -55,6 +55,15 @@ export class ModelRegistry {
   static getMaxOutputTokens(modelId: string, provider: string): number | undefined {
     const model = this.find(modelId, provider);
     return model?.max_output_tokens ?? undefined;
+  }
+
+  /**
+   * Thinking controls the model accepts (effort, budget_tokens, toggle).
+   * Empty when the registry has no data for the model.
+   */
+  static getReasoningOptions(modelId: string, provider: string): ReasoningOption[] {
+    const options = this.find(modelId, provider)?.metadata?.reasoning_options;
+    return Array.isArray(options) ? (options as ReasoningOption[]) : [];
   }
 
   /**

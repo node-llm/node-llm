@@ -1,6 +1,8 @@
 import { Message } from "../../chat/Message.js";
 import { ContentPart } from "../../chat/Content.js";
-import { AnthropicMessage, AnthropicContentBlock } from "./types.js";
+import { ThinkingConfig } from "../Provider.js";
+import { ModelRegistry } from "../../models/ModelRegistry.js";
+import { AnthropicMessage, AnthropicContentBlock, AnthropicMessageRequest } from "./types.js";
 
 export function formatSystemPrompt(messages: Message[]): string | undefined {
   let systemPrompt: string | undefined;
@@ -140,4 +142,46 @@ function formatSingleMessage(msg: Message): AnthropicMessage {
     }
   }
   return { role, content: blocks };
+}
+
+/**
+ * Add the thinking fields for a ThinkingConfig to a request body.
+ * Call after tool_choice is set.
+ *
+ * - `budget` is sent as a fixed thinking budget, exactly as given.
+ * - On generations that only think adaptively (no budget option in the registry:
+ *   Opus 4.7+, Sonnet 5+, Fable), `effort` turns on adaptive thinking and is sent
+ *   as `output_config.effort`. Forced tool choice skips the thinking block, which
+ *   the API rejects alongside it.
+ * - On generations that take a budget, `effort` alone is not sent, so calls that
+ *   worked before keep the same request.
+ * - `display` is forwarded on the thinking block, and alone turns on adaptive thinking.
+ */
+export function applyThinking(
+  body: AnthropicMessageRequest,
+  thinking: ThinkingConfig | undefined,
+  maxTokensSet: boolean
+): void {
+  if (!thinking) return;
+
+  const options = ModelRegistry.getReasoningOptions(body.model, "anthropic");
+  const takesEffort = options.some((option) => option.type === "effort");
+  const adaptiveOnly = takesEffort && !options.some((option) => option.type === "budget_tokens");
+  const effort = thinking.effort && thinking.effort !== "none" ? thinking.effort : undefined;
+  const display = thinking.display ? { display: thinking.display } : {};
+  const forcedTool = body.tool_choice?.type === "any" || body.tool_choice?.type === "tool";
+
+  if (thinking.budget) {
+    body.thinking = { type: "enabled", budget_tokens: thinking.budget, ...display };
+    // Extended thinking models require a larger max_tokens
+    if (!maxTokensSet) {
+      body.max_tokens = Math.max(body.max_tokens, thinking.budget + 1024);
+    }
+  } else if (thinking.display || (effort && adaptiveOnly && !forcedTool)) {
+    body.thinking = { type: "adaptive", ...display };
+  }
+
+  if (effort && takesEffort && (thinking.budget || adaptiveOnly)) {
+    body.output_config = { ...body.output_config, effort };
+  }
 }

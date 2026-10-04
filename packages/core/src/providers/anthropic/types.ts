@@ -45,11 +45,17 @@ export interface AnthropicMessageRequest {
     input_schema?: Record<string, unknown>;
   }>;
   tool_choice?: { type: string; name?: string };
-  thinking?: {
-    type: "enabled" | "disabled";
-    budget_tokens: number;
+  thinking?: AnthropicThinking;
+  output_config?: {
+    effort?: string;
+    [key: string]: unknown;
   };
 }
+
+export type AnthropicThinking =
+  | { type: "enabled"; budget_tokens: number; display?: "summarized" | "omitted" }
+  | { type: "adaptive"; display?: "summarized" | "omitted" }
+  | { type: "disabled" };
 
 export interface AnthropicUsage {
   input_tokens: number;
