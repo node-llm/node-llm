@@ -13,31 +13,31 @@
 Integrating multiple LLM providers often means juggling different SDKs, API styles, and update cycles. NodeLLM gives you a single, unified API for over 540+ models across multiple providers (OpenAI, Gemini, Anthropic, DeepSeek, OpenRouter, xAI, Ollama, etc.) that stays consistent even when providers change.
 
 <p align="left">
-  <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/openai.svg" height="28" />
-  <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/openai-text.svg" height="22" />
+  <img src="https://cdn.jsdelivr.net/npm/@lobehub/icons-static-svg@1.95.1/icons/openai.svg" height="28" />
+  <img src="https://cdn.jsdelivr.net/npm/@lobehub/icons-static-svg@1.95.1/icons/openai-text.svg" height="22" />
   &nbsp;&nbsp;&nbsp;&nbsp;
-  <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/anthropic-text.svg" height="18" />
+  <img src="https://cdn.jsdelivr.net/npm/@lobehub/icons-static-svg@1.95.1/icons/anthropic-text.svg" height="18" />
   &nbsp;&nbsp;&nbsp;&nbsp;
-  <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/gemini-color.svg" height="28" />
-  <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/gemini-text.svg" height="20" />
+  <img src="https://cdn.jsdelivr.net/npm/@lobehub/icons-static-svg@1.95.1/icons/gemini-color.svg" height="28" />
+  <img src="https://cdn.jsdelivr.net/npm/@lobehub/icons-static-svg@1.95.1/icons/gemini-text.svg" height="20" />
   &nbsp;&nbsp;&nbsp;&nbsp;
-  <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/deepseek-color.svg" height="28" />
-  <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/deepseek-text.svg" height="20" />
+  <img src="https://cdn.jsdelivr.net/npm/@lobehub/icons-static-svg@1.95.1/icons/deepseek-color.svg" height="28" />
+  <img src="https://cdn.jsdelivr.net/npm/@lobehub/icons-static-svg@1.95.1/icons/deepseek-text.svg" height="20" />
   &nbsp;&nbsp;&nbsp;&nbsp;
-  <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/bedrock-color.svg" height="28" />
-  <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/bedrock-text.svg" height="20" />
+  <img src="https://cdn.jsdelivr.net/npm/@lobehub/icons-static-svg@1.95.1/icons/bedrock-color.svg" height="28" />
+  <img src="https://cdn.jsdelivr.net/npm/@lobehub/icons-static-svg@1.95.1/icons/bedrock-text.svg" height="20" />
   &nbsp;&nbsp;&nbsp;&nbsp;
-  <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/openrouter.svg" height="28" />
-  <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/openrouter-text.svg" height="22" />
+  <img src="https://cdn.jsdelivr.net/npm/@lobehub/icons-static-svg@1.95.1/icons/openrouter.svg" height="28" />
+  <img src="https://cdn.jsdelivr.net/npm/@lobehub/icons-static-svg@1.95.1/icons/openrouter-text.svg" height="22" />
   &nbsp;&nbsp;&nbsp;&nbsp;
-  <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/ollama.svg" height="28" />
-  <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/ollama-text.svg" height="18" />
+  <img src="https://cdn.jsdelivr.net/npm/@lobehub/icons-static-svg@1.95.1/icons/ollama.svg" height="28" />
+  <img src="https://cdn.jsdelivr.net/npm/@lobehub/icons-static-svg@1.95.1/icons/ollama-text.svg" height="18" />
   &nbsp;&nbsp;&nbsp;&nbsp;
-  <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/xai.svg" height="28" />
-  <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/xai-text.svg" height="18" />
+  <img src="https://cdn.jsdelivr.net/npm/@lobehub/icons-static-svg@1.95.1/icons/xai.svg" height="28" />
+  <img src="https://cdn.jsdelivr.net/npm/@lobehub/icons-static-svg@1.95.1/icons/xai-text.svg" height="18" />
   &nbsp;&nbsp;&nbsp;&nbsp;
-  <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/mistral-color.svg" height="28" />
-  <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/mistral-text.svg" height="20" />
+  <img src="https://cdn.jsdelivr.net/npm/@lobehub/icons-static-svg@1.95.1/icons/mistral-color.svg" height="28" />
+  <img src="https://cdn.jsdelivr.net/npm/@lobehub/icons-static-svg@1.95.1/icons/mistral-text.svg" height="20" />
   &nbsp;&nbsp;&nbsp;&nbsp;
   <img src="docs/assets/images/providers/typesafe.svg" height="26" alt="TypeSafe" />
   <b>TypeSafe</b>
@@ -332,18 +332,18 @@ Security is not an afterthought. NodeLLM includes a native **"Invisible Perimete
 
 ## 📋 Supported Providers
 
-| Provider                                                                                                                                                                                                                             | Supported Features                                                                               |
-| :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :----------------------------------------------------------------------------------------------- |
-| <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/openai.svg" height="18"> **OpenAI**                                                                                                            | Chat, **Streaming + Tools**, Vision, Audio, Images, Transcription, **Reasoning**                 |
-| <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/gemini-color.svg" height="18"> **Gemini**                                                                                                      | Chat, **Streaming + Tools**, Vision, Audio, Video, Embeddings                                    |
-| <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/anthropic-text.svg" height="12"> **Anthropic**                                                                                                 | Chat, **Streaming + Tools**, Vision, PDF, Structured Output                                      |
-| <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/deepseek-color.svg" height="18"> **DeepSeek**                                                                                                  | Chat (V3), **Reasoning (R1)**, **Streaming + Tools**                                             |
-| <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/aws.svg" height="18"> **AWS Bedrock**                                                                                                          | **Nova, Titan, Claude 3/3.5**, Streaming, Tools, Vision, Guardrails                              |
-| <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/openrouter.svg" height="18"> **OpenRouter**                                                                                                    | **Aggregator**, Chat, Streaming, Tools, Vision, Embeddings, **Reasoning**                        |
-| <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/xai.svg" height="18"> <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/xai-text.svg" height="12"> **xAI** | Chat, Streaming, Tools, Vision, Images, **Reasoning**                                            |
-| <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/ollama.svg" height="18"> **Ollama**                                                                                                            | **Local Inference**, Chat, Streaming, Tools, Vision, Embeddings                                  |
-| <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/mistral-color.svg" height="18"> **Mistral**                                                                                                    | Chat, Streaming, Tools, Vision, Embeddings, Transcription, Moderation, **Reasoning (Magistral)** |
-| <img src="docs/assets/images/providers/typesafe.svg" height="18"> **TypeSafe**                                                                                                                                                       | **Judgments**: typed probability, choice and score answers (Jev)                                 |
+| Provider                                                                                                                                                                                                             | Supported Features                                                                               |
+| :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :----------------------------------------------------------------------------------------------- |
+| <img src="https://cdn.jsdelivr.net/npm/@lobehub/icons-static-svg@1.95.1/icons/openai.svg" height="18"> **OpenAI**                                                                                                    | Chat, **Streaming + Tools**, Vision, Audio, Images, Transcription, **Reasoning**                 |
+| <img src="https://cdn.jsdelivr.net/npm/@lobehub/icons-static-svg@1.95.1/icons/gemini-color.svg" height="18"> **Gemini**                                                                                              | Chat, **Streaming + Tools**, Vision, Audio, Video, Embeddings                                    |
+| <img src="https://cdn.jsdelivr.net/npm/@lobehub/icons-static-svg@1.95.1/icons/anthropic-text.svg" height="12"> **Anthropic**                                                                                         | Chat, **Streaming + Tools**, Vision, PDF, Structured Output                                      |
+| <img src="https://cdn.jsdelivr.net/npm/@lobehub/icons-static-svg@1.95.1/icons/deepseek-color.svg" height="18"> **DeepSeek**                                                                                          | Chat (V3), **Reasoning (R1)**, **Streaming + Tools**                                             |
+| <img src="https://cdn.jsdelivr.net/npm/@lobehub/icons-static-svg@1.95.1/icons/aws.svg" height="18"> **AWS Bedrock**                                                                                                  | **Nova, Titan, Claude 3/3.5**, Streaming, Tools, Vision, Guardrails                              |
+| <img src="https://cdn.jsdelivr.net/npm/@lobehub/icons-static-svg@1.95.1/icons/openrouter.svg" height="18"> **OpenRouter**                                                                                            | **Aggregator**, Chat, Streaming, Tools, Vision, Embeddings, **Reasoning**                        |
+| <img src="https://cdn.jsdelivr.net/npm/@lobehub/icons-static-svg@1.95.1/icons/xai.svg" height="18"> <img src="https://cdn.jsdelivr.net/npm/@lobehub/icons-static-svg@1.95.1/icons/xai-text.svg" height="12"> **xAI** | Chat, Streaming, Tools, Vision, Images, **Reasoning**                                            |
+| <img src="https://cdn.jsdelivr.net/npm/@lobehub/icons-static-svg@1.95.1/icons/ollama.svg" height="18"> **Ollama**                                                                                                    | **Local Inference**, Chat, Streaming, Tools, Vision, Embeddings                                  |
+| <img src="https://cdn.jsdelivr.net/npm/@lobehub/icons-static-svg@1.95.1/icons/mistral-color.svg" height="18"> **Mistral**                                                                                            | Chat, Streaming, Tools, Vision, Embeddings, Transcription, Moderation, **Reasoning (Magistral)** |
+| <img src="docs/assets/images/providers/typesafe.svg" height="18"> **TypeSafe**                                                                                                                                       | **Judgments**: typed probability, choice and score answers (Jev)                                 |
 
 ---
 
