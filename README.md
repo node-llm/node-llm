@@ -24,6 +24,9 @@ Integrating multiple LLM providers often means juggling different SDKs, API styl
   <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/deepseek-color.svg" height="28" />
   <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/deepseek-text.svg" height="20" />
   &nbsp;&nbsp;&nbsp;&nbsp;
+  <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/bedrock-color.svg" height="28" />
+  <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/bedrock-text.svg" height="20" />
+  &nbsp;&nbsp;&nbsp;&nbsp;
   <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/openrouter.svg" height="28" />
   <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/openrouter-text.svg" height="22" />
   &nbsp;&nbsp;&nbsp;&nbsp;
@@ -340,6 +343,7 @@ Security is not an afterthought. NodeLLM includes a native **"Invisible Perimete
 | <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/xai.svg" height="18"> <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/xai-text.svg" height="12"> **xAI** | Chat, Streaming, Tools, Vision, Images, **Reasoning**                                            |
 | <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/ollama.svg" height="18"> **Ollama**                                                                                                            | **Local Inference**, Chat, Streaming, Tools, Vision, Embeddings                                  |
 | <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/latest/files/icons/mistral-color.svg" height="18"> **Mistral**                                                                                                    | Chat, Streaming, Tools, Vision, Embeddings, Transcription, Moderation, **Reasoning (Magistral)** |
+| <img src="docs/assets/images/providers/typesafe.svg" height="18"> **TypeSafe**                                                                                                                                                       | **Judgments**: typed probability, choice and score answers (Jev)                                 |
 
 ---
 
