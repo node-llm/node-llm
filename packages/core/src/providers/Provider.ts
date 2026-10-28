@@ -79,6 +79,8 @@ export interface ChatRequest {
   requestTimeout?: number;
   /** Cancels the request */
   signal?: AbortSignal;
+  /** Set only for providers that support prompt caching */
+  promptCache?: boolean;
   [key: string]: unknown;
 }
 
@@ -141,6 +143,7 @@ export interface ProviderCapabilities {
   supportsDeveloperRole(modelId: string): boolean;
   supportsPrediction?(modelId: string): boolean;
   supportsTemperature?(modelId: string): boolean;
+  supportsPromptCaching?(modelId: string): boolean;
   supportsToolChoice?(modelId: string): boolean;
   getContextWindow(modelId: string): number | null;
 }

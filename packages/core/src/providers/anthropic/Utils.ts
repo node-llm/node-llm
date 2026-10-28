@@ -209,6 +209,7 @@ export function buildMessageRequest(
     parallel_tool_calls: _parallel,
     requestTimeout: _timeout,
     signal: _signal,
+    promptCache,
     ...params
   } = request;
 
@@ -253,6 +254,12 @@ export function buildMessageRequest(
     } else if (typeof tool_choice === "object" && "function" in tool_choice) {
       body.tool_choice = { type: "tool", name: tool_choice.function.name };
     }
+  }
+
+  // Top-level cache_control caches everything up to the last cacheable block, and moves the
+  // breakpoint forward as the conversation grows.
+  if (promptCache) {
+    body.cache_control = { type: "ephemeral" };
   }
 
   applyThinking(body, thinking, Boolean(max_tokens));

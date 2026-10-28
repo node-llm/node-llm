@@ -45,6 +45,7 @@ export interface AnthropicMessageRequest {
     input_schema?: Record<string, unknown>;
   }>;
   tool_choice?: { type: string; name?: string };
+  cache_control?: { type: "ephemeral" };
   thinking?: AnthropicThinking;
   output_config?: {
     effort?: string;

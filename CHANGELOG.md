@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 
 ### Features
 
+- **Prompt Caching**: `withPromptCache()`, the `promptCache` chat option and `static promptCache` on Agents cache the repeated start of each request (instructions, tools and earlier turns) on Anthropic, so an agent loop pays the full input price once. Providers that cache automatically are unaffected. Providers declare it with the new optional `supportsPromptCaching(model)` capability.
 - **`defineTool()`**: Defines a tool without a class, with the arguments of `execute` typed from its Zod schema, as `defineAgent()` does for agents.
 - **Zod 4 Schemas**: `withSchema()`, the `schema` option, Agents and `Tool` accept Zod 4 schemas (Zod 4.2 or later, from `"zod"`) as well as Zod 3, with types inferred from either. Schemas are recognised by shape, so a schema from another copy of Zod validates too; before, it skipped validation silently.
 - **Adaptive Thinking for Claude**: On Claude generations that only think adaptively (Opus 4.7 and later, Sonnet 5 and later, Fable), `withEffort()` and `withThinking({ effort })` now send adaptive thinking with `output_config.effort`. Before, effort was not sent to Anthropic, and these models reject a fixed `budget`. `effort` also accepts `"xhigh"` and `"max"`.

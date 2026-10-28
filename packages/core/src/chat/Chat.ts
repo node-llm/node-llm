@@ -19,6 +19,7 @@ import {
 import { Executor } from "../executor/Executor.js";
 import { ChatStream } from "./ChatStream.js";
 import { requestTemperature } from "./Temperature.js";
+import { requestPromptCache } from "./PromptCache.js";
 import { Stream } from "../streaming/Stream.js";
 import { ModelRegistry } from "../models/ModelRegistry.js";
 import { ToolDefinition, ToolResolvable, ToolCall } from "./Tool.js";
@@ -490,6 +491,16 @@ export class Chat<S = unknown> {
   }
 
   /**
+   * Cache the repeated start of each request (instructions, tools and earlier turns), so a
+   * long conversation or agent loop pays the full input price only once. Providers that cache
+   * automatically, such as OpenAI and Gemini, need no change and ignore this.
+   */
+  withPromptCache(enabled = true): this {
+    this.options.promptCache = enabled;
+    return this;
+  }
+
+  /**
    * Hook for confirming tool execution in "confirm" mode.
    * Return true to proceed, false to cancel the specific call. When multiple
    * handlers are registered, every one of them must approve.
@@ -674,6 +685,7 @@ export class Chat<S = unknown> {
             options?.requestTimeout ?? this.options.requestTimeout ?? config.requestTimeout,
           thinking: options?.thinking ?? this.options.thinking,
           prediction: options?.prediction ?? this.options.prediction,
+          promptCache: requestPromptCache(this.provider, this.model, this.options.promptCache),
           signal: options?.signal,
           ...this.options.params
         };
@@ -899,6 +911,7 @@ export class Chat<S = unknown> {
             requestTimeout:
               options?.requestTimeout ?? this.options.requestTimeout ?? config.requestTimeout,
             prediction: options?.prediction ?? this.options.prediction,
+            promptCache: requestPromptCache(this.provider, this.model, this.options.promptCache),
             signal: options?.signal,
             ...this.options.params
           });

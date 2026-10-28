@@ -37,6 +37,7 @@ import {
   runChainHandlers
 } from "../utils/handler-stacking.js";
 import { requestTemperature } from "./Temperature.js";
+import { requestPromptCache } from "./PromptCache.js";
 
 /**
  * Internal handler for chat streaming logic.
@@ -262,6 +263,7 @@ export class ChatStream {
             requestTimeout: options.requestTimeout ?? config.requestTimeout,
             thinking: options.thinking,
             prediction: options.prediction,
+            promptCache: requestPromptCache(provider, model, options.promptCache),
             signal: abortController.signal,
             ...options.params
           };

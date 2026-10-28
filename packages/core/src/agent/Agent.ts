@@ -53,6 +53,9 @@ export interface AgentConfig<I = Record<string, any>> {
   /** Run independent tool calls within the same turn concurrently */
   toolConcurrency?: boolean;
 
+  /** Cache the repeated start of each request on providers that need asking to */
+  promptCache?: boolean;
+
   /** Assume model exists without validation */
   assumeModelExists?: boolean;
 
@@ -86,6 +89,7 @@ export abstract class Agent<
   static maxTokens?: number;
   static maxToolCalls?: number;
   static toolConcurrency?: boolean;
+  static promptCache?: boolean;
   static assumeModelExists?: boolean;
   static middlewares?: Middleware[];
 
@@ -170,6 +174,7 @@ export abstract class Agent<
       maxTokens: overrides.maxTokens ?? ctor.maxTokens,
       maxToolCalls: overrides.maxToolCalls ?? ctor.maxToolCalls,
       toolConcurrency: overrides.toolConcurrency ?? ctor.toolConcurrency,
+      promptCache: overrides.promptCache ?? ctor.promptCache,
       headers: { ...ctor.headers, ...overrides.headers },
       params: { ...ctor.params, ...overrides.params },
       thinking: overrides.thinking ?? ctor.thinking,
@@ -450,6 +455,7 @@ export function defineAgent<
     static override maxTokens = config.maxTokens;
     static override maxToolCalls = config.maxToolCalls;
     static override toolConcurrency = config.toolConcurrency;
+    static override promptCache = config.promptCache;
     static override assumeModelExists = config.assumeModelExists;
     static override middlewares = config.middlewares;
   };

@@ -55,6 +55,11 @@ export interface ChatOptions {
    * concurrently instead of one at a time. Defaults to `config.toolConcurrency`.
    */
   toolConcurrency?: boolean;
+  /**
+   * Cache the repeated start of each request (instructions, tools and earlier turns) on providers
+   * that need asking to, such as Anthropic. Others cache automatically.
+   */
+  promptCache?: boolean;
   toolChoice?: ToolChoice;
   toolCalls?: "one" | "many" | number;
   onConfirmToolCall?: (toolCall: ToolCall) => Promise<boolean> | boolean;
