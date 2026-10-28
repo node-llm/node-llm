@@ -309,6 +309,19 @@ const result = await analyzer.ask("I love this product!");
 console.log(result.data.sentiment); // "positive" - typed and validated
 ```
 
+A class's `static schema` can't type `result.data` by itself, because TypeScript doesn't let a base class read a subclass's static properties, so pass the schema's type as the second type argument. `defineAgent()` infers it from `schema`:
+
+```typescript
+const SentimentAgent = defineAgent({
+  model: "gpt-5",
+  instructions: "Analyze the sentiment of the given text.",
+  schema: SentimentSchema
+});
+
+const { data } = await new SentimentAgent({ llm }).ask("I love this product!");
+console.log(data.sentiment); // typed from SentimentSchema
+```
+
 ---
 
 ## Inline Definition with `defineAgent()`

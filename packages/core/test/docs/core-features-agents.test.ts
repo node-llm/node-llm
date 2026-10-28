@@ -4,7 +4,7 @@
  * Verifies that Agent class code examples from the documentation work correctly.
  * Uses FakeProvider to avoid requiring real API keys.
  */
-import { describe, it, expect, beforeEach } from "vitest";
+import { describe, it, expect, beforeEach, expectTypeOf } from "vitest";
 import {
   createLLM,
   Agent,
@@ -403,6 +403,28 @@ describe("core-features-agents", () => {
       const agent = new QuickAgent({ llm });
 
       expect(agent).toBeInstanceOf(Agent);
+    });
+
+    it("defineAgent() types response.data from its schema", async () => {
+      provider = new FakeProvider(['{"sentiment":"positive","score":0.9}']);
+      const SentimentAgent = defineAgent({
+        model: "fake-model",
+        instructions: "Analyze the sentiment of the given text.",
+        schema: z.object({
+          sentiment: z.enum(["positive", "negative", "neutral"]),
+          score: z.number()
+        })
+      });
+
+      const llm = createLLM({ provider: "fake" });
+      const result = await new SentimentAgent({ llm }).ask("I love this product!");
+
+      expect(result.data.sentiment).toBe("positive");
+      expectTypeOf(result.data).toEqualTypeOf<{
+        sentiment: "positive" | "negative" | "neutral";
+        score: number;
+      }>();
+      expectTypeOf(SentimentAgent.ask).returns.resolves.toHaveProperty("data");
     });
   });
 

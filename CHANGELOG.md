@@ -8,6 +8,7 @@ All notable changes to this project will be documented in this file.
 
 - **Adaptive Thinking for Claude**: On Claude generations that only think adaptively (Opus 4.7 and later, Sonnet 5 and later, Fable), `withEffort()` and `withThinking({ effort })` now send adaptive thinking with `output_config.effort`. Before, effort was not sent to Anthropic, and these models reject a fixed `budget`. `effort` also accepts `"xhigh"` and `"max"`.
 - **Thinking Display**: `withThinking({ display: "summarized" })` returns a summary of Claude's thinking, which newer models hide by default.
+- **Typed `defineAgent()` Output**: `defineAgent({ schema })` infers the Zod schema's type, so `response.data` is typed without repeating the schema as a type argument.
 - **`ToolCallLimitError`**: Reaching `maxToolCalls` now throws `ToolCallLimitError` (code `TOOL_CALL_LIMIT`) instead of a plain `Error`. It carries the `limit` and the `usage` of every request in that ask. The message is unchanged.
 
 ### Bug Fixes

@@ -428,6 +428,14 @@ export type DefinedAgent<
 export function defineAgent<
   I extends Record<string, any> = Record<string, any>,
   S extends Record<string, unknown> = Record<string, unknown>
+>(config: AgentConfig<I> & { schema: z.ZodType<S> }): DefinedAgent<I, S>;
+export function defineAgent<
+  I extends Record<string, any> = Record<string, any>,
+  S extends Record<string, unknown> = Record<string, unknown>
+>(config: AgentConfig<I>): DefinedAgent<I, S>;
+export function defineAgent<
+  I extends Record<string, any> = Record<string, any>,
+  S extends Record<string, unknown> = Record<string, unknown>
 >(config: AgentConfig<I>): DefinedAgent<I, S> {
   return class extends Agent<I, S> {
     static override model = config.model;
