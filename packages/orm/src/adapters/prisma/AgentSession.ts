@@ -376,7 +376,7 @@ export interface CreateAgentSessionOptions<I = any> {
   provider?: string;
   instructions?: string;
   maxToolCalls?: number;
-  /** Tools for this session, added to the ones the agent class defines */
+  /** Tools for this session, in place of the ones the agent class defines */
   tools?: ChatOptions["tools"];
 }
 
