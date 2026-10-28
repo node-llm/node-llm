@@ -11,8 +11,10 @@ import {
   z,
   providerRegistry,
   ToolError,
-  ToolCallLimitError
+  ToolCallLimitError,
+  defineTool
 } from "../../src/index.js";
+import { z as zod4 } from "zod4";
 import { FakeProvider } from "../fake-provider.js";
 
 describe("core-features-tools", () => {
@@ -210,6 +212,23 @@ describe("core-features-tools", () => {
       const chat = llm.chat("fake-model").withTools([SearchTool], { replace: true });
 
       expect(chat).toBeDefined();
+    });
+  });
+
+  describe("Inline Definition with defineTool()", () => {
+    it("defineTool() creates a tool with typed arguments", async () => {
+      const WeatherTool = defineTool({
+        name: "get_weather",
+        description: "Get the current weather for a location",
+        schema: zod4.object({ location: zod4.string().describe("The city, e.g. Paris") }),
+        execute: async ({ location }) => ({ location, condition: "Sunny" })
+      });
+
+      const tool = new WeatherTool();
+      expect(tool.toLLMTool().function.name).toBe("get_weather");
+      expect(await tool.handler({ location: "Paris" })).toBe(
+        '{"location":"Paris","condition":"Sunny"}'
+      );
     });
   });
 

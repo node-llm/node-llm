@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { isZodSchema, Zod4Schema } from "../schema/zod.js";
+import { isZodSchema, Zod3Schema, Zod4Schema, ZodSchema } from "../schema/zod.js";
 import { toJsonSchema } from "../schema/to-json-schema.js";
 
 export interface ToolCall {
@@ -98,7 +98,11 @@ export abstract class Tool<T = Record<string, any>> {
    * Parameters the tool accepts.
    * Can be a Zod 4 or Zod 3 object (for auto-schema + type safety) or a raw JSON Schema.
    */
-  public abstract schema: Zod4Schema | z.ZodObject<z.ZodRawShape> | Record<string, unknown>;
+  public abstract schema:
+    | Zod4Schema
+    | Zod3Schema
+    | z.ZodObject<z.ZodRawShape>
+    | Record<string, unknown>;
 
   /**
    * Whether to enforce strict JSON schema constraints for OpenAI and similar providers.
@@ -189,4 +193,38 @@ export abstract class Tool<T = Record<string, any>> {
       handler: (args: unknown) => this.handler(args as T)
     };
   }
+}
+
+/**
+ * Defines a tool without a class, mirroring `defineAgent`. `execute` receives arguments typed
+ * from the Zod schema; return `new ToolHalt(message)` from it to end the turn.
+ *
+ * @example
+ * ```typescript
+ * const WeatherTool = defineTool({
+ *   name: "get_weather",
+ *   description: "Get the current weather for a location",
+ *   schema: z.object({ location: z.string() }),
+ *   execute: async ({ location }) => `Sunny in ${location}`
+ * });
+ * chat.withTool(WeatherTool);
+ * ```
+ */
+export function defineTool<Args extends Record<string, unknown>>(definition: {
+  name: string;
+  description: string;
+  schema: ZodSchema<Args>;
+  strict?: boolean;
+  execute: (args: Args) => unknown;
+}): new () => Tool<Args> {
+  return class extends Tool<Args> {
+    name = definition.name;
+    description = definition.description;
+    schema = definition.schema;
+    strict = definition.strict;
+
+    async execute(args: Args) {
+      return definition.execute(args);
+    }
+  };
 }

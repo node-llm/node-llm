@@ -86,6 +86,24 @@ When `strict = true` is set, `NodeLLM` automatically translates your Zod schema 
 - **Type Safety**: declare the tool as `Tool<z.infer<typeof schema>>` and `execute()` is fully typed from your schema. (TypeScript cannot infer it from the `schema` property alone, so without the type argument the arguments are `Record<string, any>`.)
 - **Self-Documenting**: The Zod `.describe()` calls are automatically pulled into the tool's description for the LLM.
 
+### Inline Definition with `defineTool()`
+
+For a tool that doesn't need its own class, `defineTool()` returns one, with the arguments of `execute` typed from the schema. Return `new ToolHalt(message)` from `execute` to end the turn.
+
+```ts
+import { defineTool } from "@node-llm/core";
+import { z } from "zod"; // Zod 4
+
+const WeatherTool = defineTool({
+  name: "get_weather",
+  description: "Get the current weather for a location",
+  schema: z.object({ location: z.string().describe("The city, e.g. Paris") }),
+  execute: async ({ location }) => ({ location, condition: "Sunny" })
+});
+
+const chat = llm.chat().withTool(WeatherTool);
+```
+
 ### Defining Parameters with Zod
 
 `NodeLLM` turns the schema into JSON Schema for the model, with Zod's own converter for Zod 4 schemas (Zod 3 schemas still work; see [Zod 4 and Zod 3](structured_output.html#zod-4-and-zod-3)). Most standard Zod types work out of the box:
