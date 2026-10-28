@@ -168,13 +168,16 @@ async function syncModels() {
     }
 
     const generatedAliases = { ...GOLDEN_ALIASES };
+    // models.dev's key order varies between fetches; sorting keeps the output the same from one
+    // sync to the next.
+    const byKey = ([a], [b]) => a.localeCompare(b);
 
-    for (const [providerId, providerData] of Object.entries(rawData)) {
+    for (const [providerId, providerData] of Object.entries(rawData).sort(byKey)) {
       let targetProvider = PROVIDER_MAP[providerId] || providerId;
       if (!SUPPORTED_PROVIDERS.includes(targetProvider)) continue;
 
       const models = providerData.models || {};
-      for (const [modelId, details] of Object.entries(models)) {
+      for (const [modelId, details] of Object.entries(models).sort(byKey)) {
         const caps = [];
 
         if (details.streaming !== false) caps.push("streaming");
@@ -291,13 +294,14 @@ async function syncModels() {
         if (slug.length > 3 && !generatedAliases[slug]) {
           generatedAliases[slug] = {};
         }
-        if (generatedAliases[slug]) {
+        // The first model in sorted order keeps an alias, and golden aliases are never replaced.
+        if (generatedAliases[slug] && !generatedAliases[slug][targetProvider]) {
           generatedAliases[slug][targetProvider] = modelEntry.id;
         }
       }
     }
 
-    finalModels.sort((a, b) => a.id.localeCompare(b.id));
+    finalModels.sort((a, b) => a.id.localeCompare(b.id) || a.provider.localeCompare(b.provider));
     fs.writeFileSync(MODELS_FILE, JSON.stringify(finalModels, null, 2));
     console.log(`Synced ${finalModels.length} models.`);
 
@@ -307,7 +311,7 @@ async function syncModels() {
       .sort()
       .forEach((key) => {
         if (Object.keys(generatedAliases[key]).length > 0) {
-          finalAliases[key] = generatedAliases[key];
+          finalAliases[key] = Object.fromEntries(Object.entries(generatedAliases[key]).sort(byKey));
         }
       });
 
