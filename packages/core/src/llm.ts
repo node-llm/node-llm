@@ -155,6 +155,12 @@ export class NodeLLMCore {
   }
 
   chat(model?: string, options: ChatOptions = {}): Chat {
+    const { provider: providerName, ...chatOptions } = options;
+    // Provider ids are display names ("Anthropic") while registry names are lowercase.
+    if (providerName && providerName.toLowerCase() !== this.provider?.id.toLowerCase()) {
+      return this.withProvider(providerName).chat(model, chatOptions);
+    }
+
     if (!this.provider) {
       throw new ProviderNotConfiguredError();
     }

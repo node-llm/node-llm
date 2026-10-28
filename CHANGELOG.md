@@ -9,6 +9,10 @@ All notable changes to this project will be documented in this file.
 - **Adaptive Thinking for Claude**: On Claude generations that only think adaptively (Opus 4.7 and later, Sonnet 5 and later, Fable), `withEffort()` and `withThinking({ effort })` now send adaptive thinking with `output_config.effort`. Before, effort was not sent to Anthropic, and these models reject a fixed `budget`. `effort` also accepts `"xhigh"` and `"max"`.
 - **Thinking Display**: `withThinking({ display: "summarized" })` returns a summary of Claude's thinking, which newer models hide by default.
 
+### Bug Fixes
+
+- **Agent and Chat `provider` Option**: An Agent's `provider` (static or passed to the constructor) and `chat(model, { provider })` now choose the provider. Before, they were ignored, so the chat used the instance's own provider, or threw `LLM provider not configured` when it had none (for example `NodeLLM` without `NODELLM_PROVIDER`).
+
 ### Improvements
 
 - **Model Catalog Sync**: `models.json` now records each model's thinking controls (`metadata.reasoning_options`) from models.dev.
