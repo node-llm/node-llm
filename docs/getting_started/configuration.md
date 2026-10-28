@@ -186,7 +186,7 @@ const chat = llm.chat("gpt-5", {
 | `defaultTranscriptionModel` | Default model for `.transcribe()`   | Provider default                  |
 | `defaultModerationModel`    | Default model for `.moderate()`     | Provider default                  |
 | `defaultEmbeddingModel`     | Default model for `.embed()`        | Provider default                  |
-| `maxToolCalls`              | Max sequential tool execution turns | `5`                               |
+| `maxToolCalls`              | Max rounds of tool calls per ask (`ToolCallLimitError` beyond) | `5`    |
 | `maxCorrections`            | Max middleware-driven self-correction retries | `5`                     |
 | `maxRetries`                | Max retries for provider errors (exponential backoff + jitter, honors `Retry-After`) | `2` |
 | `requestTimeout`            | Request timeout in milliseconds     | `30000` (30s)                     |

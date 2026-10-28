@@ -10,7 +10,7 @@ import { Provider, ChatChunk, Usage, ThinkingResult } from "../providers/Provide
 import { ChatResponseString } from "./ChatResponse.js";
 import { Stream } from "../streaming/Stream.js";
 import { config } from "../config.js";
-import { ToolExecutionMode } from "../constants.js";
+import { ToolExecutionMode, DEFAULT_MAX_TOOL_CALLS } from "../constants.js";
 import { AskOptions } from "./Chat.js";
 import { FileLoader } from "../utils/FileLoader.js";
 import { toJsonSchema } from "../schema/to-json-schema.js";
@@ -18,12 +18,17 @@ import { ToolDefinition, ToolCall } from "./Tool.js";
 import { ChatValidator } from "./Validation.js";
 import { ToolHandler } from "./ToolHandler.js";
 import { logger } from "../utils/logger.js";
+import { ToolCallLimitError } from "../errors/index.js";
 import { ResponseFormat } from "../providers/Provider.js";
 import { ModelRegistry } from "../models/ModelRegistry.js";
 import { Middleware, MiddlewareContext, ToolErrorDirective } from "../types/Middleware.js";
 import { runMiddleware } from "../utils/middleware-runner.js";
 import { randomUUID } from "node:crypto";
-import { shouldRunToolCallsConcurrently, executeToolCallOutcomes } from "./ToolCallOutcome.js";
+import {
+  shouldRunToolCallsConcurrently,
+  executeToolCallOutcomes,
+  toolCallLimitResults
+} from "./ToolCallOutcome.js";
 import {
   collectHandlers,
   runAllHandlers,
@@ -204,7 +209,7 @@ export class ChatStream {
         }
 
         let isFirst = true;
-        const maxToolCalls = options.maxToolCalls ?? 5;
+        const maxToolCalls = options.maxToolCalls ?? DEFAULT_MAX_TOOL_CALLS;
         let stepCount = 0;
 
         const totalUsage: Usage = { input_tokens: 0, output_tokens: 0, total_tokens: 0 };
@@ -233,13 +238,6 @@ export class ChatStream {
         let assistantResponse: ChatResponseString | undefined;
 
         while (true) {
-          stepCount++;
-          if (stepCount > maxToolCalls) {
-            throw new Error(
-              `[NodeLLM] Maximum tool execution calls (${maxToolCalls}) exceeded during streaming.`
-            );
-          }
-
           let fullContent = "";
           let fullReasoning = "";
           const thinking: ThinkingResult = { text: "" };
@@ -340,6 +338,12 @@ export class ChatStream {
 
           if (!ToolHandler.shouldExecuteTools(toolCalls, options.toolExecution)) {
             break;
+          }
+
+          stepCount++;
+          if (stepCount > maxToolCalls) {
+            messages.push(...toolCallLimitResults(provider, toolCalls, maxToolCalls));
+            throw new ToolCallLimitError(maxToolCalls, totalUsage);
           }
 
           const runConcurrently = shouldRunToolCallsConcurrently(

@@ -30,12 +30,17 @@ import { config } from "../config.js";
 import {
   ToolExecutionMode,
   ToolExecutionModeInput,
-  DEFAULT_MAX_CORRECTIONS
+  DEFAULT_MAX_CORRECTIONS,
+  DEFAULT_MAX_TOOL_CALLS
 } from "../constants.js";
-import { ConfigurationError } from "../errors/index.js";
+import { ConfigurationError, ToolCallLimitError } from "../errors/index.js";
 import { ChatValidator } from "./Validation.js";
 import { ToolHandler } from "./ToolHandler.js";
-import { shouldRunToolCallsConcurrently, executeToolCallOutcomes } from "./ToolCallOutcome.js";
+import {
+  shouldRunToolCallsConcurrently,
+  executeToolCallOutcomes,
+  toolCallLimitResults
+} from "./ToolCallOutcome.js";
 import { logger } from "../utils/logger.js";
 import {
   Middleware,
@@ -739,7 +744,8 @@ export class Chat<S = unknown> {
           await runAllHandlers(endMessageHandlers, assistantMessage);
         }
 
-        const maxToolCalls = options?.maxToolCalls ?? this.options.maxToolCalls ?? 5;
+        const maxToolCalls =
+          options?.maxToolCalls ?? this.options.maxToolCalls ?? DEFAULT_MAX_TOOL_CALLS;
         let stepCount = 0;
         let haltTriggered = false;
 
@@ -751,7 +757,10 @@ export class Chat<S = unknown> {
 
           stepCount++;
           if (stepCount > maxToolCalls) {
-            throw new Error(`[NodeLLM] Maximum tool execution calls (${maxToolCalls}) exceeded.`);
+            this.messages.push(
+              ...toolCallLimitResults(this.provider, response.tool_calls, maxToolCalls)
+            );
+            throw new ToolCallLimitError(maxToolCalls, totalUsage);
           }
 
           const runConcurrently = shouldRunToolCallsConcurrently(

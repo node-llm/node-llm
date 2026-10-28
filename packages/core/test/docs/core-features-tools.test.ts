@@ -10,7 +10,8 @@ import {
   Tool,
   z,
   providerRegistry,
-  ToolError
+  ToolError,
+  ToolCallLimitError
 } from "../../src/index.js";
 import { FakeProvider } from "../fake-provider.js";
 
@@ -231,6 +232,36 @@ describe("core-features-tools", () => {
       });
 
       expect(response).toBeDefined();
+    });
+
+    it("ToolCallLimitError reports the limit and usage, and the chat can be asked again", async () => {
+      const toolRound = {
+        content: "",
+        usage: { input_tokens: 5, output_tokens: 1, total_tokens: 6 },
+        tool_calls: [
+          { id: "call", type: "function" as const, function: { name: "lookup", arguments: "{}" } }
+        ]
+      };
+      provider = new FakeProvider([...Array(6).fill(toolRound), "Here is what I found"]);
+      const lookup = {
+        type: "function" as const,
+        function: { name: "lookup", parameters: {} },
+        handler: async () => "result"
+      };
+      const chat = createLLM({ provider: "fake" }).chat("fake-model").withTool(lookup);
+
+      let finished = "";
+      try {
+        await chat.ask("Research and summarise the topic");
+      } catch (error) {
+        if (error instanceof ToolCallLimitError) {
+          expect(error.limit).toBe(5);
+          expect(error.usage.total_tokens).toBe(36);
+          finished = String(await chat.ask("Finish with what you have", { maxToolCalls: 2 }));
+        }
+      }
+
+      expect(finished).toBe("Here is what I found");
     });
   });
 

@@ -43,6 +43,7 @@ LLMError                        # Base error class
 │   └── InvalidModelError       # 404: Requested model ID is unknown
 ├── CapabilityError             # Model doesn't support feature (e.g. vision)
 ├── ToolError                   # Tool execution failed (has `fatal` property)
+├── ToolCallLimitError          # Model still calling tools after `maxToolCalls` rounds (has `limit`, `usage`)
 ├── ProviderNotConfiguredError  # No provider set
 ├── UnsupportedFeatureError     # Provider doesn't support feature
 └── ModelCapabilityError        # Model doesn't support capability

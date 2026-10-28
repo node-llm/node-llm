@@ -203,7 +203,7 @@ Confirm mode (`toolExecution: "confirm"`) always runs sequentially regardless of
 
 To prevent infinite recursion and runaway costs (where a model keeps calling tools without reaching a conclusion), `NodeLLM` includes a built-in Loop Guard.
 
-By default, `NodeLLM` will throw an error if a model performs more than **5 sequential tool execution turns** in a single request.
+By default, `NodeLLM` throws a `ToolCallLimitError` if a model asks for a **6th round of tool calls** in a single `ask()` or `stream()`. A round is one model response with its tool calls, however many calls it makes in parallel, so the default allows 5 rounds. `ask()` and `stream()` count the same way.
 
 ### Customizing the Limit
 
@@ -216,6 +216,23 @@ const llm = createLLM({ maxToolCalls: 10 });
 await chat.ask("Perform a complex deep research task", {
   maxToolCalls: 15
 });
+```
+
+### Handling the Limit
+
+`ToolCallLimitError` carries the `limit` and the `usage` of every request in that ask, so you can report what the run spent. The calls the model asked for but that weren't run are answered with an error result, so the chat history stays valid and you can ask again, for example with a higher limit:
+
+```ts
+import { ToolCallLimitError } from "@node-llm/core";
+
+try {
+  await chat.ask("Research and summarise the topic");
+} catch (error) {
+  if (error instanceof ToolCallLimitError) {
+    console.log(`Stopped after ${error.limit} rounds, ${error.usage.total_tokens} tokens`);
+    await chat.ask("Finish with what you have", { maxToolCalls: 2 });
+  }
+}
 ```
 
 ---

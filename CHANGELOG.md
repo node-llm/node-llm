@@ -8,10 +8,13 @@ All notable changes to this project will be documented in this file.
 
 - **Adaptive Thinking for Claude**: On Claude generations that only think adaptively (Opus 4.7 and later, Sonnet 5 and later, Fable), `withEffort()` and `withThinking({ effort })` now send adaptive thinking with `output_config.effort`. Before, effort was not sent to Anthropic, and these models reject a fixed `budget`. `effort` also accepts `"xhigh"` and `"max"`.
 - **Thinking Display**: `withThinking({ display: "summarized" })` returns a summary of Claude's thinking, which newer models hide by default.
+- **`ToolCallLimitError`**: Reaching `maxToolCalls` now throws `ToolCallLimitError` (code `TOOL_CALL_LIMIT`) instead of a plain `Error`. It carries the `limit` and the `usage` of every request in that ask. The message is unchanged.
 
 ### Bug Fixes
 
 - **Temperature on Models That Reject It**: Claude Opus 4.7 and later, the Claude 5 family, OpenAI's reasoning models and others return an error when a request sets a temperature. For models the registry marks this way, chats and agents now send the request without one and log a warning once per model. Providers declare it with the new optional `supportsTemperature(model)` capability.
+- **Tool Call Limit Leaves a Valid History**: When `maxToolCalls` is reached, the tool calls the model asked for but that weren't run are now answered with an error result. Before, the history ended with unanswered tool calls, which providers reject, so the chat could not be asked again.
+- **Streaming Tool Call Limit**: `stream()` counted every model request against `maxToolCalls`, so it allowed one round of tool calls fewer than `ask()`. Both now count rounds of tool calls.
 - **Agent and Chat `provider` Option**: An Agent's `provider` (static or passed to the constructor) and `chat(model, { provider })` now choose the provider. Before, they were ignored, so the chat used the instance's own provider, or threw `LLM provider not configured` when it had none (for example `NodeLLM` without `NODELLM_PROVIDER`).
 
 ### Improvements
@@ -20,6 +23,8 @@ All notable changes to this project will be documented in this file.
 
 ### Compatibility
 
+- `stream()` allows one more round of tool calls than before, matching `ask()`.
+- After `maxToolCalls` is reached, the chat history ends with an error tool result for each call that wasn't run.
 - Requests to budget-thinking Claude models (Sonnet 4.5, Haiku 4.5, Opus 4.5, Opus 4.6, Sonnet 4.6) are unchanged: `budget` is sent as before, and `effort` alone is still not sent.
 
 ## [1.18.0] - 2026-10-03 (@node-llm/core)
