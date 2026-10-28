@@ -240,8 +240,8 @@ _Model information enriched by [models.dev](https://models.dev)._
 | `gemini-3.7-flash` | 1.0M | 65.536k | In: $0.75, Out: $3.75, Cache: $0.07 |
 | `gemini-3.8-flash` | 1.0M | 65.536k | In: $0.75, Out: $3.75, Cache: $0.07 |
 | `gemini-3.8-flash` | 1.0M | 65.536k | In: $0.75, Out: $3.75, Cache: $0.07 |
-| `gemini-4-argon` | 1.0M | 65.536k | In: $2.00, Out: $10.00, Cache: $0.10 |
 | `gemini-4-argon` | 1.0M | 32.768k | In: $2.00, Out: $10.00, Cache: $0.10 |
+| `gemini-4-argon` | 1.0M | 65.536k | In: $2.00, Out: $10.00, Cache: $0.10 |
 | `gemini-exp-1206` | 1.0M | 65.536k | In: $0.07, Out: $0.30 |
 | `gemini-flash-latest` | 1.0M | 65.536k | In: $0.75, Out: $3.75, Cache: $0.07 |
 | `gemini-flash-lite-latest` | 1.0M | 65.536k | In: $0.30, Out: $2.50, Cache: $0.03 |
@@ -286,8 +286,8 @@ _Model information enriched by [models.dev](https://models.dev)._
 | `deep-research-preview-04-2026` | 131.072k | 65.536k | In: $2.00, Out: $12.00, Cache: $0.20 |
 | `gemini-2.5-computer-use-preview-10-2025` | 131.072k | 65.536k | In: $0.07, Out: $0.30 |
 | `gemini-3-pro-image-preview` | 131.072k | 32.768k | In: $2.00, Out: $120.00 |
-| `gemini-3.1-flash-image` | 131.072k | 32.768k | In: $0.50, Out: $60.00, Cache: $0.05 |
 | `gemini-3.1-flash-image` | 131.072k | 32.768k | In: $0.50, Out: $60.00 |
+| `gemini-3.1-flash-image` | 131.072k | 32.768k | In: $0.50, Out: $60.00, Cache: $0.05 |
 | `gemini-3.1-flash-live-preview` | 131.072k | 65.536k | In: $0.75, Out: $4.50 |
 | `gemini-nano-banana-2.1` | 131.072k | 32.768k | In: $1.50, Out: $30.00, Cache: $0.15 |
 | `gemini-omni-flash-preview` | 131.072k | 65.536k | In: $1.50, Out: $17.50 |
@@ -300,14 +300,14 @@ _Model information enriched by [models.dev](https://models.dev)._
 | `mistral-small-2503` | 128k | 16.384k | In: $0.10, Out: $0.30 |
 | `xai/grok-4.1-fast-non-reasoning` | 128k | 30k | In: $0.20, Out: $0.50, Cache: $0.05 |
 | `xai/grok-4.1-fast-reasoning` | 128k | 30k | In: $0.20, Out: $0.50, Cache: $0.05 |
-| `gemini-3-pro-image` | 65.536k | 32.768k | In: $2.00, Out: $120.00, Cache: $0.20 |
 | `gemini-3-pro-image` | 65.536k | 32.768k | In: $2.00, Out: $120.00 |
+| `gemini-3-pro-image` | 65.536k | 32.768k | In: $2.00, Out: $120.00, Cache: $0.20 |
 | `gemini-3.1-flash-image-preview` | 65.536k | 65.536k | In: $0.50, Out: $60.00 |
-| `gemini-3.1-flash-lite-image` | 65.536k | 4.096k | In: $0.25, Out: $30.00, Cache: $0.03 |
 | `gemini-3.1-flash-lite-image` | 65.536k | 4.096k | In: $0.25, Out: $30.00 |
+| `gemini-3.1-flash-lite-image` | 65.536k | 4.096k | In: $0.25, Out: $30.00, Cache: $0.03 |
 | `gemini-2.5-flash-image` | 32.768k | 32.768k | In: $0.07, Out: $0.30 |
-| `gemini-2.5-flash-image` | 32.768k | 32.768k | In: $0.30, Out: $30.00 |
 | `gemini-2.5-flash-image` | 32.768k | 32.768k | In: $0.30, Out: $30.00, Cache: $0.07 |
+| `gemini-2.5-flash-image` | 32.768k | 32.768k | In: $0.30, Out: $30.00 |
 | `gemini-2.5-flash-image-preview` | 32.768k | 32.768k | In: $0.07, Out: $0.30 |
 | `gemini-2.5-flash-tts` | 32.768k | 16.384k | In: $0.50, Out: $10.00 |
 | `gemini-2.5-pro-tts` | 32.768k | 16.384k | In: $1.00, Out: $20.00 |
@@ -380,14 +380,14 @@ _Model information enriched by [models.dev](https://models.dev)._
 | `xiaomi/mimo-v2.6-flash` | 1.1M | 131.072k | In: $0.14, Out: $0.28, Cache: $0.00 |
 | `xiaomi/mimo-v2.6-pro` | 1.1M | 131.072k | In: $0.43, Out: $0.87, Cache: $0.00 |
 | `meituan/longcat-2.0` | 1.0M | 262.144k | In: $0.30, Out: $1.20, Cache: $0.01 |
-| `~deepseek/deepseek-flash-latest` | 1.0M | 943.718k | In: $0.01, Out: $1.80, Cache: $0.01 |
+| `~deepseek/deepseek-flash-latest` | 1.0M | 943.718k | In: $0.01, Out: $1.64, Cache: $0.01 |
 | `~deepseek/deepseek-pro-latest` | 1.0M | 393.216k | In: $0.25, Out: $8.00, Cache: $0.25 |
 | `~deepseek/deepseek-v4-flash-latest` | 1.0M | 943.718k | In: $0.05, Out: $0.16, Cache: $0.03 |
 | `~google/gemini-flash-latest` | 1.0M | 65.536k | In: $0.75, Out: $3.75, Cache: $0.07 |
 | `~google/gemini-pro-latest` | 1.0M | 943.718k | In: $2.00, Out: $10.00, Cache: $0.10 |
-| `~moonshotai/kimi-latest` | 1.0M | 943.718k | In: $0.15, Out: $20.00, Cache: $0.14 |
+| `~moonshotai/kimi-latest` | 1.0M | 943.718k | In: $0.18, Out: $20.00, Cache: $0.17 |
 | `~unbiased/pareto-latest` | 1.0M | 131.072k | In: $0.80, Out: $3.20, Cache: $0.03 |
-| `~z-ai/glm-flash-latest` | 1.0M | 131.072k | In: $0.03, Out: $0.08, Cache: $0.03 |
+| `~z-ai/glm-flash-latest` | 1.0M | 131.072k | In: $0.03, Out: $0.09, Cache: $0.03 |
 | `~z-ai/glm-latest` | 1.0M | 943.718k | In: $0.07, Out: $1.40, Cache: $0.07 |
 | `deepseek/deepseek-v4-flash` | 1.0M | 131.072k | In: $0.14, Out: $0.28, Cache: $0.03 |
 | `deepseek/deepseek-v4-flash-0731` | 1.0M | 943.718k | In: $0.12, Out: $0.24, Cache: $0.02 |
@@ -424,7 +424,7 @@ _Model information enriched by [models.dev](https://models.dev)._
 | `minimax/minimax-m3` | 1.0M | 512k | In: $0.30, Out: $1.20, Cache: $0.06 |
 | `minimax/minimax-m3.1-flash` | 1.0M | 524.288k | In: $0.15, Out: $0.60, Cache: $0.01 |
 | `mistralai/mistral-large-4-0` | 1.0M | 262.144k | In: $1.36, Out: $4.18, Cache: $0.14 |
-| `moonshotai/kimi-k3` | 1.0M | 943.718k | In: $0.15, Out: $20.00, Cache: $0.14 |
+| `moonshotai/kimi-k3` | 1.0M | 943.718k | In: $0.18, Out: $20.00, Cache: $0.17 |
 | `moonshotai/kimi-k3.1-pro` | 1.0M | 943.718k | In: $2.00, Out: $10.00, Cache: $0.20 |
 | `nvidia/nemotron-3.5-super-vl` | 1.0M | 235.929k | In: $0.15, Out: $0.50, Cache: $0.02 |
 | `poolside/laguna-s-2.1` | 1.0M | 131.072k | In: $0.09, Out: $0.18, Cache: $0.01 |
@@ -436,7 +436,7 @@ _Model information enriched by [models.dev](https://models.dev)._
 | `thinkingmachines/inkling:free` | 1.0M | 262.144k | - |
 | `unbiased/pareto-26.10` | 1.0M | 131.072k | In: $0.80, Out: $3.20, Cache: $0.03 |
 | `xiaomi/mimo-v2.6-pro-ultraspeed` | 1.0M | 131.072k | In: $4.35, Out: $8.70, Cache: $0.04 |
-| `z-ai/glm-5.2` | 1.0M | 943.718k | In: $0.02, Out: $7.00, Cache: $0.02 |
+| `z-ai/glm-5.2` | 1.0M | 943.718k | In: $0.01, Out: $7.00, Cache: $0.01 |
 | `z-ai/glm-5.3` | 1.0M | 943.718k | In: $0.07, Out: $1.40, Cache: $0.07 |
 | `z-ai/glm-5.3-flash` | 1.0M | 943.717k | In: $0.15, Out: $0.50, Cache: $0.03 |
 | `z-ai/glm-5.3-flashx` | 1.0M | 131.072k | In: $0.37, Out: $1.25, Cache: $0.09 |
@@ -1291,12 +1291,12 @@ _Model information enriched by [models.dev](https://models.dev)._
 | `~anthropic/claude-haiku-latest` | openrouter | 1.0M | In: $0.10, Out: $0.50, Cache: $0.01 |
 | `~anthropic/claude-opus-latest` | openrouter | 1.0M | In: $4.00, Out: $20.00, Cache: $0.20 |
 | `~anthropic/claude-sonnet-latest` | openrouter | 1.0M | In: $2.00, Out: $10.00, Cache: $0.10 |
-| `~deepseek/deepseek-flash-latest` | openrouter | 1.0M | In: $0.01, Out: $1.80, Cache: $0.01 |
+| `~deepseek/deepseek-flash-latest` | openrouter | 1.0M | In: $0.01, Out: $1.64, Cache: $0.01 |
 | `~deepseek/deepseek-pro-latest` | openrouter | 1.0M | In: $0.25, Out: $8.00, Cache: $0.25 |
 | `~deepseek/deepseek-v4-flash-latest` | openrouter | 1.0M | In: $0.05, Out: $0.16, Cache: $0.03 |
 | `~google/gemini-flash-latest` | openrouter | 1.0M | In: $0.75, Out: $3.75, Cache: $0.07 |
 | `~google/gemini-pro-latest` | openrouter | 1.0M | In: $2.00, Out: $10.00, Cache: $0.10 |
-| `~moonshotai/kimi-latest` | openrouter | 1.0M | In: $0.15, Out: $20.00, Cache: $0.14 |
+| `~moonshotai/kimi-latest` | openrouter | 1.0M | In: $0.18, Out: $20.00, Cache: $0.17 |
 | `~openai/gpt-astra-latest` | openrouter | 1.1M | In: $10.00, Out: $50.00, Cache: $1.00 |
 | `~openai/gpt-luna-latest` | openrouter | 1.1M | In: $0.10, Out: $0.50, Cache: $0.01 |
 | `~openai/gpt-mini-latest` | openrouter | 400k | In: $0.75, Out: $4.50, Cache: $0.07 |
@@ -1304,7 +1304,7 @@ _Model information enriched by [models.dev](https://models.dev)._
 | `~openai/gpt-terra-latest` | openrouter | 1.1M | In: $1.00, Out: $5.00, Cache: $0.05 |
 | `~unbiased/pareto-latest` | openrouter | 1.0M | In: $0.80, Out: $3.20, Cache: $0.03 |
 | `~x-ai/grok-latest` | openrouter | 500k | In: $2.00, Out: $6.00, Cache: $0.50 |
-| `~z-ai/glm-flash-latest` | openrouter | 1.0M | In: $0.03, Out: $0.08, Cache: $0.03 |
+| `~z-ai/glm-flash-latest` | openrouter | 1.0M | In: $0.03, Out: $0.09, Cache: $0.03 |
 | `~z-ai/glm-latest` | openrouter | 1.0M | In: $0.07, Out: $1.40, Cache: $0.07 |
 | `aion-labs/aion-2.0` | openrouter | 131.072k | In: $0.80, Out: $1.60, Cache: $0.20 |
 
@@ -1316,10 +1316,10 @@ _Model information enriched by [models.dev](https://models.dev)._
 | `~anthropic/claude-haiku-latest` | openrouter | 1.0M | In: $0.10, Out: $0.50, Cache: $0.01 |
 | `~anthropic/claude-opus-latest` | openrouter | 1.0M | In: $4.00, Out: $20.00, Cache: $0.20 |
 | `~anthropic/claude-sonnet-latest` | openrouter | 1.0M | In: $2.00, Out: $10.00, Cache: $0.10 |
-| `~deepseek/deepseek-flash-latest` | openrouter | 1.0M | In: $0.01, Out: $1.80, Cache: $0.01 |
+| `~deepseek/deepseek-flash-latest` | openrouter | 1.0M | In: $0.01, Out: $1.64, Cache: $0.01 |
 | `~google/gemini-flash-latest` | openrouter | 1.0M | In: $0.75, Out: $3.75, Cache: $0.07 |
 | `~google/gemini-pro-latest` | openrouter | 1.0M | In: $2.00, Out: $10.00, Cache: $0.10 |
-| `~moonshotai/kimi-latest` | openrouter | 1.0M | In: $0.15, Out: $20.00, Cache: $0.14 |
+| `~moonshotai/kimi-latest` | openrouter | 1.0M | In: $0.18, Out: $20.00, Cache: $0.17 |
 | `~openai/gpt-astra-latest` | openrouter | 1.1M | In: $10.00, Out: $50.00, Cache: $1.00 |
 | `~openai/gpt-luna-latest` | openrouter | 1.1M | In: $0.10, Out: $0.50, Cache: $0.01 |
 | `~openai/gpt-mini-latest` | openrouter | 400k | In: $0.75, Out: $4.50, Cache: $0.07 |
@@ -1327,7 +1327,7 @@ _Model information enriched by [models.dev](https://models.dev)._
 | `~openai/gpt-terra-latest` | openrouter | 1.1M | In: $1.00, Out: $5.00, Cache: $0.05 |
 | `~unbiased/pareto-latest` | openrouter | 1.0M | In: $0.80, Out: $3.20, Cache: $0.03 |
 | `~x-ai/grok-latest` | openrouter | 500k | In: $2.00, Out: $6.00, Cache: $0.50 |
-| `~z-ai/glm-flash-latest` | openrouter | 1.0M | In: $0.03, Out: $0.08, Cache: $0.03 |
+| `~z-ai/glm-flash-latest` | openrouter | 1.0M | In: $0.03, Out: $0.09, Cache: $0.03 |
 | `amazon.nova-2-lite-v1:0` | bedrock | 1.0M | In: $0.33, Out: $2.75, Cache: $0.08 |
 | `amazon.nova-lite-v1:0` | bedrock | 300k | In: $0.06, Out: $0.24, Cache: $0.01 |
 | `amazon.nova-pro-v1:0` | bedrock | 300k | In: $0.80, Out: $3.20, Cache: $0.20 |
@@ -1341,19 +1341,19 @@ _Model information enriched by [models.dev](https://models.dev)._
 | `~anthropic/claude-haiku-latest` | openrouter | 1.0M | In: $0.10, Out: $0.50, Cache: $0.01 |
 | `~anthropic/claude-opus-latest` | openrouter | 1.0M | In: $4.00, Out: $20.00, Cache: $0.20 |
 | `~anthropic/claude-sonnet-latest` | openrouter | 1.0M | In: $2.00, Out: $10.00, Cache: $0.10 |
-| `~deepseek/deepseek-flash-latest` | openrouter | 1.0M | In: $0.01, Out: $1.80, Cache: $0.01 |
+| `~deepseek/deepseek-flash-latest` | openrouter | 1.0M | In: $0.01, Out: $1.64, Cache: $0.01 |
 | `~deepseek/deepseek-pro-latest` | openrouter | 1.0M | In: $0.25, Out: $8.00, Cache: $0.25 |
 | `~deepseek/deepseek-v4-flash-latest` | openrouter | 1.0M | In: $0.05, Out: $0.16, Cache: $0.03 |
 | `~google/gemini-flash-latest` | openrouter | 1.0M | In: $0.75, Out: $3.75, Cache: $0.07 |
 | `~google/gemini-pro-latest` | openrouter | 1.0M | In: $2.00, Out: $10.00, Cache: $0.10 |
-| `~moonshotai/kimi-latest` | openrouter | 1.0M | In: $0.15, Out: $20.00, Cache: $0.14 |
+| `~moonshotai/kimi-latest` | openrouter | 1.0M | In: $0.18, Out: $20.00, Cache: $0.17 |
 | `~openai/gpt-astra-latest` | openrouter | 1.1M | In: $10.00, Out: $50.00, Cache: $1.00 |
 | `~openai/gpt-luna-latest` | openrouter | 1.1M | In: $0.10, Out: $0.50, Cache: $0.01 |
 | `~openai/gpt-mini-latest` | openrouter | 400k | In: $0.75, Out: $4.50, Cache: $0.07 |
 | `~openai/gpt-sol-latest` | openrouter | 1.1M | In: $2.00, Out: $10.00, Cache: $0.10 |
 | `~openai/gpt-terra-latest` | openrouter | 1.1M | In: $1.00, Out: $5.00, Cache: $0.05 |
 | `~x-ai/grok-latest` | openrouter | 500k | In: $2.00, Out: $6.00, Cache: $0.50 |
-| `~z-ai/glm-flash-latest` | openrouter | 1.0M | In: $0.03, Out: $0.08, Cache: $0.03 |
+| `~z-ai/glm-flash-latest` | openrouter | 1.0M | In: $0.03, Out: $0.09, Cache: $0.03 |
 | `~z-ai/glm-latest` | openrouter | 1.0M | In: $0.07, Out: $1.40, Cache: $0.07 |
 | `aion-labs/aion-2.0` | openrouter | 131.072k | In: $0.80, Out: $1.60, Cache: $0.20 |
 | `aion-labs/aion-3.0` | openrouter | 131.072k | In: $3.00, Out: $6.00, Cache: $0.75 |
@@ -1366,12 +1366,12 @@ _Model information enriched by [models.dev](https://models.dev)._
 | `~anthropic/claude-haiku-latest` | openrouter | 1.0M | In: $0.10, Out: $0.50, Cache: $0.01 |
 | `~anthropic/claude-opus-latest` | openrouter | 1.0M | In: $4.00, Out: $20.00, Cache: $0.20 |
 | `~anthropic/claude-sonnet-latest` | openrouter | 1.0M | In: $2.00, Out: $10.00, Cache: $0.10 |
-| `~deepseek/deepseek-flash-latest` | openrouter | 1.0M | In: $0.01, Out: $1.80, Cache: $0.01 |
+| `~deepseek/deepseek-flash-latest` | openrouter | 1.0M | In: $0.01, Out: $1.64, Cache: $0.01 |
 | `~deepseek/deepseek-pro-latest` | openrouter | 1.0M | In: $0.25, Out: $8.00, Cache: $0.25 |
 | `~deepseek/deepseek-v4-flash-latest` | openrouter | 1.0M | In: $0.05, Out: $0.16, Cache: $0.03 |
 | `~google/gemini-flash-latest` | openrouter | 1.0M | In: $0.75, Out: $3.75, Cache: $0.07 |
 | `~google/gemini-pro-latest` | openrouter | 1.0M | In: $2.00, Out: $10.00, Cache: $0.10 |
-| `~moonshotai/kimi-latest` | openrouter | 1.0M | In: $0.15, Out: $20.00, Cache: $0.14 |
+| `~moonshotai/kimi-latest` | openrouter | 1.0M | In: $0.18, Out: $20.00, Cache: $0.17 |
 | `~openai/gpt-astra-latest` | openrouter | 1.1M | In: $10.00, Out: $50.00, Cache: $1.00 |
 | `~openai/gpt-luna-latest` | openrouter | 1.1M | In: $0.10, Out: $0.50, Cache: $0.01 |
 | `~openai/gpt-mini-latest` | openrouter | 400k | In: $0.75, Out: $4.50, Cache: $0.07 |
@@ -1379,7 +1379,7 @@ _Model information enriched by [models.dev](https://models.dev)._
 | `~openai/gpt-terra-latest` | openrouter | 1.1M | In: $1.00, Out: $5.00, Cache: $0.05 |
 | `~unbiased/pareto-latest` | openrouter | 1.0M | In: $0.80, Out: $3.20, Cache: $0.03 |
 | `~x-ai/grok-latest` | openrouter | 500k | In: $2.00, Out: $6.00, Cache: $0.50 |
-| `~z-ai/glm-flash-latest` | openrouter | 1.0M | In: $0.03, Out: $0.08, Cache: $0.03 |
+| `~z-ai/glm-flash-latest` | openrouter | 1.0M | In: $0.03, Out: $0.09, Cache: $0.03 |
 | `~z-ai/glm-latest` | openrouter | 1.0M | In: $0.07, Out: $1.40, Cache: $0.07 |
 | `aion-labs/aion-2.0` | openrouter | 131.072k | In: $0.80, Out: $1.60, Cache: $0.20 |
 
@@ -1391,12 +1391,12 @@ _Model information enriched by [models.dev](https://models.dev)._
 | `~anthropic/claude-haiku-latest` | openrouter | 1.0M | In: $0.10, Out: $0.50, Cache: $0.01 |
 | `~anthropic/claude-opus-latest` | openrouter | 1.0M | In: $4.00, Out: $20.00, Cache: $0.20 |
 | `~anthropic/claude-sonnet-latest` | openrouter | 1.0M | In: $2.00, Out: $10.00, Cache: $0.10 |
-| `~deepseek/deepseek-flash-latest` | openrouter | 1.0M | In: $0.01, Out: $1.80, Cache: $0.01 |
+| `~deepseek/deepseek-flash-latest` | openrouter | 1.0M | In: $0.01, Out: $1.64, Cache: $0.01 |
 | `~deepseek/deepseek-pro-latest` | openrouter | 1.0M | In: $0.25, Out: $8.00, Cache: $0.25 |
 | `~deepseek/deepseek-v4-flash-latest` | openrouter | 1.0M | In: $0.05, Out: $0.16, Cache: $0.03 |
 | `~google/gemini-flash-latest` | openrouter | 1.0M | In: $0.75, Out: $3.75, Cache: $0.07 |
 | `~google/gemini-pro-latest` | openrouter | 1.0M | In: $2.00, Out: $10.00, Cache: $0.10 |
-| `~moonshotai/kimi-latest` | openrouter | 1.0M | In: $0.15, Out: $20.00, Cache: $0.14 |
+| `~moonshotai/kimi-latest` | openrouter | 1.0M | In: $0.18, Out: $20.00, Cache: $0.17 |
 | `~openai/gpt-astra-latest` | openrouter | 1.1M | In: $10.00, Out: $50.00, Cache: $1.00 |
 | `~openai/gpt-luna-latest` | openrouter | 1.1M | In: $0.10, Out: $0.50, Cache: $0.01 |
 | `~openai/gpt-mini-latest` | openrouter | 400k | In: $0.75, Out: $4.50, Cache: $0.07 |
@@ -1404,7 +1404,7 @@ _Model information enriched by [models.dev](https://models.dev)._
 | `~openai/gpt-terra-latest` | openrouter | 1.1M | In: $1.00, Out: $5.00, Cache: $0.05 |
 | `~unbiased/pareto-latest` | openrouter | 1.0M | In: $0.80, Out: $3.20, Cache: $0.03 |
 | `~x-ai/grok-latest` | openrouter | 500k | In: $2.00, Out: $6.00, Cache: $0.50 |
-| `~z-ai/glm-flash-latest` | openrouter | 1.0M | In: $0.03, Out: $0.08, Cache: $0.03 |
+| `~z-ai/glm-flash-latest` | openrouter | 1.0M | In: $0.03, Out: $0.09, Cache: $0.03 |
 | `~z-ai/glm-latest` | openrouter | 1.0M | In: $0.07, Out: $1.40, Cache: $0.07 |
 | `aion-labs/aion-2.0` | openrouter | 131.072k | In: $0.80, Out: $1.60, Cache: $0.20 |
 
@@ -1422,10 +1422,10 @@ Models that can process images:
 | `~anthropic/claude-haiku-latest` | openrouter | 1.0M | In: $0.10, Out: $0.50, Cache: $0.01 |
 | `~anthropic/claude-opus-latest` | openrouter | 1.0M | In: $4.00, Out: $20.00, Cache: $0.20 |
 | `~anthropic/claude-sonnet-latest` | openrouter | 1.0M | In: $2.00, Out: $10.00, Cache: $0.10 |
-| `~deepseek/deepseek-flash-latest` | openrouter | 1.0M | In: $0.01, Out: $1.80, Cache: $0.01 |
+| `~deepseek/deepseek-flash-latest` | openrouter | 1.0M | In: $0.01, Out: $1.64, Cache: $0.01 |
 | `~google/gemini-flash-latest` | openrouter | 1.0M | In: $0.75, Out: $3.75, Cache: $0.07 |
 | `~google/gemini-pro-latest` | openrouter | 1.0M | In: $2.00, Out: $10.00, Cache: $0.10 |
-| `~moonshotai/kimi-latest` | openrouter | 1.0M | In: $0.15, Out: $20.00, Cache: $0.14 |
+| `~moonshotai/kimi-latest` | openrouter | 1.0M | In: $0.18, Out: $20.00, Cache: $0.17 |
 | `~openai/gpt-astra-latest` | openrouter | 1.1M | In: $10.00, Out: $50.00, Cache: $1.00 |
 | `~openai/gpt-luna-latest` | openrouter | 1.1M | In: $0.10, Out: $0.50, Cache: $0.01 |
 | `~openai/gpt-mini-latest` | openrouter | 400k | In: $0.75, Out: $4.50, Cache: $0.07 |
