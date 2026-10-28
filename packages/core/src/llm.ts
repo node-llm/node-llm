@@ -45,7 +45,8 @@ export interface RetryOptions {
   delayMs?: number;
 }
 
-type LLMConfig = {
+/** Options for createLLM(): the provider to use and its keys, as well as any NodeLLMConfig setting. */
+export type LLMConfig = {
   provider?: Provider | string;
   retry?: RetryOptions;
   middlewares?: Middleware[];

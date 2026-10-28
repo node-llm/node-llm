@@ -39,6 +39,7 @@ export {
   ModelRegistry,
   PricingRegistry
 } from "./llm.js";
+export type { LLMConfig } from "./llm.js";
 export { config } from "./config.js";
 export type { NodeLLMConfig } from "./config.js";
 export { providerRegistry, ProviderInterceptor } from "./providers/registry.js";
