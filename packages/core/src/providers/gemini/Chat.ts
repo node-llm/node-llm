@@ -48,6 +48,7 @@ export class GeminiChat {
       tool_choice: _choice,
       parallel_tool_calls: _parallel,
       requestTimeout,
+      signal,
       ...rest
     } = request;
 
@@ -114,7 +115,8 @@ export class GeminiChat {
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify(payload)
+        body: JSON.stringify(payload),
+        signal
       },
       requestTimeout
     );

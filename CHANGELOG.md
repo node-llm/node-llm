@@ -15,6 +15,7 @@ All notable changes to this project will be documented in this file.
 
 ### Bug Fixes
 
+- **Cancelling Requests**: An `AbortSignal` passed to `ask()` now cancels the request on Anthropic, Bedrock, DeepSeek, Gemini, Mistral and xAI, as it already did on OpenAI. Before, those providers ignored it, and Anthropic, DeepSeek, Gemini and xAI also sent it in the request body.
 - **Temperature on Models That Reject It**: Claude Opus 4.7 and later, the Claude 5 family, OpenAI's reasoning models and others return an error when a request sets a temperature. For models the registry marks this way, chats and agents now send the request without one and log a warning once per model. Providers declare it with the new optional `supportsTemperature(model)` capability.
 - **Tool Call Limit Leaves a Valid History**: When `maxToolCalls` is reached, the tool calls the model asked for but that weren't run are now answered with an error result. Before, the history ended with unanswered tool calls, which providers reject, so the chat could not be asked again.
 - **Streaming Tool Call Limit**: `stream()` counted every model request against `maxToolCalls`, so it allowed one round of tool calls fewer than `ask()`. Both now count rounds of tool calls.

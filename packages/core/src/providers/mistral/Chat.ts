@@ -64,7 +64,7 @@ export class MistralChat {
       tool_choice: _choice,
       parallel_tool_calls: _parallel,
       requestTimeout,
-      signal: _signal,
+      signal,
       ...rest
     } = request;
 
@@ -142,7 +142,8 @@ export class MistralChat {
           Accept: "application/json",
           ...request.headers
         },
-        body: JSON.stringify(body)
+        body: JSON.stringify(body),
+        signal
       },
       requestTimeout
     );

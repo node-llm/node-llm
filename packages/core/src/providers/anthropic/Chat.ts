@@ -49,6 +49,7 @@ export class AnthropicChat {
       tool_choice: _choice,
       parallel_tool_calls: _parallel,
       requestTimeout,
+      signal,
       ...rest
     } = request;
 
@@ -112,7 +113,8 @@ export class AnthropicChat {
       {
         method: "POST",
         headers: headers,
-        body: JSON.stringify(body)
+        body: JSON.stringify(body),
+        signal
       },
       requestTimeout
     );

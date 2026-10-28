@@ -47,6 +47,7 @@ export class XAIChat {
       thinking: _thinking,
       headers: _headers,
       requestTimeout,
+      signal,
       ...rest
     } = request;
 
@@ -74,7 +75,8 @@ export class XAIChat {
           "Content-Type": "application/json",
           ...request.headers
         },
-        body: JSON.stringify(body)
+        body: JSON.stringify(body),
+        signal
       },
       requestTimeout
     );

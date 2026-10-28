@@ -69,7 +69,8 @@ export class BedrockChat {
       {
         method: "POST",
         headers,
-        body: bodyJson
+        body: bodyJson,
+        signal: request.signal
       },
       request.requestTimeout ?? this.config.requestTimeout
     );

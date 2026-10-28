@@ -77,6 +77,8 @@ export interface ChatRequest {
   prediction?: string | ContentPart[];
   headers?: Record<string, string>;
   requestTimeout?: number;
+  /** Cancels the request */
+  signal?: AbortSignal;
   [key: string]: unknown;
 }
 
