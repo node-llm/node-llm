@@ -55,7 +55,7 @@ describe("Mistral Capabilities", () => {
     });
 
     it("should return correct context window for small models", () => {
-      expect(MistralCapabilities.getContextWindow("mistral-small-latest")).toBe(256000);
+      expect(MistralCapabilities.getContextWindow("mistral-small-latest")).toBe(262144);
     });
 
     it("should return default for unknown models", () => {
