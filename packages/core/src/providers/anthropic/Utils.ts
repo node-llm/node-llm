@@ -1,8 +1,10 @@
 import { Message } from "../../chat/Message.js";
 import { ContentPart } from "../../chat/Content.js";
-import { ThinkingConfig } from "../Provider.js";
+import { ChatRequest, ThinkingConfig } from "../Provider.js";
 import { ModelRegistry } from "../../models/ModelRegistry.js";
 import { AnthropicMessage, AnthropicContentBlock, AnthropicMessageRequest } from "./types.js";
+import { Capabilities } from "./Capabilities.js";
+import { DEFAULT_MAX_TOKENS } from "../../constants.js";
 
 export function formatSystemPrompt(messages: Message[]): string | undefined {
   let systemPrompt: string | undefined;
@@ -184,4 +186,82 @@ export function applyThinking(
   if (effort && takesEffort && (thinking.budget || adaptiveOnly)) {
     body.output_config = { ...body.output_config, effort };
   }
+}
+
+/**
+ * The Messages API request body for a chat request, shared by streaming and non-streaming calls.
+ * Fields NodeLLM doesn't map itself, such as those from `withParams()`, are sent as they are.
+ */
+export function buildMessageRequest(
+  request: ChatRequest,
+  stream: boolean
+): AnthropicMessageRequest {
+  const {
+    model,
+    messages: _messages,
+    tools,
+    temperature,
+    max_tokens,
+    response_format,
+    thinking,
+    headers: _headers,
+    tool_choice,
+    parallel_tool_calls: _parallel,
+    requestTimeout: _timeout,
+    signal: _signal,
+    ...params
+  } = request;
+
+  let system = formatSystemPrompt(request.messages);
+  if (response_format) {
+    let schemaText = "";
+    if (response_format.type === "json_schema" && response_format.json_schema?.schema) {
+      schemaText = "\nSchema:\n" + JSON.stringify(response_format.json_schema.schema, null, 2);
+    }
+    const instruction = `CRITICAL: Respond ONLY with a valid JSON object matching the requested schema.${schemaText}\n\nDo not include any other text or explanation.`;
+    system = system ? `${system}\n\n${instruction}` : instruction;
+  }
+
+  const body: AnthropicMessageRequest = {
+    model,
+    messages: formatMessages(request.messages),
+    max_tokens: max_tokens || Capabilities.getMaxOutputTokens(model) || DEFAULT_MAX_TOKENS,
+    system,
+    ...params,
+    stream
+  };
+
+  if (temperature !== undefined) {
+    body.temperature = temperature;
+  }
+
+  if (tools && tools.length > 0 && tool_choice !== "none") {
+    body.tools = tools.map((tool) => ({
+      name: tool.function.name,
+      description: tool.function.description,
+      input_schema: tool.function.parameters
+    }));
+  }
+
+  if (tool_choice && tool_choice !== "none") {
+    if (tool_choice === "auto") {
+      body.tool_choice = { type: "auto" };
+    } else if (tool_choice === "required") {
+      body.tool_choice = { type: "any" };
+    } else if (typeof tool_choice === "string") {
+      body.tool_choice = { type: "tool", name: tool_choice };
+    } else if (typeof tool_choice === "object" && "function" in tool_choice) {
+      body.tool_choice = { type: "tool", name: tool_choice.function.name };
+    }
+  }
+
+  applyThinking(body, thinking, Boolean(max_tokens));
+  return body;
+}
+
+/** Whether the request sends a PDF, which needs the PDF beta header. */
+export function hasPdf(body: AnthropicMessageRequest): boolean {
+  return body.messages.some(
+    (msg) => Array.isArray(msg.content) && msg.content.some((block) => block.type === "document")
+  );
 }

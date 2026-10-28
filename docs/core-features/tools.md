@@ -177,6 +177,8 @@ const chat = llm.chat("gpt-5")
 chat.withToolChoice("get_weather");
 ```
 
+Claude Opus 5.5, Sonnet 5.5 and Fable 5.1 don't accept `required` or a specific tool, and Anthropic rejects the request. With those models, keep `auto` and say in the instructions which tool to use.
+
 ### Tool Calls (calls)
 
 Use `calls` to control if the model can execute multiple tools in a single turn (Parallel Tool Calling).
