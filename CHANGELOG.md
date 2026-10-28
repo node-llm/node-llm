@@ -15,6 +15,7 @@ All notable changes to this project will be documented in this file.
 
 ### Bug Fixes
 
+- **Prompt Cache Usage and Cost**: On Anthropic and Bedrock, `input_tokens` now includes tokens read from and written to the prompt cache, as it does on the other providers, and `total_tokens` with it. Before, cached input was subtracted from a total that didn't include it, so the cost of a cached request was too low or even negative. Cache writes are now priced at the model's cache write rate (1.25x input on Claude). Streaming requests to Anthropic now report cache usage too.
 - **Anthropic Streaming Parameters**: Streaming requests to Anthropic now send extra parameters, such as those from `withParams()`, as non-streaming requests already did. Both now build the same request body.
 - **Cancelling Requests**: An `AbortSignal` passed to `ask()` now cancels the request on Anthropic, Bedrock, DeepSeek, Gemini, Mistral and xAI, as it already did on OpenAI. Before, those providers ignored it, and Anthropic, DeepSeek, Gemini and xAI also sent it in the request body.
 - **Temperature on Models That Reject It**: Claude Opus 4.7 and later, the Claude 5 family, OpenAI's reasoning models and others return an error when a request sets a temperature. For models the registry marks this way, chats and agents now send the request without one and log a warning once per model. Providers declare it with the new optional `supportsTemperature(model)` capability.
@@ -32,6 +33,7 @@ All notable changes to this project will be documented in this file.
 
 ### Compatibility
 
+- Anthropic and Bedrock `input_tokens` and `total_tokens` are higher for requests that read or write the prompt cache, because they now include those tokens.
 - Zod 3 schemas are converted and validated exactly as before.
 - `stream()` allows one more round of tool calls than before, matching `ask()`.
 - After `maxToolCalls` is reached, the chat history ends with an error tool result for each call that wasn't run.

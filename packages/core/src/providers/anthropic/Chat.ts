@@ -5,7 +5,7 @@ import { handleAnthropicError } from "./Errors.js";
 import { ModelRegistry } from "../../models/ModelRegistry.js";
 import { logger } from "../../utils/logger.js";
 import { fetchWithTimeout } from "../../utils/fetch.js";
-import { buildMessageRequest, hasPdf } from "./Utils.js";
+import { buildMessageRequest, hasPdf, toUsage } from "./Utils.js";
 
 export class AnthropicChat {
   constructor(
@@ -78,15 +78,7 @@ export class AnthropicChat {
       }
     }
 
-    const usage = json.usage
-      ? {
-          input_tokens: json.usage.input_tokens,
-          output_tokens: json.usage.output_tokens,
-          total_tokens: json.usage.input_tokens + json.usage.output_tokens,
-          cached_tokens: json.usage.cache_read_input_tokens,
-          cache_creation_tokens: json.usage.cache_creation_input_tokens
-        }
-      : undefined;
+    const usage = json.usage ? toUsage(json.usage) : undefined;
 
     const calculatedUsage = usage
       ? ModelRegistry.calculateCost(usage, model, "anthropic")

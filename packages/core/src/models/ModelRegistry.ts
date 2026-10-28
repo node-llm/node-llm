@@ -124,6 +124,7 @@ export class ModelRegistry {
       output_tokens: number;
       total_tokens: number;
       cached_tokens?: number;
+      cache_creation_tokens?: number;
       reasoning_tokens?: number;
       image_tokens?: number;
     }
@@ -151,10 +152,15 @@ export class ModelRegistry {
         (modelId.includes("reasoner") || modelId.includes("3-7") ? outputPrice * 2.5 : outputPrice);
 
       const cachedPrice = prices.cached_input_per_million ?? inputPrice / 2;
+      const cacheWritePrice = prices.cache_write_per_million ?? inputPrice;
 
+      // input_tokens counts every input token, including cache reads and writes.
+      const cachedTokens = usage.cached_tokens || 0;
+      const cacheWriteTokens = usage.cache_creation_tokens || 0;
       inputCost +=
-        ((usage.input_tokens - (usage.cached_tokens || 0)) / 1_000_000) * inputPrice +
-        ((usage.cached_tokens || 0) / 1_000_000) * cachedPrice;
+        ((usage.input_tokens - cachedTokens - cacheWriteTokens) / 1_000_000) * inputPrice +
+        (cachedTokens / 1_000_000) * cachedPrice +
+        (cacheWriteTokens / 1_000_000) * cacheWritePrice;
 
       const outputTokens = usage.output_tokens - (usage.reasoning_tokens || 0);
       const reasoningTokens = usage.reasoning_tokens || 0;

@@ -40,6 +40,8 @@ console.log(response.meta);
 // => { usage: {...}, model: "...", provider: "...", reasoning: "...", metadata: {...} }
 ```
 
+`input_tokens` counts every input token on every provider, including those read from a prompt cache (`cached_tokens`) and written to one (`cache_creation_tokens`). The cost prices each part at its own rate.
+
 ## Session Totals
 
 The `Chat` instance maintains a running total of usage for the life of that object.

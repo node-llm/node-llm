@@ -95,12 +95,15 @@ export interface ChatChunk {
 }
 
 export interface Usage {
+  /** Every input token, including those read from or written to a prompt cache */
   input_tokens: number;
   output_tokens: number;
   total_tokens: number;
   reasoning_tokens?: number;
   image_tokens?: number;
+  /** Input tokens read from a prompt cache */
   cached_tokens?: number;
+  /** Input tokens written to a prompt cache */
   cache_creation_tokens?: number;
   cost?: number;
   input_cost?: number;

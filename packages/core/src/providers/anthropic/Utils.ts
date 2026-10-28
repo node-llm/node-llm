@@ -1,6 +1,6 @@
 import { Message } from "../../chat/Message.js";
 import { ContentPart } from "../../chat/Content.js";
-import { ChatRequest, ThinkingConfig } from "../Provider.js";
+import { ChatRequest, ThinkingConfig, Usage } from "../Provider.js";
 import { ModelRegistry } from "../../models/ModelRegistry.js";
 import { AnthropicMessage, AnthropicContentBlock, AnthropicMessageRequest } from "./types.js";
 import { Capabilities } from "./Capabilities.js";
@@ -264,4 +264,26 @@ export function hasPdf(body: AnthropicMessageRequest): boolean {
   return body.messages.some(
     (msg) => Array.isArray(msg.content) && msg.content.some((block) => block.type === "document")
   );
+}
+
+/**
+ * NodeLLM usage from Anthropic's. Anthropic's input_tokens leave out cache reads and writes;
+ * NodeLLM's input_tokens count every input token, so costs and totals include cached input.
+ */
+export function toUsage(usage: {
+  input_tokens: number;
+  output_tokens: number;
+  cache_read_input_tokens?: number;
+  cache_creation_input_tokens?: number;
+}): Usage {
+  const cached = usage.cache_read_input_tokens || 0;
+  const written = usage.cache_creation_input_tokens || 0;
+  const input = usage.input_tokens + cached + written;
+  return {
+    input_tokens: input,
+    output_tokens: usage.output_tokens,
+    total_tokens: input + usage.output_tokens,
+    cached_tokens: usage.cache_read_input_tokens,
+    cache_creation_tokens: usage.cache_creation_input_tokens
+  };
 }

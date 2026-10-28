@@ -1,6 +1,6 @@
 import { ChatRequest, ChatChunk } from "../Provider.js";
 import { handleAnthropicError } from "./Errors.js";
-import { buildMessageRequest, hasPdf } from "./Utils.js";
+import { buildMessageRequest, hasPdf, toUsage } from "./Utils.js";
 import { logger } from "../../utils/logger.js";
 import { fetchWithTimeout } from "../../utils/fetch.js";
 
@@ -135,12 +135,7 @@ export class AnthropicStreaming {
               // Block finished
             } else if (eventType === "message_start") {
               if (data.message?.usage) {
-                const usage = {
-                  input_tokens: data.message.usage.input_tokens,
-                  output_tokens: data.message.usage.output_tokens,
-                  total_tokens: data.message.usage.input_tokens + data.message.usage.output_tokens
-                };
-                yield { content: "", usage };
+                yield { content: "", usage: toUsage(data.message.usage) };
               }
             } else if (eventType === "message_delta") {
               // Update usage

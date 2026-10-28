@@ -246,6 +246,7 @@ async function syncModels() {
                 input_per_million: details.cost?.input || 0,
                 output_per_million: details.cost?.output || 0,
                 cached_input_per_million: details.cost?.cache_read,
+                cache_write_per_million: details.cost?.cache_write,
                 reasoning_output_per_million: details.cost?.output
               }
             }
