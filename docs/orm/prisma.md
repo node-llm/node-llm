@@ -284,7 +284,7 @@ class ApiStore implements ChatStore {
 }
 
 const session = await createAgentSession(new ApiStore(), llm, SupportAgent, {
-  tools: [lookupOrder] // tools for this session, added to the agent class's own
+  tools: [lookupOrder] // tools for this session, in place of the agent class's own
 });
 ```
 

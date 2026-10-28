@@ -8,7 +8,7 @@ All notable changes to this project will be documented in this file.
 
 - **Custom Stores**: Chats and agent sessions record through a `ChatStore`. A Prisma client still works as before (it is wrapped in the new `PrismaStore`); any other store, such as one that sends records to your own API, can be passed in its place. `isChatStore()`, `PrismaStore` and the store record types are exported.
 - **Prisma Is Optional**: `@prisma/client` is now an optional peer dependency and the build no longer runs `prisma generate`, since only the Prisma store uses Prisma. Apps with their own store don't install it.
-- **Session Tools**: `createAgentSession()` takes `tools`, for tools built per session (for example ones bound to a user's data), added to the agent class's own.
+- **Session Tools**: `createAgentSession()` takes `tools`, for tools built per session (for example ones bound to a user's data), used in place of the agent class's own.
 
 ### Bug Fixes
 
