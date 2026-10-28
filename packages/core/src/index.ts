@@ -43,6 +43,7 @@ export { config } from "./config.js";
 export type { NodeLLMConfig } from "./config.js";
 export { providerRegistry, ProviderInterceptor } from "./providers/registry.js";
 export { Schema } from "./schema/Schema.js";
+export type { ZodSchema } from "./schema/zod.js";
 export { BaseProvider } from "./providers/BaseProvider.js";
 export {
   Provider,

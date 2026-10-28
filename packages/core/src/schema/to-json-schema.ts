@@ -1,13 +1,6 @@
-import { z } from "zod";
-import { zodToJsonSchema } from "zod-to-json-schema";
+import { isZodSchema, zodToJson, ZodSchema } from "./zod.js";
 
-export function toJsonSchema(
-  schema: z.ZodType<unknown> | Record<string, unknown>
-): Record<string, unknown> {
-  // If it's a Zod schema, convert it
-  if (schema instanceof z.ZodType) {
-    return zodToJsonSchema(schema, { target: "openApi3" });
-  }
-  // If it's already a JSON schema object, return as is
-  return schema;
+export function toJsonSchema(schema: ZodSchema | Record<string, unknown>): Record<string, unknown> {
+  // A Zod schema is converted; a JSON Schema object is used as it is.
+  return isZodSchema(schema) ? zodToJson(schema) : schema;
 }

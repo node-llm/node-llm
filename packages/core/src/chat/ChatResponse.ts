@@ -2,7 +2,7 @@ import { Usage, ThinkingResult, Attachment } from "../providers/Provider.js";
 import { ToolCall } from "./Tool.js";
 import { Schema } from "../schema/Schema.js";
 import { extractJson } from "../utils/json.js";
-import { z } from "zod";
+import { isZodSchema } from "../schema/zod.js";
 
 /**
  * Enhanced string that includes token usage metadata.
@@ -147,9 +147,10 @@ export class ChatResponseString extends String {
 
     const json = this.parsed;
 
-    if (this.schema && this.schema.definition.schema instanceof z.ZodType) {
+    const schema = this.schema?.definition.schema;
+    if (isZodSchema(schema)) {
       try {
-        this._cachedData = this.schema.definition.schema.parse(json);
+        this._cachedData = schema.parse(json);
         return this._cachedData;
       } catch (e) {
         this._validationError = e as Error;

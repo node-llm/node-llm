@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { isZodSchema, Zod4Schema } from "../schema/zod.js";
 import { toJsonSchema } from "../schema/to-json-schema.js";
 
 export interface ToolCall {
@@ -95,9 +96,9 @@ export abstract class Tool<T = Record<string, any>> {
 
   /**
    * Parameters the tool accepts.
-   * Can be a Zod object (for auto-schema + type safety) or a raw JSON Schema.
+   * Can be a Zod 4 or Zod 3 object (for auto-schema + type safety) or a raw JSON Schema.
    */
-  public abstract schema: z.ZodObject<z.ZodRawShape> | Record<string, unknown>;
+  public abstract schema: Zod4Schema | z.ZodObject<z.ZodRawShape> | Record<string, unknown>;
 
   /**
    * Whether to enforce strict JSON schema constraints for OpenAI and similar providers.
@@ -138,7 +139,7 @@ export abstract class Tool<T = Record<string, any>> {
     try {
       // 1. Runtime validation if Zod schema is provided
       let validatedArgs = args;
-      if (this.schema instanceof z.ZodType) {
+      if (isZodSchema(this.schema)) {
         try {
           validatedArgs = this.schema.parse(args) as T;
         } catch (validationError: any) {

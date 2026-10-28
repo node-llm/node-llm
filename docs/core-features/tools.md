@@ -38,7 +38,8 @@ npm install @node-llm/core
 The recommended way to define tools is by using the `Tool` class. This provides auto-generated JSON schemas and full type safety using `zod`.
 
 ```ts
-import { NodeLLM, Tool, z } from "@node-llm/core";
+import { NodeLLM, Tool } from "@node-llm/core";
+import { z } from "zod"; // Zod 4
 
 const weatherSchema = z.object({
   location: z.string().describe("The city and state, e.g. San Francisco, CA"),
@@ -87,7 +88,7 @@ When `strict = true` is set, `NodeLLM` automatically translates your Zod schema 
 
 ### Defining Parameters with Zod
 
-`NodeLLM` uses `zod-to-json-schema` under the hood. Most standard Zod types work out of the box:
+`NodeLLM` turns the schema into JSON Schema for the model, with Zod's own converter for Zod 4 schemas (Zod 3 schemas still work; see [Zod 4 and Zod 3](structured_output.html#zod-4-and-zod-3)). Most standard Zod types work out of the box:
 
 | Zod Type              | Description                                         |
 | :-------------------- | :-------------------------------------------------- |

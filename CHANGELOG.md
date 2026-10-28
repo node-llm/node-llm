@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 
 ### Features
 
+- **Zod 4 Schemas**: `withSchema()`, the `schema` option, Agents and `Tool` accept Zod 4 schemas (Zod 4.2 or later, from `"zod"`) as well as Zod 3, with types inferred from either. Schemas are recognised by shape, so a schema from another copy of Zod validates too; before, it skipped validation silently.
 - **Adaptive Thinking for Claude**: On Claude generations that only think adaptively (Opus 4.7 and later, Sonnet 5 and later, Fable), `withEffort()` and `withThinking({ effort })` now send adaptive thinking with `output_config.effort`. Before, effort was not sent to Anthropic, and these models reject a fixed `budget`. `effort` also accepts `"xhigh"` and `"max"`.
 - **Thinking Display**: `withThinking({ display: "summarized" })` returns a summary of Claude's thinking, which newer models hide by default.
 - **Typed `defineAgent()` Output**: `defineAgent({ schema })` infers the Zod schema's type, so `response.data` is typed without repeating the schema as a type argument.
@@ -22,8 +23,13 @@ All notable changes to this project will be documented in this file.
 
 - **Model Catalog Sync**: `models.json` now records each model's thinking controls (`metadata.reasoning_options`) and whether it accepts a temperature (`metadata.temperature`) from models.dev.
 
+### Deprecations
+
+- **Zod 3 schemas**: still supported, but deprecated and may be removed in a future major version. Use Zod 4 for new code. The `z` exported by `@node-llm/core` stays Zod 3 until then.
+
 ### Compatibility
 
+- Zod 3 schemas are converted and validated exactly as before.
 - `stream()` allows one more round of tool calls than before, matching `ask()`.
 - After `maxToolCalls` is reached, the chat history ends with an error tool result for each call that wasn't run.
 - Requests to budget-thinking Claude models (Sonnet 4.5, Haiku 4.5, Opus 4.5, Opus 4.6, Sonnet 4.6) are unchanged: `budget` is sent as before, and `effort` alone is still not sent.

@@ -1,10 +1,10 @@
-import { z } from "zod";
 import { Chat, AskOptions } from "../chat/Chat.js";
 import { ChatOptions } from "../chat/ChatOptions.js";
 import { ChatResponseString } from "../chat/ChatResponse.js";
 import { ToolResolvable, ToolCall } from "../chat/Tool.js";
 import { ThinkingConfig, ThinkingResult } from "../providers/Provider.js";
 import { Schema } from "../schema/Schema.js";
+import type { ZodSchema } from "../schema/zod.js";
 import { NodeLLM, NodeLLMCore } from "../llm.js";
 import { Middleware } from "../types/Middleware.js";
 
@@ -36,7 +36,7 @@ export interface AgentConfig<I = Record<string, any>> {
   thinking?: ThinkingConfig;
 
   /** Output schema for structured responses */
-  schema?: z.ZodType | Schema | Record<string, unknown>;
+  schema?: ZodSchema | Schema | Record<string, unknown>;
 
   /** Provider-specific parameters */
   params?: Record<string, unknown>;
@@ -80,7 +80,7 @@ export abstract class Agent<
   static tools?: LazyValue<ToolResolvable[], Record<string, any>>;
   static temperature?: number;
   static thinking?: ThinkingConfig;
-  static schema?: z.ZodType | Schema | Record<string, unknown>;
+  static schema?: ZodSchema | Schema | Record<string, unknown>;
   static params?: Record<string, unknown>;
   static headers?: Record<string, string>;
   static maxTokens?: number;
@@ -207,7 +207,7 @@ export abstract class Agent<
     // Apply schema
     const schema = overrides.schema ?? ctor.schema;
     if (schema) {
-      this.chat.withSchema(schema as z.ZodType<S>);
+      this.chat.withSchema(schema as ZodSchema<S>);
     }
 
     // Wire up telemetry hooks
@@ -428,7 +428,7 @@ export type DefinedAgent<
 export function defineAgent<
   I extends Record<string, any> = Record<string, any>,
   S extends Record<string, unknown> = Record<string, unknown>
->(config: AgentConfig<I> & { schema: z.ZodType<S> }): DefinedAgent<I, S>;
+>(config: AgentConfig<I> & { schema: ZodSchema<S> }): DefinedAgent<I, S>;
 export function defineAgent<
   I extends Record<string, any> = Record<string, any>,
   S extends Record<string, unknown> = Record<string, unknown>

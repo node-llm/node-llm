@@ -24,8 +24,8 @@ import { ModelRegistry } from "../models/ModelRegistry.js";
 import { ToolDefinition, ToolResolvable, ToolCall } from "./Tool.js";
 import { Schema } from "../schema/Schema.js";
 import { toJsonSchema } from "../schema/to-json-schema.js";
+import { isZodSchema, Zod3Schema, Zod4Schema, ZodSchema } from "../schema/zod.js";
 import { randomUUID } from "node:crypto";
-import { z } from "zod";
 import { config } from "../config.js";
 import {
   ToolExecutionMode,
@@ -96,7 +96,7 @@ export class Chat<S = unknown> {
     // exactly as it was.
     const rawSchema = options.schema as unknown;
     if (
-      rawSchema instanceof z.ZodType ||
+      isZodSchema(rawSchema) ||
       (rawSchema &&
         typeof rawSchema === "object" &&
         !(rawSchema instanceof Schema) &&
@@ -362,14 +362,15 @@ export class Chat<S = unknown> {
    * Enforce a specific schema for the output.
    * Can accept a Schema object or a Zod schema/JSON Schema directly.
    */
-  // A Zod schema gets its own overload so the response type is inferred from
-  // it; in the single union signature, a Zod object also matched the
-  // Record<string, unknown> branch and T fell back to unknown. The second
-  // overload is the original signature, so every call that compiled before
-  // still does - including one passing a value typed as the whole union.
-  withSchema<T>(schema: z.ZodType<T>): Chat<T>;
-  withSchema<T = unknown>(schema: Schema | z.ZodType<T> | Record<string, unknown> | null): Chat<T>;
-  withSchema<T>(schema: Schema | z.ZodType<T> | Record<string, unknown> | null): Chat<T> {
+  // Zod 4 and Zod 3 schemas get their own overloads so the response type is
+  // inferred from them; in the single union signature, a Zod object also
+  // matched the Record<string, unknown> branch and T fell back to unknown. The
+  // last overload is the original signature, so every call that compiled
+  // before still does - including one passing a value typed as the whole union.
+  withSchema<T>(schema: Zod4Schema<T>): Chat<T>;
+  withSchema<T>(schema: Zod3Schema<T>): Chat<T>;
+  withSchema<T = unknown>(schema: Schema | ZodSchema<T> | Record<string, unknown> | null): Chat<T>;
+  withSchema<T>(schema: Schema | ZodSchema<T> | Record<string, unknown> | null): Chat<T> {
     if (schema === null) {
       this.options.schema = undefined;
       return this as unknown as Chat<T>;
@@ -377,7 +378,7 @@ export class Chat<S = unknown> {
 
     if (schema instanceof Schema) {
       this.options.schema = schema;
-    } else if (schema instanceof z.ZodType) {
+    } else if (isZodSchema(schema)) {
       this.options.schema = Schema.fromZod("output", schema);
     } else {
       this.options.schema = Schema.fromJson("output", schema as Record<string, unknown>);

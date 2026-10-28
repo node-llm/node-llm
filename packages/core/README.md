@@ -76,7 +76,7 @@ for await (const chunk of llm.chat().stream("Tell me a long story")) {
 Stop parsing markdown. Get typed objects directly.
 
 ```ts
-import { z } from "@node-llm/core";
+import { z } from "zod"; // Zod 4; Zod 3 schemas work too
 
 const PlayerSchema = z.object({
   name: z.string(),
