@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased] (@node-llm/orm)
+
+### Features
+
+- **Custom Stores**: Chats and agent sessions record through a `ChatStore`. A Prisma client still works as before (it is wrapped in the new `PrismaStore`); any other store, such as one that sends records to your own API, can be passed in its place. `isChatStore()`, `PrismaStore` and the store record types are exported.
+- **Session Tools**: `createAgentSession()` takes `tools`, for tools built per session (for example ones bound to a user's data), added to the agent class's own.
+
+### Bug Fixes
+
+- **Agent Session Request Duration**: Requests recorded by agent sessions now store the response's latency. Before, their `duration` was always `0`.
+
 ## [Unreleased] (@node-llm/core)
 
 ### Features

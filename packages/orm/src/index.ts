@@ -58,3 +58,17 @@
 
 // Re-export Prisma adapter as default
 export * from "./adapters/prisma/index.js";
+
+// Custom stores
+export { isChatStore } from "./Store.js";
+export type {
+  ChatStore,
+  StoredChat,
+  StoredMessage,
+  StoredAgentSession,
+  NewChat,
+  NewToolCall,
+  NewRequest,
+  MessageUpdate,
+  RequestTotals
+} from "./Store.js";

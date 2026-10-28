@@ -48,6 +48,9 @@
 export { Chat, createChat, loadChat } from "./Chat.js";
 export type { ChatRecord, MessageRecord, ChatOptions } from "./Chat.js";
 
+// Stores: where chats are recorded
+export { PrismaStore, toStore } from "./PrismaStore.js";
+
 // AgentSession API
 export { AgentSession, createAgentSession, loadAgentSession } from "./AgentSession.js";
 export type {
