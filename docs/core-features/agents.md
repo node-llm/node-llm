@@ -91,7 +91,7 @@ const reply = await agent.ask("What is TypeScript?");
 | `provider` | `string` | Force a specific provider (e.g., "openai") |
 | `instructions` | `string` | System prompt for the agent |
 | `tools` | `Tool[]` | Array of Tool classes to register |
-| `temperature` | `number` | Sampling temperature (0-2) |
+| `temperature` | `number` | Sampling temperature (0-2); left out for models that reject one |
 | `thinking` | `boolean \| object` | Enable extended thinking (Claude) |
 | `schema` | `ZodSchema` | Output schema for structured responses |
 | `params` | `Record<string, unknown>` | Provider-specific request parameters |

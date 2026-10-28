@@ -221,11 +221,13 @@ Adjust the randomness of the model's responses using `.withTemperature(0.0 - 1.0
 
 ```ts
 // Deterministic / Factual (Low Temperature)
-const factual = NodeLLM.chat("gpt-5").withTemperature(0.0);
+const factual = NodeLLM.chat("gpt-4o").withTemperature(0.0);
 
 // Creative / Random (High Temperature)
-const creative = NodeLLM.chat("gpt-5").withTemperature(0.9);
+const creative = NodeLLM.chat("gpt-4o").withTemperature(0.9);
 ```
+
+Some models reject a temperature, including Claude Opus 4.7 and later, the Claude 5 family and OpenAI's reasoning models. For models the registry marks this way, NodeLLM sends the request without a temperature and logs a warning once per model, so a chat or agent with a temperature keeps working when you move it to one of them.
 
 ---
 

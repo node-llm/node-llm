@@ -18,6 +18,10 @@ export class Capabilities {
     return caps;
   }
 
+  static supportsTemperature(modelId: string): boolean {
+    return ModelRegistry.supportsTemperature(modelId, "deepseek");
+  }
+
   static getContextWindow(modelId: string): number {
     return ModelRegistry.getContextWindow(modelId, "deepseek") ?? 32_768;
   }

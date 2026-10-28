@@ -101,13 +101,16 @@ class MyCustomProvider extends BaseProvider {
     // Declare vision support
     supportsVision: (modelId: string) => modelId.includes("vision"),
 
+    // Declare models that reject a temperature (optional; omit to always send it)
+    supportsTemperature: (modelId: string) => !modelId.startsWith("reasoner"),
+
     // Declare the context window size
     getContextWindow: (modelId: string) => 128000
   };
 }
 ```
 
-Notably, if `supportsDeveloperRole` is true, NodeLLM will automatically map isolated system instructions to the `developer` role. If false (the default), it will keep them as the standard `system` role.
+Notably, if `supportsDeveloperRole` is true, NodeLLM will automatically map isolated system instructions to the `developer` role. If false (the default), it will keep them as the standard `system` role. If `supportsTemperature` returns false for a model, NodeLLM sends that model's requests without a temperature.
 
 ## Registering Your Provider
 

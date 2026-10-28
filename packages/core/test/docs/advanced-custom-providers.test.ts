@@ -95,6 +95,7 @@ describe("advanced-custom-providers", () => {
           ...this.defaultCapabilities(),
           supportsDeveloperRole: (modelId: string) => true,
           supportsVision: (modelId: string) => modelId.includes("vision"),
+          supportsTemperature: (modelId: string) => !modelId.startsWith("reasoner"),
           getContextWindow: (modelId: string) => 128000
         };
       }
@@ -103,6 +104,8 @@ describe("advanced-custom-providers", () => {
       expect(provider.capabilities.supportsDeveloperRole("any")).toBe(true);
       expect(provider.capabilities.supportsVision("model-vision")).toBe(true);
       expect(provider.capabilities.supportsVision("model-text")).toBe(false);
+      expect(provider.capabilities.supportsTemperature("reasoner-1")).toBe(false);
+      expect(provider.capabilities.supportsTemperature("model-text")).toBe(true);
       expect(provider.capabilities.getContextWindow("any")).toBe(128000);
     });
   });

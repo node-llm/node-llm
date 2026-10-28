@@ -11,6 +11,10 @@ import { ModelPricing } from "../../models/types.js";
 // ─────────────────────────────────────────────────────────────────────────────
 
 export class Capabilities {
+  static supportsTemperature(modelId: string): boolean {
+    return ModelRegistry.supportsTemperature(modelId, "bedrock");
+  }
+
   static getContextWindow(modelId: string): number | null {
     return ModelRegistry.getContextWindow(modelId, "bedrock") ?? 128_000;
   }

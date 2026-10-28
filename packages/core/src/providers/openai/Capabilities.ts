@@ -3,6 +3,10 @@ import { PricingRegistry } from "../../models/PricingRegistry.js";
 import { ModelPricing } from "../../models/types.js";
 
 export class Capabilities {
+  static supportsTemperature(modelId: string): boolean {
+    return ModelRegistry.supportsTemperature(modelId, "openai");
+  }
+
   static getContextWindow(modelId: string): number | null {
     return ModelRegistry.getContextWindow(modelId, "openai") ?? 128_000;
   }

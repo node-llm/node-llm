@@ -34,6 +34,7 @@ export class OllamaProvider extends OpenAIProvider {
       supportsReasoning: (modelId: string) => OllamaCapabilities.supportsReasoning(modelId),
       supportsDeveloperRole: (_modelId: string) => false,
       supportsPrediction: (_modelId: string) => false,
+      supportsTemperature: (_modelId: string) => true,
       getContextWindow: (modelId: string) => OllamaCapabilities.getContextWindow(modelId)
     };
   }

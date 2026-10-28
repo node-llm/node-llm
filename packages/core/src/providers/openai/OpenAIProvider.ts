@@ -50,6 +50,7 @@ export class OpenAIProvider extends BaseProvider implements Provider {
     supportsReasoning: (model: string) => Capabilities.supportsReasoning(model),
     supportsDeveloperRole: (model: string) => Capabilities.supportsDeveloperRole(model),
     supportsPrediction: (model: string) => Capabilities.supportsPrediction(model),
+    supportsTemperature: (model: string) => Capabilities.supportsTemperature(model),
     getContextWindow: (model: string) => Capabilities.getContextWindow(model) || null
   };
 

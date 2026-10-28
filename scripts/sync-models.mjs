@@ -255,7 +255,11 @@ async function syncModels() {
             last_synced: new Date().toISOString(),
             // Which thinking controls the model takes (effort levels, budget_tokens,
             // toggle). Providers read this to pick the request shape.
-            ...(details.reasoning_options ? { reasoning_options: details.reasoning_options } : {})
+            ...(details.reasoning_options ? { reasoning_options: details.reasoning_options } : {}),
+            // false for models that reject a temperature; chats leave it out for them.
+            ...(typeof details.temperature === "boolean"
+              ? { temperature: details.temperature }
+              : {})
           }
         };
 

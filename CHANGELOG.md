@@ -11,11 +11,12 @@ All notable changes to this project will be documented in this file.
 
 ### Bug Fixes
 
+- **Temperature on Models That Reject It**: Claude Opus 4.7 and later, the Claude 5 family, OpenAI's reasoning models and others return an error when a request sets a temperature. For models the registry marks this way, chats and agents now send the request without one and log a warning once per model. Providers declare it with the new optional `supportsTemperature(model)` capability.
 - **Agent and Chat `provider` Option**: An Agent's `provider` (static or passed to the constructor) and `chat(model, { provider })` now choose the provider. Before, they were ignored, so the chat used the instance's own provider, or threw `LLM provider not configured` when it had none (for example `NodeLLM` without `NODELLM_PROVIDER`).
 
 ### Improvements
 
-- **Model Catalog Sync**: `models.json` now records each model's thinking controls (`metadata.reasoning_options`) from models.dev.
+- **Model Catalog Sync**: `models.json` now records each model's thinking controls (`metadata.reasoning_options`) and whether it accepts a temperature (`metadata.temperature`) from models.dev.
 
 ### Compatibility
 

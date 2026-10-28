@@ -46,6 +46,7 @@ export class MistralProvider extends BaseProvider implements Provider {
     supportsModeration: (model: string) => MistralCapabilities.supportsModeration(model),
     supportsReasoning: (model: string) => MistralCapabilities.supportsReasoning(model),
     supportsDeveloperRole: (_model: string) => false,
+    supportsTemperature: (model: string) => MistralCapabilities.supportsTemperature(model),
     getContextWindow: (model: string) => MistralCapabilities.getContextWindow(model)
   };
 

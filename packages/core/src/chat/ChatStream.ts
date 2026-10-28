@@ -31,6 +31,7 @@ import {
   runConfirmHandlers,
   runChainHandlers
 } from "../utils/handler-stacking.js";
+import { requestTemperature } from "./Temperature.js";
 
 /**
  * Internal handler for chat streaming logic.
@@ -253,7 +254,7 @@ export class ChatStream {
             model,
             messages: requestMessages,
             tools: options.tools as ToolDefinition[],
-            temperature: options.temperature,
+            temperature: requestTemperature(provider, model, options.temperature),
             max_tokens: options.maxTokens ?? config.maxTokens,
             response_format: responseFormat,
             headers: options.headers,

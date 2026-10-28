@@ -18,6 +18,7 @@ import {
 } from "../providers/Provider.js";
 import { Executor } from "../executor/Executor.js";
 import { ChatStream } from "./ChatStream.js";
+import { requestTemperature } from "./Temperature.js";
 import { Stream } from "../streaming/Stream.js";
 import { ModelRegistry } from "../models/ModelRegistry.js";
 import { ToolDefinition, ToolResolvable, ToolCall } from "./Tool.js";
@@ -652,7 +653,11 @@ export class Chat<S = unknown> {
           model: this.model,
           messages: messagesToUse,
           tools: this.options.tools as ToolDefinition[],
-          temperature: options?.temperature ?? this.options.temperature,
+          temperature: requestTemperature(
+            this.provider,
+            this.model,
+            options?.temperature ?? this.options.temperature
+          ),
           max_tokens: options?.maxTokens ?? this.options.maxTokens ?? config.maxTokens,
           headers: { ...this.options.headers, ...options?.headers },
           response_format: responseFormat, // Pass to provider
@@ -870,7 +875,11 @@ export class Chat<S = unknown> {
             model: this.model,
             messages: [...this.systemMessages, ...this.messages],
             tools: this.options.tools as ToolDefinition[],
-            temperature: options?.temperature ?? this.options.temperature,
+            temperature: requestTemperature(
+              this.provider,
+              this.model,
+              options?.temperature ?? this.options.temperature
+            ),
             max_tokens: options?.maxTokens ?? this.options.maxTokens ?? config.maxTokens,
             headers: this.options.headers,
             response_format: responseFormat,

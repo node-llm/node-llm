@@ -67,6 +67,14 @@ export class ModelRegistry {
   }
 
   /**
+   * Whether the model accepts a temperature. Models that reject one (such as Claude Opus 4.7
+   * and later) are marked in the registry; models it has no data for are assumed to accept it.
+   */
+  static supportsTemperature(modelId: string, provider: string): boolean {
+    return this.find(modelId, provider)?.metadata?.temperature !== false;
+  }
+
+  /**
    * Check if a model supports a capability.
    */
   static supports(modelId: string, capability: string, provider: string): boolean {
