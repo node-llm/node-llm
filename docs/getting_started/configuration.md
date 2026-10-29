@@ -254,6 +254,20 @@ const llm = createLLM({
 });
 ```
 
+### Keys for Many Customers (`envFallback`)
+
+By default, a key or setting not passed in code is read from the environment, such as `OPENAI_API_KEY`. An app that calls providers with each customer's own key should turn that off, so a customer without a key gets an error instead of quietly using the server's key:
+
+```ts
+const llm = createLLM({
+  provider: "openai",
+  openaiApiKey: customer.openaiKey,
+  envFallback: false
+});
+```
+
+With `envFallback: false`, keys, base URLs and the provider come only from what is passed in. Nothing changes unless you set it.
+
 ### Scoped Configuration (Isolation)
 
 `NodeLLM` is a **frozen, immutable instance**. It cannot be mutated at runtime. This design ensures that configurations do not leak between parallel requests, making it safe for multi-tenant applications.
