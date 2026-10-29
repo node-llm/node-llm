@@ -725,7 +725,9 @@ export class Chat<S = unknown> {
 
         // Start generation
         await runAllHandlers(newMessageHandlers);
+        let requestStarted = Date.now();
         let response = await this.executor.executeChat(executeOptions);
+        const firstLatency = Date.now() - requestStarted;
         trackUsage(response.usage);
 
         assistantMessage = new ChatResponseString(
@@ -741,6 +743,7 @@ export class Chat<S = unknown> {
           response.metadata,
           response.attachments
         );
+        assistantMessage.latency = firstLatency;
 
         // --- Content Policy Hooks (Output - Turn 1) ---
         assistantMessage = await runChainHandlers(afterResponseHandlers, assistantMessage);
@@ -893,6 +896,7 @@ export class Chat<S = unknown> {
 
           if (haltTriggered) break;
 
+          requestStarted = Date.now();
           response = await this.executor.executeChat({
             model: this.model,
             messages: [...this.systemMessages, ...this.messages],
@@ -915,6 +919,7 @@ export class Chat<S = unknown> {
             signal: options?.signal,
             ...this.options.params
           });
+          const latency = Date.now() - requestStarted;
           trackUsage(response.usage);
 
           assistantMessage = new ChatResponseString(
@@ -930,6 +935,7 @@ export class Chat<S = unknown> {
             response.metadata,
             response.attachments
           );
+          assistantMessage.latency = latency;
 
           assistantMessage = await runChainHandlers(afterResponseHandlers, assistantMessage);
 

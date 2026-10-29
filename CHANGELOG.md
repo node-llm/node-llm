@@ -18,6 +18,7 @@ All notable changes to this project will be documented in this file.
 
 ### Features
 
+- **Response Latency**: Each response has `latency`, how long the provider took to answer that request in milliseconds, set before `afterResponse` hooks run and kept by `withContent()`. The ORM records it as each request's `duration`, which was always `0` before.
 - **Prompt Caching**: `withPromptCache()`, the `promptCache` chat option and `static promptCache` on Agents cache the repeated start of each request (instructions, tools and earlier turns) on Anthropic, so an agent loop pays the full input price once. Providers that cache automatically are unaffected. Providers declare it with the new optional `supportsPromptCaching(model)` capability.
 - **`defineTool()`**: Defines a tool without a class, with the arguments of `execute` typed from its Zod schema, as `defineAgent()` does for agents.
 - **Zod 4 Schemas**: `withSchema()`, the `schema` option, Agents and `Tool` accept Zod 4 schemas (Zod 4.2 or later, from `"zod"`) as well as Zod 3, with types inferred from either. Schemas are recognised by shape, so a schema from another copy of Zod validates too; before, it skipped validation silently.

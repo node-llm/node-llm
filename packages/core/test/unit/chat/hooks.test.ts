@@ -46,6 +46,25 @@ describe("Content Policy Hooks", () => {
   });
 
   describe("afterResponse", () => {
+    it("tells hooks how long the provider took to answer", async () => {
+      const provider = new FakeProvider(["Answer"]);
+      const chat = new Chat(provider, "fake-model");
+      let latency: number | undefined;
+
+      chat.afterResponse(async (response) => {
+        latency = response.latency;
+        return response.withContent(response.content.toUpperCase());
+      });
+      chat.afterResponse(async (response) => {
+        expect(response.latency).toBe(latency);
+      });
+
+      await chat.ask("Question");
+
+      expect(typeof latency).toBe("number");
+      expect(latency).toBeGreaterThanOrEqual(0);
+    });
+
     it("modifies the response after the provider returns it", async () => {
       const provider = new FakeProvider(["The secret is Project X"]);
       const chat = new Chat(provider, "fake-model");

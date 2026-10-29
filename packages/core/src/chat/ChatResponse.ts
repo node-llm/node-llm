@@ -12,6 +12,9 @@ export class ChatResponseString extends String {
   private _cachedData: unknown = undefined;
   private _validationError: Error | null = null;
 
+  /** How long the provider took to answer this request, in milliseconds */
+  public latency?: number;
+
   constructor(
     content: string,
     public readonly usage: Usage,
@@ -109,7 +112,7 @@ export class ChatResponseString extends String {
    * Return a new ChatResponseString with modified content but preserved metadata.
    */
   withContent(newContent: string): ChatResponseString {
-    return new ChatResponseString(
+    const changed = new ChatResponseString(
       newContent,
       this.usage,
       this.model,
@@ -122,6 +125,8 @@ export class ChatResponseString extends String {
       this.metadata,
       this.attachments
     );
+    changed.latency = this.latency;
+    return changed;
   }
 
   /**
