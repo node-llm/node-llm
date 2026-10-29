@@ -1,3 +1,4 @@
+import { windowToolResults } from "./ToolResultWindow.js";
 import { FileLoader } from "../utils/FileLoader.js";
 import { Message } from "./Message.js";
 import {
@@ -668,7 +669,7 @@ export class Chat<S = unknown> {
         const messagesToUse = context.messages || [];
         const executeOptions = {
           model: this.model,
-          messages: messagesToUse,
+          messages: windowToolResults(messagesToUse, this.options.keepToolResults),
           tools: this.options.tools as ToolDefinition[],
           temperature: requestTemperature(
             this.provider,
@@ -899,7 +900,10 @@ export class Chat<S = unknown> {
           requestStarted = Date.now();
           response = await this.executor.executeChat({
             model: this.model,
-            messages: [...this.systemMessages, ...this.messages],
+            messages: windowToolResults(
+              [...this.systemMessages, ...this.messages],
+              this.options.keepToolResults
+            ),
             tools: this.options.tools as ToolDefinition[],
             temperature: requestTemperature(
               this.provider,

@@ -1,3 +1,4 @@
+import { windowToolResults } from "./ToolResultWindow.js";
 import { Message } from "./Message.js";
 import {
   ContentPart,
@@ -246,7 +247,7 @@ export class ChatStream {
           let currentTurnUsage: Usage | undefined;
 
           context.messages = [...systemMessages, ...messages];
-          let requestMessages = context.messages; // Use up-to-date messages from context
+          let requestMessages = windowToolResults(context.messages, options.keepToolResults);
           requestMessages = await runChainHandlers(beforeRequestHandlers, requestMessages);
 
           const streamRequest: any = {

@@ -18,6 +18,7 @@ All notable changes to this project will be documented in this file.
 
 ### Features
 
+- **`keepToolResults`**: A chat option and agent setting that sends only the most recent N tool results in full, replacing older ones with a short placeholder. Long tool loops, such as an agent reading page after page, no longer resend every earlier result on every request. The chat's history keeps them all.
 - **Response Latency**: Each response has `latency`, how long the provider took to answer that request in milliseconds, set before `afterResponse` hooks run and kept by `withContent()`. The ORM records it as each request's `duration`, which was always `0` before.
 - **Prompt Caching**: `withPromptCache()`, the `promptCache` chat option and `static promptCache` on Agents cache the repeated start of each request (instructions, tools and earlier turns) on Anthropic, so an agent loop pays the full input price once. Providers that cache automatically are unaffected. Providers declare it with the new optional `supportsPromptCaching(model)` capability.
 - **`defineTool()`**: Defines a tool without a class, with the arguments of `execute` typed from its Zod schema, as `defineAgent()` does for agents.

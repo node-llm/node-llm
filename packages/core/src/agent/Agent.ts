@@ -50,6 +50,9 @@ export interface AgentConfig<I = Record<string, any>> {
   /** Maximum tool call iterations */
   maxToolCalls?: number;
 
+  /** Send only the most recent N tool results in full; see ChatOptions.keepToolResults */
+  keepToolResults?: number;
+
   /** Run independent tool calls within the same turn concurrently */
   toolConcurrency?: boolean;
 
@@ -88,6 +91,9 @@ export abstract class Agent<
   static headers?: Record<string, string>;
   static maxTokens?: number;
   static maxToolCalls?: number;
+
+  /** Send only the most recent N tool results in full; see ChatOptions.keepToolResults */
+  static keepToolResults?: number;
   static toolConcurrency?: boolean;
   static promptCache?: boolean;
   static assumeModelExists?: boolean;
@@ -173,6 +179,7 @@ export abstract class Agent<
       temperature: overrides.temperature ?? ctor.temperature,
       maxTokens: overrides.maxTokens ?? ctor.maxTokens,
       maxToolCalls: overrides.maxToolCalls ?? ctor.maxToolCalls,
+      keepToolResults: overrides.keepToolResults ?? ctor.keepToolResults,
       toolConcurrency: overrides.toolConcurrency ?? ctor.toolConcurrency,
       promptCache: overrides.promptCache ?? ctor.promptCache,
       headers: { ...ctor.headers, ...overrides.headers },
@@ -454,6 +461,7 @@ export function defineAgent<
     static override headers = config.headers;
     static override maxTokens = config.maxTokens;
     static override maxToolCalls = config.maxToolCalls;
+    static override keepToolResults = config.keepToolResults;
     static override toolConcurrency = config.toolConcurrency;
     static override promptCache = config.promptCache;
     static override assumeModelExists = config.assumeModelExists;

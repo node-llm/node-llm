@@ -47,6 +47,12 @@ export interface ChatOptions {
   assumeModelExists?: boolean;
   provider?: string;
   maxToolCalls?: number;
+  /**
+   * Sends only the most recent N tool results in full; older ones are replaced with a short
+   * placeholder in each request (the chat's history keeps them). Keeps long tool loops, such as
+   * an agent reading many pages, from resending every earlier result on every request.
+   */
+  keepToolResults?: number;
   maxCorrections?: number;
   requestTimeout?: number;
   toolExecution?: ToolExecutionModeInput;
