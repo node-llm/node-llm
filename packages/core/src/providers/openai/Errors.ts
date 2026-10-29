@@ -10,6 +10,7 @@ import {
   ServiceUnavailableError,
   APIError
 } from "../../errors/index.js";
+import { isBillingProblem } from "../../errors/billing.js";
 
 export async function handleOpenAIError(response: Response, model?: string): Promise<never> {
   const status = response.status;
@@ -40,6 +41,10 @@ export async function handleOpenAIError(response: Response, model?: string): Pro
 
   const provider = "openai";
 
+  if (isBillingProblem(status, message, code)) {
+    throw new InsufficientQuotaError(message, body, provider, model);
+  }
+
   if (status === 400) {
     if (
       code === "context_length_exceeded" ||
@@ -63,9 +68,6 @@ export async function handleOpenAIError(response: Response, model?: string): Pro
   }
 
   if (status === 429) {
-    if (code === "insufficient_quota") {
-      throw new InsufficientQuotaError(message, body, provider, model);
-    }
     throw new RateLimitError(message, body, provider, model);
   }
 

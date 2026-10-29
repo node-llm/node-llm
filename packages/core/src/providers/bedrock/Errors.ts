@@ -11,6 +11,7 @@ import {
   APIError,
   ForbiddenError
 } from "../../errors/index.js";
+import { isBillingProblem } from "../../errors/billing.js";
 
 export async function handleBedrockError(response: Response, modelId: string): Promise<never> {
   const status = response.status;
@@ -26,6 +27,10 @@ export async function handleBedrockError(response: Response, modelId: string): P
   }
 
   const provider = "bedrock";
+
+  if (isBillingProblem(status, message)) {
+    throw new InsufficientQuotaError(message, body, provider, modelId);
+  }
 
   // Throttling
   if (status === 429 || message.includes("ThrottlingException")) {

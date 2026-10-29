@@ -10,6 +10,7 @@ import {
   ServiceUnavailableError,
   APIError
 } from "../../errors/index.js";
+import { isBillingProblem } from "../../errors/billing.js";
 
 export async function handleDeepSeekError(response: Response, model?: string): Promise<never> {
   const status = response.status;
@@ -31,6 +32,10 @@ export async function handleDeepSeekError(response: Response, model?: string): P
 
   const provider = "deepseek";
 
+  if (isBillingProblem(status, message)) {
+    throw new InsufficientQuotaError(message, body, provider, model);
+  }
+
   if (status === 400) {
     if (message.includes("context") || message.includes("length") || message.includes("tokens")) {
       throw new ContextWindowExceededError(message, body, provider, model);
@@ -49,10 +54,7 @@ export async function handleDeepSeekError(response: Response, model?: string): P
     throw new NotFoundError(message, status, body, provider, model);
   }
 
-  if (status === 402 || status === 429) {
-    if (message.includes("quota") || message.includes("balance") || message.includes("credit")) {
-      throw new InsufficientQuotaError(message, body, provider, model);
-    }
+  if (status === 429) {
     throw new RateLimitError(message, body, provider, model);
   }
 

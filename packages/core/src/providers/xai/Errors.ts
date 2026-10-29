@@ -1,4 +1,5 @@
 import {
+  InsufficientQuotaError,
   APIError,
   AuthenticationError,
   BadRequestError,
@@ -6,6 +7,7 @@ import {
   ServerError,
   NotFoundError
 } from "../../errors/index.js";
+import { isBillingProblem } from "../../errors/billing.js";
 
 export async function handleXAIError(response: Response, model?: string): Promise<never> {
   const status = response.status;
@@ -14,7 +16,6 @@ export async function handleXAIError(response: Response, model?: string): Promis
 
   try {
     const text = await response.text();
-    console.error("XAI ERROR RESPONSE:", text);
     errorData = JSON.parse(text);
     errorMessage = errorData.error?.message || errorMessage;
   } catch (_e) {
@@ -22,6 +23,10 @@ export async function handleXAIError(response: Response, model?: string): Promis
   }
 
   const provider = "xai";
+
+  if (isBillingProblem(status, errorMessage)) {
+    throw new InsufficientQuotaError(errorMessage, errorData, provider, model);
+  }
 
   switch (status) {
     case 401:
