@@ -37,6 +37,10 @@ export async function handleAnthropicError(response: Response, modelId: string):
     if (message.includes("prompt is too long") || message.includes("context_length")) {
       throw new ContextWindowExceededError(message, body, provider, modelId);
     }
+    // Anthropic reports an empty account as a bad request: "Your credit balance is too low".
+    if (message.includes("credit balance")) {
+      throw new InsufficientQuotaError(message, body, provider, modelId);
+    }
     throw new BadRequestError(message, body, provider, modelId);
   }
 
