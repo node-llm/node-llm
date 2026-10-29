@@ -12,7 +12,10 @@ export class ChatResponseString extends String {
   private _cachedData: unknown = undefined;
   private _validationError: Error | null = null;
 
-  /** How long the provider took to answer this request, in milliseconds */
+  /**
+   * How long the provider took to answer, in milliseconds: for one request in afterResponse hooks,
+   * and in total across an ask's requests on what ask() returns.
+   */
   public latency?: number;
 
   constructor(

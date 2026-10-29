@@ -730,6 +730,7 @@ export class Chat<S = unknown> {
         let requestStarted = Date.now();
         let response = await this.executor.executeChat(executeOptions);
         const firstLatency = Date.now() - requestStarted;
+        let totalLatency = firstLatency;
         trackUsage(response.usage);
 
         assistantMessage = new ChatResponseString(
@@ -943,6 +944,7 @@ export class Chat<S = unknown> {
             ...this.options.params
           });
           const latency = Date.now() - requestStarted;
+          totalLatency += latency;
           trackUsage(response.usage);
 
           assistantMessage = new ChatResponseString(
@@ -987,6 +989,8 @@ export class Chat<S = unknown> {
           assistantMessage.metadata,
           assistantMessage.attachments
         ) as unknown as ChatResponseString & { data: S };
+        // What ask() returns covers every request in it, so its latency is their total.
+        finalResponse.latency = totalLatency;
 
         // 5. onResponse Hook
         const requestDirective = await runMiddleware<RequestDirective>(

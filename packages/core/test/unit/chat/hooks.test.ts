@@ -63,6 +63,7 @@ describe("Content Policy Hooks", () => {
 
       expect(typeof latency).toBe("number");
       expect(latency).toBeGreaterThanOrEqual(0);
+      expect(typeof (await chat.ask("Again")).latency).toBe("number");
     });
 
     it("modifies the response after the provider returns it", async () => {
