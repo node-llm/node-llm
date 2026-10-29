@@ -97,11 +97,19 @@ export function toolCallLimitResults(
   toolCalls: ToolCall[],
   limit: number
 ): Message[] {
+  return unrunToolCallResults(provider, toolCalls, `the tool call limit (${limit}) was reached`);
+}
+
+/**
+ * Answers tool calls a loop stopped before running, so the history stays valid for the next ask:
+ * every tool call a model makes needs a result.
+ */
+export function unrunToolCallResults(
+  provider: Provider,
+  toolCalls: ToolCall[],
+  reason: string
+): Message[] {
   return toolCalls.map((toolCall) =>
-    provider.formatToolResultMessage(
-      toolCall.id,
-      `Not run: the tool call limit (${limit}) was reached.`,
-      { isError: true }
-    )
+    provider.formatToolResultMessage(toolCall.id, `Not run: ${reason}.`, { isError: true })
   );
 }

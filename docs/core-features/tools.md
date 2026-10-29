@@ -274,6 +274,16 @@ Older results are left out in blocks: with `keepToolResults: 3`, between three a
 
 Each result keeps its place and tool call id, so the conversation stays valid for every provider, and the model still sees every step it took. The chat's own `history` keeps every result in full.
 
+### Capping What a Loop Spends
+
+`maxCost` stops a tool loop once an ask has spent that many US dollars, before its next request, and throws `CostLimitError` with the `limit` and the `usage` so far. It guards against a tool that returns far more than expected, such as a page with thousands of rows:
+
+```ts
+const chat = llm.chat("gpt-5.5", { maxCost: 0.5 });
+```
+
+It needs the model's pricing to know the cost, so it does nothing for models without it.
+
 ## Tool Execution Policies (Security) <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v1.5.0+</span>
 
 For sensitive operations, you can control the "autonomy" of the tool execution loop using `withToolExecution()`.

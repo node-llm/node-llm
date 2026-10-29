@@ -35,13 +35,14 @@ import {
   DEFAULT_MAX_CORRECTIONS,
   DEFAULT_MAX_TOOL_CALLS
 } from "../constants.js";
-import { ConfigurationError, ToolCallLimitError } from "../errors/index.js";
+import { ConfigurationError, CostLimitError, ToolCallLimitError } from "../errors/index.js";
 import { ChatValidator } from "./Validation.js";
 import { ToolHandler } from "./ToolHandler.js";
 import {
   shouldRunToolCallsConcurrently,
   executeToolCallOutcomes,
-  toolCallLimitResults
+  toolCallLimitResults,
+  unrunToolCallResults
 } from "./ToolCallOutcome.js";
 import { logger } from "../utils/logger.js";
 import {
@@ -778,6 +779,18 @@ export class Chat<S = unknown> {
               ...toolCallLimitResults(this.provider, response.tool_calls, maxToolCalls)
             );
             throw new ToolCallLimitError(maxToolCalls, totalUsage);
+          }
+
+          const maxCost = this.options.maxCost;
+          if (maxCost !== undefined && (totalUsage.cost ?? 0) >= maxCost) {
+            this.messages.push(
+              ...unrunToolCallResults(
+                this.provider,
+                response.tool_calls,
+                `the cost limit ($${maxCost}) was reached`
+              )
+            );
+            throw new CostLimitError(maxCost, totalUsage);
           }
 
           const runConcurrently = shouldRunToolCallsConcurrently(

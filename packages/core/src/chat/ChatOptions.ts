@@ -53,6 +53,12 @@ export interface ChatOptions {
    * an agent reading many pages, from resending every earlier result on every request.
    */
   keepToolResults?: number;
+  /**
+   * The most an ask may spend, in US dollars. A tool loop that has spent this much stops before
+   * its next request and throws CostLimitError. It needs the model's pricing, so it does nothing
+   * for models without it.
+   */
+  maxCost?: number;
   maxCorrections?: number;
   requestTimeout?: number;
   toolExecution?: ToolExecutionModeInput;

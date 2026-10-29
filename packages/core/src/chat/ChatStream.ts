@@ -19,7 +19,7 @@ import { ToolDefinition, ToolCall } from "./Tool.js";
 import { ChatValidator } from "./Validation.js";
 import { ToolHandler } from "./ToolHandler.js";
 import { logger } from "../utils/logger.js";
-import { ToolCallLimitError } from "../errors/index.js";
+import { CostLimitError, ToolCallLimitError } from "../errors/index.js";
 import { ResponseFormat } from "../providers/Provider.js";
 import { ModelRegistry } from "../models/ModelRegistry.js";
 import { Middleware, MiddlewareContext, ToolErrorDirective } from "../types/Middleware.js";
@@ -28,7 +28,8 @@ import { randomUUID } from "node:crypto";
 import {
   shouldRunToolCallsConcurrently,
   executeToolCallOutcomes,
-  toolCallLimitResults
+  toolCallLimitResults,
+  unrunToolCallResults
 } from "./ToolCallOutcome.js";
 import {
   collectHandlers,
@@ -347,6 +348,17 @@ export class ChatStream {
           if (stepCount > maxToolCalls) {
             messages.push(...toolCallLimitResults(provider, toolCalls, maxToolCalls));
             throw new ToolCallLimitError(maxToolCalls, totalUsage);
+          }
+
+          if (options.maxCost !== undefined && (totalUsage.cost ?? 0) >= options.maxCost) {
+            messages.push(
+              ...unrunToolCallResults(
+                provider,
+                toolCalls,
+                `the cost limit ($${options.maxCost}) was reached`
+              )
+            );
+            throw new CostLimitError(options.maxCost, totalUsage);
           }
 
           const runConcurrently = shouldRunToolCallsConcurrently(

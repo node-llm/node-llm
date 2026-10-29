@@ -18,6 +18,7 @@ All notable changes to this project will be documented in this file.
 
 ### Features
 
+- **`maxCost`**: A chat option and agent setting that caps what an ask may spend, in US dollars. A tool loop that has spent the limit stops before its next request and throws `CostLimitError` (code `COST_LIMIT`), with the `limit` and `usage`, and the tool calls it didn't run are answered so the chat can be asked again. A safety net for agents whose tools can return very large results.
 - **`keepToolResults`**: A chat option and agent setting that sends only the most recent tool results in full, replacing older ones with a short placeholder. Long tool loops, such as an agent reading page after page, no longer resend every earlier result on every request. Results are left out in blocks of N, so the start of the conversation changes only every N requests and prompt caching keeps working. The chat's history keeps them all.
 - **Response Latency**: Each response has `latency`, how long the provider took to answer that request in milliseconds, set before `afterResponse` hooks run and kept by `withContent()`. The ORM records it as each request's `duration`, which was always `0` before.
 - **Prompt Caching**: `withPromptCache()`, the `promptCache` chat option and `static promptCache` on Agents cache the repeated start of each request (instructions, tools and earlier turns) on Anthropic, so an agent loop pays the full input price once. Providers that cache automatically are unaffected. Providers declare it with the new optional `supportsPromptCaching(model)` capability.
