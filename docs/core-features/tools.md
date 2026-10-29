@@ -270,6 +270,8 @@ class PageReader extends Agent {
 }
 ```
 
+Older results are left out in blocks: with `keepToolResults: 3`, between three and six recent results are sent in full, and once there are six, the oldest three are replaced together. The start of the conversation then changes only every three requests, so prompt caching keeps working in between.
+
 Each result keeps its place and tool call id, so the conversation stays valid for every provider, and the model still sees every step it took. The chat's own `history` keeps every result in full.
 
 ## Tool Execution Policies (Security) <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v1.5.0+</span>

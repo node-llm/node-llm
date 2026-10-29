@@ -99,7 +99,7 @@ const reply = await agent.ask("What is TypeScript?");
 | `maxTokens` | `number` | Maximum tokens in the response |
 | `promptCache` | `boolean` | Cache the repeated start of each request (see [Prompt Caching](chat.html#prompt-caching)) |
 | `maxToolCalls` | `number` | Maximum rounds of tool calls per ask; more throws `ToolCallLimitError` |
-| `keepToolResults` | `number` | Send only the most recent N tool results in full; older ones become a placeholder |
+| `keepToolResults` | `number` | Send only the most recent tool results in full (between N and 2N); older ones become a placeholder |
 | `assumeModelExists` | `boolean` | Skip registry validation for custom/unlisted models |
 | `middlewares` | `Middleware[]` | Middlewares for observation or correction <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.6em; font-weight: 600; vertical-align: middle;">v1.15.0+</span> |
 

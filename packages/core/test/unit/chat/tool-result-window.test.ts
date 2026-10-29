@@ -72,25 +72,39 @@ describe("beforeRequest in a tool loop", () => {
 });
 
 describe("keepToolResults", () => {
-  it("sends only the most recent tool results in full, and keeps the history whole", async () => {
-    const provider = new PageReadingProvider(3);
-    const chat = new Chat(provider, "test-model", { keepToolResults: 1 });
+  it("leaves out older tool results in blocks, and keeps the history whole", async () => {
+    const provider = new PageReadingProvider(5);
+    const chat = new Chat(provider, "test-model", { keepToolResults: 2 });
 
     await chat.withTool(readPage).ask("Read the pages");
 
+    // Three results: all in full. Four: the oldest two go together. Five: still those two.
     expect(toolResults(provider.requests[3]!)).toEqual([
-      OMITTED_TOOL_RESULT,
-      OMITTED_TOOL_RESULT,
+      "Contents of page 1",
+      "Contents of page 2",
       "Contents of page 3"
+    ]);
+    expect(toolResults(provider.requests[4]!)).toEqual([
+      OMITTED_TOOL_RESULT,
+      OMITTED_TOOL_RESULT,
+      "Contents of page 3",
+      "Contents of page 4"
+    ]);
+    expect(toolResults(provider.requests[5]!)).toEqual([
+      OMITTED_TOOL_RESULT,
+      OMITTED_TOOL_RESULT,
+      "Contents of page 3",
+      "Contents of page 4",
+      "Contents of page 5"
     ]);
     expect(
       chat.history.filter((message) => message.role === "tool").map((message) => message.content)
-    ).toEqual(["Contents of page 1", "Contents of page 2", "Contents of page 3"]);
+    ).toHaveLength(5);
   });
 
   it("is set on an agent class like its other options", async () => {
     class Reader extends Agent {
-      static keepToolResults = 2;
+      static keepToolResults = 1;
       static tools = [readPage];
     }
     const provider = new PageReadingProvider(3);
@@ -100,7 +114,7 @@ describe("keepToolResults", () => {
 
     expect(toolResults(provider.requests[3]!)).toEqual([
       OMITTED_TOOL_RESULT,
-      "Contents of page 2",
+      OMITTED_TOOL_RESULT,
       "Contents of page 3"
     ]);
   });
