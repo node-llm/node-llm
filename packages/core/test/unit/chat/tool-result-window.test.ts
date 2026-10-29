@@ -51,6 +51,26 @@ const readPage = {
 const toolResults = (request: ChatRequest) =>
   request.messages.filter((message) => message.role === "tool").map((message) => message.content);
 
+describe("beforeRequest in a tool loop", () => {
+  it("runs on every request, not only the first", async () => {
+    const provider = new PageReadingProvider(2);
+    const chat = new Chat(provider, "test-model");
+    chat.beforeRequest(async (messages) =>
+      messages.map((message) => ({
+        ...message,
+        content: String(message.content ?? "").replace("page 1", "page [redacted]")
+      }))
+    );
+
+    await chat.withTool(readPage).ask("Read the pages");
+
+    expect(toolResults(provider.requests[2]!)).toEqual([
+      "Contents of page [redacted]",
+      "Contents of page 2"
+    ]);
+  });
+});
+
 describe("keepToolResults", () => {
   it("sends only the most recent tool results in full, and keeps the history whole", async () => {
     const provider = new PageReadingProvider(3);

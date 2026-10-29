@@ -31,6 +31,7 @@ All notable changes to this project will be documented in this file.
 
 ### Bug Fixes
 
+- **`beforeRequest` in Tool Loops**: `ask()` ran `beforeRequest` hooks only on the first request; the requests that follow each round of tool calls skipped them, so content policy hooks (such as redaction) didn't apply to tool results. They now run on every request, as they already did when streaming.
 - **Prompt Cache Usage and Cost**: On Anthropic and Bedrock, `input_tokens` now includes tokens read from and written to the prompt cache, as it does on the other providers, and `total_tokens` with it. Before, cached input was subtracted from a total that didn't include it, so the cost of a cached request was too low or even negative. Cache writes are now priced at the model's cache write rate (1.25x input on Claude). Streaming requests to Anthropic now report cache usage too.
 - **Anthropic Streaming Parameters**: Streaming requests to Anthropic now send extra parameters, such as those from `withParams()`, as non-streaming requests already did. Both now build the same request body.
 - **Cancelling Requests**: An `AbortSignal` passed to `ask()` now cancels the request on Anthropic, Bedrock, DeepSeek, Gemini, Mistral and xAI, as it already did on OpenAI. Before, those providers ignored it, and Anthropic, DeepSeek, Gemini and xAI also sent it in the request body.

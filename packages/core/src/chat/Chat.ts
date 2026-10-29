@@ -897,13 +897,19 @@ export class Chat<S = unknown> {
 
           if (haltTriggered) break;
 
+          // Content policy hooks see every request in the loop, as they do when streaming.
+          const followUpMessages = await runChainHandlers(
+            beforeRequestHandlers,
+            windowToolResults(
+              [...this.systemMessages, ...this.messages],
+              this.options.keepToolResults
+            )
+          );
+
           requestStarted = Date.now();
           response = await this.executor.executeChat({
             model: this.model,
-            messages: windowToolResults(
-              [...this.systemMessages, ...this.messages],
-              this.options.keepToolResults
-            ),
+            messages: followUpMessages,
             tools: this.options.tools as ToolDefinition[],
             temperature: requestTemperature(
               this.provider,
