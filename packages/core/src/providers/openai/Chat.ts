@@ -21,6 +21,12 @@ export class OpenAIChat {
     this.baseUrl = typeof providerOrUrl === "string" ? providerOrUrl : providerOrUrl.apiBase();
   }
 
+  // A provider signs its own requests; Azure, for one, wants an api-key header, not a bearer token.
+  private authHeaders(): Record<string, string> {
+    if (typeof this.providerOrUrl !== "string") return this.providerOrUrl.headers();
+    return { Authorization: `Bearer ${this.apiKey}`, "Content-Type": "application/json" };
+  }
+
   async execute(request: ChatRequest): Promise<ChatResponse> {
     const temperature = Capabilities.normalizeTemperature(request.temperature, request.model);
 
@@ -122,8 +128,7 @@ export class OpenAIChat {
       {
         method: "POST",
         headers: {
-          Authorization: `Bearer ${this.apiKey}`,
-          "Content-Type": "application/json",
+          ...this.authHeaders(),
           ...request.headers
         },
         body: JSON.stringify(body),

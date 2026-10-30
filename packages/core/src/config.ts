@@ -18,6 +18,9 @@ export interface NodeLLMConfig {
   xaiApiBase?: string;
   mistralApiKey?: string;
   mistralApiBase?: string;
+  azureApiKey?: string;
+  /** A deployment's address, with its api-version, or the resource's v1 address */
+  azureApiBase?: string;
   /** TypeSafe (System One / Jev) key for judgments. */
   typesafeApiKey?: string;
   /** System One endpoint; point it at any Jev-compatible server. */
@@ -90,6 +93,8 @@ export class Configuration implements NodeLLMConfig {
   private _xaiApiBase?: string;
   private _mistralApiKey?: string;
   private _mistralApiBase?: string;
+  private _azureApiKey?: string;
+  private _azureApiBase?: string;
   private _typesafeApiKey?: string;
   private _typesafeApiBase?: string;
   private _bedrockApiKey?: string;
@@ -211,6 +216,21 @@ export class Configuration implements NodeLLMConfig {
   }
   public set mistralApiBase(v: string | undefined) {
     this._mistralApiBase = v;
+  }
+
+  public get azureApiKey(): string | undefined {
+    return this._azureApiKey ?? this.fromEnv("AZURE_OPENAI_API_KEY");
+  }
+  public set azureApiKey(v: string | undefined) {
+    this._azureApiKey = v;
+  }
+
+  // No default: every Azure resource has its own address.
+  public get azureApiBase(): string | undefined {
+    return this._azureApiBase ?? this.fromEnv("AZURE_OPENAI_API_BASE");
+  }
+  public set azureApiBase(v: string | undefined) {
+    this._azureApiBase = v;
   }
 
   public get typesafeApiKey(): string | undefined {

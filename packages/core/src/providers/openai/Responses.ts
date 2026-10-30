@@ -112,11 +112,19 @@ function textFormat(format: ChatRequest["response_format"]) {
  * Chat through OpenAI's Responses API, for requests Chat Completions can't serve. Nothing is
  * stored on OpenAI's side: like every other NodeLLM chat, each request carries the conversation.
  */
+/**
+ * Where Responses requests go and how they are signed: OpenAI's own API, or a provider serving
+ * the same API under another address, such as an Azure OpenAI resource.
+ */
+export interface ResponsesTarget {
+  responsesBase(): string;
+  headers(): Record<string, string>;
+  /** The name the API knows the model by, such as an Azure deployment's name */
+  responsesModel(model: string): string;
+}
+
 export class OpenAIResponses {
-  constructor(
-    private readonly baseUrl: string,
-    private readonly apiKey: string
-  ) {}
+  constructor(private readonly target: ResponsesTarget) {}
 
   async execute(request: ChatRequest): Promise<ChatResponse> {
     const {
@@ -137,7 +145,7 @@ export class OpenAIResponses {
     } = request;
 
     const body: Record<string, unknown> = {
-      model,
+      model: this.target.responsesModel(model),
       input: inputItems(messages),
       store: false,
       ...rest
@@ -167,7 +175,7 @@ export class OpenAIResponses {
     const format = textFormat(response_format);
     if (format) body.text = { format };
 
-    const url = buildUrl(this.baseUrl, "/responses");
+    const url = buildUrl(this.target.responsesBase(), "/responses");
     logger.logRequest("OpenAI", "POST", url, body);
 
     const response = await fetchWithTimeout(
@@ -175,8 +183,7 @@ export class OpenAIResponses {
       {
         method: "POST",
         headers: {
-          Authorization: `Bearer ${this.apiKey}`,
-          "Content-Type": "application/json",
+          ...this.target.headers(),
           ...request.headers
         },
         body: JSON.stringify(body),
