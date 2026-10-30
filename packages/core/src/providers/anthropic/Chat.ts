@@ -1,13 +1,11 @@
 import { ChatRequest, ChatResponse, ThinkingResult } from "../Provider.js";
-import { AnthropicMessageRequest, AnthropicMessageResponse } from "./types.js";
+import { AnthropicMessageResponse } from "./types.js";
 import { ToolCall } from "../../chat/Tool.js";
-import { Capabilities } from "./Capabilities.js";
 import { handleAnthropicError } from "./Errors.js";
 import { ModelRegistry } from "../../models/ModelRegistry.js";
 import { logger } from "../../utils/logger.js";
 import { fetchWithTimeout } from "../../utils/fetch.js";
-import { formatSystemPrompt, formatMessages, applyThinking } from "./Utils.js";
-import { DEFAULT_MAX_TOKENS } from "../../constants.js";
+import { buildMessageRequest, hasPdf, toUsage } from "./Utils.js";
 
 export class AnthropicChat {
   constructor(
@@ -17,81 +15,7 @@ export class AnthropicChat {
 
   async execute(request: ChatRequest): Promise<ChatResponse> {
     const model = request.model;
-    const maxTokens =
-      request.max_tokens || Capabilities.getMaxOutputTokens(model) || DEFAULT_MAX_TOKENS;
-
-    const systemPrompt = formatSystemPrompt(request.messages);
-    const messages = formatMessages(request.messages);
-
-    let system = systemPrompt;
-    if (request.response_format) {
-      let schemaText = "";
-      if (
-        request.response_format.type === "json_schema" &&
-        request.response_format.json_schema?.schema
-      ) {
-        schemaText =
-          "\nSchema:\n" + JSON.stringify(request.response_format.json_schema.schema, null, 2);
-      }
-      const instruction = `CRITICAL: Respond ONLY with a valid JSON object matching the requested schema.${schemaText}\n\nDo not include any other text or explanation.`;
-      system = system ? `${system}\n\n${instruction}` : instruction;
-    }
-
-    const {
-      model: _model,
-      messages: _messages,
-      tools: _tools,
-      temperature: _temp,
-      max_tokens: _max,
-      response_format: _format,
-      thinking: _thinking,
-      headers: _headers,
-      tool_choice: _choice,
-      parallel_tool_calls: _parallel,
-      requestTimeout,
-      ...rest
-    } = request;
-
-    const body: AnthropicMessageRequest = {
-      model: model,
-      messages: messages,
-      max_tokens: maxTokens,
-      system: system,
-      stream: false,
-      ...rest
-    };
-
-    if (request.temperature !== undefined) {
-      body.temperature = request.temperature;
-    }
-
-    // Map tools
-    if (request.tools && request.tools.length > 0 && request.tool_choice !== "none") {
-      body.tools = request.tools.map((tool) => ({
-        name: tool.function.name,
-        description: tool.function.description,
-        input_schema: tool.function.parameters
-      }));
-    }
-
-    if (request.tool_choice && request.tool_choice !== "none") {
-      if (request.tool_choice === "auto") {
-        body.tool_choice = { type: "auto" };
-      } else if (request.tool_choice === "required") {
-        body.tool_choice = { type: "any" };
-      } else if (typeof request.tool_choice === "string") {
-        body.tool_choice = { type: "tool", name: request.tool_choice };
-      } else if (typeof request.tool_choice === "object" && "function" in request.tool_choice) {
-        body.tool_choice = { type: "tool", name: request.tool_choice.function.name };
-      }
-    }
-
-    applyThinking(body, _thinking, Boolean(request.max_tokens));
-
-    // Check if any message contains PDF content to add beta header
-    const hasPdf = messages.some(
-      (msg) => Array.isArray(msg.content) && msg.content.some((block) => block.type === "document")
-    );
+    const body = buildMessageRequest(request, false);
 
     const headers: Record<string, string> = {
       "x-api-key": this.apiKey,
@@ -100,7 +24,7 @@ export class AnthropicChat {
       ...request.headers
     };
 
-    if (hasPdf) {
+    if (hasPdf(body)) {
       headers["anthropic-beta"] = "pdfs-2024-09-25";
     }
 
@@ -112,9 +36,10 @@ export class AnthropicChat {
       {
         method: "POST",
         headers: headers,
-        body: JSON.stringify(body)
+        body: JSON.stringify(body),
+        signal: request.signal
       },
-      requestTimeout
+      request.requestTimeout
     );
 
     if (!response.ok) {
@@ -153,15 +78,7 @@ export class AnthropicChat {
       }
     }
 
-    const usage = json.usage
-      ? {
-          input_tokens: json.usage.input_tokens,
-          output_tokens: json.usage.output_tokens,
-          total_tokens: json.usage.input_tokens + json.usage.output_tokens,
-          cached_tokens: json.usage.cache_read_input_tokens,
-          cache_creation_tokens: json.usage.cache_creation_input_tokens
-        }
-      : undefined;
+    const usage = json.usage ? toUsage(json.usage) : undefined;
 
     const calculatedUsage = usage
       ? ModelRegistry.calculateCost(usage, model, "anthropic")

@@ -45,7 +45,8 @@ export interface RetryOptions {
   delayMs?: number;
 }
 
-type LLMConfig = {
+/** Options for createLLM(): the provider to use and its keys, as well as any NodeLLMConfig setting. */
+export type LLMConfig = {
   provider?: Provider | string;
   retry?: RetryOptions;
   middlewares?: Middleware[];
@@ -155,6 +156,12 @@ export class NodeLLMCore {
   }
 
   chat(model?: string, options: ChatOptions = {}): Chat {
+    const { provider: providerName, ...chatOptions } = options;
+    // Provider ids are display names ("Anthropic") while registry names are lowercase.
+    if (providerName && providerName.toLowerCase() !== this.provider?.id.toLowerCase()) {
+      return this.withProvider(providerName).chat(model, chatOptions);
+    }
+
     if (!this.provider) {
       throw new ProviderNotConfiguredError();
     }

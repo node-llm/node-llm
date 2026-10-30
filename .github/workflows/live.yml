@@ -1,0 +1,46 @@
+name: Live Provider Smoke Tests
+
+# Real calls to real providers, to catch what offline tests can't: an API change, a model that
+# rejects a parameter, a first-hour bug. Each provider runs only when its key is a repository
+# secret, on its cheapest suitable model; a run costs well under a cent per provider.
+on:
+  schedule:
+    # Every night at 3 AM UTC
+    - cron: "0 3 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  live:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "pnpm"
+          cache-dependency-path: pnpm-lock.yaml
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Run the smoke tests
+        run: pnpm --filter @node-llm/core test:live
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          MISTRAL_API_KEY: ${{ secrets.MISTRAL_API_KEY }}
+          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
+          XAI_API_KEY: ${{ secrets.XAI_API_KEY }}

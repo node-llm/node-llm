@@ -1,10 +1,10 @@
-import { z } from "zod";
 import { Chat, AskOptions } from "../chat/Chat.js";
 import { ChatOptions } from "../chat/ChatOptions.js";
 import { ChatResponseString } from "../chat/ChatResponse.js";
 import { ToolResolvable, ToolCall } from "../chat/Tool.js";
 import { ThinkingConfig, ThinkingResult } from "../providers/Provider.js";
 import { Schema } from "../schema/Schema.js";
+import type { ZodSchema } from "../schema/zod.js";
 import { NodeLLM, NodeLLMCore } from "../llm.js";
 import { Middleware } from "../types/Middleware.js";
 
@@ -36,7 +36,7 @@ export interface AgentConfig<I = Record<string, any>> {
   thinking?: ThinkingConfig;
 
   /** Output schema for structured responses */
-  schema?: z.ZodType | Schema | Record<string, unknown>;
+  schema?: ZodSchema | Schema | Record<string, unknown>;
 
   /** Provider-specific parameters */
   params?: Record<string, unknown>;
@@ -50,8 +50,17 @@ export interface AgentConfig<I = Record<string, any>> {
   /** Maximum tool call iterations */
   maxToolCalls?: number;
 
+  /** Send only the most recent N tool results in full; see ChatOptions.keepToolResults */
+  keepToolResults?: number;
+
+  /** The most an ask may spend, in US dollars; see ChatOptions.maxCost */
+  maxCost?: number;
+
   /** Run independent tool calls within the same turn concurrently */
   toolConcurrency?: boolean;
+
+  /** Cache the repeated start of each request on providers that need asking to */
+  promptCache?: boolean;
 
   /** Assume model exists without validation */
   assumeModelExists?: boolean;
@@ -80,12 +89,19 @@ export abstract class Agent<
   static tools?: LazyValue<ToolResolvable[], Record<string, any>>;
   static temperature?: number;
   static thinking?: ThinkingConfig;
-  static schema?: z.ZodType | Schema | Record<string, unknown>;
+  static schema?: ZodSchema | Schema | Record<string, unknown>;
   static params?: Record<string, unknown>;
   static headers?: Record<string, string>;
   static maxTokens?: number;
   static maxToolCalls?: number;
+
+  /** Send only the most recent N tool results in full; see ChatOptions.keepToolResults */
+  static keepToolResults?: number;
+
+  /** The most an ask may spend, in US dollars; see ChatOptions.maxCost */
+  static maxCost?: number;
   static toolConcurrency?: boolean;
+  static promptCache?: boolean;
   static assumeModelExists?: boolean;
   static middlewares?: Middleware[];
 
@@ -169,7 +185,10 @@ export abstract class Agent<
       temperature: overrides.temperature ?? ctor.temperature,
       maxTokens: overrides.maxTokens ?? ctor.maxTokens,
       maxToolCalls: overrides.maxToolCalls ?? ctor.maxToolCalls,
+      keepToolResults: overrides.keepToolResults ?? ctor.keepToolResults,
+      maxCost: overrides.maxCost ?? ctor.maxCost,
       toolConcurrency: overrides.toolConcurrency ?? ctor.toolConcurrency,
+      promptCache: overrides.promptCache ?? ctor.promptCache,
       headers: { ...ctor.headers, ...overrides.headers },
       params: { ...ctor.params, ...overrides.params },
       thinking: overrides.thinking ?? ctor.thinking,
@@ -207,7 +226,7 @@ export abstract class Agent<
     // Apply schema
     const schema = overrides.schema ?? ctor.schema;
     if (schema) {
-      this.chat.withSchema(schema as z.ZodType<S>);
+      this.chat.withSchema(schema as ZodSchema<S>);
     }
 
     // Wire up telemetry hooks
@@ -428,6 +447,14 @@ export type DefinedAgent<
 export function defineAgent<
   I extends Record<string, any> = Record<string, any>,
   S extends Record<string, unknown> = Record<string, unknown>
+>(config: AgentConfig<I> & { schema: ZodSchema<S> }): DefinedAgent<I, S>;
+export function defineAgent<
+  I extends Record<string, any> = Record<string, any>,
+  S extends Record<string, unknown> = Record<string, unknown>
+>(config: AgentConfig<I>): DefinedAgent<I, S>;
+export function defineAgent<
+  I extends Record<string, any> = Record<string, any>,
+  S extends Record<string, unknown> = Record<string, unknown>
 >(config: AgentConfig<I>): DefinedAgent<I, S> {
   return class extends Agent<I, S> {
     static override model = config.model;
@@ -441,7 +468,10 @@ export function defineAgent<
     static override headers = config.headers;
     static override maxTokens = config.maxTokens;
     static override maxToolCalls = config.maxToolCalls;
+    static override keepToolResults = config.keepToolResults;
+    static override maxCost = config.maxCost;
     static override toolConcurrency = config.toolConcurrency;
+    static override promptCache = config.promptCache;
     static override assumeModelExists = config.assumeModelExists;
     static override middlewares = config.middlewares;
   };

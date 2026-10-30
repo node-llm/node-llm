@@ -38,7 +38,8 @@ npm install @node-llm/core
 The recommended way to define tools is by using the `Tool` class. This provides auto-generated JSON schemas and full type safety using `zod`.
 
 ```ts
-import { NodeLLM, Tool, z } from "@node-llm/core";
+import { NodeLLM, Tool } from "@node-llm/core";
+import { z } from "zod"; // Zod 4
 
 const weatherSchema = z.object({
   location: z.string().describe("The city and state, e.g. San Francisco, CA"),
@@ -85,9 +86,27 @@ When `strict = true` is set, `NodeLLM` automatically translates your Zod schema 
 - **Type Safety**: declare the tool as `Tool<z.infer<typeof schema>>` and `execute()` is fully typed from your schema. (TypeScript cannot infer it from the `schema` property alone, so without the type argument the arguments are `Record<string, any>`.)
 - **Self-Documenting**: The Zod `.describe()` calls are automatically pulled into the tool's description for the LLM.
 
+### Inline Definition with `defineTool()`
+
+For a tool that doesn't need its own class, `defineTool()` returns one, with the arguments of `execute` typed from the schema. Return `new ToolHalt(message)` from `execute` to end the turn.
+
+```ts
+import { defineTool } from "@node-llm/core";
+import { z } from "zod"; // Zod 4
+
+const WeatherTool = defineTool({
+  name: "get_weather",
+  description: "Get the current weather for a location",
+  schema: z.object({ location: z.string().describe("The city, e.g. Paris") }),
+  execute: async ({ location }) => ({ location, condition: "Sunny" })
+});
+
+const chat = llm.chat().withTool(WeatherTool);
+```
+
 ### Defining Parameters with Zod
 
-`NodeLLM` uses `zod-to-json-schema` under the hood. Most standard Zod types work out of the box:
+`NodeLLM` turns the schema into JSON Schema for the model, with Zod's own converter for Zod 4 schemas (Zod 3 schemas still work; see [Zod 4 and Zod 3](structured_output.html#zod-4-and-zod-3)). Most standard Zod types work out of the box:
 
 | Zod Type              | Description                                         |
 | :-------------------- | :-------------------------------------------------- |
@@ -158,6 +177,8 @@ const chat = llm.chat("gpt-5")
 chat.withToolChoice("get_weather");
 ```
 
+Claude Opus 5.5, Sonnet 5.5 and Fable 5.1 don't accept `required` or a specific tool, and Anthropic rejects the request. With those models, keep `auto` and say in the instructions which tool to use.
+
 ### Tool Calls (calls)
 
 Use `calls` to control if the model can execute multiple tools in a single turn (Parallel Tool Calling).
@@ -203,7 +224,7 @@ Confirm mode (`toolExecution: "confirm"`) always runs sequentially regardless of
 
 To prevent infinite recursion and runaway costs (where a model keeps calling tools without reaching a conclusion), `NodeLLM` includes a built-in Loop Guard.
 
-By default, `NodeLLM` will throw an error if a model performs more than **5 sequential tool execution turns** in a single request.
+By default, `NodeLLM` throws a `ToolCallLimitError` if a model asks for a **6th round of tool calls** in a single `ask()` or `stream()`. A round is one model response with its tool calls, however many calls it makes in parallel, so the default allows 5 rounds. `ask()` and `stream()` count the same way.
 
 ### Customizing the Limit
 
@@ -218,7 +239,50 @@ await chat.ask("Perform a complex deep research task", {
 });
 ```
 
+### Handling the Limit
+
+`ToolCallLimitError` carries the `limit` and the `usage` of every request in that ask, so you can report what the run spent. The calls the model asked for but that weren't run are answered with an error result, so the chat history stays valid and you can ask again, for example with a higher limit:
+
+```ts
+import { ToolCallLimitError } from "@node-llm/core";
+
+try {
+  await chat.ask("Research and summarise the topic");
+} catch (error) {
+  if (error instanceof ToolCallLimitError) {
+    console.log(`Stopped after ${error.limit} rounds, ${error.usage.total_tokens} tokens`);
+    await chat.ask("Finish with what you have", { maxToolCalls: 2 });
+  }
+}
+```
+
 ---
+
+## Long Tool Loops: Keeping Requests Small
+
+Every request in a tool loop resends the conversation so far, including every earlier tool result. When results are large, such as pages, files or search results, an agent that takes many steps pays for the same results again and again. `keepToolResults` sends only the most recent results in full and replaces older ones with a short placeholder:
+
+```ts
+const chat = llm.chat("claude-sonnet-5-5", { keepToolResults: 3 });
+
+class PageReader extends Agent {
+  static keepToolResults = 3;
+}
+```
+
+Older results are left out in blocks: with `keepToolResults: 3`, between three and six recent results are sent in full, and once there are six, the oldest three are replaced together. The start of the conversation then changes only every three requests, so prompt caching keeps working in between.
+
+Each result keeps its place and tool call id, so the conversation stays valid for every provider, and the model still sees every step it took. The chat's own `history` keeps every result in full.
+
+### Capping What a Loop Spends
+
+`maxCost` stops a tool loop once an ask has spent that many US dollars, before its next request, and throws `CostLimitError` with the `limit` and the `usage` so far. It guards against a tool that returns far more than expected, such as a page with thousands of rows:
+
+```ts
+const chat = llm.chat("gpt-5.5", { maxCost: 0.5 });
+```
+
+It needs the model's pricing to know the cost, so it does nothing for models without it.
 
 ## Tool Execution Policies (Security) <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v1.5.0+</span>
 

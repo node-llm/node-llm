@@ -3,6 +3,10 @@ import { PricingRegistry } from "../../models/PricingRegistry.js";
 import { ModelPricing } from "../../models/types.js";
 
 export class Capabilities {
+  static supportsTemperature(modelId: string): boolean {
+    return ModelRegistry.supportsTemperature(modelId, "openai");
+  }
+
   static getContextWindow(modelId: string): number | null {
     return ModelRegistry.getContextWindow(modelId, "openai") ?? 128_000;
   }
@@ -70,6 +74,14 @@ export class Capabilities {
 
   static supportsPrediction(modelId: string): boolean {
     return /gpt-4o|gpt-4-/.test(modelId);
+  }
+
+  /**
+   * Models that take function tools only through the Responses API; Chat Completions rejects them
+   * with "use /v1/responses" while reasoning is on, which it is by default.
+   */
+  static needsResponsesForTools(modelId: string): boolean {
+    return /^gpt-5\.6/.test(modelId);
   }
 
   static needsMaxCompletionTokens(modelId: string): boolean {

@@ -10,8 +10,11 @@ import {
   Tool,
   z,
   providerRegistry,
-  ToolError
+  ToolError,
+  ToolCallLimitError,
+  defineTool
 } from "../../src/index.js";
+import { z as zod4 } from "zod4";
 import { FakeProvider } from "../fake-provider.js";
 
 describe("core-features-tools", () => {
@@ -212,6 +215,23 @@ describe("core-features-tools", () => {
     });
   });
 
+  describe("Inline Definition with defineTool()", () => {
+    it("defineTool() creates a tool with typed arguments", async () => {
+      const WeatherTool = defineTool({
+        name: "get_weather",
+        description: "Get the current weather for a location",
+        schema: zod4.object({ location: zod4.string().describe("The city, e.g. Paris") }),
+        execute: async ({ location }) => ({ location, condition: "Sunny" })
+      });
+
+      const tool = new WeatherTool();
+      expect(tool.toLLMTool().function.name).toBe("get_weather");
+      expect(await tool.handler({ location: "Paris" })).toBe(
+        '{"location":"Paris","condition":"Sunny"}'
+      );
+    });
+  });
+
   describe("Loop Protection (Loop Guard)", () => {
     it("createLLM accepts maxToolCalls option", () => {
       const llm = createLLM({
@@ -231,6 +251,36 @@ describe("core-features-tools", () => {
       });
 
       expect(response).toBeDefined();
+    });
+
+    it("ToolCallLimitError reports the limit and usage, and the chat can be asked again", async () => {
+      const toolRound = {
+        content: "",
+        usage: { input_tokens: 5, output_tokens: 1, total_tokens: 6 },
+        tool_calls: [
+          { id: "call", type: "function" as const, function: { name: "lookup", arguments: "{}" } }
+        ]
+      };
+      provider = new FakeProvider([...Array(6).fill(toolRound), "Here is what I found"]);
+      const lookup = {
+        type: "function" as const,
+        function: { name: "lookup", parameters: {} },
+        handler: async () => "result"
+      };
+      const chat = createLLM({ provider: "fake" }).chat("fake-model").withTool(lookup);
+
+      let finished = "";
+      try {
+        await chat.ask("Research and summarise the topic");
+      } catch (error) {
+        if (error instanceof ToolCallLimitError) {
+          expect(error.limit).toBe(5);
+          expect(error.usage.total_tokens).toBe(36);
+          finished = String(await chat.ask("Finish with what you have", { maxToolCalls: 2 }));
+        }
+      }
+
+      expect(finished).toBe("Here is what I found");
     });
   });
 

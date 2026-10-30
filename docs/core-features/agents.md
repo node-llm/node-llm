@@ -91,13 +91,16 @@ const reply = await agent.ask("What is TypeScript?");
 | `provider` | `string` | Force a specific provider (e.g., "openai") |
 | `instructions` | `string` | System prompt for the agent |
 | `tools` | `Tool[]` | Array of Tool classes to register |
-| `temperature` | `number` | Sampling temperature (0-2) |
+| `temperature` | `number` | Sampling temperature (0-2); left out for models that reject one |
 | `thinking` | `boolean \| object` | Enable extended thinking (Claude) |
 | `schema` | `ZodSchema` | Output schema for structured responses |
 | `params` | `Record<string, unknown>` | Provider-specific request parameters |
 | `headers` | `Record<string, string>` | Custom headers for requests |
 | `maxTokens` | `number` | Maximum tokens in the response |
-| `maxToolCalls` | `number` | Maximum tool-call iterations per turn |
+| `promptCache` | `boolean` | Cache the repeated start of each request (see [Prompt Caching](chat.html#prompt-caching)) |
+| `maxToolCalls` | `number` | Maximum rounds of tool calls per ask; more throws `ToolCallLimitError` |
+| `maxCost` | `number` | The most an ask may spend in US dollars; more throws `CostLimitError` |
+| `keepToolResults` | `number` | Send only the most recent tool results in full (between N and 2N); older ones become a placeholder |
 | `assumeModelExists` | `boolean` | Skip registry validation for custom/unlisted models |
 | `middlewares` | `Middleware[]` | Middlewares for observation or correction <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.6em; font-weight: 600; vertical-align: middle;">v1.15.0+</span> |
 
@@ -307,6 +310,19 @@ const llm = createLLM({ provider: "openai" });
 const analyzer = new SentimentAnalyzer({ llm });
 const result = await analyzer.ask("I love this product!");
 console.log(result.data.sentiment); // "positive" - typed and validated
+```
+
+A class's `static schema` can't type `result.data` by itself, because TypeScript doesn't let a base class read a subclass's static properties, so pass the schema's type as the second type argument. `defineAgent()` infers it from `schema`:
+
+```typescript
+const SentimentAgent = defineAgent({
+  model: "gpt-5",
+  instructions: "Analyze the sentiment of the given text.",
+  schema: SentimentSchema
+});
+
+const { data } = await new SentimentAgent({ llm }).ask("I love this product!");
+console.log(data.sentiment); // typed from SentimentSchema
 ```
 
 ---

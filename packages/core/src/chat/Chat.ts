@@ -1,3 +1,4 @@
+import { windowToolResults } from "./ToolResultWindow.js";
 import { FileLoader } from "../utils/FileLoader.js";
 import { Message } from "./Message.js";
 import {
@@ -18,23 +19,31 @@ import {
 } from "../providers/Provider.js";
 import { Executor } from "../executor/Executor.js";
 import { ChatStream } from "./ChatStream.js";
+import { requestTemperature } from "./Temperature.js";
+import { requestPromptCache } from "./PromptCache.js";
 import { Stream } from "../streaming/Stream.js";
 import { ModelRegistry } from "../models/ModelRegistry.js";
 import { ToolDefinition, ToolResolvable, ToolCall } from "./Tool.js";
 import { Schema } from "../schema/Schema.js";
 import { toJsonSchema } from "../schema/to-json-schema.js";
+import { isZodSchema, Zod3Schema, Zod4Schema, ZodSchema } from "../schema/zod.js";
 import { randomUUID } from "node:crypto";
-import { z } from "zod";
 import { config } from "../config.js";
 import {
   ToolExecutionMode,
   ToolExecutionModeInput,
-  DEFAULT_MAX_CORRECTIONS
+  DEFAULT_MAX_CORRECTIONS,
+  DEFAULT_MAX_TOOL_CALLS
 } from "../constants.js";
-import { ConfigurationError } from "../errors/index.js";
+import { ConfigurationError, CostLimitError, ToolCallLimitError } from "../errors/index.js";
 import { ChatValidator } from "./Validation.js";
 import { ToolHandler } from "./ToolHandler.js";
-import { shouldRunToolCallsConcurrently, executeToolCallOutcomes } from "./ToolCallOutcome.js";
+import {
+  shouldRunToolCallsConcurrently,
+  executeToolCallOutcomes,
+  toolCallLimitResults,
+  unrunToolCallResults
+} from "./ToolCallOutcome.js";
 import { logger } from "../utils/logger.js";
 import {
   Middleware,
@@ -90,7 +99,7 @@ export class Chat<S = unknown> {
     // exactly as it was.
     const rawSchema = options.schema as unknown;
     if (
-      rawSchema instanceof z.ZodType ||
+      isZodSchema(rawSchema) ||
       (rawSchema &&
         typeof rawSchema === "object" &&
         !(rawSchema instanceof Schema) &&
@@ -356,14 +365,15 @@ export class Chat<S = unknown> {
    * Enforce a specific schema for the output.
    * Can accept a Schema object or a Zod schema/JSON Schema directly.
    */
-  // A Zod schema gets its own overload so the response type is inferred from
-  // it; in the single union signature, a Zod object also matched the
-  // Record<string, unknown> branch and T fell back to unknown. The second
-  // overload is the original signature, so every call that compiled before
-  // still does - including one passing a value typed as the whole union.
-  withSchema<T>(schema: z.ZodType<T>): Chat<T>;
-  withSchema<T = unknown>(schema: Schema | z.ZodType<T> | Record<string, unknown> | null): Chat<T>;
-  withSchema<T>(schema: Schema | z.ZodType<T> | Record<string, unknown> | null): Chat<T> {
+  // Zod 4 and Zod 3 schemas get their own overloads so the response type is
+  // inferred from them; in the single union signature, a Zod object also
+  // matched the Record<string, unknown> branch and T fell back to unknown. The
+  // last overload is the original signature, so every call that compiled
+  // before still does - including one passing a value typed as the whole union.
+  withSchema<T>(schema: Zod4Schema<T>): Chat<T>;
+  withSchema<T>(schema: Zod3Schema<T>): Chat<T>;
+  withSchema<T = unknown>(schema: Schema | ZodSchema<T> | Record<string, unknown> | null): Chat<T>;
+  withSchema<T>(schema: Schema | ZodSchema<T> | Record<string, unknown> | null): Chat<T> {
     if (schema === null) {
       this.options.schema = undefined;
       return this as unknown as Chat<T>;
@@ -371,7 +381,7 @@ export class Chat<S = unknown> {
 
     if (schema instanceof Schema) {
       this.options.schema = schema;
-    } else if (schema instanceof z.ZodType) {
+    } else if (isZodSchema(schema)) {
       this.options.schema = Schema.fromZod("output", schema);
     } else {
       this.options.schema = Schema.fromJson("output", schema as Record<string, unknown>);
@@ -479,6 +489,16 @@ export class Chat<S = unknown> {
    */
   withToolConcurrency(enabled: boolean): this {
     this.options.toolConcurrency = enabled;
+    return this;
+  }
+
+  /**
+   * Cache the repeated start of each request (instructions, tools and earlier turns), so a
+   * long conversation or agent loop pays the full input price only once. Providers that cache
+   * automatically, such as OpenAI and Gemini, need no change and ignore this.
+   */
+  withPromptCache(enabled = true): this {
+    this.options.promptCache = enabled;
     return this;
   }
 
@@ -650,9 +670,13 @@ export class Chat<S = unknown> {
         const messagesToUse = context.messages || [];
         const executeOptions = {
           model: this.model,
-          messages: messagesToUse,
+          messages: windowToolResults(messagesToUse, this.options.keepToolResults),
           tools: this.options.tools as ToolDefinition[],
-          temperature: options?.temperature ?? this.options.temperature,
+          temperature: requestTemperature(
+            this.provider,
+            this.model,
+            options?.temperature ?? this.options.temperature
+          ),
           max_tokens: options?.maxTokens ?? this.options.maxTokens ?? config.maxTokens,
           headers: { ...this.options.headers, ...options?.headers },
           response_format: responseFormat, // Pass to provider
@@ -663,6 +687,7 @@ export class Chat<S = unknown> {
             options?.requestTimeout ?? this.options.requestTimeout ?? config.requestTimeout,
           thinking: options?.thinking ?? this.options.thinking,
           prediction: options?.prediction ?? this.options.prediction,
+          promptCache: requestPromptCache(this.provider, this.model, this.options.promptCache),
           signal: options?.signal,
           ...this.options.params
         };
@@ -702,7 +727,10 @@ export class Chat<S = unknown> {
 
         // Start generation
         await runAllHandlers(newMessageHandlers);
+        let requestStarted = Date.now();
         let response = await this.executor.executeChat(executeOptions);
+        const firstLatency = Date.now() - requestStarted;
+        let totalLatency = firstLatency;
         trackUsage(response.usage);
 
         assistantMessage = new ChatResponseString(
@@ -718,6 +746,7 @@ export class Chat<S = unknown> {
           response.metadata,
           response.attachments
         );
+        assistantMessage.latency = firstLatency;
 
         // --- Content Policy Hooks (Output - Turn 1) ---
         assistantMessage = await runChainHandlers(afterResponseHandlers, assistantMessage);
@@ -734,7 +763,8 @@ export class Chat<S = unknown> {
           await runAllHandlers(endMessageHandlers, assistantMessage);
         }
 
-        const maxToolCalls = options?.maxToolCalls ?? this.options.maxToolCalls ?? 5;
+        const maxToolCalls =
+          options?.maxToolCalls ?? this.options.maxToolCalls ?? DEFAULT_MAX_TOOL_CALLS;
         let stepCount = 0;
         let haltTriggered = false;
 
@@ -746,7 +776,22 @@ export class Chat<S = unknown> {
 
           stepCount++;
           if (stepCount > maxToolCalls) {
-            throw new Error(`[NodeLLM] Maximum tool execution calls (${maxToolCalls}) exceeded.`);
+            this.messages.push(
+              ...toolCallLimitResults(this.provider, response.tool_calls, maxToolCalls)
+            );
+            throw new ToolCallLimitError(maxToolCalls, totalUsage);
+          }
+
+          const maxCost = this.options.maxCost;
+          if (maxCost !== undefined && (totalUsage.cost ?? 0) >= maxCost) {
+            this.messages.push(
+              ...unrunToolCallResults(
+                this.provider,
+                response.tool_calls,
+                `the cost limit ($${maxCost}) was reached`
+              )
+            );
+            throw new CostLimitError(maxCost, totalUsage);
           }
 
           const runConcurrently = shouldRunToolCallsConcurrently(
@@ -866,11 +911,25 @@ export class Chat<S = unknown> {
 
           if (haltTriggered) break;
 
+          // Content policy hooks see every request in the loop, as they do when streaming.
+          const followUpMessages = await runChainHandlers(
+            beforeRequestHandlers,
+            windowToolResults(
+              [...this.systemMessages, ...this.messages],
+              this.options.keepToolResults
+            )
+          );
+
+          requestStarted = Date.now();
           response = await this.executor.executeChat({
             model: this.model,
-            messages: [...this.systemMessages, ...this.messages],
+            messages: followUpMessages,
             tools: this.options.tools as ToolDefinition[],
-            temperature: options?.temperature ?? this.options.temperature,
+            temperature: requestTemperature(
+              this.provider,
+              this.model,
+              options?.temperature ?? this.options.temperature
+            ),
             max_tokens: options?.maxTokens ?? this.options.maxTokens ?? config.maxTokens,
             headers: this.options.headers,
             response_format: responseFormat,
@@ -880,9 +939,12 @@ export class Chat<S = unknown> {
             requestTimeout:
               options?.requestTimeout ?? this.options.requestTimeout ?? config.requestTimeout,
             prediction: options?.prediction ?? this.options.prediction,
+            promptCache: requestPromptCache(this.provider, this.model, this.options.promptCache),
             signal: options?.signal,
             ...this.options.params
           });
+          const latency = Date.now() - requestStarted;
+          totalLatency += latency;
           trackUsage(response.usage);
 
           assistantMessage = new ChatResponseString(
@@ -898,6 +960,7 @@ export class Chat<S = unknown> {
             response.metadata,
             response.attachments
           );
+          assistantMessage.latency = latency;
 
           assistantMessage = await runChainHandlers(afterResponseHandlers, assistantMessage);
 
@@ -926,6 +989,8 @@ export class Chat<S = unknown> {
           assistantMessage.metadata,
           assistantMessage.attachments
         ) as unknown as ChatResponseString & { data: S };
+        // What ask() returns covers every request in it, so its latency is their total.
+        finalResponse.latency = totalLatency;
 
         // 5. onResponse Hook
         const requestDirective = await runMiddleware<RequestDirective>(

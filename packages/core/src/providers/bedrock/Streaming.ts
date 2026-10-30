@@ -242,7 +242,11 @@ export class BedrockStreaming {
     // 5. Metadata (Usage)
     if (event.metadata && event.metadata.usage) {
       const rawUsage: Usage = {
-        input_tokens: event.metadata.usage.inputTokens,
+        // Bedrock's inputTokens leave out cache reads and writes; NodeLLM's count them.
+        input_tokens:
+          event.metadata.usage.inputTokens +
+          (event.metadata.usage.cacheReadInputTokens || 0) +
+          (event.metadata.usage.cacheWriteInputTokens || 0),
         output_tokens: event.metadata.usage.outputTokens,
         total_tokens: event.metadata.usage.totalTokens,
         cached_tokens: event.metadata.usage.cacheReadInputTokens,

@@ -10,6 +10,7 @@ import {
   ServiceUnavailableError,
   APIError
 } from "../../errors/index.js";
+import { isBillingProblem } from "../../errors/billing.js";
 
 export async function handleAnthropicError(response: Response, modelId: string): Promise<never> {
   const status = response.status;
@@ -33,6 +34,10 @@ export async function handleAnthropicError(response: Response, modelId: string):
 
   const provider = "anthropic";
 
+  if (isBillingProblem(status, message)) {
+    throw new InsufficientQuotaError(message, body, provider, modelId);
+  }
+
   if (status === 400) {
     if (message.includes("prompt is too long") || message.includes("context_length")) {
       throw new ContextWindowExceededError(message, body, provider, modelId);
@@ -52,9 +57,6 @@ export async function handleAnthropicError(response: Response, modelId: string):
   }
 
   if (status === 429) {
-    if (message.includes("quota") || message.includes("credit")) {
-      throw new InsufficientQuotaError(message, body, provider, modelId);
-    }
     throw new RateLimitError(message, body, provider, modelId);
   }
 

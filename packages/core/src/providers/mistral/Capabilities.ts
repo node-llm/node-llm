@@ -20,6 +20,10 @@ export class MistralCapabilities {
     return caps;
   }
 
+  static supportsTemperature(modelId: string): boolean {
+    return ModelRegistry.supportsTemperature(modelId, "mistral");
+  }
+
   static getContextWindow(modelId: string): number | null {
     return ModelRegistry.getContextWindow(modelId, "mistral") ?? 32_768;
   }

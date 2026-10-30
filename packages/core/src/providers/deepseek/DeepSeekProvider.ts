@@ -27,6 +27,7 @@ export class DeepSeekProvider extends BaseProvider implements Provider {
     supportsModeration: (model: string) => Capabilities.supportsModeration(model),
     supportsReasoning: (model: string) => Capabilities.supportsReasoning(model),
     supportsDeveloperRole: (_model: string) => false,
+    supportsTemperature: (model: string) => Capabilities.supportsTemperature(model),
     getContextWindow: (model: string) => Capabilities.getContextWindow(model)
   };
 

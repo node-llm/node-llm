@@ -3,6 +3,7 @@ import { handleAnthropicError } from "../../../../src/providers/anthropic/Errors
 import {
   BadRequestError,
   AuthenticationError,
+  InsufficientQuotaError,
   RateLimitError,
   ServiceUnavailableError,
   ServerError,
@@ -15,6 +16,23 @@ describe("Anthropic Errors", () => {
       status: 400
     });
     await expect(handleAnthropicError(response, "test-model")).rejects.toThrow(BadRequestError);
+  });
+
+  it("treats an account with too little credit as out of quota", async () => {
+    const response = new Response(
+      JSON.stringify({
+        type: "error",
+        error: {
+          type: "invalid_request_error",
+          message:
+            "Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits."
+        }
+      }),
+      { status: 400 }
+    );
+    await expect(handleAnthropicError(response, "test-model")).rejects.toThrow(
+      InsufficientQuotaError
+    );
   });
 
   it("should handle 401 Unauthorized", async () => {

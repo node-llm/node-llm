@@ -3,12 +3,14 @@ export interface ModelPricing {
     standard?: {
       input_per_million?: number;
       cached_input_per_million?: number;
+      cache_write_per_million?: number;
       output_per_million?: number;
       reasoning_output_per_million?: number;
     };
     batch?: {
       input_per_million?: number;
       cached_input_per_million?: number;
+      cache_write_per_million?: number;
       output_per_million?: number;
       reasoning_output_per_million?: number;
     };

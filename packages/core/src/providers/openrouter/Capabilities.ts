@@ -56,6 +56,10 @@ export class OpenRouterCapabilities {
     return true;
   }
 
+  static supportsTemperature(modelId: string): boolean {
+    return ModelRegistry.supportsTemperature(modelId, "openrouter");
+  }
+
   static getContextWindow(modelId: string): number | null {
     return ModelRegistry.getContextWindow(modelId, "openrouter") ?? null;
   }

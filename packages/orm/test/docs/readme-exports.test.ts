@@ -24,6 +24,14 @@ describe("readme-exports", () => {
     });
   });
 
+  describe("Store Exports", () => {
+    it("exports PrismaStore and isChatStore", async () => {
+      const { PrismaStore, isChatStore } = await import("../../src/index.js");
+      expect(typeof PrismaStore).toBe("function");
+      expect(typeof isChatStore).toBe("function");
+    });
+  });
+
   describe("Type Exports", () => {
     it("exports ChatRecord type", async () => {
       // Type verification - just confirm the module exports it

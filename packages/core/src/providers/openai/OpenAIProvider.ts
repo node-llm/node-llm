@@ -1,3 +1,4 @@
+import { OpenAIResponses, needsResponsesApi } from "./Responses.js";
 import {
   Provider,
   ChatRequest,
@@ -33,6 +34,7 @@ export class OpenAIProvider extends BaseProvider implements Provider {
   protected baseUrl: string;
   protected chatHandler: OpenAIChat;
   protected streamingHandler: OpenAIStreaming;
+  protected responsesHandler: OpenAIResponses;
   protected modelsHandler: OpenAIModels;
   protected imageHandler: OpenAIImage;
   protected transcriptionHandler: OpenAITranscription;
@@ -50,6 +52,7 @@ export class OpenAIProvider extends BaseProvider implements Provider {
     supportsReasoning: (model: string) => Capabilities.supportsReasoning(model),
     supportsDeveloperRole: (model: string) => Capabilities.supportsDeveloperRole(model),
     supportsPrediction: (model: string) => Capabilities.supportsPrediction(model),
+    supportsTemperature: (model: string) => Capabilities.supportsTemperature(model),
     getContextWindow: (model: string) => Capabilities.getContextWindow(model) || null
   };
 
@@ -58,6 +61,7 @@ export class OpenAIProvider extends BaseProvider implements Provider {
     this.baseUrl = options.baseUrl ?? DEFAULT_OPENAI_BASE_URL;
     this.chatHandler = new OpenAIChat(this, options.apiKey);
     this.streamingHandler = new OpenAIStreaming(this, options.apiKey);
+    this.responsesHandler = new OpenAIResponses(this.apiBase(), options.apiKey);
     this.modelsHandler = new OpenAIModels(this.baseUrl, options.apiKey);
     this.imageHandler = new OpenAIImage(this.baseUrl, options.apiKey);
     this.transcriptionHandler = new OpenAITranscription(this.baseUrl, options.apiKey);
@@ -96,10 +100,23 @@ export class OpenAIProvider extends BaseProvider implements Provider {
   }
 
   async chat(request: ChatRequest): Promise<ChatResponse> {
+    if (needsResponsesApi(request, this.apiBase())) return this.responsesHandler.execute(request);
     return this.chatHandler.execute(request);
   }
 
   async *stream(request: ChatRequest): AsyncGenerator<ChatChunk> {
+    // Requests only the Responses API serves arrive whole, as one chunk, for now.
+    if (needsResponsesApi(request, this.apiBase())) {
+      const response = await this.responsesHandler.execute(request);
+      yield {
+        content: response.content ?? "",
+        tool_calls: response.tool_calls,
+        usage: response.usage,
+        thinking: response.thinking,
+        done: true
+      };
+      return;
+    }
     yield* this.streamingHandler.execute(request);
   }
 

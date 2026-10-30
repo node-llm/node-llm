@@ -11,6 +11,7 @@ import {
   z,
   providerRegistry
 } from "../../src/index.js";
+import { z as zod4 } from "zod4";
 import { FakeProvider } from "../fake-provider.js";
 
 describe("core-features-structured-output", () => {
@@ -22,6 +23,22 @@ describe("core-features-structured-output", () => {
   });
 
   describe("Using Zod (Recommended)", () => {
+    it("parses the documented example with a Zod 4 schema", async () => {
+      const personSchema = zod4.object({
+        name: zod4.string().describe("Person's full name"),
+        age: zod4.number().describe("Person's age in years"),
+        hobbies: zod4.array(zod4.string()).describe("List of hobbies")
+      });
+
+      const chat = createLLM({ provider: "fake" }).chat("fake-model");
+      const response = await chat
+        .withSchema(personSchema)
+        .ask("Generate a person named Alice who likes hiking and coding");
+
+      expect(response.data.name).toBe("Alice");
+      expect(response.data.hobbies).toEqual(["hiking", "coding"]);
+    });
+
     it("z.object() creates a valid schema", () => {
       const personSchema = z.object({
         name: z.string().describe("Person's full name"),

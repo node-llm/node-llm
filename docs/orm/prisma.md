@@ -266,6 +266,30 @@ const chat = await createChat(prisma, llm, {
 });
 ```
 
+### Custom Stores
+
+Chats and agent sessions record through a store. By default that's your Prisma client, but anything that implements `ChatStore` works in its place. That's useful when the code that talks to the model can't reach the database, such as a worker on another machine that reports to your API:
+
+```typescript
+import { createAgentSession, type ChatStore } from "@node-llm/orm";
+
+class ApiStore implements ChatStore {
+  async createChat(chat) {
+    return post("/llm/chats", chat);
+  }
+  async createMessage(message) {
+    return post("/llm/messages", message);
+  }
+  // ...updateMessage, listMessages, createToolCall, finishToolCall, createRequest and the rest
+}
+
+const session = await createAgentSession(new ApiStore(), llm, SupportAgent, {
+  tools: [lookupOrder] // tools for this session, in place of the agent class's own
+});
+```
+
+The records are the same as in the Prisma tables (chats, messages, tool calls with their results, and a request row per API call with its duration, tokens and cost), so one schema serves both. `createChat`, `loadChat`, `createAgentSession` and `loadAgentSession` take a store or a Prisma client; `isChatStore()` tells them apart.
+
 ### Using Tools
 
 Tools are automatically tracked without additional configuration.

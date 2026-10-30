@@ -77,6 +77,10 @@ export interface ChatRequest {
   prediction?: string | ContentPart[];
   headers?: Record<string, string>;
   requestTimeout?: number;
+  /** Cancels the request */
+  signal?: AbortSignal;
+  /** Set only for providers that support prompt caching */
+  promptCache?: boolean;
   [key: string]: unknown;
 }
 
@@ -93,12 +97,15 @@ export interface ChatChunk {
 }
 
 export interface Usage {
+  /** Every input token, including those read from or written to a prompt cache */
   input_tokens: number;
   output_tokens: number;
   total_tokens: number;
   reasoning_tokens?: number;
   image_tokens?: number;
+  /** Input tokens read from a prompt cache */
   cached_tokens?: number;
+  /** Input tokens written to a prompt cache */
   cache_creation_tokens?: number;
   cost?: number;
   input_cost?: number;
@@ -135,6 +142,8 @@ export interface ProviderCapabilities {
   supportsReasoning(modelId: string): boolean;
   supportsDeveloperRole(modelId: string): boolean;
   supportsPrediction?(modelId: string): boolean;
+  supportsTemperature?(modelId: string): boolean;
+  supportsPromptCaching?(modelId: string): boolean;
   supportsToolChoice?(modelId: string): boolean;
   getContextWindow(modelId: string): number | null;
 }

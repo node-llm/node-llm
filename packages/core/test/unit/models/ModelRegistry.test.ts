@@ -35,7 +35,7 @@ describe("ModelRegistry - Filtered Sync Verification", () => {
     const sonnet45 = ModelRegistry.find("claude-sonnet-4-5-20250929");
     expect(sonnet45).toBeDefined();
     expect(sonnet45?.name).toBe("Claude Sonnet 4.5");
-    expect(sonnet45?.context_window).toBe(1000000);
+    expect(sonnet45?.context_window).toBe(200000);
   });
 
   it("should find the new OpenAI models like gpt-4o", () => {

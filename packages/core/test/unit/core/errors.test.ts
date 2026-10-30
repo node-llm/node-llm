@@ -4,6 +4,7 @@ import {
   LLMError,
   APIError,
   RateLimitError,
+  InsufficientQuotaError,
   AuthenticationError,
   BadRequestError,
   ServerError
@@ -31,6 +32,23 @@ describe("Error System", () => {
   });
 
   describe("Executor Retry Logic", () => {
+    it("does not retry an account that is out of credit or quota", async () => {
+      const mockProvider = {
+        chat: vi
+          .fn()
+          .mockRejectedValue(new InsufficientQuotaError("Your credit balance is too low", {}))
+      };
+      const executor = new Executor(mockProvider as unknown as Provider, {
+        attempts: 3,
+        delayMs: 0
+      });
+
+      await expect(executor.executeChat({ model: "test", messages: [] })).rejects.toThrow(
+        InsufficientQuotaError
+      );
+      expect(mockProvider.chat).toHaveBeenCalledTimes(1);
+    });
+
     it("should retry on RateLimitError", async () => {
       let attempts = 0;
       const mockProvider = {

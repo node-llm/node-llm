@@ -22,7 +22,7 @@
     }
   },
   "scripts": {
-    "build": "prisma generate --schema=schema.prisma && tsc",
+    "build": "tsc",
     "test": "vitest run",
     "test:docs": "vitest run test/docs",
     "test:watch": "vitest",
@@ -67,6 +67,11 @@
   "peerDependencies": {
     "@node-llm/core": "^1.15.0",
     "@prisma/client": "^5.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@prisma/client": {
+      "optional": true
+    }
   },
   "devDependencies": {
     "@node-llm/core": "file:../core",

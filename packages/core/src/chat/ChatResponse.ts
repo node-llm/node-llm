@@ -2,7 +2,7 @@ import { Usage, ThinkingResult, Attachment } from "../providers/Provider.js";
 import { ToolCall } from "./Tool.js";
 import { Schema } from "../schema/Schema.js";
 import { extractJson } from "../utils/json.js";
-import { z } from "zod";
+import { isZodSchema } from "../schema/zod.js";
 
 /**
  * Enhanced string that includes token usage metadata.
@@ -11,6 +11,12 @@ import { z } from "zod";
 export class ChatResponseString extends String {
   private _cachedData: unknown = undefined;
   private _validationError: Error | null = null;
+
+  /**
+   * How long the provider took to answer, in milliseconds: for one request in afterResponse hooks,
+   * and in total across an ask's requests on what ask() returns.
+   */
+  public latency?: number;
 
   constructor(
     content: string,
@@ -109,7 +115,7 @@ export class ChatResponseString extends String {
    * Return a new ChatResponseString with modified content but preserved metadata.
    */
   withContent(newContent: string): ChatResponseString {
-    return new ChatResponseString(
+    const changed = new ChatResponseString(
       newContent,
       this.usage,
       this.model,
@@ -122,6 +128,8 @@ export class ChatResponseString extends String {
       this.metadata,
       this.attachments
     );
+    changed.latency = this.latency;
+    return changed;
   }
 
   /**
@@ -147,9 +155,10 @@ export class ChatResponseString extends String {
 
     const json = this.parsed;
 
-    if (this.schema && this.schema.definition.schema instanceof z.ZodType) {
+    const schema = this.schema?.definition.schema;
+    if (isZodSchema(schema)) {
       try {
-        this._cachedData = this.schema.definition.schema.parse(json);
+        this._cachedData = schema.parse(json);
         return this._cachedData;
       } catch (e) {
         this._validationError = e as Error;

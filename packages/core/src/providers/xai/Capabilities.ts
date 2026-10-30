@@ -51,6 +51,10 @@ export class Capabilities {
     return true;
   }
 
+  static supportsTemperature(modelId: string): boolean {
+    return ModelRegistry.supportsTemperature(modelId, "xai");
+  }
+
   static getContextWindow(modelId: string): number {
     return ModelRegistry.getContextWindow(modelId, "xai") ?? 128_000;
   }

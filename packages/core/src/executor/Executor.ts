@@ -1,5 +1,5 @@
 import { Provider, ChatRequest, ChatResponse } from "../providers/Provider.js";
-import { RateLimitError, ServerError } from "../errors/index.js";
+import { InsufficientQuotaError, RateLimitError, ServerError } from "../errors/index.js";
 
 export class Executor {
   constructor(
@@ -20,8 +20,11 @@ export class Executor {
       } catch (error) {
         lastError = error;
 
-        // If it's a fatal error (BadRequest, Authentication), don't retry
-        const isRetryable = error instanceof RateLimitError || error instanceof ServerError;
+        // Fatal errors (bad request, authentication, an account out of credit) fail straight away:
+        // trying again can't help.
+        const isRetryable =
+          (error instanceof RateLimitError && !(error instanceof InsufficientQuotaError)) ||
+          error instanceof ServerError;
 
         if (!isRetryable || attempt >= this.retry.attempts) {
           throw error;

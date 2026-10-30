@@ -3,6 +3,8 @@ import { ToolExecutionMode, ToolExecutionModeInput } from "../constants.js";
 import { ToolHandler, ToolExecutionResult } from "./ToolHandler.js";
 import { Middleware, MiddlewareContext } from "../types/Middleware.js";
 import { runMiddleware } from "../utils/middleware-runner.js";
+import { Provider } from "../providers/Provider.js";
+import { Message } from "./Message.js";
 
 export type ToolCallOutcome =
   | { kind: "cancelled"; toolCall: ToolCall }
@@ -84,4 +86,30 @@ export async function executeToolCallOutcomes(
     outcomes.push(await executeToolCallOutcome(toolCall, options, middlewares, context));
   }
   return outcomes;
+}
+
+/**
+ * Error results for the tool calls a chat stopped before running because it reached
+ * `maxToolCalls`, so its history stays valid for the next request.
+ */
+export function toolCallLimitResults(
+  provider: Provider,
+  toolCalls: ToolCall[],
+  limit: number
+): Message[] {
+  return unrunToolCallResults(provider, toolCalls, `the tool call limit (${limit}) was reached`);
+}
+
+/**
+ * Answers tool calls a loop stopped before running, so the history stays valid for the next ask:
+ * every tool call a model makes needs a result.
+ */
+export function unrunToolCallResults(
+  provider: Provider,
+  toolCalls: ToolCall[],
+  reason: string
+): Message[] {
+  return toolCalls.map((toolCall) =>
+    provider.formatToolResultMessage(toolCall.id, `Not run: ${reason}.`, { isError: true })
+  );
 }

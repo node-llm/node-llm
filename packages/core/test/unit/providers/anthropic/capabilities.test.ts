@@ -25,6 +25,14 @@ describe("Anthropic Capabilities", () => {
     expect(Capabilities.supportsTools("claude-2")).toBe(false);
   });
 
+  it("knows which models reject a temperature", () => {
+    expect(Capabilities.supportsTemperature("claude-sonnet-5-5")).toBe(false);
+    expect(Capabilities.supportsTemperature("claude-opus-4-7")).toBe(false);
+    expect(Capabilities.supportsTemperature("claude-opus-4-6")).toBe(true);
+    expect(Capabilities.supportsTemperature("claude-haiku-4-5")).toBe(true);
+    expect(Capabilities.supportsTemperature("claude-2")).toBe(true); // unknown model -> send it
+  });
+
   it("checks extended thinking support", () => {
     expect(Capabilities.supportsExtendedThinking("claude-sonnet-4-5")).toBe(true);
     expect(Capabilities.supportsExtendedThinking("claude-2")).toBe(false);

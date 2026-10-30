@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import type { PrismaClient } from "@prisma/client";
 import type { NodeLLMCore, ChatChunk, AskOptions, Usage } from "@node-llm/core";
 import { BaseChat, type ChatRecord, type ChatOptions } from "../../BaseChat.js";
+import type { ChatStore } from "../../Store.js";
+import { toStore } from "./PrismaStore.js";
 
 export { type ChatRecord, type ChatOptions };
 
@@ -30,26 +31,22 @@ export interface TableNames {
 }
 
 /**
- * Prisma-based Chat Implementation.
+ * A chat whose messages, tool calls and requests are recorded in a store: a Prisma client's
+ * database by default, or any ChatStore.
  */
 export class Chat extends BaseChat {
-  private tables: Required<TableNames>;
+  private store: ChatStore;
   private persistenceConfig: Required<NonNullable<ChatOptions["persistence"]>>;
 
   constructor(
-    private prisma: PrismaClient,
+    prismaOrStore: unknown,
     private llm: NodeLLMCore,
     record: ChatRecord,
     options: ChatOptions = {},
     tableNames: TableNames = {}
   ) {
     super(record, options);
-    this.tables = {
-      chat: tableNames.chat || "llmChat",
-      message: tableNames.message || "llmMessage",
-      toolCall: tableNames.toolCall || "llmToolCall",
-      request: tableNames.request || "llmRequest"
-    };
+    this.store = toStore(prismaOrStore, tableNames);
 
     this.persistenceConfig = {
       toolCalls: options.persistence?.toolCalls ?? true,
@@ -91,16 +88,13 @@ export class Chat extends BaseChat {
     coreChat.onToolCallStart(async (call: any) => {
       // Only persist if toolCalls persistence is enabled
       if (this.persistenceConfig.toolCalls) {
-        const toolCallModel = this.tables.toolCall;
-        await (this.prisma as any)[toolCallModel].create({
-          data: {
-            messageId: assistantMessageId,
-            toolCallId: call.id,
-            name: call.function?.name || "unknown",
-            arguments: JSON.stringify(call.function?.arguments || {}),
-            thought: (call as any).thought || null,
-            thoughtSignature: (call as any).thought_signature || null
-          }
+        await this.store.createToolCall({
+          messageId: assistantMessageId,
+          toolCallId: call.id,
+          name: call.function?.name || "unknown",
+          arguments: JSON.stringify(call.function?.arguments || {}),
+          thought: (call as any).thought || null,
+          thoughtSignature: (call as any).thought_signature || null
         });
       }
 
@@ -111,15 +105,11 @@ export class Chat extends BaseChat {
     coreChat.onToolCallEnd(async (call: any, result: any) => {
       // Only persist if toolCalls persistence is enabled
       if (this.persistenceConfig.toolCalls) {
-        const toolCallModel = this.tables.toolCall;
         const resString = typeof result === "string" ? result : JSON.stringify(result);
 
-        await (this.prisma as any)[toolCallModel].update({
-          where: { messageId_toolCallId: { messageId: assistantMessageId, toolCallId: call.id } },
-          data: {
-            result: resString,
-            thought: (call as any).thought || null
-          }
+        await this.store.finishToolCall(assistantMessageId, call.id, {
+          result: resString,
+          thought: (call as any).thought || null
         });
       }
 
@@ -140,19 +130,16 @@ export class Chat extends BaseChat {
 
       // Only persist if requests persistence is enabled
       if (this.persistenceConfig.requests) {
-        const modelName = this.tables.request;
-        await (this.prisma as any)[modelName].create({
-          data: {
-            chatId: this.id,
-            messageId: assistantMessageId,
-            provider: finalResp.provider || provider || "unknown",
-            model: finalResp.model || model || "unknown",
-            statusCode: 200,
-            duration: finalResp.latency || 0,
-            inputTokens: finalResp.usage?.input_tokens || 0,
-            outputTokens: finalResp.usage?.output_tokens || 0,
-            cost: finalResp.usage?.cost || 0
-          }
+        await this.store.createRequest({
+          chatId: this.id,
+          messageId: assistantMessageId,
+          provider: finalResp.provider || provider || "unknown",
+          model: finalResp.model || model || "unknown",
+          statusCode: 200,
+          duration: finalResp.latency || 0,
+          inputTokens: finalResp.usage?.input_tokens || 0,
+          outputTokens: finalResp.usage?.output_tokens || 0,
+          cost: finalResp.usage?.cost || 0
         });
       }
 
@@ -216,19 +203,21 @@ export class Chat extends BaseChat {
    * Send a message and persist the conversation.
    */
   async ask(message: string, options: AskOptions = {}): Promise<MessageRecord> {
-    const messageModel = this.tables.message;
-    const userMessage = await (this.prisma as any)[messageModel].create({
-      data: { chatId: this.id, role: "user", content: message }
+    const userMessage = await this.store.createMessage({
+      chatId: this.id,
+      role: "user",
+      content: message
     });
 
-    const assistantMessage = await (this.prisma as any)[messageModel].create({
-      data: { chatId: this.id, role: "assistant", content: null }
+    const assistantMessage = await this.store.createMessage({
+      chatId: this.id,
+      role: "assistant",
+      content: null
     });
 
     try {
-      const historyRecords = await (this.prisma as any)[messageModel].findMany({
-        where: { chatId: this.id, id: { notIn: [userMessage!.id, assistantMessage!.id] } },
-        orderBy: { createdAt: "asc" }
+      const historyRecords = await this.store.listMessages(this.id, {
+        excludeIds: [userMessage.id, assistantMessage.id]
       });
 
       const history = historyRecords.map((m: any) => ({
@@ -239,24 +228,21 @@ export class Chat extends BaseChat {
       const coreChat = await this.prepareCoreChat(history, assistantMessage!.id);
       const response = await coreChat.ask(message, options);
 
-      return await (this.prisma as any)[messageModel].update({
-        where: { id: assistantMessage!.id },
-        data: {
-          content: response.content,
-          contentRaw: JSON.stringify(response.meta),
-          inputTokens: response.usage?.input_tokens || 0,
-          outputTokens: response.usage?.output_tokens || 0,
-          thinkingText: response.thinking?.text || null,
-          thinkingSignature: response.thinking?.signature || null,
-          thinkingTokens: response.thinking?.tokens || null,
-          modelId: response.model || null,
-          provider: response.provider || null
-        }
-      });
+      return (await this.store.updateMessage(assistantMessage.id, {
+        content: response.content,
+        contentRaw: JSON.stringify(response.meta),
+        inputTokens: response.usage?.input_tokens || 0,
+        outputTokens: response.usage?.output_tokens || 0,
+        thinkingText: response.thinking?.text || null,
+        thinkingSignature: response.thinking?.signature || null,
+        thinkingTokens: response.thinking?.tokens || null,
+        modelId: response.model || null,
+        provider: response.provider || null
+      })) as MessageRecord;
     } catch (error) {
       // Delete the empty assistant message, but keep the user message
       // so there's a record of what was asked (useful for debugging)
-      await (this.prisma as any)[messageModel].delete({ where: { id: assistantMessage!.id } });
+      await this.store.deleteMessage(assistantMessage.id);
       throw error;
     }
   }
@@ -269,19 +255,21 @@ export class Chat extends BaseChat {
     message: string,
     options: AskOptions = {}
   ): AsyncGenerator<ChatChunk, MessageRecord, undefined> {
-    const messageModel = this.tables.message;
-    const userMessage = await (this.prisma as any)[messageModel].create({
-      data: { chatId: this.id, role: "user", content: message }
+    const userMessage = await this.store.createMessage({
+      chatId: this.id,
+      role: "user",
+      content: message
     });
 
-    const assistantMessage = await (this.prisma as any)[messageModel].create({
-      data: { chatId: this.id, role: "assistant", content: null }
+    const assistantMessage = await this.store.createMessage({
+      chatId: this.id,
+      role: "assistant",
+      content: null
     });
 
     try {
-      const historyRecords = await (this.prisma as any)[messageModel].findMany({
-        where: { chatId: this.id, id: { notIn: [userMessage!.id, assistantMessage!.id] } },
-        orderBy: { createdAt: "asc" }
+      const historyRecords = await this.store.listMessages(this.id, {
+        excludeIds: [userMessage.id, assistantMessage.id]
       });
 
       const history = historyRecords.map((m: any) => ({
@@ -313,24 +301,21 @@ export class Chat extends BaseChat {
         }
       }
 
-      return await (this.prisma as any)[messageModel].update({
-        where: { id: assistantMessage!.id },
-        data: {
-          content: fullContent,
-          contentRaw: JSON.stringify(metadata),
-          inputTokens: metadata.input_tokens || 0,
-          outputTokens: metadata.output_tokens || 0,
-          thinkingText: metadata.thinking?.text || null,
-          thinkingSignature: metadata.thinking?.signature || null,
-          thinkingTokens: metadata.thinking?.tokens || null,
-          modelId: this.localOptions.model || this.record.model || null,
-          provider: this.localOptions.provider || this.record.provider || null
-        }
-      });
+      return (await this.store.updateMessage(assistantMessage.id, {
+        content: fullContent,
+        contentRaw: JSON.stringify(metadata),
+        inputTokens: metadata.input_tokens || 0,
+        outputTokens: metadata.output_tokens || 0,
+        thinkingText: metadata.thinking?.text || null,
+        thinkingSignature: metadata.thinking?.signature || null,
+        thinkingTokens: metadata.thinking?.tokens || null,
+        modelId: this.localOptions.model || this.record.model || null,
+        provider: this.localOptions.provider || this.record.provider || null
+      })) as MessageRecord;
     } catch (error) {
       // Delete the empty assistant message, but keep the user message
       // so there's a record of what was asked (useful for debugging)
-      await (this.prisma as any)[messageModel].delete({ where: { id: assistantMessage!.id } });
+      await this.store.deleteMessage(assistantMessage.id);
       throw error;
     }
   }
@@ -339,69 +324,32 @@ export class Chat extends BaseChat {
    * Get all messages for this chat.
    */
   async messages(): Promise<MessageRecord[]> {
-    const messageModel = this.tables.message;
-    return await (this.prisma as any)[messageModel].findMany({
-      where: { chatId: this.id },
-      orderBy: { createdAt: "asc" }
-    });
+    return (await this.store.listMessages(this.id)) as MessageRecord[];
   }
 
   /**
    * Returns a usage summary for this chat session.
    */
   async stats(): Promise<Usage> {
-    const requestModel = this.tables.request;
-    const aggregate = await (this.prisma as any)[requestModel].aggregate({
-      where: { chatId: this.id },
-      _sum: {
-        inputTokens: true,
-        outputTokens: true,
-        cost: true
-      }
-    });
+    const totals = await this.store.requestTotals(this.id);
 
     return {
-      input_tokens: Number(aggregate._sum.inputTokens || 0),
-      output_tokens: Number(aggregate._sum.outputTokens || 0),
-      total_tokens: Number((aggregate._sum.inputTokens || 0) + (aggregate._sum.outputTokens || 0)),
-      cost: Number(aggregate._sum.cost || 0)
+      input_tokens: totals.inputTokens,
+      output_tokens: totals.outputTokens,
+      total_tokens: totals.inputTokens + totals.outputTokens,
+      cost: totals.cost
     };
   }
 }
 
 /**
- * Helper to find the correct table property in the prisma client.
- * Prisma usually camelCases model names (e.g., AssistantChat -> assistantChat),
- * but mapping can vary based on configuration.
- */
-function getTable(prisma: any, tableName: string): any {
-  if (prisma[tableName]) return prisma[tableName];
-
-  // Try case-insensitive match if not found directly
-  const keys = Object.keys(prisma).filter((k) => !k.startsWith("$") && !k.startsWith("_"));
-  const match = keys.find((k) => k.toLowerCase() === tableName.toLowerCase());
-
-  if (match) return prisma[match];
-
-  // If still not found, search for the model name if it's different from the property name
-  // but for now, we'll just throw a clear error
-  throw new Error(
-    `[@node-llm/orm] Prisma table "${tableName}" not found. Available tables: ${keys.join(", ")}`
-  );
-}
-
-/**
- * Convenience method to create a new chat session.
+ * Creates a new chat session, recorded through a Prisma client or any ChatStore.
  */
 export async function createChat<T = Record<string, any>>(
-  prisma: any,
+  prismaOrStore: unknown,
   llm: NodeLLMCore,
   options: ChatOptions & { tableNames?: TableNames } & T = {} as any
 ): Promise<Chat> {
-  const chatTable = options.tableNames?.chat || "llmChat";
-
-  // Extract known options so we don't double-pass them or pass them incorrectly
-  // runtime options should NOT be persisted to DB
   const {
     model,
     provider,
@@ -421,50 +369,34 @@ export async function createChat<T = Record<string, any>>(
     ...extras
   } = options;
 
-  if (options.debug) {
-    const keys = Object.keys(prisma).filter((k) => !k.startsWith("$") && !k.startsWith("_"));
-    console.log(
-      `[@node-llm/orm] createChat: table=${chatTable}, availableTables=${keys.join(", ")}`
-    );
-  }
+  const store = toStore(prismaOrStore, options.tableNames);
+  if (options.debug) console.log(`[@node-llm/orm] createChat: store=${store.constructor.name}`);
 
-  const table = getTable(prisma, chatTable);
-  const record = await table.create({
-    data: {
-      model,
-      provider,
-      instructions,
-      metadata: metadata ?? null,
-      ...(extras as any)
-    }
+  const record = await store.createChat({
+    model,
+    provider,
+    instructions,
+    metadata: metadata ?? null,
+    ...(extras as any)
   });
 
-  return new Chat(prisma, llm, record, options, options.tableNames);
+  return new Chat(store, llm, record, options, options.tableNames);
 }
 
 /**
- * Convenience method to load an existing chat session.
+ * Loads an existing chat session from a Prisma client or any ChatStore.
  */
 export async function loadChat(
-  prisma: any,
+  prismaOrStore: unknown,
   llm: NodeLLMCore,
   chatId: string,
   options: ChatOptions & { tableNames?: TableNames; debug?: boolean } = {}
 ): Promise<Chat | null> {
-  const chatTable = options.tableNames?.chat || "llmChat";
+  const store = toStore(prismaOrStore, options.tableNames);
+  if (options.debug) console.log(`[@node-llm/orm] loadChat: store=${store.constructor.name}`);
 
-  if (options.debug) {
-    const keys = Object.keys(prisma).filter((k) => !k.startsWith("$") && !k.startsWith("_"));
-    console.log(`[@node-llm/orm] loadChat: table=${chatTable}, availableTables=${keys.join(", ")}`);
-  }
-
-  const table = getTable(prisma, chatTable);
-  const record = await table.findUnique({
-    where: { id: chatId }
-  });
-
+  const record = await store.findChat(chatId);
   if (!record) return null;
 
-  // Reconstruct chat with options from DB or manual overrides if needed
-  return new Chat(prisma, llm, record, options, options.tableNames);
+  return new Chat(store, llm, record, options, options.tableNames);
 }

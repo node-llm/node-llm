@@ -1,8 +1,8 @@
-import { z } from "zod";
+import type { ZodSchema } from "./zod.js";
 
 export interface SchemaDefinition {
   name: string;
-  schema: z.ZodType<unknown> | Record<string, unknown>; // Support Zod or raw JSON Schema
+  schema: ZodSchema | Record<string, unknown>; // A Zod 4 or Zod 3 schema, or raw JSON Schema
   description?: string;
   strict?: boolean; // For OpenAI's strict mode
 }
@@ -12,7 +12,7 @@ export class Schema {
 
   static fromZod(
     name: string,
-    schema: z.ZodType<unknown>,
+    schema: ZodSchema,
     options?: { description?: string; strict?: boolean }
   ): Schema {
     return new Schema({

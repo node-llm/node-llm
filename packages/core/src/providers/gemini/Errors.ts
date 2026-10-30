@@ -10,6 +10,7 @@ import {
   ServiceUnavailableError,
   APIError
 } from "../../errors/index.js";
+import { isBillingProblem } from "../../errors/billing.js";
 
 export async function handleGeminiError(response: Response, model?: string): Promise<never> {
   const status = response.status;
@@ -32,6 +33,10 @@ export async function handleGeminiError(response: Response, model?: string): Pro
 
   const provider = "gemini";
 
+  if (isBillingProblem(status, message)) {
+    throw new InsufficientQuotaError(message, body, provider, model);
+  }
+
   if (status === 400) {
     if (message.includes("limit") || message.includes("context") || message.includes("token")) {
       throw new ContextWindowExceededError(message, body, provider, model);
@@ -51,9 +56,6 @@ export async function handleGeminiError(response: Response, model?: string): Pro
   }
 
   if (status === 429) {
-    if (message.includes("quota")) {
-      throw new InsufficientQuotaError(message, body, provider, model);
-    }
     throw new RateLimitError(message, body, provider, model);
   }
 

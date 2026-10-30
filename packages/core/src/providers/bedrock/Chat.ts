@@ -69,7 +69,8 @@ export class BedrockChat {
       {
         method: "POST",
         headers,
-        body: bodyJson
+        body: bodyJson,
+        signal: request.signal
       },
       request.requestTimeout ?? this.config.requestTimeout
     );
@@ -173,7 +174,11 @@ export class BedrockChat {
 
     // Build usage info
     const usage: Usage = {
-      input_tokens: response.usage.inputTokens,
+      // Bedrock's inputTokens leave out cache reads and writes; NodeLLM's count them.
+      input_tokens:
+        response.usage.inputTokens +
+        (response.usage.cacheReadInputTokens || 0) +
+        (response.usage.cacheWriteInputTokens || 0),
       output_tokens: response.usage.outputTokens,
       total_tokens: response.usage.totalTokens,
       cached_tokens: response.usage.cacheReadInputTokens,

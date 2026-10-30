@@ -2,19 +2,63 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased] (@node-llm/orm)
+
+### Features
+
+- **Custom Stores**: Chats and agent sessions record through a `ChatStore`. A Prisma client still works as before (it is wrapped in the new `PrismaStore`); any other store, such as one that sends records to your own API, can be passed in its place. `isChatStore()`, `PrismaStore` and the store record types are exported.
+- **Prisma Is Optional**: `@prisma/client` is now an optional peer dependency and the build no longer runs `prisma generate`, since only the Prisma store uses Prisma. Apps with their own store don't install it.
+- **Session Tools**: `createAgentSession()` takes `tools`, for tools built per session (for example ones bound to a user's data), used in place of the agent class's own.
+
+### Bug Fixes
+
+- **Agent Session Request Duration**: Requests recorded by agent sessions now store the response's latency. Before, their `duration` was always `0`.
+
 ## [Unreleased] (@node-llm/core)
 
 ### Features
 
+- **Tools on OpenAI GPT-5.6**: GPT-5.6 models reject function tools on Chat Completions ("use /v1/responses"). NodeLLM now sends tool requests for them through OpenAI's Responses API, mapping messages, tool calls and results, images, structured output and reasoning effort, with nothing stored on OpenAI's side. Every other request still uses Chat Completions as before.
+- **`envFallback`**: `createLLM({ envFallback: false })` takes keys, base URLs and the provider only from what is passed in code, never from environment variables. Apps that call providers with each customer's key set it, so a missing key fails instead of quietly using the server's own. The default is unchanged.
+- **`maxCost`**: A chat option and agent setting that caps what an ask may spend, in US dollars. A tool loop that has spent the limit stops before its next request and throws `CostLimitError` (code `COST_LIMIT`), with the `limit` and `usage`, and the tool calls it didn't run are answered so the chat can be asked again. A safety net for agents whose tools can return very large results.
+- **`keepToolResults`**: A chat option and agent setting that sends only the most recent tool results in full, replacing older ones with a short placeholder. Long tool loops, such as an agent reading page after page, no longer resend every earlier result on every request. Results are left out in blocks of N, so the start of the conversation changes only every N requests and prompt caching keeps working. The chat's history keeps them all.
+- **Response Latency**: Each response has `latency`, how long the provider took to answer that request in milliseconds, set before `afterResponse` hooks run and kept by `withContent()`. What `ask()` returns has the total across its requests. The ORM records it as each request's `duration`, which was always `0` before.
+- **Prompt Caching**: `withPromptCache()`, the `promptCache` chat option and `static promptCache` on Agents cache the repeated start of each request (instructions, tools and earlier turns) on Anthropic, so an agent loop pays the full input price once. Providers that cache automatically are unaffected. Providers declare it with the new optional `supportsPromptCaching(model)` capability.
+- **`defineTool()`**: Defines a tool without a class, with the arguments of `execute` typed from its Zod schema, as `defineAgent()` does for agents.
+- **Zod 4 Schemas**: `withSchema()`, the `schema` option, Agents and `Tool` accept Zod 4 schemas (Zod 4.2 or later, from `"zod"`) as well as Zod 3, with types inferred from either. Schemas are recognised by shape, so a schema from another copy of Zod validates too; before, it skipped validation silently.
 - **Adaptive Thinking for Claude**: On Claude generations that only think adaptively (Opus 4.7 and later, Sonnet 5 and later, Fable), `withEffort()` and `withThinking({ effort })` now send adaptive thinking with `output_config.effort`. Before, effort was not sent to Anthropic, and these models reject a fixed `budget`. `effort` also accepts `"xhigh"` and `"max"`.
 - **Thinking Display**: `withThinking({ display: "summarized" })` returns a summary of Claude's thinking, which newer models hide by default.
+- **Typed `defineAgent()` Output**: `defineAgent({ schema })` infers the Zod schema's type, so `response.data` is typed without repeating the schema as a type argument.
+- **`LLMConfig` Type**: The options type `createLLM()` takes is now exported, so an app can build them (for example a provider and its key from its own settings) without reaching for `Parameters<typeof createLLM>`.
+- **`ToolCallLimitError`**: Reaching `maxToolCalls` now throws `ToolCallLimitError` (code `TOOL_CALL_LIMIT`) instead of a plain `Error`. It carries the `limit` and the `usage` of every request in that ask. The message is unchanged.
+
+### Bug Fixes
+
+- **Billing Errors on Every Provider**: Whether an account can't pay is now decided the same way for every provider (status 402, the `insufficient_quota` code, or wording such as "credit balance", "insufficient balance" or "billing"), and is always an `InsufficientQuotaError`. Before, each provider checked differently: Anthropic's 400 and xAI's billing errors weren't recognised, and only DeepSeek handled 402. A plain "quota" is no longer treated as billing, since Gemini and others use it for per-minute rate limits, which should be retried. The xAI handler no longer prints raw error bodies to the console.
+- **No Retries When Out of Quota**: `InsufficientQuotaError` is a `RateLimitError`, so retries kept trying an account with no credit or quota left, with growing back-off. It now fails straight away, as other fatal errors do.
+- **`beforeRequest` in Tool Loops**: `ask()` ran `beforeRequest` hooks only on the first request; the requests that follow each round of tool calls skipped them, so content policy hooks (such as redaction) didn't apply to tool results. They now run on every request, as they already did when streaming.
+- **Prompt Cache Usage and Cost**: On Anthropic and Bedrock, `input_tokens` now includes tokens read from and written to the prompt cache, as it does on the other providers, and `total_tokens` with it. Before, cached input was subtracted from a total that didn't include it, so the cost of a cached request was too low or even negative. Cache writes are now priced at the model's cache write rate (1.25x input on Claude). Streaming requests to Anthropic now report cache usage too.
+- **Anthropic Streaming Parameters**: Streaming requests to Anthropic now send extra parameters, such as those from `withParams()`, as non-streaming requests already did. Both now build the same request body.
+- **Cancelling Requests**: An `AbortSignal` passed to `ask()` now cancels the request on Anthropic, Bedrock, DeepSeek, Gemini, Mistral and xAI, as it already did on OpenAI. Before, those providers ignored it, and Anthropic, DeepSeek, Gemini and xAI also sent it in the request body.
+- **Temperature on Models That Reject It**: Claude Opus 4.7 and later, the Claude 5 family, OpenAI's reasoning models and others return an error when a request sets a temperature. For models the registry marks this way, chats and agents now send the request without one and log a warning once per model. Providers declare it with the new optional `supportsTemperature(model)` capability.
+- **Tool Call Limit Leaves a Valid History**: When `maxToolCalls` is reached, the tool calls the model asked for but that weren't run are now answered with an error result. Before, the history ended with unanswered tool calls, which providers reject, so the chat could not be asked again.
+- **Streaming Tool Call Limit**: `stream()` counted every model request against `maxToolCalls`, so it allowed one round of tool calls fewer than `ask()`. Both now count rounds of tool calls.
+- **Agent and Chat `provider` Option**: An Agent's `provider` (static or passed to the constructor) and `chat(model, { provider })` now choose the provider. Before, they were ignored, so the chat used the instance's own provider, or threw `LLM provider not configured` when it had none (for example `NodeLLM` without `NODELLM_PROVIDER`).
 
 ### Improvements
 
-- **Model Catalog Sync**: `models.json` now records each model's thinking controls (`metadata.reasoning_options`) from models.dev.
+- **Model Catalog Sync**: `models.json` now records each model's thinking controls (`metadata.reasoning_options`) and whether it accepts a temperature (`metadata.temperature`) from models.dev.
+
+### Deprecations
+
+- **Zod 3 schemas**: still supported, but deprecated and may be removed in a future major version. Use Zod 4 for new code. The `z` exported by `@node-llm/core` stays Zod 3 until then.
 
 ### Compatibility
 
+- Anthropic and Bedrock `input_tokens` and `total_tokens` are higher for requests that read or write the prompt cache, because they now include those tokens.
+- Zod 3 schemas are converted and validated exactly as before.
+- `stream()` allows one more round of tool calls than before, matching `ask()`.
+- After `maxToolCalls` is reached, the chat history ends with an error tool result for each call that wasn't run.
 - Requests to budget-thinking Claude models (Sonnet 4.5, Haiku 4.5, Opus 4.5, Opus 4.6, Sonnet 4.6) are unchanged: `budget` is sent as before, and `effort` alone is still not sent.
 
 ## [1.18.0] - 2026-10-03 (@node-llm/core)

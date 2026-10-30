@@ -93,6 +93,10 @@ class MyTool extends Tool {
 
 ---
 
+## Tools on GPT-5.6
+
+OpenAI's GPT-5.6 models take function tools only through the Responses API; Chat Completions rejects them while the model reasons. NodeLLM sends those requests, and only those, through the Responses API, so tools work the same as on any other model. Nothing is stored on OpenAI's side (`store: false`): as always, each request carries the conversation. Streaming such a request returns the answer as one chunk.
+
 ## Predicted Outputs
 
 For tasks like code refactoring or document editing where much of the output is already known, you can use **Predicted Outputs** to significantly reduce latency.

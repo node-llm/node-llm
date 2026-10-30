@@ -10,6 +10,7 @@ import {
   ServiceUnavailableError,
   APIError
 } from "../../errors/index.js";
+import { isBillingProblem } from "../../errors/billing.js";
 
 export async function handleMistralError(response: Response, model?: string): Promise<never> {
   const status = response.status;
@@ -35,6 +36,10 @@ export async function handleMistralError(response: Response, model?: string): Pr
 
   const provider = "mistral";
 
+  if (isBillingProblem(status, message)) {
+    throw new InsufficientQuotaError(message, body, provider);
+  }
+
   if (status === 400) {
     if (message.includes("context") || message.includes("length") || message.includes("tokens")) {
       throw new ContextWindowExceededError(message, body, provider, model);
@@ -58,9 +63,6 @@ export async function handleMistralError(response: Response, model?: string): Pr
   }
 
   if (status === 429) {
-    if (message.includes("quota") || message.includes("billing")) {
-      throw new InsufficientQuotaError(message, body, provider);
-    }
     throw new RateLimitError(message, status, body, provider);
   }
 

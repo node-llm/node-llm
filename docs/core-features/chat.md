@@ -129,9 +129,21 @@ await chat.ask("Tell me about the weather");
 
 ---
 
+## Prompt Caching
+
+Long conversations and agent loops resend the same instructions, tools and earlier turns on every request. `withPromptCache()` lets the provider cache that repeated start, so it is billed at the cheaper cache rate after the first request:
+
+```ts
+const chat = NodeLLM.chat("claude-sonnet-5-5").withPromptCache();
+```
+
+On Agents, set `static promptCache = true`. Anthropic needs asking to cache; OpenAI, Gemini and DeepSeek cache automatically, so the option changes nothing there. Cache reads and writes show up in `usage.cached_tokens` and `usage.cache_creation_tokens`, and the cost prices them at their own rates. Prompts shorter than the model's minimum (about 1,000 to 4,000 tokens) are not cached.
+
+---
+
 ## Raw Content Blocks (Advanced)
 
-For advanced use cases like **Anthropic Prompt Caching**, you can pass provider-specific content blocks directly. `NodeLLM` attempts to pass array content through to the provider.
+For finer control, such as caching only part of the prompt, you can pass provider-specific content blocks directly. `NodeLLM` attempts to pass array content through to the provider.
 
 ```ts
 // Example: Anthropic Prompt Caching
@@ -221,11 +233,13 @@ Adjust the randomness of the model's responses using `.withTemperature(0.0 - 1.0
 
 ```ts
 // Deterministic / Factual (Low Temperature)
-const factual = NodeLLM.chat("gpt-5").withTemperature(0.0);
+const factual = NodeLLM.chat("gpt-4o").withTemperature(0.0);
 
 // Creative / Random (High Temperature)
-const creative = NodeLLM.chat("gpt-5").withTemperature(0.9);
+const creative = NodeLLM.chat("gpt-4o").withTemperature(0.9);
 ```
+
+Some models reject a temperature, including Claude Opus 4.7 and later, the Claude 5 family and OpenAI's reasoning models. For models the registry marks this way, NodeLLM sends the request without a temperature and logs a warning once per model, so a chat or agent with a temperature keeps working when you move it to one of them.
 
 ---
 

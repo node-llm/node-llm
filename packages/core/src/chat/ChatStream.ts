@@ -1,3 +1,4 @@
+import { windowToolResults } from "./ToolResultWindow.js";
 import { Message } from "./Message.js";
 import {
   ContentPart,
@@ -10,7 +11,7 @@ import { Provider, ChatChunk, Usage, ThinkingResult } from "../providers/Provide
 import { ChatResponseString } from "./ChatResponse.js";
 import { Stream } from "../streaming/Stream.js";
 import { config } from "../config.js";
-import { ToolExecutionMode } from "../constants.js";
+import { ToolExecutionMode, DEFAULT_MAX_TOOL_CALLS } from "../constants.js";
 import { AskOptions } from "./Chat.js";
 import { FileLoader } from "../utils/FileLoader.js";
 import { toJsonSchema } from "../schema/to-json-schema.js";
@@ -18,12 +19,18 @@ import { ToolDefinition, ToolCall } from "./Tool.js";
 import { ChatValidator } from "./Validation.js";
 import { ToolHandler } from "./ToolHandler.js";
 import { logger } from "../utils/logger.js";
+import { CostLimitError, ToolCallLimitError } from "../errors/index.js";
 import { ResponseFormat } from "../providers/Provider.js";
 import { ModelRegistry } from "../models/ModelRegistry.js";
 import { Middleware, MiddlewareContext, ToolErrorDirective } from "../types/Middleware.js";
 import { runMiddleware } from "../utils/middleware-runner.js";
 import { randomUUID } from "node:crypto";
-import { shouldRunToolCallsConcurrently, executeToolCallOutcomes } from "./ToolCallOutcome.js";
+import {
+  shouldRunToolCallsConcurrently,
+  executeToolCallOutcomes,
+  toolCallLimitResults,
+  unrunToolCallResults
+} from "./ToolCallOutcome.js";
 import {
   collectHandlers,
   runAllHandlers,
@@ -31,6 +38,8 @@ import {
   runConfirmHandlers,
   runChainHandlers
 } from "../utils/handler-stacking.js";
+import { requestTemperature } from "./Temperature.js";
+import { requestPromptCache } from "./PromptCache.js";
 
 /**
  * Internal handler for chat streaming logic.
@@ -203,7 +212,7 @@ export class ChatStream {
         }
 
         let isFirst = true;
-        const maxToolCalls = options.maxToolCalls ?? 5;
+        const maxToolCalls = options.maxToolCalls ?? DEFAULT_MAX_TOOL_CALLS;
         let stepCount = 0;
 
         const totalUsage: Usage = { input_tokens: 0, output_tokens: 0, total_tokens: 0 };
@@ -232,13 +241,6 @@ export class ChatStream {
         let assistantResponse: ChatResponseString | undefined;
 
         while (true) {
-          stepCount++;
-          if (stepCount > maxToolCalls) {
-            throw new Error(
-              `[NodeLLM] Maximum tool execution calls (${maxToolCalls}) exceeded during streaming.`
-            );
-          }
-
           let fullContent = "";
           let fullReasoning = "";
           const thinking: ThinkingResult = { text: "" };
@@ -246,14 +248,14 @@ export class ChatStream {
           let currentTurnUsage: Usage | undefined;
 
           context.messages = [...systemMessages, ...messages];
-          let requestMessages = context.messages; // Use up-to-date messages from context
+          let requestMessages = windowToolResults(context.messages, options.keepToolResults);
           requestMessages = await runChainHandlers(beforeRequestHandlers, requestMessages);
 
           const streamRequest: any = {
             model,
             messages: requestMessages,
             tools: options.tools as ToolDefinition[],
-            temperature: options.temperature,
+            temperature: requestTemperature(provider, model, options.temperature),
             max_tokens: options.maxTokens ?? config.maxTokens,
             response_format: responseFormat,
             headers: options.headers,
@@ -263,6 +265,7 @@ export class ChatStream {
             requestTimeout: options.requestTimeout ?? config.requestTimeout,
             thinking: options.thinking,
             prediction: options.prediction,
+            promptCache: requestPromptCache(provider, model, options.promptCache),
             signal: abortController.signal,
             ...options.params
           };
@@ -339,6 +342,23 @@ export class ChatStream {
 
           if (!ToolHandler.shouldExecuteTools(toolCalls, options.toolExecution)) {
             break;
+          }
+
+          stepCount++;
+          if (stepCount > maxToolCalls) {
+            messages.push(...toolCallLimitResults(provider, toolCalls, maxToolCalls));
+            throw new ToolCallLimitError(maxToolCalls, totalUsage);
+          }
+
+          if (options.maxCost !== undefined && (totalUsage.cost ?? 0) >= options.maxCost) {
+            messages.push(
+              ...unrunToolCallResults(
+                provider,
+                toolCalls,
+                `the cost limit ($${options.maxCost}) was reached`
+              )
+            );
+            throw new CostLimitError(options.maxCost, totalUsage);
           }
 
           const runConcurrently = shouldRunToolCallsConcurrently(

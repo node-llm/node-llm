@@ -127,7 +127,7 @@ export class OpenAIChat {
           ...request.headers
         },
         body: JSON.stringify(body),
-        signal: signal as AbortSignal | null | undefined
+        signal
       },
       request.requestTimeout
     );

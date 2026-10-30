@@ -35,7 +35,8 @@ This feature abstracts the provider-specific implementations (like OpenAI's `jso
 The easiest way to define schemas is with Zod.
 
 ```ts
-import { NodeLLM, z } from "@node-llm/core";
+import { NodeLLM } from "@node-llm/core";
+import { z } from "zod"; // Zod 4
 
 // Define a schema using Zod
 const personSchema = z.object({
@@ -61,6 +62,12 @@ console.log(person.name); // "Alice"
 console.log(person.age); // e.g. 25
 console.log(person.hobbies); // ["hiking", "coding"]
 ```
+
+### Zod 4 and Zod 3
+
+NodeLLM accepts both Zod 4 and Zod 3 schemas. Use Zod 4 for new code: add it to your app (`npm install zod`) and import `z` from `"zod"`, as above. Zod 4 schemas need Zod 4.2 or later, imported from `"zod"` rather than `"zod/mini"`.
+
+Zod 3 schemas still work, including ones built with the `z` that `@node-llm/core` exports, which stays Zod 3 so existing code keeps working. Zod 3 support is deprecated, though, and may be removed in a future major version, when the exported `z` would become Zod 4.
 
 ---
 

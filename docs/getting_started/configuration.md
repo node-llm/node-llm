@@ -186,7 +186,7 @@ const chat = llm.chat("gpt-5", {
 | `defaultTranscriptionModel` | Default model for `.transcribe()`   | Provider default                  |
 | `defaultModerationModel`    | Default model for `.moderate()`     | Provider default                  |
 | `defaultEmbeddingModel`     | Default model for `.embed()`        | Provider default                  |
-| `maxToolCalls`              | Max sequential tool execution turns | `5`                               |
+| `maxToolCalls`              | Max rounds of tool calls per ask (`ToolCallLimitError` beyond) | `5`    |
 | `maxCorrections`            | Max middleware-driven self-correction retries | `5`                     |
 | `maxRetries`                | Max retries for provider errors (exponential backoff + jitter, honors `Retry-After`) | `2` |
 | `requestTimeout`            | Request timeout in milliseconds     | `30000` (30s)                     |
@@ -253,6 +253,20 @@ const llm = createLLM({
   anthropicApiKey: process.env.ANTHROPIC_API_KEY
 });
 ```
+
+### Keys for Many Customers (`envFallback`)
+
+By default, a key or setting not passed in code is read from the environment, such as `OPENAI_API_KEY`. An app that calls providers with each customer's own key should turn that off, so a customer without a key gets an error instead of quietly using the server's key:
+
+```ts
+const llm = createLLM({
+  provider: "openai",
+  openaiApiKey: customer.openaiKey,
+  envFallback: false
+});
+```
+
+With `envFallback: false`, keys, base URLs and the provider come only from what is passed in. Nothing changes unless you set it.
 
 ### Scoped Configuration (Isolation)
 

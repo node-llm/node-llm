@@ -13,6 +13,8 @@
  * @see ARCHITECTURE.md for error contract details
  */
 
+import type { Usage } from "../providers/Provider.js";
+
 /**
  * Base class for all NodeLLM errors
  */
@@ -240,5 +242,34 @@ export class ToolError extends LLMError {
   ) {
     super(message, "TOOL_ERROR");
     this.name = "ToolError";
+  }
+}
+
+/**
+ * Thrown when the model still wants to call tools after `maxToolCalls` rounds of tool calls.
+ * Its pending calls are answered with an error result, so the chat can be asked again.
+ */
+/**
+ * An ask spent its `maxCost` before finishing its tool loop. The tool calls it stopped before
+ * running are answered in the history, so the chat can be asked again.
+ */
+export class CostLimitError extends LLMError {
+  constructor(
+    /** The limit, in US dollars */
+    public readonly limit: number,
+    /** Usage of every request in the ask that reached the limit */
+    public readonly usage: Usage
+  ) {
+    super(`[NodeLLM] Cost limit ($${limit}) reached.`, "COST_LIMIT");
+  }
+}
+
+export class ToolCallLimitError extends LLMError {
+  constructor(
+    public readonly limit: number,
+    /** Usage of every request in the ask that reached the limit */
+    public readonly usage: Usage
+  ) {
+    super(`[NodeLLM] Maximum tool execution calls (${limit}) exceeded.`, "TOOL_CALL_LIMIT");
   }
 }

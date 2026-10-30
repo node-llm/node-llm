@@ -53,6 +53,10 @@ cd packages/core
 npm run test:watch
 ```
 
+### Live smoke tests
+
+`npm run test:live` (in `packages/core`) makes real calls to every provider whose key is set, such as `OPENAI_API_KEY`: a reply, a tool call, structured output, streaming, an agent and the cost limit. It picks each provider's cheapest suitable model; set `LIVE_OPENAI_MODEL` (and so on) to choose another, or `LIVE_PROVIDERS=openai,anthropic` to run only some. A run costs well under a cent per provider. It also runs nightly in CI with the repository's secrets.
+
 ## Important Notes
 
 - **Keep it simple** - if it needs extensive documentation, reconsider the approach.

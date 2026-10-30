@@ -1,11 +1,8 @@
 import { ChatRequest, ChatChunk } from "../Provider.js";
-import { Capabilities } from "./Capabilities.js";
 import { handleAnthropicError } from "./Errors.js";
-import { formatSystemPrompt, formatMessages, applyThinking } from "./Utils.js";
-import { AnthropicMessageRequest } from "./types.js";
+import { buildMessageRequest, hasPdf, toUsage } from "./Utils.js";
 import { logger } from "../../utils/logger.js";
 import { fetchWithTimeout } from "../../utils/fetch.js";
-import { DEFAULT_MAX_TOKENS } from "../../constants.js";
 
 export class AnthropicStreaming {
   constructor(
@@ -16,64 +13,7 @@ export class AnthropicStreaming {
   async *execute(request: ChatRequest, controller?: AbortController): AsyncGenerator<ChatChunk> {
     const abortController = controller || new AbortController();
     const model = request.model;
-    const maxTokens =
-      request.max_tokens || Capabilities.getMaxOutputTokens(model) || DEFAULT_MAX_TOKENS;
-
-    const systemPrompt = formatSystemPrompt(request.messages);
-    const messages = formatMessages(request.messages);
-
-    let system = systemPrompt;
-    if (request.response_format) {
-      let schemaText = "";
-      if (
-        request.response_format.type === "json_schema" &&
-        request.response_format.json_schema?.schema
-      ) {
-        schemaText =
-          "\nSchema:\n" + JSON.stringify(request.response_format.json_schema.schema, null, 2);
-      }
-      const instruction = `CRITICAL: Respond ONLY with a valid JSON object matching the requested schema.${schemaText}\n\nDo not include any other text or explanation.`;
-      system = system ? `${system}\n\n${instruction}` : instruction;
-    }
-
-    const body: AnthropicMessageRequest = {
-      model: model,
-      messages: messages,
-      max_tokens: maxTokens,
-      system: system,
-      stream: true
-    };
-
-    if (request.temperature !== undefined) {
-      body.temperature = request.temperature;
-    }
-
-    if (request.tools && request.tools.length > 0 && request.tool_choice !== "none") {
-      body.tools = request.tools.map((tool) => ({
-        name: tool.function.name,
-        description: tool.function.description,
-        input_schema: tool.function.parameters
-      }));
-    }
-
-    if (request.tool_choice && request.tool_choice !== "none") {
-      if (request.tool_choice === "auto") {
-        body.tool_choice = { type: "auto" };
-      } else if (request.tool_choice === "required") {
-        body.tool_choice = { type: "any" };
-      } else if (typeof request.tool_choice === "string") {
-        body.tool_choice = { type: "tool", name: request.tool_choice };
-      } else if (typeof request.tool_choice === "object" && "function" in request.tool_choice) {
-        body.tool_choice = { type: "tool", name: request.tool_choice.function.name };
-      }
-    }
-
-    applyThinking(body, request.thinking, Boolean(request.max_tokens));
-
-    // Check if any message contains PDF content to add beta header
-    const hasPdf = messages.some(
-      (msg) => Array.isArray(msg.content) && msg.content.some((block) => block.type === "document")
-    );
+    const body = buildMessageRequest(request, true);
 
     const headers: Record<string, string> = {
       "x-api-key": this.apiKey,
@@ -82,7 +22,7 @@ export class AnthropicStreaming {
       ...request.headers
     };
 
-    if (hasPdf) {
+    if (hasPdf(body)) {
       headers["anthropic-beta"] = "pdfs-2024-09-25";
     }
 
@@ -195,12 +135,7 @@ export class AnthropicStreaming {
               // Block finished
             } else if (eventType === "message_start") {
               if (data.message?.usage) {
-                const usage = {
-                  input_tokens: data.message.usage.input_tokens,
-                  output_tokens: data.message.usage.output_tokens,
-                  total_tokens: data.message.usage.input_tokens + data.message.usage.output_tokens
-                };
-                yield { content: "", usage };
+                yield { content: "", usage: toUsage(data.message.usage) };
               }
             } else if (eventType === "message_delta") {
               // Update usage

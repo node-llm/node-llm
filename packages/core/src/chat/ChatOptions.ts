@@ -47,6 +47,18 @@ export interface ChatOptions {
   assumeModelExists?: boolean;
   provider?: string;
   maxToolCalls?: number;
+  /**
+   * Sends only the most recent N tool results in full; older ones are replaced with a short
+   * placeholder in each request (the chat's history keeps them). Keeps long tool loops, such as
+   * an agent reading many pages, from resending every earlier result on every request.
+   */
+  keepToolResults?: number;
+  /**
+   * The most an ask may spend, in US dollars. A tool loop that has spent this much stops before
+   * its next request and throws CostLimitError. It needs the model's pricing, so it does nothing
+   * for models without it.
+   */
+  maxCost?: number;
   maxCorrections?: number;
   requestTimeout?: number;
   toolExecution?: ToolExecutionModeInput;
@@ -55,6 +67,11 @@ export interface ChatOptions {
    * concurrently instead of one at a time. Defaults to `config.toolConcurrency`.
    */
   toolConcurrency?: boolean;
+  /**
+   * Cache the repeated start of each request (instructions, tools and earlier turns) on providers
+   * that need asking to, such as Anthropic. Others cache automatically.
+   */
+  promptCache?: boolean;
   toolChoice?: ToolChoice;
   toolCalls?: "one" | "many" | number;
   onConfirmToolCall?: (toolCall: ToolCall) => Promise<boolean> | boolean;
