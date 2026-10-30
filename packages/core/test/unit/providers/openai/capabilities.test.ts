@@ -65,4 +65,11 @@ describe("OpenAI Capabilities", () => {
     expect(pricing.text_tokens.standard.input_per_million).toBe(2.5);
     expect(pricing.text_tokens.standard.output_per_million).toBe(10.0);
   });
+
+  it("knows which models take tools only through the Responses API", () => {
+    expect(Capabilities.needsResponsesForTools("gpt-5.6-luna")).toBe(true);
+    expect(Capabilities.needsResponsesForTools("gpt-6-luna")).toBe(true);
+    expect(Capabilities.needsResponsesForTools("gpt-5.1")).toBe(false);
+    expect(Capabilities.needsResponsesForTools("gpt-4o")).toBe(false);
+  });
 });
