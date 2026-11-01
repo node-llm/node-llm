@@ -63,7 +63,8 @@
     "test:docs": "vitest run test/docs",
     "test:live": "vitest run --config vitest.live.config.ts",
     "test:watch": "vitest",
-    "prepack": "npm run build && cp ../../CHANGELOG.md ./CHANGELOG.md",
+    "prepare": "npm run build",
+    "prepack": "cp ../../CHANGELOG.md ./CHANGELOG.md",
     "postpack": "rm ./CHANGELOG.md",
     "prepublishOnly": "npm run build && npm run test:docs"
   },
@@ -76,6 +77,7 @@
     "@pollyjs/adapter-node-http": "^6.0.6",
     "@pollyjs/core": "^6.0.6",
     "@pollyjs/persister-fs": "^6.0.6",
+    "typescript": "^5.9.3",
     "zod4": "npm:zod@4.6.7"
   }
 }

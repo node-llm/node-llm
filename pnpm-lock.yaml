@@ -264,6 +264,9 @@ importers:
       '@pollyjs/persister-fs':
         specifier: ^6.0.6
         version: 6.0.6
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
       zod4:
         specifier: npm:zod@4.6.7
         version: zod@4.6.7
