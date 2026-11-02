@@ -23,11 +23,22 @@ const keys: Record<string, string> = {
   gemini: "GEMINI_API_KEY",
   mistral: "MISTRAL_API_KEY",
   deepseek: "DEEPSEEK_API_KEY",
-  xai: "XAI_API_KEY"
+  xai: "XAI_API_KEY",
+  azure: "AZURE_API_KEY"
 };
 
-// Known-good cheap models; for the rest the registry picks.
-const defaults: Record<string, string> = { openai: "gpt-5.6-luna", anthropic: "claude-haiku-5-5" };
+// Known-good cheap models; for the rest the registry picks. On Azure the model is a deployment's
+// name, which no registry knows: LIVE_AZURE_MODEL names it when it isn't gpt-4o.
+const defaults: Record<string, string> = {
+  openai: "gpt-5.6-luna",
+  anthropic: "claude-haiku-5-5",
+  azure: "gpt-4o"
+};
+
+// Azure has no one address: each resource has its own.
+const addresses: Record<string, Record<string, string | undefined>> = {
+  azure: { azureApiBase: process.env.AZURE_API_BASE }
+};
 
 const models = (
   Array.isArray(modelsJson) ? modelsJson : (modelsJson as { models: ModelEntry[] }).models
@@ -68,7 +79,8 @@ describe.runIf(providers.length > 0).each(providers)("%s", (provider) => {
   const llm = createLLM({
     provider,
     envFallback: false,
-    [`${provider}ApiKey`]: process.env[keys[provider]!]
+    [`${provider}ApiKey`]: process.env[keys[provider]!],
+    ...addresses[provider]
   });
 
   it(`answers, with usage, cost and latency (${model})`, async () => {
