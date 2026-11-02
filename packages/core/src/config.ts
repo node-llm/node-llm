@@ -19,8 +19,12 @@ export interface NodeLLMConfig {
   mistralApiKey?: string;
   mistralApiBase?: string;
   azureApiKey?: string;
-  /** A deployment's address, with its api-version, or the resource's v1 address */
+  /** The address the Azure portal shows: a deployment's, a model endpoint's, or the resource's */
   azureApiBase?: string;
+  /** A Microsoft Entra ID token, for Azure resources that sign in without keys */
+  azureAuthToken?: string;
+  /** Azure deployment names mapped to the models they run, so capabilities and pricing are known */
+  azureDeployments?: Record<string, string>;
   /** TypeSafe (System One / Jev) key for judgments. */
   typesafeApiKey?: string;
   /** System One endpoint; point it at any Jev-compatible server. */
@@ -95,6 +99,8 @@ export class Configuration implements NodeLLMConfig {
   private _mistralApiBase?: string;
   private _azureApiKey?: string;
   private _azureApiBase?: string;
+  private _azureAuthToken?: string;
+  private _azureDeployments?: Record<string, string>;
   private _typesafeApiKey?: string;
   private _typesafeApiBase?: string;
   private _bedrockApiKey?: string;
@@ -219,7 +225,7 @@ export class Configuration implements NodeLLMConfig {
   }
 
   public get azureApiKey(): string | undefined {
-    return this._azureApiKey ?? this.fromEnv("AZURE_OPENAI_API_KEY");
+    return this._azureApiKey ?? this.fromEnv("AZURE_API_KEY");
   }
   public set azureApiKey(v: string | undefined) {
     this._azureApiKey = v;
@@ -227,10 +233,24 @@ export class Configuration implements NodeLLMConfig {
 
   // No default: every Azure resource has its own address.
   public get azureApiBase(): string | undefined {
-    return this._azureApiBase ?? this.fromEnv("AZURE_OPENAI_API_BASE");
+    return this._azureApiBase ?? this.fromEnv("AZURE_API_BASE");
   }
   public set azureApiBase(v: string | undefined) {
     this._azureApiBase = v;
+  }
+
+  public get azureAuthToken(): string | undefined {
+    return this._azureAuthToken ?? this.fromEnv("AZURE_AUTH_TOKEN");
+  }
+  public set azureAuthToken(v: string | undefined) {
+    this._azureAuthToken = v;
+  }
+
+  public get azureDeployments(): Record<string, string> | undefined {
+    return this._azureDeployments;
+  }
+  public set azureDeployments(v: Record<string, string> | undefined) {
+    this._azureDeployments = v;
   }
 
   public get typesafeApiKey(): string | undefined {

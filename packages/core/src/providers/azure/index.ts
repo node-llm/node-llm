@@ -1,29 +1,39 @@
+import { config as globalConfig } from "../../config.js";
 import { providerRegistry } from "../registry.js";
-import { AzureOpenAIProvider } from "./AzureOpenAIProvider.js";
-import { NodeLLMConfig } from "../../config.js";
+import { AzureProvider } from "./AzureProvider.js";
 
-export * from "./AzureOpenAIProvider.js";
+export * from "./AzureProvider.js";
+export * from "./Capabilities.js";
 
-/**
- * Register the Azure OpenAI provider.
- */
-export function registerAzureProvider(config?: NodeLLMConfig) {
-  providerRegistry.register("azure", (cfg?: NodeLLMConfig) => {
-    const activeConfig = cfg || config;
-    const apiKey = activeConfig?.azureApiKey;
-    const baseUrl = activeConfig?.azureApiBase;
+let registered = false;
 
-    if (!apiKey) {
-      throw new Error(
-        "Azure OpenAI API key not found. Please provide 'azureApiKey' in config or set AZURE_OPENAI_API_KEY environment variable."
-      );
-    }
+export function registerAzureProvider() {
+  if (registered) return;
+
+  providerRegistry.register("azure", (config) => {
+    const cfg = config || globalConfig;
+    const baseUrl = cfg.azureApiBase;
+
     if (!baseUrl) {
       throw new Error(
-        "Azure OpenAI address not found. Please provide 'azureApiBase' (a deployment's address) in config or set AZURE_OPENAI_API_BASE environment variable."
+        "azureApiBase is not set in config or AZURE_API_BASE environment variable: give the address the Azure portal shows for your deployment or resource"
+      );
+    }
+    if (!cfg.azureApiKey && !cfg.azureAuthToken) {
+      throw new Error(
+        "azureApiKey or azureAuthToken is not set in config or AZURE_API_KEY / AZURE_AUTH_TOKEN environment variables"
       );
     }
 
-    return new AzureOpenAIProvider({ apiKey, baseUrl });
+    return new AzureProvider({
+      apiKey: cfg.azureApiKey,
+      authToken: cfg.azureAuthToken,
+      baseUrl,
+      deployments: cfg.azureDeployments
+    });
   });
+
+  registered = true;
 }
+
+export const ensureAzureRegistered = registerAzureProvider;
