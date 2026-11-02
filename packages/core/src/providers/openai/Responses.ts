@@ -109,20 +109,23 @@ function textFormat(format: ChatRequest["response_format"]) {
 }
 
 /**
- * Chat through OpenAI's Responses API, for requests Chat Completions can't serve. Nothing is
- * stored on OpenAI's side: like every other NodeLLM chat, each request carries the conversation.
- */
-/**
  * Where Responses requests go and how they are signed: OpenAI's own API, or a provider serving
- * the same API under another address, such as an Azure OpenAI resource.
+ * the same API under another address, such as an Azure resource.
  */
 export interface ResponsesTarget {
+  id: string;
   responsesBase(): string;
+  /** The model the registry prices the request's model as */
+  registryModel(model: string): string;
   headers(): Record<string, string>;
   /** The name the API knows the model by, such as an Azure deployment's name */
   responsesModel(model: string): string;
 }
 
+/**
+ * Chat through OpenAI's Responses API, for requests Chat Completions can't serve. Nothing is
+ * stored on OpenAI's side: like every other NodeLLM chat, each request carries the conversation.
+ */
 export class OpenAIResponses {
   constructor(private readonly target: ResponsesTarget) {}
 
@@ -151,7 +154,8 @@ export class OpenAIResponses {
       ...rest
     };
 
-    const temperature = Capabilities.normalizeTemperature(request.temperature, model);
+    const knownModel = this.target.registryModel(model);
+    const temperature = Capabilities.normalizeTemperature(request.temperature, knownModel);
     if (temperature !== undefined && temperature !== null) body.temperature = temperature;
     if (max_tokens) body.max_output_tokens = max_tokens;
     if (parallel_tool_calls !== undefined) body.parallel_tool_calls = parallel_tool_calls;
@@ -227,8 +231,8 @@ export class OpenAIResponses {
             cached_tokens: json.usage.input_tokens_details?.cached_tokens,
             reasoning_tokens: json.usage.output_tokens_details?.reasoning_tokens
           },
-          model,
-          "openai"
+          knownModel,
+          this.target.id
         )
       : undefined;
     const reasoningTokens = json.usage?.output_tokens_details?.reasoning_tokens;

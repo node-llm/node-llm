@@ -24,6 +24,7 @@ import { OpenAIImage } from "./Image.js";
 import { OpenAITranscription } from "./Transcription.js";
 import { OpenAIModeration } from "./Moderation.js";
 import { OpenAIEmbedding } from "./Embedding.js";
+import { buildUrl } from "./utils.js";
 
 export interface OpenAIProviderOptions {
   apiKey: string;
@@ -78,6 +79,15 @@ export class OpenAIProvider extends BaseProvider implements Provider, ResponsesT
       Authorization: `Bearer ${this.options.apiKey}`,
       "Content-Type": "application/json"
     };
+  }
+
+  /** Where an endpoint such as /chat/completions is served */
+  public url(path: string): string {
+    return buildUrl(this.apiBase(), path);
+  }
+
+  public registryModel(model: string): string {
+    return model;
   }
 
   public responsesBase(): string {

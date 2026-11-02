@@ -21,14 +21,26 @@ export class OpenAIChat {
     this.baseUrl = typeof providerOrUrl === "string" ? providerOrUrl : providerOrUrl.apiBase();
   }
 
-  // A provider signs its own requests; Azure, for one, wants an api-key header, not a bearer token.
+  // A provider decides where its requests go, signs them and names the model they are priced as;
+  // Azure, for one, routes by deployment and wants an api-key header, not a bearer token.
+  private url(): string {
+    if (typeof this.providerOrUrl === "string") return buildUrl(this.baseUrl, "/chat/completions");
+    return this.providerOrUrl.url("/chat/completions");
+  }
+
   private authHeaders(): Record<string, string> {
     if (typeof this.providerOrUrl !== "string") return this.providerOrUrl.headers();
     return { Authorization: `Bearer ${this.apiKey}`, "Content-Type": "application/json" };
   }
 
+  private registry(model: string): { model: string; provider: string } {
+    if (typeof this.providerOrUrl === "string") return { model, provider: "openai" };
+    return { model: this.providerOrUrl.registryModel(model), provider: this.providerOrUrl.id };
+  }
+
   async execute(request: ChatRequest): Promise<ChatResponse> {
-    const temperature = Capabilities.normalizeTemperature(request.temperature, request.model);
+    const known = this.registry(request.model);
+    const temperature = Capabilities.normalizeTemperature(request.temperature, known.model);
 
     const isMainOpenAI = this.baseUrl.includes("api.openai.com");
     const supportsDeveloperRole =
@@ -63,7 +75,7 @@ export class OpenAIChat {
     if (temperature !== undefined && temperature !== null) body.temperature = temperature;
 
     if (max_tokens) {
-      if (Capabilities.needsMaxCompletionTokens(request.model)) {
+      if (Capabilities.needsMaxCompletionTokens(known.model)) {
         body.max_completion_tokens = max_tokens;
       } else {
         body.max_tokens = max_tokens;
@@ -120,7 +132,7 @@ export class OpenAIChat {
       body.reasoning_effort = thinking.effort;
     }
 
-    const url = buildUrl(this.baseUrl, "/chat/completions");
+    const url = this.url();
     logger.logRequest("OpenAI", "POST", url, body);
 
     const response = await fetchWithTimeout(
@@ -171,7 +183,9 @@ export class OpenAIChat {
       throw new Error("OpenAI returned empty response");
     }
 
-    const calculatedUsage = usage ? ModelRegistry.calculateCost(usage, model, "openai") : undefined;
+    const calculatedUsage = usage
+      ? ModelRegistry.calculateCost(usage, known.model, known.provider)
+      : undefined;
 
     return {
       content,

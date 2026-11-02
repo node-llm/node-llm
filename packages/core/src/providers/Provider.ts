@@ -270,6 +270,11 @@ export interface Provider {
   embed?(request: EmbeddingRequest): Promise<EmbeddingResponse>;
   judge?(request: JudgmentRequest): Promise<JudgmentResponse>;
   defaultModel(feature?: string): string;
+  /**
+   * The model the registry knows a request's model as, for pricing: an Azure deployment's name
+   * maps to the model it runs. Without it, a model is priced by its own name.
+   */
+  registryModel?(model: string): string;
   capabilities?: ProviderCapabilities;
   formatToolResultMessage(
     toolCallId: string,

@@ -22,6 +22,14 @@ export class OpenAIEmbedding {
     }
   }
 
+  protected endpoint(): string {
+    return buildUrl(this.baseUrl, "/embeddings");
+  }
+
+  protected requestHeaders(): Record<string, string> {
+    return { Authorization: `Bearer ${this.apiKey}`, "Content-Type": "application/json" };
+  }
+
   async execute(request: EmbeddingRequest): Promise<EmbeddingResponse> {
     const model = request.model || DEFAULT_MODELS.EMBEDDING;
 
@@ -40,17 +48,14 @@ export class OpenAIEmbedding {
       body.user = request.user;
     }
 
-    const url = buildUrl(this.baseUrl, "/embeddings");
+    const url = this.endpoint();
     logger.logRequest("OpenAI", "POST", url, body);
 
     const response = await fetchWithTimeout(
       url,
       {
         method: "POST",
-        headers: {
-          Authorization: `Bearer ${this.apiKey}`,
-          "Content-Type": "application/json"
-        },
+        headers: this.requestHeaders(),
         body: JSON.stringify(body)
       },
       request.requestTimeout

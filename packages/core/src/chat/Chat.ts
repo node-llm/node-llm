@@ -701,7 +701,11 @@ export class Chat<S = unknown> {
         const trackUsage = (u?: Usage) => {
           if (u) {
             if (u.cost === undefined) {
-              const withCost = ModelRegistry.calculateCost(u, this.model, this.provider.id);
+              const withCost = ModelRegistry.calculateCost(
+                u,
+                this.provider.registryModel?.(this.model) ?? this.model,
+                this.provider.id
+              );
               u.cost = (withCost as Usage).cost;
               u.input_cost = (withCost as Usage).input_cost;
               u.output_cost = (withCost as Usage).output_cost;

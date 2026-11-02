@@ -5,6 +5,9 @@ import { Capabilities } from "./Capabilities.js";
 import { ModelRegistry } from "../../models/ModelRegistry.js";
 import { buildUrl } from "./utils.js";
 
+/** A model as an OpenAI-compatible /models endpoint lists it */
+export type ListedModel = { id: string; created: number; owned_by: string };
+
 export class OpenAIModels {
   constructor(
     protected readonly baseUrl: string,
@@ -52,27 +55,32 @@ export class OpenAIModels {
     return model?.pricing || Capabilities.getPricing(modelId);
   }
 
+  protected endpoint(): string {
+    return buildUrl(this.baseUrl, "/models");
+  }
+
+  protected requestHeaders(): Record<string, string> {
+    return { Authorization: `Bearer ${this.apiKey}`, "Content-Type": "application/json" };
+  }
+
+  /** The models the API lists that are worth returning */
+  protected listed(data: ListedModel[]): ListedModel[] {
+    return data;
+  }
+
   async execute(): Promise<ModelInfo[]> {
     const provider = this.getProviderName();
     try {
       const response = await fetchWithTimeout(
-        buildUrl(this.baseUrl, "/models"),
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${this.apiKey}`,
-            "Content-Type": "application/json"
-          }
-        },
+        this.endpoint(),
+        { method: "GET", headers: this.requestHeaders() },
         config.requestTimeout
       );
 
       if (response.ok) {
-        const { data } = (await response.json()) as {
-          data: { id: string; created: number; owned_by: string }[];
-        };
+        const { data } = (await response.json()) as { data: ListedModel[] };
 
-        return data.map((m) => {
+        return this.listed(data).map((m) => {
           const modelId = m.id;
           const registryModel = ModelRegistry.find(modelId, provider);
 
