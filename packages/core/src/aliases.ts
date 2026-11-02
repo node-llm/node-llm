@@ -550,6 +550,7 @@ export default {
   },
   "deepseek-v4.1-flash-1017": {
     "deepseek": "deepseek-flash",
+    "mistral": "deepseek-v4-1-flash-1017",
     "openrouter": "deepseek/deepseek-v4.1-flash-1017"
   },
   "devstral-2": {
@@ -847,8 +848,7 @@ export default {
   },
   "gpt-4-turbo": {
     "azure": "gpt-4-turbo",
-    "openai": "gpt-4-turbo",
-    "openrouter": "openai/gpt-4-turbo"
+    "openai": "gpt-4-turbo"
   },
   "gpt-4-turbo-vision": {
     "azure": "gpt-4-turbo-vision"
@@ -946,9 +946,6 @@ export default {
     "openai": "gpt-5.2",
     "openrouter": "openai/gpt-5.2",
     "perplexity": "openai/gpt-5.2"
-  },
-  "gpt-5.2-chat": {
-    "openrouter": "openai/gpt-5.2-chat"
   },
   "gpt-5.2-codex": {
     "azure": "gpt-5.2-codex",
@@ -1152,8 +1149,7 @@ export default {
     "openrouter": "openai/gpt-chat-latest"
   },
   "gpt-image-1": {
-    "azure": "gpt-image-1",
-    "openai": "gpt-image-1"
+    "azure": "gpt-image-1"
   },
   "gpt-image-1-mini": {
     "openai": "gpt-image-1-mini"
@@ -1311,12 +1307,6 @@ export default {
   "grok-latest": {
     "openrouter": "~x-ai/grok-latest"
   },
-  "hermes-3-405b-instruct": {
-    "openrouter": "nousresearch/hermes-3-llama-3.1-405b"
-  },
-  "hermes-3-70b-instruct": {
-    "openrouter": "nousresearch/hermes-3-llama-3.1-70b"
-  },
   "hermes-4-405b": {
     "openrouter": "nousresearch/hermes-4-405b"
   },
@@ -1390,18 +1380,6 @@ export default {
   },
   "kimi-latest": {
     "openrouter": "~moonshotai/kimi-latest"
-  },
-  "laguna-s-2.1": {
-    "openrouter": "poolside/laguna-s-2.1"
-  },
-  "laguna-s-2.1-free": {
-    "openrouter": "poolside/laguna-s-2.1:free"
-  },
-  "laguna-xs-2.1": {
-    "openrouter": "poolside/laguna-xs-2.1"
-  },
-  "laguna-xs-2.1-free": {
-    "openrouter": "poolside/laguna-xs-2.1:free"
   },
   "leanstral-1.5": {
     "mistral": "labs-leanstral-1-5-1"
@@ -1660,6 +1638,9 @@ export default {
   "mistral-large-4": {
     "mistral": "mistral-large-4",
     "openrouter": "mistralai/mistral-large-4-0"
+  },
+  "mistral-large-4.0.8": {
+    "mistral": "mistral-large-4-0-8"
   },
   "mistral-large-latest": {
     "mistral": "mistral-large-latest"
@@ -1924,16 +1905,12 @@ export default {
     "openrouter": "openai/o1"
   },
   "o1-pro": {
-    "openai": "o1-pro",
-    "openrouter": "openai/o1-pro"
+    "openai": "o1-pro"
   },
   "o3-mini": {
     "azure": "o3-mini",
     "openai": "o3-mini",
     "openrouter": "openai/o3-mini"
-  },
-  "o3-mini-high": {
-    "openrouter": "openai/o3-mini-high"
   },
   "o3-pro": {
     "openai": "o3-pro",
@@ -1941,11 +1918,7 @@ export default {
   },
   "o4-mini": {
     "azure": "o4-mini",
-    "openai": "o4-mini",
-    "openrouter": "openai/o4-mini"
-  },
-  "o4-mini-high": {
-    "openrouter": "openai/o4-mini-high"
+    "openai": "o4-mini"
   },
   "open-mistral-nemo": {
     "mistral": "open-mistral-nemo"
@@ -1974,6 +1947,9 @@ export default {
   },
   "pareto-latest": {
     "openrouter": "~unbiased/pareto-latest"
+  },
+  "particle-1": {
+    "openrouter": "particle-ai/particle-1"
   },
   "perceptron-mk1": {
     "openrouter": "perceptron/perceptron-mk1"
@@ -2083,9 +2059,6 @@ export default {
   "qwen3-next-80b-a3b-instruct": {
     "bedrock": "qwen.qwen3-next-80b-a3b",
     "openrouter": "qwen/qwen3-next-80b-a3b-instruct"
-  },
-  "qwen3-next-80b-a3b-thinking": {
-    "openrouter": "qwen/qwen3-next-80b-a3b-thinking"
   },
   "qwen3-vl-235b-a22b-instruct": {
     "bedrock": "qwen.qwen3-vl-235b-a22b",
@@ -2215,9 +2188,6 @@ export default {
   },
   "solar-mini-4": {
     "openrouter": "upstage/solar-mini4"
-  },
-  "solar-pro-3": {
-    "openrouter": "upstage/solar-pro-3"
   },
   "solar-pro-4": {
     "openrouter": "upstage/solar-pro4"
