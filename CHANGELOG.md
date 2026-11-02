@@ -2,25 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
-## [Unreleased] (@node-llm/orm)
-
-### Features
-
-- **Custom Stores**: Chats and agent sessions record through a `ChatStore`. A Prisma client still works as before (it is wrapped in the new `PrismaStore`); any other store, such as one that sends records to your own API, can be passed in its place. `isChatStore()`, `PrismaStore` and the store record types are exported.
-- **Prisma Is Optional**: `@prisma/client` is now an optional peer dependency and the build no longer runs `prisma generate`, since only the Prisma store uses Prisma. Apps with their own store don't install it.
-- **Session Tools**: `createAgentSession()` takes `tools`, for tools built per session (for example ones bound to a user's data), used in place of the agent class's own.
-
-### Bug Fixes
-
-- **Agent Session Request Duration**: Requests recorded by agent sessions now store the response's latency. Before, their `duration` was always `0`.
-
-## [Unreleased] (@node-llm/core)
+## [1.19.0] - 2026-11-02 (@node-llm/core)
 
 ### Features
 
 - **Azure AI Foundry Provider**: `provider: "azure"` reaches every model deployed on an Azure resource, OpenAI's and others' such as Llama, DeepSeek, Mistral, Grok and Phi, with chat, streaming, tools, structured output, vision, embeddings and model listing. `azureApiBase` takes any address the Azure portal shows (a deployment's, a model endpoint's, the resource's v1 address or the resource itself) and the model is the deployment's name. Requests are signed with the resource's key (`azureApiKey`), as a bearer token on serverless endpoints, or with a Microsoft Entra ID token (`azureAuthToken`). `azureDeployments` maps deployment names to the models they run, so capabilities and cost are known; a deployment NodeLLM doesn't know is assumed able, since Azure decides. Configured from `AZURE_API_KEY`, `AZURE_API_BASE` and `AZURE_AUTH_TOKEN` too.
 - **Tools on OpenAI GPT-6**: GPT-6 models, like GPT-5.6, take function tools through the Responses API, on OpenAI and on Azure.
-
 - **Tools on OpenAI GPT-5.6**: GPT-5.6 models reject function tools on Chat Completions ("use /v1/responses"). NodeLLM now sends tool requests for them through OpenAI's Responses API, mapping messages, tool calls and results, images, structured output and reasoning effort, with nothing stored on OpenAI's side. Every other request still uses Chat Completions as before.
 - **`envFallback`**: `createLLM({ envFallback: false })` takes keys, base URLs and the provider only from what is passed in code, never from environment variables. Apps that call providers with each customer's key set it, so a missing key fails instead of quietly using the server's own. The default is unchanged.
 - **`maxCost`**: A chat option and agent setting that caps what an ask may spend, in US dollars. A tool loop that has spent the limit stops before its next request and throws `CostLimitError` (code `COST_LIMIT`), with the `limit` and `usage`, and the tool calls it didn't run are answered so the chat can be asked again. A safety net for agents whose tools can return very large results.
@@ -64,6 +51,24 @@ All notable changes to this project will be documented in this file.
 - `stream()` allows one more round of tool calls than before, matching `ask()`.
 - After `maxToolCalls` is reached, the chat history ends with an error tool result for each call that wasn't run.
 - Requests to budget-thinking Claude models (Sonnet 4.5, Haiku 4.5, Opus 4.5, Opus 4.6, Sonnet 4.6) are unchanged: `budget` is sent as before, and `effort` alone is still not sent.
+
+## [0.3.1] - 2026-11-02 (@node-llm/mcp)
+
+### Bug Fixes
+
+- **MCP SDK Security Fixes**: `@modelcontextprotocol/sdk` is now 1.32.0 or later, which fixes advisories on OAuth credentials sent to a server-chosen authorization server, cross-origin redirects re-sending headers, unbounded request bodies and batches, and tasks not tied to their session.
+
+## [0.9.0] - 2026-11-02 (@node-llm/orm)
+
+### Features
+
+- **Custom Stores**: Chats and agent sessions record through a `ChatStore`. A Prisma client still works as before (it is wrapped in the new `PrismaStore`); any other store, such as one that sends records to your own API, can be passed in its place. `isChatStore()`, `PrismaStore` and the store record types are exported.
+- **Prisma Is Optional**: `@prisma/client` is now an optional peer dependency and the build no longer runs `prisma generate`, since only the Prisma store uses Prisma. Apps with their own store don't install it.
+- **Session Tools**: `createAgentSession()` takes `tools`, for tools built per session (for example ones bound to a user's data), used in place of the agent class's own.
+
+### Bug Fixes
+
+- **Agent Session Request Duration**: Requests recorded by agent sessions now store the response's latency. Before, their `duration` was always `0`.
 
 ## [1.18.0] - 2026-10-03 (@node-llm/core)
 
