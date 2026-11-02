@@ -12,7 +12,8 @@ import {
   registerBedrockProvider,
   registerXAIProvider,
   registerMistralProvider,
-  registerTypeSafeProvider
+  registerTypeSafeProvider,
+  registerAzureProvider
 } from "./providers/registry.js";
 import { GeneratedImage } from "./image/GeneratedImage.js";
 import { ModelRegistry } from "./models/ModelRegistry.js";
@@ -68,7 +69,8 @@ const PROVIDER_REGISTRARS: Record<string, () => void> = {
   bedrock: registerBedrockProvider,
   xai: registerXAIProvider,
   mistral: registerMistralProvider,
-  typesafe: registerTypeSafeProvider
+  typesafe: registerTypeSafeProvider,
+  azure: registerAzureProvider
 };
 
 export class NodeLLMCore {

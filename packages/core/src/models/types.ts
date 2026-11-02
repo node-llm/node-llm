@@ -71,6 +71,7 @@ export type ProviderName =
   | "openrouter"
   | "ollama"
   | "mistral"
+  | "azure"
   | (string & {});
 
 export type ModelCapability =

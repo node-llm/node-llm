@@ -74,11 +74,11 @@ Debug logging works for:
 
 - **Chat** (regular and streaming)
 - **Image Generation** (OpenAI, Gemini, Bedrock)
-- **Embeddings** (OpenAI, Gemini, Ollama, Mistral, Bedrock)
+- **Embeddings** (OpenAI, Gemini, Ollama, Mistral, Bedrock, Azure AI Foundry)
 - **Transcription** (OpenAI, Gemini, Mistral)
 - **Moderation** (OpenAI, Mistral, Bedrock)
 - **Model Alias Resolution** (all providers)
-- **All Providers** (OpenAI, Anthropic, Gemini, DeepSeek, Bedrock, OpenRouter, xAI, Ollama, Mistral)
+- **All Providers** (OpenAI, Anthropic, Gemini, DeepSeek, Bedrock, OpenRouter, xAI, Ollama, Mistral, Azure AI Foundry)
 
 The logs include:
 

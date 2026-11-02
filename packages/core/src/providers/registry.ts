@@ -9,6 +9,7 @@ import { registerBedrockProvider } from "./bedrock/index.js";
 import { registerXAIProvider } from "./xai/index.js";
 import { registerMistralProvider } from "./mistral/index.js";
 import { registerTypeSafeProvider } from "./typesafe/index.js";
+import { registerAzureProvider } from "./azure/index.js";
 
 import { NodeLLMConfig } from "../config.js";
 
@@ -96,5 +97,6 @@ export {
   registerBedrockProvider,
   registerXAIProvider,
   registerMistralProvider,
-  registerTypeSafeProvider
+  registerTypeSafeProvider,
+  registerAzureProvider
 };

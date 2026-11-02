@@ -81,7 +81,7 @@ export class Capabilities {
    * with "use /v1/responses" while reasoning is on, which it is by default.
    */
   static needsResponsesForTools(modelId: string): boolean {
-    return /^gpt-5\.6/.test(modelId);
+    return /^gpt-(5\.6|6)/.test(modelId);
   }
 
   static needsMaxCompletionTokens(modelId: string): boolean {

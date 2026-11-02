@@ -1,4 +1,4 @@
-import { OpenAIResponses, needsResponsesApi } from "./Responses.js";
+import { OpenAIResponses, type ResponsesTarget, needsResponsesApi } from "./Responses.js";
 import {
   Provider,
   ChatRequest,
@@ -24,13 +24,14 @@ import { OpenAIImage } from "./Image.js";
 import { OpenAITranscription } from "./Transcription.js";
 import { OpenAIModeration } from "./Moderation.js";
 import { OpenAIEmbedding } from "./Embedding.js";
+import { buildUrl } from "./utils.js";
 
 export interface OpenAIProviderOptions {
   apiKey: string;
   baseUrl?: string;
 }
 
-export class OpenAIProvider extends BaseProvider implements Provider {
+export class OpenAIProvider extends BaseProvider implements Provider, ResponsesTarget {
   protected baseUrl: string;
   protected chatHandler: OpenAIChat;
   protected streamingHandler: OpenAIStreaming;
@@ -61,7 +62,7 @@ export class OpenAIProvider extends BaseProvider implements Provider {
     this.baseUrl = options.baseUrl ?? DEFAULT_OPENAI_BASE_URL;
     this.chatHandler = new OpenAIChat(this, options.apiKey);
     this.streamingHandler = new OpenAIStreaming(this, options.apiKey);
-    this.responsesHandler = new OpenAIResponses(this.apiBase(), options.apiKey);
+    this.responsesHandler = new OpenAIResponses(this);
     this.modelsHandler = new OpenAIModels(this.baseUrl, options.apiKey);
     this.imageHandler = new OpenAIImage(this.baseUrl, options.apiKey);
     this.transcriptionHandler = new OpenAITranscription(this.baseUrl, options.apiKey);
@@ -78,6 +79,28 @@ export class OpenAIProvider extends BaseProvider implements Provider {
       Authorization: `Bearer ${this.options.apiKey}`,
       "Content-Type": "application/json"
     };
+  }
+
+  /** Where an endpoint such as /chat/completions is served */
+  public url(path: string): string {
+    return buildUrl(this.apiBase(), path);
+  }
+
+  public registryModel(model: string): string {
+    return model;
+  }
+
+  public responsesBase(): string {
+    return this.apiBase();
+  }
+
+  public responsesModel(model: string): string {
+    return model;
+  }
+
+  /** Whether a request goes to the Responses API rather than Chat Completions. */
+  protected usesResponsesApi(request: ChatRequest): boolean {
+    return needsResponsesApi(request, this.apiBase());
   }
 
   protected providerName(): string {
@@ -100,13 +123,13 @@ export class OpenAIProvider extends BaseProvider implements Provider {
   }
 
   async chat(request: ChatRequest): Promise<ChatResponse> {
-    if (needsResponsesApi(request, this.apiBase())) return this.responsesHandler.execute(request);
+    if (this.usesResponsesApi(request)) return this.responsesHandler.execute(request);
     return this.chatHandler.execute(request);
   }
 
   async *stream(request: ChatRequest): AsyncGenerator<ChatChunk> {
     // Requests only the Responses API serves arrive whole, as one chunk, for now.
-    if (needsResponsesApi(request, this.apiBase())) {
+    if (this.usesResponsesApi(request)) {
       const response = await this.responsesHandler.execute(request);
       yield {
         content: response.content ?? "",

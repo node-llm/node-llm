@@ -20,12 +20,28 @@ export class OpenAIStreaming {
     this.baseUrl = typeof providerOrUrl === "string" ? providerOrUrl : providerOrUrl.apiBase();
   }
 
+  // A provider decides where its requests go and signs them; Azure, for one, routes by deployment
+  // and wants an api-key header, not a bearer token.
+  private url(): string {
+    if (typeof this.providerOrUrl === "string") return buildUrl(this.baseUrl, "/chat/completions");
+    return this.providerOrUrl.url("/chat/completions");
+  }
+
+  private authHeaders(): Record<string, string> {
+    if (typeof this.providerOrUrl !== "string") return this.providerOrUrl.headers();
+    return { Authorization: `Bearer ${this.apiKey}`, "Content-Type": "application/json" };
+  }
+
   async *execute(request: ChatRequest, controller?: AbortController): AsyncGenerator<ChatChunk> {
     const internalController = new AbortController();
     const abortController = controller || internalController;
 
     const signal = request.signal ? (request.signal as AbortSignal) : abortController.signal;
-    const temperature = Capabilities.normalizeTemperature(request.temperature, request.model);
+    const knownModel =
+      typeof this.providerOrUrl === "string"
+        ? request.model
+        : this.providerOrUrl.registryModel(request.model);
+    const temperature = Capabilities.normalizeTemperature(request.temperature, knownModel);
 
     const isMainOpenAI = this.baseUrl.includes("api.openai.com");
     const supportsDeveloperRole =
@@ -47,7 +63,7 @@ export class OpenAIStreaming {
     }
 
     if (request.max_tokens) {
-      if (Capabilities.needsMaxCompletionTokens(request.model)) {
+      if (Capabilities.needsMaxCompletionTokens(knownModel)) {
         body.max_completion_tokens = request.max_tokens;
       } else {
         body.max_tokens = request.max_tokens;
@@ -117,7 +133,7 @@ export class OpenAIStreaming {
     >();
 
     try {
-      const url = buildUrl(this.baseUrl, "/chat/completions");
+      const url = this.url();
       logger.logRequest("OpenAI", "POST", url, body);
 
       const response = await fetchWithTimeout(
@@ -125,8 +141,7 @@ export class OpenAIStreaming {
         {
           method: "POST",
           headers: {
-            Authorization: `Bearer ${this.apiKey}`,
-            "Content-Type": "application/json",
+            ...this.authHeaders(),
             ...request.headers
           },
           body: JSON.stringify(body),

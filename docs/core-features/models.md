@@ -83,6 +83,7 @@ The registry includes models from:
 - **xAI** (Grok)
 - **Ollama** (Local models)
 - **Mistral** (Mistral Large, Codestral, Pixtral, Magistral) <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v1.14.0+</span>
+- **Azure AI Foundry** (every model a resource deploys: GPT, Llama, DeepSeek, Mistral, Grok, Phi) <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v1.19.0+</span>
 
 ---
 
@@ -123,7 +124,7 @@ console.log(priced.cost); // Computed total cost in USD
 
 ## Custom Models & Endpoints
 
-Sometimes you need to use models not in the registry, such as **Azure OpenAI** deployments, **Local Models** (Ollama/LM Studio), or brand new releases.
+Sometimes you need to use models not in the registry, such as fine-tunes, **Local Models** (Ollama/LM Studio), or brand new releases.
 
 ### Using `assumeModelExists`
 

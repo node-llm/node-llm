@@ -117,7 +117,7 @@ for await (const chunk of chat.stream("Weather in Tokyo?")) {
 }
 ```
 
-**Supported Providers:** OpenAI, Anthropic, Gemini, DeepSeek, Mistral, Bedrock, xAI, Ollama, OpenRouter
+**Supported Providers:** OpenAI, Anthropic, Gemini, DeepSeek, Mistral, Bedrock, xAI, Ollama, OpenRouter, Azure AI Foundry
 
 ---
 

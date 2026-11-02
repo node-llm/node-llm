@@ -128,13 +128,27 @@ describe("providers-docs", () => {
     });
   });
 
+  describe("Azure AI Foundry Provider", () => {
+    it("chats with a deployment named in azureDeployments, from the docs' configuration", () => {
+      // Per docs: createLLM({ provider: "azure", azureApiKey, azureApiBase, azureDeployments })
+      const llm = createLLM({
+        provider: "azure",
+        azureApiKey: "test-key",
+        azureApiBase: "https://my-resource.services.ai.azure.com/openai/v1",
+        azureDeployments: { "team-llama": "llama-3.3-70b-instruct" }
+      });
+      const chat = llm.chat("team-llama");
+      expect(chat.modelId).toBe("team-llama");
+    });
+  });
+
   describe("Custom Endpoints", () => {
-    it("supports custom base URL for Azure OpenAI", () => {
-      // Per docs: createLLM({ openaiApiBase: "https://your-resource.openai.azure.com" })
+    it("supports a custom base URL for an OpenAI-compatible server", () => {
+      // Per docs: createLLM({ openaiApiBase: "https://your-proxy.litellm.ai/v1" })
       const llm = createLLM({
         provider: "fake",
         openaiApiKey: "test-key",
-        openaiApiBase: "https://your-resource.openai.azure.com"
+        openaiApiBase: "https://your-proxy.litellm.ai/v1"
       });
       expect(llm).toBeDefined();
     });

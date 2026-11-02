@@ -220,7 +220,11 @@ export class ChatStream {
           if (u) {
             // Fallback cost calculation if provider didn't return it
             if (u.cost === undefined) {
-              const withCost = ModelRegistry.calculateCost(u, model, provider.id);
+              const withCost = ModelRegistry.calculateCost(
+                u,
+                provider.registryModel?.(model) ?? model,
+                provider.id
+              );
               u.cost = (withCost as Usage).cost;
               u.input_cost = (withCost as Usage).input_cost;
               u.output_cost = (withCost as Usage).output_cost;

@@ -41,7 +41,7 @@ describe("getting-started-configuration", () => {
     });
 
     it("createLLM accepts custom base URL options", () => {
-      // Per docs: createLLM({ openaiApiBase: process.env.AZURE_OPENAI_API_BASE_ENDPOINT })
+      // Per docs: createLLM({ openaiApiBase: "https://llm-proxy.example.com/v1" })
       const llm = createLLM({
         provider: "fake",
         openaiApiKey: "test-key",
