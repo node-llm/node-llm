@@ -142,6 +142,7 @@ model LlmRequest {
   outputTokens Int
   cost             Float?
   correctionRounds Int?    // Number of self-correction retries (v0.7.0+)
+  cachedTokens Int?        // Input tokens served from the prompt cache (v0.10.0+)
   createdAt    DateTime    @default(now())
 
   chat         LlmChat     @relation(fields: [chatId], references: [id], onDelete: Cascade)

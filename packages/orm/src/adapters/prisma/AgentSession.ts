@@ -206,6 +206,7 @@ export class AgentSession<
         duration: (response as { latency?: number }).latency || 0,
         inputTokens: response.usage?.input_tokens || 0,
         outputTokens: response.usage?.output_tokens || 0,
+        cachedTokens: response.usage?.cached_tokens,
         cost: response.usage?.cost || 0
       });
     });

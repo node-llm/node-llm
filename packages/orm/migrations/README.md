@@ -13,10 +13,11 @@ Reference SQL migrations for upgrading your database schema.
 
 ## Available Migrations
 
-| File                       | Version | Description                                         |
-| -------------------------- | ------- | --------------------------------------------------- |
-| `add_thinking_support.sql` | v0.2.0+ | Extended Thinking columns (Claude 3.7, DeepSeek R1) |
-| `add_agent_session.sql`    | v0.5.0+ | AgentSession for persistent agent conversations     |
+| File                       | Version  | Description                                          |
+| -------------------------- | -------- | ---------------------------------------------------- |
+| `add_thinking_support.sql` | v0.2.0+  | Extended Thinking columns (Claude 3.7, DeepSeek R1)  |
+| `add_agent_session.sql`    | v0.5.0+  | AgentSession for persistent agent conversations      |
+| `add_cached_tokens.sql`    | v0.10.0+ | Input tokens served from the provider's prompt cache |
 
 ## How to Use
 

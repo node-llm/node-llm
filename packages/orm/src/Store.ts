@@ -71,6 +71,8 @@ export interface NewRequest {
   duration: number;
   inputTokens: number;
   outputTokens: number;
+  /** Input tokens the provider served from its prompt cache, when it says (v0.10.0+) */
+  cachedTokens?: number;
   cost: number;
 }
 

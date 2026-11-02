@@ -139,6 +139,7 @@ export class Chat extends BaseChat {
           duration: finalResp.latency || 0,
           inputTokens: finalResp.usage?.input_tokens || 0,
           outputTokens: finalResp.usage?.output_tokens || 0,
+          cachedTokens: finalResp.usage?.cached_tokens,
           cost: finalResp.usage?.cost || 0
         });
       }

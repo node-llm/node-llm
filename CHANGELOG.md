@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased] (@node-llm/orm)
+
+### Features
+
+- **Cached Tokens**: Each request records `cachedTokens`, how many of its input tokens the provider served from its prompt cache, so an app can see what caching saved; `cost` already prices them at the cached rate. It needs a new `cachedTokens` column on `LlmRequest` (`migrations/add_cached_tokens.sql`). A database without it keeps saving requests as before.
+
 ## [1.19.0] - 2026-11-02 (@node-llm/core)
 
 ### Features

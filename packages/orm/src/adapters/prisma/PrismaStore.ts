@@ -94,7 +94,11 @@ export class PrismaStore implements ChatStore {
   }
 
   async createRequest(request: NewRequest): Promise<void> {
-    await this.table("request").create({ data: request });
+    const table = this.table("request");
+    // A database set up before v0.10.0 has no cachedTokens column; its requests save as before.
+    const { cachedTokens, ...rest } = request;
+    const data = cachedTokens !== undefined && table.fields?.cachedTokens ? request : rest;
+    await table.create({ data });
   }
 
   async requestTotals(chatId: string): Promise<RequestTotals> {

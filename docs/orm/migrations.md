@@ -181,3 +181,35 @@ Then run:
 ```bash
 npx prisma migrate dev --name add_correction_rounds
 ```
+
+---
+
+## Upgrading for Cached Token Tracking (v0.10.0+)
+
+Version 0.10.0 records how many of each request's input tokens the provider served from its prompt cache, in a `cachedTokens` column on `LlmRequest`. Cached tokens are already priced at the cached rate in `cost`; the column shows how much caching saved. A database without the column keeps working: requests are saved as before, without it.
+
+### Option 1: Use the Provided Migration
+
+```bash
+cp node_modules/@node-llm/orm/migrations/add_cached_tokens.sql \
+   prisma/migrations/$(date +%Y%m%d%H%M%S)_add_cached_tokens/migration.sql
+
+npx prisma migrate resolve --applied $(date +%Y%m%d%H%M%S)_add_cached_tokens
+```
+
+### Option 2: Manual Migration
+
+Add to your `schema.prisma`:
+
+```prisma
+model LlmRequest {
+  // ... existing fields
+  cachedTokens Int?  // Input tokens served from the provider's prompt cache
+}
+```
+
+Then run:
+
+```bash
+npx prisma migrate dev --name add_cached_tokens
+```
