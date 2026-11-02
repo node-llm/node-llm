@@ -43,13 +43,13 @@ await chat.ask("Describe this", { files: ["https://example.com/image.png"] });
 
 ## Provider Support
 
-| File Type | Gemini | OpenAI | Anthropic | Bedrock <span style="background-color: #0d9488; color: white; padding: 1px 4px; border-radius: 3px; font-size: 0.6em;">v1.8.0+</span> | Mistral <span style="background-color: #0d9488; color: white; padding: 1px 4px; border-radius: 3px; font-size: 0.6em;">v1.14.0+</span> |
-|-----------|--------|--------|-----------|---------|----------|
-| **Images** | ✅ | ✅ | ✅ | ✅ | ✅ (Pixtral) |
-| **PDFs** | ✅ | ✅ | ✅ | ✅ | ❌ |
-| **Audio** | ✅ | ✅ | ❌ | ❌ | ✅ (Voxtral) |
-| **Video** | ✅ | ⚠️ | ❌ | ❌ | ❌ |
-| **Code/Text** | ✅ | ✅ | ✅ | ✅ | ✅ |
+| File Type | Gemini | OpenAI | Anthropic | Bedrock <span style="background-color: #0d9488; color: white; padding: 1px 4px; border-radius: 3px; font-size: 0.6em;">v1.8.0+</span> | Mistral <span style="background-color: #0d9488; color: white; padding: 1px 4px; border-radius: 3px; font-size: 0.6em;">v1.14.0+</span> | Azure AI Foundry <span style="background-color: #0d9488; color: white; padding: 1px 4px; border-radius: 3px; font-size: 0.6em;">v1.19.0+</span> |
+|-----------|--------|--------|-----------|---------|----------|----------|
+| **Images** | ✅ | ✅ | ✅ | ✅ | ✅ (Pixtral) | ✅ (vision models) |
+| **PDFs** | ✅ | ✅ | ✅ | ✅ | ❌ | ❌ |
+| **Audio** | ✅ | ✅ | ❌ | ❌ | ✅ (Voxtral) | ❌ |
+| **Video** | ✅ | ⚠️ | ❌ | ❌ | ❌ | ❌ |
+| **Code/Text** | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 
 _⚠️ = Limited support (e.g., frame extraction)_
 

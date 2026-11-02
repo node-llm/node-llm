@@ -70,7 +70,7 @@ const embedding = await NodeLLM.embed("Text", {
 
 ### Custom Models
 
-For models not in the registry (e.g., Azure deployments or new releases), use `assumeModelExists`.
+For models not in the registry (e.g., fine-tunes or new releases), use `assumeModelExists`.
 
 Unlike `chat()`, the `embed()` options object does not accept a `provider` field — the provider is fixed to whichever `NodeLLM` instance you call it on. To target a specific provider, scope the call with `withProvider()` first:
 

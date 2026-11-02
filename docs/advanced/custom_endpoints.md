@@ -3,7 +3,7 @@ layout: default
 title: Custom Endpoints
 parent: Advanced
 nav_order: 4
-description: Connect NodeLLM to Azure OpenAI, LiteLLM, Ollama, or any OpenAI-compatible API and use custom models outside the standard registry.
+description: Connect NodeLLM to LiteLLM, Ollama, or any OpenAI-compatible API and use custom models outside the standard registry.
 ---
 
 # {{ page.title }} <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v1.0.0+</span>
@@ -26,7 +26,7 @@ description: Connect NodeLLM to Azure OpenAI, LiteLLM, Ollama, or any OpenAI-com
 
 ## OpenAI-Compatible Endpoints
 
-Connect to services like Azure OpenAI, LiteLLM, or Ollama by configuring the base URL.
+Connect to services like LiteLLM or Ollama by configuring the base URL.
 
 ### Generic Configuration
 
@@ -42,35 +42,15 @@ export OPENAI_API_KEY="not-needed"
 export OPENAI_API_BASE="http://localhost:11434/v1"
 ```
 
-### Azure OpenAI
+### Azure
 
-For Azure, point `OPENAI_API_BASE` to your specific deployment URL. The library correctly handles URL construction even with query parameters.
-
-```bash
-export OPENAI_API_KEY="your-azure-key"
-# Include the full path to your deployment
-export OPENAI_API_BASE="https://YOUR_RESOURCE.openai.azure.com/openai/deployments/YOUR_DEPLOYMENT?api-version=2024-08-01-preview"
-```
-
-Then, pass the `api-key` header manually when creating the chat instance:
-
-```typescript
-import { createLLM } from "@node-llm/core";
-
-const llm = createLLM({ provider: "openai" });
-
-const chat = llm.chat("gpt-4").withRequestOptions({
-  headers: { "api-key": process.env.OPENAI_API_KEY }
-});
-
-const response = await chat.ask("Hello Azure!");
-```
+Azure has its own provider, which signs requests the way Azure expects and reaches every model a resource deploys. See [Azure AI Foundry](../providers/azure.md).
 
 ---
 
 ## Using Custom Models
 
-If you use a model ID not in the built-in registry (e.g., custom Azure names or new models), use `assumeModelExists: true` to bypass validation.
+If you use a model ID not in the built-in registry (e.g., a fine-tune or a new release), use `assumeModelExists: true` to bypass validation.
 
 ```typescript
 const chat = llm.chat("my-company-gpt-4", {

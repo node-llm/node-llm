@@ -78,6 +78,10 @@ for await (const chunk of chat.stream("Now explain it to a five-year-old")) {
     <img src="https://cdn.jsdelivr.net/npm/@lobehub/icons-static-svg@1.95.1/icons/mistral-text.svg" alt="" class="logo-small">
   </div>
   <div class="provider-logo">
+    <img src="https://cdn.jsdelivr.net/npm/@lobehub/icons-static-svg@1.95.1/icons/azureai-color.svg" alt="Azure AI Foundry">
+    <img src="https://cdn.jsdelivr.net/npm/@lobehub/icons-static-svg@1.95.1/icons/azureai-text.svg" alt="" class="logo-small">
+  </div>
+  <div class="provider-logo">
     <img src="/assets/images/providers/typesafe.svg" alt="TypeSafe">
     <span class="logo-wordmark">TypeSafe</span>
   </div>
@@ -231,6 +235,7 @@ Plug custom security, PII detection, and compliance logic into asynchronous [`be
 | <img src="https://cdn.jsdelivr.net/npm/@lobehub/icons-static-svg@1.95.1/icons/xai.svg" height="18"> **xAI**                  | Chat, Streaming, Tools, Vision, Images, Reasoning                                              |
 | <img src="https://cdn.jsdelivr.net/npm/@lobehub/icons-static-svg@1.95.1/icons/ollama.svg" height="18"> **Ollama**            | Local Inference: Chat, Streaming, Tools, Vision, Embeddings                                    |
 | <img src="https://cdn.jsdelivr.net/npm/@lobehub/icons-static-svg@1.95.1/icons/mistral-color.svg" height="18"> **Mistral**    | Chat, Streaming, Tools, Vision, Embeddings, Transcription, Moderation, Reasoning               |
+| <img src="https://cdn.jsdelivr.net/npm/@lobehub/icons-static-svg@1.95.1/icons/azureai-color.svg" height="18"> **Azure AI Foundry** | Every model a resource deploys: Chat, Streaming, Tools, Vision, Embeddings, Reasoning |
 | <img src="/assets/images/providers/typesafe.svg" height="18"> **TypeSafe** | Judgments: typed probability, choice and score answers (Jev) |
 
 The [model registry](/available-models) tracks current model IDs, capabilities, and pricing across all providers — kept in sync automatically.

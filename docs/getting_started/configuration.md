@@ -78,19 +78,32 @@ const llm = createLLM({
   deepseekApiKey: process.env.DEEPSEEK_API_KEY,
   openrouterApiKey: process.env.OPENROUTER_API_KEY,
   xaiApiKey: process.env.XAI_API_KEY,
-  mistralApiKey: process.env.MISTRAL_API_KEY
+  mistralApiKey: process.env.MISTRAL_API_KEY,
+  azureApiKey: process.env.AZURE_API_KEY
 });
 ```
 
 #### Custom Base URLs
 
-Override the default API endpoints for custom deployments (e.g., Azure OpenAI):
+Override the default API endpoints, for a proxy or an OpenAI-compatible server:
 
 ```typescript
 const llm = createLLM({
   provider: "openai",
-  openaiApiKey: process.env.AZURE_OPENAI_API_KEY,
-  openaiApiBase: process.env.AZURE_OPENAI_API_BASE_ENDPOINT
+  openaiApiKey: process.env.OPENAI_API_KEY,
+  openaiApiBase: "https://llm-proxy.example.com/v1"
+});
+```
+
+#### Azure AI Foundry
+
+Azure has its own provider: give it the address the Azure portal shows for your deployment or resource, and the deployment's name as the model. See [Azure AI Foundry](../providers/azure.md).
+
+```typescript
+const llm = createLLM({
+  provider: "azure",
+  azureApiKey: process.env.AZURE_API_KEY,
+  azureApiBase: "https://my-resource.services.ai.azure.com/openai/v1"
 });
 ```
 
@@ -169,6 +182,10 @@ const chat = llm.chat("gpt-5", {
 | `xaiApiBase`                | xAI API base URL                    | `process.env.XAI_API_BASE`        |
 | `mistralApiKey`             | Mistral API key                     | `process.env.MISTRAL_API_KEY`     |
 | `mistralApiBase`            | Mistral API base URL                | `process.env.MISTRAL_API_BASE`    |
+| `azureApiKey`               | Azure resource key                  | `process.env.AZURE_API_KEY`       |
+| `azureApiBase`              | Azure deployment or resource address | `process.env.AZURE_API_BASE`     |
+| `azureAuthToken`            | Microsoft Entra ID token, instead of a key | `process.env.AZURE_AUTH_TOKEN` |
+| `azureDeployments`          | Deployment names mapped to the models they run | -                     |
 | `typesafeApiKey`            | TypeSafe (Jev) key for judgments    | `process.env.TYPESAFE_API_KEY` (or `JEV_API_KEY`) |
 | `typesafeApiBase`           | System One endpoint                 | `process.env.TYPESAFE_API_BASE` (`https://api.typesafe.ai`) |
 | `ollamaApiBase`             | Ollama API base URL                 | `process.env.OLLAMA_API_BASE`     |
