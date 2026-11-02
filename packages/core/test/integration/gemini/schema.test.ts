@@ -1,7 +1,7 @@
 import { describe, it, expect, afterEach } from "vitest";
 import { createLLM } from "../../../src/index.js";
 import { setupVCR } from "../../helpers/vcr.js";
-import { z } from "zod";
+import { z } from "zod/v3";
 import "dotenv/config";
 
 describe("Gemini Structured Output (VCR)", { timeout: 30000 }, () => {

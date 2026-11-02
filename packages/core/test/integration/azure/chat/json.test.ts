@@ -1,5 +1,5 @@
 import { describe, it, expect, afterEach } from "vitest";
-import { z } from "zod";
+import { z } from "zod/v3";
 import { setupVCR } from "../../../helpers/vcr.js";
 import { azure, DEPLOYMENT } from "../helpers.js";
 import "dotenv/config";

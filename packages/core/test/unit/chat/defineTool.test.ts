@@ -1,5 +1,5 @@
 import { describe, it, expect, expectTypeOf } from "vitest";
-import { z as zod4 } from "zod4";
+import { z as zod4 } from "zod";
 import { Chat } from "../../../src/chat/Chat.js";
 import { Tool, ToolHalt, defineTool } from "../../../src/chat/Tool.js";
 import { z } from "../../../src/index.js";

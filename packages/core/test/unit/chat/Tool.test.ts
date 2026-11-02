@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { z } from "zod";
+import { z } from "zod/v3";
 import { Tool, ToolDefinition } from "../../../src/chat/Tool.js";
 import { createLLM } from "../../../src/llm.js";
 import { FakeProvider } from "../../fake-provider.js";

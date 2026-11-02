@@ -11,7 +11,7 @@ import {
   z,
   providerRegistry
 } from "../../src/index.js";
-import { z as zod4 } from "zod4";
+import { z as zod4 } from "zod";
 import { FakeProvider } from "../fake-provider.js";
 
 describe("core-features-structured-output", () => {

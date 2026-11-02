@@ -37,6 +37,7 @@ All notable changes to this project will be documented in this file.
 
 ### Bug Fixes
 
+- **Zod Security Fix**: Core now depends on Zod 4.6.6 or later, which fixes a memory exhaustion advisory (GHSA-mrhx-c7xc-m3w5) that has no fix in Zod 3. The `z` NodeLLM exports is unchanged: it is still the Zod 3 API, now from `zod/v3`, and Zod 3 and Zod 4 schemas work as before.
 - **Billing Errors on Every Provider**: Whether an account can't pay is now decided the same way for every provider (status 402, the `insufficient_quota` code, or wording such as "credit balance", "insufficient balance" or "billing"), and is always an `InsufficientQuotaError`. Before, each provider checked differently: Anthropic's 400 and xAI's billing errors weren't recognised, and only DeepSeek handled 402. A plain "quota" is no longer treated as billing, since Gemini and others use it for per-minute rate limits, which should be retried. The xAI handler no longer prints raw error bodies to the console.
 - **No Retries When Out of Quota**: `InsufficientQuotaError` is a `RateLimitError`, so retries kept trying an account with no credit or quota left, with growing back-off. It now fails straight away, as other fatal errors do.
 - **`beforeRequest` in Tool Loops**: `ask()` ran `beforeRequest` hooks only on the first request; the requests that follow each round of tool calls skipped them, so content policy hooks (such as redaction) didn't apply to tool results. They now run on every request, as they already did when streaming.

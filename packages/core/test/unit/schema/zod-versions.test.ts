@@ -1,7 +1,6 @@
 import { describe, it, expect, expectTypeOf } from "vitest";
-import { z as zod4 } from "zod4";
-import { z as zod3FromAnotherCopy } from "zod4/v3";
-import * as zodMini from "zod4/mini";
+import { z as zod4 } from "zod";
+import * as zodMini from "zod/mini";
 import { Chat } from "../../../src/chat/Chat.js";
 import { Tool } from "../../../src/chat/Tool.js";
 import { defineAgent } from "../../../src/agent/Agent.js";
@@ -58,18 +57,6 @@ describe("Zod 4 and Zod 3 schemas", () => {
         required: ["name"],
         additionalProperties: false
       });
-    });
-
-    it("accepts a Zod 3 schema from another copy of Zod", async () => {
-      const provider = new FakeProvider(['{"name":"Ada"}']);
-      const schema = zod3FromAnotherCopy.object({ name: zod3FromAnotherCopy.string() });
-
-      const response = await new Chat(provider, "fake-model").withSchema(schema).ask("Who?");
-
-      expect(provider.lastRequest?.response_format?.json_schema?.schema).toMatchObject({
-        properties: { name: { type: "string" } }
-      });
-      expect(response.data).toEqual({ name: "Ada" });
     });
   });
 

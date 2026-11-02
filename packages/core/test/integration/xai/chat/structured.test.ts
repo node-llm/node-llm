@@ -2,7 +2,7 @@ import { describe, it, expect, afterEach } from "vitest";
 import { NodeLLM } from "../../../../src/index.js";
 import { setupVCR } from "../../../helpers/vcr.js";
 import "dotenv/config";
-import { z } from "zod";
+import { z } from "zod/v3";
 
 describe("xAI Structured Outputs Integration (VCR)", { timeout: 30000 }, () => {
   let polly: { stop: () => Promise<void> } | undefined;

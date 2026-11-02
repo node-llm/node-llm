@@ -2,7 +2,7 @@ import { describe, it, expect, vi, afterEach } from "vitest";
 import { Chat } from "../../../src/chat/Chat.js";
 import { Provider } from "../../../src/providers/Provider.js";
 import { Tool } from "../../../src/chat/Tool.js";
-import { z } from "zod";
+import { z } from "zod/v3";
 import { FakeProvider } from "../../fake-provider.js";
 
 // A provider whose models reject a temperature, as Claude Opus 4.7 and later do.

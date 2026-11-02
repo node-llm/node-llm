@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from "vitest";
-import { z } from "zod";
+import { z } from "zod/v3";
 import { ToolHandler } from "../../../src/chat/ToolHandler.js";
 import { Tool } from "../../../src/chat/Tool.js";
 

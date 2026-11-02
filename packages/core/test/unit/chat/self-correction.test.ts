@@ -2,7 +2,7 @@ import { describe, it, expect, vi } from "vitest";
 import { NodeLLM, createLLM } from "../../../src/index.js";
 import { SchemaSelfCorrectionMiddleware } from "../../../src/middlewares/SchemaSelfCorrection.js";
 import { Provider, ChatResponse } from "../../../src/providers/Provider.js";
-import { z } from "zod";
+import { z } from "zod/v3";
 
 describe("SchemaSelfCorrectionMiddleware", () => {
   it("should bound self-correction retries so a RETRY-always middleware can't loop forever", async () => {

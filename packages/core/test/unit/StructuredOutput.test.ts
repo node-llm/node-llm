@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { ChatResponseString } from "../../src/chat/ChatResponse.js";
 import { Schema } from "../../src/schema/Schema.js";
-import { z } from "zod";
+import { z } from "zod/v3";
 
 describe("Structured Output Reliability", () => {
   const personSchema = z.object({

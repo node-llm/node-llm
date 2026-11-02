@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { Agent } from "../../src/agent/Agent.js";
 import { Tool } from "../../src/chat/Tool.js";
-import { z } from "zod";
+import { z } from "zod/v3";
 import { NodeLLM } from "../../src/llm.js";
 import { ChatResponseString } from "../../src/chat/ChatResponse.js";
 import { ThinkingResult } from "../../src/providers/Provider.js";

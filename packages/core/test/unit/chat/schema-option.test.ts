@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { z } from "zod";
+import { z } from "zod/v3";
 import { Chat } from "../../../src/chat/Chat.js";
 import { Schema } from "../../../src/schema/Schema.js";
 import { FakeProvider } from "../../fake-provider.js";

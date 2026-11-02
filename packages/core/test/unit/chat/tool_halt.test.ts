@@ -4,7 +4,7 @@ import { Tool, ToolHalt } from "../../../src/chat/Tool.js";
 import { ToolHandler } from "../../../src/chat/ToolHandler.js";
 import { Provider, ChatRequest, ChatResponse } from "../../../src/providers/Provider.js";
 import { Message } from "../../../src/chat/Message.js";
-import { z } from "zod";
+import { z } from "zod/v3";
 
 // ============================================================================
 // Test Provider

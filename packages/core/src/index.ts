@@ -27,7 +27,7 @@ export type { AgentConfig, DefinedAgent } from "./agent/Agent.js";
 export type { Middleware, MiddlewareContext } from "./types/Middleware.js";
 export * from "./middlewares/index.js";
 
-export { z } from "zod";
+export { z } from "zod/v3";
 export {
   NodeLLM,
   LegacyNodeLLM,

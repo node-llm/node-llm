@@ -249,11 +249,11 @@ importers:
   packages/core:
     dependencies:
       zod:
-        specifier: ^3.23.8
-        version: 3.25.76
+        specifier: ^4.6.6
+        version: 4.6.7
       zod-to-json-schema:
         specifier: ^3.25.1
-        version: 3.25.1(zod@3.25.76)
+        version: 3.25.1(zod@4.6.7)
     devDependencies:
       '@pollyjs/adapter-fetch':
         specifier: ^6.0.7
@@ -270,9 +270,6 @@ importers:
       typescript:
         specifier: ^5.9.3
         version: 5.9.3
-      zod4:
-        specifier: npm:zod@4.6.7
-        version: zod@4.6.7
 
   packages/mcp:
     dependencies:
@@ -4549,9 +4546,6 @@ packages:
     peerDependencies:
       zod: ^3.25.28 || ^4
 
-  zod@3.25.76:
-    resolution: {integrity: sha512-gzUt/qt81nXsFGKIFcC3YnfEAx5NkunCfnDlvuBSSFS02bcXu4Lmea0AFIUwbLWxWPx3d9p8S5QoaujKcNQxcQ==}
-
   zod@4.6.7:
     resolution: {integrity: sha512-g8W2D2kU6a8untc053fX1uVBKzM7yqAxW/3zwk83+6RyF2+SKOuV+c0wBDhUwzV1PaGapmZH+rmcUzPf+3CGwg==}
 
@@ -5002,8 +4996,8 @@ snapshots:
 
   '@node-llm/core@file:packages/core':
     dependencies:
-      zod: 3.25.76
-      zod-to-json-schema: 3.25.2(zod@3.25.76)
+      zod: 4.6.7
+      zod-to-json-schema: 3.25.2(zod@4.6.7)
 
   '@node-llm/monitor@0.1.2(@node-llm/core@packages+core)(@node-llm/orm@0.8.0(@node-llm/core@packages+core)(@prisma/client@5.22.0(prisma@5.22.0)))(@prisma/client@5.22.0(prisma@5.22.0))':
     dependencies:
@@ -9118,19 +9112,13 @@ snapshots:
 
   yoctocolors@2.1.2: {}
 
-  zod-to-json-schema@3.25.1(zod@3.25.76):
+  zod-to-json-schema@3.25.1(zod@4.6.7):
     dependencies:
-      zod: 3.25.76
-
-  zod-to-json-schema@3.25.2(zod@3.25.76):
-    dependencies:
-      zod: 3.25.76
+      zod: 4.6.7
 
   zod-to-json-schema@3.25.2(zod@4.6.7):
     dependencies:
       zod: 4.6.7
-
-  zod@3.25.76: {}
 
   zod@4.6.7: {}
 

@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "zod/v3";
 import { isZodSchema, Zod3Schema, Zod4Schema, ZodSchema } from "../schema/zod.js";
 import { toJsonSchema } from "../schema/to-json-schema.js";
 
