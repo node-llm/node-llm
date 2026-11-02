@@ -9,6 +9,9 @@ import { config } from "dotenv";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const monorepoRoot = path.resolve(__dirname, "../../../../");
+
+/** The Azure resource recordings name, whichever resource recorded them */
+export const AZURE_RESOURCE_HOST = "my-resource.openai.azure.com";
 config({ path: path.join(monorepoRoot, ".env") });
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -43,6 +46,8 @@ export function setupVCR(
   if (!process.env.OPENROUTER_API_KEY) process.env.OPENROUTER_API_KEY = "dummy-key-for-vcr-replay";
   if (!process.env.XAI_API_KEY) process.env.XAI_API_KEY = "dummy-key-for-vcr-replay";
   if (!process.env.MISTRAL_API_KEY) process.env.MISTRAL_API_KEY = "dummy-key-for-vcr-replay";
+  if (!process.env.AZURE_API_KEY) process.env.AZURE_API_KEY = "dummy-key-for-vcr-replay";
+  if (!process.env.AZURE_API_BASE) process.env.AZURE_API_BASE = `https://${AZURE_RESOURCE_HOST}`;
   if (!process.env.TYPESAFE_API_KEY && !process.env.JEV_API_KEY) {
     process.env.TYPESAFE_API_KEY = "dummy-key-for-vcr-replay";
   }
@@ -69,6 +74,7 @@ export function setupVCR(
           "openai-project",
           "user-agent",
           "x-api-key",
+          "api-key",
           "host",
           ...(subDir === "bedrock"
             ? ["x-amz-date", "x-amz-content-sha256", "x-amz-security-token", "x-amz-target"]
@@ -76,6 +82,9 @@ export function setupVCR(
         ]
       },
       url: {
+        // Each Azure resource has its own host; a recording replays against any of them.
+        hostname: (hostname: string) =>
+          hostname.endsWith(".azure.com") ? AZURE_RESOURCE_HOST : hostname,
         pathname: (pathname: string) => {
           // Normalize Bedrock Guardrail URLs so record and replay match
           if (pathname.includes("/guardrail/")) {
@@ -131,6 +140,19 @@ export function setupVCR(
         "/guardrail/dummy-guardrail-id/version/1"
       );
     }
+
+    // Keep the Azure resource's name out of recordings
+    if (recording.request.url) {
+      recording.request.url = recording.request.url.replace(
+        /^https:\/\/[^/]+\.azure\.com/,
+        `https://${AZURE_RESOURCE_HOST}`
+      );
+    }
+    recording.request.headers?.forEach((header: { name: string; value: string }) => {
+      if (header.name.toLowerCase() === "host" && header.value.endsWith(".azure.com")) {
+        header.value = AZURE_RESOURCE_HOST;
+      }
+    });
 
     // Scrub key from URL
     if (recording.request.url) {
