@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## [Unreleased] (@node-llm/orm)
+## [0.10.0] - 2026-11-03 (@node-llm/orm)
 
 ### Features
 
