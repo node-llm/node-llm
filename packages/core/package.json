@@ -63,7 +63,7 @@
     "test:docs": "vitest run test/docs",
     "test:live": "vitest run --config vitest.live.config.ts",
     "test:watch": "vitest",
-    "prepare": "npm run build && cp src/models/models.json dist/models/models.json",
+    "prepare": "npm run build",
     "prepack": "cp ../../CHANGELOG.md ./CHANGELOG.md",
     "postpack": "rm ./CHANGELOG.md",
     "prepublishOnly": "npm run build && npm run test:docs"
