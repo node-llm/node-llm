@@ -50,7 +50,8 @@ export class BedrockStreaming {
       thinking: request.thinking,
       guardrail,
       toolChoice: request.tool_choice,
-      additionalModelRequestFields: request.additionalModelRequestFields as Record<string, any>
+      additionalModelRequestFields: request.additionalModelRequestFields as Record<string, any>,
+      promptCache: request.promptCache
     });
 
     const bodyJson = JSON.stringify(body);

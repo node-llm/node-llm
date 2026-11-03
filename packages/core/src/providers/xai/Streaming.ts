@@ -173,7 +173,8 @@ export class XAIStreaming {
               const usage = {
                 input_tokens: json.usage.prompt_tokens,
                 output_tokens: json.usage.completion_tokens,
-                total_tokens: json.usage.total_tokens
+                total_tokens: json.usage.total_tokens,
+                cached_tokens: json.usage.prompt_tokens_details?.cached_tokens
               };
               yield { content: "", usage };
             }

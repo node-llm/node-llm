@@ -222,6 +222,7 @@ export function buildConverseRequest(
     };
     toolChoice?: ToolChoice;
     additionalModelRequestFields?: Record<string, any>;
+    promptCache?: boolean;
   }
 ): BedrockConverseRequest {
   const { messages: bedrockMessages, system } = convertMessages(messages);
@@ -232,6 +233,13 @@ export function buildConverseRequest(
 
   if (system) {
     request.system = system;
+  }
+
+  // A cache point after the system prompt and after the latest message caches the conversation
+  // so far; the second one moves forward as it grows.
+  if (options?.promptCache) {
+    addCachePoint(request.system);
+    addCachePoint(bedrockMessages[bedrockMessages.length - 1]?.content);
   }
 
   const toolConfig = convertTools(tools, options?.toolChoice);
@@ -274,4 +282,10 @@ export function buildConverseRequest(
   }
 
   return request;
+}
+
+function addCachePoint(blocks: BedrockContentBlock[] | undefined): void {
+  if (blocks?.length && !("cachePoint" in blocks[blocks.length - 1]!)) {
+    blocks.push({ cachePoint: { type: "default" } });
+  }
 }

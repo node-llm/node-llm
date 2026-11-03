@@ -93,6 +93,26 @@ describe("DeepSeekChat", () => {
     expect(response.reasoning).toBe("Thought process");
   });
 
+  it("reports prompt cache hits as cached tokens", async () => {
+    (global.fetch as unknown as Mock).mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        choices: [{ message: { content: "Answer" }, finish_reason: "stop" }],
+        usage: {
+          prompt_tokens: 100,
+          completion_tokens: 5,
+          total_tokens: 105,
+          prompt_cache_hit_tokens: 80
+        }
+      })
+    });
+
+    const response = await chat.execute({ model: "deepseek-chat", messages: [] } as ChatRequest);
+
+    expect(response.usage?.input_tokens).toBe(100);
+    expect(response.usage?.cached_tokens).toBe(80);
+  });
+
   it("should handle API errors", async () => {
     (global.fetch as unknown as Mock).mockResolvedValue({
       ok: false,

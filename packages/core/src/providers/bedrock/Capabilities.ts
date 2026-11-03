@@ -59,6 +59,15 @@ export class Capabilities {
     return ModelRegistry.supports(modelId, "reasoning", "bedrock");
   }
 
+  // Bedrock caches Claude 3.5 Haiku, 3.7 Sonnet and later, and Nova; older Claude models refuse cache points.
+  static supportsPromptCaching(modelId: string): boolean {
+    const id = modelId.toLowerCase();
+    if (id.includes("amazon.nova")) return true;
+    return (
+      id.includes("anthropic.claude") && !/claude-3-(opus|sonnet|haiku)|claude-3-5-sonnet/.test(id)
+    );
+  }
+
   static supportsEmbeddings(modelId: string): boolean {
     return (
       ModelRegistry.supports(modelId, "embeddings", "bedrock") || modelId.includes("titan-embed")
