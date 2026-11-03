@@ -229,3 +229,10 @@ describe("OpenRouterCapabilities", () => {
     });
   });
 });
+
+describe("OpenRouter prompt caching", () => {
+  it("asks for caching only on Claude models", () => {
+    expect(OpenRouterCapabilities.supportsPromptCaching("anthropic/claude-haiku-5.5")).toBe(true);
+    expect(OpenRouterCapabilities.supportsPromptCaching("openai/gpt-5")).toBe(false);
+  });
+});

@@ -132,6 +132,11 @@ export class OpenAIChat {
       body.reasoning_effort = thinking.effort;
     }
 
+    // Only reaches providers that declare supportsPromptCaching, such as OpenRouter for Claude.
+    if (request.promptCache) {
+      body.cache_control = { type: "ephemeral" };
+    }
+
     const url = this.url();
     logger.logRequest("OpenAI", "POST", url, body);
 

@@ -123,6 +123,11 @@ export class OpenAIStreaming {
       body.reasoning_effort = request.thinking.effort;
     }
 
+    // Only reaches providers that declare supportsPromptCaching, such as OpenRouter for Claude.
+    if (request.promptCache) {
+      body.cache_control = { type: "ephemeral" };
+    }
+
     body.stream_options = { include_usage: true };
 
     let done = false;
