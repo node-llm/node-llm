@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.19.1] - 2026-11-03 (@node-llm/core)
+
+### Bug Fixes
+
+- **Nullable Fields Reach Every Provider as Nulls**: Zod schemas, for structured output and for tool arguments, are now sent as standard JSON Schema rather than OpenAPI 3.0. OpenAPI's `nullable: true` made Anthropic reject a nullable object ("property 'nullable' is not supported") and made OpenAI, Mistral, DeepSeek and xAI answer a nullable field with the text `"null"` or an invented value. A nullable field is now `type: ["string", "null"]` (or `anyOf` with `null`), and the `$schema` line is left out. Gemini receives tool parameters through `parametersJsonSchema`, as it already did for structured output.
+- **Tool Calling on Gemini 3**: Gemini 3 attaches a `thoughtSignature` to each function call and rejects the next request if it isn't sent back ("Function call is missing a thought_signature"). Tool calls now keep it as `thought_signature`, in normal and streaming responses, and send it back with the call.
+
+## [0.10.1] - 2026-11-03 (@node-llm/orm)
+
+### Bug Fixes
+
+- **Thought Signatures From Agent Sessions**: Agent sessions now save a tool call's `thoughtSignature` (from core 1.19.1), as chats already did.
+
 ## [0.10.0] - 2026-11-03 (@node-llm/orm)
 
 ### Features
