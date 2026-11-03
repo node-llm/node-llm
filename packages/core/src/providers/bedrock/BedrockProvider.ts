@@ -69,6 +69,7 @@ export class BedrockProvider extends BaseProvider implements Provider {
     supportsModeration: (_model: string) =>
       !!(this.config.guardrailIdentifier && this.config.guardrailVersion),
     supportsReasoning: (model: string) => Capabilities.supportsExtendedThinking(model),
+    supportsPromptCaching: (model: string) => Capabilities.supportsPromptCaching(model),
     supportsDeveloperRole: (_model: string) => true,
     supportsTemperature: (model: string) => Capabilities.supportsTemperature(model),
     getContextWindow: (model: string) => Capabilities.getContextWindow(model)

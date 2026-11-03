@@ -19,6 +19,7 @@ interface XAIChatResponse {
     prompt_tokens: number;
     completion_tokens: number;
     total_tokens: number;
+    prompt_tokens_details?: { cached_tokens?: number };
   };
 }
 
@@ -94,7 +95,8 @@ export class XAIChat {
     const usage: Usage = {
       input_tokens: json.usage.prompt_tokens,
       output_tokens: json.usage.completion_tokens,
-      total_tokens: json.usage.total_tokens
+      total_tokens: json.usage.total_tokens,
+      cached_tokens: json.usage.prompt_tokens_details?.cached_tokens
     };
 
     const toolCalls = message?.tool_calls?.map((tc) => ({

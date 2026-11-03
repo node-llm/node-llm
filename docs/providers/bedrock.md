@@ -117,7 +117,7 @@ console.log(response.data);
 
 NodeLLM supports Amazon Bedrock's **Prompt Caching** (via the Converse API). This allows you to cache large context blocks (like documents or system prompts) to reduce latency and cost.
 
-Use the standard `cache_control: { type: "ephemeral" }` API (same as Anthropic) to enable it.
+Call `withPromptCache()` (or set `static promptCache = true` on an Agent) to cache the system prompt and the conversation so far, or mark individual blocks with the standard `cache_control: { type: "ephemeral" }` API (same as Anthropic).
 
 ```ts
 // System Prompt Caching

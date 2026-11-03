@@ -123,6 +123,11 @@ export class OpenAIStreaming {
       body.reasoning_effort = request.thinking.effort;
     }
 
+    // Only reaches providers that declare supportsPromptCaching, such as OpenRouter for Claude.
+    if (request.promptCache) {
+      body.cache_control = { type: "ephemeral" };
+    }
+
     body.stream_options = { include_usage: true };
 
     let done = false;
@@ -259,7 +264,8 @@ export class OpenAIStreaming {
               const usage = {
                 input_tokens: json.usage.prompt_tokens,
                 output_tokens: json.usage.completion_tokens,
-                total_tokens: json.usage.total_tokens
+                total_tokens: json.usage.total_tokens,
+                cached_tokens: json.usage.prompt_tokens_details?.cached_tokens
               };
               yield { content: "", usage };
             }

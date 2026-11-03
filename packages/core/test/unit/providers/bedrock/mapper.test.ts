@@ -166,6 +166,24 @@ describe("Bedrock Mapper", () => {
   });
 
   describe("buildConverseRequest", () => {
+    it("adds cache points after the system prompt and the latest message when caching", () => {
+      const messages = [
+        { role: "system", content: "Be brief" },
+        { role: "user", content: "Hi" }
+      ] as Message[];
+
+      const result = buildConverseRequest(messages, undefined, { promptCache: true });
+
+      expect(result.system?.at(-1)).toEqual({ cachePoint: { type: "default" } });
+      expect(result.messages.at(-1)?.content.at(-1)).toEqual({ cachePoint: { type: "default" } });
+    });
+
+    it("adds no cache points unless asked", () => {
+      const result = buildConverseRequest([{ role: "user", content: "Hi" }] as Message[]);
+
+      expect(JSON.stringify(result)).not.toContain("cachePoint");
+    });
+
     it("should build a complete request", () => {
       const messages: Message[] = [
         { role: "system", content: "Be helpful." },

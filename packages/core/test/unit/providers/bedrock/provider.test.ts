@@ -118,3 +118,17 @@ describe("BedrockProvider", () => {
     });
   });
 });
+
+describe("Bedrock prompt caching", () => {
+  const provider = new BedrockProvider({ region: "us-east-1", apiKey: "test" });
+
+  it("caches Claude 3.5 Haiku and later, and Nova, but not older Claude models", () => {
+    const supports = (model: string) => provider.capabilities.supportsPromptCaching?.(model);
+    expect(supports("us.anthropic.claude-sonnet-4-5-20250929-v1:0")).toBe(true);
+    expect(supports("anthropic.claude-3-5-haiku-20241022-v1:0")).toBe(true);
+    expect(supports("amazon.nova-pro-v1:0")).toBe(true);
+    expect(supports("anthropic.claude-3-5-sonnet-20240620-v1:0")).toBe(false);
+    expect(supports("anthropic.claude-3-haiku-20240307-v1:0")).toBe(false);
+    expect(supports("meta.llama3-70b-instruct-v1:0")).toBe(false);
+  });
+});

@@ -34,6 +34,7 @@ interface MistralChatResponse {
     prompt_tokens: number;
     completion_tokens: number;
     total_tokens: number;
+    prompt_tokens_details?: { cached_tokens?: number };
   };
 }
 
@@ -209,6 +210,7 @@ export class MistralChat {
       input_tokens: json.usage?.prompt_tokens ?? 0,
       output_tokens: json.usage?.completion_tokens ?? 0,
       total_tokens: json.usage?.total_tokens ?? 0,
+      cached_tokens: json.usage?.prompt_tokens_details?.cached_tokens,
       cost,
       input_cost: inputCost,
       output_cost: outputCost

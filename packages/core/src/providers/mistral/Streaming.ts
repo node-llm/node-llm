@@ -164,7 +164,8 @@ export class MistralStreaming {
                 usage: {
                   input_tokens: parsed.usage.prompt_tokens ?? 0,
                   output_tokens: parsed.usage.completion_tokens ?? 0,
-                  total_tokens: parsed.usage.total_tokens ?? 0
+                  total_tokens: parsed.usage.total_tokens ?? 0,
+                  cached_tokens: parsed.usage.prompt_tokens_details?.cached_tokens
                 },
                 done: false
               };

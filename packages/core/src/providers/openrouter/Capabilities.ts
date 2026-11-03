@@ -52,6 +52,11 @@ export class OpenRouterCapabilities {
     );
   }
 
+  // OpenRouter caches OpenAI, DeepSeek and Gemini prompts by itself; Claude needs cache_control.
+  static supportsPromptCaching(modelId: string): boolean {
+    return modelId.toLowerCase().startsWith("anthropic/");
+  }
+
   static supportsToolChoice(_modelId: string): boolean {
     return true;
   }
