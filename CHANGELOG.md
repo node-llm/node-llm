@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.19.2] - 2026-11-03 (@node-llm/core)
+
+### Bug Fixes
+
+- **Prompt Caching on OpenRouter**: `withPromptCache()` (or `static promptCache = true` on an Agent) now asks OpenRouter to cache prompts for Claude models (`anthropic/...`). Before, the option never reached OpenRouter, so every request was billed at the full input price.
+- **Prompt Caching on Bedrock**: the option now adds a cache point after the system prompt and after the latest message, for Claude 3.5 Haiku, 3.7 Sonnet and later, and Nova. Older Claude models, which refuse cache points, are left alone. Blocks marked with `cache_control` keep working as before.
+- **Cached Tokens From Every Provider**: `usage.cached_tokens` is now filled in for OpenAI streaming, xAI, DeepSeek (`prompt_cache_hit_tokens`) and Mistral. On DeepSeek and xAI the reported cost is lower when the cache is hit, because cached input is now priced at its own rate; `input_tokens` is unchanged.
+
+Requests are unchanged when prompt caching is off.
+
 ## [1.19.1] - 2026-11-03 (@node-llm/core)
 
 ### Bug Fixes
