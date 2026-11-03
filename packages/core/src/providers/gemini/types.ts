@@ -13,6 +13,7 @@ export interface GeminiPart {
     response: Record<string, unknown>;
   };
   thought?: boolean;
+  thoughtSignature?: string;
 }
 
 export interface GeminiContent {

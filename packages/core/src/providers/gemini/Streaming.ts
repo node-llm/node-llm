@@ -193,7 +193,8 @@ export class GeminiStreaming {
                     function: {
                       name: part.functionCall.name,
                       arguments: JSON.stringify(part.functionCall.args || {})
-                    }
+                    },
+                    ...(part.thoughtSignature && { thought_signature: part.thoughtSignature })
                   });
                 }
               }

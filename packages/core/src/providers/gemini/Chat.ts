@@ -144,7 +144,8 @@ export class GeminiChat {
         function: {
           name: p.functionCall!.name,
           arguments: JSON.stringify(p.functionCall!.args)
-        }
+        },
+        ...(p.thoughtSignature && { thought_signature: p.thoughtSignature })
       }));
 
     const attachments = contentParts

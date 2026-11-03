@@ -153,6 +153,22 @@ describe("GeminiUsageParsing", () => {
     vi.resetAllMocks();
   });
 
+  it("keeps a function call's thought signature", async () => {
+    (GeminiChatUtils.convertMessages as unknown as Mock).mockResolvedValue({
+      contents: [],
+      systemInstructionParts: []
+    });
+    const part = { functionCall: { name: "pick", args: {} }, thoughtSignature: "sig-1" };
+    (fetch as unknown as Mock).mockResolvedValue({
+      ok: true,
+      json: () => Promise.resolve({ candidates: [{ content: { parts: [part] } }] })
+    });
+
+    const result = await chat.execute({ model: "gemini-3.8-flash", messages: [] });
+
+    expect(result.tool_calls?.[0]?.thought_signature).toBe("sig-1");
+  });
+
   it("should parse cachedContentTokenCount correctly", async () => {
     const request: ChatRequest = {
       model: "gemini-1.5-flash",

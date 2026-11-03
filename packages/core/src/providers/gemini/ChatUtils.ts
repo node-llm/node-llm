@@ -81,7 +81,8 @@ export class GeminiChatUtils {
               functionCall: {
                 name: call.function.name,
                 args: JSON.parse(call.function.arguments)
-              }
+              },
+              ...(call.thought_signature && { thoughtSignature: call.thought_signature })
             });
           }
         }
