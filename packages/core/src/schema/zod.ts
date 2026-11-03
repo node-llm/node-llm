@@ -35,13 +35,15 @@ export function isZodSchema(value: unknown): value is ZodSchema {
 
 /**
  * The JSON Schema a model is given for a Zod schema: the shape it must send, so fields with
- * defaults are optional.
+ * defaults are optional. Standard JSON Schema rather than OpenAPI's dialect: providers ignore or
+ * reject OpenAPI's `nullable`, so a nullable field became a plain string and models sent "null".
  */
 export function zodToJson(schema: ZodSchema): Record<string, unknown> {
-  return "_zod" in schema ? zod4ToJson(schema) : zod3ToJson(schema);
+  const { $schema: _dialect, ...json } = "_zod" in schema ? zod4ToJson(schema) : zod3ToJson(schema);
+  return json;
 }
 
-type Zod4ToJsonSchema = (params: { target: "openapi-3.0"; io: "input" }) => Record<string, unknown>;
+type Zod4ToJsonSchema = (params: { target: "draft-7"; io: "input" }) => Record<string, unknown>;
 
 // Zod 4.2 added toJSONSchema() to schemas; earlier Zod 4 releases and zod/mini don't have it.
 function zod4ToJson(schema: Zod4Schema): Record<string, unknown> {
@@ -51,10 +53,10 @@ function zod4ToJson(schema: Zod4Schema): Record<string, unknown> {
       `[NodeLLM] Zod 4 schemas need Zod 4.2 or later, imported from "zod" rather than "zod/mini".`
     );
   }
-  return toJSONSchema.call(schema, { target: "openapi-3.0", io: "input" });
+  return toJSONSchema.call(schema, { target: "draft-7", io: "input" });
 }
 
 // Removed with Zod 3 support in NodeLLM 2.0.
 function zod3ToJson(schema: Zod3Schema): Record<string, unknown> {
-  return zodToJsonSchema(schema as unknown as ZodTypeAny, { target: "openApi3" });
+  return zodToJsonSchema(schema as unknown as ZodTypeAny, { target: "jsonSchema7" });
 }

@@ -56,6 +56,32 @@ describe("GeminiChat", () => {
     expect(result.usage?.total_tokens).toBe(8);
   });
 
+  // `parameters` takes Gemini's OpenAPI subset, which rejects a nullable field's ["string", "null"].
+  it("sends tool parameters as JSON Schema", async () => {
+    const parameters = { type: "object", properties: { ref: { type: ["string", "null"] } } };
+    (GeminiChatUtils.convertMessages as unknown as Mock).mockResolvedValue({
+      contents: [],
+      systemInstructionParts: []
+    });
+    (fetch as unknown as Mock).mockResolvedValue({
+      ok: true,
+      json: () => Promise.resolve({ candidates: [{ content: { parts: [{ text: "ok" }] } }] })
+    });
+
+    await chat.execute({
+      model: "gemini-3.8-flash",
+      messages: [{ role: "user", content: "Pick" }],
+      tools: [{ type: "function", function: { name: "pick", description: "Pick", parameters } }]
+    });
+
+    const body = JSON.parse((fetch as unknown as Mock).mock.calls[0][1].body);
+    expect(body.tools[0].functionDeclarations[0]).toEqual({
+      name: "pick",
+      description: "Pick",
+      parametersJsonSchema: parameters
+    });
+  });
+
   it("should handle JSON mode in request", async () => {
     const request: ChatRequest = {
       model: "gemini-1.5-flash",
@@ -125,6 +151,22 @@ describe("GeminiUsageParsing", () => {
     chat = new GeminiChat(baseUrl, apiKey);
     vi.stubGlobal("fetch", vi.fn());
     vi.resetAllMocks();
+  });
+
+  it("keeps a function call's thought signature", async () => {
+    (GeminiChatUtils.convertMessages as unknown as Mock).mockResolvedValue({
+      contents: [],
+      systemInstructionParts: []
+    });
+    const part = { functionCall: { name: "pick", args: {} }, thoughtSignature: "sig-1" };
+    (fetch as unknown as Mock).mockResolvedValue({
+      ok: true,
+      json: () => Promise.resolve({ candidates: [{ content: { parts: [part] } }] })
+    });
+
+    const result = await chat.execute({ model: "gemini-3.8-flash", messages: [] });
+
+    expect(result.tool_calls?.[0]?.thought_signature).toBe("sig-1");
   });
 
   it("should parse cachedContentTokenCount correctly", async () => {

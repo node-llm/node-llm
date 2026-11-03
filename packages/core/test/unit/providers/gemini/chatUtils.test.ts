@@ -61,6 +61,28 @@ describe("GeminiChatUtils", () => {
     expect(contents[0]!.parts[0]!.functionCall!.args).toEqual({ city: "London" });
   });
 
+  // Gemini 3 rejects a function call sent back without the signature it came with.
+  it("sends a tool call's thought signature back with it", async () => {
+    const messages: Message[] = [
+      {
+        role: "assistant",
+        content: null as unknown as string,
+        tool_calls: [
+          {
+            id: "pick",
+            type: "function",
+            function: { name: "pick", arguments: "{}" },
+            thought_signature: "sig-1"
+          }
+        ]
+      }
+    ];
+
+    const { contents } = await GeminiChatUtils.convertMessages(messages);
+
+    expect(contents[0]!.parts[0]!.thoughtSignature).toBe("sig-1");
+  });
+
   it("should handle multimodal content", async () => {
     (BinaryUtils.toBase64 as unknown as Mock).mockResolvedValue({
       mimeType: "image/png",

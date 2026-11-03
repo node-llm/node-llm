@@ -13,6 +13,7 @@ export interface GeminiPart {
     response: Record<string, unknown>;
   };
   thought?: boolean;
+  thoughtSignature?: string;
 }
 
 export interface GeminiContent {
@@ -30,6 +31,7 @@ export interface GeminiGenerateContentRequest {
       name: string;
       description?: string;
       parameters?: Record<string, unknown>;
+      parametersJsonSchema?: Record<string, unknown>;
     }>;
   }[];
   generationConfig?: {

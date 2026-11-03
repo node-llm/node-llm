@@ -77,7 +77,7 @@ export class GeminiStreaming {
           functionDeclarations: request.tools.map((t) => ({
             name: t.function.name,
             description: t.function.description,
-            parameters: t.function.parameters
+            parametersJsonSchema: t.function.parameters
           }))
         }
       ];
@@ -193,7 +193,8 @@ export class GeminiStreaming {
                     function: {
                       name: part.functionCall.name,
                       arguments: JSON.stringify(part.functionCall.args || {})
-                    }
+                    },
+                    ...(part.thoughtSignature && { thought_signature: part.thoughtSignature })
                   });
                 }
               }

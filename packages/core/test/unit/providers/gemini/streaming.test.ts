@@ -101,7 +101,7 @@ describe("GeminiStreaming", () => {
 
   it("handles function calls in stream", async () => {
     const chunks = [
-      'data: {"candidates":[{"content":{"parts":[{"functionCall":{"name":"get_weather","args":{"city":"NYC"}}}]}}]}\n'
+      'data: {"candidates":[{"content":{"parts":[{"functionCall":{"name":"get_weather","args":{"city":"NYC"}},"thoughtSignature":"sig-1"}]}}]}\n'
     ];
 
     vi.mocked(fetchWithTimeout).mockResolvedValue(
@@ -120,6 +120,7 @@ describe("GeminiStreaming", () => {
     expect(finalChunk?.tool_calls).toHaveLength(1);
     expect(finalChunk?.tool_calls?.[0].function.name).toBe("get_weather");
     expect(finalChunk?.tool_calls?.[0].function.arguments).toBe('{"city":"NYC"}');
+    expect(finalChunk?.tool_calls?.[0].thought_signature).toBe("sig-1");
   });
 
   it("throws on API error response", async () => {

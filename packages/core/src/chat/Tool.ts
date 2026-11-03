@@ -9,6 +9,8 @@ export interface ToolCall {
     name: string;
     arguments: string;
   };
+  /** Gemini's signature for its reasoning behind the call, which it requires back with the call */
+  thought_signature?: string;
 }
 
 export interface ToolDefinition {

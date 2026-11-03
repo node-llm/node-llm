@@ -180,7 +180,8 @@ export class AgentSession<
         messageId: this.currentMessageId,
         toolCallId: toolCall.id,
         name: toolCall.function.name,
-        arguments: toolCall.function.arguments
+        arguments: toolCall.function.arguments,
+        thoughtSignature: toolCall.thought_signature ?? null
       });
     });
 
