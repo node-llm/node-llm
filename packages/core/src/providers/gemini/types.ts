@@ -30,6 +30,7 @@ export interface GeminiGenerateContentRequest {
       name: string;
       description?: string;
       parameters?: Record<string, unknown>;
+      parametersJsonSchema?: Record<string, unknown>;
     }>;
   }[];
   generationConfig?: {

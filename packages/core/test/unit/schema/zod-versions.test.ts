@@ -29,12 +29,45 @@ describe("Zod 4 and Zod 3 schemas", () => {
         properties: {
           name: { type: "string", description: "Full name" },
           age: { type: "integer" },
-          nickname: { type: "string", nullable: true }
+          nickname: { type: ["string", "null"] }
         },
         required: ["name", "age", "nickname"]
       });
       expect(response.data).toEqual({ name: "Ada", age: 36, nickname: null, active: true });
       expectTypeOf(response.data).toEqualTypeOf<zod4.infer<typeof Person>>();
+    });
+
+    // OpenAPI's `nullable` is ignored or rejected by providers, so models answered "null" as text.
+    it("sends nullable fields and objects in standard JSON Schema, without a $schema line", () => {
+      const json = toJsonSchema(
+        zod4.object({
+          ref: zod4.string().nullable(),
+          opens: zod4.object({ ref: zod4.string() }).nullable()
+        })
+      );
+
+      expect(json).not.toHaveProperty("$schema");
+      expect(JSON.stringify(json)).not.toContain("nullable");
+      expect(json.properties).toEqual({
+        ref: { type: ["string", "null"] },
+        opens: {
+          anyOf: [
+            {
+              type: "object",
+              properties: { ref: { type: "string" } },
+              required: ["ref"]
+            },
+            { type: "null" }
+          ]
+        }
+      });
+    });
+
+    it("sends a nullable Zod 3 field in standard JSON Schema", () => {
+      const json = toJsonSchema(z.object({ ref: z.string().nullable() }));
+
+      expect(json).not.toHaveProperty("$schema");
+      expect(json.properties).toEqual({ ref: { type: ["string", "null"] } });
     });
 
     it("throws Zod's own error when the response doesn't match a Zod 4 schema", async () => {
@@ -76,6 +109,21 @@ describe("Zod 4 and Zod 3 schemas", () => {
         type: "object",
         properties: { query: { type: "string", description: "What to look up" } },
         required: ["query"]
+      });
+    });
+
+    it("describes a nullable tool argument in standard JSON Schema", () => {
+      class PickTool extends Tool<{ ref: string | null }> {
+        name = "pick";
+        description = "Picks an element, or none";
+        schema = zod4.object({ ref: zod4.string().nullable() });
+        async execute() {
+          return "ok";
+        }
+      }
+
+      expect(new PickTool().toLLMTool().function.parameters).toMatchObject({
+        properties: { ref: { type: ["string", "null"] } }
       });
     });
 

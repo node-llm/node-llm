@@ -77,7 +77,7 @@ export class GeminiStreaming {
           functionDeclarations: request.tools.map((t) => ({
             name: t.function.name,
             description: t.function.description,
-            parameters: t.function.parameters
+            parametersJsonSchema: t.function.parameters
           }))
         }
       ];
