@@ -137,7 +137,7 @@ Long conversations and agent loops resend the same instructions, tools and earli
 const chat = NodeLLM.chat("claude-sonnet-5-5").withPromptCache();
 ```
 
-On Agents, set `static promptCache = true`. Anthropic needs asking to cache; OpenAI, Gemini and DeepSeek cache automatically, so the option changes nothing there. Cache reads and writes show up in `usage.cached_tokens` and `usage.cache_creation_tokens`, and the cost prices them at their own rates. Prompts shorter than the model's minimum (about 1,000 to 4,000 tokens) are not cached.
+On Agents, set `static promptCache = true`. Anthropic, Bedrock (Claude 3.5 Haiku, 3.7 Sonnet and later, and Nova) and Claude models on OpenRouter need asking to cache; OpenAI, Azure, Gemini, DeepSeek, xAI and Mistral cache automatically, so the option changes nothing there. Without the option, requests are sent exactly as before. Cache reads and writes show up in `usage.cached_tokens` and `usage.cache_creation_tokens`, and the cost prices them at their own rates. Prompts shorter than the model's minimum (about 1,000 to 4,000 tokens) are not cached.
 
 ---
 
