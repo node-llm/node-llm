@@ -50,6 +50,7 @@ run_all_examples.sh
 docs/_site/
 docs/.jekyll-cache/
 docs/.jekyll-metadata
+docs/local/
 /.agent
 examples/scripts/mcp/package-lock.json
 pnpm-lock.yaml

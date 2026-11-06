@@ -125,7 +125,11 @@ export class AzureProvider extends OpenAIProvider {
   }
 
   public override registryModel(model: string): string {
-    return this.deployments[model] ?? model;
+    if (this.deployments[model]) return this.deployments[model];
+    const match = model.match(
+      /(gpt-4o-mini|gpt-4o|gpt-4\.1-mini|gpt-4\.1-nano|gpt-4\.1|gpt-5\.[0-9]+-mini|gpt-5\.[0-9]+|gpt-5-mini|gpt-5-nano|gpt-5|gpt-6-[a-z0-9]+|gpt-6|gpt-4-turbo|gpt-4|o[1-4]-mini|o[1-4])/i
+    );
+    return match?.[1] ? match[1].toLowerCase() : model;
   }
 
   // The Responses API is served from the resource's v1 address, never under a deployment.

@@ -85,7 +85,7 @@ export class Capabilities {
   }
 
   static needsMaxCompletionTokens(modelId: string): boolean {
-    return this.supportsReasoning(modelId);
+    return this.supportsReasoning(modelId) || /(^|[-_/])(o1|o3|o4|gpt-5)/i.test(modelId);
   }
 
   static getModelType(modelId: string): string {

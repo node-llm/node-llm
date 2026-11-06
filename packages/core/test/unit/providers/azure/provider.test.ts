@@ -263,6 +263,10 @@ describe("Azure AI Foundry", () => {
       expect(provider.capabilities.supportsEmbeddings("team-llama")).toBe(false);
       expect(provider.capabilities.supportsVision("gpt-4o")).toBe(true);
       expect(provider.capabilities.getContextWindow("team-llama")).toBe(128000);
+      expect(provider.registryModel("mte-dev-uae-gpt-4o-mini-128k-global-standard")).toBe(
+        "gpt-4o-mini"
+      );
+      expect(provider.registryModel("mte-sweden-gpt-5.4-272k-global-standard")).toBe("gpt-5.4");
     });
 
     it("let a deployment the registry doesn't know do what Azure allows", () => {
