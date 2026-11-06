@@ -140,7 +140,7 @@ export class OpenAIChat {
     const url = this.url();
     logger.logRequest("OpenAI", "POST", url, body);
 
-    const response = await fetchWithTimeout(
+    let response = await fetchWithTimeout(
       url,
       {
         method: "POST",
@@ -155,7 +155,30 @@ export class OpenAIChat {
     );
 
     if (!response.ok) {
-      await handleOpenAIError(response, request.model);
+      if (response.status === 400 && body.max_tokens) {
+        const errorClone = response.clone();
+        const errText = await errorClone.text().catch(() => "");
+        if (errText.includes("max_completion_tokens") || errText.includes("max_tokens")) {
+          delete body.max_tokens;
+          body.max_completion_tokens = max_tokens;
+          response = await fetchWithTimeout(
+            url,
+            {
+              method: "POST",
+              headers: {
+                ...this.authHeaders(),
+                ...request.headers
+              },
+              body: JSON.stringify(body),
+              signal
+            },
+            request.requestTimeout
+          );
+        }
+      }
+      if (!response.ok) {
+        await handleOpenAIError(response, request.model);
+      }
     }
 
     const json = (await response.json()) as OpenAIChatResponse;

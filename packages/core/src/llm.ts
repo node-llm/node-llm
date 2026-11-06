@@ -80,7 +80,7 @@ export class NodeLLMCore {
   constructor(
     public readonly config: NodeLLMConfig,
     public readonly provider?: Provider,
-    public readonly retry: Required<RetryOptions> = { attempts: 1, delayMs: 0 },
+    public readonly retry: Required<RetryOptions> = { attempts: 4, delayMs: 1500 },
     public readonly middlewares: Middleware[] = [],
     private readonly defaults: {
       chat?: string;
@@ -593,7 +593,7 @@ export function createLLM(options: LLMConfig = {}): NodeLLMCore {
   const baseConfig = configSnapshot;
 
   // 2. Resolve Retry
-  let retry: Required<RetryOptions> = { attempts: 1, delayMs: 0 };
+  let retry: Required<RetryOptions> = { attempts: 4, delayMs: 1500 };
   if (baseConfig.maxRetries !== undefined) {
     retry.attempts = baseConfig.maxRetries + 1;
   }
