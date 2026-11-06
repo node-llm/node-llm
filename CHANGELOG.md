@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.19.3] - 2026-11-06 (@node-llm/core)
+
+### Features & Bug Fixes
+
+- **Rate Limit Exponential Backoff**: Added automated exponential backoff retry handling for HTTP 429 rate limit errors with `retry-after` header parsing and jittered backoff.
+- **GPT-5 Completion Token Compatibility**: Normalized token limit parameters across OpenAI models, ensuring `max_tokens` automatically maps to `max_completion_tokens` for GPT-5, o1/o3/o4 series models and compatible endpoints.
+- **Azure Provider Hardening**: Normalized error status translation and capabilities resolution to unify custom endpoint support without branching.
+
 ## [1.19.2] - 2026-11-03 (@node-llm/core)
 
 ### Bug Fixes

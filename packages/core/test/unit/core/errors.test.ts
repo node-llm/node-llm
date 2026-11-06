@@ -129,9 +129,27 @@ describe("Error System", () => {
       await expect(handleOpenAIError(response)).rejects.toThrow(AuthenticationError);
     });
 
-    it("should map 429 to RateLimitError", async () => {
-      const response = mockResponse(429, { error: { message: "Quota exceeded" } });
-      await expect(handleOpenAIError(response)).rejects.toThrow(RateLimitError);
+    it("should map 429 to RateLimitError and parse retry-after headers", async () => {
+      const headers = new Headers({ "retry-after-ms": "2500" });
+      const response = {
+        status: 429,
+        ok: false,
+        headers,
+        json: async () => ({
+          error: {
+            message:
+              "Your requests to gpt-4o-mini for mte-dev-uae-gpt-4o-mini-128k-global-standard in uaenorth have exceeded token rate limit. Please retry after 2 seconds."
+          }
+        }),
+        clone: () => response
+      } as unknown as Response;
+
+      try {
+        await handleOpenAIError(response);
+      } catch (e) {
+        expect(e).toBeInstanceOf(RateLimitError);
+        expect((e as RateLimitError).retryAfter).toBe(2.5);
+      }
     });
 
     it("should map 500 to ServerError", async () => {

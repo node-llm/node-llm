@@ -47,12 +47,10 @@ export class Executor {
    */
   private backoffDelay(attempt: number, error: unknown): number {
     if (error instanceof RateLimitError && typeof error.retryAfter === "number") {
-      return Math.max(0, error.retryAfter * 1000);
+      return Math.min(Math.max(1000, error.retryAfter * 1000), 60_000);
     }
 
-    const base = this.retry.delayMs > 0 ? this.retry.delayMs : 0;
-    if (base === 0) return 0;
-
+    const base = this.retry.delayMs > 0 ? this.retry.delayMs : 1000;
     // Exponential: base * 2^(attempt-1), capped at 30s, with full jitter.
     const exponential = Math.min(base * 2 ** (attempt - 1), 30_000);
     return Math.floor(Math.random() * exponential);

@@ -1,6 +1,6 @@
 {
   "name": "@node-llm/core",
-  "version": "1.19.2",
+  "version": "1.19.3",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",

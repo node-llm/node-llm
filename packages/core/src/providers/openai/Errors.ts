@@ -68,7 +68,23 @@ export async function handleOpenAIError(response: Response, model?: string): Pro
   }
 
   if (status === 429) {
-    throw new RateLimitError(message, body, provider, model);
+    const retryAfterHeader = response.headers?.get("retry-after");
+    const retryAfterMsHeader = response.headers?.get("retry-after-ms");
+    let retryAfterSeconds: number | undefined;
+    if (retryAfterMsHeader) {
+      const ms = Number(retryAfterMsHeader);
+      if (Number.isFinite(ms) && ms > 0) retryAfterSeconds = ms / 1000;
+    } else if (retryAfterHeader) {
+      const sec = Number(retryAfterHeader);
+      if (Number.isFinite(sec) && sec > 0) retryAfterSeconds = sec;
+    }
+    if (!retryAfterSeconds && typeof message === "string") {
+      const match =
+        message.match(/retry after ([0-9.]+) second/i) ||
+        message.match(/try again in ([0-9.]+) second/i);
+      if (match?.[1]) retryAfterSeconds = Number(match[1]);
+    }
+    throw new RateLimitError(message, body, provider, model, retryAfterSeconds);
   }
 
   if (status === 502 || status === 503) {
