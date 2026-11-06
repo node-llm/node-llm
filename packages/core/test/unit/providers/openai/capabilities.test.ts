@@ -67,8 +67,8 @@ describe("OpenAI Capabilities", () => {
   });
 
   it("knows which models take tools only through the Responses API", () => {
-    expect(Capabilities.needsResponsesForTools("gpt-5.6-luna")).toBe(true);
-    expect(Capabilities.needsResponsesForTools("gpt-6-luna")).toBe(true);
+    expect(Capabilities.needsResponsesForTools("gpt-5.6")).toBe(true);
+    expect(Capabilities.needsResponsesForTools("gpt-6")).toBe(true);
     expect(Capabilities.needsResponsesForTools("gpt-5.1")).toBe(false);
     expect(Capabilities.needsResponsesForTools("gpt-4o")).toBe(false);
   });

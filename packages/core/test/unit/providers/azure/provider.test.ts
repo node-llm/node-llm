@@ -6,7 +6,7 @@ import { createLLM } from "../../../../src/llm.js";
 import { UnsupportedFeatureError } from "../../../../src/errors/index.js";
 
 const deployment =
-  "https://my-resource.openai.azure.com/openai/deployments/team-gpt-6-luna?api-version=2025-04-01-preview";
+  "https://my-resource.openai.azure.com/openai/deployments/team-gpt-6?api-version=2025-04-01-preview";
 const resource = "https://my-resource.services.ai.azure.com";
 
 const readPage = {
@@ -66,7 +66,7 @@ describe("Azure AI Foundry", () => {
       [
         "a deployment's address",
         deployment,
-        "https://my-resource.openai.azure.com/openai/deployments/team-gpt-6-luna/chat/completions?api-version=2025-04-01-preview"
+        "https://my-resource.openai.azure.com/openai/deployments/team-gpt-6/chat/completions?api-version=2025-04-01-preview"
       ],
       [
         "a deployment's address without a version",
@@ -142,19 +142,19 @@ describe("Azure AI Foundry", () => {
     it("takes tool calls for models that need it, at the v1 address, naming the deployment", async () => {
       const fetch = stubFetch(responsesAnswer);
 
-      const response = await azure(deployment).chat(request("gpt-6-luna", true));
+      const response = await azure(deployment).chat(request("gpt-6", true));
 
       const { url, headers, body } = sent(fetch);
       expect(url).toBe("https://my-resource.openai.azure.com/openai/v1/responses");
       expect(headers["api-key"]).toBe("azure-key");
-      expect(body.model).toBe("team-gpt-6-luna");
+      expect(body.model).toBe("team-gpt-6");
       expect(response.tool_calls?.[0]?.function.name).toBe("read_page");
     });
 
     it("knows a deployment by the model it runs", async () => {
       const fetch = stubFetch(responsesAnswer);
 
-      await azure(`${resource}/openai/v1`, { deployments: { "team-gpt6": "gpt-6-luna" } }).chat(
+      await azure(`${resource}/openai/v1`, { deployments: { "team-gpt6": "gpt-6" } }).chat(
         request("team-gpt6", true)
       );
 
@@ -199,7 +199,7 @@ describe("Azure AI Foundry", () => {
 
     const { url, headers } = sent(fetch);
     expect(url).toBe(
-      "https://my-resource.openai.azure.com/openai/deployments/team-gpt-6-luna/chat/completions?api-version=2025-04-01-preview"
+      "https://my-resource.openai.azure.com/openai/deployments/team-gpt-6/chat/completions?api-version=2025-04-01-preview"
     );
     expect(headers["api-key"]).toBe("azure-key");
   });

@@ -30,7 +30,7 @@ const keys: Record<string, string> = {
 // Known-good cheap models; for the rest the registry picks. On Azure the model is a deployment's
 // name, which no registry knows: LIVE_AZURE_MODEL names it when it isn't gpt-4o.
 const defaults: Record<string, string> = {
-  openai: "gpt-5.6-luna",
+  openai: "gpt-4o",
   anthropic: "claude-haiku-5-5",
   azure: "gpt-4o"
 };

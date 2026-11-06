@@ -6,7 +6,7 @@ const request = {
   chatId: "chat-1",
   messageId: "message-1",
   provider: "azure",
-  model: "gpt-6-luna",
+  model: "gpt-6",
   statusCode: 200,
   duration: 900,
   inputTokens: 12000,

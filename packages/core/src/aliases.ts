@@ -1002,25 +1002,6 @@ export default {
   "gpt-5.6": {
     "openai": "gpt-5.6"
   },
-  "gpt-5.6-luna": {
-    "azure": "gpt-5.6-luna",
-    "bedrock": "openai.gpt-5.6-luna",
-    "openai": "gpt-5.6-luna",
-    "openrouter": "openai/gpt-5.6-luna",
-    "perplexity": "openai/gpt-5.6-luna"
-  },
-  "gpt-5.6-luna-global": {
-    "bedrock": "global.openai.gpt-5.6-luna"
-  },
-  "gpt-5.6-luna-india": {
-    "bedrock": "in.openai.gpt-5.6-luna"
-  },
-  "gpt-5.6-luna-pro": {
-    "openrouter": "openai/gpt-5.6-luna-pro"
-  },
-  "gpt-5.6-luna-us": {
-    "bedrock": "us.openai.gpt-5.6-luna"
-  },
   "gpt-5.6-sol": {
     "azure": "gpt-5.6-sol",
     "bedrock": "openai.gpt-5.6-sol",
@@ -1071,22 +1052,6 @@ export default {
   },
   "gpt-6-astra-us": {
     "bedrock": "us.openai.gpt-6-astra"
-  },
-  "gpt-6-luna": {
-    "azure": "gpt-6-luna",
-    "bedrock": "openai.gpt-6-luna",
-    "openai": "gpt-6-luna",
-    "openrouter": "openai/gpt-6-luna",
-    "perplexity": "openai/gpt-6-luna"
-  },
-  "gpt-6-luna-global": {
-    "bedrock": "global.openai.gpt-6-luna"
-  },
-  "gpt-6-luna-pro": {
-    "openrouter": "openai/gpt-6-luna-pro"
-  },
-  "gpt-6-luna-us": {
-    "bedrock": "us.openai.gpt-6-luna"
   },
   "gpt-6-sol": {
     "azure": "gpt-6-sol",
@@ -1167,9 +1132,6 @@ export default {
   },
   "gpt-image-2.5-sunburst": {
     "azure": "gpt-image-2.5-sunburst"
-  },
-  "gpt-luna-latest": {
-    "openrouter": "~openai/gpt-luna-latest"
   },
   "gpt-mini-latest": {
     "openrouter": "~openai/gpt-mini-latest"

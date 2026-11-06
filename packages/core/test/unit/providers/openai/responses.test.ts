@@ -66,11 +66,11 @@ describe("OpenAI models that need the Responses API for tools", () => {
     );
     vi.stubGlobal("fetch", fetch);
 
-    const response = await new OpenAIProvider({ apiKey: "sk-test" }).chat(request("gpt-5.6-luna"));
+    const response = await new OpenAIProvider({ apiKey: "sk-test" }).chat(request("gpt-5.6"));
 
     const { url, body } = sent(fetch);
     expect(url).toMatch(/\/responses$/);
-    expect(body).toMatchObject({ model: "gpt-5.6-luna", store: false });
+    expect(body).toMatchObject({ model: "gpt-5.6", store: false });
     expect(body.input).toEqual([
       { role: "system", content: "You read pages." },
       { role: "user", content: "Read page 1" },
