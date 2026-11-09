@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="20 6 640 214" width="640" height="214">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="30 58 572 140" width="572" height="140">
   <title>NodeLLM</title>
   <defs>
     <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
@@ -13,9 +13,9 @@
     <path fill-rule="evenodd" d="M164,18 L182,0 H212 V-30 H232 V80 H182 L164,62Z M184,22 V58 H212 V22Z"/>
     <path fill-rule="evenodd" d="M250,18 L268,0 H302 L320,18 V48 H270 V60 H318 V80 H268 L250,62Z M270,20 V30 H300 V20Z"/>
   </g>
-  <g transform="translate(510,124)">
+  <g transform="translate(468,137) scale(0.75)">
     <polygon points="-112,0 -74,-76 74,-76 112,0 74,76 -74,76" fill="url(#g)"/>
-    <polygon points="-96,0 -64,-63 64,-63 96,0 64,63 -64,63" fill="#1F4A1E"/>
+    <polygon points="-96,0 -64,-63 64,-63 96,0 64,63 -64,63" fill="#265A24"/>
     <polygon points="-96,0 -64,-63 64,-63 96,0 64,63 -64,63" fill="none" stroke="#B8EB7A" stroke-width="2" opacity="0.6"/>
     <g fill="#A9E36B">
       <path d="M-65,-25 H-49 V9 H-33 V23 H-65Z"/>
@@ -25,7 +25,6 @@
     <g fill="#8CCB4E">
       <path d="M96,-104 Q98,-84 118,-82 Q98,-80 96,-60 Q94,-80 74,-82 Q94,-84 96,-104Z"/>
       <path d="M128,-62 Q129,-50 141,-49 Q129,-48 128,-36 Q127,-48 115,-49 Q127,-50 128,-62Z"/>
-      <path d="M62,-96 Q63,-89 70,-88 Q63,-87 62,-80 Q61,-87 54,-88 Q61,-89 62,-96Z"/>
     </g>
   </g>
 </svg>
