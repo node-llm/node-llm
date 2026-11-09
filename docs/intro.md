@@ -6,7 +6,7 @@ permalink: /docs/intro
 ---
 
 <p align="left">
-  <img src="/assets/images/logo.png" alt="NodeLLM" width="200" />
+  <img src="/assets/images/logo.png" alt="NodeLLM" width="260" />
 </p>
 
 # One API for every LLM provider
@@ -17,7 +17,7 @@ permalink: /docs/intro
 [![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-**NodeLLM is the backend runtime for building reliable, testable, provider-agnostic AI systems in Node.js.** Nine providers, one predictable API — with normalized streaming, automatic tool loops, deterministic testing, and first-class observability built in.
+**NodeLLM is the backend runtime for building reliable, testable, provider-agnostic AI systems in Node.js.** Eleven providers, one predictable API — with normalized streaming, automatic tool loops, deterministic testing, and first-class observability built in.
 
 ```bash
 npm install @node-llm/core

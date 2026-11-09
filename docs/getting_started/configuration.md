@@ -97,7 +97,7 @@ const llm = createLLM({
 
 #### Azure AI Foundry
 
-Azure has its own provider: give it the address the Azure portal shows for your deployment or resource, and the deployment's name as the model. See [Azure AI Foundry](../providers/azure.md).
+Azure has its own provider: give it the address the Azure portal shows for your deployment or resource, and the deployment's name as the model. See [Azure AI Foundry](/providers/azure.html).
 
 ```typescript
 const llm = createLLM({

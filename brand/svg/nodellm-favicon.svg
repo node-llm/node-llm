@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <title>NodeLLM</title>
+  <circle cx="32" cy="32" r="31" fill="#6DB33F"/>
+  <path d="M32,12 Q34,30 52,32 Q34,34 32,52 Q30,34 12,32 Q30,30 32,12Z" fill="#FFFFFF"/>
+</svg>
