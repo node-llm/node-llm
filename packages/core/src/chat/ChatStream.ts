@@ -24,6 +24,7 @@ import { ResponseFormat } from "../providers/Provider.js";
 import { ModelRegistry } from "../models/ModelRegistry.js";
 import { Middleware, MiddlewareContext, ToolErrorDirective } from "../types/Middleware.js";
 import { executableTools, requestTools } from "./ToolSearch.js";
+import { streamWithFallbacks } from "../executor/Fallback.js";
 import { runMiddleware } from "../utils/middleware-runner.js";
 import { randomUUID } from "node:crypto";
 import {
@@ -279,7 +280,15 @@ export class ChatStream {
             delete streamRequest.prediction;
           }
 
-          for await (const chunk of provider.stream(streamRequest)) {
+          for await (const chunk of streamWithFallbacks(
+            provider,
+            streamRequest,
+            options.fallbacks,
+            options.resolveProvider,
+            async (event) => {
+              for (const handler of options.onFallbackHandlers ?? []) await handler(event);
+            }
+          )) {
             if (isFirst) {
               await runAllHandlers(newMessageHandlers);
               isFirst = false;

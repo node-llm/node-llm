@@ -1,3 +1,4 @@
+import { checkApiBase, OPENAI_COMPATIBLE_ENDPOINTS } from "../apiBase.js";
 import { config as globalConfig } from "../../config.js";
 import { providerRegistry } from "../registry.js";
 import { MistralProvider } from "./MistralProvider.js";
@@ -18,7 +19,10 @@ export function registerMistralProvider() {
   providerRegistry.register("mistral", (config) => {
     const cfg = config || globalConfig;
     const apiKey = cfg.mistralApiKey;
-    const baseUrl = cfg.mistralApiBase;
+    const baseUrl = checkApiBase("mistralApiBase", cfg.mistralApiBase, {
+      example: "https://api.mistral.ai/v1",
+      endpoints: OPENAI_COMPATIBLE_ENDPOINTS
+    });
 
     if (!apiKey) {
       throw new Error(

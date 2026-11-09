@@ -456,6 +456,46 @@ async execute({ date }: { date: string }) {
 }
 ```
 
+### Rescuing Specific Errors (rescueFrom) <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v1.20.0+</span>
+
+By default, an error thrown in `execute()` reaches the model as `Error executing tool '<name>': <message>`. To send something more useful for a known error, register a handler with `rescueFrom` in the constructor. The handler gets the error and the tool's arguments, and returns the result the model sees: a string, an object (sent as JSON) or a `ToolHalt`.
+
+```ts
+class OrderStatusTool extends Tool<{ id: string }> {
+  name = "order_status";
+  description = "Look up an order's status";
+  schema = z.object({ id: z.string() });
+
+  constructor() {
+    super();
+    this.rescueFrom(OrderNotFoundError, (_error, { id }) => ({
+      error: `No order ${id}. Ask the customer to check the number.`
+    }));
+    this.rescueFrom(PaymentsDownError, () => this.halt("Payments are down. Try again later."));
+  }
+
+  async execute({ id }: { id: string }) {
+    return orders.find(id); // throws OrderNotFoundError
+  }
+}
+```
+
+- A handler also matches subclasses of its error class.
+- When several handlers match, the one registered last wins, so register general handlers first.
+- Errors that no handler matches keep the default result.
+
+With `defineTool`, pass the handlers as `[ErrorClass, handler]` pairs:
+
+```ts
+const OrderStatus = defineTool({
+  name: "order_status",
+  description: "Look up an order's status",
+  schema: z.object({ id: z.string() }),
+  execute: async ({ id }) => orders.find(id),
+  rescueFrom: [[OrderNotFoundError, (_error, { id }) => `No order ${id}`]]
+});
+```
+
 ### ToolHalt — Early Loop Termination <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v1.11.0+</span>
 
 Sometimes a tool needs to stop the agentic loop immediately without making another LLM call. Use `this.halt()` to return a message directly to the user and break the loop.

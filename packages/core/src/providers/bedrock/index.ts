@@ -1,3 +1,4 @@
+import { checkApiBase } from "../apiBase.js";
 /**
  * Bedrock Provider - Public Exports
  */
@@ -24,7 +25,10 @@ export function registerBedrockProvider() {
       accessKeyId: cfg.bedrockAccessKeyId,
       secretAccessKey: cfg.bedrockSecretAccessKey,
       sessionToken: cfg.bedrockSessionToken,
-      apiBase: cfg.bedrockApiBase,
+      apiBase: checkApiBase("bedrockApiBase", cfg.bedrockApiBase, {
+        example: "https://bedrock-runtime.us-east-1.amazonaws.com",
+        endpoints: /\/model\/.*$/
+      }),
       guardrailIdentifier: cfg.bedrockGuardrailIdentifier,
       guardrailVersion: cfg.bedrockGuardrailVersion
     };

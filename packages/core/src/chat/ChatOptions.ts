@@ -5,7 +5,8 @@ import { ContentPart } from "./Content.js";
 import { Schema } from "../schema/Schema.js";
 import { ChatResponseString } from "./ChatResponse.js";
 import { ToolExecutionModeInput } from "../constants.js";
-import { ResponseFormat, ThinkingConfig, ToolChoice } from "../providers/Provider.js";
+import { Provider, ResponseFormat, ThinkingConfig, ToolChoice } from "../providers/Provider.js";
+import { FallbackEvent, FallbackTarget } from "../executor/Fallback.js";
 
 export interface ChatOptions {
   systemPrompt?: string;
@@ -82,4 +83,12 @@ export interface ChatOptions {
   onAfterResponseHandlers?: Array<
     (response: ChatResponseString) => Promise<ChatResponseString | void>
   >;
+  /** Models to try, in order, when the chat's model fails with a rate limit, server or network error. */
+  fallbacks?: FallbackTarget[];
+  onFallbackHandlers?: Array<(event: FallbackEvent) => void | Promise<void>>;
+  /**
+   * @internal Resolves a provider by registry name for cross-provider fallbacks.
+   * Set by `llm.chat()`.
+   */
+  resolveProvider?: (name: string) => Provider;
 }

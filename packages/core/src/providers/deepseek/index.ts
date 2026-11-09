@@ -1,3 +1,4 @@
+import { checkApiBase, OPENAI_COMPATIBLE_ENDPOINTS } from "../apiBase.js";
 import { config as globalConfig } from "../../config.js";
 import { providerRegistry } from "../registry.js";
 import { DeepSeekProvider } from "./DeepSeekProvider.js";
@@ -15,7 +16,10 @@ export function registerDeepSeekProvider() {
   providerRegistry.register("deepseek", (config) => {
     const cfg = config || globalConfig;
     const apiKey = cfg.deepseekApiKey;
-    const baseUrl = cfg.deepseekApiBase; // Optional override
+    const baseUrl = checkApiBase("deepseekApiBase", cfg.deepseekApiBase, {
+      example: "https://api.deepseek.com",
+      endpoints: OPENAI_COMPATIBLE_ENDPOINTS
+    }); // Optional override
 
     if (!apiKey) {
       throw new Error(

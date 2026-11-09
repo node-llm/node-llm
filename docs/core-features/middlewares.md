@@ -237,6 +237,23 @@ const chat = NodeLLM.chat("gpt-5", {
 });
 ```
 
+### 4. OpenTelemetry <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v1.20.0+</span>
+Sends a trace span for every model call and tool call to your OpenTelemetry setup (Jaeger, Honeycomb, Datadog, Grafana Tempo and so on). Pass the `@opentelemetry/api` module your app already uses; NodeLLM does not add it as a dependency.
+
+```typescript
+import * as otel from "@opentelemetry/api";
+import { createLLM, OpenTelemetry } from "@node-llm/core";
+
+const llm = createLLM({ provider: "openai", middlewares: [OpenTelemetry(otel)] });
+```
+
+- **One span per call:** `chat <model>`, `embeddings <model>`, `generate_image <model>` and so on. A chat span covers the whole `ask()` or `stream()`, including its tool loop.
+- **Tool spans:** `execute_tool <name>`, as children of the chat span.
+- **Attributes:** the GenAI semantic conventions, such as `gen_ai.provider.name`, `gen_ai.request.model`, `gen_ai.response.model`, `gen_ai.usage.input_tokens` and `gen_ai.usage.output_tokens`. Errors set the span status and `error.type`.
+- **Privacy:** spans never include prompts, responses or tool arguments.
+
+Spans go nowhere until your app registers an OpenTelemetry SDK and exporter.
+
 ---
 
 ## Global Middlewares <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v1.10.0+</span>

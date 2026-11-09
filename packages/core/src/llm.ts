@@ -177,7 +177,14 @@ export class NodeLLMCore {
       middlewares: [...this.middlewares, ...(options.middlewares || [])],
       requestTimeout: options.requestTimeout ?? this.config.requestTimeout,
       maxTokens: options.maxTokens ?? this.config.maxTokens,
-      maxToolCalls: options.maxToolCalls ?? this.config.maxToolCalls
+      maxToolCalls: options.maxToolCalls ?? this.config.maxToolCalls,
+      resolveProvider:
+        options.resolveProvider ??
+        ((name: string) => {
+          const key = name.toLowerCase();
+          PROVIDER_REGISTRARS[key]?.();
+          return providerRegistry.resolve(key, this.config);
+        })
     };
 
     return new Chat(this.provider, resolvedModel, combinedOptions, this.retry);

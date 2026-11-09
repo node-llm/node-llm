@@ -1,3 +1,4 @@
+import { checkApiBase, OPENAI_COMPATIBLE_ENDPOINTS } from "../apiBase.js";
 import { config as globalConfig } from "../../config.js";
 import { providerRegistry } from "../registry.js";
 import { OpenRouterProvider } from "./OpenRouterProvider.js";
@@ -16,7 +17,10 @@ export function registerOpenRouterProvider() {
   providerRegistry.register("openrouter", (config) => {
     const cfg = config || globalConfig;
     const apiKey = cfg.openrouterApiKey;
-    const baseUrl = cfg.openrouterApiBase;
+    const baseUrl = checkApiBase("openrouterApiBase", cfg.openrouterApiBase, {
+      example: "https://openrouter.ai/api/v1",
+      endpoints: OPENAI_COMPATIBLE_ENDPOINTS
+    });
 
     if (!apiKey) {
       throw new Error(

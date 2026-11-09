@@ -1,3 +1,4 @@
+import { checkApiBase, OPENAI_COMPATIBLE_ENDPOINTS } from "../apiBase.js";
 import { providerRegistry } from "../registry.js";
 import { XAIProvider } from "./XAIProvider.js";
 import { NodeLLMConfig } from "../../config.js";
@@ -20,7 +21,10 @@ export function registerXAIProvider(config?: NodeLLMConfig) {
 
     return new XAIProvider({
       apiKey,
-      baseUrl: activeConfig?.xaiApiBase
+      baseUrl: checkApiBase("xaiApiBase", activeConfig?.xaiApiBase, {
+        example: "https://api.x.ai/v1",
+        endpoints: OPENAI_COMPATIBLE_ENDPOINTS
+      })
     });
   });
 }
