@@ -1,0 +1,1 @@
+Team standup, Tuesday. Checkout redesign is on track for Friday. The payment provider's sandbox was down for two hours yesterday, which blocked QA; Priya will ask them for a status page. Marco needs design sign-off on the empty-cart screen before he can finish. Everyone agreed to skip Thursday's standup for the offsite.

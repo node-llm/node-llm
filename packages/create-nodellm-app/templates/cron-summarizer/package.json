@@ -1,0 +1,16 @@
+{
+  "name": "nodellm-cron-summarizer",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node --env-file=.env summarize.js",
+    "once": "node --env-file=.env summarize.js --once"
+  },
+  "dependencies": {
+    "@node-llm/core": "^1.19.0",
+    "zod": "^4.0.0"
+  },
+  "engines": {
+    "node": ">=20.10.0"
+  }
+}

@@ -2,6 +2,20 @@
 
 This directory contains examples demonstrating how to integrate LLMs as an architectural surface using `NodeLLM`.
 
+## 🚀 Starters
+
+Create a small, runnable project in one command:
+
+```bash
+npx create-nodellm-app my-agent
+```
+
+| Template | What it shows |
+| --- | --- |
+| [`tool-agent`](../packages/create-nodellm-app/templates/tool-agent) | A command-line agent that calls your own tools |
+| [`streaming-api`](../packages/create-nodellm-app/templates/streaming-api) | An HTTP endpoint that streams answers as Server-Sent Events |
+| [`cron-summarizer`](../packages/create-nodellm-app/templates/cron-summarizer) | A scheduled job that turns text into structured data |
+
 ## 🎯 Flagship Examples (Full Applications)
 
 ### 1. HR Chatbot with RAG & Streaming
