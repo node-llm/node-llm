@@ -18,6 +18,12 @@ import {
   ToolChoice
 } from "../providers/Provider.js";
 import { Executor } from "../executor/Executor.js";
+import {
+  FallbackEvent,
+  FallbackTarget,
+  ResolvedFallback,
+  resolveFallbackTarget
+} from "../executor/Fallback.js";
 import { ChatStream } from "./ChatStream.js";
 import { requestTemperature } from "./Temperature.js";
 import { requestPromptCache } from "./PromptCache.js";
@@ -90,7 +96,13 @@ export class Chat<S = unknown> {
     retryConfig: { attempts: number; delayMs: number } = { attempts: 1, delayMs: 0 }
   ) {
     this.middlewares = options.middlewares || [];
-    this.executor = new Executor(provider, retryConfig);
+    this.executor = new Executor(provider, retryConfig, {
+      resolve: () =>
+        (this.options.fallbacks ?? []).map((target) => () => this.resolveFallback(target)),
+      onFallback: async (event) => {
+        for (const handler of this.options.onFallbackHandlers ?? []) await handler(event);
+      }
+    });
 
     // A Zod object or plain JSON Schema passed as the `schema` option was stored
     // as-is, and the request builders then read `.definition` off it and
@@ -458,6 +470,32 @@ export class Chat<S = unknown> {
     return this;
   }
 
+  /**
+   * Models to try, in order, when the chat's model still fails after retries
+   * with a rate limit, server or network error. A string is a model id on the
+   * same provider; `{ model, provider }` switches provider. Each request starts
+   * on the chat's own model again.
+   *
+   * @example
+   * ```typescript
+   * chat.withFallbacks("gpt-4.1-mini", { model: "claude-haiku-4-5", provider: "anthropic" });
+   * ```
+   */
+  withFallbacks(...targets: FallbackTarget[]): this {
+    this.options.fallbacks = [...(this.options.fallbacks ?? []), ...targets];
+    return this;
+  }
+
+  /** Called before each fallback attempt with the error and the models involved. */
+  onFallback(handler: (event: FallbackEvent) => void | Promise<void>): this {
+    this.options.onFallbackHandlers = [...(this.options.onFallbackHandlers ?? []), handler];
+    return this;
+  }
+
+  private resolveFallback(target: FallbackTarget): ResolvedFallback {
+    return resolveFallbackTarget(target, this.provider, this.options.resolveProvider);
+  }
+
   onToolCallError(
     handler: (
       toolCall: ToolCall,
@@ -698,13 +736,15 @@ export class Chat<S = unknown> {
           executeOptions.messages
         );
 
+        const servedProvider = () => this.executor.servedBy?.provider ?? this.provider;
+        const servedModel = () => this.executor.servedBy?.model ?? this.model;
         const trackUsage = (u?: Usage) => {
           if (u) {
             if (u.cost === undefined) {
               const withCost = ModelRegistry.calculateCost(
                 u,
-                this.provider.registryModel?.(this.model) ?? this.model,
-                this.provider.id
+                servedProvider().registryModel?.(servedModel()) ?? servedModel(),
+                servedProvider().id
               );
               u.cost = (withCost as Usage).cost;
               u.input_cost = (withCost as Usage).input_cost;
@@ -740,8 +780,8 @@ export class Chat<S = unknown> {
         assistantMessage = new ChatResponseString(
           response.content ?? "",
           response.usage ?? { input_tokens: 0, output_tokens: 0, total_tokens: 0 },
-          this.model,
-          this.provider.id,
+          this.executor.servedBy?.model ?? this.model,
+          (this.executor.servedBy?.provider ?? this.provider).id,
           response.thinking,
           response.reasoning,
           response.tool_calls,
@@ -839,8 +879,8 @@ export class Chat<S = unknown> {
                 assistantMessage = new ChatResponseString(
                   toolResult.content,
                   totalUsage,
-                  this.model,
-                  this.provider.id,
+                  this.executor.servedBy?.model ?? this.model,
+                  (this.executor.servedBy?.provider ?? this.provider).id,
                   undefined,
                   undefined,
                   undefined,
@@ -954,8 +994,8 @@ export class Chat<S = unknown> {
           assistantMessage = new ChatResponseString(
             response.content ?? "",
             response.usage ?? { input_tokens: 0, output_tokens: 0, total_tokens: 0 },
-            this.model,
-            this.provider.id,
+            this.executor.servedBy?.model ?? this.model,
+            (this.executor.servedBy?.provider ?? this.provider).id,
             response.thinking,
             response.reasoning,
             response.tool_calls,
@@ -983,8 +1023,8 @@ export class Chat<S = unknown> {
         finalResponse = new ChatResponseString(
           assistantMessage.toString() || "",
           totalUsage,
-          this.model,
-          this.provider.id,
+          this.executor.servedBy?.model ?? this.model,
+          (this.executor.servedBy?.provider ?? this.provider).id,
           assistantMessage.thinking,
           assistantMessage.reasoning,
           response.tool_calls,
