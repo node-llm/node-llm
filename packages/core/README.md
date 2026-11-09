@@ -12,7 +12,7 @@
 
 **The production-grade LLM engine for Node.js. Provider-agnostic by design.**
 
-`@node-llm/core` provides a single, unified API for interacting with over 540+ models across all major providers. It is built for developers who need stable infrastructure, standard streaming, and automated tool execution without vendor lock-in.
+`@node-llm/core` provides a single, unified API for interacting with 1,000+ models across all major providers. It is built for developers who need stable infrastructure, standard streaming, and automated tool execution without vendor lock-in.
 
 ---
 

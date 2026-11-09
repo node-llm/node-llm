@@ -54,3 +54,8 @@ docs/local/
 /.agent
 examples/scripts/mcp/package-lock.json
 pnpm-lock.yaml
+
+# =========================
+# TypeScript incremental build info
+# =========================
+*.tsbuildinfo

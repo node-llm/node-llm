@@ -10,43 +10,7 @@
 
 **NodeLLM is a backend orchestration layer designed for building reliable, testable, and provider-agnostic AI systems.**
 
-Integrating multiple LLM providers often means juggling different SDKs, API styles, and update cycles. NodeLLM gives you a single, unified API for over 540+ models across multiple providers (OpenAI, Gemini, Anthropic, DeepSeek, OpenRouter, xAI, Ollama, etc.) that stays consistent even when providers change.
-
-<p align="left">
-  <img src="https://cdn.jsdelivr.net/npm/@lobehub/icons-static-svg@1.95.1/icons/openai.svg" height="28" />
-  <img src="https://cdn.jsdelivr.net/npm/@lobehub/icons-static-svg@1.95.1/icons/openai-text.svg" height="22" />
-  &nbsp;&nbsp;&nbsp;&nbsp;
-  <img src="https://cdn.jsdelivr.net/npm/@lobehub/icons-static-svg@1.95.1/icons/anthropic-text.svg" height="18" />
-  &nbsp;&nbsp;&nbsp;&nbsp;
-  <img src="https://cdn.jsdelivr.net/npm/@lobehub/icons-static-svg@1.95.1/icons/gemini-color.svg" height="28" />
-  <img src="https://cdn.jsdelivr.net/npm/@lobehub/icons-static-svg@1.95.1/icons/gemini-text.svg" height="20" />
-  &nbsp;&nbsp;&nbsp;&nbsp;
-  <img src="https://cdn.jsdelivr.net/npm/@lobehub/icons-static-svg@1.95.1/icons/deepseek-color.svg" height="28" />
-  <img src="https://cdn.jsdelivr.net/npm/@lobehub/icons-static-svg@1.95.1/icons/deepseek-text.svg" height="20" />
-  &nbsp;&nbsp;&nbsp;&nbsp;
-  <img src="https://cdn.jsdelivr.net/npm/@lobehub/icons-static-svg@1.95.1/icons/bedrock-color.svg" height="28" />
-  <img src="https://cdn.jsdelivr.net/npm/@lobehub/icons-static-svg@1.95.1/icons/bedrock-text.svg" height="20" />
-  &nbsp;&nbsp;&nbsp;&nbsp;
-  <img src="https://cdn.jsdelivr.net/npm/@lobehub/icons-static-svg@1.95.1/icons/openrouter.svg" height="28" />
-  <img src="https://cdn.jsdelivr.net/npm/@lobehub/icons-static-svg@1.95.1/icons/openrouter-text.svg" height="22" />
-  &nbsp;&nbsp;&nbsp;&nbsp;
-  <img src="https://cdn.jsdelivr.net/npm/@lobehub/icons-static-svg@1.95.1/icons/ollama.svg" height="28" />
-  <img src="https://cdn.jsdelivr.net/npm/@lobehub/icons-static-svg@1.95.1/icons/ollama-text.svg" height="18" />
-  &nbsp;&nbsp;&nbsp;&nbsp;
-  <img src="https://cdn.jsdelivr.net/npm/@lobehub/icons-static-svg@1.95.1/icons/xai.svg" height="28" />
-  <img src="https://cdn.jsdelivr.net/npm/@lobehub/icons-static-svg@1.95.1/icons/xai-text.svg" height="18" />
-  &nbsp;&nbsp;&nbsp;&nbsp;
-  <img src="https://cdn.jsdelivr.net/npm/@lobehub/icons-static-svg@1.95.1/icons/mistral-color.svg" height="28" />
-  <img src="https://cdn.jsdelivr.net/npm/@lobehub/icons-static-svg@1.95.1/icons/mistral-text.svg" height="20" />
-  &nbsp;&nbsp;&nbsp;&nbsp;
-  <img src="https://cdn.jsdelivr.net/npm/@lobehub/icons-static-svg@1.95.1/icons/azureai-color.svg" height="28" />
-  <img src="https://cdn.jsdelivr.net/npm/@lobehub/icons-static-svg@1.95.1/icons/azureai-text.svg" height="20" />
-  &nbsp;&nbsp;&nbsp;&nbsp;
-  <img src="docs/assets/images/providers/typesafe.svg" height="26" alt="TypeSafe" />
-  <b>TypeSafe</b>
-</p>
-
-<br/>
+Integrating multiple LLM providers often means juggling different SDKs, API styles, and update cycles. NodeLLM gives you a single, unified API for 1,000+ models across multiple providers (OpenAI, Gemini, Anthropic, DeepSeek, OpenRouter, xAI, Ollama, etc.) that stays consistent even when providers change.
 
 [![npm version](https://img.shields.io/npm/v/@node-llm/core.svg)](https://www.npmjs.com/org/node-llm)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -55,6 +19,24 @@ Integrating multiple LLM providers often means juggling different SDKs, API styl
 ```bash
 npm install @node-llm/core
 ```
+
+```ts
+import { createLLM } from "@node-llm/core";
+
+const llm = createLLM({ provider: "anthropic" }); // or "openai", "gemini", "ollama", ...
+const chat = llm.chat("claude-sonnet-5");
+
+const reply = await chat.ask("Explain event-driven architecture in two sentences.");
+console.log(reply.content);
+
+for await (const chunk of chat.stream("Now explain it to a five-year-old.")) {
+  process.stdout.write(chunk.content);
+}
+```
+
+Same code on **OpenAI, Anthropic, Gemini, DeepSeek, Bedrock, OpenRouter, xAI, Ollama, Mistral, Azure AI Foundry and TypeSafe**: switch providers with config, not a rewrite. [Full provider list ↓](#-supported-providers)
+
+**Start a new project:** `npx create-nodellm-app my-agent` · **Docs:** [nodellm.dev](https://nodellm.dev/docs/intro)
 
 ---
 

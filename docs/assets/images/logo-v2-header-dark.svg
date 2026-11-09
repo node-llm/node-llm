@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="30 76 534 122" width="534" height="122">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="30 58 572 140" width="572" height="140">
   <title>NodeLLM</title>
   <defs>
     <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
@@ -21,6 +21,10 @@
       <path d="M-65,-25 H-49 V9 H-33 V23 H-65Z"/>
       <path d="M-25,-25 H-9 V9 H7 V23 H-25Z"/>
       <path d="M15,23 V-25 H31 L40,-2 L49,-25 H65 V23 H51 V-5 L44,13 H36 L29,-5 V23Z"/>
+    </g>
+    <g fill="#8CCB4E">
+      <path d="M96,-104 Q98,-84 118,-82 Q98,-80 96,-60 Q94,-80 74,-82 Q94,-84 96,-104Z"/>
+      <path d="M128,-62 Q129,-50 141,-49 Q129,-48 128,-36 Q127,-48 115,-49 Q127,-50 128,-62Z"/>
     </g>
   </g>
 </svg>

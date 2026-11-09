@@ -1,0 +1,9 @@
+# Pick a provider: openai, anthropic, gemini, deepseek, openrouter, xai, mistral, ollama, bedrock, azure
+NODELLM_PROVIDER=openai
+# Optional: a model id for that provider (leave empty for the provider's default)
+NODELLM_MODEL=gpt-5-mini
+
+# Add the key for the provider you picked
+OPENAI_API_KEY=
+# ANTHROPIC_API_KEY=
+# GEMINI_API_KEY=

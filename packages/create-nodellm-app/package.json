@@ -1,0 +1,41 @@
+{
+  "name": "create-nodellm-app",
+  "version": "0.1.0",
+  "description": "Create a NodeLLM project in one command: a tool-calling agent, a streaming API, or a scheduled summarizer",
+  "keywords": [
+    "nodellm",
+    "llm",
+    "ai",
+    "agent",
+    "openai",
+    "anthropic",
+    "gemini",
+    "ollama",
+    "starter",
+    "create"
+  ],
+  "license": "MIT",
+  "type": "module",
+  "bin": {
+    "create-nodellm-app": "bin/create-nodellm-app.js"
+  },
+  "files": [
+    "bin",
+    "templates"
+  ],
+  "engines": {
+    "node": ">=20.10.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/node-llm/node-llm.git",
+    "directory": "packages/create-nodellm-app"
+  },
+  "homepage": "https://nodellm.dev",
+  "scripts": {
+    "test": "node --test test/cli.test.js"
+  }
+}

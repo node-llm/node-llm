@@ -1,0 +1,14 @@
+{
+  "name": "nodellm-streaming-api",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node --env-file=.env server.js"
+  },
+  "dependencies": {
+    "@node-llm/core": "^1.19.0"
+  },
+  "engines": {
+    "node": ">=20.10.0"
+  }
+}
