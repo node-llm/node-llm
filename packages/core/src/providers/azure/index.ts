@@ -1,3 +1,4 @@
+import { checkApiBase } from "../apiBase.js";
 import { config as globalConfig } from "../../config.js";
 import { providerRegistry } from "../registry.js";
 import { AzureProvider } from "./AzureProvider.js";
@@ -12,7 +13,9 @@ export function registerAzureProvider() {
 
   providerRegistry.register("azure", (config) => {
     const cfg = config || globalConfig;
-    const baseUrl = cfg.azureApiBase;
+    const baseUrl = checkApiBase("azureApiBase", cfg.azureApiBase, {
+      example: "https://RESOURCE.openai.azure.com"
+    });
 
     if (!baseUrl) {
       throw new Error(
