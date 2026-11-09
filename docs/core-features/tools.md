@@ -258,6 +258,38 @@ try {
 
 ---
 
+## Many Tools: Deferred Loading <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v1.20.0+</span>
+
+Every tool definition is sent with every request. With dozens of tools, that costs tokens and makes the model choose worse. Mark rarely used tools `defer: true`:
+
+```ts
+class IssueRefundTool extends Tool<{ orderId: string }> {
+  name = "issue_refund";
+  description = "Refund an order to the customer's card";
+  schema = z.object({ orderId: z.string() });
+  defer = true;
+
+  async execute({ orderId }: { orderId: string }) {
+    return refunds.create(orderId);
+  }
+}
+
+// or: defineTool({ ..., defer: true })
+chat.withTools([LookupOrderTool, IssueRefundTool, SendInvoiceTool /* ... */]);
+```
+
+When a chat has deferred tools:
+
+1. Requests leave out the deferred tools' definitions and add a built-in `tool_search` tool, whose description lists the deferred tools by name.
+2. The model calls `tool_search` with a few words about the task (or `select:issue_refund` to load by name).
+3. From the next step on, the matching tools' definitions are sent too, for the rest of the conversation.
+
+Which tools are loaded is read from the conversation history, so it survives saving and restoring a chat. Tools without `defer` are sent as before, and a chat with no deferred tools is unchanged.
+
+This works the same on every provider. It does not use a provider's own server-side tool search.
+
+---
+
 ## Long Tool Loops: Keeping Requests Small
 
 Every request in a tool loop resends the conversation so far, including every earlier tool result. When results are large, such as pages, files or search results, an agent that takes many steps pays for the same results again and again. `keepToolResults` sends only the most recent results in full and replaces older ones with a short placeholder:

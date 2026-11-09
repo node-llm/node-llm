@@ -21,6 +21,11 @@ export interface ToolDefinition {
     strict?: boolean;
     parameters: Record<string, unknown>;
   };
+  /**
+   * Leave this tool's definition out of requests until the model finds it with
+   * the built-in `tool_search` tool. For chats with many tools.
+   */
+  defer?: boolean;
   // Arguments are parsed from the model's JSON; `any` lets a handler declare
   // their shape, which `unknown` rejected.
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -113,6 +118,13 @@ export abstract class Tool<T = Record<string, any>> {
   public strict?: boolean;
 
   /**
+   * Leave this tool out of requests until the model finds it with the built-in
+   * `tool_search` tool. Use it when a chat has more tools than a model should
+   * see at once.
+   */
+  public defer?: boolean;
+
+  /**
    * The core logic for the tool.
    * 'args' will be parsed and validated based on 'schema'.
    */
@@ -192,6 +204,7 @@ export abstract class Tool<T = Record<string, any>> {
         strict: this.strict,
         parameters: parameters as Record<string, unknown>
       },
+      ...(this.defer ? { defer: true } : {}),
       handler: (args: unknown) => this.handler(args as T)
     };
   }
@@ -217,6 +230,8 @@ export function defineTool<Args extends Record<string, unknown>>(definition: {
   description: string;
   schema: ZodSchema<Args>;
   strict?: boolean;
+  /** See `Tool.defer`. */
+  defer?: boolean;
   execute: (args: Args) => unknown;
 }): new () => Tool<Args> {
   return class extends Tool<Args> {
@@ -224,6 +239,7 @@ export function defineTool<Args extends Record<string, unknown>>(definition: {
     description = definition.description;
     schema = definition.schema;
     strict = definition.strict;
+    defer = definition.defer;
 
     async execute(args: Args) {
       return definition.execute(args);

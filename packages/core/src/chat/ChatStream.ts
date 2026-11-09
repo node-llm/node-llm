@@ -23,6 +23,7 @@ import { CostLimitError, ToolCallLimitError } from "../errors/index.js";
 import { ResponseFormat } from "../providers/Provider.js";
 import { ModelRegistry } from "../models/ModelRegistry.js";
 import { Middleware, MiddlewareContext, ToolErrorDirective } from "../types/Middleware.js";
+import { executableTools, requestTools } from "./ToolSearch.js";
 import { runMiddleware } from "../utils/middleware-runner.js";
 import { randomUUID } from "node:crypto";
 import {
@@ -258,7 +259,7 @@ export class ChatStream {
           const streamRequest: any = {
             model,
             messages: requestMessages,
-            tools: options.tools as ToolDefinition[],
+            tools: requestTools(options.tools as ToolDefinition[], context.messages),
             temperature: requestTemperature(provider, model, options.temperature),
             max_tokens: options.maxTokens ?? config.maxTokens,
             response_format: responseFormat,
@@ -375,7 +376,7 @@ export class ChatStream {
             toolCalls,
             {
               ...options,
-              tools: options.tools as unknown as ToolDefinition[],
+              tools: executableTools(options.tools as unknown as ToolDefinition[]),
               onToolCallStart: combinedToolCallStart,
               onToolCallEnd: combinedToolCallEnd,
               onConfirmToolCall: combinedConfirmToolCall
@@ -426,7 +427,7 @@ export class ChatStream {
               try {
                 const toolResult = await ToolHandler.execute(
                   toolCall,
-                  options.tools as unknown as ToolDefinition[],
+                  executableTools(options.tools as unknown as ToolDefinition[]),
                   combinedToolCallStart,
                   combinedToolCallEnd
                 );
