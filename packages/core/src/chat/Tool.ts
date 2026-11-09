@@ -13,6 +13,18 @@ export interface ToolCall {
   thought_signature?: string;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type ErrorClass<E extends Error = Error> = abstract new (...args: any[]) => E;
+
+/**
+ * Turns an error a tool raised into the result the model sees.
+ * Return a string, an object (sent as JSON) or a ToolHalt.
+ */
+export type ToolRescueHandler<E extends Error = Error, T = Record<string, unknown>> = (
+  error: E,
+  args: T
+) => unknown;
+
 export interface ToolDefinition {
   type: "function";
   function: {
@@ -118,6 +130,40 @@ export abstract class Tool<T = Record<string, any>> {
    */
   public abstract execute(args: T): Promise<unknown>;
 
+  private readonly rescueHandlers: Array<[ErrorClass, ToolRescueHandler<Error, T>]> = [];
+
+  /**
+   * Turn an error of `errorClass` (or a subclass) thrown by `execute` into the
+   * result the model sees. Call it in the constructor. When several handlers
+   * match, the one registered last wins. Errors no handler matches keep the
+   * default "Error executing tool" result.
+   *
+   * @example
+   * ```typescript
+   * class OrderStatusTool extends Tool<{ id: string }> {
+   *   constructor() {
+   *     super();
+   *     this.rescueFrom(NotFoundError, (_error, { id }) => ({ error: `No order ${id}` }));
+   *   }
+   * }
+   * ```
+   */
+  protected rescueFrom<E extends Error>(
+    errorClass: ErrorClass<E>,
+    handler: ToolRescueHandler<E, T>
+  ): this {
+    this.rescueHandlers.push([errorClass, handler as ToolRescueHandler<Error, T>]);
+    return this;
+  }
+
+  private async rescue(error: unknown, args: T): Promise<{ result: unknown } | undefined> {
+    for (let i = this.rescueHandlers.length - 1; i >= 0; i--) {
+      const [errorClass, handler] = this.rescueHandlers[i]!;
+      if (error instanceof errorClass) return { result: await handler(error, args) };
+    }
+    return undefined;
+  }
+
   /**
    * Stop the agentic loop and return this message as the final tool result.
    * Use this when you want to end the conversation turn immediately.
@@ -153,7 +199,14 @@ export abstract class Tool<T = Record<string, any>> {
         }
       }
 
-      const result = await this.execute(validatedArgs);
+      let result: unknown;
+      try {
+        result = await this.execute(validatedArgs);
+      } catch (error) {
+        const rescued = await this.rescue(error, validatedArgs);
+        if (!rescued) throw error;
+        result = rescued.result;
+      }
 
       // Preserve ToolHalt for the execution loop to handle
       if (result instanceof ToolHalt) {
@@ -218,12 +271,21 @@ export function defineTool<Args extends Record<string, unknown>>(definition: {
   schema: ZodSchema<Args>;
   strict?: boolean;
   execute: (args: Args) => unknown;
+  /** Error handlers, as `[ErrorClass, handler]` pairs; see `Tool.rescueFrom`. */
+  rescueFrom?: Array<[ErrorClass, ToolRescueHandler<Error, Args>]>;
 }): new () => Tool<Args> {
   return class extends Tool<Args> {
     name = definition.name;
     description = definition.description;
     schema = definition.schema;
     strict = definition.strict;
+
+    constructor() {
+      super();
+      for (const [errorClass, handler] of definition.rescueFrom ?? []) {
+        this.rescueFrom(errorClass, handler);
+      }
+    }
 
     async execute(args: Args) {
       return definition.execute(args);
