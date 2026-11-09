@@ -4,60 +4,73 @@ permalink: /llms.txt
 ---
 # NodeLLM
 
-> The Backend-First AI SDK for Node.js
+> The Backend-First AI SDK for Node.js. One API for OpenAI, Anthropic, Gemini, DeepSeek, Bedrock, OpenRouter, xAI, Ollama, Mistral, Azure AI Foundry and TypeSafe.
 
-NodeLLM is an open-source infrastructure layer for building provider-agnostic, production-grade LLM systems in Node.js. It standardizes integrations across OpenAI, Anthropic, Gemini, DeepSeek, Bedrock, OpenRouter, xAI, Ollama, Mistral, and Azure AI Foundry into a single, predictable API.
+NodeLLM is an open-source (MIT) TypeScript library for building provider-agnostic LLM features, agents and workers in Node.js. It talks to each provider's HTTP API directly (it does not wrap vendor SDKs) and normalizes chat, streaming, tools, structured output, vision, embeddings, images, transcription and moderation behind one API. Its only runtime dependencies are `zod` and `zod-to-json-schema`.
 
-## Project Details
+## Packages
 
-- **Type**: Node.js LLM SDK / Infrastructure Layer
-- **Primary Use**: Building scalable AI workers, APIs, and agents
-- **Languages**: JavaScript, TypeScript
-- **License**: MIT
-- **Package**: `@node-llm/core`
-- **Testing Package**: `@node-llm/testing`
-- **Repository**: `https://github.com/node-llm/node-llm`
-- **Documentation**: `https://nodellm.dev`
+- `@node-llm/core`: chat, streaming, tools, agents, judgments, middlewares, model registry
+- `@node-llm/orm`: persist chats, messages, tool calls and usage with Prisma
+- `@node-llm/mcp`: connect Model Context Protocol servers and use their tools
+- `@node-llm/testing`: record/replay (VCR) and fluent mocks for deterministic tests
+- `@node-llm/monitor`, `@node-llm/monitor-otel`: usage dashboard and OpenTelemetry export
 
-## Core Features
-
-- **Provider Agnostic**: Unified API for 1,000+ models (OpenAI, Anthropic, Gemini, Bedrock, DeepSeek, OpenRouter, xAI, Ollama, Mistral, Azure AI Foundry).
-- **Backend-First**: Optimized for long-running processes, CRON jobs, and persistent agents (not just frontend streaming).
-- **Static Model Registry**: Zero-latency, offline access to model metadata (context window, pricing, capabilities).
-- **Middleware Architecture**: Intercept and modify LLM requests/responses globally or locally (PII masking, cost tracking, telemetry).
-- **ORM Integration**: First-class support for persisting chat history and tools via `@node-llm/orm`.
-- **Deterministic Testing**: Native support for recording/replaying LLM interactions (VCR) and fluent mocking via `@node-llm/testing`.
-
-## Architecture
-
-1.  **Core**: Light-weight, zero-dependency abstraction layer with middleware support.
-2.  **Providers**: Pluggable adapters that normalize inputs/outputs.
-3.  **Registry**: Static JSON database of model capabilities.
-4.  **MiddlewareStack**: Multi-layer orchestration for Evals, Logging, and Redaction.
-
-## Usage Example
+## Quick start
 
 ```ts
-import { NodeLLM } from "@node-llm/core";
+import { createLLM } from "@node-llm/core";
 
-// 1. Unified Interface with Middleware
-const chat = NodeLLM.chat("gpt-4o", {
-  middlewares: [piiMasker, costLogger]
-});
+const llm = createLLM({ provider: "anthropic" }); // reads ANTHROPIC_API_KEY
+const chat = llm.chat("claude-sonnet-5");
 
-// 2. Standardized Response
-const response = await chat.ask("Explain infrastructure-as-code");
+const reply = await chat.ask("Explain event-driven architecture");
+console.log(reply.content);
+
+for await (const chunk of chat.stream("Shorter, please")) {
+  process.stdout.write(chunk.content);
+}
 ```
 
-## Comparisons
+Zero-config: `NodeLLM.chat(model)` uses the provider from `NODELLM_PROVIDER` and the matching API key. Switch provider at runtime with `NodeLLM.withProvider("openai")`.
 
-- **vs Vercel AI SDK**: NodeLLM is optimized for backend/workers, whereas Vercel AI SDK is optimized for Frontend/Next.js streaming.
-- **vs LangChain**: NodeLLM is a thin infrastructure layer with a static registry, whereas LangChain is a comprehensive framework with complex abstractions.
-- **vs OpenAI SDK**: NodeLLM wraps the OpenAI SDK to provide multi-provider support with identical code.
+## Core features
 
-## Quick Links
+- **Tools**: `chat.withTool(tool)`; NodeLLM runs the tool loop automatically.
+- **Structured output**: `chat.withSchema(zodSchema)` returns validated, typed data.
+- **Agents**: `class MyAgent extends Agent { static model = "gpt-5"; static instructions = "..."; }`, then `new MyAgent({ llm }).ask(...)`.
+- **Judgments**: `NodeLLM.judge(input, { questions: { urgent: probability("...") } })` returns typed probability, choice and score answers.
+- **Middlewares**: `PIIMaskMiddleware`, `CostGuardMiddleware`, `UsageLoggerMiddleware`, `SchemaSelfCorrection`, or your own. All are opt-in.
+- **Reasoning**: `chat.withThinking(...)` for reasoning models on OpenAI, Anthropic, Gemini, Bedrock, DeepSeek, xAI and Mistral.
+- **Model registry**: offline metadata for 1,000+ models (context window, pricing, capabilities).
+- **Other**: `NodeLLM.embed`, `NodeLLM.paint` (images), `NodeLLM.transcribe`, `NodeLLM.moderate`.
 
-- **Get Started**: https://nodellm.dev/getting-started/overview
-- **Architecture**: https://nodellm.dev/architecture
-- **Testing**: https://nodellm.dev/core-features/testing
-- **Contributing**: https://github.com/node-llm/node-llm/blob/main/CONTRIBUTING.md
+## Documentation
+
+- Introduction: https://nodellm.dev/docs/intro
+- Quick start: https://nodellm.dev/getting-started/quick-start
+- Configuration: https://nodellm.dev/getting-started/configuration
+- Chat: https://nodellm.dev/core-features/chat
+- Tools: https://nodellm.dev/core-features/tools
+- Structured output: https://nodellm.dev/core-features/structured_output.html
+- Agents: https://nodellm.dev/core-features/agents
+- Judgments: https://nodellm.dev/core-features/judgments.html
+- Middlewares: https://nodellm.dev/core-features/middlewares
+- Testing: https://nodellm.dev/core-features/testing
+- ORM (Prisma): https://nodellm.dev/orm/prisma
+- MCP: https://nodellm.dev/mcp.html
+- Monitoring: https://nodellm.dev/monitor
+- Providers: https://nodellm.dev/providers
+- Full text for LLMs: https://nodellm.dev/llms-full.txt
+
+## How it compares
+
+- **vs Vercel AI SDK**: NodeLLM targets backends, workers and agents; the AI SDK centers on frontend/edge streaming UIs.
+- **vs LangChain.js**: NodeLLM is a smaller runtime with one consistent API, not a large framework of chains and abstractions.
+- **vs vendor SDKs (`openai`, `@anthropic-ai/sdk`)**: the same code works across providers; switching is a config change.
+
+## Links
+
+- Repository: https://github.com/node-llm/node-llm
+- npm: https://www.npmjs.com/package/@node-llm/core
+- Contributing: https://github.com/node-llm/node-llm/blob/main/CONTRIBUTING.md
