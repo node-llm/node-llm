@@ -335,6 +335,8 @@ Security is not an afterthought. NodeLLM includes a native **"Invisible Perimete
 
 ## 🌱 Built with NodeLLM
 
+<a href="https://qadet.nodellm.dev"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/images/showcase/qadet-dark.svg"><img src="docs/assets/images/showcase/qadet-light.svg" alt="Qadet" height="32"></picture></a>
+
 - **[Qadet](https://qadet.nodellm.dev)**: an AI QA tester that turns user stories into tests, runs them in a real Chrome, and replays them as regression tests without calling a model. Built by the NodeLLM team on `@node-llm/core` and `@node-llm/orm`.
 - **[pwndoc](https://github.com/pwndoc/pwndoc)**: open-source pentest reporting platform; uses `@node-llm/core` in its backend.
 

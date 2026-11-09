@@ -26,13 +26,16 @@
   <link rel="alternate icon" type="image/png" href="/assets/images/favicon.png">
   <style>
     :root {
-      --bg: #0a0f0a;
-      --bg-accent: #111811;
-      --text: #f0fdf4;
-      --text-dim: #a1b0a1;
-      --accent: #50a04f;
-      --border: rgba(0, 212, 106, 0.1);
-      --code-bg: #141a14;
+      --bg: #10140e;
+      --bg-accent: #161d14;
+      --text: #f2f5ee;
+      --text-dim: #a6b3a0;
+      --text-faint: #7d8a77;
+      --accent: #6db33f;
+      --accent-light: #a9e36b;
+      --accent-dark: #1f4a1e;
+      --border: rgba(109, 179, 63, 0.14);
+      --code-bg: #161d14;
     }
 
     * { box-sizing: border-box; }
@@ -72,20 +75,20 @@
     /* Hero */
     .hero {
       text-align: center;
-      padding: 8rem 1rem 6rem;
+      padding: 4.5rem 1rem 5rem;
       max-width: 1000px;
       margin: 0 auto;
     }
 
     .gradient-text {
-      background: linear-gradient(to right, #50a04f, #d4ff33);
+      background: linear-gradient(to right, var(--accent), var(--accent-light));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
     }
 
     h1 {
-      font-size: 5rem;
+      font-size: 4.5rem;
       font-weight: 800;
       line-height: 1;
       letter-spacing: -0.05em;
@@ -124,11 +127,11 @@
       border: 1px solid var(--accent);
     }
     .btn-primary:hover { 
-      background: #d4ff33; 
+      background: var(--accent-light); 
       color: #000;
-      border-color: #d4ff33;
+      border-color: var(--accent-light);
       transform: translateY(-2px); 
-      box-shadow: 0 10px 30px rgba(212, 255, 51, 0.3);
+      box-shadow: 0 10px 30px rgba(169, 227, 107, 0.25);
     }
 
     .btn-secondary {
@@ -166,9 +169,10 @@
     .showcase { padding: 2rem 0 6rem; }
     .showcase-title { text-align: center; font-size: 2rem; font-weight: 800; margin: 0 0 2rem; color: var(--text); }
     .card-link { text-decoration: none; display: block; }
+    .showcase-logo { height: 34px; width: auto; display: block; margin-bottom: 1.1rem; }
     .card code { font-size: 0.85em; color: var(--text); }
     .card:hover { 
-      border-color: rgba(0, 212, 106, 0.4);
+      border-color: rgba(109, 179, 63, 0.45);
       transform: translateY(-5px);
       background: rgba(20, 26, 20, 0.6);
       box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
@@ -176,7 +180,9 @@
 
     .card h3 { margin-top: 0; font-size: 1.4rem; font-weight: 700; margin-bottom: 1rem; color: var(--text); }
     .card p { color: var(--text-dim); font-size: 1rem; margin-bottom: 0; line-height: 1.6; }
-    .icon { font-size: 1.5rem; margin-bottom: 1.5rem; display: block; opacity: 1; }
+    .icon { display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 10px; margin-bottom: 1.25rem; background: rgba(109, 179, 63, 0.12); color: var(--accent-light); }
+    .icon svg { width: 22px; height: 22px; }
+    .eyebrow { display: inline-block; padding: 0.35rem 0.9rem; margin-bottom: 1.75rem; border-radius: 99px; font-size: 0.85rem; font-weight: 600; color: var(--accent-light); background: rgba(109, 179, 63, 0.12); box-shadow: inset 0 0 0 1px rgba(109, 179, 63, 0.3); }
 
     /* Code Block - Simplified */
     .code-section {
@@ -242,9 +248,9 @@
     }
     .tab-btn:hover { color: #fff; background: rgba(255, 255, 255, 0.03); }
     .tab-btn.active {
-      background: rgba(0, 212, 106, 0.12);
-      color: #50a04f;
-      box-shadow: inset 0 0 0 1px rgba(0, 212, 106, 0.2);
+      background: rgba(109, 179, 63, 0.14);
+      color: var(--accent-light);
+      box-shadow: inset 0 0 0 1px rgba(109, 179, 63, 0.3);
     }
     .code-content { display: none; border-top: 1px solid rgba(255, 255, 255, 0.05); padding-top: 1rem; margin-top: 1rem; }
     .code-content.active { display: block; animation: fadeIn 0.4s ease-out; }
@@ -371,11 +377,12 @@
   </header>
 
   <section class="hero">
-    <h1>NodeLLM <br/> The <span class="gradient-text">Backend-First</span> AI SDK</h1>
+    <span class="eyebrow">Open source · MIT · 11 providers</span>
+    <h1>The <span class="gradient-text">Backend-First</span> AI SDK for Node.js</h1>
     <p class="subtitle">
       Open-source infrastructure for building production-grade agents in Node.js — provider-agnostic, database-backed, with minimal dependencies.
     </p>
-    <p class="replacement-statement" style="color: #444; font-size: 1.1rem; margin-top: -1.5rem; margin-bottom: 2.5rem; max-width: 700px; margin-left: auto; margin-right: auto;">
+    <p class="replacement-statement" style="color: var(--text-faint); font-size: 1.1rem; margin-top: -1.5rem; margin-bottom: 2.5rem; max-width: 700px; margin-left: auto; margin-right: auto;">
       Replace provider SDKs, prompt glue code, and ad-hoc agent state with a single, versioned backend API.
     </p>
 
@@ -407,17 +414,17 @@
 
   <section class="grid">
     <div class="card">
-      <span class="icon">🔌</span>
+      <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 2v6M15 2v6M6 8h12v4a6 6 0 0 1-12 0V8zM12 18v4"/></svg></span>
       <h3>Provider Agnostic</h3>
       <p>Switch between OpenAI, Anthropic, Gemini, Bedrock, and DeepSeek with zero code changes. A unified API for 1,000+ models.</p>
     </div>
     <div class="card">
-      <span class="icon">⚡️</span>
+      <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="7" rx="2"/><rect x="3" y="13" width="18" height="7" rx="2"/><path d="M7 7.5h.01M7 16.5h.01"/></svg></span>
       <h3>Backend First</h3>
       <p>Optimized for workers, CRON jobs, and microservices. Built for long-running stability, not just frontend streaming.</p>
     </div>
     <div class="card">
-      <span class="icon">🔒</span>
+      <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6l8-3z"/><path d="M9 12l2 2 4-4"/></svg></span>
       <h3>Agentic Zero Trust</h3>
       <p>The "Invisible Perimeter" for your agents. Automatic key redaction, PII masking, and guardrails built in.</p>
     </div>
@@ -503,7 +510,7 @@ console.<span class="fn">log</span>(res.content);</code></pre>
     <h2 class="showcase-title">Built with NodeLLM</h2>
     <div class="grid">
       <a class="card card-link" href="https://qadet.nodellm.dev">
-        <h3>Qadet</h3>
+        <img class="showcase-logo" src="/assets/images/showcase/qadet-dark.svg" alt="Qadet">
         <p>An AI QA tester: turns user stories into tests, runs them in a real Chrome, and replays them as regression tests without calling a model. Built by the NodeLLM team on <code>@node-llm/core</code> and <code>@node-llm/orm</code>.</p>
       </a>
       <a class="card card-link" href="https://github.com/pwndoc/pwndoc">
