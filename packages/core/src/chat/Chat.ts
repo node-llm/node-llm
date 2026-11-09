@@ -18,6 +18,7 @@ import {
   ToolChoice
 } from "../providers/Provider.js";
 import { Executor } from "../executor/Executor.js";
+import { executableTools, requestTools } from "./ToolSearch.js";
 import {
   FallbackEvent,
   FallbackTarget,
@@ -709,7 +710,7 @@ export class Chat<S = unknown> {
         const executeOptions = {
           model: this.model,
           messages: windowToolResults(messagesToUse, this.options.keepToolResults),
-          tools: this.options.tools as ToolDefinition[],
+          tools: requestTools(this.options.tools as ToolDefinition[], messagesToUse),
           temperature: requestTemperature(
             this.provider,
             this.model,
@@ -848,7 +849,7 @@ export class Chat<S = unknown> {
             response.tool_calls,
             {
               ...this.options,
-              tools: this.options.tools as unknown as ToolDefinition[],
+              tools: executableTools(this.options.tools as unknown as ToolDefinition[]),
               onToolCallStart: combinedToolCallStart,
               onToolCallEnd: combinedToolCallEnd,
               onConfirmToolCall: combinedConfirmToolCall
@@ -910,7 +911,7 @@ export class Chat<S = unknown> {
               try {
                 const toolResult = await ToolHandler.execute(
                   toolCall,
-                  this.options.tools as unknown as ToolDefinition[],
+                  executableTools(this.options.tools as unknown as ToolDefinition[]),
                   combinedToolCallStart,
                   combinedToolCallEnd
                 );
@@ -968,7 +969,10 @@ export class Chat<S = unknown> {
           response = await this.executor.executeChat({
             model: this.model,
             messages: followUpMessages,
-            tools: this.options.tools as ToolDefinition[],
+            tools: requestTools(this.options.tools as ToolDefinition[], [
+              ...this.systemMessages,
+              ...this.messages
+            ]),
             temperature: requestTemperature(
               this.provider,
               this.model,
