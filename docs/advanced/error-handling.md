@@ -228,6 +228,37 @@ const llm = createLLM({
 
 ---
 
+## Model Fallbacks <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v1.20.0+</span>
+
+Use `withFallbacks` to try other models when the chat's model keeps failing. A string is a model on the same provider. `{ model, provider }` switches provider.
+
+```ts
+const chat = llm
+  .chat("gpt-5")
+  .withFallbacks("gpt-5-mini", { model: "claude-haiku-4-5", provider: "anthropic" });
+
+const reply = await chat.ask("Summarize this ticket");
+console.log(reply.model, reply.provider); // the model that answered
+```
+
+- **When it falls back:** after the automatic retries, on a `RateLimitError` (including `InsufficientQuotaError`), a `ServerError` or a network failure. Bad requests, authentication errors and cancellations are thrown straight away.
+- **Order:** fallbacks are tried in order. If every one fails, the last error is thrown.
+- **Per request:** each request starts on the chat's own model again. In a tool loop, each step can fall back on its own.
+- **Streaming:** a stream falls back only if it fails before its first chunk. After that, the error is thrown, since you have already shown part of an answer.
+- **Providers:** a fallback provider uses the same configuration (API keys, base URLs) as the `llm` instance the chat came from. A fallback whose provider is not configured is skipped.
+
+To log or count fallbacks, use `onFallback`:
+
+```ts
+chat.onFallback(({ error, from, to, attempt }) => {
+  logger.warn(`Fallback ${attempt}: ${from.model} -> ${to.provider}/${to.model}`, error);
+});
+```
+
+Pick fallback models that support what the request needs, such as tools, vision or structured output.
+
+---
+
 ## Debugging
 
 Enable debug logging to see detailed request/response information:
