@@ -14,6 +14,7 @@
 - `nodellm-logo-mono-black` / `-mono-white` / `-mono-green` — one color, no gradient. Best for screen printing and embroidery.
 - `nodellm-badge` — the LLM hexagon alone (avatars, stickers).
 - `nodellm-favicon` — green "o" with sparkle (small icons).
+- `nodellm-avatar` — square badge on dark, for GitHub org, npm and social profile pictures.
 - `png/nodellm-social-1200x630.png` — link preview image.
 
 ## Colors
