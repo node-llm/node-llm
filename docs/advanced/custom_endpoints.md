@@ -44,7 +44,7 @@ export OPENAI_API_BASE="http://localhost:11434/v1"
 
 ### Azure
 
-Azure has its own provider, which signs requests the way Azure expects and reaches every model a resource deploys. See [Azure AI Foundry](../providers/azure.md).
+Azure has its own provider, which signs requests the way Azure expects and reaches every model a resource deploys. See [Azure AI Foundry](/providers/azure.html).
 
 ---
 
@@ -78,4 +78,4 @@ await NodeLLM.paint("prompt", {
 });
 ```
 
-**Note:** When using this flag, strict capability checks (e.g., whether a model supports vision) are skipped. You are responsible for ensuring the model supports the requested features.
+**Note:** When using this flag, strict capability checks (e.g., whether a model supports vision) are skipped. Make sure the model can actually handle what you ask of it.

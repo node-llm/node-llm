@@ -11,18 +11,19 @@
   <meta property="og:url" content="https://nodellm.dev/">
   <meta property="og:title" content="NodeLLM - The Backend-First AI SDK">
   <meta property="og:description" content="Open-source infrastructure layer for building production-grade AI agents in Node.js.">
-  <meta property="og:image" content="https://nodellm.dev/assets/images/logo.png">
+  <meta property="og:image" content="https://nodellm.dev/assets/images/logo-social.png">
 
   <!-- Twitter -->
   <meta property="twitter:card" content="summary_large_image">
   <meta property="twitter:url" content="https://nodellm.dev/">
   <meta property="twitter:title" content="NodeLLM - The Backend-First AI SDK">
   <meta property="twitter:description" content="Open-source infrastructure layer for building production-grade AI agents in Node.js.">
-  <meta property="twitter:image" content="https://nodellm.dev/assets/images/logo.png">
+  <meta property="twitter:image" content="https://nodellm.dev/assets/images/logo-social.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;800&display=swap" rel="stylesheet">
-  <link rel="icon" type="image/jpeg" href="assets/images/favicon.png">
+  <link rel="icon" type="image/svg+xml" href="/assets/images/favicon-v2.svg">
+  <link rel="alternate icon" type="image/png" href="/assets/images/favicon.png">
   <style>
     :root {
       --bg: #0a0f0a;
@@ -355,7 +356,7 @@
 
   <header>
     <a href="/" class="logo">
-      <img src="assets/images/logo-dark.png" alt="Logo">
+      <img src="/assets/images/logo-v2-dark.svg" alt="NodeLLM">
     </a>
     <nav>
       <a href="/docs/intro">Documentation</a>
@@ -368,7 +369,7 @@
   <section class="hero">
     <h1>NodeLLM <br/> The <span class="gradient-text">Backend-First</span> AI SDK</h1>
     <p class="subtitle">
-      Open-source infrastructure for building production-grade agents in Node.js — provider-agnostic, database-backed, with zero dependency bloat.
+      Open-source infrastructure for building production-grade agents in Node.js — provider-agnostic, database-backed, with minimal dependencies.
     </p>
     <p class="replacement-statement" style="color: #444; font-size: 1.1rem; margin-top: -1.5rem; margin-bottom: 2.5rem; max-width: 700px; margin-left: auto; margin-right: auto;">
       Replace provider SDKs, prompt glue code, and ad-hoc agent state with a single, versioned backend API.
@@ -404,7 +405,7 @@
     <div class="card">
       <span class="icon">🔌</span>
       <h3>Provider Agnostic</h3>
-      <p>Switch between OpenAI, Anthropic, Gemini, Bedrock, and DeepSeek with zero code changes. A unified API for 540+ models.</p>
+      <p>Switch between OpenAI, Anthropic, Gemini, Bedrock, and DeepSeek with zero code changes. A unified API for 1,000+ models.</p>
     </div>
     <div class="card">
       <span class="icon">⚡️</span>
@@ -414,7 +415,7 @@
     <div class="card">
       <span class="icon">🔒</span>
       <h3>Agentic Zero Trust</h3>
-      <p>The "Invisible Perimeter" for your agents. Automatic key redaction, PII masking, and guardrails included by default.</p>
+      <p>The "Invisible Perimeter" for your agents. Automatic key redaction, PII masking, and guardrails built in.</p>
     </div>
   </section>
 
@@ -440,10 +441,10 @@
         <!-- Tab 1: Orchestration -->
         <div id="orchestration" class="code-content active">
 <pre><code><span class="kw">const</span> chat = NodeLLM.<span class="fn">chat</span>(<span class="str">"gpt-5"</span>);
-<span class="kw">await</span> chat.<span class="fn">withTool</span>(DatabaseTool);
+chat.<span class="fn">withTool</span>(DatabaseTool);
 
 <span class="com">// Automates tools & real-time streaming</span>
-<span class="kw">for await</span> (<span class="kw">const</span> s <span class="kw">of</span> chat.<span class="fn">stream</span>(<span class="str">"Supply..."</span>)) <span class="fn">print</span>(s.content);
+<span class="kw">for await</span> (<span class="kw">const</span> s <span class="kw">of</span> chat.<span class="fn">stream</span>(<span class="str">"Supply..."</span>)) process.stdout.<span class="fn">write</span>(s.content);
 
 <span class="com">// Multi-modal Senses: Image Gen & Audio</span>
 <span class="kw">const</span> art = <span class="kw">await</span> NodeLLM.<span class="fn">paint</span>(<span class="str">"3D Logo"</span>);

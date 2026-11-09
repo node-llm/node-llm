@@ -58,7 +58,7 @@ NodeLLM supports speaker identification (diarization) and word-level timestamps.
 
 ```ts
 const response = await NodeLLM.transcribe("meeting.mp3", {
-  model: "whisper-1", // or "gpt-5-transcribe-diarize"
+  model: "whisper-1", // or "gpt-4o-transcribe-diarize"
   timestamp_granularities: ["word", "segment"],
   speakerNames: ["Alice", "Bob"]
 });
