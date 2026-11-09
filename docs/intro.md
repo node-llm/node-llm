@@ -222,6 +222,21 @@ Plug custom security, PII detection, and compliance logic into asynchronous [`be
 
 ---
 
+## Built with NodeLLM
+
+<div class="showcase-grid">
+  <a class="showcase-card" href="https://qadet.nodellm.dev">
+    <img src="/assets/images/showcase/qadet-light.svg" alt="Qadet" />
+    <p>An AI QA tester: turns user stories into tests, runs them in a real Chrome, and replays them as regression tests without calling a model. Built by the NodeLLM team on <code>@node-llm/core</code> and <code>@node-llm/orm</code>.</p>
+  </a>
+  <a class="showcase-card" href="https://github.com/pwndoc/pwndoc">
+    <strong>pwndoc</strong>
+    <p>Open-source pentest reporting platform with 2.9k GitHub stars. Uses <code>@node-llm/core</code> in its backend.</p>
+  </a>
+</div>
+
+Using NodeLLM in your project? [Open a pull request](https://github.com/node-llm/node-llm/edit/main/README.md) to add it.
+
 ## Supported providers
 
 | Provider                                                                                                                             | Supported Features                                                                             |
