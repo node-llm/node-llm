@@ -1,3 +1,4 @@
+import { checkApiBase } from "../apiBase.js";
 import { config as globalConfig } from "../../config.js";
 import { providerRegistry } from "../registry.js";
 import { GeminiProvider } from "./GeminiProvider.js";
@@ -19,7 +20,13 @@ export function registerGeminiProvider() {
       throw new Error("geminiApiKey is not set in config or GEMINI_API_KEY environment variable");
     }
 
-    return new GeminiProvider({ apiKey });
+    return new GeminiProvider({
+      apiKey,
+      baseUrl: checkApiBase("geminiApiBase", cfg.geminiApiBase, {
+        example: "https://generativelanguage.googleapis.com/v1beta",
+        endpoints: /\/models(?:\/.*)?$/
+      })
+    });
   });
 
   registered = true;

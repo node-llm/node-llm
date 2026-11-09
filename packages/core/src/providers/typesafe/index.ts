@@ -1,3 +1,4 @@
+import { checkApiBase } from "../apiBase.js";
 import { config as globalConfig } from "../../config.js";
 import { providerRegistry } from "../registry.js";
 import { TypeSafeProvider } from "./TypeSafeProvider.js";
@@ -19,7 +20,12 @@ export function registerTypeSafeProvider() {
       );
     }
 
-    return new TypeSafeProvider({ apiKey, baseUrl: cfg.typesafeApiBase });
+    return new TypeSafeProvider({
+      apiKey,
+      baseUrl: checkApiBase("typesafeApiBase", cfg.typesafeApiBase, {
+        example: "https://api.typesafe.ai"
+      })
+    });
   });
 
   registered = true;

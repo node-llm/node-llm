@@ -1,3 +1,4 @@
+import { checkApiBase, OPENAI_COMPATIBLE_ENDPOINTS } from "../apiBase.js";
 import { config as globalConfig } from "../../config.js";
 import { providerRegistry } from "../registry.js";
 import { OpenAIProvider } from "./OpenAIProvider.js";
@@ -14,7 +15,10 @@ export function registerOpenAIProvider() {
   providerRegistry.register("openai", (config) => {
     const cfg = config || globalConfig;
     const apiKey = cfg.openaiApiKey;
-    const baseUrl = cfg.openaiApiBase;
+    const baseUrl = checkApiBase("openaiApiBase", cfg.openaiApiBase, {
+      example: "https://api.openai.com/v1",
+      endpoints: OPENAI_COMPATIBLE_ENDPOINTS
+    });
 
     if (!apiKey) {
       throw new Error("openaiApiKey is not set in config or OPENAI_API_KEY environment variable");
