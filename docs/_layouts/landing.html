@@ -163,6 +163,10 @@
       position: relative;
       overflow: hidden;
     }
+    .showcase { padding: 2rem 0 6rem; }
+    .showcase-title { text-align: center; font-size: 2rem; font-weight: 800; margin: 0 0 2rem; color: var(--text); }
+    .card-link { text-decoration: none; display: block; }
+    .card code { font-size: 0.85em; color: var(--text); }
     .card:hover { 
       border-color: rgba(0, 212, 106, 0.4);
       transform: translateY(-5px);
@@ -492,6 +496,20 @@ console.<span class="fn">log</span>(res.content);</code></pre>
 <span class="kw">await</span> chat.<span class="fn">ask</span>(<span class="str">"Recall previous security scan"</span>);</code></pre>
         </div>
       </div>
+    </div>
+  </section>
+
+  <section class="showcase">
+    <h2 class="showcase-title">Built with NodeLLM</h2>
+    <div class="grid">
+      <a class="card card-link" href="https://qadet.nodellm.dev">
+        <h3>Qadet</h3>
+        <p>An AI QA tester: turns user stories into tests, runs them in a real Chrome, and replays them as regression tests without calling a model. Built by the NodeLLM team on <code>@node-llm/core</code> and <code>@node-llm/orm</code>.</p>
+      </a>
+      <a class="card card-link" href="https://github.com/pwndoc/pwndoc">
+        <h3>pwndoc</h3>
+        <p>Open-source pentest reporting platform with 2.9k GitHub stars. Uses <code>@node-llm/core</code> in its backend.</p>
+      </a>
     </div>
   </section>
 
