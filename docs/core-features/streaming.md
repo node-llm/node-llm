@@ -174,33 +174,42 @@ try {
 
 ---
 
-## Web Application Integration
+## Streaming from an Express route
 
-Streaming is essential for modern web apps. Here is a simple example using **Express**:
+Run `npm install express @node-llm/core` and set your provider and API key as described in [Configuration](/getting-started/configuration). Save this as `server.mjs` to stream Server-Sent Events (SSE):
 
-```ts
+```js
 import express from "express";
 import { NodeLLM } from "@node-llm/core";
 
 const app = express();
-
-app.get("/chat", async (req, res) => {
-  // Set headers for streaming text
-  res.setHeader("Content-Type", "text/plain; charset=utf-8");
-  res.setHeader("Transfer-Encoding", "chunked");
-
-  const chat = NodeLLM.chat("gpt-5-mini");
-
+app.use(express.json());
+app.post("/chat", async (req, res) => {
+  const message = req.body?.message;
+  if (typeof message !== "string" || !message.trim()) {
+    return res.status(400).json({ error: "Send a non-empty message" });
+  }
+  res.set({
+    "Content-Type": "text/event-stream",
+    "Cache-Control": "no-cache",
+    Connection: "keep-alive"
+  });
+  const controller = new AbortController();
+  res.on("close", () => controller.abort());
   try {
-    for await (const chunk of chat.stream(req.query.q as string)) {
-      if (chunk.content) {
-        res.write(chunk.content);
-      }
+    for await (const chunk of NodeLLM.chat().stream(message, { signal: controller.signal })) {
+      if (chunk.content) res.write(`data: ${JSON.stringify({ text: chunk.content })}\n\n`);
     }
-    res.end();
+    if (!res.destroyed) res.write("event: done\ndata: {}\n\n");
   } catch (error) {
-    res.write(`\nError: ${error.message}`);
-    res.end();
+    if (!controller.signal.aborted) {
+      res.write(`event: error\ndata: ${JSON.stringify({ error: String(error) })}\n\n`);
+    }
+  } finally {
+    if (!res.destroyed) res.end();
   }
 });
+app.listen(3000);
 ```
+
+Run `node server.mjs`, then try `curl -N -X POST localhost:3000/chat -H 'Content-Type: application/json' -d '{"message":"Hello"}'`. The response's `close` event aborts generation when the client disconnects.
