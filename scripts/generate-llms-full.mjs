@@ -1,104 +1,97 @@
-import fs from "fs";
-import path from "path";
-import { fileURLToPath } from "url";
+import { readFileSync, readdirSync, writeFileSync } from "node:fs";
+import { dirname, join, relative, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const DOCS_DIR = join(dirname(fileURLToPath(import.meta.url)), "..", "docs");
+const HEADER =
+  "# NodeLLM Full Documentation\n\n" +
+  "> Auto-generated context for LLMs containing all project documentation.\n\n";
 
-const DOCS_DIR = path.join(__dirname, "../docs");
-const OUTPUT_FILE = path.join(DOCS_DIR, "llms-full.txt");
-
-// Order matters for context!
-// We want to present the high-level concepts first, then details.
-const PATTERN = [
-  "llms.txt", // Start with the summary
-  "intro.md",
-  "getting_started/**/*.md",
-  "core-features/**/*.md",
-  "providers/**/*.md",
-  "orm/**/*.md",
-  "advanced/**/*.md"
-];
-
-function getAllFiles(dirPath, arrayOfFiles) {
-  const files = fs.readdirSync(dirPath);
-
-  arrayOfFiles = arrayOfFiles || [];
-
-  files.forEach(function (file) {
-    if (fs.statSync(dirPath + "/" + file).isDirectory()) {
-      if (file !== "_site" && file !== ".jekyll-cache") {
-        arrayOfFiles = getAllFiles(dirPath + "/" + file, arrayOfFiles);
-      }
-    } else {
-      if (file.endsWith(".md") || file === "llms.txt") {
-        arrayOfFiles.push(path.join(dirPath, "/", file));
-      }
-    }
-  });
-
-  return arrayOfFiles;
-}
-
-// Simple glob-like matcher
-function matchesPattern(filePath, pattern) {
-  const relativePath = path.relative(DOCS_DIR, filePath);
-
-  if (pattern.includes("**")) {
-    const parts = pattern.split("/**/");
-    const dir = parts[0];
-    return relativePath.startsWith(dir);
-  }
-  return relativePath === pattern;
-}
-
-function generate() {
-  console.log("Generating llms-full.txt...");
-
-  // Get all potential files
-  const allFiles = getAllFiles(DOCS_DIR);
-
-  // Sort them based on our preferred reading order
-  const sortedFiles = [];
-  const seen = new Set();
-
-  // 1. Add files matching explicit patterns first
-  PATTERN.forEach((pattern) => {
-    allFiles.forEach((file) => {
-      if (!seen.has(file) && matchesPattern(file, pattern)) {
-        sortedFiles.push(file);
-        seen.add(file);
-      }
+function markdownFiles(dir, root = dir) {
+  return readdirSync(dir, { withFileTypes: true })
+    .filter((entry) => !["_site", ".jekyll-cache"].includes(entry.name))
+    .flatMap((entry) => {
+      const file = join(dir, entry.name);
+      if (entry.isDirectory()) return markdownFiles(file, root);
+      return entry.isFile() && entry.name.endsWith(".md") ? [relative(root, file)] : [];
     });
-  });
-
-  // 2. Add any remaining markdown files (appendices)
-  allFiles.forEach((file) => {
-    if (!seen.has(file)) {
-      sortedFiles.push(file);
-    }
-  });
-
-  let content = "# NodeLLM Full Documentation\n\n";
-  content += "> Auto-generated context for LLMs containing all project documentation.\n\n";
-
-  sortedFiles.forEach((file) => {
-    const relativePath = path.relative(DOCS_DIR, file);
-    if (relativePath === "llms-full.txt") return;
-
-    console.log(`Adding ${relativePath}`);
-
-    const fileContent = fs.readFileSync(file, "utf8");
-
-    content += `\n\n<!-- FILE: ${relativePath} -->\n`;
-    content += `\n# 📄 ${relativePath}\n\n`;
-    content += fileContent;
-    content += `\n\n<!-- END FILE: ${relativePath} -->\n`;
-    content += "-".repeat(40);
-  });
-
-  fs.writeFileSync(OUTPUT_FILE, content);
-  console.log(`\n✅ Generated ${OUTPUT_FILE} (${(content.length / 1024).toFixed(2)} KB)`);
 }
 
-generate();
+function readPage(docsDir, file) {
+  const source = readFileSync(join(docsDir, file), "utf8");
+  const match = source.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n/);
+  const metadata = {};
+  if (match) {
+    for (const line of match[1].split(/\r?\n/)) {
+      const field = line.match(/^([\w-]+):\s*(.*)$/);
+      if (field) metadata[field[1]] = field[2].replace(/^["']|["']$/g, "");
+    }
+  }
+  return { file, metadata, body: match ? source.slice(match[0].length) : source };
+}
+
+function navigationOrder(pages) {
+  const byTitle = new Map(pages.map((page) => [page.metadata.title, page]));
+  const byFile = new Map(pages.map((page) => [page.file, page]));
+  const children = new Map();
+  const roots = [];
+  for (const page of pages) {
+    const parent =
+      (page.metadata.parent && byTitle.get(page.metadata.parent)) ??
+      (page.file.endsWith("/index.md")
+        ? undefined
+        : byFile.get(join(dirname(page.file), "index.md")));
+    if (parent && parent !== page) {
+      const group = children.get(parent) ?? [];
+      group.push(page);
+      children.set(parent, group);
+    } else {
+      roots.push(page);
+    }
+  }
+  const compare = (a, b) =>
+    Number(a.metadata.nav_order ?? Infinity) - Number(b.metadata.nav_order ?? Infinity) ||
+    (a.metadata.title ?? a.file).localeCompare(b.metadata.title ?? b.file, "en") ||
+    a.file.localeCompare(b.file, "en");
+  const ordered = [];
+  function visit(page) {
+    ordered.push(page);
+    for (const child of (children.get(page) ?? []).sort(compare)) visit(child);
+  }
+  for (const page of roots.sort(compare)) visit(page);
+  return ordered;
+}
+
+function readableBody(page) {
+  return page.body
+    .replace(/\{\{\s*page\.(title|description)\s*\}\}/g, (_, field) => page.metadata[field] ?? "")
+    .replace(/\{%[\s\S]*?%\}|\{\{[\s\S]*?\}\}/g, "")
+    .replace(/[ \t]+$/gm, "")
+    .trim();
+}
+
+export function buildContent(docsDir = DOCS_DIR) {
+  const pages = markdownFiles(docsDir)
+    .map((file) => readPage(docsDir, file))
+    .filter((page) => page.metadata.nav_exclude !== "true");
+  const summary = readPage(docsDir, "llms.txt");
+  const sections = [summary, ...navigationOrder(pages)].map((page) => {
+    const body = readableBody(page);
+    return `<!-- FILE: ${page.file} -->\n\n# 📄 ${page.file}\n\n${body}\n\n<!-- END FILE: ${page.file} -->\n${"-".repeat(40)}`;
+  });
+  return HEADER + "\n\n" + sections.join("\n\n") + "\n";
+}
+
+if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+  const output = join(DOCS_DIR, "llms-full.txt");
+  const content = buildContent();
+  if (process.argv.includes("--check")) {
+    if (readFileSync(output, "utf8") !== content) {
+      console.error("docs/llms-full.txt is out of date. Run npm run docs:llms.");
+      process.exitCode = 1;
+    }
+  } else {
+    writeFileSync(output, content);
+    console.log(`Generated ${output}`);
+  }
+}

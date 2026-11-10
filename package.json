@@ -15,6 +15,8 @@
     "test:examples": "npm test --prefix examples/applications/hr-chatbot-rag && npm test --prefix examples/applications/brand-perception-checker/server",
     "build": "npm run build --workspaces --if-present",
     "docs": "cd docs && bundle install && bundle exec jekyll serve",
+    "docs:llms": "node scripts/generate-llms-full.mjs",
+    "docs:llms:check": "node scripts/generate-llms-full.mjs --check",
     "sync-models": "node scripts/sync-models.mjs",
     "vcr:record": "node scripts/vcr-record.mjs",
     "vcr:refresh": "node scripts/vcr-maintenance.mjs refresh",

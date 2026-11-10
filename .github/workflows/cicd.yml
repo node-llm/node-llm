@@ -57,6 +57,9 @@ jobs:
         env:
           DATABASE_URL: "postgresql://localhost:5432/dummy"
 
+      - name: Check generated LLM documentation
+        run: npm run docs:llms:check && node --test scripts/generate-llms-full.test.mjs
+
       - name: Build
         run: pnpm run build
         env:
