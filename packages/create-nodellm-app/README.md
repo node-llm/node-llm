@@ -22,6 +22,19 @@ cp .env.example .env   # choose a provider and add its API key
 npm start
 ```
 
+Add `--ts` to any template to generate TypeScript files instead:
+
+```bash
+npx create-nodellm-app my-agent --template tool-agent --ts
+cd my-agent
+npm install
+npm run typecheck
+cp .env.example .env   # choose a provider and add its API key
+npm start
+```
+
+TypeScript projects use `tsx` to run `.ts` files on Node.js 20.10+.
+
 Every template works with any provider NodeLLM supports (OpenAI, Anthropic, Gemini, DeepSeek, Bedrock, OpenRouter, xAI, Ollama, Mistral, Azure AI Foundry): switch with `NODELLM_PROVIDER` in `.env`.
 
 Requires Node.js 20.10 or later.

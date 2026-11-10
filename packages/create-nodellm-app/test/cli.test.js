@@ -11,11 +11,13 @@ test("parseArgs reads the directory and template in any form", () => {
   assert.deepEqual(parseArgs(["app", "--template", "streaming-api"]), {
     dir: "app",
     template: "streaming-api",
-    help: false
+    help: false,
+    ts: false
   });
   assert.equal(parseArgs(["--template=cron-summarizer", "app"]).template, "cron-summarizer");
   assert.equal(parseArgs(["-t", "tool-agent"]).template, "tool-agent");
   assert.equal(parseArgs(["--help"]).help, true);
+  assert.equal(parseArgs(["--ts", "app", "-t", "tool-agent"]).ts, true);
 });
 
 for (const template of TEMPLATES) {
@@ -31,6 +33,31 @@ for (const template of TEMPLATES) {
     assert.ok(existsSync(join(target, ".env.example")));
     assert.ok(!existsSync(join(target, "_gitignore")));
     assert.ok(!existsSync(join(target, "_env.example")));
+    assert.ok(!existsSync(join(target, "_typescript")));
+    assert.ok(!existsSync(join(target, "tsconfig.json")));
+  });
+
+  test(`scaffold creates a TypeScript ${template} project`, () => {
+    const target = join(mkdtempSync(join(tmpdir(), "cna-")), "Typed App");
+    scaffold(target, template, { ts: true });
+
+    const pkg = JSON.parse(readFileSync(join(target, "package.json"), "utf8"));
+    assert.equal(pkg.name, "typed-app");
+    assert.equal(pkg.scripts.typecheck, "tsc --noEmit");
+    assert.ok(pkg.scripts.start.includes("--import=tsx"));
+    assert.ok(pkg.devDependencies.typescript);
+    assert.ok(existsSync(join(target, "tsconfig.json")));
+    assert.ok(existsSync(join(target, ".env.example")));
+    assert.ok(existsSync(join(target, ".gitignore")));
+    assert.ok(!existsSync(join(target, "_typescript")));
+    const entry = {
+      "tool-agent": "index",
+      "streaming-api": "server",
+      "cron-summarizer": "summarize"
+    }[template];
+    assert.ok(existsSync(join(target, `${entry}.ts`)));
+    assert.ok(!existsSync(join(target, `${entry}.js`)));
+    assert.match(readFileSync(join(target, "README.md"), "utf8"), /npm run typecheck/);
   });
 }
 

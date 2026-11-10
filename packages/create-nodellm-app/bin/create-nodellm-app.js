@@ -6,6 +6,7 @@ import {
   readdirSync,
   readFileSync,
   realpathSync,
+  rmSync,
   renameSync,
   writeFileSync
 } from "node:fs";
@@ -22,7 +23,10 @@ const TEMPLATES = {
 const templatesDir = join(dirname(fileURLToPath(import.meta.url)), "..", "templates");
 
 function usage() {
-  console.log(`Usage: npx create-nodellm-app <project-dir> [--template <name>]
+  console.log(`Usage: npx create-nodellm-app <project-dir> [--template <name>] [--ts]
+
+Options:
+  --ts              Generate a TypeScript project
 
 Templates:
 ${Object.entries(TEMPLATES)
@@ -31,10 +35,11 @@ ${Object.entries(TEMPLATES)
 }
 
 export function parseArgs(argv) {
-  const args = { dir: undefined, template: undefined, help: false };
+  const args = { dir: undefined, template: undefined, help: false, ts: false };
   for (let i = 0; i < argv.length; i++) {
     const arg = argv[i];
     if (arg === "-h" || arg === "--help") args.help = true;
+    else if (arg === "--ts") args.ts = true;
     else if (arg === "-t" || arg === "--template") args.template = argv[++i];
     else if (arg.startsWith("--template=")) args.template = arg.slice("--template=".length);
     else if (!args.dir) args.dir = arg;
@@ -51,7 +56,7 @@ async function ask(question) {
   }
 }
 
-export function scaffold(targetDir, template) {
+export function scaffold(targetDir, template, { ts = false } = {}) {
   if (!TEMPLATES[template]) {
     throw new Error(
       `Unknown template "${template}". Choose one of: ${Object.keys(TEMPLATES).join(", ")}`
@@ -63,6 +68,16 @@ export function scaffold(targetDir, template) {
 
   cpSync(join(templatesDir, template), targetDir, { recursive: true });
 
+  const tsDir = join(targetDir, "_typescript");
+  if (ts) {
+    for (const file of readdirSync(tsDir)) {
+      cpSync(join(tsDir, file), join(targetDir, file));
+      rmSync(join(targetDir, file.replace(/\.ts$/, ".js")));
+    }
+    cpSync(join(templatesDir, "_typescript", "tsconfig.json"), join(targetDir, "tsconfig.json"));
+  }
+  rmSync(tsDir, { recursive: true });
+
   // npm drops dotfiles named .gitignore from published packages, so templates ship it as _gitignore.
   for (const [from, to] of [
     ["_gitignore", ".gitignore"],
@@ -73,6 +88,23 @@ export function scaffold(targetDir, template) {
 
   const pkgPath = join(targetDir, "package.json");
   const pkg = JSON.parse(readFileSync(pkgPath, "utf8"));
+  if (ts) {
+    for (const [script, command] of Object.entries(pkg.scripts)) {
+      pkg.scripts[script] = command
+        .replace(/\.js\b/g, ".ts")
+        .replace("node --env-file=.env", "node --env-file=.env --import=tsx");
+    }
+    pkg.scripts.typecheck = "tsc --noEmit";
+    pkg.devDependencies = { "@types/node": "^20.19.0", tsx: "^4.21.0", typescript: "^5.9.3" };
+    const readmePath = join(targetDir, "README.md");
+    writeFileSync(
+      readmePath,
+      readFileSync(readmePath, "utf8")
+        .replace(/\.js\b/g, ".ts")
+        .replace("npm start", "npm run typecheck\nnpm start") +
+        "\nTypeScript projects use `tsx` to run `.ts` files on Node.js 20.10+.\n"
+    );
+  }
   pkg.name = basename(targetDir)
     .toLowerCase()
     .replace(/[^a-z0-9-_.]/g, "-");
@@ -85,6 +117,7 @@ async function main() {
 
   const interactive = process.stdin.isTTY && process.stdout.isTTY;
   let { dir, template } = args;
+  const { ts } = args;
 
   if (!dir) {
     if (!interactive) return (usage(), process.exit(1));
@@ -105,20 +138,20 @@ async function main() {
 
   const target = resolve(dir);
   try {
-    scaffold(target, template);
+    scaffold(target, template, { ts });
   } catch (error) {
     console.error(`\n${error.message}`);
     process.exit(1);
   }
 
   console.log(`
-Created ${dir} from the "${template}" template.
+Created ${dir} from the "${template}" template${ts ? " (TypeScript)" : ""}.
 
 Next steps:
   cd ${dir}
   npm install
   cp .env.example .env    # then add your provider and API key
-  npm start
+${ts ? "  npm run typecheck\n" : ""}  npm start
 
 Docs: https://nodellm.dev/docs/intro`);
 }
