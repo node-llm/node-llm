@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased] (@node-llm/core)
+
+### Bug Fixes
+
+- **`requestTimeout` Covers the Response Body**: the timeout no longer stops when the headers arrive. Some providers, OpenRouter among them, send headers at once and then hold the body open while the model works. A call to a stalled model then waited forever. Non-streaming calls now fail with `Request timeout after …ms` when the body takes too long. Streams keep the old behavior: the timeout covers the wait for the first response only.
+
 ## [1.19.3] - 2026-11-06 (@node-llm/core)
 
 ### Features & Bug Fixes

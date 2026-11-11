@@ -105,6 +105,8 @@ chat.withToolExecution("confirm").onConfirmToolCall(async (call) => {
 });
 ```
 
+The timeout covers the whole call, including reading the response body. Some providers send their headers at once and then hold the body open while the model works. A timeout that stopped at the headers would never fire for them. For a stream, the timeout covers the wait for the first response, not the stream itself.
+
 **Security Benefits:**
 
 - **Prevents Destructive Actions**: Stops the model from accidentally deleting data without oversight.

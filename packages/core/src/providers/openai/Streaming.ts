@@ -152,7 +152,8 @@ export class OpenAIStreaming {
           body: JSON.stringify(body),
           signal
         },
-        request.requestTimeout
+        request.requestTimeout,
+        { coverBody: false }
       );
 
       if (!response.ok) {

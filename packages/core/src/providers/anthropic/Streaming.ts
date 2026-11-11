@@ -46,7 +46,8 @@ export class AnthropicStreaming {
           body: JSON.stringify(body),
           signal: abortController.signal
         },
-        request.requestTimeout
+        request.requestTimeout,
+        { coverBody: false }
       );
 
       if (!response.ok) {

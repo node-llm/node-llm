@@ -64,7 +64,8 @@ export class XAIStreaming {
           body: JSON.stringify(body),
           signal: abortController.signal
         },
-        requestTimeout
+        requestTimeout,
+        { coverBody: false }
       );
 
       if (!response.ok) {

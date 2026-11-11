@@ -128,7 +128,8 @@ export class GeminiStreaming {
           body: JSON.stringify(payload),
           signal: abortController.signal
         },
-        request.requestTimeout
+        request.requestTimeout,
+        { coverBody: false }
       );
 
       if (!response.ok) {
