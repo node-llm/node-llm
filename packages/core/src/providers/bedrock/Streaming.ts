@@ -67,7 +67,8 @@ export class BedrockStreaming {
         body: bodyJson,
         signal
       },
-      request.requestTimeout ?? this.config.requestTimeout
+      request.requestTimeout ?? this.config.requestTimeout,
+      { coverBody: false }
     );
 
     if (!response.ok) {
