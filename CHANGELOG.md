@@ -2,7 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
-## [Unreleased] (@node-llm/core)
+## [1.20.0] - 2026-11-11 (@node-llm/core)
+
+### Features
+
+- **Model Fallbacks**: `chat.withFallbacks(...targets)` tries other models, on the same or another provider, when a request still fails after retries with a rate limit, server or network error. Each request starts on the chat's own model; streams fall back only before their first chunk. `onFallback` reports each attempt, and responses report the model and provider that answered.
+- **Deferred Tools**: a tool marked `defer: true` is left out of requests until the model looks for it with a built-in `tool_search` tool; tools a search loads are sent with every later request. What is loaded is read back from the conversation, so it survives serialization. Works on every provider.
+- **`rescueFrom` on Tools**: a tool can turn a specific error class thrown by `execute()` into the result the model sees (a string, an object as JSON, or a `ToolHalt`). Handlers match subclasses; the one registered last wins. `defineTool` takes the same handlers as `[ErrorClass, handler]` pairs.
+- **OpenTelemetry Tracing Middleware**: `OpenTelemetry(otel)` emits a span per chat, embedding, image, transcription, moderation and judgment call, and a child span per tool call, using the GenAI semantic conventions. Spans never include prompts, responses or tool arguments, and core gains no dependency: the app passes its own `@opentelemetry/api`.
+- **Base URL Checks**: every provider checks its `*ApiBase` setting when created. A base URL without `http(s)://`, or one ending in a path NodeLLM adds itself (such as `/chat/completions` or `/messages`), throws a `ConfigurationError` naming the setting and the expected form. `anthropicApiBase` and `geminiApiBase` now reach their providers; before, they were read from config but never passed on.
 
 ### Bug Fixes
 
