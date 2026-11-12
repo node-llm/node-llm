@@ -32,7 +32,8 @@ export interface AnthropicMessageRequest {
   model: string;
   messages: AnthropicMessage[];
   max_tokens: number;
-  system?: string;
+  /** The instructions: text, or text blocks when one is marked as a cache breakpoint */
+  system?: string | Array<{ type: "text"; text: string; cache_control?: { type: "ephemeral" } }>;
   metadata?: Record<string, unknown>;
   stop_sequences?: string[];
   stream?: boolean;
