@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.20.1] - 2026-11-12 (@node-llm/core)
+
+### Bug Fixes
+
+- **Fatal Tool Errors Stop the Loop**: a `ToolError` with `fatal: true`, or a 401/403, thrown from a tool built with the `Tool` class or `defineTool` now stops the agent loop and is thrown, as documented. Before, `Tool.handler` turned it into an ordinary error message and the model carried on. Non-fatal errors still reach the model as text.
+- **Anthropic Instructions Stay Cached**: with `promptCache` on, the system prompt is sent with its own `cache_control` breakpoint. An app that rewrites earlier messages, such as leaving out old tool results, no longer misses the cache and pays for its instructions and tools in full on every call.
+
 ## [1.20.0] - 2026-11-11 (@node-llm/core)
 
 ### Features
