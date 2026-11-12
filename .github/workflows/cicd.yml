@@ -12,6 +12,7 @@ on:
       - ".github/workflows/cicd.yml"
       - "README.md"
       - "docs/**"
+      - "scripts/generate-llms-full*.mjs"
   pull_request:
     branches: ["main"]
     paths:
@@ -23,6 +24,7 @@ on:
       - ".github/workflows/cicd.yml"
       - "README.md"
       - "docs/**"
+      - "scripts/generate-llms-full*.mjs"
   workflow_call:
 
 # Define default permissions for this workflow
@@ -64,6 +66,9 @@ jobs:
 
       - name: Lint
         run: pnpm run lint || echo "Linting failed but continuing tests"
+
+      - name: Check docs/llms-full.txt is up to date
+        run: pnpm run docs:llms:check
 
       - name: Run tests
         run: pnpm -r test

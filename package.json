@@ -16,6 +16,8 @@
     "build": "npm run build --workspaces --if-present",
     "docs": "cd docs && bundle install && bundle exec jekyll serve",
     "sync-models": "node scripts/sync-models.mjs",
+    "docs:llms": "node scripts/generate-llms-full.mjs",
+    "docs:llms:check": "node scripts/generate-llms-full.mjs --check && node --test scripts/generate-llms-full.test.mjs",
     "vcr:record": "node scripts/vcr-record.mjs",
     "vcr:refresh": "node scripts/vcr-maintenance.mjs refresh",
     "vcr:verify": "node scripts/vcr-maintenance.mjs verify",
