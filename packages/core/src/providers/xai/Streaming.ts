@@ -1,3 +1,4 @@
+import { normalizeSseBuffer } from "../../utils/sse.js";
 import { ChatRequest, ChatChunk } from "../Provider.js";
 import { APIError } from "../../errors/index.js";
 import { logger } from "../../utils/logger.js";
@@ -90,7 +91,7 @@ export class XAIStreaming {
         if (readerDone) break;
 
         const chunk = decoder.decode(value, { stream: true });
-        buffer += chunk;
+        buffer = normalizeSseBuffer(buffer + chunk);
 
         const lines = buffer.split("\n\n");
         buffer = lines.pop() || "";
