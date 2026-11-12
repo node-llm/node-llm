@@ -70,4 +70,18 @@ describe("prompt caching", () => {
       "cache_control"
     );
   });
+
+  it("marks Anthropic's instructions as a cache breakpoint too, so they stay cached when earlier messages change", () => {
+    const messages = [
+      { role: "system" as const, content: "You test web apps." },
+      { role: "user" as const, content: "Hello" }
+    ];
+
+    expect(
+      buildMessageRequest({ model: "claude-sonnet-4-5", messages, promptCache: true }, false).system
+    ).toEqual([{ type: "text", text: "You test web apps.", cache_control: { type: "ephemeral" } }]);
+    expect(buildMessageRequest({ model: "claude-sonnet-4-5", messages }, false).system).toBe(
+      "You test web apps."
+    );
+  });
 });

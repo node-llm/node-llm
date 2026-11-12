@@ -260,6 +260,11 @@ export function buildMessageRequest(
   // breakpoint forward as the conversation grows.
   if (promptCache) {
     body.cache_control = { type: "ephemeral" };
+    // A second breakpoint after the instructions (and the tools before them): the moving one at
+    // the end stops fitting when an app rewrites earlier messages, such as leaving out old tool
+    // results, and then the instructions and tools would be paid for in full on every call.
+    if (typeof body.system === "string" && body.system)
+      body.system = [{ type: "text", text: body.system, cache_control: { type: "ephemeral" } }];
   }
 
   applyThinking(body, thinking, Boolean(max_tokens));
