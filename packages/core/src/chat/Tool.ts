@@ -228,6 +228,9 @@ export abstract class Tool<T = Record<string, any>> {
       if (result === undefined || result === null) return "";
       return typeof result === "string" ? result : JSON.stringify(result);
     } catch (error: any) {
+      // A fatal error (ToolError with fatal: true, or a 401/403) must reach the agent loop, which
+      // stops and throws it. Turned into text here, it would only be shown to the model.
+      if (isFatal(error)) throw error;
       return `Error executing tool '${this.name}': ${error.message || error}`;
     }
   }
@@ -308,3 +311,9 @@ export function defineTool<Args extends Record<string, unknown>>(definition: {
     }
   };
 }
+
+/** An error the agent loop stops on instead of showing it to the model. */
+const isFatal = (error: unknown): boolean => {
+  const { fatal, status } = (error ?? {}) as { fatal?: boolean; status?: number };
+  return fatal === true || status === 401 || status === 403;
+};
