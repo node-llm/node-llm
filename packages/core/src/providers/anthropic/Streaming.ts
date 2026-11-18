@@ -1,4 +1,4 @@
-import { normalizeSseBuffer } from "../../utils/sse.js";
+import { appendSseChunk } from "../../utils/sse.js";
 import { ChatRequest, ChatChunk } from "../Provider.js";
 import { handleAnthropicError } from "./Errors.js";
 import { buildMessageRequest, hasPdf, toUsage } from "./Utils.js";
@@ -73,7 +73,7 @@ export class AnthropicStreaming {
         if (readerDone) break;
 
         const chunk = decoder.decode(value, { stream: true });
-        buffer = normalizeSseBuffer(buffer + chunk);
+        buffer = appendSseChunk(buffer, chunk);
 
         const lines = buffer.split("\n\n");
         buffer = lines.pop() || "";

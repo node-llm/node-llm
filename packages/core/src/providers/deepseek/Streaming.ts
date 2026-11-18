@@ -1,4 +1,4 @@
-import { normalizeSseBuffer } from "../../utils/sse.js";
+import { appendSseChunk } from "../../utils/sse.js";
 import { ChatRequest, ChatChunk } from "../Provider.js";
 import { APIError } from "../../errors/index.js";
 import { logger } from "../../utils/logger.js";
@@ -91,7 +91,7 @@ export class DeepSeekStreaming {
         if (readerDone) break;
 
         const chunk = decoder.decode(value, { stream: true });
-        buffer = normalizeSseBuffer(buffer + chunk);
+        buffer = appendSseChunk(buffer, chunk);
 
         const lines = buffer.split("\n\n");
         buffer = lines.pop() || "";

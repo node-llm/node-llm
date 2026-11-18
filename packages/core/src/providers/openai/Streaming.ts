@@ -1,4 +1,4 @@
-import { normalizeSseBuffer } from "../../utils/sse.js";
+import { appendSseChunk } from "../../utils/sse.js";
 import { ChatRequest, ChatChunk } from "../Provider.js";
 import { Capabilities } from "./Capabilities.js";
 import { handleOpenAIError } from "./Errors.js";
@@ -179,7 +179,7 @@ export class OpenAIStreaming {
         if (readerDone) break;
 
         const chunk = decoder.decode(value, { stream: true });
-        buffer = normalizeSseBuffer(buffer + chunk);
+        buffer = appendSseChunk(buffer, chunk);
 
         const lines = buffer.split("\n\n");
         buffer = lines.pop() || ""; // Keep the last incomplete part in the buffer
