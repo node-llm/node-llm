@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## [Unreleased] (@node-llm/core)
+## [1.21.0] - 2026-11-21 (@node-llm/core)
 
 ### Features
 
