@@ -288,6 +288,7 @@ export class ChatStream {
             options.resolveProvider,
             async (event) => {
               for (const handler of options.onFallbackHandlers ?? []) await handler(event);
+              await runMiddleware(middlewares, "onFallback", context, event);
             }
           )) {
             if (isFirst) {

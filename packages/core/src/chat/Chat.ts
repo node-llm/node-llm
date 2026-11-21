@@ -697,6 +697,8 @@ export class Chat<S = unknown> {
     try {
       // 1. onRequest Hook
       await runMiddleware(this.middlewares, "onRequest", context);
+      const middlewareFallback = (event: FallbackEvent) =>
+        runMiddleware(this.middlewares, "onFallback", context, event);
 
       let assistantMessage: ChatResponseString;
       let finalResponse: ChatResponseString & { data: S };
@@ -773,7 +775,7 @@ export class Chat<S = unknown> {
         // Start generation
         await runAllHandlers(newMessageHandlers);
         let requestStarted = Date.now();
-        let response = await this.executor.executeChat(executeOptions);
+        let response = await this.executor.executeChat(executeOptions, middlewareFallback);
         const firstLatency = Date.now() - requestStarted;
         let totalLatency = firstLatency;
         trackUsage(response.usage);
@@ -966,31 +968,36 @@ export class Chat<S = unknown> {
           );
 
           requestStarted = Date.now();
-          response = await this.executor.executeChat({
-            model: this.model,
-            messages: followUpMessages,
-            tools: requestTools(this.options.tools as ToolDefinition[], [
-              ...this.systemMessages,
-              ...this.messages
-            ]),
-            temperature: requestTemperature(
-              this.provider,
-              this.model,
-              options?.temperature ?? this.options.temperature
-            ),
-            max_tokens: options?.maxTokens ?? this.options.maxTokens ?? config.maxTokens,
-            headers: this.options.headers,
-            response_format: responseFormat,
-            tool_choice: this.options.toolChoice,
-            parallel_tool_calls:
-              this.options.toolCalls === "one" || this.options.toolCalls === 1 ? false : undefined,
-            requestTimeout:
-              options?.requestTimeout ?? this.options.requestTimeout ?? config.requestTimeout,
-            prediction: options?.prediction ?? this.options.prediction,
-            promptCache: requestPromptCache(this.provider, this.model, this.options.promptCache),
-            signal: options?.signal,
-            ...this.options.params
-          });
+          response = await this.executor.executeChat(
+            {
+              model: this.model,
+              messages: followUpMessages,
+              tools: requestTools(this.options.tools as ToolDefinition[], [
+                ...this.systemMessages,
+                ...this.messages
+              ]),
+              temperature: requestTemperature(
+                this.provider,
+                this.model,
+                options?.temperature ?? this.options.temperature
+              ),
+              max_tokens: options?.maxTokens ?? this.options.maxTokens ?? config.maxTokens,
+              headers: this.options.headers,
+              response_format: responseFormat,
+              tool_choice: this.options.toolChoice,
+              parallel_tool_calls:
+                this.options.toolCalls === "one" || this.options.toolCalls === 1
+                  ? false
+                  : undefined,
+              requestTimeout:
+                options?.requestTimeout ?? this.options.requestTimeout ?? config.requestTimeout,
+              prediction: options?.prediction ?? this.options.prediction,
+              promptCache: requestPromptCache(this.provider, this.model, this.options.promptCache),
+              signal: options?.signal,
+              ...this.options.params
+            },
+            middlewareFallback
+          );
           const latency = Date.now() - requestStarted;
           totalLatency += latency;
           trackUsage(response.usage);

@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased] (@node-llm/core)
 
+### Features
+
+- **`onFallback` Middleware Hook**: middlewares can now see model fallbacks. `onFallback(context, event)` runs, with the request's own context, before a chat request is sent to a fallback model, for `ask()` and `stream()`. The OpenTelemetry middleware uses it to add a `node_llm.fallback` span event and to name the provider that answered.
+
 ### Bug Fixes
 
 - **Finish Reason on Every Provider**: `response.finishReason` is now set by OpenAI (and OpenAI-based providers: Azure, OpenRouter, Ollama), Anthropic, Gemini, DeepSeek and xAI, for both `ask()` and `stream()`. Before, only Bedrock and Mistral set it, and streamed responses never had it. The value is the provider's own (`stop`, `length`, `end_turn`, `max_tokens`, `MAX_TOKENS`, ...). The OpenTelemetry middleware now fills `gen_ai.response.finish_reasons` from it.

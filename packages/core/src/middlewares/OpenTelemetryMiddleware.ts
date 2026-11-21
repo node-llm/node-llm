@@ -1,5 +1,6 @@
 import { Middleware, MiddlewareContext, NodeLLMResponse } from "../types/Middleware.js";
 import { ToolCall } from "../chat/Tool.js";
+import { FallbackEvent } from "../executor/Fallback.js";
 
 /**
  * The parts of `@opentelemetry/api` this middleware uses. Typed structurally so
@@ -25,6 +26,7 @@ interface OTelSpan {
   setAttribute(key: string, value: AttributeValue): unknown;
   setStatus(status: { code: number; message?: string }): unknown;
   recordException(exception: Error): unknown;
+  addEvent?(name: string, attributes?: Record<string, AttributeValue>): unknown;
   end(): void;
 }
 
@@ -117,6 +119,23 @@ export class OpenTelemetryMiddleware implements Middleware {
     if (!span) return;
     fail(span, error);
     this.end(ctx);
+  }
+
+  async onFallback(ctx: MiddlewareContext, event: FallbackEvent): Promise<void> {
+    const span = ctx.state[SPAN] as OTelSpan | undefined;
+    if (!span) return;
+    const error = event.error as { name?: string } | undefined;
+    span.addEvent?.("node_llm.fallback", {
+      "node_llm.fallback.attempt": event.attempt,
+      "node_llm.fallback.from.model": event.from.model,
+      "node_llm.fallback.from.provider": event.from.provider,
+      "node_llm.fallback.to.model": event.to.model,
+      "node_llm.fallback.to.provider": event.to.provider,
+      "error.type": error?.name || "Error"
+    });
+    // The span describes the call as a whole: name the provider that answered.
+    span.setAttribute("gen_ai.provider.name", event.to.provider);
+    span.setAttribute("gen_ai.system", event.to.provider);
   }
 
   async onToolCallStart(ctx: MiddlewareContext, tool: ToolCall): Promise<void> {

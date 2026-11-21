@@ -74,6 +74,9 @@ await chat.ask("Hello world");
    onToolCallStart?: (context: MiddlewareContext, tool: ToolCall) => Promise<void>;
    onToolCallEnd?: (context: MiddlewareContext, tool: ToolCall, result: unknown) => Promise<void>;
    onToolCallError?: (context: MiddlewareContext, tool: ToolCall, error: Error) => Promise<ToolErrorDirective>;
+
+   // Model fallbacks (v1.21.0+)
+   onFallback?: (context: MiddlewareContext, event: FallbackEvent) => Promise<void>;
  }
  ```
 
@@ -128,6 +131,22 @@ const perfMiddleware = {
     }
   }
 }
+```
+
+---
+
+### Watching Fallbacks and Tool Search
+
+- **`onFallback`** runs when a chat request failed and is about to go to a fallback model (see [Model Fallbacks](/advanced/error-handling)). It gets the same `context` as the rest of the request and an event with `error`, `from`, `to` and `attempt`. The response that follows reports the model and provider that answered.
+- **Tool search** needs no hook of its own. Loading deferred tools is a call to the `tool_search` tool, so `onToolCallStart` and `onToolCallEnd` see it like any other tool. The result is JSON whose `loaded` field lists the tools it loaded.
+
+```typescript
+const fallbackLogger: Middleware = {
+  name: "FallbackLogger",
+  onFallback: async (context, { from, to, error }) => {
+    console.warn(`[${context.requestId}] ${from.model} failed (${(error as Error).message}), trying ${to.model}`);
+  }
+};
 ```
 
 ---
@@ -250,6 +269,7 @@ const llm = createLLM({ provider: "openai", middlewares: [OpenTelemetry(otel)] }
 - **One span per call:** `chat <model>`, `embeddings <model>`, `generate_image <model>` and so on. A chat span covers the whole `ask()` or `stream()`, including its tool loop.
 - **Tool spans:** `execute_tool <name>`, as children of the chat span.
 - **Attributes:** the GenAI semantic conventions, such as `gen_ai.provider.name`, `gen_ai.request.model`, `gen_ai.response.model`, `gen_ai.usage.input_tokens` and `gen_ai.usage.output_tokens`. Errors set the span status and `error.type`.
+- **Fallbacks:** when a chat falls back to another model, the span gets a `node_llm.fallback` event with the models and providers involved, and `gen_ai.provider.name` names the provider that answered.
 - **Privacy:** spans never include prompts, responses or tool arguments.
 
 Spans go nowhere until your app registers an OpenTelemetry SDK and exporter.

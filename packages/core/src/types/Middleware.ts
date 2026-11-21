@@ -1,3 +1,4 @@
+import { FallbackEvent } from "../executor/Fallback.js";
 import { Message } from "../chat/Message.js";
 import { ChatOptions } from "../chat/ChatOptions.js";
 import { ChatResponseString } from "../chat/ChatResponse.js";
@@ -162,4 +163,11 @@ export interface Middleware {
     tool: ToolCall,
     error: Error
   ): Promise<ToolErrorDirective>;
+
+  /**
+   * Called when a chat request failed and is about to be sent to a fallback
+   * model (see `chat.withFallbacks`). The response that follows reports the
+   * model and provider that answered.
+   */
+  onFallback?(ctx: MiddlewareContext, event: FallbackEvent): Promise<void>;
 }
