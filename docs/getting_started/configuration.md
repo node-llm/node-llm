@@ -209,7 +209,7 @@ const chat = llm.chat("gpt-5", {
 | `requestTimeout`            | Request timeout in milliseconds     | `30000` (30s)                     |
 | `maxTokens`                 | Max output tokens per request       | `4096`                            |
 | `toolExecution`             | Tool execution mode (`auto`/`confirm`/`dry-run`) | `auto`               |
-| `toolConcurrency`           | Run independent tool calls in the same turn concurrently ([see Tools guide](/core-features/tools.html#concurrent-tool-execution)) | `false` |
+| `toolConcurrency`           | Run independent tool calls in the same turn concurrently; a number caps how many run at once ([see Tools guide](/core-features/tools.html#concurrent-tool-execution)) | `false` |
 | `retry`                     | Retry configuration (legacy)        | `{ attempts: 1, delayMs: 0 }`     |
 
 ---

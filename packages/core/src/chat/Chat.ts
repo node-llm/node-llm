@@ -47,6 +47,7 @@ import { ChatValidator } from "./Validation.js";
 import { ToolHandler } from "./ToolHandler.js";
 import {
   shouldRunToolCallsConcurrently,
+  toolWorkerLimit,
   executeToolCallOutcomes,
   toolCallLimitResults,
   unrunToolCallResults
@@ -524,9 +525,11 @@ export class Chat<S = unknown> {
   /**
    * Enable or disable concurrent execution of independent tool calls
    * returned in the same turn. Disabled ("confirm" mode always runs
-   * sequentially since approval is interactive).
+   * sequentially since approval is interactive). A number caps how many
+   * run at once, such as 4 for tools that reach a rate-limited API: every
+   * call still runs, that many at a time.
    */
-  withToolConcurrency(enabled: boolean): this {
+  withToolConcurrency(enabled: boolean | number): this {
     this.options.toolConcurrency = enabled;
     return this;
   }
@@ -858,7 +861,8 @@ export class Chat<S = unknown> {
             },
             this.middlewares,
             context,
-            runConcurrently
+            runConcurrently,
+            toolWorkerLimit(this.options.toolConcurrency)
           );
 
           for (const outcome of outcomes) {

@@ -57,7 +57,7 @@ export interface AgentConfig<I = Record<string, any>> {
   maxCost?: number;
 
   /** Run independent tool calls within the same turn concurrently */
-  toolConcurrency?: boolean;
+  toolConcurrency?: boolean | number;
 
   /** Cache the repeated start of each request on providers that need asking to */
   promptCache?: boolean;
@@ -100,7 +100,7 @@ export abstract class Agent<
 
   /** The most an ask may spend, in US dollars; see ChatOptions.maxCost */
   static maxCost?: number;
-  static toolConcurrency?: boolean;
+  static toolConcurrency?: boolean | number;
   static promptCache?: boolean;
   static assumeModelExists?: boolean;
   static middlewares?: Middleware[];

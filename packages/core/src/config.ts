@@ -50,7 +50,7 @@ export interface NodeLLMConfig {
    * concurrently instead of one at a time. Opt-in, overridable per-chat via
    * `chat.withToolConcurrency()`.
    */
-  toolConcurrency?: boolean;
+  toolConcurrency?: boolean | number;
   provider?: string;
   /**
    * When false, keys, base URLs and the provider come only from what is passed in code, never
@@ -356,7 +356,7 @@ export class Configuration implements NodeLLMConfig {
   public requestTimeout: number = DEFAULT_REQUEST_TIMEOUT;
   public maxTokens: number = DEFAULT_MAX_TOKENS;
   public toolExecution: ToolExecutionMode = DEFAULT_TOOL_EXECUTION;
-  public toolConcurrency: boolean = DEFAULT_TOOL_CONCURRENCY;
+  public toolConcurrency: boolean | number = DEFAULT_TOOL_CONCURRENCY;
 
   /**
    * Returns a plain object with all configuration values.
