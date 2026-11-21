@@ -1,5 +1,10 @@
 import { Provider, ChatRequest, ChatResponse } from "../providers/Provider.js";
-import { InsufficientQuotaError, RateLimitError, ServerError } from "../errors/index.js";
+import {
+  InsufficientQuotaError,
+  NetworkError,
+  RateLimitError,
+  ServerError
+} from "../errors/index.js";
 import {
   FallbackEvent,
   ResolvedFallback,
@@ -90,7 +95,8 @@ export class Executor {
         // trying again can't help.
         const isRetryable =
           (error instanceof RateLimitError && !(error instanceof InsufficientQuotaError)) ||
-          error instanceof ServerError;
+          error instanceof ServerError ||
+          error instanceof NetworkError;
 
         if (!isRetryable || attempt >= this.retry.attempts) {
           throw error;

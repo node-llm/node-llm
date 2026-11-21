@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased] (@node-llm/core)
+
+### Bug Fixes
+
+- **Network Errors Are Retried**: a request that can't reach the provider, such as `fetch failed` with `ECONNRESET`, now throws `NetworkError`, with the `host` and the original error as `cause`, and is retried like a server error. Before, fetch's `TypeError` escaped on the first attempt whatever `retry` was set to. It still moves on to a fallback model. The error-handling docs now also say that `InsufficientQuotaError` isn't retried, as the code already did.
+
 ## [1.21.0] - 2026-11-21 (@node-llm/core)
 
 ### Features

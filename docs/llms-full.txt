@@ -5824,6 +5824,7 @@ LLMError                        # Base error class
 │   ├── ServerError             # 500+: Provider server error
 │   │   └── ServiceUnavailableError  # 502/503/529: Overloaded
 │   └── AuthenticationError     # 401/403 (deprecated, use specific classes)
+├── NetworkError                # Provider unreachable: connection failed, refused or reset (has `host`, `cause`)
 ├── ConfigurationError          # Missing API key or invalid config
 ├── NotFoundError               # Model or provider not found
 │   └── InvalidModelError       # 404: Requested model ID is unknown
@@ -5994,11 +5995,10 @@ See [Tool Error Handling](../core-features/tools.html#error-handling--flow-contr
 
 NodeLLM automatically retries transient errors:
 
-- **Retried**: `RateLimitError` (429, including its subclass `InsufficientQuotaError`), `ServerError` (500+, including its subclass `ServiceUnavailableError`)
-- **Not retried**: `BadRequestError` (400), `ContextWindowExceededError`, `UnauthorizedError` (401), `ForbiddenError` (403)
+- **Retried**: `RateLimitError` (429), `ServerError` (500+, including its subclass `ServiceUnavailableError`) and `NetworkError` (the provider couldn't be reached, such as `fetch failed` with `ECONNRESET`)
+- **Not retried**: `InsufficientQuotaError` (429 for an account out of credit: waiting won't help), `BadRequestError` (400), `ContextWindowExceededError`, `UnauthorizedError` (401), `ForbiddenError` (403), timeouts and cancellations
 
-> **Note on `InsufficientQuotaError`**
-> Because `InsufficientQuotaError` extends `RateLimitError`, it is currently retried like any other 429. If you're out of credits, retries will simply fail again after each backoff — consider catching `InsufficientQuotaError` specifically to short-circuit and alert instead of waiting for retries to exhaust.
+`NetworkError` names the `host` that couldn't be reached, and its `cause` is the error `fetch()` threw. Its message says why, such as `Could not reach api.anthropic.com: fetch failed (ECONNRESET)`.
 
 > **Why not retry on Context Window Overflows?**
 > A `ContextWindowExceededError` (400) is considered a client-side logic error. Retrying with the same payload would consistently fail. By identifying this specific error, developers can implement smarter recovery logic, such as trimming chat history or summarizing previous turns before retrying manually.
