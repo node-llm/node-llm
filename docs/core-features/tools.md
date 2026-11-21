@@ -308,6 +308,38 @@ Older results are left out in blocks: with `keepToolResults: 3`, between three a
 
 Each result keeps its place and tool call id, so the conversation stays valid for every provider, and the model still sees every step it took. The chat's own `history` keeps every result in full.
 
+### Context Budgets <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v1.22.0+</span>
+
+`keepToolResults` counts results. A context budget measures them instead, as shares of the model's context window, so one huge result or many medium ones can't push a request past the window:
+
+```ts
+import { config } from "@node-llm/core";
+
+config.contextBudget = { perResult: 0.25, perRequest: 0.7 };
+```
+
+- **`perResult`:** a tool result longer than this share is cut when it is added, ending with a note that tells the model how much it saw and to ask for a narrower query or the next page. The chat's history keeps the cut result.
+- **`perRequest`:** a request larger than this share leaves out its oldest tool results, each replaced by a one-line note telling the model to call the tool again if it needs it. Only the request changes; `chat.history` keeps every result.
+- **Latest round:** this round's results go out whenever they fit, since the model hasn't seen them yet. When the round alone is over the share, its oldest results are left out too, with a note to ask for less, so the chat can't get stuck failing every request.
+- **Prompt caching:** the cut point moves in steps of about 15% of the budget rather than one result at a time, so the start of the request stays the same for many rounds.
+- **Tool search:** `tool_search` results are never left out.
+
+Shares are of the context window the model registry lists for the model. Sizes are estimated at two characters a token, which is how dense JSON and HTML run, so the budget errs on the side of leaving results out. Raise `perRequest` if your tools return mostly prose.
+
+A chat or agent can set its own, and `null` turns off a budget set in `config`:
+
+```ts
+const chat = llm.chat("gpt-4.1").withContextBudget({ perResult: 0.1, perRequest: 0.5 });
+const plain = llm.chat("gpt-4.1").withContextBudget(null);
+
+class ResearchAgent extends Agent {
+  static model = "my-local-model";
+  static contextBudget = { window: 32_000, perRequest: 0.7 }; // window for a model the registry doesn't know
+}
+```
+
+The budget only cuts and counts the text of messages and tool call arguments. Attachments, tool definitions and a long question can still overflow a request.
+
 ### Capping What a Loop Spends
 
 `maxCost` stops a tool loop once an ask has spent that many US dollars, before its next request, and throws `CostLimitError` with the `limit` and the `usage` so far. It guards against a tool that returns far more than expected, such as a page with thousands of rows:
@@ -342,38 +374,6 @@ In `confirm` and `dry-run` modes, the `ChatResponseString` object returned by `.
 const res = await chat.withToolExecution("dry-run").ask("Delete all users");
 console.log(res.tool_calls); // [{ id: '...', function: { name: 'delete_users', ... } }]
 ```
-
-### Context Budgets <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v1.22.0+</span>
-
-`keepToolResults` counts results. A context budget measures them instead, as shares of the model's context window, so one huge result or many medium ones can't push a request past the window:
-
-```ts
-import { config } from "@node-llm/core";
-
-config.contextBudget = { perResult: 0.25, perRequest: 0.7 };
-```
-
-- **`perResult`:** a tool result longer than this share is cut when it is added, ending with a note that tells the model how much it saw and to ask for a narrower query or the next page. The chat's history keeps the cut result.
-- **`perRequest`:** a request larger than this share leaves out its oldest tool results, each replaced by a one-line note telling the model to call the tool again if it needs it. Only the request changes; `chat.history` keeps every result.
-- **Latest round:** this round's results go out whenever they fit, since the model hasn't seen them yet. When the round alone is over the share, its oldest results are left out too, with a note to ask for less, so the chat can't get stuck failing every request.
-- **Prompt caching:** the cut point moves in steps of about 15% of the budget rather than one result at a time, so the start of the request stays the same for many rounds.
-- **Tool search:** `tool_search` results are never left out.
-
-Shares are of the context window the model registry lists for the model. Sizes are estimated at two characters a token, which is how dense JSON and HTML run, so the budget errs on the side of leaving results out. Raise `perRequest` if your tools return mostly prose.
-
-A chat or agent can set its own, and `null` turns off a budget set in `config`:
-
-```ts
-const chat = llm.chat("gpt-4.1").withContextBudget({ perResult: 0.1, perRequest: 0.5 });
-const plain = llm.chat("gpt-4.1").withContextBudget(null);
-
-class ResearchAgent extends Agent {
-  static model = "my-local-model";
-  static contextBudget = { window: 32_000, perRequest: 0.7 }; // window for a model the registry doesn't know
-}
-```
-
-The budget only cuts and counts the text of messages and tool call arguments. Attachments, tool definitions and a long question can still overflow a request.
 
 ---
 
