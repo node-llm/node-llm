@@ -157,6 +157,22 @@ export class ServiceUnavailableError extends ServerError {
 }
 
 /**
+ * The provider could not be reached: the connection failed, was refused or was reset before a
+ * response came back. Retried like a server error. `cause` is the error fetch threw.
+ */
+export class NetworkError extends LLMError {
+  constructor(
+    message: string,
+    /** The host that could not be reached */
+    public readonly host?: string,
+    options?: { cause?: unknown }
+  ) {
+    super(message, "NETWORK_ERROR");
+    if (options && "cause" in options) (this as { cause?: unknown }).cause = options.cause;
+  }
+}
+
+/**
  * Misconfiguration (e.g. missing API key)
  */
 export class ConfigurationError extends LLMError {

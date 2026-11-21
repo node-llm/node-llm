@@ -2,7 +2,7 @@ import { ChatChunk, ChatRequest, Provider } from "../providers/Provider.js";
 import { logger } from "../utils/logger.js";
 import { ConfigurationError } from "../errors/index.js";
 import { resolveModelAlias } from "../model_aliases.js";
-import { LLMError, RateLimitError, ServerError } from "../errors/index.js";
+import { LLMError, NetworkError, RateLimitError, ServerError } from "../errors/index.js";
 
 /** A model to try when the chat's model fails. A string is a model id on the same provider. */
 export type FallbackTarget = string | { model: string; provider?: string };
@@ -23,7 +23,12 @@ export interface FallbackEvent {
  * network failures. Bad requests, auth errors and cancellations never do.
  */
 export function isFallbackError(error: unknown): boolean {
-  if (error instanceof RateLimitError || error instanceof ServerError) return true;
+  if (
+    error instanceof RateLimitError ||
+    error instanceof ServerError ||
+    error instanceof NetworkError
+  )
+    return true;
   if (error instanceof LLMError) return false;
   if (error instanceof Error && error.name === "AbortError") return false;
   // fetch() rejects with a TypeError when the connection fails.
