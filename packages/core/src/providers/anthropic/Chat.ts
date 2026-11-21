@@ -88,7 +88,8 @@ export class AnthropicChat {
       content,
       usage: calculatedUsage,
       thinking: thinkingResult,
-      tool_calls: toolCalls.length > 0 ? toolCalls : undefined
+      tool_calls: toolCalls.length > 0 ? toolCalls : undefined,
+      finish_reason: json.stop_reason ?? null
     };
   }
 }

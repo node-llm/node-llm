@@ -51,7 +51,8 @@ export class FakeProvider implements Provider {
         content: "",
         reasoning: reply.reasoning || undefined,
         thinking: reply.thinking,
-        tool_calls: reply.tool_calls
+        tool_calls: reply.tool_calls,
+        finish_reason: reply.finish_reason
       };
     }
   }

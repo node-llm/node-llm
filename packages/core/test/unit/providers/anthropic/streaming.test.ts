@@ -164,11 +164,12 @@ describe("Anthropic Streaming", () => {
         chunks.push(chunk);
       }
 
-      expect(chunks).toHaveLength(1);
-      expect(chunks[0]!.tool_calls).toBeDefined();
-      expect(chunks[0]!.tool_calls?.[0]!.function.name).toBe("get_weather");
-      expect(chunks[0]!.tool_calls?.[0]!.function.arguments).toBe('{"location":"Paris"}');
-      expect(chunks[0]!.done).toBe(true);
+      expect(chunks).toHaveLength(2);
+      expect(chunks[0]!.finish_reason).toBe("end_turn");
+      expect(chunks[1]!.tool_calls).toBeDefined();
+      expect(chunks[1]!.tool_calls?.[0]!.function.name).toBe("get_weather");
+      expect(chunks[1]!.tool_calls?.[0]!.function.arguments).toBe('{"location":"Paris"}');
+      expect(chunks[1]!.done).toBe(true);
     });
 
     it("should include tools in request body", async () => {

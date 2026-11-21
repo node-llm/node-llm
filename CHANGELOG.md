@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased] (@node-llm/core)
+
+### Bug Fixes
+
+- **Finish Reason on Every Provider**: `response.finishReason` is now set by OpenAI (and OpenAI-based providers: Azure, OpenRouter, Ollama), Anthropic, Gemini, DeepSeek and xAI, for both `ask()` and `stream()`. Before, only Bedrock and Mistral set it, and streamed responses never had it. The value is the provider's own (`stop`, `length`, `end_turn`, `max_tokens`, `MAX_TOKENS`, ...). The OpenTelemetry middleware now fills `gen_ai.response.finish_reasons` from it.
+
 ## [1.20.1] - 2026-11-12 (@node-llm/core)
 
 ### Bug Fixes
