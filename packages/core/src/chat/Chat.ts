@@ -727,6 +727,8 @@ export class Chat<S = unknown> {
 
       // Self-Correction Loop
       while (true) {
+        // A correction re-asks with the answer and the feedback, which are only in this.messages.
+        if (correctionAttempt > 0) context.messages = [...this.systemMessages, ...this.messages];
         // Prepare execution options
         const messagesToUse = context.messages || [];
         const executeOptions = {

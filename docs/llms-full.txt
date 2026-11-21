@@ -2027,6 +2027,33 @@ const response = await chat.withSchema(companySchema).ask("Generate a small tech
 
 ---
 
+## When a Response Doesn't Match
+
+`response.data` throws Zod's `ZodError` when the response doesn't match the schema. Its message is one line that names each field, the values the schema allows and the value the model sent, so it can go straight into a log or an error screen:
+
+```text
+Response did not match the "verdict" schema: status: Invalid option: expected one of "passed"|"failed" (got "blocked")
+```
+
+The same parts are on `error.problems`, one per field: `path` (such as `steps[2].status`), `message`, `expected` (an enum's or literal's allowed values) and `received` (undefined when the model left the field out). `response.isValid`, `response.validationError` and `response.safeData` check without throwing.
+
+### Lenient Enums
+
+To accept a response with an unknown enum value instead of failing, say so in the schema with Zod's `.catch()`. The model is still sent the allowed values.
+
+```ts
+const verdict = z.object({
+  // An unknown status becomes "unknown"
+  status: z.enum(["passed", "failed", "unknown"]).catch("unknown"),
+  // An unknown priority is left out
+  priority: z.enum(["low", "high"]).optional().catch(undefined)
+});
+```
+
+To have the model fix its answer instead, add the self-correction middleware below: it re-asks with this message.
+
+---
+
 ## 🛡️ Automating Schema Correction (Middleware) <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v1.15.0+</span>
 
 Even with strict schemas, non-OpenAI models (like Claude, Gemini, or local models) can occasionally hallucinate invalid JSON or skip required fields.

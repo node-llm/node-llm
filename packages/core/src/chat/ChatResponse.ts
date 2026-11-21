@@ -3,6 +3,7 @@ import { ToolCall } from "./Tool.js";
 import { Schema } from "../schema/Schema.js";
 import { extractJson } from "../utils/json.js";
 import { isZodSchema } from "../schema/zod.js";
+import { readableSchemaError } from "../schema/validation.js";
 
 /**
  * Enhanced string that includes token usage metadata.
@@ -147,7 +148,8 @@ export class ChatResponseString extends String {
   /**
    * Access the parsed data.
    * If a Zod schema was provided via .withSchema(), this will validate the data.
-   * Throws ZodError if validation fails.
+   * Throws ZodError if validation fails. Its message is one line naming each field, the values the
+   * schema allows and the value received, and its `problems` hold the same parts.
    */
   get data(): unknown {
     if (this._cachedData !== undefined) return this._cachedData;
@@ -161,8 +163,9 @@ export class ChatResponseString extends String {
         this._cachedData = schema.parse(json);
         return this._cachedData;
       } catch (e) {
-        this._validationError = e as Error;
-        throw e;
+        const error = readableSchemaError(e, this.schema!.definition.name, json) as Error;
+        this._validationError = error;
+        throw error;
       }
     }
 
