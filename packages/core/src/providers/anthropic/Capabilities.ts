@@ -15,6 +15,19 @@ export class Capabilities {
     return ModelRegistry.getMaxOutputTokens(modelId, "anthropic") ?? 8_192;
   }
 
+  /**
+   * Whether the model takes `defer_loading` tools and `tool_reference` results
+   * (tool search). Claude 4.5 and later; not Claude 3, Opus 4 / 4.1 or Sonnet 4.
+   */
+  static supportsToolSearch(modelId: string): boolean {
+    const id = modelId.replace(/^(?:[a-z]{2,4}\.)?anthropic\./, "");
+    if (!id.startsWith("claude-")) return false;
+    if (/^claude-(?:\d|instant)/.test(id) || /^claude-3/.test(id)) return false;
+    if (/^claude-(?:opus|sonnet)-4(?:-[01])?(?:-\d{8}|@\d{8}|$|-latest|-v\d)/.test(id))
+      return false;
+    return true;
+  }
+
   static supportsVision(modelId: string): boolean {
     return ModelRegistry.supports(modelId, "vision", "anthropic");
   }

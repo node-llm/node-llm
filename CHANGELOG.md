@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased] (@node-llm/core)
+
+### Features
+
+- **Native Deferred Tools on Anthropic**: on Claude 4.5 and later, a chat with deferred tools sends every tool on every request, deferred ones with `defer_loading: true`, and sends `tool_search` results as `tool_reference` blocks. The tool list no longer changes when the model loads a tool, so the prompt cache holds. Other providers and older Claude models keep the portable behavior.
+
+### Bug Fixes
+
+- **`keepToolResults` Keeps `tool_search` Results**: windowing no longer replaces `tool_search` results with a placeholder. They are small, and they record which deferred tools a conversation has loaded.
+
 ## [1.20.1] - 2026-11-12 (@node-llm/core)
 
 ### Bug Fixes
