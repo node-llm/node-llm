@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased] (@node-llm/orm)
+
+### Features
+
+- **Agent Session Answers Have Their Data**: for an agent with a `schema`, the record `session.ask()` returns has the parsed answer as `data`, typed from the schema, found inside a code fence or surrounding text and checked against a Zod schema, as `response.data` is in core. Before, apps parsed `content` themselves. `data` isn't a column: it isn't saved and is left out when the record is serialized. New types `AgentAnswer` and `AgentData`.
+
 ## [1.21.0] - 2026-11-21 (@node-llm/core)
 
 ### Features

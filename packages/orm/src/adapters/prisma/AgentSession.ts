@@ -18,6 +18,26 @@ import {
 import type { ChatStore } from "../../Store.js";
 import { toStore } from "./PrismaStore.js";
 
+/** What an agent's answers parse to: its schema's type, or unknown without one. */
+export type AgentData<T> = T extends Agent<any, infer S> ? S : unknown;
+
+/**
+ * The saved assistant message, with the answer's parsed `data`: checked against the agent's schema
+ * when it has a Zod one, and found inside a code fence or surrounding text. Reading `data` throws
+ * the schema's error when the answer doesn't match. `data` isn't a column, so it isn't saved or
+ * sent when the record is serialized.
+ */
+export type AgentAnswer<T> = MessageRecord & { readonly data: AgentData<T> };
+
+function withData<T>(record: MessageRecord, response: { data: unknown }): AgentAnswer<T> {
+  Object.defineProperty(record, "data", {
+    get: () => response.data,
+    enumerable: false,
+    configurable: true
+  });
+  return record as AgentAnswer<T>;
+}
+
 /**
  * Record structure for the LLM Agent Session table.
  */
@@ -216,7 +236,7 @@ export class AgentSession<
   /**
    * Send a message and persist the conversation.
    */
-  async ask(message: string, options: AskOptions & { inputs?: I } = {}): Promise<MessageRecord> {
+  async ask(message: string, options: AskOptions & { inputs?: I } = {}): Promise<AgentAnswer<T>> {
     // Persist user message
     await this.store.createMessage({ chatId: this.chatId, role: "user", content: message });
 
@@ -237,7 +257,7 @@ export class AgentSession<
       const response = await this.agent.ask(message, { ...options, inputs });
 
       // Update assistant message with response
-      return (await this.store.updateMessage(assistantMessage.id, {
+      const saved = (await this.store.updateMessage(assistantMessage.id, {
         content: response.content,
         contentRaw: JSON.stringify(response.meta),
         inputTokens: response.usage?.input_tokens || 0,
@@ -248,6 +268,7 @@ export class AgentSession<
         modelId: response.model || null,
         provider: response.provider || null
       })) as MessageRecord;
+      return withData<T>(saved, response);
     } catch (error) {
       // Clean up placeholder on error
       await this.store.deleteMessage(assistantMessage.id);
