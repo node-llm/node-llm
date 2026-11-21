@@ -52,7 +52,18 @@ export function setupVCR(
     process.env.TYPESAFE_API_KEY = "dummy-key-for-vcr-replay";
   }
 
-  if (!process.env.AWS_ACCESS_KEY_ID && !process.env.AWS_BEARER_TOKEN_BEDROCK) {
+  if (mode === "replay") {
+    // Replay must not depend on the machine's AWS setup: a .env with both a
+    // bearer token and access keys is rejected by BedrockConfig, and a
+    // different region or guardrail changes the URLs the cassettes match on.
+    delete process.env.AWS_BEARER_TOKEN_BEDROCK;
+    delete process.env.AWS_SESSION_TOKEN;
+    process.env.AWS_ACCESS_KEY_ID = "AKIA-DUMMY-KEY";
+    process.env.AWS_SECRET_ACCESS_KEY = "dummy-secret-key";
+    process.env.AWS_REGION = "us-east-1";
+    delete process.env.AWS_GUARDRAIL_ID;
+    delete process.env.AWS_GUARDRAIL_VERSION;
+  } else if (!process.env.AWS_ACCESS_KEY_ID && !process.env.AWS_BEARER_TOKEN_BEDROCK) {
     process.env.AWS_ACCESS_KEY_ID = "AKIA-DUMMY-KEY";
     process.env.AWS_SECRET_ACCESS_KEY = "dummy-secret-key";
   }
