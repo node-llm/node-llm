@@ -61,6 +61,7 @@ export * from "./adapters/prisma/index.js";
 
 // Custom stores
 export { isChatStore } from "./Store.js";
+export { StoppedByStoreError } from "./errors.js";
 export type {
   ChatStore,
   StoredChat,
@@ -68,6 +69,7 @@ export type {
   StoredAgentSession,
   NewChat,
   NewToolCall,
+  RequestRecorded,
   NewRequest,
   MessageUpdate,
   RequestTotals
