@@ -432,6 +432,21 @@ await session.ask("Where is my order #789?");
 console.log(session.id); // "abc-123" - save this!
 ```
 
+### Structured Answers
+
+For an agent with a `schema`, the record `session.ask()` returns has the parsed answer as `data`, typed from the schema. It is found inside a code fence or surrounding text and checked against a Zod schema, so you don't parse `content` yourself. Reading `data` throws the schema's error when the answer doesn't match. `data` isn't saved: it isn't a column, and it is left out when the record is serialized.
+
+```typescript
+class Repairer extends Agent<{}, z.infer<typeof proposal>> {
+  static model = "claude-sonnet-5-5";
+  static schema = proposal;
+}
+
+const session = await createAgentSession(prisma, llm, Repairer);
+const answer = await session.ask("The Save button moved.");
+answer.data.action; // typed, checked against the schema
+```
+
 ### Resuming Sessions
 
 ```typescript

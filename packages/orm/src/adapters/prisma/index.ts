@@ -54,6 +54,8 @@ export { PrismaStore, toStore } from "./PrismaStore.js";
 // AgentSession API
 export { AgentSession, createAgentSession, loadAgentSession } from "./AgentSession.js";
 export type {
+  AgentAnswer,
+  AgentData,
   AgentSessionRecord,
   CreateAgentSessionOptions,
   LoadAgentSessionOptions,
