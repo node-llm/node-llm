@@ -19,6 +19,23 @@ export interface MCPSamplingLLMOptions {
   llm: NodeLLMCore;
   /** Model to use for sampling. Falls back to the llm's configured defaultChatModel. */
   model?: string;
+  /**
+   * Asked before each sampling request is answered; return false to refuse it. The server can
+   * send any prompt, with its own instructions, and your account pays for the answer.
+   */
+  approve?: (request: MCPSamplingParams) => boolean | Promise<boolean>;
+  /** The most one answer may be, in tokens, whatever the server asks for. */
+  maxTokens?: number;
+  /** The most all of this server's sampling requests may spend together, in US dollars. */
+  maxCost?: number;
+}
+
+/** Thrown, and sent to the server as an error, when a sampling request is refused. */
+export class SamplingRefusedError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "SamplingRefusedError";
+  }
 }
 
 export type MCPSamplingOption = MCPSamplingHandler | MCPSamplingLLMOptions;
@@ -26,7 +43,7 @@ export type MCPSamplingOption = MCPSamplingHandler | MCPSamplingLLMOptions;
 export function resolveSamplingHandler(option?: MCPSamplingOption): MCPSamplingHandler | undefined {
   if (!option) return undefined;
   if (typeof option === "function") return option;
-  return createLLMSamplingHandler(option.llm, option.model);
+  return createLLMSamplingHandler(option.llm, option.model, option);
 }
 
 /**
@@ -69,9 +86,19 @@ function mapFinishReason(reason?: string | null): CreateMessageResult["stopReaso
  */
 export function createLLMSamplingHandler(
   llm: NodeLLMCore,
-  defaultModel?: string
+  defaultModel?: string,
+  guards: Pick<MCPSamplingLLMOptions, "approve" | "maxTokens" | "maxCost"> = {}
 ): MCPSamplingHandler {
+  let spent = 0;
   return async (request: MCPSamplingParams): Promise<CreateMessageResult> => {
+    if (guards.maxCost !== undefined && spent >= guards.maxCost) {
+      throw new SamplingRefusedError(
+        `[MCP] Sampling refused: this server has used its $${guards.maxCost} limit.`
+      );
+    }
+    if (guards.approve && !(await guards.approve(request))) {
+      throw new SamplingRefusedError("[MCP] Sampling request refused.");
+    }
     const model = defaultModel ?? llm.defaultChatModel;
     if (!model) {
       throw new Error(
@@ -80,7 +107,11 @@ export function createLLMSamplingHandler(
       );
     }
 
-    const chat = llm.chat(model, { maxTokens: request.maxTokens });
+    const maxTokens =
+      guards.maxTokens !== undefined
+        ? Math.min(request.maxTokens ?? guards.maxTokens, guards.maxTokens)
+        : request.maxTokens;
+    const chat = llm.chat(model, { maxTokens });
 
     if (request.systemPrompt) {
       chat.withInstructions(request.systemPrompt);
@@ -97,6 +128,7 @@ export function createLLMSamplingHandler(
     }
 
     const response = await chat.ask(lastMessage ? extractText(lastMessage.content) : "");
+    spent += response.usage?.cost ?? 0;
 
     return {
       model: response.model ?? model,
