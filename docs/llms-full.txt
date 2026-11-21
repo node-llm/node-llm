@@ -2446,7 +2446,9 @@ When a chat has deferred tools:
 
 Which tools are loaded is read from the conversation history, so it survives saving and restoring a chat. Tools without `defer` are sent as before, and a chat with no deferred tools is unchanged.
 
-This works the same on every provider. It does not use a provider's own server-side tool search.
+This works the same on every provider.
+
+**On Anthropic (Claude 4.5 and later, v1.21.0+)**, NodeLLM also uses Claude's own deferred loading. Every tool is sent on every request, deferred ones with `defer_loading: true`, and a `tool_search` result is sent as `tool_reference` blocks that the API expands into full definitions. The tool list then never changes during a conversation, so [prompt caching](/advanced/prompt_caching) keeps working after the model loads a tool. Search itself still runs in NodeLLM, so results are the same as on other providers.
 
 ---
 
@@ -4810,6 +4812,9 @@ await chat.ask("Hello world");
    onToolCallStart?: (context: MiddlewareContext, tool: ToolCall) => Promise<void>;
    onToolCallEnd?: (context: MiddlewareContext, tool: ToolCall, result: unknown) => Promise<void>;
    onToolCallError?: (context: MiddlewareContext, tool: ToolCall, error: Error) => Promise<ToolErrorDirective>;
+
+   // Model fallbacks (v1.21.0+)
+   onFallback?: (context: MiddlewareContext, event: FallbackEvent) => Promise<void>;
  }
  ```
 
@@ -4864,6 +4869,22 @@ const perfMiddleware = {
     }
   }
 }
+```
+
+---
+
+### Watching Fallbacks and Tool Search
+
+- **`onFallback`** runs when a chat request failed and is about to go to a fallback model (see [Model Fallbacks](/advanced/error-handling)). It gets the same `context` as the rest of the request and an event with `error`, `from`, `to` and `attempt`. The response that follows reports the model and provider that answered.
+- **Tool search** needs no hook of its own. Loading deferred tools is a call to the `tool_search` tool, so `onToolCallStart` and `onToolCallEnd` see it like any other tool. The result is JSON whose `loaded` field lists the tools it loaded.
+
+```typescript
+const fallbackLogger: Middleware = {
+  name: "FallbackLogger",
+  onFallback: async (context, { from, to, error }) => {
+    console.warn(`[${context.requestId}] ${from.model} failed (${(error as Error).message}), trying ${to.model}`);
+  }
+};
 ```
 
 ---
@@ -4986,6 +5007,7 @@ const llm = createLLM({ provider: "openai", middlewares: [OpenTelemetry(otel)] }
 - **One span per call:** `chat <model>`, `embeddings <model>`, `generate_image <model>` and so on. A chat span covers the whole `ask()` or `stream()`, including its tool loop.
 - **Tool spans:** `execute_tool <name>`, as children of the chat span.
 - **Attributes:** the GenAI semantic conventions, such as `gen_ai.provider.name`, `gen_ai.request.model`, `gen_ai.response.model`, `gen_ai.usage.input_tokens` and `gen_ai.usage.output_tokens`. Errors set the span status and `error.type`.
+- **Fallbacks:** when a chat falls back to another model, the span gets a `node_llm.fallback` event with the models and providers involved, and `gen_ai.provider.name` names the provider that answered.
 - **Privacy:** spans never include prompts, responses or tool arguments.
 
 Spans go nowhere until your app registers an OpenTelemetry SDK and exporter.
@@ -6009,6 +6031,7 @@ console.log(reply.model, reply.provider); // the model that answered
 - **Order:** fallbacks are tried in order. If every one fails, the last error is thrown.
 - **Per request:** each request starts on the chat's own model again. In a tool loop, each step can fall back on its own.
 - **Streaming:** a stream falls back only if it fails before its first chunk. After that, the error is thrown, since you have already shown part of an answer.
+- **Settings (v1.21.0+):** a fallback model gets the chat's settings, minus any it doesn't take. Temperature, thinking, prompt caching, a forced tool choice and a predicted output are left out for a model that doesn't support them, so the fallback doesn't fail with a bad request.
 - **Providers:** a fallback provider uses the same configuration (API keys, base URLs) as the `llm` instance the chat came from. A fallback whose provider is not configured is skipped.
 
 To log or count fallbacks, use `onFallback`:

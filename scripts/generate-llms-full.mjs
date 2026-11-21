@@ -11,6 +11,7 @@
 // Front matter is stripped, `{{ page.title }}`-style tags are replaced with the
 // page's front matter values, and other Liquid tags, kramdown attribute lists
 // (`{: .no_toc }`) and the just-the-docs table of contents are removed.
+import { execFileSync } from "child_process";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath, pathToFileURL } from "url";
@@ -56,6 +57,20 @@ export function renderBody(body, data) {
     .join("\n")
     .replace(/^1\. TOC\n(?=\n|$)/gm, "");
   return rendered.replace(/^\s*\n/, "").replace(/\s+$/, "") + "\n";
+}
+
+/**
+ * Docs files git tracks, relative to `dir`, or undefined outside a git checkout.
+ * Untracked and ignored files (such as private notes in docs/local/) must never
+ * end up in the published llms-full.txt.
+ */
+function trackedDocs(dir) {
+  try {
+    const out = execFileSync("git", ["ls-files", "-z", "--", "."], { cwd: dir, encoding: "utf8" });
+    return new Set(out.split("\0").filter(Boolean));
+  } catch {
+    return undefined;
+  }
 }
 
 function listDocs(dir, root = dir) {
@@ -115,8 +130,10 @@ export function orderPages(pages) {
 
 /** Returns the full text of llms-full.txt for the docs in `docsDir`. */
 export function buildLlmsFull(docsDir = DOCS_DIR) {
+  const tracked = trackedDocs(docsDir);
   const pages = listDocs(docsDir)
     .filter((file) => file !== OUTPUT_NAME)
+    .filter((file) => !tracked || tracked.has(file))
     .map((file) => {
       const source = fs.readFileSync(path.join(docsDir, file), "utf8");
       // llms.txt is served as-is, so it is included as-is.
