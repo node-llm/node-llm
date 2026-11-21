@@ -432,6 +432,18 @@ await session.ask("Where is my order #789?");
 console.log(session.id); // "abc-123" - save this!
 ```
 
+The class's settings apply unless a session sets its own. Any agent setting except `schema` can be given for one session, such as a budget for one run:
+
+```typescript
+const session = await createAgentSession(prisma, llm, ResearchAgent, {
+  maxCost: 0.5, // in place of ResearchAgent.maxCost
+  maxToolCalls: 40,
+  tools: [searchDocs] // in place of the class's tools
+});
+```
+
+These settings aren't saved with the session. Pass them to `loadAgentSession()` again when you resume it: `loadAgentSession(prisma, llm, ResearchAgent, id, { maxCost: 0.5 })`.
+
 ### Resuming Sessions
 
 ```typescript
