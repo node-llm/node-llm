@@ -1,3 +1,4 @@
+import { toolErrorText } from "./ToolErrorText.js";
 import { windowToolResults } from "./ToolResultWindow.js";
 import { Message } from "./Message.js";
 import {
@@ -472,7 +473,7 @@ export class ChatStream {
             messages.push(
               provider.formatToolResultMessage(
                 toolCall.id,
-                `Fatal error executing tool '${toolCall.function.name}': ${currentError.message}`,
+                `Fatal error executing tool '${toolCall.function.name}': ${toolErrorText(currentError)}`,
                 { isError: true }
               )
             );

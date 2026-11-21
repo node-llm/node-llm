@@ -1,3 +1,4 @@
+import { toolErrorText } from "./ToolErrorText.js";
 import { windowToolResults } from "./ToolResultWindow.js";
 import { FileLoader } from "../utils/FileLoader.js";
 import { Message } from "./Message.js";
@@ -943,7 +944,7 @@ export class Chat<S = unknown> {
             this.messages.push(
               this.provider.formatToolResultMessage(
                 toolCall.id,
-                `Fatal error executing tool '${toolCall.function.name}': ${(currentError as Error).message}`,
+                `Fatal error executing tool '${toolCall.function.name}': ${toolErrorText(currentError)}`,
                 { isError: true }
               )
             );

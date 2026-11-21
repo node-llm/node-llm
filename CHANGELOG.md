@@ -8,6 +8,9 @@ All notable changes to this project will be documented in this file.
 
 - **Gemini Keys Are Sent in a Header**: the key goes in `x-goog-api-key` instead of `?key=` in the URL, so proxies, tracing and error reports that record URLs don't see it.
 - **Debug Logs Mask Keys and Files**: with `debug: true`, printed request and response bodies mask key- and token-like values and secret fields (`api_key`, `authorization`, ...), and replace base64 files with their size. Prompts and answers are still printed. `redactForLog()` is exported.
+- **Tool Arguments Are Checked Against JSON Schemas**: a tool defined with a JSON Schema (plain definitions, `Tool` classes with one, MCP tools) no longer runs with arguments its schema rules out: missing required fields, wrong types, values outside an `enum`, or extra fields where `additionalProperties` is `false`. The model is told what to fix. Zod tools are checked by Zod as before.
+- **Tool Errors Sent to the Model Are Masked and Cut Short**: key-like values and passwords in URLs are masked, and the message is cut to 500 characters.
+- **Unknown-Tool Replies Don't List Deferred Tools**: when the model calls a tool that doesn't exist, the reply lists only the tools it can see.
 - **Provider Errors Mask Keys**: `APIError`'s `message` and `body` mask key-like values (such as an OpenRouter key named in a credit error). Everything else in them is unchanged.
 
 ## [1.21.0] - 2026-11-21 (@node-llm/core)
