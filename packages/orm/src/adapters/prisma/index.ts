@@ -56,6 +56,7 @@ export { AgentSession, createAgentSession, loadAgentSession } from "./AgentSessi
 export type {
   AgentAnswer,
   AgentData,
+  AgentSessionOverrides,
   AgentSessionRecord,
   CreateAgentSessionOptions,
   LoadAgentSessionOptions,

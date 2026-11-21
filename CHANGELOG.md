@@ -16,6 +16,7 @@ All notable changes to this project will be documented in this file.
 - **Self-Correction Re-Asks With the Feedback in `ask()`**: a middleware `RETRY`, such as `SchemaSelfCorrection`'s, sent the first request again, without the rejected answer or the feedback, so the model was not told what to fix. It now sends both, as `stream()` already did.
 - **Ending With a Tool**: `endWith: "finish"` on a chat, an agent or one ask names a tool the model must call before its turn ends. When the model ends its turn without calling it, it is reminded once; if it still doesn't, the ask throws `EndToolNotCalledError` with the tool and the ask's usage. `{ tool, reminder }` sets the reminder's wording, a tool that halts the loop counts as called, and `endWith: null` turns it off for one ask. Works for `ask()` and `stream()`.
 - **Stall Guard**: `stallGuard: { repeats, noProgress, progress }` on a chat or an agent stops a tool loop that is going nowhere, before its next request, with `StalledError`. `repeats` counts the same call with the same arguments getting the same result; `noProgress` counts calls in a row that failed or got a result the tool already gave in the ask, or that an app's own `progress(call, result, failed)` says made no progress. The error has the `reason`, the `calls`, their `count` and the ask's `usage`, and every call that ran keeps its result in the history. Works for `ask()` and `stream()`; off unless set.
+
 ## [Unreleased] (@node-llm/orm)
 
 ### Features
@@ -25,11 +26,13 @@ All notable changes to this project will be documented in this file.
 ### Bug Fixes
 
 - **No Empty Assistant Messages on Load**: an assistant message with no text, left by a run that stopped before it finished, is no longer sent in a loaded session's history. Providers such as Anthropic reject an empty message.
+
 ### Bug Fixes
 
 - **Network Errors Are Retried**: a request that can't reach the provider, such as `fetch failed` with `ECONNRESET`, now throws `NetworkError`, with the `host` and the original error as `cause`, and is retried like a server error. Before, fetch's `TypeError` escaped on the first attempt whatever `retry` was set to. It still moves on to a fallback model. The error-handling docs now also say that `InsufficientQuotaError` isn't retried, as the code already did.
 - **Anthropic Structured Outputs**: on Claude models that support it (Fable and Mythos 5, Opus 5 and 4.8, Sonnet 5, Haiku 5 and 4.5, and Opus 4.5 and 4.1), a schema is now sent as `output_config.format`, so the answer is held to it instead of only being asked for in the prompt. Constraints Anthropic doesn't take, such as minimums and lengths, are left out of what is sent, and every object gets `additionalProperties: false`; a Zod schema still checks the full schema on `response.data`. Older models, and schemas with records or self-references, keep the prompt instruction. For `ask()` and `stream()`.
 - **Agent Session Answers Have Their Data**: for an agent with a `schema`, the record `session.ask()` returns has the parsed answer as `data`, typed from the schema, found inside a code fence or surrounding text and checked against a Zod schema, as `response.data` is in core. Before, apps parsed `content` themselves. `data` isn't a column: it isn't saved and is left out when the record is serialized. New types `AgentAnswer` and `AgentData`.
+- **Agent Settings per Session**: `createAgentSession()` and `loadAgentSession()` take any agent setting except `schema` for that session, in place of the class's: `maxCost`, `maxTokens`, `temperature`, `thinking`, `keepToolResults`, `promptCache`, `middlewares` and the rest. Before, only `model`, `provider`, `instructions`, `maxToolCalls` and `tools` were passed on, and `loadAgentSession()` took none, so an app had to subclass the agent for each budget. Settings left `undefined` keep the class's. New type `AgentSessionOverrides`.
 
 ## [1.21.0] - 2026-11-21 (@node-llm/core)
 
