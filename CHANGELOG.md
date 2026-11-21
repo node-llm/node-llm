@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased] (@node-llm/core)
+
+### Features
+
+- **`onFallback` Middleware Hook**: middlewares can now see model fallbacks. `onFallback(context, event)` runs, with the request's own context, before a chat request is sent to a fallback model, for `ask()` and `stream()`. The OpenTelemetry middleware uses it to add a `node_llm.fallback` span event and to name the provider that answered.
+
 ## [1.20.1] - 2026-11-12 (@node-llm/core)
 
 ### Bug Fixes
