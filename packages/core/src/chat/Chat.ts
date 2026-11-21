@@ -597,7 +597,11 @@ export class Chat<S = unknown> {
     let messageContent: unknown = content;
     const files = [...(options?.images ?? []), ...(options?.files ?? [])];
     if (files.length > 0) {
-      const processedFiles = await Promise.all(files.map((f: string) => FileLoader.load(f)));
+      const processedFiles = await Promise.all(
+        files.map((f: string) =>
+          FileLoader.load(f, this.options.fileSecurity ?? config.fileSecurity)
+        )
+      );
       const hasBinary = processedFiles.some(isBinaryContent);
 
       ChatValidator.validateVision(this.provider, this.model, hasBinary, this.options);

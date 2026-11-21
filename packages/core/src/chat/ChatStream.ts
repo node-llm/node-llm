@@ -165,7 +165,9 @@ export class ChatStream {
       const files = [...(requestOptions.images ?? []), ...(requestOptions.files ?? [])];
 
       if (files.length > 0) {
-        const processedFiles = await Promise.all(files.map((f: string) => FileLoader.load(f)));
+        const processedFiles = await Promise.all(
+          files.map((f: string) => FileLoader.load(f, options.fileSecurity ?? config.fileSecurity))
+        );
         const hasBinary = processedFiles.some(isBinaryContent);
 
         ChatValidator.validateVision(provider, model, hasBinary, options);

@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased] (@node-llm/core)
+
+### Security
+
+- **Secret Files and Cloud Metadata Are Refused**: `images` and `files` no longer load files that hold secrets (`.env` and `.env.*`, `.npmrc`, `.netrc`, SSH keys, anything in `.ssh`, `.aws` or `.kube`, `.pem` and `.key` files, and links to them), and no longer fetch cloud metadata addresses (`169.254.x.x`, `fd00:ec2::254`, `metadata.google.internal`), directly or through a redirect. They throw `FileAccessError`. Ordinary files, files with no extension and other private hosts load as before; `fileSecurity.allowSensitiveFiles` loads secret files again.
+- **Remote Files Time Out and Stop at 50 MB While Reading**: a remote file now times out after 60 seconds (`fileSecurity.fetchTimeout`). One without a `content-length` was read in full before its size was checked; it is now stopped once it passes 50 MB.
+- **More File Rules (`fileSecurity`)**: for apps where a path or URL comes from a user, `root` keeps local files inside a folder (after following links), `blockPrivateNetwork` refuses every private address, `allowedHosts` allows only listed hosts, and `throwOnFetchError` throws instead of passing a failed URL on to the provider. Set on `config`, `createLLM()` or a chat.
+
 ## [1.21.0] - 2026-11-21 (@node-llm/core)
 
 ### Features

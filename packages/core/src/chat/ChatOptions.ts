@@ -1,3 +1,4 @@
+import type { FileSecurity } from "../utils/FileSecurity.js";
 import { Middleware } from "../types/Middleware.js";
 import { Message } from "./Message.js";
 import { ToolResolvable, ToolCall } from "./Tool.js";
@@ -62,6 +63,8 @@ export interface ChatOptions {
   maxCost?: number;
   maxCorrections?: number;
   requestTimeout?: number;
+  /** Rules for the files and URLs this chat may load; see FileSecurity. */
+  fileSecurity?: FileSecurity;
   toolExecution?: ToolExecutionModeInput;
   /**
    * When true, independent tool calls returned in the same turn are executed
