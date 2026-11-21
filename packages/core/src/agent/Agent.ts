@@ -1,5 +1,6 @@
 import { Chat, AskOptions } from "../chat/Chat.js";
 import { ChatOptions } from "../chat/ChatOptions.js";
+import type { ContextBudget } from "../chat/ContextBudget.js";
 import { ChatResponseString } from "../chat/ChatResponse.js";
 import { ToolResolvable, ToolCall } from "../chat/Tool.js";
 import { ThinkingConfig, ThinkingResult } from "../providers/Provider.js";
@@ -59,6 +60,8 @@ export interface AgentConfig<I = Record<string, any>> {
   /** Run independent tool calls within the same turn concurrently */
   toolConcurrency?: boolean;
 
+  contextBudget?: ContextBudget | null;
+
   /** Cache the repeated start of each request on providers that need asking to */
   promptCache?: boolean;
 
@@ -101,6 +104,7 @@ export abstract class Agent<
   /** The most an ask may spend, in US dollars; see ChatOptions.maxCost */
   static maxCost?: number;
   static toolConcurrency?: boolean;
+  static contextBudget?: ContextBudget | null;
   static promptCache?: boolean;
   static assumeModelExists?: boolean;
   static middlewares?: Middleware[];
@@ -188,6 +192,8 @@ export abstract class Agent<
       keepToolResults: overrides.keepToolResults ?? ctor.keepToolResults,
       maxCost: overrides.maxCost ?? ctor.maxCost,
       toolConcurrency: overrides.toolConcurrency ?? ctor.toolConcurrency,
+      contextBudget:
+        overrides.contextBudget !== undefined ? overrides.contextBudget : ctor.contextBudget,
       promptCache: overrides.promptCache ?? ctor.promptCache,
       headers: { ...ctor.headers, ...overrides.headers },
       params: { ...ctor.params, ...overrides.params },
@@ -471,6 +477,7 @@ export function defineAgent<
     static override keepToolResults = config.keepToolResults;
     static override maxCost = config.maxCost;
     static override toolConcurrency = config.toolConcurrency;
+    static override contextBudget = config.contextBudget;
     static override promptCache = config.promptCache;
     static override assumeModelExists = config.assumeModelExists;
     static override middlewares = config.middlewares;

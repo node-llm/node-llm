@@ -210,6 +210,7 @@ const chat = llm.chat("gpt-5", {
 | `maxTokens`                 | Max output tokens per request       | `4096`                            |
 | `toolExecution`             | Tool execution mode (`auto`/`confirm`/`dry-run`) | `auto`               |
 | `toolConcurrency`           | Run independent tool calls in the same turn concurrently ([see Tools guide](/core-features/tools.html#concurrent-tool-execution)) | `false` |
+| `contextBudget`             | Shares of the context window tool results may take: `{ perResult, perRequest }` ([see Tools guide](/core-features/tools.html#context-budgets)) | off |
 | `retry`                     | Retry configuration (legacy)        | `{ attempts: 1, delayMs: 0 }`     |
 
 ---
