@@ -104,7 +104,7 @@ describeVCR("Authentication", () => {
 
 ### Security & Scrubbing 🛡️
 
-The VCR automatically redacts `api_key`, `authorization`, and other sensitive headers. You can add custom redaction:
+The VCR automatically redacts `api_key`, `authorization`, `x-goog-api-key` and other sensitive headers, and key formats wherever they appear: OpenAI, Anthropic (`sk-ant-...`), OpenRouter (`sk-or-v1-...`), xAI, Google, AWS access key IDs, GitHub tokens, Bearer tokens and JWTs. Check a new cassette before you commit it all the same. You can add custom redaction:
 
 ```typescript
 withVCR({

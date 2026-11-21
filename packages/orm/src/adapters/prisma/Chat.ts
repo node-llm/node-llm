@@ -4,6 +4,7 @@ import { BaseChat, type ChatRecord, type ChatOptions } from "../../BaseChat.js";
 import type { ChatStore } from "../../Store.js";
 import { toStore } from "./PrismaStore.js";
 import { StoppedByStoreError } from "../../errors.js";
+import type { StoreRedactor } from "../../redact.js";
 
 export { type ChatRecord, type ChatOptions };
 
@@ -357,7 +358,7 @@ export class Chat extends BaseChat {
 export async function createChat<T = Record<string, any>>(
   prismaOrStore: unknown,
   llm: NodeLLMCore,
-  options: ChatOptions & { tableNames?: TableNames } & T = {} as any
+  options: ChatOptions & { tableNames?: TableNames; redact?: StoreRedactor } & T = {} as any
 ): Promise<Chat> {
   const {
     model,
@@ -375,10 +376,11 @@ export async function createChat<T = Record<string, any>>(
     headers: _headers,
     requestTimeout: _requestTimeout,
     params: _params,
+    redact: _redact,
     ...extras
   } = options;
 
-  const store = toStore(prismaOrStore, options.tableNames);
+  const store = toStore(prismaOrStore, options.tableNames, options.redact);
   if (options.debug) console.log(`[@node-llm/orm] createChat: store=${store.constructor.name}`);
 
   const record = await store.createChat({
@@ -399,9 +401,9 @@ export async function loadChat(
   prismaOrStore: unknown,
   llm: NodeLLMCore,
   chatId: string,
-  options: ChatOptions & { tableNames?: TableNames; debug?: boolean } = {}
+  options: ChatOptions & { tableNames?: TableNames; debug?: boolean; redact?: StoreRedactor } = {}
 ): Promise<Chat | null> {
-  const store = toStore(prismaOrStore, options.tableNames);
+  const store = toStore(prismaOrStore, options.tableNames, options.redact);
   if (options.debug) console.log(`[@node-llm/orm] loadChat: store=${store.constructor.name}`);
 
   const record = await store.findChat(chatId);

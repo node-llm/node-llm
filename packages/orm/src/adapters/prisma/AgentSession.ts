@@ -19,6 +19,7 @@ import type { ChatStore } from "../../Store.js";
 import { toStore } from "./PrismaStore.js";
 import { storedHistory } from "../../history.js";
 import { StoppedByStoreError } from "../../errors.js";
+import type { StoreRedactor } from "../../redact.js";
 
 /** What an agent's answers parse to: its schema's type, or unknown without one. */
 export type AgentData<T> = T extends Agent<any, infer S> ? S : unknown;
@@ -444,15 +445,28 @@ export type AgentSessionOverrides<I = any> = Omit<
 export interface CreateAgentSessionOptions<I = any> extends AgentSessionOverrides<I> {
   metadata?: I;
   tableNames?: TableNames;
+  /** Changes text before it is saved, after keys and tokens are masked; see StoreRedactor. */
+  redact?: StoreRedactor;
   debug?: boolean;
   instructions?: string;
 }
 
 /** The agent settings in session options, leaving out the session's own options. */
 function agentOverrides<I>(
-  options: AgentSessionOverrides<I> & { metadata?: unknown; tableNames?: unknown; debug?: unknown }
+  options: AgentSessionOverrides<I> & {
+    metadata?: unknown;
+    tableNames?: unknown;
+    debug?: unknown;
+    redact?: unknown;
+  }
 ): AgentSessionOverrides<I> {
-  const { metadata: _metadata, tableNames: _tableNames, debug: _debug, ...overrides } = options;
+  const {
+    metadata: _metadata,
+    tableNames: _tableNames,
+    debug: _debug,
+    redact: _redact,
+    ...overrides
+  } = options;
   return Object.fromEntries(
     Object.entries(overrides).filter(([, value]) => value !== undefined)
   ) as AgentSessionOverrides<I>;
@@ -467,7 +481,7 @@ export async function createAgentSession<I extends Record<string, any>, T extend
   AgentClass: AgentClass<T>,
   options: CreateAgentSessionOptions<I> = {}
 ): Promise<AgentSession<I, T>> {
-  const store = toStore(prismaOrStore, options.tableNames);
+  const store = toStore(prismaOrStore, options.tableNames, options.redact);
 
   if (options.debug) {
     console.log(`[@node-llm/orm] createAgentSession: agentClass=${AgentClass.name}`);
@@ -513,6 +527,8 @@ export async function createAgentSession<I extends Record<string, any>, T extend
  */
 export interface LoadAgentSessionOptions<I = any> extends AgentSessionOverrides<I> {
   tableNames?: TableNames;
+  /** Changes text before it is saved, after keys and tokens are masked; see StoreRedactor. */
+  redact?: StoreRedactor;
   debug?: boolean;
 }
 
@@ -526,7 +542,7 @@ export async function loadAgentSession<I extends Record<string, any>, T extends 
   sessionId: string,
   options: LoadAgentSessionOptions<I> = {}
 ): Promise<AgentSession<I, T> | null> {
-  const store = toStore(prismaOrStore, options.tableNames);
+  const store = toStore(prismaOrStore, options.tableNames, options.redact);
 
   if (options.debug) {
     console.log(`[@node-llm/orm] loadAgentSession: id=${sessionId}`);

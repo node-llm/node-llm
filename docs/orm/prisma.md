@@ -317,6 +317,20 @@ try {
 }
 ```
 
+### Secrets Aren't Saved
+
+Everything a chat or agent session saves passes through a mask first: API keys and tokens (`sk-...`, `AIza...`, `Bearer ...` and the like) and passwords in URLs (`postgres://user:...@host`) are replaced by `[REDACTED]` in message text, thinking, tool arguments and tool results. It applies to the Prisma store and to custom stores alike. Tool arguments stay valid JSON.
+
+To mask more, such as personal data your app knows about, pass `redact`:
+
+```typescript
+const session = await createAgentSession(prisma, llm, SupportAgent, {
+  redact: (text) => text.replace(/\bACCT-\d+\b/g, "[ACCOUNT]")
+});
+```
+
+`createChat`, `loadChat` and `loadAgentSession` take it too. It runs after the key masking, on text being saved; what the model sees is unchanged.
+
 ### Using Tools
 
 Tools are automatically tracked without additional configuration.
