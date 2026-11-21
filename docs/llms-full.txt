@@ -778,7 +778,6 @@ const chat = llm.chat("gpt-5", {
 | `maxTokens`                 | Max output tokens per request       | `4096`                            |
 | `toolExecution`             | Tool execution mode (`auto`/`confirm`/`dry-run`) | `auto`               |
 | `toolConcurrency`           | Run independent tool calls in the same turn concurrently; a number caps how many run at once ([see Tools guide](/core-features/tools.html#concurrent-tool-execution)) | `false` |
-| `toolConcurrency`           | Run independent tool calls in the same turn concurrently ([see Tools guide](/core-features/tools.html#concurrent-tool-execution)) | `false` |
 | `contextBudget`             | Shares of the context window tool results may take: `{ perResult, perRequest }` ([see Tools guide](/core-features/tools.html#context-budgets)) | off |
 | `retry`                     | Retry configuration (legacy)        | `{ attempts: 1, delayMs: 0 }`     |
 
@@ -7133,6 +7132,18 @@ await session.ask("Where is my order #789?");
 console.log(session.id); // "abc-123" - save this!
 ```
 
+The class's settings apply unless a session sets its own. Any agent setting except `schema` can be given for one session, such as a budget for one run:
+
+```typescript
+const session = await createAgentSession(prisma, llm, ResearchAgent, {
+  maxCost: 0.5, // in place of ResearchAgent.maxCost
+  maxToolCalls: 40,
+  tools: [searchDocs] // in place of the class's tools
+});
+```
+
+These settings aren't saved with the session. Pass them to `loadAgentSession()` again when you resume it: `loadAgentSession(prisma, llm, ResearchAgent, id, { maxCost: 0.5 })`.
+
 ### Structured Answers
 
 For an agent with a `schema`, the record `session.ask()` returns has the parsed answer as `data`, typed from the schema. It is found inside a code fence or surrounding text and checked against a Zod schema, so you don't parse `content` yourself. Reading `data` throws the schema's error when the answer doesn't match. `data` isn't saved: it isn't a column, and it is left out when the record is serialized.
@@ -7147,18 +7158,6 @@ const session = await createAgentSession(prisma, llm, Repairer);
 const answer = await session.ask("The Save button moved.");
 answer.data.action; // typed, checked against the schema
 ```
-
-The class's settings apply unless a session sets its own. Any agent setting except `schema` can be given for one session, such as a budget for one run:
-
-```typescript
-const session = await createAgentSession(prisma, llm, ResearchAgent, {
-  maxCost: 0.5, // in place of ResearchAgent.maxCost
-  maxToolCalls: 40,
-  tools: [searchDocs] // in place of the class's tools
-});
-```
-
-These settings aren't saved with the session. Pass them to `loadAgentSession()` again when you resume it: `loadAgentSession(prisma, llm, ResearchAgent, id, { maxCost: 0.5 })`.
 
 ### Calls Made Outside the Agent
 
