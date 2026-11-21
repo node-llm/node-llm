@@ -3014,6 +3014,40 @@ See the [HR Chatbot Example](https://github.com/node-llm/node-llm/tree/main/exam
 
 ---
 
+## Subagents <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v1.22.0+</span>
+
+Some tasks take a long search: twenty help center articles read to answer one question. Run that in the support agent and every article stays in its conversation. Hand it to another agent instead. A subagent works in its own conversation, and only its answer comes back.
+
+An agent class goes wherever a tool goes. Give it a `description` so the calling model knows when to use it:
+
+```typescript
+class ResearchAgent extends Agent {
+  static model = "gpt-4.1-mini";
+  static description = "Researches a question across the help center and reports back with links";
+  static instructions = "Read every relevant article before you answer. Cite each one.";
+  static tools = [SearchDocs];
+}
+
+class SupportAgent extends Agent {
+  static model = "gpt-4.1";
+  static tools = [LookupOrder, ResearchAgent];
+}
+```
+
+- **Name:** the model calls it as `research_agent`, the class name in snake_case. Set `static agentName`, or `name` in `defineAgent()`, to choose another. An agent from `defineAgent()` needs one, since its class has no name.
+- **Call:** the model sends a `task`, written to stand on its own, since the subagent can't see the calling conversation. Each call runs a new instance of the agent and returns the content of its last answer.
+- **Inputs:** the model can also fill the agent's declared `inputs`. Fix some yourself with `toTool()`, and the model fills only the rest:
+
+```typescript
+static tools = (inputs) => [BillingAgent.toTool({ customer: inputs.customer })];
+```
+
+- **Instance:** a subagent runs on the calling agent's `llm` instance, so it uses the same keys and settings. Pass `{ llm }` as the second argument to `toTool()` to choose another.
+- **Plain chats:** `chat.withTool(ResearchAgent)` works too, on the default `NodeLLM` instance.
+- **Usage:** the subagent's tokens and cost are its own; they are not added to the calling chat's `totalUsage`.
+
+---
+
 ## Multi-Agent Collaboration
 
 Compose specialized agents for complex workflows:

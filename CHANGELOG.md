@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased] (@node-llm/core)
+
+### Features
+
+- **Subagents**: an agent class goes wherever a tool goes. The model hands it a `task`, a fresh instance works on it in its own conversation, and only the content of its last answer comes back, so its searches and reading never fill the calling conversation. `Agent.toTool(inputs, { name, description, llm })` fixes some of the agent's inputs and lets the model fill the rest. Agents gain `description` and `agentName` (`name` and `description` in `defineAgent()`). A subagent inside an agent runs on that agent's `llm` instance.
+
 ## [1.21.0] - 2026-11-21 (@node-llm/core)
 
 ### Features
