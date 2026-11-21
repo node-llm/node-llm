@@ -350,3 +350,13 @@ function describeCall(call: ToolCall | undefined): string {
   const args = call.function.arguments || "";
   return `${call.function.name}(${args.length > 60 ? `${args.slice(0, 57)}...` : args})`;
 }
+
+/** Subagents nested deeper than the limit: an agent's tool started an agent, and so on. */
+export class AgentDepthError extends LLMError {
+  constructor(public readonly limit: number) {
+    super(
+      `[NodeLLM] Subagents nested more than ${limit} deep; an agent may be handing tasks to itself.`,
+      "AGENT_DEPTH"
+    );
+  }
+}

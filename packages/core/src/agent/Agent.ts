@@ -1,4 +1,5 @@
 import { Chat, AskOptions } from "../chat/Chat.js";
+import { askFrames } from "../chat/AskFrame.js";
 import { ChatOptions } from "../chat/ChatOptions.js";
 import type { ContextBudget } from "../chat/ContextBudget.js";
 import type { EndWith } from "../chat/EndWith.js";
@@ -215,7 +216,10 @@ export abstract class Agent<
           ...(options.llm ? { llm: options.llm } : {}),
           ...(Object.keys(agentInputs).length ? { inputs: agentInputs } : {})
         });
-        const response = await agent.ask(String(task ?? ""));
+        // Started from the parent's ask: nesting is limited, and its spending counts there too.
+        const response = await agent.ask(String(task ?? ""), {
+          parentAsk: askFrames.getStore()
+        });
         return response.content ?? "";
       }
     };
