@@ -28,7 +28,10 @@ export class Executor {
    * still fails with a rate limit, server or network error, tries each
    * fallback model in order. Throws the last error when every one fails.
    */
-  async executeChat(request: ChatRequest): Promise<ChatResponse> {
+  async executeChat(
+    request: ChatRequest,
+    onFallback?: (event: FallbackEvent) => void | Promise<void>
+  ): Promise<ChatResponse> {
     try {
       const response = await this.executeOn(this.provider, request);
       this.servedBy = { provider: this.provider, model: request.model };
@@ -49,7 +52,9 @@ export class Executor {
         }
         attempt++;
         const to = { model: target.model, provider: target.provider.id };
-        await this.fallbacks?.onFallback?.({ error: lastError, from, to, attempt });
+        const event = { error: lastError, from, to, attempt };
+        await this.fallbacks?.onFallback?.(event);
+        await onFallback?.(event);
         try {
           const response = await this.executeOn(
             target.provider,

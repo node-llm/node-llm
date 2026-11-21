@@ -1,4 +1,6 @@
+import { TOOL_SEARCH_NAME, deferredToolsOf, loadedByToolSearch } from "../../chat/ToolSearch.js";
 import { Message } from "../../chat/Message.js";
+import { ToolDefinition } from "../../chat/Tool.js";
 import { ContentPart } from "../../chat/Content.js";
 import { ChatRequest, ThinkingConfig, Usage } from "../Provider.js";
 import { ModelRegistry } from "../../models/ModelRegistry.js";
@@ -25,13 +27,20 @@ export function formatSystemPrompt(messages: Message[]): string | undefined {
   return systemPrompt;
 }
 
-export function formatMessages(requestMessages: Message[]): AnthropicMessage[] {
+export function formatMessages(
+  requestMessages: Message[],
+  deferredNames?: Set<string>
+): AnthropicMessage[] {
   const messages: AnthropicMessage[] = [];
+  const searchCallIds = deferredNames ? toolSearchCallIds(requestMessages) : undefined;
 
   for (const msg of requestMessages) {
     if (msg.role === "system" || msg.role === "developer") continue;
 
-    const formatted = formatSingleMessage(msg);
+    const formatted =
+      searchCallIds && deferredNames && msg.role === "tool" && searchCallIds.has(msg.tool_call_id!)
+        ? formatToolSearchResult(msg, deferredNames)
+        : formatSingleMessage(msg);
     const lastMsg = messages[messages.length - 1];
 
     if (lastMsg && lastMsg.role === formatted.role) {
@@ -50,6 +59,39 @@ export function formatMessages(requestMessages: Message[]): AnthropicMessage[] {
     }
   }
   return messages;
+}
+
+function toolSearchCallIds(messages: Message[]): Set<string> {
+  const ids = new Set<string>();
+  for (const message of messages) {
+    for (const call of message.tool_calls ?? []) {
+      if (call.function.name === TOOL_SEARCH_NAME) ids.add(call.id);
+    }
+  }
+  return ids;
+}
+
+/**
+ * With deferred loading on, a `tool_search` result is sent as `tool_reference`
+ * blocks: the API expands each into the tool's full definition for the model.
+ * A result that loaded nothing, or names a tool the request does not defer,
+ * stays as text.
+ */
+function formatToolSearchResult(msg: Message, deferredNames: Set<string>): AnthropicMessage {
+  const loaded = loadedByToolSearch(msg.content);
+  if (msg.isError || loaded.length === 0 || !loaded.every((name) => deferredNames.has(name))) {
+    return formatSingleMessage(msg);
+  }
+  return {
+    role: "user",
+    content: [
+      {
+        type: "tool_result",
+        tool_use_id: msg.tool_call_id!,
+        content: loaded.map((name) => ({ type: "tool_reference" as const, tool_name: name }))
+      }
+    ]
+  };
 }
 
 function formatSingleMessage(msg: Message): AnthropicMessage {
@@ -223,9 +265,14 @@ export function buildMessageRequest(
     system = system ? `${system}\n\n${instruction}` : instruction;
   }
 
+  const deferred = Capabilities.supportsToolSearch(model) ? deferredToolsOf(tools) : undefined;
+  const deferredNames = deferred?.length
+    ? new Set(deferred.map((tool) => tool.function.name))
+    : undefined;
+
   const body: AnthropicMessageRequest = {
     model,
-    messages: formatMessages(request.messages),
+    messages: formatMessages(request.messages, deferredNames),
     max_tokens: max_tokens || Capabilities.getMaxOutputTokens(model) || DEFAULT_MAX_TOKENS,
     system,
     ...params,
@@ -237,11 +284,20 @@ export function buildMessageRequest(
   }
 
   if (tools && tools.length > 0 && tool_choice !== "none") {
-    body.tools = tools.map((tool) => ({
+    const toAnthropic = (tool: ToolDefinition) => ({
       name: tool.function.name,
       description: tool.function.description,
       input_schema: tool.function.parameters
-    }));
+    });
+    body.tools =
+      deferred && deferredNames
+        ? // Every tool, in the same order on every request, so the tool list never changes
+          // and the prompt cache holds. Deferred ones load when tool_search finds them.
+          [
+            ...tools.filter((tool) => !deferredNames.has(tool.function.name)).map(toAnthropic),
+            ...deferred.map((tool) => ({ ...toAnthropic(tool), defer_loading: true }))
+          ]
+        : tools.map(toAnthropic);
   }
 
   if (tool_choice && tool_choice !== "none") {

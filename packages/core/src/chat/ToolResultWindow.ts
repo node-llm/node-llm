@@ -1,3 +1,4 @@
+import { TOOL_SEARCH_NAME } from "./ToolSearch.js";
 import type { Message } from "./Message.js";
 
 /** What a tool result outside the window is replaced with in a request. */
@@ -18,8 +19,17 @@ export const OMITTED_TOOL_RESULT =
 export function windowToolResults(messages: Message[], keep: number | undefined): Message[] {
   if (keep === undefined || keep < 0) return messages;
 
+  // tool_search results stay: they are small, and they record which deferred
+  // tools the conversation has loaded.
+  const searchCalls = new Set(
+    messages.flatMap((message) =>
+      (message.tool_calls ?? [])
+        .filter((call) => call.function.name === TOOL_SEARCH_NAME)
+        .map((call) => call.id)
+    )
+  );
   const toolResults = messages.flatMap((message, index) =>
-    message.role === "tool" ? [index] : []
+    message.role === "tool" && !searchCalls.has(message.tool_call_id!) ? [index] : []
   );
   const omittedCount =
     keep === 0

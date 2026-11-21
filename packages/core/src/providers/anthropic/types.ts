@@ -11,7 +11,8 @@ export interface AnthropicContentBlock {
     | "tool_result"
     | "document"
     | "thinking"
-    | "redacted_thinking";
+    | "redacted_thinking"
+    | "tool_reference";
   text?: string;
   source?: {
     type: "base64";
@@ -26,6 +27,7 @@ export interface AnthropicContentBlock {
   is_error?: boolean;
   thinking?: string;
   signature?: string;
+  tool_name?: string;
 }
 
 export interface AnthropicMessageRequest {
@@ -44,6 +46,7 @@ export interface AnthropicMessageRequest {
     name: string;
     description?: string;
     input_schema?: Record<string, unknown>;
+    defer_loading?: boolean;
   }>;
   tool_choice?: { type: string; name?: string };
   cache_control?: { type: "ephemeral" };
