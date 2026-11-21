@@ -1,3 +1,4 @@
+import { mergeFileSecurity } from "./utils/FileSecurity.js";
 import { Chat } from "./chat/Chat.js";
 import { ChatOptions } from "./chat/ChatOptions.js";
 import { Provider, ModelInfo } from "./providers/Provider.js";
@@ -178,7 +179,7 @@ export class NodeLLMCore {
       requestTimeout: options.requestTimeout ?? this.config.requestTimeout,
       maxTokens: options.maxTokens ?? this.config.maxTokens,
       maxToolCalls: options.maxToolCalls ?? this.config.maxToolCalls,
-      fileSecurity: options.fileSecurity ?? this.config.fileSecurity,
+      fileSecurity: mergeFileSecurity(this.config.fileSecurity, options.fileSecurity),
       resolveProvider:
         options.resolveProvider ??
         ((name: string) => {

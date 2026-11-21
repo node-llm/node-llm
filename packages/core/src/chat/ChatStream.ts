@@ -1,3 +1,4 @@
+import { mergeFileSecurity } from "../utils/FileSecurity.js";
 import { windowToolResults } from "./ToolResultWindow.js";
 import { Message } from "./Message.js";
 import {
@@ -166,7 +167,9 @@ export class ChatStream {
 
       if (files.length > 0) {
         const processedFiles = await Promise.all(
-          files.map((f: string) => FileLoader.load(f, options.fileSecurity ?? config.fileSecurity))
+          files.map((f: string) =>
+            FileLoader.load(f, mergeFileSecurity(config.fileSecurity, options.fileSecurity))
+          )
         );
         const hasBinary = processedFiles.some(isBinaryContent);
 

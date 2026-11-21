@@ -1,57 +1,14 @@
 import { promises as fs } from "fs";
 import * as path from "path";
 import { ContentPart } from "../chat/Content.js";
-import { checkLocalFile, fetchChecked, FileAccessError, FileSecurity } from "./FileSecurity.js";
-
-/**
- * Maximum size (bytes) for a remotely-fetched attachment. Caps memory use and
- * limits the blast radius if an untrusted URL is ever passed here (the fetched
- * body is buffered fully into memory as base64). 50 MB comfortably covers
- * images, audio, and PDFs sent to providers.
- */
-const MAX_REMOTE_BYTES = 50 * 1024 * 1024;
-
-async function readCapped(response: Response, source: string): Promise<ArrayBuffer> {
-  const declared = Number(response.headers.get("content-length"));
-  if (Number.isFinite(declared) && declared > MAX_REMOTE_BYTES) {
-    throw new Error(
-      `Remote file ${source} is ${declared} bytes, exceeding the ${MAX_REMOTE_BYTES}-byte limit.`
-    );
-  }
-  // Counted while reading, so a body without a content-length can't grow past the limit.
-  const body = response.body as ReadableStream<Uint8Array> | null;
-  if (!body || typeof body.getReader !== "function") {
-    const buffer = await response.arrayBuffer();
-    if (buffer.byteLength > MAX_REMOTE_BYTES) {
-      throw new Error(
-        `Remote file ${source} is ${buffer.byteLength} bytes, exceeding the ${MAX_REMOTE_BYTES}-byte limit.`
-      );
-    }
-    return buffer;
-  }
-  const reader = body.getReader();
-  const chunks: Uint8Array[] = [];
-  let total = 0;
-  for (;;) {
-    const { done, value } = await reader.read();
-    if (done) break;
-    total += value.byteLength;
-    if (total > MAX_REMOTE_BYTES) {
-      await reader.cancel();
-      throw new Error(
-        `Remote file ${source} is over ${MAX_REMOTE_BYTES} bytes, exceeding the limit.`
-      );
-    }
-    chunks.push(value);
-  }
-  const buffer = new Uint8Array(total);
-  let offset = 0;
-  for (const chunk of chunks) {
-    buffer.set(chunk, offset);
-    offset += chunk.byteLength;
-  }
-  return buffer.buffer;
-}
+import {
+  checkLocalFile,
+  fetchChecked,
+  FileAccessError,
+  FileSecurity,
+  headerOf,
+  readCapped
+} from "./FileSecurity.js";
 
 const MIME_TYPES: Record<string, string> = {
   ".jpg": "image/jpeg",
@@ -124,7 +81,7 @@ export class FileLoader {
         if (!response.ok) throw new Error(`Failed to fetch file: ${response.statusText}`);
 
         const buffer = await readCapped(response, filePath);
-        const contentTypeFull = response.headers.get("content-type") || "image/jpeg";
+        const contentTypeFull = headerOf(response, "content-type") || "image/jpeg";
         const contentType = (contentTypeFull.split(";")[0] ?? "image/jpeg").trim();
         const base64 = Buffer.from(buffer).toString("base64");
         const dataUri = `data:${contentType};base64,${base64}`;
