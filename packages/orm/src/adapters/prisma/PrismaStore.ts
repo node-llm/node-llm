@@ -8,7 +8,8 @@ import type {
   RequestTotals,
   StoredAgentSession,
   StoredChat,
-  StoredMessage
+  StoredMessage,
+  StoredToolCall
 } from "../../Store.js";
 import { isChatStore } from "../../Store.js";
 
@@ -80,6 +81,14 @@ export class PrismaStore implements ChatStore {
 
   async createToolCall(toolCall: NewToolCall): Promise<void> {
     await this.table("toolCall").create({ data: toolCall });
+  }
+
+  async listToolCalls(messageIds: string[]): Promise<StoredToolCall[]> {
+    if (messageIds.length === 0) return [];
+    return await this.table("toolCall").findMany({
+      where: { messageId: { in: messageIds } },
+      orderBy: { createdAt: "asc" }
+    });
   }
 
   async finishToolCall(

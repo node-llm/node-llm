@@ -20,6 +20,11 @@ const mockPrisma = {
     findMany: vi.fn(),
     update: vi.fn(),
     delete: vi.fn()
+  },
+  llmToolCall: {
+    create: vi.fn(),
+    update: vi.fn(),
+    findMany: vi.fn().mockResolvedValue([])
   }
 };
 
@@ -123,11 +128,16 @@ describe("AgentSession", () => {
       });
 
       mockPrisma.llmMessage.findMany.mockResolvedValue([
-        { role: "user", content: "Hello" },
-        { role: "assistant", content: "Hi there" }
+        { id: "m1", role: "user", content: "Hello" },
+        { id: "m2", role: "assistant", content: "Hi there" }
       ]);
 
       const session = await loadAgentSession(mockPrisma as any, mockLlm, TestAgent, "session-123");
+
+      expect(mockPrisma.llmToolCall.findMany).toHaveBeenCalledWith({
+        where: { messageId: { in: ["m1", "m2"] } },
+        orderBy: { createdAt: "asc" }
+      });
 
       expect(session).not.toBeNull();
       expect(session?.id).toBe("session-123");

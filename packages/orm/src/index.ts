@@ -66,6 +66,7 @@ export type {
   StoredChat,
   StoredMessage,
   StoredAgentSession,
+  StoredToolCall,
   NewChat,
   NewToolCall,
   NewRequest,
