@@ -368,18 +368,36 @@ export class AgentSession<
 }
 
 /**
+ * Agent settings for one session, in place of the agent class's own, such as `maxCost` or
+ * `maxToolCalls` for a run with its own budget. Not kept in the store: pass them again to
+ * loadAgentSession().
+ */
+export type AgentSessionOverrides<I = any> = Omit<
+  Partial<AgentConfig<I>>,
+  "llm" | "inputs" | "tools" | "schema"
+> & {
+  /** Tools for this session, in place of the ones the agent class defines */
+  tools?: ChatOptions["tools"];
+};
+
+/**
  * Options for creating a new agent session.
  */
-export interface CreateAgentSessionOptions<I = any> {
+export interface CreateAgentSessionOptions<I = any> extends AgentSessionOverrides<I> {
   metadata?: I;
   tableNames?: TableNames;
   debug?: boolean;
-  model?: string;
-  provider?: string;
   instructions?: string;
-  maxToolCalls?: number;
-  /** Tools for this session, in place of the ones the agent class defines */
-  tools?: ChatOptions["tools"];
+}
+
+/** The agent settings in session options, leaving out the session's own options. */
+function agentOverrides<I>(
+  options: AgentSessionOverrides<I> & { metadata?: unknown; tableNames?: unknown; debug?: unknown }
+): AgentSessionOverrides<I> {
+  const { metadata: _metadata, tableNames: _tableNames, debug: _debug, ...overrides } = options;
+  return Object.fromEntries(
+    Object.entries(overrides).filter(([, value]) => value !== undefined)
+  ) as AgentSessionOverrides<I>;
 }
 
 /**
@@ -416,13 +434,9 @@ export async function createAgentSession<I extends Record<string, any>, T extend
 
   // 3. Instantiate Agent with overrides
   const agent = new AgentClass({
+    ...agentOverrides<I>(options),
     llm,
-    inputs: sessionRecord.metadata as I,
-    model: options.model,
-    provider: options.provider,
-    instructions: options.instructions,
-    maxToolCalls: options.maxToolCalls,
-    ...(options.tools ? { tools: options.tools } : {})
+    inputs: sessionRecord.metadata as I
   });
 
   return new AgentSession<I, T>(
@@ -439,7 +453,7 @@ export async function createAgentSession<I extends Record<string, any>, T extend
 /**
  * Options for loading an existing agent session.
  */
-export interface LoadAgentSessionOptions {
+export interface LoadAgentSessionOptions<I = any> extends AgentSessionOverrides<I> {
   tableNames?: TableNames;
   debug?: boolean;
 }
@@ -452,7 +466,7 @@ export async function loadAgentSession<I extends Record<string, any>, T extends 
   llm: NodeLLMCore,
   AgentClass: AgentClass<T>,
   sessionId: string,
-  options: LoadAgentSessionOptions = {}
+  options: LoadAgentSessionOptions<I> = {}
 ): Promise<AgentSession<I, T> | null> {
   const store = toStore(prismaOrStore, options.tableNames);
 
@@ -487,6 +501,7 @@ export async function loadAgentSession<I extends Record<string, any>, T extends 
   // "Code Wins" - model, tools, instructions come from AgentClass
   // Metadata from DB handles the lazy resolution of behavior
   const agent = new AgentClass({
+    ...agentOverrides<I>(options),
     llm,
     messages: history,
     inputs: sessionRecord.metadata as I
