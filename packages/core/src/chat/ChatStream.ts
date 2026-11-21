@@ -1,4 +1,5 @@
 import type { SideUsage } from "./SideUsage.js";
+import { toolErrorText } from "./ToolErrorText.js";
 import { windowToolResults } from "./ToolResultWindow.js";
 import { applyRequestBudget, budgetLimits, cutToolResult } from "./ContextBudget.js";
 import { Message } from "./Message.js";
@@ -506,7 +507,7 @@ export class ChatStream {
               }
             }
 
-            const errorResult = `Fatal error executing tool '${toolCall.function.name}': ${currentError.message}`;
+            const errorResult = `Fatal error executing tool '${toolCall.function.name}': ${toolErrorText(currentError)}`;
             messages.push(
               provider.formatToolResultMessage(toolCall.id, errorResult, { isError: true })
             );

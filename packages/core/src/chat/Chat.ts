@@ -1,3 +1,4 @@
+import { toolErrorText } from "./ToolErrorText.js";
 import { windowToolResults } from "./ToolResultWindow.js";
 import { applyRequestBudget, budgetLimits, ContextBudget, cutToolResult } from "./ContextBudget.js";
 import { FileLoader } from "../utils/FileLoader.js";
@@ -1008,7 +1009,7 @@ export class Chat<S = unknown> {
               }
             }
 
-            const errorResult = `Fatal error executing tool '${toolCall.function.name}': ${(currentError as Error).message}`;
+            const errorResult = `Fatal error executing tool '${toolCall.function.name}': ${toolErrorText(currentError)}`;
             this.messages.push(
               this.provider.formatToolResultMessage(toolCall.id, errorResult, { isError: true })
             );

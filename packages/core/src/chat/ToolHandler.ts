@@ -1,6 +1,7 @@
+import { checkArguments } from "../schema/check-arguments.js";
 import { ToolExecutionMode, ToolExecutionModeInput } from "../constants.js";
 import { ToolError } from "../errors/index.js";
-import { ToolCall, ToolDefinition, ToolHalt } from "./Tool.js";
+import { CHECKS_OWN_ARGUMENTS, ToolCall, ToolDefinition, ToolHalt } from "./Tool.js";
 
 /**
  * Result of a tool execution, including halt status
@@ -56,6 +57,19 @@ export class ToolHandler {
           halted: false
         };
       }
+      // Arguments the tool's own JSON Schema rules out never reach a handler that doesn't check
+      // them itself; the model is told what to fix instead.
+      if (!(tool as { [CHECKS_OWN_ARGUMENTS]?: boolean })[CHECKS_OWN_ARGUMENTS]) {
+        const problems = checkArguments(tool.function.parameters, args);
+        if (problems.length > 0) {
+          return {
+            role: "tool",
+            tool_call_id: toolCall.id,
+            content: `Invalid tool arguments: ${problems.slice(0, 10).join("; ")}`,
+            halted: false
+          };
+        }
+      }
       const result = await tool.handler(args);
 
       // Check if this is a halt signal
@@ -76,7 +90,8 @@ export class ToolHandler {
       };
     } else {
       // Model tried to call a tool that isn't available
-      const availableTools = tools?.map((t) => t.function.name) || [];
+      // Only tools the model can already see: deferred ones stay hidden until it searches.
+      const availableTools = tools?.filter((t) => !t.defer).map((t) => t.function.name) || [];
       const errorMsg = `Model tried to call unavailable tool '${toolCall.function.name}'. Available tools: [${availableTools.join(", ")}].`;
 
       return {

@@ -5,6 +5,8 @@ const SECRET_KEY =
   /^(?:api[-_]?key|x-api-key|x-goog-api-key|authorization|proxy-authorization|password|secret|client[-_]?secret|access[-_]?token|refresh[-_]?token|id[-_]?token|session[-_]?token|aws[-_]?secret[-_]?access[-_]?key|cookie|set-cookie)$/i;
 export const SECRET_VALUE =
   /\b(?:sk-(?:ant-|proj-|or-v1-)?[A-Za-z0-9_-]{16,}|AIza[0-9A-Za-z_-]{30,}|xai-[A-Za-z0-9]{20,}|AKIA[0-9A-Z]{16}|gh[pousr]_[A-Za-z0-9]{30,}|Bearer\s+[A-Za-z0-9._~+/=-]{16,})/g;
+// The password in a URL such as postgres://user:password@host.
+const URL_PASSWORD = /(\b[a-z][a-z0-9+.-]*:\/\/[^\s:/@]+:)[^\s@/]+@/gi;
 const DATA_URI = /data:([\w/+.-]+);base64,[A-Za-z0-9+/=]{200,}/g;
 
 /**
@@ -16,6 +18,7 @@ export function redactForLog(value: unknown, depth = 0): unknown {
   if (typeof value === "string") {
     return value
       .replace(SECRET_VALUE, "[REDACTED]")
+      .replace(URL_PASSWORD, "$1[REDACTED]@")
       .replace(DATA_URI, (match, mime) => `data:${mime};base64,[${match.length} chars]`);
   }
   if (depth > 20 || value === null || typeof value !== "object") return value;
@@ -37,5 +40,5 @@ export function redactForLog(value: unknown, depth = 0): unknown {
 
 /** Masks key- and token-like values in a provider's error message. */
 export function redactSecrets(text: string): string {
-  return text.replace(SECRET_VALUE, "[REDACTED]");
+  return text.replace(SECRET_VALUE, "[REDACTED]").replace(URL_PASSWORD, "$1[REDACTED]@");
 }

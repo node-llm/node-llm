@@ -5483,6 +5483,14 @@ Addresses are checked before each request. A host that changes its DNS answer be
 
 ---
 
+## 🧰 Tool Calls
+
+- **Arguments are checked against the tool's schema.** A tool defined with a JSON Schema, including `Tool` classes with one and MCP tools, no longer receives arguments its schema rules out: a missing required field, a wrong type, a value outside an `enum`, or an extra field where the schema says `additionalProperties: false`. The model gets `Invalid tool arguments: ...` and can try again. Tools with a Zod schema are checked by Zod as before, so coercions and defaults still work. Keywords the check doesn't know, such as `format` or `minimum`, are not enforced: check those in the handler.
+- **Tool errors are masked and cut short.** When a tool throws, the model is told the error's message with key-like values and passwords in URLs masked, cut to 500 characters. Other details, such as file paths or hostnames in your messages, are still sent: throw messages written for the model.
+- **Hidden tools stay hidden.** When the model calls a tool that doesn't exist, the reply lists only the tools it can already see, not deferred ones.
+
+---
+
 ## ⚡ Smart Developer Role
 
 Modern models (like OpenAI's **o1**, **o3**, and **GPT-4o**) have introduced a specialized `developer` role. This role has higher "Instruction Authority" than the standard `system` role.
