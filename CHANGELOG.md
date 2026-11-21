@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased] (@node-llm/core)
+
+### Features
+
+- **Ending With a Tool**: `endWith: "finish"` on a chat, an agent or one ask names a tool the model must call before its turn ends. When the model ends its turn without calling it, it is reminded once; if it still doesn't, the ask throws `EndToolNotCalledError` with the tool and the ask's usage. `{ tool, reminder }` sets the reminder's wording, a tool that halts the loop counts as called, and `endWith: null` turns it off for one ask. Works for `ask()` and `stream()`.
+
 ## [1.21.0] - 2026-11-21 (@node-llm/core)
 
 ### Features
