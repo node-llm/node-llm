@@ -117,6 +117,11 @@ export type RequestDirective =
   | "STOP"
   | void;
 
+/** What `onToolCallEnd` may return: the result to send the model in place of the tool's own. */
+export interface ToolResultChange {
+  content: string;
+}
+
 /**
  * Middleware interface for hooking into the LLM execution lifecycle.
  */
@@ -150,9 +155,14 @@ export interface Middleware {
   onToolCallStart?(ctx: MiddlewareContext, tool: ToolCall): Promise<void>;
 
   /**
-   * Called after a tool completes successfully.
+   * Called after a tool completes successfully. Return `{ content }` to change the result the
+   * model is sent, such as to mask personal data in it.
    */
-  onToolCallEnd?(ctx: MiddlewareContext, tool: ToolCall, result: unknown): Promise<void>;
+  onToolCallEnd?(
+    ctx: MiddlewareContext,
+    tool: ToolCall,
+    result: unknown
+  ): Promise<void | ToolResultChange>;
 
   /**
    * Called if a tool execution fails.
