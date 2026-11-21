@@ -43,7 +43,13 @@ import {
   DEFAULT_MAX_CORRECTIONS,
   DEFAULT_MAX_TOOL_CALLS
 } from "../constants.js";
-import { ConfigurationError, CostLimitError, ToolCallLimitError } from "../errors/index.js";
+import {
+  ConfigurationError,
+  CostLimitError,
+  EndToolNotCalledError,
+  ToolCallLimitError
+} from "../errors/index.js";
+import { calledTool, EndWith, endWithTool } from "./EndWith.js";
 import { ChatValidator } from "./Validation.js";
 import { ToolHandler } from "./ToolHandler.js";
 import {
@@ -77,6 +83,8 @@ export interface AskOptions {
   headers?: Record<string, string>;
   maxToolCalls?: number;
   maxCorrections?: number;
+  /** Overrides the chat's `endWith` for this ask; `null` turns it off. */
+  endWith?: EndWith | null;
   requestTimeout?: number;
   thinking?: ThinkingConfig;
   prediction?: string | ContentPart[];
@@ -640,6 +648,11 @@ export class Chat<S = unknown> {
       role: "user",
       content: messageContent as MessageContent
     });
+    const askStart = this.messages.length;
+    const endWith = endWithTool(
+      options?.endWith !== undefined ? options.endWith : this.options.endWith
+    );
+    let endWithReminded = false;
 
     // Process Schema/Structured Output
     let responseFormat: ResponseFormat | undefined = this.options.responseFormat;
@@ -1064,6 +1077,20 @@ export class Chat<S = unknown> {
           if (!response.tool_calls || response.tool_calls.length === 0) {
             await runAllHandlers(endMessageHandlers, assistantMessage);
           }
+        }
+
+        // A turn that should have ended with a tool is reminded once, then fails.
+        if (
+          endWith &&
+          !haltTriggered &&
+          !response.tool_calls?.length &&
+          !calledTool(this.messages, askStart, endWith.tool)
+        ) {
+          if (endWithReminded) throw new EndToolNotCalledError(endWith.tool, totalUsage);
+          endWithReminded = true;
+          this.messages.push({ role: "user", content: endWith.reminder });
+          context.messages = [...this.systemMessages, ...this.messages];
+          continue;
         }
 
         finalResponse = new ChatResponseString(

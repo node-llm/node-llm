@@ -1,6 +1,7 @@
 import { Chat, AskOptions } from "../chat/Chat.js";
 import { ChatOptions } from "../chat/ChatOptions.js";
 import type { ContextBudget } from "../chat/ContextBudget.js";
+import type { EndWith } from "../chat/EndWith.js";
 import { ChatResponseString } from "../chat/ChatResponse.js";
 import { ToolResolvable, ToolCall, ToolDefinition } from "../chat/Tool.js";
 import { ConfigurationError } from "../errors/index.js";
@@ -61,6 +62,9 @@ export interface AgentConfig<I = Record<string, any>> {
   /** Maximum tool call iterations */
   maxToolCalls?: number;
 
+  /** A tool the model must call before its turn ends; see ChatOptions.endWith */
+  endWith?: EndWith | null;
+
   /** Send only the most recent N tool results in full; see ChatOptions.keepToolResults */
   keepToolResults?: number;
 
@@ -107,6 +111,9 @@ export abstract class Agent<
   static headers?: Record<string, string>;
   static maxTokens?: number;
   static maxToolCalls?: number;
+
+  /** A tool the model must call before its turn ends; see ChatOptions.endWith */
+  static endWith?: EndWith | null;
 
   /** Send only the most recent N tool results in full; see ChatOptions.keepToolResults */
   static keepToolResults?: number;
@@ -282,6 +289,7 @@ export abstract class Agent<
       temperature: overrides.temperature ?? ctor.temperature,
       maxTokens: overrides.maxTokens ?? ctor.maxTokens,
       maxToolCalls: overrides.maxToolCalls ?? ctor.maxToolCalls,
+      endWith: overrides.endWith !== undefined ? overrides.endWith : ctor.endWith,
       keepToolResults: overrides.keepToolResults ?? ctor.keepToolResults,
       maxCost: overrides.maxCost ?? ctor.maxCost,
       toolConcurrency: overrides.toolConcurrency ?? ctor.toolConcurrency,
@@ -579,6 +587,7 @@ export function defineAgent<
     static override headers = config.headers;
     static override maxTokens = config.maxTokens;
     static override maxToolCalls = config.maxToolCalls;
+    static override endWith = config.endWith;
     static override keepToolResults = config.keepToolResults;
     static override maxCost = config.maxCost;
     static override toolConcurrency = config.toolConcurrency;

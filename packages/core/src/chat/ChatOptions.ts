@@ -1,4 +1,5 @@
 import type { ContextBudget } from "./ContextBudget.js";
+import type { EndWith } from "./EndWith.js";
 import { Middleware } from "../types/Middleware.js";
 import { Message } from "./Message.js";
 import { ToolResolvable, ToolCall } from "./Tool.js";
@@ -62,6 +63,12 @@ export interface ChatOptions {
    */
   maxCost?: number;
   maxCorrections?: number;
+  /**
+   * A tool the model must call before its turn ends, such as one that reports a result. When the
+   * model ends its turn without calling it, it is reminded once; if it still doesn't, the ask
+   * throws EndToolNotCalledError.
+   */
+  endWith?: EndWith | null;
   requestTimeout?: number;
   toolExecution?: ToolExecutionModeInput;
   /**

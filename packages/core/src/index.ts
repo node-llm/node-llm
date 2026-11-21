@@ -78,6 +78,7 @@ export {
 export { resolveModelAlias } from "./model_aliases.js";
 export { default as MODEL_ALIASES } from "./aliases.js";
 export type { ToolExecutionModeInput } from "./constants.js";
+export type { EndWith } from "./chat/EndWith.js";
 export {
   ToolExecutionMode,
   DEFAULT_MAX_TOOL_CALLS,

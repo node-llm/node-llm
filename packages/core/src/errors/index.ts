@@ -273,3 +273,21 @@ export class ToolCallLimitError extends LLMError {
     super(`[NodeLLM] Maximum tool execution calls (${limit}) exceeded.`, "TOOL_CALL_LIMIT");
   }
 }
+
+/**
+ * The model ended its turn without calling the tool set with `endWith`, even after it was
+ * reminded once.
+ */
+export class EndToolNotCalledError extends LLMError {
+  constructor(
+    /** The tool the model had to call */
+    public readonly tool: string,
+    /** Usage of every request in the ask */
+    public readonly usage: Usage
+  ) {
+    super(
+      `[NodeLLM] The model ended its turn without calling the ${tool} tool, even when reminded.`,
+      "END_TOOL_NOT_CALLED"
+    );
+  }
+}
