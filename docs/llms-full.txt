@@ -1996,7 +1996,7 @@ console.log(response.data); // { greeting: "..." } or whatever keys it chose
 | :------------ | :----------------------------------------- | :-------------------------------------------------------------------------------------------------------------- |
 | **OpenAI**    | `response_format: { type: "json_schema" }` | Fully supported with strict adherence.                                                                          |
 | **Gemini**    | `responseJsonSchema`                       | Supported natively.                                                                                             |
-| **Anthropic** | System Prompt Injection                    | `NodeLLM` embeds the JSON schema in the system prompt with an explicit instruction to respond only with matching JSON. |
+| **Anthropic** | `output_config.format` (structured outputs) | On Claude Fable and Mythos 5, Opus 5 and 4.8, Sonnet 5, Haiku 5 and 4.5 (and Opus 4.5 and 4.1), the answer is held to the schema. Constraints Anthropic doesn't take, such as `min`, `max` and lengths, are left out of what is sent and still checked by Zod. Older models, and schemas with records or self-references, get the schema in the system prompt with an instruction to respond only with matching JSON. |
 
 ---
 

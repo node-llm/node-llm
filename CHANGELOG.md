@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased] (@node-llm/core)
+
+### Features
+
+- **Anthropic Structured Outputs**: on Claude models that support it (Fable and Mythos 5, Opus 5 and 4.8, Sonnet 5, Haiku 5 and 4.5, and Opus 4.5 and 4.1), a schema is now sent as `output_config.format`, so the answer is held to it instead of only being asked for in the prompt. Constraints Anthropic doesn't take, such as minimums and lengths, are left out of what is sent, and every object gets `additionalProperties: false`; a Zod schema still checks the full schema on `response.data`. Older models, and schemas with records or self-references, keep the prompt instruction. For `ask()` and `stream()`.
+
 ## [1.21.0] - 2026-11-21 (@node-llm/core)
 
 ### Features
