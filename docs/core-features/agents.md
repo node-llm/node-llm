@@ -622,10 +622,12 @@ const session = await createAgentSession(prisma, llm, SupportAgent, {
 await session.ask("Where is my order #789?");
 console.log(session.id); // "abc-123" - save this to resume later
 
-// Resume in a later request
+// Resume in a later request, or after a restart: earlier turns' tool calls come back too
 const resumed = await loadAgentSession(prisma, llm, SupportAgent, "abc-123");
 await resumed?.ask("Can you cancel it?");
 ```
+
+See [Resuming After a Restart](../orm/prisma.html#resuming-after-a-restart) for a run that stopped part way.
 
 ### The "Code Wins" Principle
 

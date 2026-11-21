@@ -16,6 +16,15 @@ All notable changes to this project will be documented in this file.
 - **Self-Correction Re-Asks With the Feedback in `ask()`**: a middleware `RETRY`, such as `SchemaSelfCorrection`'s, sent the first request again, without the rejected answer or the feedback, so the model was not told what to fix. It now sends both, as `stream()` already did.
 - **Ending With a Tool**: `endWith: "finish"` on a chat, an agent or one ask names a tool the model must call before its turn ends. When the model ends its turn without calling it, it is reminded once; if it still doesn't, the ask throws `EndToolNotCalledError` with the tool and the ask's usage. `{ tool, reminder }` sets the reminder's wording, a tool that halts the loop counts as called, and `endWith: null` turns it off for one ask. Works for `ask()` and `stream()`.
 - **Stall Guard**: `stallGuard: { repeats, noProgress, progress }` on a chat or an agent stops a tool loop that is going nowhere, before its next request, with `StalledError`. `repeats` counts the same call with the same arguments getting the same result; `noProgress` counts calls in a row that failed or got a result the tool already gave in the ask, or that an app's own `progress(call, result, failed)` says made no progress. The error has the `reason`, the `calls`, their `count` and the ask's `usage`, and every call that ran keeps its result in the history. Works for `ask()` and `stream()`; off unless set.
+## [Unreleased] (@node-llm/orm)
+
+### Features
+
+- **Loaded Sessions Keep Their Tool Calls**: `loadAgentSession()` gives the agent the tool calls of earlier turns with their results, before the answer they led to. Before, it gave only each message's text, so a resumed agent didn't know what it had already looked up. A run that stopped part way, such as when its service restarted, can be loaded and asked to continue: the calls that finished come back, and a call that never finished is left out. Custom stores add an optional `listToolCalls(messageIds)`; without it, sessions load as before.
+
+### Bug Fixes
+
+- **No Empty Assistant Messages on Load**: an assistant message with no text, left by a run that stopped before it finished, is no longer sent in a loaded session's history. Providers such as Anthropic reject an empty message.
 
 ## [1.21.0] - 2026-11-21 (@node-llm/core)
 

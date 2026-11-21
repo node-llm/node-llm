@@ -17,6 +17,7 @@ import {
  */
 import type { ChatStore } from "../../Store.js";
 import { toStore } from "./PrismaStore.js";
+import { storedHistory } from "../../history.js";
 
 /**
  * Record structure for the LLM Agent Session table.
@@ -474,14 +475,14 @@ export async function loadAgentSession<I extends Record<string, any>, T extends 
     );
   }
 
-  // 2. Load message history
+  // 2. Load message history, with the tool calls of earlier turns when the store keeps them
   const messages = (await store.listMessages(sessionRecord.chatId)) as MessageRecord[];
+  const toolCalls = store.listToolCalls
+    ? await store.listToolCalls(messages.map((message) => message.id))
+    : [];
 
-  // 3. Convert DB messages to NodeLLM Message format
-  const history: Message[] = messages.map((m) => ({
-    role: m.role as "user" | "assistant" | "system",
-    content: m.content || ""
-  }));
+  // 3. Convert DB records to NodeLLM messages
+  const history: Message[] = storedHistory(messages, toolCalls);
 
   // 4. Instantiate agent with injected history, LLM, AND metadata (as inputs)
   // "Code Wins" - model, tools, instructions come from AgentClass
