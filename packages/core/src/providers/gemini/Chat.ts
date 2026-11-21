@@ -168,7 +168,13 @@ export class GeminiChat {
       ? ModelRegistry.calculateCost(usage, request.model, "gemini")
       : undefined;
 
-    return { content, tool_calls, usage: calculatedUsage, attachments };
+    return {
+      content,
+      tool_calls,
+      usage: calculatedUsage,
+      attachments,
+      finish_reason: candidate?.finishReason ?? null
+    };
   }
 
   private sanitizeSchema(schema: any): any {

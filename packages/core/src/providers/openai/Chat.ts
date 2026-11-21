@@ -220,7 +220,8 @@ export class OpenAIChat {
       tool_calls,
       usage: calculatedUsage,
       thinking: thinkingResult,
-      reasoning: reasoningText
+      reasoning: reasoningText,
+      finish_reason: json.choices[0]?.finish_reason ?? null
     };
   }
 }
