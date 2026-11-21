@@ -273,3 +273,13 @@ export class ToolCallLimitError extends LLMError {
     super(`[NodeLLM] Maximum tool execution calls (${limit}) exceeded.`, "TOOL_CALL_LIMIT");
   }
 }
+
+/** Subagents nested deeper than the limit: an agent's tool started an agent, and so on. */
+export class AgentDepthError extends LLMError {
+  constructor(public readonly limit: number) {
+    super(
+      `[NodeLLM] Subagents nested more than ${limit} deep; an agent may be handing tasks to itself.`,
+      "AGENT_DEPTH"
+    );
+  }
+}

@@ -200,6 +200,15 @@ This creates a **defense-in-depth** strategy where multiple layers of protection
 
 ---
 
+## 🪆 Subagents
+
+An agent used as a tool runs inside its parent's ask:
+
+- **Its spending is the parent's.** Every request a subagent makes is added to the parent ask's `usage`, and the subagent stops once an ask above it has reached its `maxCost`, so a limit on the top agent caps the whole tree.
+- **Nesting is limited.** Subagents may nest 8 deep. An agent that keeps handing the task to itself, or two that hand it to each other, gets `AgentDepthError` at the ninth level, which reaches the model as a tool error.
+
+---
+
 ## ⚡ Smart Developer Role
 
 Modern models (like OpenAI's **o1**, **o3**, and **GPT-4o**) have introduced a specialized `developer` role. This role has higher "Instruction Authority" than the standard `system` role.

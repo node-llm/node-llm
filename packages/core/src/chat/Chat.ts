@@ -42,7 +42,12 @@ import {
   DEFAULT_MAX_CORRECTIONS,
   DEFAULT_MAX_TOOL_CALLS
 } from "../constants.js";
-import { ConfigurationError, CostLimitError, ToolCallLimitError } from "../errors/index.js";
+import {
+  AgentDepthError,
+  ConfigurationError,
+  CostLimitError,
+  ToolCallLimitError
+} from "../errors/index.js";
 import { ChatValidator } from "./Validation.js";
 import { ToolHandler } from "./ToolHandler.js";
 import {
@@ -80,9 +85,12 @@ export interface AskOptions {
   prediction?: string | ContentPart[];
   signal?: AbortSignal;
   inputs?: Record<string, any>;
+  /** @internal The ask a subagent was started from; set by Agent.asTool(). */
+  parentAsk?: AskFrame;
 }
 
 import { ChatResponseString } from "./ChatResponse.js";
+import { AskFrame, askFrames, addToParents, parentOverLimit, MAX_AGENT_DEPTH } from "./AskFrame.js";
 
 export class Chat<S = unknown> {
   private messages: Message[] = [];
@@ -591,6 +599,18 @@ export class Chat<S = unknown> {
     content: string | ContentPart[],
     options?: AskOptions
   ): Promise<ChatResponseString & { data: S }> {
+    const parent = options?.parentAsk;
+    const depth = (parent?.depth ?? 0) + 1;
+    if (depth > MAX_AGENT_DEPTH) throw new AgentDepthError(MAX_AGENT_DEPTH);
+    const frame: AskFrame = { depth, parent, maxCost: this.options.maxCost };
+    return askFrames.run(frame, () => this.runAsk(content, options, frame));
+  }
+
+  private async runAsk(
+    content: string | ContentPart[],
+    options: AskOptions | undefined,
+    frame: AskFrame
+  ): Promise<ChatResponseString & { data: S }> {
     const requestId = randomUUID();
     const state: Record<string, unknown> = {};
 
@@ -704,6 +724,7 @@ export class Chat<S = unknown> {
       let finalResponse: ChatResponseString & { data: S };
       let correctionAttempt = 0;
       const totalUsage: Usage = { input_tokens: 0, output_tokens: 0, total_tokens: 0 };
+      frame.usage = totalUsage;
 
       // Self-Correction Loop
       while (true) {
@@ -769,6 +790,8 @@ export class Chat<S = unknown> {
             if (u.output_cost !== undefined) {
               totalUsage.output_cost = (totalUsage.output_cost ?? 0) + u.output_cost;
             }
+            // A subagent's spending is its parents' too.
+            addToParents(frame, u);
           }
         };
 
@@ -839,6 +862,18 @@ export class Chat<S = unknown> {
               )
             );
             throw new CostLimitError(maxCost, totalUsage);
+          }
+          // A subagent stops when an ask above it has reached its own limit.
+          const overParent = parentOverLimit(frame);
+          if (overParent) {
+            this.messages.push(
+              ...unrunToolCallResults(
+                this.provider,
+                response.tool_calls,
+                `the cost limit ($${overParent.maxCost}) was reached`
+              )
+            );
+            throw new CostLimitError(overParent.maxCost!, overParent.usage!);
           }
 
           const runConcurrently = shouldRunToolCallsConcurrently(
