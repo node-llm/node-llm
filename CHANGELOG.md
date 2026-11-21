@@ -6,7 +6,18 @@ All notable changes to this project will be documented in this file.
 
 ### Security
 
+- **Secret Files and Cloud Metadata Are Refused**: `images` and `files` no longer load files that hold secrets (`.env` and `.env.*`, `.npmrc`, `.netrc`, SSH keys, anything in `.ssh`, `.aws` or `.kube`, `.pem` and `.key` files, and links to them), and no longer fetch cloud metadata addresses (`169.254.x.x`, `fd00:ec2::254`, `metadata.google.internal`), directly or through a redirect. They throw `FileAccessError`. Ordinary files, files with no extension and other private hosts load as before; `fileSecurity.allowSensitiveFiles` loads secret files again.
+- **Remote Files Time Out and Stop at 50 MB While Reading**: a remote file now times out after 60 seconds (`fileSecurity.fetchTimeout`). One without a `content-length` was read in full before its size was checked; it is now stopped once it passes 50 MB.
+- **More File Rules (`fileSecurity`)**: for apps where a path or URL comes from a user, `root` keeps local files inside a folder (after following links), `blockPrivateNetwork` refuses every private address, `allowedHosts` allows only listed hosts, and `throwOnFetchError` throws instead of passing a failed URL on to the provider. Set on `config`, `createLLM()` or a chat.
+- **Gemini Keys Are Sent in a Header**: the key goes in `x-goog-api-key` instead of `?key=` in the URL, so proxies, tracing and error reports that record URLs don't see it.
+- **Debug Logs Mask Keys and Files**: with `debug: true`, printed request and response bodies mask key- and token-like values and secret fields (`api_key`, `authorization`, ...), and replace base64 files with their size. Prompts and answers are still printed. `redactForLog()` is exported.
+- **Provider Errors Mask Keys**: `APIError`'s `message` and `body` mask key-like values (such as an OpenRouter key named in a credit error). Everything else in them is unchanged.
+- **Tool Arguments Are Checked Against JSON Schemas**: a tool defined with a JSON Schema (plain definitions, `Tool` classes with one, MCP tools) no longer runs with arguments its schema rules out: missing required fields, wrong types, values outside an `enum`, or extra fields where `additionalProperties` is `false`. The model is told what to fix. Zod tools are checked by Zod as before.
+- **Tool Errors Sent to the Model Are Masked and Cut Short**: key-like values and passwords in URLs are masked, and the message is cut to 500 characters.
+- **Unknown-Tool Replies Don't List Deferred Tools**: when the model calls a tool that doesn't exist, the reply lists only the tools it can see.
 - **Subagent Spending and Nesting Are Limited**: a subagent's requests now count toward its parent ask's `usage` and `maxCost`, and it stops once an ask above it has reached its limit. Subagents nest at most 8 deep; deeper, `AgentDepthError` is thrown, so an agent handing a task to itself can't loop forever.
+- **PII Masking Covers Tool Results and Answers**: `PIIMaskMiddleware` now masks each tool result before the model sees it (before, only messages present when an ask started were masked, so tool results reached the model unmasked), and `redactOutput: true`, which was accepted but did nothing, now masks the answer `ask()` returns. It also masks international phone numbers and IBANs.
+- **`onToolCallEnd` Can Change a Tool Result**: a middleware may return `{ content }` from `onToolCallEnd` to change what the model is sent. Hooks that return nothing are unchanged. New type `ToolResultChange`.
 
 ### Features
 
@@ -26,6 +37,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased] (@node-llm/orm)
 
+### Security
+
+- **Secrets Aren't Saved**: API keys, tokens and passwords in URLs are masked in everything a chat or agent session saves (message text, thinking, tool arguments and results), through the Prisma store or a custom one. Tool arguments stay valid JSON. `redact` on `createChat`, `loadChat`, `createAgentSession` and `loadAgentSession` masks more, such as personal data. `maskSecrets` and `redactingStore` are exported.
+
 ### Features
 
 - **Loaded Sessions Keep Their Tool Calls**: `loadAgentSession()` gives the agent the tool calls of earlier turns with their results, before the answer they led to. Before, it gave only each message's text, so a resumed agent didn't know what it had already looked up. A run that stopped part way, such as when its service restarted, can be loaded and asked to continue: the calls that finished come back, and a call that never finished is left out. Custom stores add an optional `listToolCalls(messageIds)`; without it, sessions load as before.
@@ -38,23 +53,6 @@ All notable changes to this project will be documented in this file.
 
 - **No Empty Assistant Messages on Load**: an assistant message with no text, left by a run that stopped before it finished, is no longer sent in a loaded session's history. Providers such as Anthropic reject an empty message.
 
-### Security
-
-- **Secret Files and Cloud Metadata Are Refused**: `images` and `files` no longer load files that hold secrets (`.env` and `.env.*`, `.npmrc`, `.netrc`, SSH keys, anything in `.ssh`, `.aws` or `.kube`, `.pem` and `.key` files, and links to them), and no longer fetch cloud metadata addresses (`169.254.x.x`, `fd00:ec2::254`, `metadata.google.internal`), directly or through a redirect. They throw `FileAccessError`. Ordinary files, files with no extension and other private hosts load as before; `fileSecurity.allowSensitiveFiles` loads secret files again.
-- **Remote Files Time Out and Stop at 50 MB While Reading**: a remote file now times out after 60 seconds (`fileSecurity.fetchTimeout`). One without a `content-length` was read in full before its size was checked; it is now stopped once it passes 50 MB.
-- **More File Rules (`fileSecurity`)**: for apps where a path or URL comes from a user, `root` keeps local files inside a folder (after following links), `blockPrivateNetwork` refuses every private address, `allowedHosts` allows only listed hosts, and `throwOnFetchError` throws instead of passing a failed URL on to the provider. Set on `config`, `createLLM()` or a chat.
-
-### Security
-
-- **Gemini Keys Are Sent in a Header**: the key goes in `x-goog-api-key` instead of `?key=` in the URL, so proxies, tracing and error reports that record URLs don't see it.
-- **Debug Logs Mask Keys and Files**: with `debug: true`, printed request and response bodies mask key- and token-like values and secret fields (`api_key`, `authorization`, ...), and replace base64 files with their size. Prompts and answers are still printed. `redactForLog()` is exported.
-- **Tool Arguments Are Checked Against JSON Schemas**: a tool defined with a JSON Schema (plain definitions, `Tool` classes with one, MCP tools) no longer runs with arguments its schema rules out: missing required fields, wrong types, values outside an `enum`, or extra fields where `additionalProperties` is `false`. The model is told what to fix. Zod tools are checked by Zod as before.
-- **Tool Errors Sent to the Model Are Masked and Cut Short**: key-like values and passwords in URLs are masked, and the message is cut to 500 characters.
-- **Unknown-Tool Replies Don't List Deferred Tools**: when the model calls a tool that doesn't exist, the reply lists only the tools it can see.
-- **Provider Errors Mask Keys**: `APIError`'s `message` and `body` mask key-like values (such as an OpenRouter key named in a credit error). Everything else in them is unchanged.
-- **PII Masking Covers Tool Results and Answers**: `PIIMaskMiddleware` now masks each tool result before the model sees it (before, only messages present when an ask started were masked, so tool results reached the model unmasked), and `redactOutput: true`, which was accepted but did nothing, now masks the answer `ask()` returns. It also masks international phone numbers and IBANs.
-- **`onToolCallEnd` Can Change a Tool Result**: a middleware may return `{ content }` from `onToolCallEnd` to change what the model is sent. Hooks that return nothing are unchanged. New type `ToolResultChange`.
-
 ## [Unreleased] (@node-llm/mcp)
 
 ### Security
@@ -62,12 +60,6 @@ All notable changes to this project will be documented in this file.
 - **Hidden Characters Are Removed From Server Tools**: zero-width, bidirectional-control and Unicode tag characters are removed from the names, descriptions and schemas of a server's tools and prompts, where a server could hide instructions for the model that a person can't see. Visible text is unchanged.
 - **Keys in Server Errors Are Masked**: key-like values in an MCP server's error are masked before the model sees it.
 - **Sampling Guards**: `sampling: { llm, model, approve, maxTokens, maxCost }` (and `createLLMSamplingHandler(llm, model, guards)`) can refuse a request, cap an answer's length, and cap what a server's sampling spends in total. A refused request throws `SamplingRefusedError`. Without guards, sampling works as before.
-
-## [Unreleased] (@node-llm/orm)
-
-### Security
-
-- **Secrets Aren't Saved**: API keys, tokens and passwords in URLs are masked in everything a chat or agent session saves (message text, thinking, tool arguments and results), through the Prisma store or a custom one. Tool arguments stay valid JSON. `redact` on `createChat`, `loadChat`, `createAgentSession` and `loadAgentSession` masks more, such as personal data. `maskSecrets` and `redactingStore` are exported.
 
 ## [Unreleased] (@node-llm/testing)
 
