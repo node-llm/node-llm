@@ -200,6 +200,36 @@ This creates a **defense-in-depth** strategy where multiple layers of protection
 
 ---
 
+## 📂 Loading Files Safely
+
+`images` and `files` take local paths and URLs. With no setup, NodeLLM refuses the ones that are only ever an attack:
+
+- **Files that hold secrets:** `.env` and `.env.*`, `.npmrc`, `.netrc`, `.pgpass`, `.git-credentials`, SSH keys (`id_rsa`, `id_ed25519`, ...), anything in `.ssh`, `.aws`, `.gnupg`, `.kube` or `.docker`, and keys and certificates (`.pem`, `.key`, `.p12`, `.pfx`, ...). A link to one of these is refused too.
+- **Cloud metadata addresses:** `169.254.x.x`, `fd00:ec2::254` and `metadata.google.internal`, which hold the server's cloud credentials. Each redirect is checked, so a public URL can't redirect there.
+- **Slow or huge remote files:** a remote file times out after 60 seconds and is stopped at 50 MB while it is read.
+
+Ordinary files, files with no extension such as a `Dockerfile`, and other private hosts (`localhost`, an internal CDN) load as before. A refused file or URL throws `FileAccessError`.
+
+When a path or URL can come from a user, add rules with `fileSecurity`:
+
+```ts
+const llm = createLLM({
+  fileSecurity: {
+    root: "/srv/uploads", // local files must be inside this folder, after following links
+    blockPrivateNetwork: true, // refuse every private, loopback and link-local address
+    allowedHosts: ["cdn.example.com"], // only these hosts may be fetched
+    throwOnFetchError: true, // throw instead of passing a URL that failed on to the provider
+    fetchTimeout: 10_000 // default 60000
+  }
+});
+```
+
+Set it on `config`, in `createLLM()`, or per chat with `llm.chat(model, { fileSecurity })`. `allowSensitiveFiles: true` loads secret files again, for the rare app that means to send them.
+
+Addresses are checked before each request. A host that changes its DNS answer between the check and the fetch (DNS rebinding) is not caught; use `allowedHosts` where you can.
+
+---
+
 ## ⚡ Smart Developer Role
 
 Modern models (like OpenAI's **o1**, **o3**, and **GPT-4o**) have introduced a specialized `developer` role. This role has higher "Instruction Authority" than the standard `system` role.

@@ -178,6 +178,7 @@ export class NodeLLMCore {
       requestTimeout: options.requestTimeout ?? this.config.requestTimeout,
       maxTokens: options.maxTokens ?? this.config.maxTokens,
       maxToolCalls: options.maxToolCalls ?? this.config.maxToolCalls,
+      fileSecurity: options.fileSecurity ?? this.config.fileSecurity,
       resolveProvider:
         options.resolveProvider ??
         ((name: string) => {

@@ -1,6 +1,7 @@
 import { promises as fs } from "fs";
 import * as path from "path";
 import { ContentPart } from "../chat/Content.js";
+import { checkLocalFile, fetchChecked, FileAccessError, FileSecurity } from "./FileSecurity.js";
 
 /**
  * Maximum size (bytes) for a remotely-fetched attachment. Caps memory use and
@@ -17,13 +18,39 @@ async function readCapped(response: Response, source: string): Promise<ArrayBuff
       `Remote file ${source} is ${declared} bytes, exceeding the ${MAX_REMOTE_BYTES}-byte limit.`
     );
   }
-  const buffer = await response.arrayBuffer();
-  if (buffer.byteLength > MAX_REMOTE_BYTES) {
-    throw new Error(
-      `Remote file ${source} is ${buffer.byteLength} bytes, exceeding the ${MAX_REMOTE_BYTES}-byte limit.`
-    );
+  // Counted while reading, so a body without a content-length can't grow past the limit.
+  const body = response.body as ReadableStream<Uint8Array> | null;
+  if (!body || typeof body.getReader !== "function") {
+    const buffer = await response.arrayBuffer();
+    if (buffer.byteLength > MAX_REMOTE_BYTES) {
+      throw new Error(
+        `Remote file ${source} is ${buffer.byteLength} bytes, exceeding the ${MAX_REMOTE_BYTES}-byte limit.`
+      );
+    }
+    return buffer;
   }
-  return buffer;
+  const reader = body.getReader();
+  const chunks: Uint8Array[] = [];
+  let total = 0;
+  for (;;) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    total += value.byteLength;
+    if (total > MAX_REMOTE_BYTES) {
+      await reader.cancel();
+      throw new Error(
+        `Remote file ${source} is over ${MAX_REMOTE_BYTES} bytes, exceeding the limit.`
+      );
+    }
+    chunks.push(value);
+  }
+  const buffer = new Uint8Array(total);
+  let offset = 0;
+  for (const chunk of chunks) {
+    buffer.set(chunk, offset);
+    offset += chunk.byteLength;
+  }
+  return buffer.buffer;
 }
 
 const MIME_TYPES: Record<string, string> = {
@@ -90,10 +117,10 @@ const TEXT_EXTENSIONS = new Set([
 ]);
 
 export class FileLoader {
-  static async load(filePath: string): Promise<ContentPart> {
+  static async load(filePath: string, rules?: FileSecurity): Promise<ContentPart> {
     if (filePath.startsWith("http")) {
       try {
-        const response = await fetch(filePath);
+        const response = await fetchChecked(filePath, rules);
         if (!response.ok) throw new Error(`Failed to fetch file: ${response.statusText}`);
 
         const buffer = await readCapped(response, filePath);
@@ -123,7 +150,9 @@ export class FileLoader {
 
         // Default to image_url for unknown binary or use as-is
         return { type: "image_url", image_url: { url: dataUri } };
-      } catch {
+      } catch (error) {
+        // A refused URL is never handed on; with throwOnFetchError, neither is one that failed.
+        if (error instanceof FileAccessError || rules?.throwOnFetchError) throw error;
         // Fallback to URL if fetch fails
         return { type: "image_url", image_url: { url: filePath } };
       }
@@ -133,6 +162,7 @@ export class FileLoader {
       return { type: "image_url", image_url: { url: filePath } };
     }
 
+    filePath = await checkLocalFile(filePath, rules);
     const ext = path.extname(filePath).toLowerCase();
     const mime = MIME_TYPES[ext] ?? "application/octet-stream";
 
