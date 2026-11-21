@@ -258,6 +258,41 @@ try {
 
 ---
 
+## Ending With a Tool
+
+An agent that reports its result through a tool, such as `finish` or `submit_verdict`, sometimes ends its turn with plain text instead. `endWith` names the tool the model must call before its turn ends. When the model ends its turn without calling it, NodeLLM reminds it once and carries on; if it still doesn't call it, the ask throws `EndToolNotCalledError`:
+
+```ts
+class Tester extends Agent {
+  static tools = [LookTool, ClickTool, FinishTool];
+  static endWith = "finish";
+}
+
+// Or on a chat, with a reminder of your own
+const chat = llm.chat("claude-sonnet-5-5", {
+  tools: [LookTool, FinishTool],
+  endWith: { tool: "finish", reminder: "Call finish with your verdict." }
+});
+```
+
+Only calls made during the current ask count. A tool that halts the loop counts as called. Pass `endWith: null` to an ask that doesn't need the tool, such as a follow-up question:
+
+```ts
+import { EndToolNotCalledError } from "@node-llm/core";
+
+try {
+  await tester.ask("Test the sign-in page");
+} catch (error) {
+  if (error instanceof EndToolNotCalledError) {
+    console.log(`No ${error.tool} after ${error.usage.total_tokens} tokens`);
+  }
+}
+
+await tester.ask("What did you find on the page?", { endWith: null });
+```
+
+---
+
 ## Many Tools: Deferred Loading <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v1.20.0+</span>
 
 Every tool definition is sent with every request. With dozens of tools, that costs tokens and makes the model choose worse. Mark rarely used tools `defer: true`:

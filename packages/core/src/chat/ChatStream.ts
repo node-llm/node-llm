@@ -19,7 +19,8 @@ import { ToolDefinition, ToolCall } from "./Tool.js";
 import { ChatValidator } from "./Validation.js";
 import { ToolHandler } from "./ToolHandler.js";
 import { logger } from "../utils/logger.js";
-import { CostLimitError, ToolCallLimitError } from "../errors/index.js";
+import { CostLimitError, EndToolNotCalledError, ToolCallLimitError } from "../errors/index.js";
+import { calledTool, endWithTool } from "./EndWith.js";
 import { ResponseFormat } from "../providers/Provider.js";
 import { ModelRegistry } from "../models/ModelRegistry.js";
 import { Middleware, MiddlewareContext, ToolErrorDirective } from "../types/Middleware.js";
@@ -177,6 +178,9 @@ export class ChatStream {
       }
 
       messages.push({ role: "user", content: messageContent });
+      const askStart = messages.length;
+      const endWith = endWithTool(options.endWith);
+      let endWithReminded = false;
 
       // Prepare Middleware Context
       const context: MiddlewareContext = {
@@ -357,6 +361,13 @@ export class ChatStream {
 
           if (!toolCalls || toolCalls.length === 0) {
             await runAllHandlers(endMessageHandlers, assistantResponse);
+            // A turn that should have ended with a tool is reminded once, then fails.
+            if (endWith && !calledTool(messages, askStart, endWith.tool)) {
+              if (endWithReminded) throw new EndToolNotCalledError(endWith.tool, totalUsage);
+              endWithReminded = true;
+              messages.push({ role: "user", content: endWith.reminder });
+              continue;
+            }
             break;
           }
 
