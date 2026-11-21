@@ -282,6 +282,10 @@ class ApiStore implements ChatStore {
     return post("/llm/messages", message);
   }
   // ...updateMessage, listMessages, createToolCall, finishToolCall, createRequest and the rest
+  async listToolCalls(messageIds) {
+    // Optional: lets loadAgentSession() give back earlier turns' tool calls
+    return post("/llm/tool-calls/search", { messageIds });
+  }
 }
 
 const session = await createAgentSession(new ApiStore(), llm, SupportAgent, {
@@ -445,6 +449,20 @@ if (!session) {
 // Continues with full history + current code config
 await session.ask("Can you cancel that order?");
 ```
+
+The history includes the tool calls of earlier turns and their results, placed before the answer they led to, so the model knows what it already looked up. A custom store gives them back through its optional `listToolCalls(messageIds)`; without it, a loaded session gets only the messages' text.
+
+### Resuming After a Restart
+
+A run that stops part way, because its process restarted or crashed, keeps what it recorded: its question, and each tool call with its result as it finished. Load the session and ask it to carry on; it sees the calls that finished, and a call that never finished is left out:
+
+```typescript
+// On start-up, for each run that was still going
+const session = await loadAgentSession(prisma, llm, ResearchAgent, run.sessionId);
+await session?.ask("You were interrupted. Continue where you left off.");
+```
+
+The model's text from the stopped turn isn't kept, since it is recorded when the turn ends; its tool calls are.
 
 ### Class Validation
 
