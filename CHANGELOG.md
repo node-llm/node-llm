@@ -28,6 +28,7 @@ All notable changes to this project will be documented in this file.
 ### Bug Fixes
 
 - **Network Errors Are Retried**: a request that can't reach the provider, such as `fetch failed` with `ECONNRESET`, now throws `NetworkError`, with the `host` and the original error as `cause`, and is retried like a server error. Before, fetch's `TypeError` escaped on the first attempt whatever `retry` was set to. It still moves on to a fallback model. The error-handling docs now also say that `InsufficientQuotaError` isn't retried, as the code already did.
+- **Anthropic Structured Outputs**: on Claude models that support it (Fable and Mythos 5, Opus 5 and 4.8, Sonnet 5, Haiku 5 and 4.5, and Opus 4.5 and 4.1), a schema is now sent as `output_config.format`, so the answer is held to it instead of only being asked for in the prompt. Constraints Anthropic doesn't take, such as minimums and lengths, are left out of what is sent, and every object gets `additionalProperties: false`; a Zod schema still checks the full schema on `response.data`. Older models, and schemas with records or self-references, keep the prompt instruction. For `ask()` and `stream()`.
 
 ## [1.21.0] - 2026-11-21 (@node-llm/core)
 
