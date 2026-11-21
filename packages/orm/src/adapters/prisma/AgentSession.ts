@@ -17,6 +17,7 @@ import {
  */
 import type { ChatStore } from "../../Store.js";
 import { toStore } from "./PrismaStore.js";
+import type { StoreRedactor } from "../../redact.js";
 
 /**
  * Record structure for the LLM Agent Session table.
@@ -373,6 +374,8 @@ export class AgentSession<
 export interface CreateAgentSessionOptions<I = any> {
   metadata?: I;
   tableNames?: TableNames;
+  /** Changes text before it is saved, after keys and tokens are masked; see StoreRedactor. */
+  redact?: StoreRedactor;
   debug?: boolean;
   model?: string;
   provider?: string;
@@ -391,7 +394,7 @@ export async function createAgentSession<I extends Record<string, any>, T extend
   AgentClass: AgentClass<T>,
   options: CreateAgentSessionOptions<I> = {}
 ): Promise<AgentSession<I, T>> {
-  const store = toStore(prismaOrStore, options.tableNames);
+  const store = toStore(prismaOrStore, options.tableNames, options.redact);
 
   if (options.debug) {
     console.log(`[@node-llm/orm] createAgentSession: agentClass=${AgentClass.name}`);
@@ -441,6 +444,8 @@ export async function createAgentSession<I extends Record<string, any>, T extend
  */
 export interface LoadAgentSessionOptions {
   tableNames?: TableNames;
+  /** Changes text before it is saved, after keys and tokens are masked; see StoreRedactor. */
+  redact?: StoreRedactor;
   debug?: boolean;
 }
 
@@ -454,7 +459,7 @@ export async function loadAgentSession<I extends Record<string, any>, T extends 
   sessionId: string,
   options: LoadAgentSessionOptions = {}
 ): Promise<AgentSession<I, T> | null> {
-  const store = toStore(prismaOrStore, options.tableNames);
+  const store = toStore(prismaOrStore, options.tableNames, options.redact);
 
   if (options.debug) {
     console.log(`[@node-llm/orm] loadAgentSession: id=${sessionId}`);

@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased] (@node-llm/orm)
+
+### Security
+
+- **Secrets Aren't Saved**: API keys, tokens and passwords in URLs are masked in everything a chat or agent session saves (message text, thinking, tool arguments and results), through the Prisma store or a custom one. Tool arguments stay valid JSON. `redact` on `createChat`, `loadChat`, `createAgentSession` and `loadAgentSession` masks more, such as personal data. `maskSecrets` and `redactingStore` are exported.
+
+## [Unreleased] (@node-llm/testing)
+
+### Security
+
+- **More Key Formats Are Scrubbed From Cassettes**: keys with hyphens (`sk-ant-...`, `sk-proj-...`, `sk-or-v1-...`, which the old pattern missed), xAI keys, AWS access key IDs, GitHub tokens and Bearer tokens, plus the `x-goog-api-key`, `api-key` and `proxy-authorization` headers.
+
 ## [1.21.0] - 2026-11-21 (@node-llm/core)
 
 ### Features

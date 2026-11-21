@@ -61,6 +61,7 @@ export * from "./adapters/prisma/index.js";
 
 // Custom stores
 export { isChatStore } from "./Store.js";
+export { maskSecrets, redactingStore, type StoreRedactor } from "./redact.js";
 export type {
   ChatStore,
   StoredChat,

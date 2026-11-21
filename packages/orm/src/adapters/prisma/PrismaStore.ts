@@ -11,6 +11,7 @@ import type {
   StoredMessage
 } from "../../Store.js";
 import { isChatStore } from "../../Store.js";
+import { redactingStore, type StoreRedactor } from "../../redact.js";
 
 export interface TableNames {
   agentSession?: string;
@@ -151,6 +152,14 @@ export class PrismaStore implements ChatStore {
 }
 
 /** A ChatStore as given, or a Prisma client wrapped in a PrismaStore. */
-export function toStore(prismaOrStore: unknown, tableNames?: TableNames): ChatStore {
-  return isChatStore(prismaOrStore) ? prismaOrStore : new PrismaStore(prismaOrStore, tableNames);
+export function toStore(
+  prismaOrStore: unknown,
+  tableNames?: TableNames,
+  redact?: StoreRedactor
+): ChatStore {
+  const store = isChatStore(prismaOrStore)
+    ? prismaOrStore
+    : new PrismaStore(prismaOrStore, tableNames);
+  // Keys and tokens are masked in everything saved, whatever the store.
+  return redactingStore(store, redact);
 }
