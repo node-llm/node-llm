@@ -1,6 +1,11 @@
 import { Provider, ChatRequest, ChatResponse } from "../providers/Provider.js";
 import { InsufficientQuotaError, RateLimitError, ServerError } from "../errors/index.js";
-import { FallbackEvent, ResolvedFallback, isFallbackError } from "./Fallback.js";
+import {
+  FallbackEvent,
+  ResolvedFallback,
+  isFallbackError,
+  requestForFallback
+} from "./Fallback.js";
 
 export interface FallbackSettings {
   /** Fallbacks in the order to try them, resolved lazily. */
@@ -46,10 +51,10 @@ export class Executor {
         const to = { model: target.model, provider: target.provider.id };
         await this.fallbacks?.onFallback?.({ error: lastError, from, to, attempt });
         try {
-          const response = await this.executeOn(target.provider, {
-            ...request,
-            model: target.model
-          });
+          const response = await this.executeOn(
+            target.provider,
+            requestForFallback(target.provider, request, target.model)
+          );
           this.servedBy = { provider: target.provider, model: target.model };
           return response;
         } catch (fallbackError) {

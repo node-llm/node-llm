@@ -245,6 +245,7 @@ console.log(reply.model, reply.provider); // the model that answered
 - **Order:** fallbacks are tried in order. If every one fails, the last error is thrown.
 - **Per request:** each request starts on the chat's own model again. In a tool loop, each step can fall back on its own.
 - **Streaming:** a stream falls back only if it fails before its first chunk. After that, the error is thrown, since you have already shown part of an answer.
+- **Settings (v1.21.0+):** a fallback model gets the chat's settings, minus any it doesn't take. Temperature, thinking, prompt caching, a forced tool choice and a predicted output are left out for a model that doesn't support them, so the fallback doesn't fail with a bad request.
 - **Providers:** a fallback provider uses the same configuration (API keys, base URLs) as the `llm` instance the chat came from. A fallback whose provider is not configured is skipped.
 
 To log or count fallbacks, use `onFallback`:

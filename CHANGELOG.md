@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased] (@node-llm/core)
+
+### Bug Fixes
+
+- **Fallbacks Leave Out Settings the Fallback Model Doesn't Take**: the request sent to a fallback model was the one built for the chat's own model. A temperature, thinking setting, forced tool choice or prompt-cache flag that the fallback model rejects made the fallback fail with a bad request, which is not retried. These settings are now left out for a model that doesn't support them, for `ask()` and `stream()`; a predicted output is now also dropped for streams.
+
 ## [1.20.1] - 2026-11-12 (@node-llm/core)
 
 ### Bug Fixes
