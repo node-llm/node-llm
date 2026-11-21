@@ -18,6 +18,7 @@ import {
 import type { ChatStore } from "../../Store.js";
 import { toStore } from "./PrismaStore.js";
 import { storedHistory } from "../../history.js";
+import { StoppedByStoreError } from "../../errors.js";
 
 /** What an agent's answers parse to: its schema's type, or unknown without one. */
 export type AgentData<T> = T extends Agent<any, infer S> ? S : unknown;
@@ -120,6 +121,8 @@ export class AgentSession<
   T extends Agent<I, any> = Agent<I, any>
 > {
   private currentMessageId: string | null = null;
+  /** Set when the store asks to stop; the next request throws it instead */
+  private stopReason?: string;
   private store: ChatStore;
   private debug: boolean;
 
@@ -218,8 +221,12 @@ export class AgentSession<
       }
     });
 
+    this.agent.beforeRequest(async () => {
+      if (this.stopReason !== undefined) throw new StoppedByStoreError(this.stopReason);
+    });
+
     this.agent.afterResponse(async (response) => {
-      await this.store.createRequest({
+      const recorded = await this.store.createRequest({
         chatId: this.chatId,
         messageId: this.currentMessageId,
         provider: response.provider || "unknown",
@@ -231,6 +238,7 @@ export class AgentSession<
         cachedTokens: response.usage?.cached_tokens,
         cost: response.usage?.cost || 0
       });
+      if (recorded && recorded.stop !== undefined) this.stopReason = recorded.stop;
     });
   }
 

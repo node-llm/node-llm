@@ -3,6 +3,7 @@ import type { NodeLLMCore, ChatChunk, AskOptions, Usage } from "@node-llm/core";
 import { BaseChat, type ChatRecord, type ChatOptions } from "../../BaseChat.js";
 import type { ChatStore } from "../../Store.js";
 import { toStore } from "./PrismaStore.js";
+import { StoppedByStoreError } from "../../errors.js";
 
 export { type ChatRecord, type ChatOptions };
 
@@ -37,6 +38,8 @@ export interface TableNames {
 export class Chat extends BaseChat {
   private store: ChatStore;
   private persistenceConfig: Required<NonNullable<ChatOptions["persistence"]>>;
+  /** Set when the store asks to stop; the next request throws it instead */
+  private stopReason?: string;
 
   constructor(
     prismaOrStore: unknown,
@@ -117,6 +120,10 @@ export class Chat extends BaseChat {
       for (const h of this.userHooks.onToolCallEnd) await h(call, result);
     });
 
+    coreChat.beforeRequest(async () => {
+      if (this.stopReason !== undefined) throw new StoppedByStoreError(this.stopReason);
+    });
+
     coreChat.afterResponse(async (finalResp: any) => {
       this.log(
         `Internal afterResponse triggered. Calling ${this.userHooks.afterResponse.length} user hooks.`
@@ -130,7 +137,7 @@ export class Chat extends BaseChat {
 
       // Only persist if requests persistence is enabled
       if (this.persistenceConfig.requests) {
-        await this.store.createRequest({
+        const recorded = await this.store.createRequest({
           chatId: this.id,
           messageId: assistantMessageId,
           provider: finalResp.provider || provider || "unknown",
@@ -142,6 +149,7 @@ export class Chat extends BaseChat {
           cachedTokens: finalResp.usage?.cached_tokens,
           cost: finalResp.usage?.cost || 0
         });
+        if (recorded && recorded.stop !== undefined) this.stopReason = recorded.stop;
       }
 
       return finalResp;

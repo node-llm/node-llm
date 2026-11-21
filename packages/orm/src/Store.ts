@@ -88,6 +88,12 @@ export interface NewRequest {
   cost: number;
 }
 
+/** What a store may answer when it records a request. */
+export interface RequestRecorded {
+  /** Stop before the next request, giving this as the reason */
+  stop?: string;
+}
+
 export interface RequestTotals {
   inputTokens: number;
   outputTokens: number;
@@ -123,7 +129,12 @@ export interface ChatStore {
     finished: { result: string; thought?: string | null }
   ): Promise<void>;
 
-  createRequest(request: NewRequest): Promise<void>;
+  /**
+   * Records one API call. A store can stop the chat or session before its next request by
+   * returning `{ stop: reason }`, such as when a spending limit kept outside the app is reached;
+   * it then throws StoppedByStoreError (v0.11.0+).
+   */
+  createRequest(request: NewRequest): Promise<void | RequestRecorded>;
   requestTotals(chatId: string): Promise<RequestTotals>;
 
   createAgentSession(session: {

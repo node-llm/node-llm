@@ -295,6 +295,28 @@ const session = await createAgentSession(new ApiStore(), llm, SupportAgent, {
 
 The records are the same as in the Prisma tables (chats, messages, tool calls with their results, and a request row per API call with its duration, tokens and cost), so one schema serves both. `createChat`, `loadChat`, `createAgentSession` and `loadAgentSession` take a store or a Prisma client; `isChatStore()` tells them apart.
 
+#### Stopping a Run From the Store
+
+A store can stop a chat or agent session before its next request, such as when a spending limit kept outside the app is reached. Return `{ stop: reason }` from `createRequest`; the ask then throws `StoppedByStoreError` with that `reason` instead of sending its next request. The tool calls that already ran keep their results in the history, and later asks on the same chat or session stop the same way.
+
+```typescript
+import { StoppedByStoreError } from "@node-llm/orm";
+
+class ApiStore implements ChatStore {
+  async createRequest(request) {
+    const { overLimit } = await post("/llm/requests", request);
+    if (overLimit) return { stop: "The monthly AI limit is reached." };
+  }
+  // ...
+}
+
+try {
+  await session.ask("Explore the checkout");
+} catch (error) {
+  if (error instanceof StoppedByStoreError) console.log(error.reason);
+}
+```
+
 ### Using Tools
 
 Tools are automatically tracked without additional configuration.

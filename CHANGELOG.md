@@ -39,6 +39,7 @@ All notable changes to this project will be documented in this file.
 ### Features
 
 - **Counting Calls a Tool Makes**: `chat.countUsage(usage)` and `agent.countUsage(usage)` count a call made outside the chat's own requests, such as a tool asking a vision model about a screenshot. It is added to the ask running now, so its `usage` and `maxCost` include it, and to `totalUsage`. In `@node-llm/orm`, `session.countCall(answer)` also saves it as a request row under the answer being written, so `stats()` includes it. Works for `ask()` and `stream()`.
+- **A Store Can Stop a Run**: a `ChatStore` can return `{ stop: reason }` from `createRequest`, such as when a spending limit kept outside the app is reached. The chat or agent session then throws `StoppedByStoreError` with that `reason` before its next request, and on later asks. The tool calls that already ran keep their results in the history. Stores that return nothing work as before.
 
 ## [1.21.0] - 2026-11-21 (@node-llm/core)
 
