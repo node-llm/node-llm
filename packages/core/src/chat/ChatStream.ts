@@ -20,6 +20,7 @@ import { ChatValidator } from "./Validation.js";
 import { ToolHandler } from "./ToolHandler.js";
 import { logger } from "../utils/logger.js";
 import { CostLimitError, ToolCallLimitError } from "../errors/index.js";
+import { stallWatch } from "./StallGuard.js";
 import { ResponseFormat } from "../providers/Provider.js";
 import { ModelRegistry } from "../models/ModelRegistry.js";
 import { Middleware, MiddlewareContext, ToolErrorDirective } from "../types/Middleware.js";
@@ -216,6 +217,7 @@ export class ChatStream {
         let isFirst = true;
         const maxToolCalls = options.maxToolCalls ?? DEFAULT_MAX_TOOL_CALLS;
         let stepCount = 0;
+        const stalls = stallWatch(options.stallGuard);
 
         const totalUsage: Usage = { input_tokens: 0, output_tokens: 0, total_tokens: 0 };
         const trackUsage = (u?: Usage) => {
@@ -416,6 +418,7 @@ export class ChatStream {
               messages.push(
                 provider.formatToolResultMessage(toolResult.tool_call_id, toolResult.content)
               );
+              stalls?.record(toolCall, toolResult.content, false);
               continue;
             }
 
@@ -456,6 +459,7 @@ export class ChatStream {
                 messages.push(
                   provider.formatToolResultMessage(toolResult.tool_call_id, toolResult.content)
                 );
+                stalls?.record(toolCall, toolResult.content, false);
                 continue;
               } catch (retryError) {
                 currentError = retryError as Error & { fatal?: boolean; status?: number };
@@ -469,13 +473,11 @@ export class ChatStream {
               }
             }
 
+            const errorResult = `Fatal error executing tool '${toolCall.function.name}': ${currentError.message}`;
             messages.push(
-              provider.formatToolResultMessage(
-                toolCall.id,
-                `Fatal error executing tool '${toolCall.function.name}': ${currentError.message}`,
-                { isError: true }
-              )
+              provider.formatToolResultMessage(toolCall.id, errorResult, { isError: true })
             );
+            stalls?.record(toolCall, errorResult, true);
 
             if (directive === "CONTINUE") {
               continue;
@@ -494,6 +496,8 @@ export class ChatStream {
               currentError as Error
             );
           }
+          const stalled = stalls?.error(totalUsage);
+          if (stalled) throw stalled;
           // Loop continues -> streaming next chunk
         }
 

@@ -1,5 +1,6 @@
 import { Chat, AskOptions } from "../chat/Chat.js";
 import { ChatOptions } from "../chat/ChatOptions.js";
+import type { StallGuard } from "../chat/StallGuard.js";
 import { ChatResponseString } from "../chat/ChatResponse.js";
 import { ToolResolvable, ToolCall } from "../chat/Tool.js";
 import { ThinkingConfig, ThinkingResult } from "../providers/Provider.js";
@@ -56,6 +57,9 @@ export interface AgentConfig<I = Record<string, any>> {
   /** The most an ask may spend, in US dollars; see ChatOptions.maxCost */
   maxCost?: number;
 
+  /** Stops a tool loop that is going nowhere; see ChatOptions.stallGuard */
+  stallGuard?: StallGuard | null;
+
   /** Run independent tool calls within the same turn concurrently */
   toolConcurrency?: boolean;
 
@@ -100,6 +104,9 @@ export abstract class Agent<
 
   /** The most an ask may spend, in US dollars; see ChatOptions.maxCost */
   static maxCost?: number;
+
+  /** Stops a tool loop that is going nowhere; see ChatOptions.stallGuard */
+  static stallGuard?: StallGuard | null;
   static toolConcurrency?: boolean;
   static promptCache?: boolean;
   static assumeModelExists?: boolean;
@@ -187,6 +194,7 @@ export abstract class Agent<
       maxToolCalls: overrides.maxToolCalls ?? ctor.maxToolCalls,
       keepToolResults: overrides.keepToolResults ?? ctor.keepToolResults,
       maxCost: overrides.maxCost ?? ctor.maxCost,
+      stallGuard: overrides.stallGuard !== undefined ? overrides.stallGuard : ctor.stallGuard,
       toolConcurrency: overrides.toolConcurrency ?? ctor.toolConcurrency,
       promptCache: overrides.promptCache ?? ctor.promptCache,
       headers: { ...ctor.headers, ...overrides.headers },
@@ -470,6 +478,7 @@ export function defineAgent<
     static override maxToolCalls = config.maxToolCalls;
     static override keepToolResults = config.keepToolResults;
     static override maxCost = config.maxCost;
+    static override stallGuard = config.stallGuard;
     static override toolConcurrency = config.toolConcurrency;
     static override promptCache = config.promptCache;
     static override assumeModelExists = config.assumeModelExists;
