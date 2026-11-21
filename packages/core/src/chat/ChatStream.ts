@@ -1,3 +1,4 @@
+import type { SideUsage } from "./SideUsage.js";
 import { windowToolResults } from "./ToolResultWindow.js";
 import { Message } from "./Message.js";
 import {
@@ -56,7 +57,8 @@ export class ChatStream {
     private readonly model: string,
     private readonly options: ChatOptions = {},
     messages?: Message[],
-    systemMessages?: Message[]
+    systemMessages?: Message[],
+    private readonly sideUsage?: SideUsage
   ) {
     this.messages = messages ?? [];
     this.systemMessages = systemMessages ?? [];
@@ -218,6 +220,7 @@ export class ChatStream {
         let stepCount = 0;
 
         const totalUsage: Usage = { input_tokens: 0, output_tokens: 0, total_tokens: 0 };
+        if (self.sideUsage) self.sideUsage.current = totalUsage;
         const trackUsage = (u?: Usage) => {
           if (u) {
             // Fallback cost calculation if provider didn't return it
@@ -510,6 +513,8 @@ export class ChatStream {
           // But rethrow for sure.
         }
         throw err;
+      } finally {
+        if (self.sideUsage) self.sideUsage.current = undefined;
       }
     };
 
