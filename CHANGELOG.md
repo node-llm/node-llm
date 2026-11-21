@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased] (@node-llm/core)
+
+### Features
+
+- **Cap on Concurrent Tool Calls**: `toolConcurrency` (and `withToolConcurrency`) also takes a number, the most tool calls to run at once. Every call still runs, that many at a time, and results stay in the order the model asked for them. Useful for tools that reach a rate-limited API. Works for chats, streams, agents, `config` and `@node-llm/orm` chats.
+
 ## [1.21.0] - 2026-11-21 (@node-llm/core)
 
 ### Features

@@ -61,11 +61,16 @@ async function executeToolCallOutcome(
  * only kicks in for AUTO/DRY_RUN turns with more than one independent call.
  */
 export function shouldRunToolCallsConcurrently(
-  toolConcurrency: boolean | undefined,
+  toolConcurrency: boolean | number | undefined,
   toolExecution: ToolExecutionModeInput | undefined,
   callCount: number
 ): boolean {
   return Boolean(toolConcurrency) && toolExecution !== ToolExecutionMode.CONFIRM && callCount > 1;
+}
+
+/** The worker cap a numeric `toolConcurrency` sets, if any. */
+export function toolWorkerLimit(toolConcurrency: boolean | number | undefined): number | undefined {
+  return typeof toolConcurrency === "number" && toolConcurrency > 0 ? toolConcurrency : undefined;
 }
 
 export async function executeToolCallOutcomes(
@@ -73,12 +78,26 @@ export async function executeToolCallOutcomes(
   options: ToolCallExecutionOptions,
   middlewares: Middleware[],
   context: MiddlewareContext,
-  concurrent: boolean
+  concurrent: boolean,
+  /** With `concurrent`, the most calls to run at once. Every call still runs. */
+  limit?: number
 ): Promise<ToolCallOutcome[]> {
   if (concurrent) {
-    return Promise.all(
-      toolCalls.map((toolCall) => executeToolCallOutcome(toolCall, options, middlewares, context))
-    );
+    const run = (toolCall: ToolCall) =>
+      executeToolCallOutcome(toolCall, options, middlewares, context);
+    if (!limit || limit >= toolCalls.length) return Promise.all(toolCalls.map(run));
+
+    // A fixed number of workers, each taking the next call; results stay in call order.
+    const outcomes: ToolCallOutcome[] = new Array(toolCalls.length);
+    let next = 0;
+    const worker = async () => {
+      while (next < toolCalls.length) {
+        const index = next++;
+        outcomes[index] = await run(toolCalls[index]!);
+      }
+    };
+    await Promise.all(Array.from({ length: Math.max(1, Math.floor(limit)) }, worker));
+    return outcomes;
   }
 
   const outcomes: ToolCallOutcome[] = [];
