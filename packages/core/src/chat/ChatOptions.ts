@@ -1,3 +1,4 @@
+import type { ContextBudget } from "./ContextBudget.js";
 import { Middleware } from "../types/Middleware.js";
 import { Message } from "./Message.js";
 import { ToolResolvable, ToolCall } from "./Tool.js";
@@ -70,6 +71,11 @@ export interface ChatOptions {
    * `config.toolConcurrency`.
    */
   toolConcurrency?: boolean | number;
+  /**
+   * Shares of the model's context window tool results may take. `null` turns
+   * off a budget set in `config`. See `ContextBudget`.
+   */
+  contextBudget?: ContextBudget | null;
   /**
    * Cache the repeated start of each request (instructions, tools and earlier turns) on providers
    * that need asking to, such as Anthropic. Others cache automatically.

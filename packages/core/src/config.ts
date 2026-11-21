@@ -1,3 +1,4 @@
+import type { ContextBudget } from "./chat/ContextBudget.js";
 /**
  * Global configuration for LLM providers.
  * Values are initialized from environment variables but can be overridden programmatically.
@@ -51,6 +52,8 @@ export interface NodeLLMConfig {
    * `chat.withToolConcurrency()`.
    */
   toolConcurrency?: boolean | number;
+  /** Shares of the model's context window tool results may take, for every chat. Off by default. */
+  contextBudget?: ContextBudget | null;
   provider?: string;
   /**
    * When false, keys, base URLs and the provider come only from what is passed in code, never
@@ -357,6 +360,7 @@ export class Configuration implements NodeLLMConfig {
   public maxTokens: number = DEFAULT_MAX_TOKENS;
   public toolExecution: ToolExecutionMode = DEFAULT_TOOL_EXECUTION;
   public toolConcurrency: boolean | number = DEFAULT_TOOL_CONCURRENCY;
+  public contextBudget: ContextBudget | null | undefined = undefined;
 
   /**
    * Returns a plain object with all configuration values.

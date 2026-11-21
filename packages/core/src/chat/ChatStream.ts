@@ -1,4 +1,5 @@
 import { windowToolResults } from "./ToolResultWindow.js";
+import { applyRequestBudget, budgetLimits, cutToolResult } from "./ContextBudget.js";
 import { Message } from "./Message.js";
 import {
   ContentPart,
@@ -87,6 +88,10 @@ export class ChatStream {
 
     if (this.options.toolConcurrency === undefined) {
       this.options.toolConcurrency = config.toolConcurrency;
+    }
+
+    if (this.options.contextBudget === undefined) {
+      this.options.contextBudget = config.contextBudget;
     }
   }
 
@@ -246,6 +251,7 @@ export class ChatStream {
         };
 
         let assistantResponse: ChatResponseString | undefined;
+        const budget = budgetLimits(options.contextBudget, provider, model);
 
         while (true) {
           let fullContent = "";
@@ -256,7 +262,10 @@ export class ChatStream {
           let currentTurnUsage: Usage | undefined;
 
           context.messages = [...systemMessages, ...messages];
-          let requestMessages = windowToolResults(context.messages, options.keepToolResults);
+          let requestMessages = applyRequestBudget(
+            windowToolResults(context.messages, options.keepToolResults),
+            budget
+          );
           requestMessages = await runChainHandlers(beforeRequestHandlers, requestMessages);
 
           const streamRequest: any = {
@@ -416,7 +425,10 @@ export class ChatStream {
             if (outcome.kind === "success") {
               const { toolResult } = outcome;
               messages.push(
-                provider.formatToolResultMessage(toolResult.tool_call_id, toolResult.content)
+                provider.formatToolResultMessage(
+                  toolResult.tool_call_id,
+                  cutToolResult(toolResult.content, budget)
+                )
               );
               continue;
             }
@@ -456,7 +468,10 @@ export class ChatStream {
                   toolResult.content
                 );
                 messages.push(
-                  provider.formatToolResultMessage(toolResult.tool_call_id, toolResult.content)
+                  provider.formatToolResultMessage(
+                    toolResult.tool_call_id,
+                    cutToolResult(toolResult.content, budget)
+                  )
                 );
                 continue;
               } catch (retryError) {
