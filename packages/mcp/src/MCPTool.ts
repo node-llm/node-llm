@@ -1,5 +1,6 @@
 import { Tool, ToolDefinition } from "@node-llm/core";
 import { SchemaStabilizer } from "./SchemaStabilizer.js";
+import { maskSecrets, stripInvisible, stripInvisibleDeep } from "./Sanitize.js";
 
 export interface MCPExecutionResult {
   text?: string;
@@ -26,10 +27,11 @@ export class MCPTool extends Tool {
     }
   ) {
     super();
-    this.name = metadata.name;
+    // What the server sends is shown to the model: hidden characters are removed from it.
+    this.name = stripInvisible(metadata.name);
     this.originalName = (metadata as any).originalName || metadata.name;
-    this.description = metadata.description || "";
-    this.schema = metadata.inputSchema;
+    this.description = stripInvisible(metadata.description || "");
+    this.schema = stripInvisibleDeep(metadata.inputSchema);
   }
 
   /**
@@ -95,7 +97,7 @@ export class MCPTool extends Tool {
     } catch (error: any) {
       // MCP Errors often come with a code and message
       const errorCode = error.code ? ` (Code: ${error.code})` : "";
-      const errorMessage = `MCP Error in ${this.name}: ${error.message}${errorCode}`;
+      const errorMessage = `MCP Error in ${this.name}: ${maskSecrets(String(error.message))}${errorCode}`;
 
       return {
         text: errorMessage,

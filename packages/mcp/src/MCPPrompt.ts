@@ -1,5 +1,6 @@
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import type { ContentPart, Message } from "@node-llm/core";
+import { stripInvisible, stripInvisibleDeep } from "./Sanitize.js";
 
 /** One block of MCP prompt content, as the SDK returns it. */
 type MCPContentBlock =
@@ -73,9 +74,10 @@ export class MCPPrompt {
       arguments?: any[];
     }
   ) {
-    this.name = metadata.name;
-    this.description = metadata.description;
-    this.arguments = metadata.arguments;
+    this.name = stripInvisible(metadata.name);
+    this.description =
+      metadata.description === undefined ? undefined : stripInvisible(metadata.description);
+    this.arguments = stripInvisibleDeep(metadata.arguments);
   }
 
   /**

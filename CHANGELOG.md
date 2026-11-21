@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased] (@node-llm/mcp)
+
+### Security
+
+- **Hidden Characters Are Removed From Server Tools**: zero-width, bidirectional-control and Unicode tag characters are removed from the names, descriptions and schemas of a server's tools and prompts, where a server could hide instructions for the model that a person can't see. Visible text is unchanged.
+- **Keys in Server Errors Are Masked**: key-like values in an MCP server's error are masked before the model sees it.
+- **Sampling Guards**: `sampling: { llm, model, approve, maxTokens, maxCost }` (and `createLLMSamplingHandler(llm, model, guards)`) can refuse a request, cap an answer's length, and cap what a server's sampling spends in total. A refused request throws `SamplingRefusedError`. Without guards, sampling works as before.
+
 ## [1.21.0] - 2026-11-21 (@node-llm/core)
 
 ### Features
