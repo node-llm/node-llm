@@ -85,6 +85,7 @@ export function setupVCR(
           "openai-project",
           "user-agent",
           "x-api-key",
+          "x-goog-api-key",
           "api-key",
           "host",
           ...(subDir === "bedrock"
@@ -133,7 +134,8 @@ export function setupVCR(
       "openai-organization",
       "openai-project",
       "api-key",
-      "x-api-key"
+      "x-api-key",
+      "x-goog-api-key"
     ];
 
     if (recording.request.headers) {

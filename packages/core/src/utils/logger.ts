@@ -1,4 +1,7 @@
 import { config } from "../config.js";
+import { redactForLog } from "./redact.js";
+
+export { redactForLog };
 
 /**
  * Masks credentials passed as URL query parameters (e.g. Gemini's `?key=...`)
@@ -15,7 +18,7 @@ class Logger {
 
   debug(message: string, data?: unknown): void {
     if (this.isDebugEnabled()) {
-      const formattedData = data ? `\n${JSON.stringify(data, null, 2)}` : "";
+      const formattedData = data ? `\n${JSON.stringify(redactForLog(data), null, 2)}` : "";
       console.log(`[NodeLLM Debug] ${message}${formattedData}`);
     }
   }
@@ -27,7 +30,7 @@ class Logger {
     if (this.isDebugEnabled()) {
       console.log(`[NodeLLM] [${provider}] Request: ${method} ${redactUrl(url)}`);
       if (body) {
-        console.log(JSON.stringify(body, null, 2));
+        console.log(JSON.stringify(redactForLog(body), null, 2));
       }
     }
   }
@@ -39,7 +42,7 @@ class Logger {
     if (this.isDebugEnabled()) {
       console.log(`[NodeLLM] [${provider}] Response: ${status} ${statusText}`);
       if (body) {
-        console.log(JSON.stringify(body, null, 2));
+        console.log(JSON.stringify(redactForLog(body), null, 2));
       }
     }
   }

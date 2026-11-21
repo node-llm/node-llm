@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased] (@node-llm/core)
+
+### Security
+
+- **Gemini Keys Are Sent in a Header**: the key goes in `x-goog-api-key` instead of `?key=` in the URL, so proxies, tracing and error reports that record URLs don't see it.
+- **Debug Logs Mask Keys and Files**: with `debug: true`, printed request and response bodies mask key- and token-like values and secret fields (`api_key`, `authorization`, ...), and replace base64 files with their size. Prompts and answers are still printed. `redactForLog()` is exported.
+- **Provider Errors Mask Keys**: `APIError`'s `message` and `body` mask key-like values (such as an OpenRouter key named in a credit error). Everything else in them is unchanged.
+
 ## [1.21.0] - 2026-11-21 (@node-llm/core)
 
 ### Features

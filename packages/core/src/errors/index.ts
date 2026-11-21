@@ -14,6 +14,7 @@
  */
 
 import type { Usage } from "../providers/Provider.js";
+import { redactForLog, redactSecrets } from "../utils/redact.js";
 
 /**
  * Base class for all NodeLLM errors
@@ -33,14 +34,21 @@ export class LLMError extends Error {
  * Errors occurring during API calls to providers
  */
 export class APIError extends LLMError {
+  /**
+   * The provider's response body. Values that look like keys or tokens are masked, as in the
+   * message, so logging or showing the error doesn't leak them.
+   */
+  public readonly body: unknown;
+
   constructor(
     message: string,
     public readonly status: number,
-    public readonly body: unknown,
+    body: unknown,
     public readonly provider?: string,
     public readonly model?: string
   ) {
-    super(message, "API_ERROR");
+    super(redactSecrets(message), "API_ERROR");
+    this.body = redactForLog(body);
   }
 }
 

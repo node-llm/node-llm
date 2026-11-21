@@ -86,3 +86,4 @@ export {
 } from "./constants.js";
 
 export { fetchWithTimeout } from "./utils/fetch.js";
+export { redactForLog } from "./utils/redact.js";

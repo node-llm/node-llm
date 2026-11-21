@@ -5248,6 +5248,14 @@ This creates a **defense-in-depth** strategy where multiple layers of protection
 
 ---
 
+## 🔑 Keys Stay Out of Logs and Errors
+
+- **Gemini keys go in a header.** The key is sent as `x-goog-api-key`, not as `?key=` in the URL, so proxies, tracing and error reports that record URLs never see it.
+- **Debug logs are masked.** With `debug: true`, request and response bodies are printed with values that look like keys or tokens (`sk-...`, `AIza...`, `Bearer ...`) and fields such as `api_key` or `authorization` replaced by `[REDACTED]`, and base64 files replaced by their size. Prompts and answers are still printed, since that is what debug logging is for: don't turn it on in production for user data.
+- **Provider errors are masked.** An `APIError`'s `message` and `body` mask key-like values the same way, so showing or logging the error doesn't leak a key or its ID. `redactForLog()` is exported for your own logs.
+
+---
+
 ## ⚡ Smart Developer Role
 
 Modern models (like OpenAI's **o1**, **o3**, and **GPT-4o**) have introduced a specialized `developer` role. This role has higher "Instruction Authority" than the standard `system` role.

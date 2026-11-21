@@ -17,7 +17,7 @@ export class GeminiTranscription {
 
   async execute(request: TranscriptionRequest): Promise<TranscriptionResponse> {
     const model = request.model || "gemini-2.0-flash";
-    const url = `${this.baseUrl}/models/${model}:generateContent?key=${this.apiKey}`;
+    const url = `${this.baseUrl}/models/${model}:generateContent`;
 
     const result = await BinaryUtils.toBase64(request.file);
     if (!result) {
@@ -60,6 +60,7 @@ export class GeminiTranscription {
       {
         method: "POST",
         headers: {
+          "x-goog-api-key": this.apiKey,
           "Content-Type": "application/json"
         },
         body: JSON.stringify(payload)
