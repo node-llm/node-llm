@@ -2,6 +2,7 @@ export * from "./chat/Message.js";
 export * from "./chat/Content.js";
 export * from "./chat/Tool.js";
 export * from "./chat/ChatOptions.js";
+export type { ContextBudget } from "./chat/ContextBudget.js";
 export * from "./chat/ChatResponse.js";
 export * from "./chat/Chat.js";
 export * from "./chat/ChatStream.js";
@@ -45,6 +46,7 @@ export type { NodeLLMConfig } from "./config.js";
 export { providerRegistry, ProviderInterceptor } from "./providers/registry.js";
 export { Schema } from "./schema/Schema.js";
 export type { ZodSchema } from "./schema/zod.js";
+export type { SchemaProblem } from "./schema/validation.js";
 export { BaseProvider } from "./providers/BaseProvider.js";
 export {
   Provider,
@@ -76,6 +78,8 @@ export {
 export { resolveModelAlias } from "./model_aliases.js";
 export { default as MODEL_ALIASES } from "./aliases.js";
 export type { ToolExecutionModeInput } from "./constants.js";
+export type { EndWith } from "./chat/EndWith.js";
+export type { StallGuard } from "./chat/StallGuard.js";
 export {
   ToolExecutionMode,
   DEFAULT_MAX_TOOL_CALLS,

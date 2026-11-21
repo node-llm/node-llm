@@ -17,6 +17,28 @@ import {
  */
 import type { ChatStore } from "../../Store.js";
 import { toStore } from "./PrismaStore.js";
+import { storedHistory } from "../../history.js";
+import { StoppedByStoreError } from "../../errors.js";
+
+/** What an agent's answers parse to: its schema's type, or unknown without one. */
+export type AgentData<T> = T extends Agent<any, infer S> ? S : unknown;
+
+/**
+ * The saved assistant message, with the answer's parsed `data`: checked against the agent's schema
+ * when it has a Zod one, and found inside a code fence or surrounding text. Reading `data` throws
+ * the schema's error when the answer doesn't match. `data` isn't a column, so it isn't saved or
+ * sent when the record is serialized.
+ */
+export type AgentAnswer<T> = MessageRecord & { readonly data: AgentData<T> };
+
+function withData<T>(record: MessageRecord, response: { data: unknown }): AgentAnswer<T> {
+  Object.defineProperty(record, "data", {
+    get: () => response.data,
+    enumerable: false,
+    configurable: true
+  });
+  return record as AgentAnswer<T>;
+}
 
 /**
  * Record structure for the LLM Agent Session table.
@@ -99,6 +121,8 @@ export class AgentSession<
   T extends Agent<I, any> = Agent<I, any>
 > {
   private currentMessageId: string | null = null;
+  /** Set when the store asks to stop; the next request throws it instead */
+  private stopReason?: string;
   private store: ChatStore;
   private debug: boolean;
 
@@ -197,8 +221,12 @@ export class AgentSession<
       }
     });
 
+    this.agent.beforeRequest(async () => {
+      if (this.stopReason !== undefined) throw new StoppedByStoreError(this.stopReason);
+    });
+
     this.agent.afterResponse(async (response) => {
-      await this.store.createRequest({
+      const recorded = await this.store.createRequest({
         chatId: this.chatId,
         messageId: this.currentMessageId,
         provider: response.provider || "unknown",
@@ -210,13 +238,42 @@ export class AgentSession<
         cachedTokens: response.usage?.cached_tokens,
         cost: response.usage?.cost || 0
       });
+      if (recorded && recorded.stop !== undefined) this.stopReason = recorded.stop;
+    });
+  }
+
+  /**
+   * Records a call made outside the agent's own requests, such as a tool asking another model
+   * about an image: as a request row of this chat, under the answer being written now, and in the
+   * agent's usage, so `stats()`, `totalUsage` and the ask's `maxCost` all include it.
+   */
+  async countCall(response: {
+    usage?: Usage;
+    model?: string;
+    provider?: string;
+    latency?: number;
+  }): Promise<void> {
+    const usage = response.usage;
+    if (!usage) return;
+    this.agent.countUsage(usage);
+    await this.store.createRequest({
+      chatId: this.chatId,
+      messageId: this.currentMessageId,
+      provider: response.provider || "unknown",
+      model: response.model || "unknown",
+      statusCode: 200,
+      duration: response.latency || 0,
+      inputTokens: usage.input_tokens || 0,
+      outputTokens: usage.output_tokens || 0,
+      cachedTokens: usage.cached_tokens,
+      cost: usage.cost || 0
     });
   }
 
   /**
    * Send a message and persist the conversation.
    */
-  async ask(message: string, options: AskOptions & { inputs?: I } = {}): Promise<MessageRecord> {
+  async ask(message: string, options: AskOptions & { inputs?: I } = {}): Promise<AgentAnswer<T>> {
     // Persist user message
     await this.store.createMessage({ chatId: this.chatId, role: "user", content: message });
 
@@ -237,7 +294,7 @@ export class AgentSession<
       const response = await this.agent.ask(message, { ...options, inputs });
 
       // Update assistant message with response
-      return (await this.store.updateMessage(assistantMessage.id, {
+      const saved = (await this.store.updateMessage(assistantMessage.id, {
         content: response.content,
         contentRaw: JSON.stringify(response.meta),
         inputTokens: response.usage?.input_tokens || 0,
@@ -248,6 +305,7 @@ export class AgentSession<
         modelId: response.model || null,
         provider: response.provider || null
       })) as MessageRecord;
+      return withData<T>(saved, response);
     } catch (error) {
       // Clean up placeholder on error
       await this.store.deleteMessage(assistantMessage.id);
@@ -368,18 +426,36 @@ export class AgentSession<
 }
 
 /**
+ * Agent settings for one session, in place of the agent class's own, such as `maxCost` or
+ * `maxToolCalls` for a run with its own budget. Not kept in the store: pass them again to
+ * loadAgentSession().
+ */
+export type AgentSessionOverrides<I = any> = Omit<
+  Partial<AgentConfig<I>>,
+  "llm" | "inputs" | "tools" | "schema"
+> & {
+  /** Tools for this session, in place of the ones the agent class defines */
+  tools?: ChatOptions["tools"];
+};
+
+/**
  * Options for creating a new agent session.
  */
-export interface CreateAgentSessionOptions<I = any> {
+export interface CreateAgentSessionOptions<I = any> extends AgentSessionOverrides<I> {
   metadata?: I;
   tableNames?: TableNames;
   debug?: boolean;
-  model?: string;
-  provider?: string;
   instructions?: string;
-  maxToolCalls?: number;
-  /** Tools for this session, in place of the ones the agent class defines */
-  tools?: ChatOptions["tools"];
+}
+
+/** The agent settings in session options, leaving out the session's own options. */
+function agentOverrides<I>(
+  options: AgentSessionOverrides<I> & { metadata?: unknown; tableNames?: unknown; debug?: unknown }
+): AgentSessionOverrides<I> {
+  const { metadata: _metadata, tableNames: _tableNames, debug: _debug, ...overrides } = options;
+  return Object.fromEntries(
+    Object.entries(overrides).filter(([, value]) => value !== undefined)
+  ) as AgentSessionOverrides<I>;
 }
 
 /**
@@ -416,13 +492,9 @@ export async function createAgentSession<I extends Record<string, any>, T extend
 
   // 3. Instantiate Agent with overrides
   const agent = new AgentClass({
+    ...agentOverrides<I>(options),
     llm,
-    inputs: sessionRecord.metadata as I,
-    model: options.model,
-    provider: options.provider,
-    instructions: options.instructions,
-    maxToolCalls: options.maxToolCalls,
-    ...(options.tools ? { tools: options.tools } : {})
+    inputs: sessionRecord.metadata as I
   });
 
   return new AgentSession<I, T>(
@@ -439,7 +511,7 @@ export async function createAgentSession<I extends Record<string, any>, T extend
 /**
  * Options for loading an existing agent session.
  */
-export interface LoadAgentSessionOptions {
+export interface LoadAgentSessionOptions<I = any> extends AgentSessionOverrides<I> {
   tableNames?: TableNames;
   debug?: boolean;
 }
@@ -452,7 +524,7 @@ export async function loadAgentSession<I extends Record<string, any>, T extends 
   llm: NodeLLMCore,
   AgentClass: AgentClass<T>,
   sessionId: string,
-  options: LoadAgentSessionOptions = {}
+  options: LoadAgentSessionOptions<I> = {}
 ): Promise<AgentSession<I, T> | null> {
   const store = toStore(prismaOrStore, options.tableNames);
 
@@ -474,19 +546,20 @@ export async function loadAgentSession<I extends Record<string, any>, T extends 
     );
   }
 
-  // 2. Load message history
+  // 2. Load message history, with the tool calls of earlier turns when the store keeps them
   const messages = (await store.listMessages(sessionRecord.chatId)) as MessageRecord[];
+  const toolCalls = store.listToolCalls
+    ? await store.listToolCalls(messages.map((message) => message.id))
+    : [];
 
-  // 3. Convert DB messages to NodeLLM Message format
-  const history: Message[] = messages.map((m) => ({
-    role: m.role as "user" | "assistant" | "system",
-    content: m.content || ""
-  }));
+  // 3. Convert DB records to NodeLLM messages
+  const history: Message[] = storedHistory(messages, toolCalls);
 
   // 4. Instantiate agent with injected history, LLM, AND metadata (as inputs)
   // "Code Wins" - model, tools, instructions come from AgentClass
   // Metadata from DB handles the lazy resolution of behavior
   const agent = new AgentClass({
+    ...agentOverrides<I>(options),
     llm,
     messages: history,
     inputs: sessionRecord.metadata as I

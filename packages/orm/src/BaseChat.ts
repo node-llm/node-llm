@@ -29,7 +29,7 @@ export interface ChatOptions {
   maxTokens?: number;
   headers?: Record<string, string>;
   maxToolCalls?: number;
-  toolConcurrency?: boolean;
+  toolConcurrency?: boolean | number;
   toolExecution?: ToolExecutionMode;
   toolChoice?: ToolChoice;
   toolCalls?: "one" | "many" | number;
@@ -174,7 +174,7 @@ export abstract class BaseChat<
    * Runs independent tool calls within the same turn concurrently instead
    * of sequentially. See core's Tools guide for details.
    */
-  withToolConcurrency(enabled: boolean): this {
+  withToolConcurrency(enabled: boolean | number): this {
     this.localOptions.toolConcurrency = enabled;
     return this;
   }

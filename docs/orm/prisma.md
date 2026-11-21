@@ -282,6 +282,10 @@ class ApiStore implements ChatStore {
     return post("/llm/messages", message);
   }
   // ...updateMessage, listMessages, createToolCall, finishToolCall, createRequest and the rest
+  async listToolCalls(messageIds) {
+    // Optional: lets loadAgentSession() give back earlier turns' tool calls
+    return post("/llm/tool-calls/search", { messageIds });
+  }
 }
 
 const session = await createAgentSession(new ApiStore(), llm, SupportAgent, {
@@ -290,6 +294,28 @@ const session = await createAgentSession(new ApiStore(), llm, SupportAgent, {
 ```
 
 The records are the same as in the Prisma tables (chats, messages, tool calls with their results, and a request row per API call with its duration, tokens and cost), so one schema serves both. `createChat`, `loadChat`, `createAgentSession` and `loadAgentSession` take a store or a Prisma client; `isChatStore()` tells them apart.
+
+#### Stopping a Run From the Store
+
+A store can stop a chat or agent session before its next request, such as when a spending limit kept outside the app is reached. Return `{ stop: reason }` from `createRequest`; the ask then throws `StoppedByStoreError` with that `reason` instead of sending its next request. The tool calls that already ran keep their results in the history, and later asks on the same chat or session stop the same way.
+
+```typescript
+import { StoppedByStoreError } from "@node-llm/orm";
+
+class ApiStore implements ChatStore {
+  async createRequest(request) {
+    const { overLimit } = await post("/llm/requests", request);
+    if (overLimit) return { stop: "The monthly AI limit is reached." };
+  }
+  // ...
+}
+
+try {
+  await session.ask("Explore the checkout");
+} catch (error) {
+  if (error instanceof StoppedByStoreError) console.log(error.reason);
+}
+```
 
 ### Using Tools
 
@@ -432,6 +458,42 @@ await session.ask("Where is my order #789?");
 console.log(session.id); // "abc-123" - save this!
 ```
 
+The class's settings apply unless a session sets its own. Any agent setting except `schema` can be given for one session, such as a budget for one run:
+
+```typescript
+const session = await createAgentSession(prisma, llm, ResearchAgent, {
+  maxCost: 0.5, // in place of ResearchAgent.maxCost
+  maxToolCalls: 40,
+  tools: [searchDocs] // in place of the class's tools
+});
+```
+
+These settings aren't saved with the session. Pass them to `loadAgentSession()` again when you resume it: `loadAgentSession(prisma, llm, ResearchAgent, id, { maxCost: 0.5 })`.
+
+### Structured Answers
+
+For an agent with a `schema`, the record `session.ask()` returns has the parsed answer as `data`, typed from the schema. It is found inside a code fence or surrounding text and checked against a Zod schema, so you don't parse `content` yourself. Reading `data` throws the schema's error when the answer doesn't match. `data` isn't saved: it isn't a column, and it is left out when the record is serialized.
+
+```typescript
+class Repairer extends Agent<{}, z.infer<typeof proposal>> {
+  static model = "claude-sonnet-5-5";
+  static schema = proposal;
+}
+
+const session = await createAgentSession(prisma, llm, Repairer);
+const answer = await session.ask("The Save button moved.");
+answer.data.action; // typed, checked against the schema
+```
+
+### Calls Made Outside the Agent
+
+When a tool calls a model itself, such as asking a vision model about a screenshot, pass that answer to `session.countCall()`. It is saved as a request row under the answer being written, and counted in the agent's usage, so `stats()`, `totalUsage` and `maxCost` include it:
+
+```typescript
+const answer = await llm.chat("claude-haiku-5-5").ask("What is on this screen?", { images });
+await session.countCall(answer);
+```
+
 ### Resuming Sessions
 
 ```typescript
@@ -445,6 +507,20 @@ if (!session) {
 // Continues with full history + current code config
 await session.ask("Can you cancel that order?");
 ```
+
+The history includes the tool calls of earlier turns and their results, placed before the answer they led to, so the model knows what it already looked up. A custom store gives them back through its optional `listToolCalls(messageIds)`; without it, a loaded session gets only the messages' text.
+
+### Resuming After a Restart
+
+A run that stops part way, because its process restarted or crashed, keeps what it recorded: its question, and each tool call with its result as it finished. Load the session and ask it to carry on; it sees the calls that finished, and a call that never finished is left out:
+
+```typescript
+// On start-up, for each run that was still going
+const session = await loadAgentSession(prisma, llm, ResearchAgent, run.sessionId);
+await session?.ask("You were interrupted. Continue where you left off.");
+```
+
+The model's text from the stopped turn isn't kept, since it is recorded when the turn ends; its tool calls are.
 
 ### Class Validation
 

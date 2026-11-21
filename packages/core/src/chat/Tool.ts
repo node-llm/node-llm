@@ -75,7 +75,12 @@ export class ToolHalt {
 /**
  * Anything that can be resolved into a ToolDefinition.
  */
-export type ToolResolvable = Tool | { new (): Tool } | ToolDefinition;
+export type ToolResolvable =
+  | Tool
+  | { new (): Tool }
+  | ToolDefinition
+  /** An agent class: runs as a subagent (see `Agent.toTool`). */
+  | { toTool(): ToolDefinition };
 
 /**
  * Subclass this to create tools with auto-generated schemas and type safety.

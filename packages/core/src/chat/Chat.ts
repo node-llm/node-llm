@@ -1,4 +1,5 @@
 import { windowToolResults } from "./ToolResultWindow.js";
+import { applyRequestBudget, budgetLimits, ContextBudget, cutToolResult } from "./ContextBudget.js";
 import { FileLoader } from "../utils/FileLoader.js";
 import { Message } from "./Message.js";
 import {
@@ -42,11 +43,19 @@ import {
   DEFAULT_MAX_CORRECTIONS,
   DEFAULT_MAX_TOOL_CALLS
 } from "../constants.js";
-import { ConfigurationError, CostLimitError, ToolCallLimitError } from "../errors/index.js";
+import {
+  ConfigurationError,
+  CostLimitError,
+  EndToolNotCalledError,
+  ToolCallLimitError
+} from "../errors/index.js";
+import { calledTool, EndWith, endWithTool } from "./EndWith.js";
+import { stallWatch } from "./StallGuard.js";
 import { ChatValidator } from "./Validation.js";
 import { ToolHandler } from "./ToolHandler.js";
 import {
   shouldRunToolCallsConcurrently,
+  toolWorkerLimit,
   executeToolCallOutcomes,
   toolCallLimitResults,
   unrunToolCallResults
@@ -75,6 +84,8 @@ export interface AskOptions {
   headers?: Record<string, string>;
   maxToolCalls?: number;
   maxCorrections?: number;
+  /** Overrides the chat's `endWith` for this ask; `null` turns it off. */
+  endWith?: EndWith | null;
   requestTimeout?: number;
   thinking?: ThinkingConfig;
   prediction?: string | ContentPart[];
@@ -83,9 +94,11 @@ export interface AskOptions {
 }
 
 import { ChatResponseString } from "./ChatResponse.js";
+import { SideUsage, addUsage } from "./SideUsage.js";
 
 export class Chat<S = unknown> {
   private messages: Message[] = [];
+  private readonly sideUsage = new SideUsage();
   private systemMessages: Message[] = [];
   private executor: Executor;
   private middlewares: Middleware[] = [];
@@ -143,6 +156,10 @@ export class Chat<S = unknown> {
       this.options.toolConcurrency = config.toolConcurrency;
     }
 
+    if (this.options.contextBudget === undefined) {
+      this.options.contextBudget = config.contextBudget;
+    }
+
     if (options.tools) {
       const toolList = options.tools;
       this.options.tools = []; // Clear and re-add via normalized method
@@ -165,7 +182,7 @@ export class Chat<S = unknown> {
    * Aggregate usage across the entire conversation
    */
   get totalUsage(): Usage {
-    return this.messages.reduce(
+    const total = this.messages.reduce(
       (acc, msg) => {
         if (msg.usage) {
           acc.input_tokens += msg.usage.input_tokens;
@@ -187,6 +204,18 @@ export class Chat<S = unknown> {
         cost: 0
       }
     );
+    for (const usage of this.sideUsage.counted) addUsage(total, usage);
+    return total;
+  }
+
+  /**
+   * Counts a call made outside this chat's own requests, such as a tool asking another model
+   * about an image: in `totalUsage`, and in the ask running now, so `maxCost` includes it. Pass the
+   * other call's `usage`, with its `cost`.
+   */
+  countUsage(usage: Usage): this {
+    this.sideUsage.count(usage);
+    return this;
   }
 
   /**
@@ -522,11 +551,24 @@ export class Chat<S = unknown> {
   }
 
   /**
+   * Keeps tool results within shares of the model's context window: a result
+   * longer than `perResult` is cut when it is added, and a request larger
+   * than `perRequest` leaves out its oldest tool results. `null` turns off a
+   * budget set in `config`.
+   */
+  withContextBudget(budget: ContextBudget | null): this {
+    this.options.contextBudget = budget;
+    return this;
+  }
+
+  /**
    * Enable or disable concurrent execution of independent tool calls
    * returned in the same turn. Disabled ("confirm" mode always runs
-   * sequentially since approval is interactive).
+   * sequentially since approval is interactive). A number caps how many
+   * run at once, such as 4 for tools that reach a rate-limited API: every
+   * call still runs, that many at a time.
    */
-  withToolConcurrency(enabled: boolean): this {
+  withToolConcurrency(enabled: boolean | number): this {
     this.options.toolConcurrency = enabled;
     return this;
   }
@@ -621,6 +663,11 @@ export class Chat<S = unknown> {
       role: "user",
       content: messageContent as MessageContent
     });
+    const askStart = this.messages.length;
+    const endWith = endWithTool(
+      options?.endWith !== undefined ? options.endWith : this.options.endWith
+    );
+    let endWithReminded = false;
 
     // Process Schema/Structured Output
     let responseFormat: ResponseFormat | undefined = this.options.responseFormat;
@@ -642,6 +689,7 @@ export class Chat<S = unknown> {
     }
 
     // Prepare Middleware Context
+    const budget = budgetLimits(this.options.contextBudget, this.provider, this.model);
     const context: MiddlewareContext = {
       requestId,
       provider: this.provider.id,
@@ -704,14 +752,20 @@ export class Chat<S = unknown> {
       let finalResponse: ChatResponseString & { data: S };
       let correctionAttempt = 0;
       const totalUsage: Usage = { input_tokens: 0, output_tokens: 0, total_tokens: 0 };
+      this.sideUsage.current = totalUsage;
 
       // Self-Correction Loop
       while (true) {
+        // A correction re-asks with the answer and the feedback, which are only in this.messages.
+        if (correctionAttempt > 0) context.messages = [...this.systemMessages, ...this.messages];
         // Prepare execution options
         const messagesToUse = context.messages || [];
         const executeOptions = {
           model: this.model,
-          messages: windowToolResults(messagesToUse, this.options.keepToolResults),
+          messages: applyRequestBudget(
+            windowToolResults(messagesToUse, this.options.keepToolResults),
+            budget
+          ),
           tools: requestTools(this.options.tools as ToolDefinition[], messagesToUse),
           temperature: requestTemperature(
             this.provider,
@@ -814,6 +868,7 @@ export class Chat<S = unknown> {
           options?.maxToolCalls ?? this.options.maxToolCalls ?? DEFAULT_MAX_TOOL_CALLS;
         let stepCount = 0;
         let haltTriggered = false;
+        const stalls = stallWatch(this.options.stallGuard);
 
         // Tool Calling Loop
         while (response.tool_calls && response.tool_calls.length > 0 && !haltTriggered) {
@@ -858,7 +913,8 @@ export class Chat<S = unknown> {
             },
             this.middlewares,
             context,
-            runConcurrently
+            runConcurrently,
+            toolWorkerLimit(this.options.toolConcurrency)
           );
 
           for (const outcome of outcomes) {
@@ -874,8 +930,12 @@ export class Chat<S = unknown> {
             if (outcome.kind === "success") {
               const { toolResult } = outcome;
               this.messages.push(
-                this.provider.formatToolResultMessage(toolResult.tool_call_id, toolResult.content)
+                this.provider.formatToolResultMessage(
+                  toolResult.tool_call_id,
+                  cutToolResult(toolResult.content, budget)
+                )
               );
+              stalls?.record(toolCall, toolResult.content, false);
 
               if (toolResult.halted) {
                 haltTriggered = true;
@@ -925,8 +985,12 @@ export class Chat<S = unknown> {
                   toolResult.content
                 );
                 this.messages.push(
-                  this.provider.formatToolResultMessage(toolResult.tool_call_id, toolResult.content)
+                  this.provider.formatToolResultMessage(
+                    toolResult.tool_call_id,
+                    cutToolResult(toolResult.content, budget)
+                  )
                 );
+                stalls?.record(toolCall, toolResult.content, false);
                 continue;
               } catch (retryError) {
                 currentError = retryError;
@@ -940,13 +1004,11 @@ export class Chat<S = unknown> {
               }
             }
 
+            const errorResult = `Fatal error executing tool '${toolCall.function.name}': ${(currentError as Error).message}`;
             this.messages.push(
-              this.provider.formatToolResultMessage(
-                toolCall.id,
-                `Fatal error executing tool '${toolCall.function.name}': ${(currentError as Error).message}`,
-                { isError: true }
-              )
+              this.provider.formatToolResultMessage(toolCall.id, errorResult, { isError: true })
             );
+            stalls?.record(toolCall, errorResult, true);
 
             if (directive === "CONTINUE") continue;
 
@@ -958,12 +1020,18 @@ export class Chat<S = unknown> {
 
           if (haltTriggered) break;
 
+          const stalled = stalls?.error(totalUsage);
+          if (stalled) throw stalled;
+
           // Content policy hooks see every request in the loop, as they do when streaming.
           const followUpMessages = await runChainHandlers(
             beforeRequestHandlers,
-            windowToolResults(
-              [...this.systemMessages, ...this.messages],
-              this.options.keepToolResults
+            applyRequestBudget(
+              windowToolResults(
+                [...this.systemMessages, ...this.messages],
+                this.options.keepToolResults
+              ),
+              budget
             )
           );
 
@@ -1029,6 +1097,20 @@ export class Chat<S = unknown> {
           if (!response.tool_calls || response.tool_calls.length === 0) {
             await runAllHandlers(endMessageHandlers, assistantMessage);
           }
+        }
+
+        // A turn that should have ended with a tool is reminded once, then fails.
+        if (
+          endWith &&
+          !haltTriggered &&
+          !response.tool_calls?.length &&
+          !calledTool(this.messages, askStart, endWith.tool)
+        ) {
+          if (endWithReminded) throw new EndToolNotCalledError(endWith.tool, totalUsage);
+          endWithReminded = true;
+          this.messages.push({ role: "user", content: endWith.reminder });
+          context.messages = [...this.systemMessages, ...this.messages];
+          continue;
         }
 
         finalResponse = new ChatResponseString(
@@ -1100,6 +1182,9 @@ export class Chat<S = unknown> {
         // For now, only onResponse triggers self-correction for simplicity.
       }
       throw err;
+    } finally {
+      // Calls counted after the ask ends go to the chat's total only.
+      this.sideUsage.current = undefined;
     }
   }
 
@@ -1112,7 +1197,8 @@ export class Chat<S = unknown> {
       this.model,
       this.options,
       this.messages,
-      this.systemMessages
+      this.systemMessages,
+      this.sideUsage
     );
     return streamer.create(content, options);
   }
@@ -1122,6 +1208,11 @@ export class Chat<S = unknown> {
    */
   private normalizeTool(tool: ToolResolvable): ToolDefinition | null {
     let toolInstance: unknown;
+
+    // An agent class (anything with a static toTool) becomes a subagent tool.
+    if (typeof tool === "function" && typeof (tool as { toTool?: unknown }).toTool === "function") {
+      return (tool as unknown as { toTool: () => ToolDefinition }).toTool();
+    }
 
     // Handle class constructor
     if (typeof tool === "function") {

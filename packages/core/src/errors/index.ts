@@ -14,6 +14,7 @@
  */
 
 import type { Usage } from "../providers/Provider.js";
+import type { ToolCall } from "../chat/Tool.js";
 
 /**
  * Base class for all NodeLLM errors
@@ -156,6 +157,22 @@ export class ServiceUnavailableError extends ServerError {
 }
 
 /**
+ * The provider could not be reached: the connection failed, was refused or was reset before a
+ * response came back. Retried like a server error. `cause` is the error fetch threw.
+ */
+export class NetworkError extends LLMError {
+  constructor(
+    message: string,
+    /** The host that could not be reached */
+    public readonly host?: string,
+    options?: { cause?: unknown }
+  ) {
+    super(message, "NETWORK_ERROR");
+    if (options && "cause" in options) (this as { cause?: unknown }).cause = options.cause;
+  }
+}
+
+/**
  * Misconfiguration (e.g. missing API key)
  */
 export class ConfigurationError extends LLMError {
@@ -272,4 +289,56 @@ export class ToolCallLimitError extends LLMError {
   ) {
     super(`[NodeLLM] Maximum tool execution calls (${limit}) exceeded.`, "TOOL_CALL_LIMIT");
   }
+}
+
+/**
+ * The model ended its turn without calling the tool set with `endWith`, even after it was
+ * reminded once.
+ */
+export class EndToolNotCalledError extends LLMError {
+  constructor(
+    /** The tool the model had to call */
+    public readonly tool: string,
+    /** Usage of every request in the ask */
+    public readonly usage: Usage
+  ) {
+    super(
+      `[NodeLLM] The model ended its turn without calling the ${tool} tool, even when reminded.`,
+      "END_TOOL_NOT_CALLED"
+    );
+  }
+}
+
+/** Why a tool loop was stopped as stalled; see StallGuard. */
+export type StallReason = "repeated" | "no_progress";
+
+/**
+ * A tool loop stopped by its StallGuard: the model repeated the same call with the same result,
+ * or made a run of calls with no progress. Every call that was run has its result in the history,
+ * so the chat can be asked again.
+ */
+export class StalledError extends LLMError {
+  constructor(
+    public readonly reason: StallReason,
+    /** The repeated call, or the calls in a row that made no progress */
+    public readonly calls: ToolCall[],
+    /** How many times the call was repeated, or how many calls made no progress */
+    public readonly count: number,
+    /** Usage of every request in the ask */
+    public readonly usage: Usage
+  ) {
+    const last = calls[calls.length - 1];
+    super(
+      reason === "repeated"
+        ? `[NodeLLM] Stalled: the model called ${describeCall(last)} ${count} times with the same result.`
+        : `[NodeLLM] Stalled: ${count} tool calls in a row made no progress (last: ${describeCall(last)}).`,
+      "STALLED"
+    );
+  }
+}
+
+function describeCall(call: ToolCall | undefined): string {
+  if (!call) return "a tool";
+  const args = call.function.arguments || "";
+  return `${call.function.name}(${args.length > 60 ? `${args.slice(0, 57)}...` : args})`;
 }

@@ -1,8 +1,12 @@
 import { Chat, AskOptions } from "../chat/Chat.js";
 import { ChatOptions } from "../chat/ChatOptions.js";
+import type { ContextBudget } from "../chat/ContextBudget.js";
+import type { EndWith } from "../chat/EndWith.js";
+import type { StallGuard } from "../chat/StallGuard.js";
 import { ChatResponseString } from "../chat/ChatResponse.js";
-import { ToolResolvable, ToolCall } from "../chat/Tool.js";
-import { ThinkingConfig, ThinkingResult } from "../providers/Provider.js";
+import { ToolResolvable, ToolCall, ToolDefinition } from "../chat/Tool.js";
+import { ConfigurationError } from "../errors/index.js";
+import { ThinkingConfig, ThinkingResult, Usage } from "../providers/Provider.js";
 import { Schema } from "../schema/Schema.js";
 import type { ZodSchema } from "../schema/zod.js";
 import { NodeLLM, NodeLLMCore } from "../llm.js";
@@ -17,6 +21,15 @@ export type LazyValue<T, I = Record<string, any>> = T | ((inputs: I) => T);
  * Configuration options for Agent.
  */
 export interface AgentConfig<I = Record<string, any>> {
+  /**
+   * The tool name when this agent is used as a subagent. Defaults to the class
+   * name in snake_case (`ResearchAgent` -> `research_agent`).
+   */
+  name?: string;
+
+  /** What the agent does, for a model deciding whether to hand it a task. */
+  description?: string;
+
   /** The model ID to use (e.g., "gpt-4o") */
   model?: string;
 
@@ -50,14 +63,22 @@ export interface AgentConfig<I = Record<string, any>> {
   /** Maximum tool call iterations */
   maxToolCalls?: number;
 
+  /** A tool the model must call before its turn ends; see ChatOptions.endWith */
+  endWith?: EndWith | null;
+
   /** Send only the most recent N tool results in full; see ChatOptions.keepToolResults */
   keepToolResults?: number;
 
   /** The most an ask may spend, in US dollars; see ChatOptions.maxCost */
   maxCost?: number;
 
+  /** Stops a tool loop that is going nowhere; see ChatOptions.stallGuard */
+  stallGuard?: StallGuard | null;
+
   /** Run independent tool calls within the same turn concurrently */
-  toolConcurrency?: boolean;
+  toolConcurrency?: boolean | number;
+
+  contextBudget?: ContextBudget | null;
 
   /** Cache the repeated start of each request on providers that need asking to */
   promptCache?: boolean;
@@ -95,12 +116,19 @@ export abstract class Agent<
   static maxTokens?: number;
   static maxToolCalls?: number;
 
+  /** A tool the model must call before its turn ends; see ChatOptions.endWith */
+  static endWith?: EndWith | null;
+
   /** Send only the most recent N tool results in full; see ChatOptions.keepToolResults */
   static keepToolResults?: number;
 
   /** The most an ask may spend, in US dollars; see ChatOptions.maxCost */
   static maxCost?: number;
-  static toolConcurrency?: boolean;
+  static toolConcurrency?: boolean | number;
+  static contextBudget?: ContextBudget | null;
+
+  /** Stops a tool loop that is going nowhere; see ChatOptions.stallGuard */
+  static stallGuard?: StallGuard | null;
   static promptCache?: boolean;
   static assumeModelExists?: boolean;
   static middlewares?: Middleware[];
@@ -110,6 +138,88 @@ export abstract class Agent<
    * Useful for introspection and validation.
    */
   static inputs?: string[];
+
+  /** Tool name when used as a subagent. Defaults to the class name in snake_case. */
+  static agentName?: string;
+
+  /** What the agent does: the tool description when used as a subagent. */
+  static description?: string;
+
+  /**
+   * This agent as a tool, so another chat or agent can hand it a task. Each
+   * call runs a fresh instance of the agent in its own conversation and
+   * returns the content of its final answer, so the work it does (searches,
+   * pages read) never enters the calling conversation.
+   *
+   * The model calls it with a `task` and any declared `inputs` not fixed
+   * here. Passing the agent class itself where a tool goes is the same as
+   * `toTool()`.
+   *
+   * @example
+   * class ResearchAgent extends Agent {
+   *   static model = "gpt-4.1-mini";
+   *   static description = "Researches a question across the help center";
+   *   static tools = [SearchDocs];
+   * }
+   * class SupportAgent extends Agent {
+   *   static model = "gpt-4.1";
+   *   static tools = [LookupOrder, ResearchAgent];
+   * }
+   */
+  static toTool<I extends Record<string, any>>(
+    this: (new (overrides?: Partial<AgentConfig<I> & ChatOptions>) => Agent<I, any>) &
+      Omit<typeof Agent, "prototype">,
+    inputs: Partial<I> = {},
+    options: { name?: string; description?: string; llm?: NodeLLMCore } = {}
+  ): ToolDefinition {
+    const name = options.name ?? this.agentName ?? snakeCase(this.name);
+    if (!name) {
+      throw new ConfigurationError(
+        "[Agent] A subagent needs a tool name: set `name` in defineAgent, `static agentName`, or pass `name` to toTool()."
+      );
+    }
+    const open = (this.inputs ?? []).filter((input) => !(input in inputs));
+    const properties: Record<string, unknown> = {
+      task: {
+        type: "string",
+        description:
+          "The task for this agent, written to stand on its own: it can't see this conversation."
+      }
+    };
+    for (const input of open) properties[input] = { type: "string" };
+
+    // eslint-disable-next-line @typescript-eslint/no-this-alias -- the handler runs later, as a plain function
+    const AgentClass = this;
+    return {
+      type: "function",
+      function: {
+        name,
+        description:
+          options.description ??
+          this.description ??
+          `Hands a task to the ${name} agent, which works on it in its own conversation and reports back.`,
+        parameters: {
+          type: "object",
+          properties,
+          required: ["task"],
+          additionalProperties: false
+        }
+      },
+      handler: async (args: Record<string, unknown>) => {
+        const { task, ...rest } = args ?? {};
+        const given = Object.fromEntries(
+          Object.entries(rest).filter(([key]) => open.includes(key))
+        );
+        const agentInputs = { ...inputs, ...given } as I;
+        const agent = new AgentClass({
+          ...(options.llm ? { llm: options.llm } : {}),
+          ...(Object.keys(agentInputs).length ? { inputs: agentInputs } : {})
+        });
+        const response = await agent.ask(String(task ?? ""));
+        return response.content ?? "";
+      }
+    };
+  }
 
   /**
    * Hook called when the agent starts a new session (ask/stream).
@@ -166,6 +276,7 @@ export abstract class Agent<
 
   /** The underlying Chat instance */
   protected readonly chat: Chat<S>;
+  private readonly llm: NodeLLMCore;
 
   /** Private reference to configuration overrides for lazy resolution */
   private readonly config: Partial<AgentConfig<I> & ChatOptions>;
@@ -185,9 +296,13 @@ export abstract class Agent<
       temperature: overrides.temperature ?? ctor.temperature,
       maxTokens: overrides.maxTokens ?? ctor.maxTokens,
       maxToolCalls: overrides.maxToolCalls ?? ctor.maxToolCalls,
+      endWith: overrides.endWith !== undefined ? overrides.endWith : ctor.endWith,
       keepToolResults: overrides.keepToolResults ?? ctor.keepToolResults,
       maxCost: overrides.maxCost ?? ctor.maxCost,
+      stallGuard: overrides.stallGuard !== undefined ? overrides.stallGuard : ctor.stallGuard,
       toolConcurrency: overrides.toolConcurrency ?? ctor.toolConcurrency,
+      contextBudget:
+        overrides.contextBudget !== undefined ? overrides.contextBudget : ctor.contextBudget,
       promptCache: overrides.promptCache ?? ctor.promptCache,
       headers: { ...ctor.headers, ...overrides.headers },
       params: { ...ctor.params, ...overrides.params },
@@ -205,6 +320,7 @@ export abstract class Agent<
     }
 
     const llm = overrides.llm ?? NodeLLM;
+    this.llm = llm;
     this.chat = llm.chat(model, chatOptions) as Chat<S>;
 
     // Initial resolution if inputs are provided in constructor
@@ -219,7 +335,7 @@ export abstract class Agent<
 
       const tools = overrides.tools ?? ctor.tools;
       if (tools && typeof tools !== "function" && tools.length > 0) {
-        this.chat.withTools(tools);
+        this.chat.withTools(this.withSubagentLlm(tools));
       }
     }
 
@@ -289,7 +405,7 @@ export abstract class Agent<
       tools = (tools as (i: I) => ToolResolvable[])(inputs);
     }
     if (Array.isArray(tools)) {
-      this.chat.withTools(tools as ToolResolvable[], { replace: true });
+      this.chat.withTools(this.withSubagentLlm(tools as ToolResolvable[]), { replace: true });
     }
   }
 
@@ -306,8 +422,17 @@ export abstract class Agent<
   /**
    * Add tools to the agent.
    */
+  /** Subagent classes run on this agent's `llm` instance (its keys and settings). */
+  private withSubagentLlm(tools: ToolResolvable[]): ToolResolvable[] {
+    return tools.map((tool) =>
+      typeof tool === "function" && typeof (tool as { toTool?: unknown }).toTool === "function"
+        ? (tool as unknown as typeof Agent).toTool.call(tool as never, {}, { llm: this.llm })
+        : tool
+    );
+  }
+
   withTools(tools: ToolResolvable[], options?: { replace?: boolean }): this {
-    this.chat.withTools(tools, options);
+    this.chat.withTools(this.withSubagentLlm(tools), options);
     return this;
   }
 
@@ -421,6 +546,15 @@ export abstract class Agent<
   }
 
   /**
+   * Counts a call made outside the agent's own requests, such as a tool asking another model;
+   * see Chat.countUsage.
+   */
+  countUsage(usage: Usage): this {
+    this.chat.countUsage(usage);
+    return this;
+  }
+
+  /**
    * Access the underlying Chat instance for advanced operations.
    */
   get underlyingChat(): Chat<S> {
@@ -458,6 +592,8 @@ export function defineAgent<
 >(config: AgentConfig<I>): DefinedAgent<I, S> {
   return class extends Agent<I, S> {
     static override model = config.model;
+    static override agentName = config.name;
+    static override description = config.description;
     static override provider = config.provider;
     static override instructions = config.instructions as LazyValue<string, any>;
     static override tools = config.tools as LazyValue<ToolResolvable[], any>;
@@ -468,11 +604,23 @@ export function defineAgent<
     static override headers = config.headers;
     static override maxTokens = config.maxTokens;
     static override maxToolCalls = config.maxToolCalls;
+    static override endWith = config.endWith;
     static override keepToolResults = config.keepToolResults;
     static override maxCost = config.maxCost;
+    static override stallGuard = config.stallGuard;
     static override toolConcurrency = config.toolConcurrency;
+    static override contextBudget = config.contextBudget;
     static override promptCache = config.promptCache;
     static override assumeModelExists = config.assumeModelExists;
     static override middlewares = config.middlewares;
   };
+}
+
+function snakeCase(name: string): string {
+  return name
+    .replace(/([a-z0-9])([A-Z])/g, "$1_$2")
+    .replace(/([A-Z]+)([A-Z][a-z])/g, "$1_$2")
+    .replace(/[^A-Za-z0-9]+/g, "_")
+    .replace(/^_+|_+$/g, "")
+    .toLowerCase();
 }
