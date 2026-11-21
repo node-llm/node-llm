@@ -218,6 +218,16 @@ config.toolConcurrency = true;
 
 Confirm mode (`toolExecution: "confirm"`) always runs sequentially regardless of this setting, since approval is interactive.
 
+### Capping Concurrent Calls <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v1.22.0+</span>
+
+With `true`, every call in a turn starts at once. When the tools reach a rate-limited API, or each call is heavy, pass a number instead:
+
+```ts
+const chat = NodeLLM.chat("gpt-4o").withTools([FetchPage]).withToolConcurrency(4);
+```
+
+Every call still runs and returns its result, four at a time. Results reach the conversation in the order the model asked for them. The same number works for `toolConcurrency` in chat options, agents and `config`.
+
 ---
 
 ## Loop Protection (Loop Guard) 🛡️

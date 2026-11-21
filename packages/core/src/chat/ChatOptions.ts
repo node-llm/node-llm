@@ -65,9 +65,11 @@ export interface ChatOptions {
   toolExecution?: ToolExecutionModeInput;
   /**
    * When true, independent tool calls returned in the same turn are executed
-   * concurrently instead of one at a time. Defaults to `config.toolConcurrency`.
+   * concurrently instead of one at a time. A number caps how many run at once
+   * (every call still runs, that many at a time). Defaults to
+   * `config.toolConcurrency`.
    */
-  toolConcurrency?: boolean;
+  toolConcurrency?: boolean | number;
   /**
    * Cache the repeated start of each request (instructions, tools and earlier turns) on providers
    * that need asking to, such as Anthropic. Others cache automatically.

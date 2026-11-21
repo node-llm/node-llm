@@ -29,6 +29,7 @@ import { runMiddleware } from "../utils/middleware-runner.js";
 import { randomUUID } from "node:crypto";
 import {
   shouldRunToolCallsConcurrently,
+  toolWorkerLimit,
   executeToolCallOutcomes,
   toolCallLimitResults,
   unrunToolCallResults
@@ -398,7 +399,8 @@ export class ChatStream {
             },
             middlewares,
             context,
-            runConcurrently
+            runConcurrently,
+            toolWorkerLimit(options.toolConcurrency)
           );
 
           for (const outcome of outcomes) {
