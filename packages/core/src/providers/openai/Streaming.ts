@@ -224,6 +224,10 @@ export class OpenAIStreaming {
 
             const delta = json.choices?.[0]?.delta;
 
+            if (json.choices?.[0]?.finish_reason) {
+              yield { content: "", finish_reason: json.choices[0].finish_reason };
+            }
+
             // Handle content delta
             if (delta?.content) {
               yield { content: delta.content };

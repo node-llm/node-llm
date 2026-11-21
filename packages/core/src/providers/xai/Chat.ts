@@ -118,7 +118,8 @@ export class XAIChat {
     return {
       content,
       usage: calculatedUsage,
-      tool_calls: toolCalls
+      tool_calls: toolCalls,
+      finish_reason: json.choices[0]?.finish_reason ?? null
     };
   }
 }
