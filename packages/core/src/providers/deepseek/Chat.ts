@@ -153,7 +153,8 @@ export class DeepSeekChat {
       reasoning,
       usage: calculatedUsage,
       thinking: thinkingResult,
-      tool_calls: toolCalls
+      tool_calls: toolCalls,
+      finish_reason: json.choices[0]?.finish_reason ?? null
     };
   }
 }

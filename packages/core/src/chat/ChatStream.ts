@@ -251,6 +251,7 @@ export class ChatStream {
           let fullReasoning = "";
           const thinking: ThinkingResult = { text: "" };
           let toolCalls: ToolCall[] | undefined;
+          let finishReason: string | null | undefined;
           let currentTurnUsage: Usage | undefined;
 
           context.messages = [...systemMessages, ...messages];
@@ -321,6 +322,10 @@ export class ChatStream {
               toolCalls = chunk.tool_calls;
             }
 
+            if (chunk.finish_reason) {
+              finishReason = chunk.finish_reason;
+            }
+
             if ((chunk as { usage?: Usage }).usage) {
               currentTurnUsage = (chunk as { usage: Usage }).usage;
               trackUsage(currentTurnUsage);
@@ -335,7 +340,7 @@ export class ChatStream {
             thinking.text || thinking.signature ? thinking : undefined,
             fullReasoning || undefined,
             toolCalls,
-            undefined, // finish_reason
+            finishReason,
             options.schema
           );
 

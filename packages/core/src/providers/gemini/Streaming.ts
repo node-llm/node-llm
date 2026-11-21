@@ -200,6 +200,10 @@ export class GeminiStreaming {
                 }
               }
 
+              if (json.candidates?.[0]?.finishReason) {
+                yield { content: "", finish_reason: json.candidates[0].finishReason };
+              }
+
               // Capture usage metadata (usually in the last chunk)
               if (json.usageMetadata) {
                 const usage = {

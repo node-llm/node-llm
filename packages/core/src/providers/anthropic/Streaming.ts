@@ -150,6 +150,10 @@ export class AnthropicStreaming {
                 yield { content: "", usage };
               }
 
+              if (data.delta?.stop_reason) {
+                yield { content: "", finish_reason: data.delta.stop_reason };
+              }
+
               if (data.delta?.stop_reason === "end_turn" && toolCallsMap.size > 0) {
                 // Yield accumulated tool calls
                 const toolCalls = Array.from(toolCallsMap.values()).map((tc) => ({

@@ -135,6 +135,10 @@ export class DeepSeekStreaming {
             }
 
             const delta = json.choices?.[0]?.delta;
+
+            if (json.choices?.[0]?.finish_reason) {
+              yield { content: "", finish_reason: json.choices[0].finish_reason };
+            }
             const deltaContent = delta?.content;
             const deltaReasoning = delta?.reasoning_content;
 
