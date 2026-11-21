@@ -1,4 +1,5 @@
 import { ChatChunk, ChatRequest, Provider } from "../providers/Provider.js";
+import { logger } from "../utils/logger.js";
 import { ConfigurationError } from "../errors/index.js";
 import { resolveModelAlias } from "../model_aliases.js";
 import { LLMError, RateLimitError, ServerError } from "../errors/index.js";
@@ -94,7 +95,11 @@ export async function* streamWithFallbacks(
 
     let yielded = false;
     try {
-      for await (const chunk of target.provider.stream({ ...request, model: target.model })) {
+      const attemptRequest =
+        index > 0
+          ? requestForFallback(target.provider, request, target.model)
+          : { ...request, model: target.model };
+      for await (const chunk of target.provider.stream(attemptRequest)) {
         yielded = true;
         yield chunk;
       }
@@ -105,4 +110,38 @@ export async function* streamWithFallbacks(
     }
   }
   throw lastError;
+}
+
+/**
+ * The request as sent to a fallback model. It was built for the chat's own
+ * model, so settings the fallback model doesn't take (temperature, thinking,
+ * prompt caching, a forced tool choice, a predicted output) are left out
+ * rather than failing the fallback with a bad request.
+ */
+export function requestForFallback(
+  provider: Provider,
+  request: ChatRequest,
+  model: string
+): ChatRequest {
+  const capabilities = provider.capabilities;
+  const adapted: ChatRequest = { ...request, model };
+  const dropped: string[] = [];
+  const drop = (key: keyof ChatRequest, unsupported: boolean | undefined) => {
+    if (adapted[key] === undefined || !unsupported) return;
+    delete adapted[key];
+    dropped.push(String(key));
+  };
+
+  drop("temperature", capabilities?.supportsTemperature?.(model) === false);
+  drop("thinking", capabilities ? !capabilities.supportsReasoning(model) : false);
+  drop("promptCache", !capabilities?.supportsPromptCaching?.(model));
+  drop("tool_choice", capabilities?.supportsToolChoice?.(model) === false);
+  drop("prediction", !capabilities?.supportsPrediction?.(model));
+
+  if (dropped.length) {
+    logger.debug(
+      `Fallback ${provider.id}/${model} does not take ${dropped.join(", ")}; sending the request without them.`
+    );
+  }
+  return adapted;
 }

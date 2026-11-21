@@ -13,6 +13,7 @@ All notable changes to this project will be documented in this file.
 
 - **Finish Reason on Every Provider**: `response.finishReason` is now set by OpenAI (and OpenAI-based providers: Azure, OpenRouter, Ollama), Anthropic, Gemini, DeepSeek and xAI, for both `ask()` and `stream()`. Before, only Bedrock and Mistral set it, and streamed responses never had it. The value is the provider's own (`stop`, `length`, `end_turn`, `max_tokens`, `MAX_TOKENS`, ...). The OpenTelemetry middleware now fills `gen_ai.response.finish_reasons` from it.
 - **`keepToolResults` Keeps `tool_search` Results**: windowing no longer replaces `tool_search` results with a placeholder. They are small, and they record which deferred tools a conversation has loaded.
+- **Fallbacks Leave Out Settings the Fallback Model Doesn't Take**: the request sent to a fallback model was the one built for the chat's own model. A temperature, thinking setting, forced tool choice or prompt-cache flag that the fallback model rejects made the fallback fail with a bad request, which is not retried. These settings are now left out for a model that doesn't support them, for `ask()` and `stream()`; a predicted output is now also dropped for streams.
 
 ## [1.20.1] - 2026-11-12 (@node-llm/core)
 
