@@ -1,4 +1,5 @@
 import { windowToolResults } from "./ToolResultWindow.js";
+import { applyRequestBudget, budgetLimits, ContextBudget, cutToolResult } from "./ContextBudget.js";
 import { FileLoader } from "../utils/FileLoader.js";
 import { Message } from "./Message.js";
 import {
@@ -141,6 +142,10 @@ export class Chat<S = unknown> {
 
     if (this.options.toolConcurrency === undefined) {
       this.options.toolConcurrency = config.toolConcurrency;
+    }
+
+    if (this.options.contextBudget === undefined) {
+      this.options.contextBudget = config.contextBudget;
     }
 
     if (options.tools) {
@@ -526,6 +531,17 @@ export class Chat<S = unknown> {
    * returned in the same turn. Disabled ("confirm" mode always runs
    * sequentially since approval is interactive).
    */
+  /**
+   * Keeps tool results within shares of the model's context window: a result
+   * longer than `perResult` is cut when it is added, and a request larger
+   * than `perRequest` leaves out its oldest tool results. `null` turns off a
+   * budget set in `config`.
+   */
+  withContextBudget(budget: ContextBudget | null): this {
+    this.options.contextBudget = budget;
+    return this;
+  }
+
   withToolConcurrency(enabled: boolean): this {
     this.options.toolConcurrency = enabled;
     return this;
@@ -642,6 +658,7 @@ export class Chat<S = unknown> {
     }
 
     // Prepare Middleware Context
+    const budget = budgetLimits(this.options.contextBudget, this.provider, this.model);
     const context: MiddlewareContext = {
       requestId,
       provider: this.provider.id,
@@ -711,7 +728,10 @@ export class Chat<S = unknown> {
         const messagesToUse = context.messages || [];
         const executeOptions = {
           model: this.model,
-          messages: windowToolResults(messagesToUse, this.options.keepToolResults),
+          messages: applyRequestBudget(
+            windowToolResults(messagesToUse, this.options.keepToolResults),
+            budget
+          ),
           tools: requestTools(this.options.tools as ToolDefinition[], messagesToUse),
           temperature: requestTemperature(
             this.provider,
@@ -874,7 +894,10 @@ export class Chat<S = unknown> {
             if (outcome.kind === "success") {
               const { toolResult } = outcome;
               this.messages.push(
-                this.provider.formatToolResultMessage(toolResult.tool_call_id, toolResult.content)
+                this.provider.formatToolResultMessage(
+                  toolResult.tool_call_id,
+                  cutToolResult(toolResult.content, budget)
+                )
               );
 
               if (toolResult.halted) {
@@ -925,7 +948,10 @@ export class Chat<S = unknown> {
                   toolResult.content
                 );
                 this.messages.push(
-                  this.provider.formatToolResultMessage(toolResult.tool_call_id, toolResult.content)
+                  this.provider.formatToolResultMessage(
+                    toolResult.tool_call_id,
+                    cutToolResult(toolResult.content, budget)
+                  )
                 );
                 continue;
               } catch (retryError) {
@@ -961,9 +987,12 @@ export class Chat<S = unknown> {
           // Content policy hooks see every request in the loop, as they do when streaming.
           const followUpMessages = await runChainHandlers(
             beforeRequestHandlers,
-            windowToolResults(
-              [...this.systemMessages, ...this.messages],
-              this.options.keepToolResults
+            applyRequestBudget(
+              windowToolResults(
+                [...this.systemMessages, ...this.messages],
+                this.options.keepToolResults
+              ),
+              budget
             )
           );
 

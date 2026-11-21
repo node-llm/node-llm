@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased] (@node-llm/core)
+
+### Features
+
+- **Context Budgets**: `config.contextBudget = { perResult, perRequest }` (or `chat.withContextBudget()`, or `static contextBudget` on an agent) keeps tool results within shares of the model's context window. A result longer than `perResult` is cut when it is added, with a note telling the model to ask for less. A request larger than `perRequest` leaves out its oldest tool results, in steps of about 15% of the budget so the prompt cache holds; the latest round goes out whenever it fits. `window` sets the context window for a model the registry doesn't know, and `null` turns a budget off.
+
 ## [1.21.0] - 2026-11-21 (@node-llm/core)
 
 ### Features

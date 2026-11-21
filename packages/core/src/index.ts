@@ -2,6 +2,7 @@ export * from "./chat/Message.js";
 export * from "./chat/Content.js";
 export * from "./chat/Tool.js";
 export * from "./chat/ChatOptions.js";
+export type { ContextBudget } from "./chat/ContextBudget.js";
 export * from "./chat/ChatResponse.js";
 export * from "./chat/Chat.js";
 export * from "./chat/ChatStream.js";
