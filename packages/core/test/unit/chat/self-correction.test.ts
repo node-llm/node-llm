@@ -75,6 +75,11 @@ describe("SchemaSelfCorrectionMiddleware", () => {
     expect(callCount).toBe(2);
     expect(response.data).toEqual({ name: "John", age: 30 });
     expect(chat.history).toHaveLength(4); // User -> Assistant (Bad) -> User (Feedback) -> Assistant (Good)
+
+    // The retry sends the bad answer and the feedback, not the first request again.
+    const retried = (mockProvider.chat as ReturnType<typeof vi.fn>).mock.calls[1][0].messages;
+    expect(retried.map((m: { role: string }) => m.role)).toEqual(["user", "assistant", "user"]);
+    expect(retried[2].content).toContain("age: ");
   });
 
   it("should stop after max retries", async () => {
