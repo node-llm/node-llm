@@ -101,6 +101,7 @@ const reply = await agent.ask("What is TypeScript?");
 | `maxToolCalls` | `number` | Maximum rounds of tool calls per ask; more throws `ToolCallLimitError` |
 | `maxCost` | `number` | The most an ask may spend in US dollars; more throws `CostLimitError` |
 | `endWith` | `string \| { tool, reminder }` | A tool the model must call before its turn ends (see [Ending With a Tool](tools.html#ending-with-a-tool)) |
+| `stallGuard` | `{ repeats, noProgress, progress }` | Stop a tool loop that is going nowhere with `StalledError` (see [Stall Guard](tools.html#stall-guard)) |
 | `keepToolResults` | `number` | Send only the most recent tool results in full (between N and 2N); older ones become a placeholder |
 | `assumeModelExists` | `boolean` | Skip registry validation for custom/unlisted models |
 | `middlewares` | `Middleware[]` | Middlewares for observation or correction <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.6em; font-weight: 600; vertical-align: middle;">v1.15.0+</span> |

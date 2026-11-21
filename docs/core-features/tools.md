@@ -266,6 +266,42 @@ try {
 }
 ```
 
+### Stall Guard
+
+`maxToolCalls` stops a long loop, but a model that is stuck often repeats itself well before the limit: it clicks the same missing button again, or keeps getting the same answer. `stallGuard` stops such a loop early, before its next request, with `StalledError`:
+
+```ts
+const chat = llm.chat("claude-sonnet-5-5", {
+  tools: [LookTool, ClickTool],
+  stallGuard: {
+    repeats: 3, // the same call, with the same arguments, got the same result 3 times
+    noProgress: 8 // 8 calls in a row made no progress
+  }
+});
+
+// Or on an agent
+class Tester extends Agent {
+  static stallGuard = { repeats: 3, noProgress: 8 };
+}
+```
+
+A call made progress when it didn't fail and its result differs from every earlier result of the same tool in the ask. A call failed when its tool threw, including errors a `Tool` returns to the model as text. Pass `progress(call, result, failed)` to decide for yourself, for example when a tool's result says whether the page changed. Each limit is off unless set, and each ask counts on its own.
+
+`StalledError` has the `reason` (`"repeated"` or `"no_progress"`), the `calls` involved, their `count` and the ask's `usage`. Its message says what happened, such as `Stalled: the model called click({"label":"Save"}) 3 times with the same result.` Every call that ran has its result in the history, so you can ask again:
+
+```ts
+import { StalledError } from "@node-llm/core";
+
+try {
+  await tester.ask("Save the form");
+} catch (error) {
+  if (error instanceof StalledError) {
+    console.log(error.reason, error.message);
+    await tester.ask("That isn't working. Try another way, or report what blocks you.");
+  }
+}
+```
+
 ---
 
 ## Ending With a Tool

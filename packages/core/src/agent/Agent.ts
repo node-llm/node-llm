@@ -2,6 +2,7 @@ import { Chat, AskOptions } from "../chat/Chat.js";
 import { ChatOptions } from "../chat/ChatOptions.js";
 import type { ContextBudget } from "../chat/ContextBudget.js";
 import type { EndWith } from "../chat/EndWith.js";
+import type { StallGuard } from "../chat/StallGuard.js";
 import { ChatResponseString } from "../chat/ChatResponse.js";
 import { ToolResolvable, ToolCall, ToolDefinition } from "../chat/Tool.js";
 import { ConfigurationError } from "../errors/index.js";
@@ -71,6 +72,9 @@ export interface AgentConfig<I = Record<string, any>> {
   /** The most an ask may spend, in US dollars; see ChatOptions.maxCost */
   maxCost?: number;
 
+  /** Stops a tool loop that is going nowhere; see ChatOptions.stallGuard */
+  stallGuard?: StallGuard | null;
+
   /** Run independent tool calls within the same turn concurrently */
   toolConcurrency?: boolean | number;
 
@@ -122,6 +126,9 @@ export abstract class Agent<
   static maxCost?: number;
   static toolConcurrency?: boolean | number;
   static contextBudget?: ContextBudget | null;
+
+  /** Stops a tool loop that is going nowhere; see ChatOptions.stallGuard */
+  static stallGuard?: StallGuard | null;
   static promptCache?: boolean;
   static assumeModelExists?: boolean;
   static middlewares?: Middleware[];
@@ -292,6 +299,7 @@ export abstract class Agent<
       endWith: overrides.endWith !== undefined ? overrides.endWith : ctor.endWith,
       keepToolResults: overrides.keepToolResults ?? ctor.keepToolResults,
       maxCost: overrides.maxCost ?? ctor.maxCost,
+      stallGuard: overrides.stallGuard !== undefined ? overrides.stallGuard : ctor.stallGuard,
       toolConcurrency: overrides.toolConcurrency ?? ctor.toolConcurrency,
       contextBudget:
         overrides.contextBudget !== undefined ? overrides.contextBudget : ctor.contextBudget,
@@ -590,6 +598,7 @@ export function defineAgent<
     static override endWith = config.endWith;
     static override keepToolResults = config.keepToolResults;
     static override maxCost = config.maxCost;
+    static override stallGuard = config.stallGuard;
     static override toolConcurrency = config.toolConcurrency;
     static override contextBudget = config.contextBudget;
     static override promptCache = config.promptCache;
