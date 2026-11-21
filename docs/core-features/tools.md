@@ -286,7 +286,9 @@ When a chat has deferred tools:
 
 Which tools are loaded is read from the conversation history, so it survives saving and restoring a chat. Tools without `defer` are sent as before, and a chat with no deferred tools is unchanged.
 
-This works the same on every provider. It does not use a provider's own server-side tool search.
+This works the same on every provider.
+
+**On Anthropic (Claude 4.5 and later, v1.21.0+)**, NodeLLM also uses Claude's own deferred loading. Every tool is sent on every request, deferred ones with `defer_loading: true`, and a `tool_search` result is sent as `tool_reference` blocks that the API expands into full definitions. The tool list then never changes during a conversation, so [prompt caching](/advanced/prompt_caching) keeps working after the model loads a tool. Search itself still runs in NodeLLM, so results are the same as on other providers.
 
 ---
 

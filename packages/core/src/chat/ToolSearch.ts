@@ -12,6 +12,26 @@ import { ToolDefinition } from "./Tool.js";
 
 export const TOOL_SEARCH_NAME = "tool_search";
 
+/**
+ * Set on the array `requestTools` returns: every deferred tool, without its
+ * `defer` flag. A provider with its own deferred loading (Anthropic's
+ * `defer_loading`) sends them all up front so the tool list never changes and
+ * the prompt cache holds. A symbol key, so JSON and other providers ignore it.
+ */
+export const DEFERRED_TOOLS = Symbol.for("node-llm.deferredTools");
+
+/** The deferred tools tagged on a `requestTools` result, if any. */
+export function deferredToolsOf(tools: ToolDefinition[] | undefined): ToolDefinition[] | undefined {
+  return (tools as (ToolDefinition[] & { [DEFERRED_TOOLS]?: ToolDefinition[] }) | undefined)?.[
+    DEFERRED_TOOLS
+  ];
+}
+
+/** Names of the tools a `tool_search` result loaded, from its JSON content. */
+export function loadedByToolSearch(content: unknown): string[] {
+  return parseLoaded(typeof content === "string" ? content : undefined);
+}
+
 const DEFAULT_LIMIT = 5;
 const MAX_LIMIT = 20;
 const SELECT = "select:";
@@ -45,11 +65,13 @@ export function requestTools(
   const loaded = loadedToolNames(messages, new Set(deferred.map((tool) => tool.function.name)));
   const byName = new Map(deferred.map((tool) => [tool.function.name, tool]));
 
-  return [
+  const result = [
     ...tools.filter((tool) => !tool.defer),
     searchTool(deferred),
     ...loaded.map((name) => byName.get(name)!)
   ].map(withoutDefer);
+  Object.defineProperty(result, DEFERRED_TOOLS, { value: deferred.map(withoutDefer) });
+  return result;
 }
 
 function withoutDefer(tool: ToolDefinition): ToolDefinition {
