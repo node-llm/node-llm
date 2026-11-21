@@ -235,6 +235,34 @@ export class AgentSession<
   }
 
   /**
+   * Records a call made outside the agent's own requests, such as a tool asking another model
+   * about an image: as a request row of this chat, under the answer being written now, and in the
+   * agent's usage, so `stats()`, `totalUsage` and the ask's `maxCost` all include it.
+   */
+  async countCall(response: {
+    usage?: Usage;
+    model?: string;
+    provider?: string;
+    latency?: number;
+  }): Promise<void> {
+    const usage = response.usage;
+    if (!usage) return;
+    this.agent.countUsage(usage);
+    await this.store.createRequest({
+      chatId: this.chatId,
+      messageId: this.currentMessageId,
+      provider: response.provider || "unknown",
+      model: response.model || "unknown",
+      statusCode: 200,
+      duration: response.latency || 0,
+      inputTokens: usage.input_tokens || 0,
+      outputTokens: usage.output_tokens || 0,
+      cachedTokens: usage.cached_tokens,
+      cost: usage.cost || 0
+    });
+  }
+
+  /**
    * Send a message and persist the conversation.
    */
   async ask(message: string, options: AskOptions & { inputs?: I } = {}): Promise<AgentAnswer<T>> {

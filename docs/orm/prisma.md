@@ -463,6 +463,15 @@ const answer = await session.ask("The Save button moved.");
 answer.data.action; // typed, checked against the schema
 ```
 
+### Calls Made Outside the Agent
+
+When a tool calls a model itself, such as asking a vision model about a screenshot, pass that answer to `session.countCall()`. It is saved as a request row under the answer being written, and counted in the agent's usage, so `stats()`, `totalUsage` and `maxCost` include it:
+
+```typescript
+const answer = await llm.chat("claude-haiku-5-5").ask("What is on this screen?", { images });
+await session.countCall(answer);
+```
+
 ### Resuming Sessions
 
 ```typescript

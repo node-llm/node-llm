@@ -94,9 +94,11 @@ export interface AskOptions {
 }
 
 import { ChatResponseString } from "./ChatResponse.js";
+import { SideUsage, addUsage } from "./SideUsage.js";
 
 export class Chat<S = unknown> {
   private messages: Message[] = [];
+  private readonly sideUsage = new SideUsage();
   private systemMessages: Message[] = [];
   private executor: Executor;
   private middlewares: Middleware[] = [];
@@ -180,7 +182,7 @@ export class Chat<S = unknown> {
    * Aggregate usage across the entire conversation
    */
   get totalUsage(): Usage {
-    return this.messages.reduce(
+    const total = this.messages.reduce(
       (acc, msg) => {
         if (msg.usage) {
           acc.input_tokens += msg.usage.input_tokens;
@@ -202,6 +204,18 @@ export class Chat<S = unknown> {
         cost: 0
       }
     );
+    for (const usage of this.sideUsage.counted) addUsage(total, usage);
+    return total;
+  }
+
+  /**
+   * Counts a call made outside this chat's own requests, such as a tool asking another model
+   * about an image: in `totalUsage`, and in the ask running now, so `maxCost` includes it. Pass the
+   * other call's `usage`, with its `cost`.
+   */
+  countUsage(usage: Usage): this {
+    this.sideUsage.count(usage);
+    return this;
   }
 
   /**
@@ -738,6 +752,7 @@ export class Chat<S = unknown> {
       let finalResponse: ChatResponseString & { data: S };
       let correctionAttempt = 0;
       const totalUsage: Usage = { input_tokens: 0, output_tokens: 0, total_tokens: 0 };
+      this.sideUsage.current = totalUsage;
 
       // Self-Correction Loop
       while (true) {
@@ -1167,6 +1182,9 @@ export class Chat<S = unknown> {
         // For now, only onResponse triggers self-correction for simplicity.
       }
       throw err;
+    } finally {
+      // Calls counted after the ask ends go to the chat's total only.
+      this.sideUsage.current = undefined;
     }
   }
 
@@ -1179,7 +1197,8 @@ export class Chat<S = unknown> {
       this.model,
       this.options,
       this.messages,
-      this.systemMessages
+      this.systemMessages,
+      this.sideUsage
     );
     return streamer.create(content, options);
   }

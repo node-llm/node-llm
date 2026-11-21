@@ -34,6 +34,12 @@ All notable changes to this project will be documented in this file.
 - **Agent Session Answers Have Their Data**: for an agent with a `schema`, the record `session.ask()` returns has the parsed answer as `data`, typed from the schema, found inside a code fence or surrounding text and checked against a Zod schema, as `response.data` is in core. Before, apps parsed `content` themselves. `data` isn't a column: it isn't saved and is left out when the record is serialized. New types `AgentAnswer` and `AgentData`.
 - **Agent Settings per Session**: `createAgentSession()` and `loadAgentSession()` take any agent setting except `schema` for that session, in place of the class's: `maxCost`, `maxTokens`, `temperature`, `thinking`, `keepToolResults`, `promptCache`, `middlewares` and the rest. Before, only `model`, `provider`, `instructions`, `maxToolCalls` and `tools` were passed on, and `loadAgentSession()` took none, so an app had to subclass the agent for each budget. Settings left `undefined` keep the class's. New type `AgentSessionOverrides`.
 
+## [Unreleased] (@node-llm/core, @node-llm/orm)
+
+### Features
+
+- **Counting Calls a Tool Makes**: `chat.countUsage(usage)` and `agent.countUsage(usage)` count a call made outside the chat's own requests, such as a tool asking a vision model about a screenshot. It is added to the ask running now, so its `usage` and `maxCost` include it, and to `totalUsage`. In `@node-llm/orm`, `session.countCall(answer)` also saves it as a request row under the answer being written, so `stats()` includes it. Works for `ask()` and `stream()`.
+
 ## [1.21.0] - 2026-11-21 (@node-llm/core)
 
 ### Features

@@ -431,6 +431,27 @@ const chat = llm.chat("gpt-5.5", { maxCost: 0.5 });
 
 It needs the model's pricing to know the cost, so it does nothing for models without it.
 
+### Counting Calls a Tool Makes
+
+A tool sometimes calls a model itself, such as asking a vision model about a screenshot. Count that call on the chat or agent with `countUsage()`, so it is part of the ask's `usage`, the chat's `totalUsage` and `maxCost`:
+
+```ts
+const describeScreen = defineTool({
+  name: "describe_screen",
+  description: "Describe what is on the screen",
+  schema: z.object({}),
+  execute: async () => {
+    const answer = await llm.chat("claude-haiku-5-5").ask("What is on this screen?", {
+      images: [await screenshot()]
+    });
+    agent.countUsage(answer.usage);
+    return String(answer);
+  }
+});
+```
+
+A call counted while no ask is running goes to `totalUsage` only. With `@node-llm/orm`, use `session.countCall(answer)` instead: it also saves the call as a request row of the session.
+
 ## Tool Execution Policies (Security) <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v1.5.0+</span>
 
 For sensitive operations, you can control the "autonomy" of the tool execution loop using `withToolExecution()`.
