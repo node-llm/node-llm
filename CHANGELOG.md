@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 ### Bug Fixes
 
 - **Readable Schema Errors**: when a structured response doesn't match its Zod schema, `response.data` still throws Zod's `ZodError`, now with a one-line message naming each field, the values the schema allows and the value received, such as `status: Invalid option: expected one of "passed"|"failed" (got "blocked")`. Before, a Zod 4 error's message was its issues as indented JSON, so logs that keep an error's first line showed only `[`. The parts are on `error.problems`. `SchemaSelfCorrection` re-asks with the new message. The docs show how to accept unknown enum values with Zod's `.catch()`.
+- **Self-Correction Re-Asks With the Feedback in `ask()`**: a middleware `RETRY`, such as `SchemaSelfCorrection`'s, sent the first request again, without the rejected answer or the feedback, so the model was not told what to fix. It now sends both, as `stream()` already did.
 
 ## [1.21.0] - 2026-11-21 (@node-llm/core)
 

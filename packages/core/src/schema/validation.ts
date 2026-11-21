@@ -17,8 +17,6 @@ interface ZodIssueLike {
   values?: unknown[];
   /** Zod 3 enum issues */
   options?: unknown[];
-  /** Zod 3 issues that name the value sent */
-  received?: unknown;
 }
 
 /**
@@ -38,7 +36,8 @@ export function readableSchemaError(error: unknown, schemaName: string, value: u
       path: formatPath(path),
       message: issue.message ?? "Invalid value",
       ...(expected ? { expected } : {}),
-      received: "received" in issue ? issue.received : valueAt(value, path)
+      // Read from the response: Zod 3's own `received` is the type's name for a wrong type.
+      received: valueAt(value, path)
     };
   });
   const message = `Response did not match the "${schemaName}" schema: ${problems.map(describe).join("; ")}`;

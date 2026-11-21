@@ -124,6 +124,14 @@ describe("schema validation errors", () => {
   });
 });
 
+it("shows the value sent, not its type, for a wrong type in Zod 3", () => {
+  const schema = z3.object({ age: z3.number() });
+  const error = thrown(() => respond({ age: "30" }, Schema.fromZod("person", schema)).data);
+
+  expect(error.problems[0]).toMatchObject({ path: "age", received: "30" });
+  expect(error.message).toContain('age: Expected number, received string (got "30")');
+});
+
 describe("re-asking with the validation error", () => {
   it("tells the model which field was wrong and what it may send", async () => {
     const schema = Schema.fromZod("verdict", z.object({ status: z.enum(["passed", "failed"]) }));
