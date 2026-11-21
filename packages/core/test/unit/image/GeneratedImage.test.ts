@@ -71,7 +71,10 @@ describe("GeneratedImage", () => {
 
       const buffer = await image.toBuffer();
       expect(buffer).toBeInstanceOf(Buffer);
-      expect(global.fetch).toHaveBeenCalledWith("https://example.com/image.png");
+      expect(global.fetch).toHaveBeenCalledWith(
+        "https://example.com/image.png",
+        expect.objectContaining({ redirect: "manual" })
+      );
     });
 
     it("should throw error when URL fetch fails", async () => {

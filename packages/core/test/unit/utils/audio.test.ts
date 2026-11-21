@@ -41,7 +41,10 @@ describe("AudioUtils", () => {
 
       expect(result.fileName).toBe("audio.wav");
       expect(result.data).toBeInstanceOf(Uint8Array);
-      expect(global.fetch).toHaveBeenCalledWith("https://example.com/audio.wav");
+      expect(global.fetch).toHaveBeenCalledWith(
+        "https://example.com/audio.wav",
+        expect.objectContaining({ redirect: "manual" })
+      );
     });
 
     it("throws error when remote fetch fails", async () => {

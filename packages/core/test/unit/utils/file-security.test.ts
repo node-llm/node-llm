@@ -137,6 +137,23 @@ describe("remote files", () => {
     await expect(FileLoader.load(missing, { throwOnFetchError: true })).rejects.toThrow();
   });
 
+  it("checks the address the connection uses, not only a lookup before it", async () => {
+    // localhost resolves to a loopback address in the connection's own lookup.
+    await expect(
+      FileLoader.load(`http://localhost:${new URL(base).port}/cat.png`, {
+        blockPrivateNetwork: true,
+        throwOnFetchError: true
+      })
+    ).rejects.toThrow(/private address/);
+  });
+  it("checks Gemini and OpenAI's own loaders and transcription files too", async () => {
+    const { BinaryUtils } = await import("../../../src/utils/Binary.js");
+    const { AudioUtils } = await import("../../../src/utils/audio.js");
+    await expect(BinaryUtils.toBase64(`${base}/to-metadata`)).rejects.toThrow(/metadata/);
+    await expect(BinaryUtils.toBase64(join(root, ".env"))).rejects.toThrow(/may hold secrets/);
+    await expect(AudioUtils.load(join(root, "id_rsa"))).rejects.toThrow(/may hold secrets/);
+    expect((await BinaryUtils.toBase64(`${base}/cat.png`))?.mimeType).toBe("image/png");
+  });
   it("stops reading a body without a length once it passes the limit", async () => {
     await expect(FileLoader.load(`${base}/huge`, { throwOnFetchError: true })).rejects.toThrow(
       /exceeding the limit/
@@ -191,5 +208,57 @@ describe("fileSecurity on a chat", () => {
           .ask("Read", { files: [join(root, "notes.txt")] })
       )
     ).toBe("ok");
+  });
+});
+
+describe("review follow-ups", () => {
+  it("judges IPv6 forms that carry an IPv4 address by that address", async () => {
+    const { isMetadataAddress: meta } = await import("../../../src/utils/FileSecurity.js");
+    for (const ip of [
+      "::ffff:a9fe:a9fe",
+      "::ffff:169.254.169.254",
+      "64:ff9b::a9fe:a9fe",
+      "::a9fe:a9fe",
+      "192.0.0.192",
+      "fd00:ec2:0:0:0:0:0:254"
+    ])
+      expect(meta(ip), ip).toBe(true);
+    for (const ip of ["::ffff:7f00:1", "64:ff9b::7f00:1", "fec0::1", "::ffff:10.0.0.1"])
+      expect(isPrivateAddress(ip), ip).toBe(true);
+    expect(isPrivateAddress("::ffff:808:808")).toBe(false);
+    await expect(FileLoader.load("http://[::ffff:169.254.169.254]/")).rejects.toThrow(/metadata/);
+  });
+
+  it("refuses devices and more files that hold secrets", async () => {
+    await expect(FileLoader.load("/dev/zero")).rejects.toBeInstanceOf(FileAccessError);
+    const { isSensitiveFile } = await import("../../../src/utils/FileSecurity.js");
+    for (const name of [
+      "prod.env",
+      ".envrc",
+      ".env-production",
+      "secrets.yml",
+      "config/database.yml",
+      "application_default_credentials.json",
+      "my-service-account.json",
+      ".git/config",
+      ".vault-token",
+      ".my.cnf",
+      "/proc/self/environ",
+      "terraform.tfstate",
+      "id_rsa_work"
+    ])
+      expect(isSensitiveFile(join(dir, name)) || isSensitiveFile(name), name).toBe(true);
+    for (const name of ["notes.txt", "Dockerfile", "README.md", "data.json", "app.yml"])
+      expect(isSensitiveFile(join(dir, name)), name).toBe(false);
+  });
+
+  it("merges rules from config and the chat", async () => {
+    const { mergeFileSecurity } = await import("../../../src/utils/FileSecurity.js");
+    expect(mergeFileSecurity({ root, blockPrivateNetwork: true }, { fetchTimeout: 5 })).toEqual({
+      root,
+      blockPrivateNetwork: true,
+      fetchTimeout: 5
+    });
+    expect(mergeFileSecurity(undefined, undefined)).toBeUndefined();
   });
 });

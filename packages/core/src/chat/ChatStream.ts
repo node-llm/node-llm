@@ -1,5 +1,6 @@
 import type { SideUsage } from "./SideUsage.js";
 import { toolErrorText } from "./ToolErrorText.js";
+import { mergeFileSecurity } from "../utils/FileSecurity.js";
 import { windowToolResults } from "./ToolResultWindow.js";
 import { applyRequestBudget, budgetLimits, cutToolResult } from "./ContextBudget.js";
 import { Message } from "./Message.js";
@@ -178,7 +179,9 @@ export class ChatStream {
 
       if (files.length > 0) {
         const processedFiles = await Promise.all(
-          files.map((f: string) => FileLoader.load(f, options.fileSecurity ?? config.fileSecurity))
+          files.map((f: string) =>
+            FileLoader.load(f, mergeFileSecurity(config.fileSecurity, options.fileSecurity))
+          )
         );
         const hasBinary = processedFiles.some(isBinaryContent);
 

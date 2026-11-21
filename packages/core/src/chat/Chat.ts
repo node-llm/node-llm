@@ -1,4 +1,5 @@
 import { toolErrorText } from "./ToolErrorText.js";
+import { mergeFileSecurity } from "../utils/FileSecurity.js";
 import { windowToolResults } from "./ToolResultWindow.js";
 import { applyRequestBudget, budgetLimits, ContextBudget, cutToolResult } from "./ContextBudget.js";
 import { FileLoader } from "../utils/FileLoader.js";
@@ -659,7 +660,7 @@ export class Chat<S = unknown> {
     if (files.length > 0) {
       const processedFiles = await Promise.all(
         files.map((f: string) =>
-          FileLoader.load(f, this.options.fileSecurity ?? config.fileSecurity)
+          FileLoader.load(f, mergeFileSecurity(config.fileSecurity, this.options.fileSecurity))
         )
       );
       const hasBinary = processedFiles.some(isBinaryContent);
