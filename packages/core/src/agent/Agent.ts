@@ -2,7 +2,7 @@ import { Chat, AskOptions } from "../chat/Chat.js";
 import { ChatOptions } from "../chat/ChatOptions.js";
 import { ChatResponseString } from "../chat/ChatResponse.js";
 import { ToolResolvable, ToolCall } from "../chat/Tool.js";
-import { ThinkingConfig, ThinkingResult } from "../providers/Provider.js";
+import { ThinkingConfig, ThinkingResult, Usage } from "../providers/Provider.js";
 import { Schema } from "../schema/Schema.js";
 import type { ZodSchema } from "../schema/zod.js";
 import { NodeLLM, NodeLLMCore } from "../llm.js";
@@ -418,6 +418,15 @@ export abstract class Agent<
    */
   get totalUsage() {
     return this.chat.totalUsage;
+  }
+
+  /**
+   * Counts a call made outside the agent's own requests, such as a tool asking another model;
+   * see Chat.countUsage.
+   */
+  countUsage(usage: Usage): this {
+    this.chat.countUsage(usage);
+    return this;
   }
 
   /**

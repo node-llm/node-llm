@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased] (@node-llm/core, @node-llm/orm)
+
+### Features
+
+- **Counting Calls a Tool Makes**: `chat.countUsage(usage)` and `agent.countUsage(usage)` count a call made outside the chat's own requests, such as a tool asking a vision model about a screenshot. It is added to the ask running now, so its `usage` and `maxCost` include it, and to `totalUsage`. In `@node-llm/orm`, `session.countCall(answer)` also saves it as a request row under the answer being written, so `stats()` includes it. Works for `ask()` and `stream()`.
+
 ## [1.21.0] - 2026-11-21 (@node-llm/core)
 
 ### Features
