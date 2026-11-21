@@ -31,7 +31,8 @@ import {
   shouldRunToolCallsConcurrently,
   executeToolCallOutcomes,
   toolCallLimitResults,
-  unrunToolCallResults
+  unrunToolCallResults,
+  runToolCallEnd
 } from "./ToolCallOutcome.js";
 import {
   collectHandlers,
@@ -446,13 +447,13 @@ export class ChatStream {
                   combinedToolCallStart,
                   combinedToolCallEnd
                 );
-                await runMiddleware(
+                const changed = await runToolCallEnd(
                   middlewares,
-                  "onToolCallEnd",
                   context,
                   toolCall,
                   toolResult.content
                 );
+                if (changed !== undefined) toolResult.content = changed;
                 messages.push(
                   provider.formatToolResultMessage(toolResult.tool_call_id, toolResult.content)
                 );

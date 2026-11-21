@@ -49,7 +49,8 @@ import {
   shouldRunToolCallsConcurrently,
   executeToolCallOutcomes,
   toolCallLimitResults,
-  unrunToolCallResults
+  unrunToolCallResults,
+  runToolCallEnd
 } from "./ToolCallOutcome.js";
 import { logger } from "../utils/logger.js";
 import {
@@ -917,13 +918,13 @@ export class Chat<S = unknown> {
                   combinedToolCallStart,
                   combinedToolCallEnd
                 );
-                await runMiddleware(
+                const changed = await runToolCallEnd(
                   this.middlewares,
-                  "onToolCallEnd",
                   context,
                   toolCall,
                   toolResult.content
                 );
+                if (changed !== undefined) toolResult.content = changed;
                 this.messages.push(
                   this.provider.formatToolResultMessage(toolResult.tool_call_id, toolResult.content)
                 );

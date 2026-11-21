@@ -48,9 +48,13 @@ async function executeToolCallOutcome(
       options.onToolCallEnd
     );
 
-    await runMiddleware(middlewares, "onToolCallEnd", context, toolCall, toolResult.content);
+    const changed = await runToolCallEnd(middlewares, context, toolCall, toolResult.content);
 
-    return { kind: "success", toolCall, toolResult };
+    return {
+      kind: "success",
+      toolCall,
+      toolResult: changed === undefined ? toolResult : { ...toolResult, content: changed }
+    };
   } catch (error: unknown) {
     return { kind: "error", toolCall, error };
   }
@@ -112,4 +116,27 @@ export function unrunToolCallResults(
   return toolCalls.map((toolCall) =>
     provider.formatToolResultMessage(toolCall.id, `Not run: ${reason}.`, { isError: true })
   );
+}
+
+/**
+ * Runs the onToolCallEnd hooks, each seeing the result as the ones before it left it, and returns
+ * the changed result, or undefined when no hook changed it.
+ */
+export async function runToolCallEnd(
+  middlewares: Middleware[],
+  context: MiddlewareContext,
+  toolCall: ToolCall,
+  content: string
+): Promise<string | undefined> {
+  let current = content;
+  let changed = false;
+  for (const middleware of [...(middlewares ?? [])].reverse()) {
+    if (typeof middleware.onToolCallEnd !== "function") continue;
+    const result = await middleware.onToolCallEnd(context, toolCall, current);
+    if (result && typeof result === "object" && typeof result.content === "string") {
+      current = result.content;
+      changed = true;
+    }
+  }
+  return changed ? current : undefined;
 }

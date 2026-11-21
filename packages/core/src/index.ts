@@ -24,7 +24,7 @@ export type {
 export { Judgment, ProbabilityAnswer, ChoiceAnswer, ScoreAnswer } from "./judge/Judgment.js";
 export type { Answer, AnswerFor, AnswersOf, JudgmentResult } from "./judge/Judgment.js";
 export type { AgentConfig, DefinedAgent } from "./agent/Agent.js";
-export type { Middleware, MiddlewareContext } from "./types/Middleware.js";
+export type { Middleware, MiddlewareContext, ToolResultChange } from "./types/Middleware.js";
 export * from "./middlewares/index.js";
 
 export { z } from "zod/v3";
