@@ -1123,6 +1123,11 @@ export class Chat<S = unknown> {
   private normalizeTool(tool: ToolResolvable): ToolDefinition | null {
     let toolInstance: unknown;
 
+    // An agent class (anything with a static toTool) becomes a subagent tool.
+    if (typeof tool === "function" && typeof (tool as { toTool?: unknown }).toTool === "function") {
+      return (tool as unknown as { toTool: () => ToolDefinition }).toTool();
+    }
+
     // Handle class constructor
     if (typeof tool === "function") {
       try {
