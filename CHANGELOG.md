@@ -40,6 +40,12 @@ All notable changes to this project will be documented in this file.
 - **Remote Files Time Out and Stop at 50 MB While Reading**: a remote file now times out after 60 seconds (`fileSecurity.fetchTimeout`). One without a `content-length` was read in full before its size was checked; it is now stopped once it passes 50 MB.
 - **More File Rules (`fileSecurity`)**: for apps where a path or URL comes from a user, `root` keeps local files inside a folder (after following links), `blockPrivateNetwork` refuses every private address, `allowedHosts` allows only listed hosts, and `throwOnFetchError` throws instead of passing a failed URL on to the provider. Set on `config`, `createLLM()` or a chat.
 
+### Security
+
+- **Gemini Keys Are Sent in a Header**: the key goes in `x-goog-api-key` instead of `?key=` in the URL, so proxies, tracing and error reports that record URLs don't see it.
+- **Debug Logs Mask Keys and Files**: with `debug: true`, printed request and response bodies mask key- and token-like values and secret fields (`api_key`, `authorization`, ...), and replace base64 files with their size. Prompts and answers are still printed. `redactForLog()` is exported.
+- **Provider Errors Mask Keys**: `APIError`'s `message` and `body` mask key-like values (such as an OpenRouter key named in a credit error). Everything else in them is unchanged.
+
 ## [1.21.0] - 2026-11-21 (@node-llm/core)
 
 ### Features

@@ -14,10 +14,11 @@ export class GeminiModels {
   async execute(): Promise<ModelInfo[]> {
     try {
       const response = await fetchWithTimeout(
-        `${this.baseUrl}/models?key=${this.apiKey}`,
+        `${this.baseUrl}/models`,
         {
           method: "GET",
           headers: {
+            "x-goog-api-key": this.apiKey,
             "Content-Type": "application/json"
           }
         },

@@ -227,6 +227,11 @@ const llm = createLLM({
 Set it on `config`, in `createLLM()`, or per chat with `llm.chat(model, { fileSecurity })`. `allowSensitiveFiles: true` loads secret files again, for the rare app that means to send them.
 
 Addresses are checked before each request. A host that changes its DNS answer between the check and the fetch (DNS rebinding) is not caught; use `allowedHosts` where you can.
+## 🔑 Keys Stay Out of Logs and Errors
+
+- **Gemini keys go in a header.** The key is sent as `x-goog-api-key`, not as `?key=` in the URL, so proxies, tracing and error reports that record URLs never see it.
+- **Debug logs are masked.** With `debug: true`, request and response bodies are printed with values that look like keys or tokens (`sk-...`, `AIza...`, `Bearer ...`) and fields such as `api_key` or `authorization` replaced by `[REDACTED]`, and base64 files replaced by their size. Prompts and answers are still printed, since that is what debug logging is for: don't turn it on in production for user data.
+- **Provider errors are masked.** An `APIError`'s `message` and `body` mask key-like values the same way, so showing or logging the error doesn't leak a key or its ID. `redactForLog()` is exported for your own logs.
 
 ---
 

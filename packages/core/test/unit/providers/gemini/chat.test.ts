@@ -46,8 +46,10 @@ describe("GeminiChat", () => {
     const result = await chat.execute(request);
 
     expect(fetch).toHaveBeenCalledWith(
-      expect.stringContaining("/models/gemini-1.5-flash:generateContent?key=test-key"),
+      expect.stringMatching(/\/models\/gemini-1\.5-flash:generateContent$/),
       expect.objectContaining({
+        // The key goes in a header, not the URL, so proxies and traces don't log it.
+        headers: expect.objectContaining({ "x-goog-api-key": "test-key" }),
         method: "POST",
         body: expect.stringContaining('"contents":[{"role":"user","parts":[{"text":"Hello"}]}]')
       })

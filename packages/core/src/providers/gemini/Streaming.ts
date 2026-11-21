@@ -17,7 +17,7 @@ export class GeminiStreaming {
   async *execute(request: ChatRequest, controller?: AbortController): AsyncGenerator<ChatChunk> {
     const abortController = controller || new AbortController();
     const temperature = Capabilities.normalizeTemperature(request.temperature, request.model);
-    const url = `${this.baseUrl}/models/${request.model}:streamGenerateContent?alt=sse&key=${this.apiKey}`;
+    const url = `${this.baseUrl}/models/${request.model}:streamGenerateContent?alt=sse`;
 
     const { contents, systemInstructionParts } = await GeminiChatUtils.convertMessages(
       request.messages
@@ -123,6 +123,7 @@ export class GeminiStreaming {
         {
           method: "POST",
           headers: {
+            "x-goog-api-key": this.apiKey,
             "Content-Type": "application/json"
           },
           body: JSON.stringify(payload),

@@ -92,3 +92,4 @@ export {
 export { fetchWithTimeout } from "./utils/fetch.js";
 export { FileAccessError, isPrivateAddress } from "./utils/FileSecurity.js";
 export type { FileSecurity } from "./utils/FileSecurity.js";
+export { redactForLog } from "./utils/redact.js";
