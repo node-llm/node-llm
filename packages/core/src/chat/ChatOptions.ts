@@ -1,3 +1,4 @@
+import type { StallGuard } from "./StallGuard.js";
 import { Middleware } from "../types/Middleware.js";
 import { Message } from "./Message.js";
 import { ToolResolvable, ToolCall } from "./Tool.js";
@@ -60,6 +61,11 @@ export interface ChatOptions {
    * for models without it.
    */
   maxCost?: number;
+  /**
+   * Stops a tool loop that repeats the same call with the same result, or makes a run of calls
+   * with no progress, with StalledError. Off unless set.
+   */
+  stallGuard?: StallGuard | null;
   maxCorrections?: number;
   requestTimeout?: number;
   toolExecution?: ToolExecutionModeInput;

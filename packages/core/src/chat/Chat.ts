@@ -43,6 +43,7 @@ import {
   DEFAULT_MAX_TOOL_CALLS
 } from "../constants.js";
 import { ConfigurationError, CostLimitError, ToolCallLimitError } from "../errors/index.js";
+import { stallWatch } from "./StallGuard.js";
 import { ChatValidator } from "./Validation.js";
 import { ToolHandler } from "./ToolHandler.js";
 import {
@@ -814,6 +815,7 @@ export class Chat<S = unknown> {
           options?.maxToolCalls ?? this.options.maxToolCalls ?? DEFAULT_MAX_TOOL_CALLS;
         let stepCount = 0;
         let haltTriggered = false;
+        const stalls = stallWatch(this.options.stallGuard);
 
         // Tool Calling Loop
         while (response.tool_calls && response.tool_calls.length > 0 && !haltTriggered) {
@@ -876,6 +878,7 @@ export class Chat<S = unknown> {
               this.messages.push(
                 this.provider.formatToolResultMessage(toolResult.tool_call_id, toolResult.content)
               );
+              stalls?.record(toolCall, toolResult.content, false);
 
               if (toolResult.halted) {
                 haltTriggered = true;
@@ -927,6 +930,7 @@ export class Chat<S = unknown> {
                 this.messages.push(
                   this.provider.formatToolResultMessage(toolResult.tool_call_id, toolResult.content)
                 );
+                stalls?.record(toolCall, toolResult.content, false);
                 continue;
               } catch (retryError) {
                 currentError = retryError;
@@ -940,13 +944,11 @@ export class Chat<S = unknown> {
               }
             }
 
+            const errorResult = `Fatal error executing tool '${toolCall.function.name}': ${(currentError as Error).message}`;
             this.messages.push(
-              this.provider.formatToolResultMessage(
-                toolCall.id,
-                `Fatal error executing tool '${toolCall.function.name}': ${(currentError as Error).message}`,
-                { isError: true }
-              )
+              this.provider.formatToolResultMessage(toolCall.id, errorResult, { isError: true })
             );
+            stalls?.record(toolCall, errorResult, true);
 
             if (directive === "CONTINUE") continue;
 
@@ -957,6 +959,9 @@ export class Chat<S = unknown> {
           }
 
           if (haltTriggered) break;
+
+          const stalled = stalls?.error(totalUsage);
+          if (stalled) throw stalled;
 
           // Content policy hooks see every request in the loop, as they do when streaming.
           const followUpMessages = await runChainHandlers(

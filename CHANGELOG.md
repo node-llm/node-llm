@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased] (@node-llm/core)
+
+### Features
+
+- **Stall Guard**: `stallGuard: { repeats, noProgress, progress }` on a chat or an agent stops a tool loop that is going nowhere, before its next request, with `StalledError`. `repeats` counts the same call with the same arguments getting the same result; `noProgress` counts calls in a row that failed or got a result the tool already gave in the ask, or that an app's own `progress(call, result, failed)` says made no progress. The error has the `reason`, the `calls`, their `count` and the ask's `usage`, and every call that ran keeps its result in the history. Works for `ask()` and `stream()`; off unless set.
+
 ## [1.21.0] - 2026-11-21 (@node-llm/core)
 
 ### Features
