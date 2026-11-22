@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## [Unreleased] (@node-llm/core)
+## [1.22.0] - 2026-11-22 (@node-llm/core)
 
 ### Security
 
@@ -35,7 +35,7 @@ All notable changes to this project will be documented in this file.
 - **Self-Correction Re-Asks With the Feedback in `ask()`**: a middleware `RETRY`, such as `SchemaSelfCorrection`'s, sent the first request again, without the rejected answer or the feedback, so the model was not told what to fix. It now sends both, as `stream()` already did.
 - **Network Errors Are Retried**: a request that can't reach the provider, such as `fetch failed` with `ECONNRESET`, now throws `NetworkError`, with the `host` and the original error as `cause`, and is retried like a server error. Before, fetch's `TypeError` escaped on the first attempt whatever `retry` was set to. It still moves on to a fallback model. The error-handling docs now also say that `InsufficientQuotaError` isn't retried, as the code already did.
 
-## [Unreleased] (@node-llm/orm)
+## [0.11.0] - 2026-11-22 (@node-llm/orm)
 
 ### Security
 
@@ -53,7 +53,7 @@ All notable changes to this project will be documented in this file.
 
 - **No Empty Assistant Messages on Load**: an assistant message with no text, left by a run that stopped before it finished, is no longer sent in a loaded session's history. Providers such as Anthropic reject an empty message.
 
-## [Unreleased] (@node-llm/mcp)
+## [0.4.0] - 2026-11-22 (@node-llm/mcp)
 
 ### Security
 
@@ -61,7 +61,7 @@ All notable changes to this project will be documented in this file.
 - **Keys in Server Errors Are Masked**: key-like values in an MCP server's error are masked before the model sees it.
 - **Sampling Guards**: `sampling: { llm, model, approve, maxTokens, maxCost }` (and `createLLMSamplingHandler(llm, model, guards)`) can refuse a request, cap an answer's length, and cap what a server's sampling spends in total. A refused request throws `SamplingRefusedError`. Without guards, sampling works as before.
 
-## [Unreleased] (@node-llm/testing)
+## [0.7.0] - 2026-11-22 (@node-llm/testing)
 
 ### Security
 
