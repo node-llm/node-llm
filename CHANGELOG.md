@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## [Unreleased] (@node-llm/core)
+## [1.23.0] - 2026-11-22 (@node-llm/core)
 
 ### Features
 
@@ -11,7 +11,7 @@ All notable changes to this project will be documented in this file.
 - **Subagent Hooks**: `beforeSubagentRequest(handler)` and `afterSubagentResponse(handler)` on chats and agents run for every request of any subagent below them, with its `usage`, `model`, `provider`, `latency` and `depth`. A `beforeSubagentRequest` handler that throws stops that subagent.
 - **Model per Step (`routeModel`)**: a function on a chat or agent (`routeModel`, `static routeModel`) chooses the model for each request of an ask from `{ turn, toolCalls, messages, model }`, such as an economical model after routine tool calls and the main model for decisions. Works for `ask()` and `stream()`; prompt caching stays on for every model. Each request's response, `afterResponse` hooks and @node-llm/orm request rows carry the model it used, and what `ask()` returns has `usageByModel`.
 
-## [Unreleased] (@node-llm/orm)
+## [0.12.0] - 2026-11-22 (@node-llm/orm)
 
 ### Features
 
