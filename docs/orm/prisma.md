@@ -317,6 +317,8 @@ try {
 }
 ```
 
+Subagents count too <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v0.12.0+</span>: every request of a subagent started from the session's tools (`Agent.toTool()`, `runAgents()`, `agentsTool()`) is recorded as a request row under the answer being written, with its model and cost, and `{ stop }` stops those workers before their next request as well. Requests sent to another model by `routeModel` are recorded with the model each one used.
+
 ### Secrets Aren't Saved
 
 Everything a chat or agent session saves passes through a mask first: API keys and tokens (`sk-...`, `AIza...`, `Bearer ...` and the like) and passwords in URLs (`postgres://user:...@host`) are replaced by `[REDACTED]` in message text, thinking, tool arguments and tool results. It applies to the Prisma store and to custom stores alike. Tool arguments stay valid JSON.
