@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.22.1] - 2026-11-22 (@node-llm/core)
+
+### Security
+
+- **Custom Base URLs Can't Be Steered Inside**: requests to a base URL set in config (any `*ApiBase`) no longer follow a redirect to another host, so a gateway can't answer `302` to `169.254.169.254` or an internal service and have the reply read as the model's answer; they throw `ApiBaseRefusedError` (code `API_BASE_REFUSED`), which is not retried. Cloud metadata addresses are refused, checked as each connection is made. Redirects within the same host, private gateways and local models work as before; a provider's default URL is not touched.
+- **`apiBaseSecurity.blockPrivateNetwork`**: for apps where users or admins set a base URL, refuses private, loopback, link-local and shared addresses on every connection, so a name that was public when saved can't later point inside (DNS rebinding). New type `ApiBaseSecurity`.
+
 ## [1.22.0] - 2026-11-22 (@node-llm/core)
 
 ### Security

@@ -22,6 +22,7 @@ export function registerXAIProvider(config?: NodeLLMConfig) {
     return new XAIProvider({
       apiKey,
       baseUrl: checkApiBase("xaiApiBase", activeConfig?.xaiApiBase, {
+        security: activeConfig?.apiBaseSecurity,
         example: "https://api.x.ai/v1",
         endpoints: OPENAI_COMPATIBLE_ENDPOINTS
       })

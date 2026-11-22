@@ -23,6 +23,7 @@ export function registerGeminiProvider() {
     return new GeminiProvider({
       apiKey,
       baseUrl: checkApiBase("geminiApiBase", cfg.geminiApiBase, {
+        security: cfg?.apiBaseSecurity,
         example: "https://generativelanguage.googleapis.com/v1beta",
         endpoints: /\/models(?:\/.*)?$/
       })

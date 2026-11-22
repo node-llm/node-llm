@@ -64,6 +64,8 @@ A base URL without `http://` or `https://`, or one that ends in an endpoint path
 openaiApiBase should look like https://api.openai.com/v1 (without /chat/completions), got "https://api.groq.com/openai/v1/chat/completions"
 ```
 
+Requests to a base URL you set never go to cloud metadata addresses or follow a redirect to another host; with `apiBaseSecurity: { blockPrivateNetwork: true }` they also refuse private addresses. See [Security](security.md#-custom-base-urls-cant-reach-inside).
+
 ### Use an endpoint next to OpenAI
 
 `OPENAI_API_BASE` changes the global OpenAI provider. To call an OpenAI-compatible service and real OpenAI from the same app, give each its own instance with `createLLM`:

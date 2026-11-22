@@ -356,6 +356,51 @@ function appControlsFetch(): boolean {
   return Boolean(dispatcher) && (dispatcher as object).constructor?.name !== "Agent";
 }
 
+type LookupCallback = (
+  error: Error | null,
+  address: string | LookupAddress[],
+  family?: number
+) => void;
+
+/**
+ * A DNS lookup for http/https requests or fetch's connections that checks every address a
+ * connection may use before it connects, so a host can't pass a check with one address and
+ * connect to another (DNS rebinding). A refused address fails the lookup with the error
+ * `toError` makes, by default a FileAccessError.
+ */
+export function checkedLookupFor(
+  rules: FileSecurity,
+  label?: string,
+  toError: (refused: FileAccessError) => Error = (refused) => refused
+) {
+  return (hostname: string, options: { all?: boolean }, callback: LookupCallback) => {
+    dnsLookup(hostname, { all: true, verbatim: true }, (error, addresses) => {
+      if (error) return callback(error, "");
+      try {
+        for (const { address } of addresses) checkAddress(address, label ?? hostname, rules);
+      } catch (refused) {
+        return callback(
+          refused instanceof FileAccessError ? toError(refused) : (refused as Error),
+          ""
+        );
+      }
+      if (options?.all) return callback(null, addresses);
+      const first = addresses[0]!;
+      callback(null, first.address, first.family);
+    });
+  };
+}
+
+/** Checks a URL's scheme and host, without resolving it: metadata hosts and IP literals. */
+export function checkUrlHostOnly(url: string, rules: FileSecurity = {}): URL {
+  return checkUrlHost(url, rules);
+}
+
+/** Whether the app has replaced fetch or set its own dispatcher; see fetchChecked. */
+export function fetchIsAppControlled(): boolean {
+  return appControlsFetch();
+}
+
 /**
  * Fetches a URL, checking it and every redirect it follows against the rules, so a public URL
  * can't redirect to a metadata or private address. The address is checked in the connection's
@@ -400,24 +445,7 @@ function requestHop(
   const parsed = checkUrlHost(url, rules);
   const host = parsed.hostname.replace(/^\[|\]$/g, "").toLowerCase();
   const client = parsed.protocol === "https:" ? https : http;
-  // Every address the connection may use is checked before it connects.
-  const checkedLookup = (
-    hostname: string,
-    options: { all?: boolean },
-    callback: (error: Error | null, address: string | LookupAddress[], family?: number) => void
-  ) => {
-    dnsLookup(hostname, { all: true, verbatim: true }, (error, addresses) => {
-      if (error) return callback(error, "");
-      try {
-        for (const { address } of addresses) checkAddress(address, host, rules);
-      } catch (refused) {
-        return callback(refused as Error, "");
-      }
-      if (options.all) return callback(null, addresses);
-      const first = addresses[0]!;
-      callback(null, first.address, first.family);
-    });
-  };
+  const checkedLookup = checkedLookupFor(rules, host);
 
   return new Promise<Response>((resolve, reject) => {
     const request = client.request(

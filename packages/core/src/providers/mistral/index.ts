@@ -20,6 +20,7 @@ export function registerMistralProvider() {
     const cfg = config || globalConfig;
     const apiKey = cfg.mistralApiKey;
     const baseUrl = checkApiBase("mistralApiBase", cfg.mistralApiBase, {
+      security: cfg?.apiBaseSecurity,
       example: "https://api.mistral.ai/v1",
       endpoints: OPENAI_COMPATIBLE_ENDPOINTS
     });

@@ -231,6 +231,28 @@ When your app replaces `fetch` (a test mock, a recorder) or sets its own fetch d
 
 ---
 
+## 🌐 Custom Base URLs Can't Reach Inside
+
+When a base URL is set (`openaiApiBase`, `anthropicApiBase`, any `*ApiBase`), every request to it is checked, with no setting needed:
+
+- Cloud metadata addresses (`169.254.x.x`, `192.0.0.192`, `fd00:ec2::254`, `metadata.google.internal`, and IPv6 forms that carry them) are refused.
+- A redirect to another host is refused, not followed, so a gateway can't answer `302` to an internal address and have the reply read as the model's answer. Redirects within the same host are followed as before.
+- Both throw `ApiBaseRefusedError` (code `API_BASE_REFUSED`, with the refused `host`), which is not retried.
+
+When users or admins can set a base URL, also refuse private addresses:
+
+```ts
+const llm = createLLM({
+  provider: "openai",
+  openaiApiBase: gatewayUrlFromSettings,
+  apiBaseSecurity: { blockPrivateNetwork: true }
+});
+```
+
+The address is checked as each connection is made, so a name that was public when the setting was saved can't point inside later (DNS rebinding). It is off by default because local models (Ollama) and company gateways often sit on private addresses. A provider's own default URL is never checked. When your app replaces `fetch` or sets its own dispatcher, the host is checked by a lookup before each request instead.
+
+---
+
 ## 🔑 Keys Stay Out of Logs and Errors
 
 - **Gemini keys go in a header.** The key is sent as `x-goog-api-key`, not as `?key=` in the URL, so proxies, tracing and error reports that record URLs never see it.

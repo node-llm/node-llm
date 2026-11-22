@@ -1,5 +1,6 @@
 import { NetworkError } from "../errors/index.js";
 import { redactSecrets } from "./redact.js";
+import { apiBaseRulesFor, fetchApiBase } from "./ApiBaseGuard.js";
 
 export interface FetchTimeoutOptions {
   /**
@@ -27,9 +28,13 @@ export async function fetchWithTimeout(
   timeoutMs?: number,
   { coverBody = true }: FetchTimeoutOptions = {}
 ): Promise<Response> {
+  // A custom base URL is checked on every connection and redirect; a default URL isn't.
+  const rules = apiBaseRulesFor(url);
+  const send = (init: RequestInit) => (rules ? fetchApiBase(url, init, rules) : fetch(url, init));
+
   if (!timeoutMs || timeoutMs <= 0) {
     try {
-      return await fetch(url, options);
+      return await send(options);
     } catch (error) {
       throw networkError(error, url);
     }
@@ -49,7 +54,7 @@ export async function fetchWithTimeout(
       ? AbortSignal.any([userSignal, controller.signal])
       : controller.signal;
 
-    const response = await fetch(url, {
+    const response = await send({
       ...options,
       signal: mergedSignal
     });

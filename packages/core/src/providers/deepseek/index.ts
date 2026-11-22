@@ -17,6 +17,7 @@ export function registerDeepSeekProvider() {
     const cfg = config || globalConfig;
     const apiKey = cfg.deepseekApiKey;
     const baseUrl = checkApiBase("deepseekApiBase", cfg.deepseekApiBase, {
+      security: cfg?.apiBaseSecurity,
       example: "https://api.deepseek.com",
       endpoints: OPENAI_COMPATIBLE_ENDPOINTS
     }); // Optional override
