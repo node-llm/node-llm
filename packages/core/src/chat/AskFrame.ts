@@ -19,6 +19,10 @@ export interface AskFrame {
   afterSubagentResponse?: Array<(response: SubagentResponse) => void | Promise<void>>;
   /** A group of subagents (see runAgents), not an ask: it doesn't count as a level of depth. */
   group?: boolean;
+  /** The asking chat's list of subagent usage, so its totalUsage includes them */
+  subagentUsage?: Usage[];
+  /** The ask's usage per model, which its subagents' requests are added to */
+  usageByModel?: Record<string, Usage>;
 }
 
 /** One response of a subagent, as the asks above it see it. */
@@ -73,6 +77,30 @@ export function addToParents(frame: AskFrame | undefined, usage: Usage): void {
   for (let parent = frame?.parent; parent; parent = parent.parent) {
     const total = parent.usage;
     if (!total) continue;
+    total.input_tokens += usage.input_tokens ?? 0;
+    total.output_tokens += usage.output_tokens ?? 0;
+    total.total_tokens += usage.total_tokens ?? 0;
+    if (usage.cached_tokens) total.cached_tokens = (total.cached_tokens ?? 0) + usage.cached_tokens;
+    if (usage.cost !== undefined) total.cost = (total.cost ?? 0) + usage.cost;
+  }
+  for (let parent = frame?.parent; parent; parent = parent.parent) {
+    parent.subagentUsage?.push({ ...usage });
+  }
+}
+
+/** Adds a subagent's request to the usage per model of every ask above it. */
+export function addToParentsByModel(
+  frame: AskFrame | undefined,
+  model: string,
+  usage: Usage
+): void {
+  for (let parent = frame?.parent; parent; parent = parent.parent) {
+    if (!parent.usageByModel) continue;
+    const total = (parent.usageByModel[model] ??= {
+      input_tokens: 0,
+      output_tokens: 0,
+      total_tokens: 0
+    });
     total.input_tokens += usage.input_tokens ?? 0;
     total.output_tokens += usage.output_tokens ?? 0;
     total.total_tokens += usage.total_tokens ?? 0;

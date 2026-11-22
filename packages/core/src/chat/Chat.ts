@@ -110,6 +110,7 @@ import {
   parentOverLimit,
   MAX_AGENT_DEPTH,
   inheritedSignal,
+  addToParentsByModel,
   beforeSubagentRequest,
   afterSubagentResponse,
   type SubagentResponse
@@ -118,6 +119,8 @@ import {
 export class Chat<S = unknown> {
   private messages: Message[] = [];
   private readonly sideUsage = new SideUsage();
+  /** What subagents started from this chat's asks used, at any depth */
+  private readonly subagentUsage: Usage[] = [];
   private systemMessages: Message[] = [];
   private executor: Executor;
   private middlewares: Middleware[] = [];
@@ -224,6 +227,7 @@ export class Chat<S = unknown> {
       }
     );
     for (const usage of this.sideUsage.counted) addUsage(total, usage);
+    for (const usage of this.subagentUsage) addUsage(total, usage);
     return total;
   }
 
@@ -685,6 +689,7 @@ export class Chat<S = unknown> {
       parent,
       maxCost: this.options.maxCost,
       signal,
+      subagentUsage: this.subagentUsage,
       beforeSubagentRequest: this.options.onBeforeSubagentRequestHandlers,
       afterSubagentResponse: this.options.onAfterSubagentResponseHandlers
     };
@@ -711,6 +716,7 @@ export class Chat<S = unknown> {
     latency: number
   ): Promise<void> {
     if (!frame.parent || !usage) return;
+    addToParentsByModel(frame, this.executor.servedBy?.model ?? this.model, usage);
     await afterSubagentResponse(frame, {
       usage,
       model: this.executor.servedBy?.model ?? this.model,
@@ -848,6 +854,7 @@ export class Chat<S = unknown> {
       let correctionAttempt = 0;
       const totalUsage: Usage = { input_tokens: 0, output_tokens: 0, total_tokens: 0 };
       const usageByModel: Record<string, Usage> = {};
+      frame.usageByModel = usageByModel;
       this.sideUsage.current = totalUsage;
       frame.usage = totalUsage;
 
