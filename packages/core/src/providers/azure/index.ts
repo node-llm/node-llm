@@ -14,6 +14,7 @@ export function registerAzureProvider() {
   providerRegistry.register("azure", (config) => {
     const cfg = config || globalConfig;
     const baseUrl = checkApiBase("azureApiBase", cfg.azureApiBase, {
+      security: cfg?.apiBaseSecurity,
       example: "https://RESOURCE.openai.azure.com"
     });
 

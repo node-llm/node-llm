@@ -15,6 +15,7 @@ export function registerAnthropicProvider() {
     return new AnthropicProvider({
       apiKey: apiKey.trim(),
       baseUrl: checkApiBase("anthropicApiBase", cfg.anthropicApiBase, {
+        security: cfg?.apiBaseSecurity,
         example: "https://api.anthropic.com/v1",
         endpoints: /\/messages$/
       })

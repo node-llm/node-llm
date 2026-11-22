@@ -26,6 +26,7 @@ export function registerBedrockProvider() {
       secretAccessKey: cfg.bedrockSecretAccessKey,
       sessionToken: cfg.bedrockSessionToken,
       apiBase: checkApiBase("bedrockApiBase", cfg.bedrockApiBase, {
+        security: cfg?.apiBaseSecurity,
         example: "https://bedrock-runtime.us-east-1.amazonaws.com",
         endpoints: /\/model\/.*$/
       }),

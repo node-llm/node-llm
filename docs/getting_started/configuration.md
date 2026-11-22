@@ -195,6 +195,7 @@ const chat = llm.chat("gpt-5", {
 | `bedrockSessionToken`       | Bedrock SigV4 session token         | `process.env.AWS_SESSION_TOKEN`   |
 | `bedrockRegion`             | AWS region for Bedrock              | `process.env.AWS_REGION` (`us-east-1`) |
 | `bedrockApiBase`            | Bedrock custom endpoint override    | `process.env.BEDROCK_API_BASE`    |
+| `apiBaseSecurity`           | Rules for custom base URLs, e.g. `{ blockPrivateNetwork: true }` | -                                 |
 | `bedrockGuardrailIdentifier`| Bedrock Guardrail ID                | `process.env.AWS_GUARDRAIL_ID`    |
 | `bedrockGuardrailVersion`   | Bedrock Guardrail version           | `process.env.AWS_GUARDRAIL_VERSION` |
 | `provider`                  | Active provider name (Zero-Config)  | `process.env.NODELLM_PROVIDER`    |

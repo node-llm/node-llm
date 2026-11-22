@@ -16,6 +16,7 @@ export function registerOpenAIProvider() {
     const cfg = config || globalConfig;
     const apiKey = cfg.openaiApiKey;
     const baseUrl = checkApiBase("openaiApiBase", cfg.openaiApiBase, {
+      security: cfg?.apiBaseSecurity,
       example: "https://api.openai.com/v1",
       endpoints: OPENAI_COMPATIBLE_ENDPOINTS
     });

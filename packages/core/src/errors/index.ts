@@ -181,6 +181,21 @@ export class NetworkError extends LLMError {
 }
 
 /**
+ * A request to a custom base URL was refused: its host is, or resolves to, a cloud metadata
+ * address (or a private one, when ApiBaseSecurity.blockPrivateNetwork is set), or it redirected
+ * to another host. Not retried.
+ */
+export class ApiBaseRefusedError extends LLMError {
+  constructor(
+    message: string,
+    /** The host that was refused */
+    public readonly host?: string
+  ) {
+    super(message, "API_BASE_REFUSED");
+  }
+}
+
+/**
  * Misconfiguration (e.g. missing API key)
  */
 export class ConfigurationError extends LLMError {

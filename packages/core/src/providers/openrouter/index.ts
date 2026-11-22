@@ -18,6 +18,7 @@ export function registerOpenRouterProvider() {
     const cfg = config || globalConfig;
     const apiKey = cfg.openrouterApiKey;
     const baseUrl = checkApiBase("openrouterApiBase", cfg.openrouterApiBase, {
+      security: cfg?.apiBaseSecurity,
       example: "https://openrouter.ai/api/v1",
       endpoints: OPENAI_COMPATIBLE_ENDPOINTS
     });

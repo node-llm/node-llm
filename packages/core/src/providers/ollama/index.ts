@@ -18,6 +18,7 @@ export function registerOllamaProvider() {
     const cfg = config || globalConfig;
     return new OllamaProvider({
       baseUrl: checkApiBase("ollamaApiBase", cfg.ollamaApiBase, {
+        security: cfg?.apiBaseSecurity,
         example: "http://localhost:11434/v1",
         endpoints: OPENAI_COMPATIBLE_ENDPOINTS
       })

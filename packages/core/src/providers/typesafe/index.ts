@@ -23,6 +23,7 @@ export function registerTypeSafeProvider() {
     return new TypeSafeProvider({
       apiKey,
       baseUrl: checkApiBase("typesafeApiBase", cfg.typesafeApiBase, {
+        security: cfg?.apiBaseSecurity,
         example: "https://api.typesafe.ai"
       })
     });
