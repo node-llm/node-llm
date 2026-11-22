@@ -105,3 +105,62 @@ describe("onToolCallEnd changing a result", () => {
     expect(seen).toEqual(["Customer"]);
   });
 });
+
+describe("review follow-ups", () => {
+  it("keeps JSON tool results valid, masking only their strings", async () => {
+    const json = { created: 1732233600, id: 4155550100, email: "jane@example.com" };
+    const provider = new Scripted([toolCall, { content: "Done.", usage }]);
+    const chat = new Chat(provider, "test-model", {
+      tools: [{ ...lookup, handler: async () => JSON.stringify(json) }],
+      middlewares: [new PIIMaskMiddleware()]
+    });
+
+    await chat.ask("Find the customer");
+
+    const sent = provider.requests[1]!.messages.find((m) => m.role === "tool")!.content as string;
+    expect(JSON.parse(sent)).toEqual({ created: 1732233600, id: 4155550100, email: "[REDACTED]" });
+  });
+
+  it("masks a tool's error before the model sees it", async () => {
+    const provider = new Scripted([toolCall, { content: "Done.", usage }]);
+    const failing = {
+      ...lookup,
+      handler: async () => {
+        throw new Error("no account for jane@example.com");
+      }
+    };
+    const chat = new Chat(provider, "test-model", {
+      tools: [failing],
+      middlewares: [new PIIMaskMiddleware()]
+    });
+
+    await chat.ask("Find the customer");
+
+    const sent = provider.requests[1]!.messages.find((m) => m.role === "tool")!.content as string;
+    expect(sent).toContain("no account for [REDACTED]");
+  });
+
+  it("stays fast on a long run of letters", () => {
+    const middleware = new PIIMaskMiddleware();
+    const start = performance.now();
+    middleware.mask("a".repeat(80_000));
+    middleware.mask("a.".repeat(40_000) + "@");
+    expect(performance.now() - start).toBeLessThan(250);
+  });
+
+  it("keeps the masked answer in the history, and isn't overridden by another CONTINUE", async () => {
+    const watcher: Middleware = { name: "watcher", onResponse: async () => "CONTINUE" };
+    const provider = new Scripted([
+      { content: "Write to jane@example.com.", usage },
+      { content: "ok", usage }
+    ]);
+    const chat = new Chat(provider, "test-model", {
+      middlewares: [new PIIMaskMiddleware({ redactOutput: true }), watcher]
+    });
+
+    expect(String(await chat.ask("Who?"))).toBe("Write to [REDACTED].");
+    expect(chat.history.at(-1)?.content).toBe("Write to [REDACTED].");
+    await chat.ask("Thanks");
+    expect(JSON.stringify(provider.requests[1]!.messages)).not.toContain("jane@example.com");
+  });
+});

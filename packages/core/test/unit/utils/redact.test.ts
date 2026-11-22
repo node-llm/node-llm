@@ -15,7 +15,9 @@ const keys = [
 
 describe("redactForLog", () => {
   it("masks key-like values and secret fields, keeping the prompt", () => {
-    for (const key of keys) expect(redactSecrets(`using ${key} now`)).toBe("using [REDACTED] now");
+    for (const key of keys.slice(0, -1))
+      expect(redactSecrets(`using ${key} now`)).toBe("using [REDACTED] now");
+    expect(redactSecrets(`using ${keys.at(-1)} now`)).toBe("using Bearer [REDACTED] now");
     expect(
       redactForLog({
         messages: [{ role: "user", content: "What is 2+2?" }],

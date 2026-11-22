@@ -1,5 +1,5 @@
 import { config } from "../config.js";
-import { redactForLog } from "./redact.js";
+import { redactForLog, redactSecrets } from "./redact.js";
 
 export { redactForLog };
 
@@ -52,7 +52,8 @@ class Logger {
   }
 
   error(message: string, error?: Error): void {
-    console.error(`[NodeLLM Error] ${message}`, error || "");
+    // Tool and provider errors can carry keys or connection strings: masked, always printed.
+    console.error(`[NodeLLM Error] ${redactSecrets(message)}`, error ? maskedError(error) : "");
   }
 
   info(message: string): void {
@@ -61,3 +62,10 @@ class Logger {
 }
 
 export const logger = new Logger();
+
+/** An error's name, message and stack with keys and passwords masked, for printing. */
+function maskedError(error: unknown): string {
+  if (!(error instanceof Error)) return redactSecrets(String(error));
+  const text = error.stack ?? `${error.name}: ${error.message}`;
+  return redactSecrets(text);
+}

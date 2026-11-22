@@ -165,6 +165,17 @@ export interface Middleware {
   ): Promise<void | ToolResultChange>;
 
   /**
+   * Called with every tool result the model is about to be sent, a tool's error included. Return
+   * `{ content }` to change it, such as to mask personal data. Runs after onToolCallEnd.
+   */
+  onToolResult?(
+    ctx: MiddlewareContext,
+    tool: ToolCall,
+    content: string,
+    info: { isError: boolean }
+  ): Promise<void | ToolResultChange>;
+
+  /**
    * Called if a tool execution fails.
    * Can return a directive to tell the engine how to proceed.
    */

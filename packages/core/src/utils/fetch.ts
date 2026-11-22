@@ -1,4 +1,5 @@
 import { NetworkError } from "../errors/index.js";
+import { redactSecrets } from "./redact.js";
 
 export interface FetchTimeoutOptions {
   /**
@@ -76,7 +77,9 @@ function networkError(error: unknown, url: string): unknown {
   const cause = (error as { cause?: { code?: string; message?: string } }).cause;
   const reason = cause?.code ?? cause?.message;
   return new NetworkError(
-    `Could not reach ${host ?? "the provider"}: ${error.message}${reason ? ` (${reason})` : ""}`,
+    redactSecrets(
+      `Could not reach ${host ?? "the provider"}: ${error.message}${reason ? ` (${reason})` : ""}`
+    ),
     host,
     { cause: error }
   );

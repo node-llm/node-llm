@@ -138,8 +138,8 @@ export function unrunToolCallResults(
 }
 
 /**
- * Runs the onToolCallEnd hooks, each seeing the result as the ones before it left it, and returns
- * the changed result, or undefined when no hook changed it.
+ * Runs the onToolCallEnd hooks, each seeing the result as the ones before it left it, then the
+ * onToolResult hooks, and returns the changed result, or undefined when no hook changed it.
  */
 export async function runToolCallEnd(
   middlewares: Middleware[],
@@ -152,6 +152,32 @@ export async function runToolCallEnd(
   for (const middleware of [...(middlewares ?? [])].reverse()) {
     if (typeof middleware.onToolCallEnd !== "function") continue;
     const result = await middleware.onToolCallEnd(context, toolCall, current);
+    if (result && typeof result === "object" && typeof result.content === "string") {
+      current = result.content;
+      changed = true;
+    }
+  }
+  const final = await runToolResult(middlewares, context, toolCall, current, false);
+  if (final !== undefined) return final;
+  return changed ? current : undefined;
+}
+
+/**
+ * Runs the onToolResult hooks on a result the model is about to be sent, and returns the changed
+ * result, or undefined when no hook changed it.
+ */
+export async function runToolResult(
+  middlewares: Middleware[],
+  context: MiddlewareContext,
+  toolCall: ToolCall,
+  content: string,
+  isError: boolean
+): Promise<string | undefined> {
+  let current = content;
+  let changed = false;
+  for (const middleware of [...(middlewares ?? [])].reverse()) {
+    if (typeof middleware.onToolResult !== "function") continue;
+    const result = await middleware.onToolResult(context, toolCall, current, { isError });
     if (result && typeof result === "object" && typeof result.content === "string") {
       current = result.content;
       changed = true;

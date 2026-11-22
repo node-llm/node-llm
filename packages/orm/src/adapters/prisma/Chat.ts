@@ -4,7 +4,7 @@ import { BaseChat, type ChatRecord, type ChatOptions } from "../../BaseChat.js";
 import type { ChatStore } from "../../Store.js";
 import { toStore } from "./PrismaStore.js";
 import { StoppedByStoreError } from "../../errors.js";
-import type { StoreRedactor } from "../../redact.js";
+import { redactorFor, type StoreRedactor } from "../../redact.js";
 
 export { type ChatRecord, type ChatOptions };
 
@@ -380,7 +380,11 @@ export async function createChat<T = Record<string, any>>(
     ...extras
   } = options;
 
-  const store = toStore(prismaOrStore, options.tableNames, options.redact);
+  const store = toStore(
+    prismaOrStore,
+    options.tableNames,
+    redactorFor(options.redact, options.middlewares)
+  );
   if (options.debug) console.log(`[@node-llm/orm] createChat: store=${store.constructor.name}`);
 
   const record = await store.createChat({
@@ -403,7 +407,11 @@ export async function loadChat(
   chatId: string,
   options: ChatOptions & { tableNames?: TableNames; debug?: boolean; redact?: StoreRedactor } = {}
 ): Promise<Chat | null> {
-  const store = toStore(prismaOrStore, options.tableNames, options.redact);
+  const store = toStore(
+    prismaOrStore,
+    options.tableNames,
+    redactorFor(options.redact, options.middlewares)
+  );
   if (options.debug) console.log(`[@node-llm/orm] loadChat: store=${store.constructor.name}`);
 
   const record = await store.findChat(chatId);

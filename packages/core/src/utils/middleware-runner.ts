@@ -24,8 +24,10 @@ export async function runMiddleware<T = void>(
     if (typeof middleware[hookName] === "function") {
       // @ts-ignore
       const result = await middleware[hookName](context, ...args);
-      // Capture the first non-void result (for directives)
-      if (result !== undefined && finalResult === undefined) {
+      // Capture the first non-void result (for directives). From onResponse, "CONTINUE" asks for
+      // nothing, so it doesn't hide another middleware's RETRY or REPLACE.
+      const asksNothing = hookName === "onResponse" && result === "CONTINUE";
+      if (result !== undefined && !asksNothing && finalResult === undefined) {
         finalResult = result as T;
       }
     }
