@@ -102,7 +102,17 @@ export interface AskOptions {
 
 import { ChatResponseString } from "./ChatResponse.js";
 import { SideUsage, addUsage } from "./SideUsage.js";
-import { AskFrame, askFrames, addToParents, parentOverLimit, MAX_AGENT_DEPTH } from "./AskFrame.js";
+import {
+  AskFrame,
+  askFrames,
+  addToParents,
+  parentOverLimit,
+  MAX_AGENT_DEPTH,
+  inheritedSignal,
+  beforeSubagentRequest,
+  afterSubagentResponse,
+  type SubagentResponse
+} from "./AskFrame.js";
 
 export class Chat<S = unknown> {
   private messages: Message[] = [];
@@ -633,6 +643,30 @@ export class Chat<S = unknown> {
   }
 
   /**
+   * Called before each request of any subagent started below this chat's asks, at any depth,
+   * such as a worker of runAgents(). A hook that throws stops that subagent with its error.
+   */
+  beforeSubagentRequest(handler: () => void | Promise<void>): this {
+    this.options.onBeforeSubagentRequestHandlers = [
+      ...(this.options.onBeforeSubagentRequestHandlers ?? []),
+      handler
+    ];
+    return this;
+  }
+
+  /**
+   * Called after each response of any subagent started below this chat's asks, at any depth,
+   * with its usage and model, for example to record what each worker spent.
+   */
+  afterSubagentResponse(handler: (response: SubagentResponse) => void | Promise<void>): this {
+    this.options.onAfterSubagentResponseHandlers = [
+      ...(this.options.onAfterSubagentResponseHandlers ?? []),
+      handler
+    ];
+    return this;
+  }
+
+  /**
    * Ask the model a question
    */
   // Typed by the chat's schema: response.data is the schema's type after
@@ -644,8 +678,44 @@ export class Chat<S = unknown> {
     const parent = options?.parentAsk;
     const depth = (parent?.depth ?? 0) + 1;
     if (depth > MAX_AGENT_DEPTH) throw new AgentDepthError(MAX_AGENT_DEPTH);
-    const frame: AskFrame = { depth, parent, maxCost: this.options.maxCost };
-    return askFrames.run(frame, () => this.runAsk(content, options, frame));
+    const signal = inheritedSignal(options?.signal, parent);
+    const frame: AskFrame = {
+      depth,
+      parent,
+      maxCost: this.options.maxCost,
+      signal,
+      beforeSubagentRequest: this.options.onBeforeSubagentRequestHandlers,
+      afterSubagentResponse: this.options.onAfterSubagentResponseHandlers
+    };
+    const askOptions = signal === options?.signal ? options : { ...options, signal };
+    return askFrames.run(frame, () => this.runAsk(content, askOptions, frame));
+  }
+
+  /**
+   * Before a subagent's request: stops it when an ask above it has reached its cost limit or
+   * been cancelled, and runs the hooks of the asks above it.
+   */
+  private async beforeTreeRequest(frame: AskFrame): Promise<void> {
+    if (!frame.parent) return;
+    frame.signal?.throwIfAborted();
+    const overParent = parentOverLimit(frame);
+    if (overParent) throw new CostLimitError(overParent.maxCost!, overParent.usage!);
+    await beforeSubagentRequest(frame);
+  }
+
+  /** After a subagent's response: tells the asks above it what it used. */
+  private async afterTreeResponse(
+    frame: AskFrame,
+    usage: Usage | undefined,
+    latency: number
+  ): Promise<void> {
+    if (!frame.parent || !usage) return;
+    await afterSubagentResponse(frame, {
+      usage,
+      model: this.executor.servedBy?.model ?? this.model,
+      provider: (this.executor.servedBy?.provider ?? this.provider).id,
+      latency
+    });
   }
 
   private async runAsk(
@@ -855,11 +925,13 @@ export class Chat<S = unknown> {
 
         // Start generation
         await runAllHandlers(newMessageHandlers);
+        await this.beforeTreeRequest(frame);
         let requestStarted = Date.now();
         let response = await this.executor.executeChat(executeOptions, middlewareFallback);
         const firstLatency = Date.now() - requestStarted;
         let totalLatency = firstLatency;
         trackUsage(response.usage);
+        await this.afterTreeResponse(frame, response.usage, firstLatency);
 
         assistantMessage = new ChatResponseString(
           response.content ?? "",
@@ -1077,6 +1149,7 @@ export class Chat<S = unknown> {
             )
           );
 
+          await this.beforeTreeRequest(frame);
           requestStarted = Date.now();
           response = await this.executor.executeChat(
             {
@@ -1111,6 +1184,7 @@ export class Chat<S = unknown> {
           const latency = Date.now() - requestStarted;
           totalLatency += latency;
           trackUsage(response.usage);
+          await this.afterTreeResponse(frame, response.usage, latency);
 
           assistantMessage = new ChatResponseString(
             response.content ?? "",

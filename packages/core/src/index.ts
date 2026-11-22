@@ -9,6 +9,16 @@ export * from "./chat/ChatStream.js";
 export * from "./streaming/Stream.js";
 export * from "./errors/index.js";
 export { Agent, defineAgent } from "./agent/Agent.js";
+export { runAgents, agentsTool } from "./agent/runAgents.js";
+export type {
+  AgentClass,
+  AgentJob,
+  AgentResult,
+  AgentsRun,
+  AgentsToolOptions,
+  RunAgentsOptions
+} from "./agent/runAgents.js";
+export type { SubagentResponse } from "./chat/AskFrame.js";
 export { Judge, defineJudge } from "./judge/Judge.js";
 export type { JudgeCallOptions, QuestionsOf } from "./judge/Judge.js";
 export { probability, choice, score } from "./judge/Question.js";

@@ -125,6 +125,28 @@ export class Chat extends BaseChat {
       if (this.stopReason !== undefined) throw new StoppedByStoreError(this.stopReason);
     });
 
+    // Subagents started from this chat's tools (Agent.toTool, runAgents): their requests are
+    // recorded under this chat's answer, and the store's `{ stop }` stops them too.
+    coreChat.beforeSubagentRequest?.(async () => {
+      if (this.stopReason !== undefined) throw new StoppedByStoreError(this.stopReason);
+    });
+    coreChat.afterSubagentResponse?.(async (sub: any) => {
+      if (!this.persistenceConfig.requests) return;
+      const recorded = await this.store.createRequest({
+        chatId: this.id,
+        messageId: assistantMessageId,
+        provider: sub.provider || "unknown",
+        model: sub.model || "unknown",
+        statusCode: 200,
+        duration: sub.latency || 0,
+        inputTokens: sub.usage?.input_tokens || 0,
+        outputTokens: sub.usage?.output_tokens || 0,
+        cachedTokens: sub.usage?.cached_tokens,
+        cost: sub.usage?.cost || 0
+      });
+      if (recorded && recorded.stop !== undefined) this.stopReason = recorded.stop;
+    });
+
     coreChat.afterResponse(async (finalResp: any) => {
       this.log(
         `Internal afterResponse triggered. Calling ${this.userHooks.afterResponse.length} user hooks.`

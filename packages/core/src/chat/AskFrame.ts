@@ -11,6 +11,56 @@ export interface AskFrame {
   usage?: Usage;
   maxCost?: number;
   parent?: AskFrame;
+  /** Cancels this ask; a subagent's ask is cancelled with every ask above it. */
+  signal?: AbortSignal;
+  /** Run before each request of any subagent below this ask; one that throws stops it. */
+  beforeSubagentRequest?: Array<() => void | Promise<void>>;
+  /** Run after each response of any subagent below this ask. */
+  afterSubagentResponse?: Array<(response: SubagentResponse) => void | Promise<void>>;
+  /** A group of subagents (see runAgents), not an ask: it doesn't count as a level of depth. */
+  group?: boolean;
+}
+
+/** One response of a subagent, as the asks above it see it. */
+export interface SubagentResponse {
+  usage: Usage;
+  model: string;
+  provider: string;
+  /** Milliseconds the request took */
+  latency: number;
+  /** How far below the ask seeing it: 1 for its own subagent */
+  depth: number;
+}
+
+/** The signal for a subagent's ask: its own, cancelled too when an ask above it is. */
+export function inheritedSignal(
+  own: AbortSignal | undefined,
+  parent: AskFrame | undefined
+): AbortSignal | undefined {
+  const above = parent?.signal;
+  if (!above) return own;
+  if (!own || own === above) return above;
+  return AbortSignal.any([own, above]);
+}
+
+/** Runs the beforeSubagentRequest hooks of every ask above this one, nearest first. */
+export async function beforeSubagentRequest(frame: AskFrame | undefined): Promise<void> {
+  for (let parent = frame?.parent; parent; parent = parent.parent) {
+    for (const hook of parent.beforeSubagentRequest ?? []) await hook();
+  }
+}
+
+/** Runs the afterSubagentResponse hooks of every ask above this one, nearest first. */
+export async function afterSubagentResponse(
+  frame: AskFrame | undefined,
+  response: Omit<SubagentResponse, "depth">
+): Promise<void> {
+  let depth = 1;
+  for (let parent = frame?.parent; parent; parent = parent.parent) {
+    if (parent.group) continue;
+    for (const hook of parent.afterSubagentResponse ?? []) await hook({ ...response, depth });
+    depth++;
+  }
 }
 
 export const askFrames = new AsyncLocalStorage<AskFrame>();

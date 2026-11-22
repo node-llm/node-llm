@@ -1,3 +1,4 @@
+import type { SubagentResponse } from "./AskFrame.js";
 import type { ContextBudget } from "./ContextBudget.js";
 import type { EndWith } from "./EndWith.js";
 import type { StallGuard } from "./StallGuard.js";
@@ -107,6 +108,10 @@ export interface ChatOptions {
   onAfterResponseHandlers?: Array<
     (response: ChatResponseString) => Promise<ChatResponseString | void>
   >;
+  /** @internal See Chat.beforeSubagentRequest */
+  onBeforeSubagentRequestHandlers?: Array<() => void | Promise<void>>;
+  /** @internal See Chat.afterSubagentResponse */
+  onAfterSubagentResponseHandlers?: Array<(response: SubagentResponse) => void | Promise<void>>;
   /** Models to try, in order, when the chat's model fails with a rate limit, server or network error. */
   fallbacks?: FallbackTarget[];
   onFallbackHandlers?: Array<(event: FallbackEvent) => void | Promise<void>>;
