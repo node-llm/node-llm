@@ -236,6 +236,7 @@ When your app replaces `fetch` (a test mock, a recorder) or sets its own fetch d
 - **Gemini keys go in a header.** The key is sent as `x-goog-api-key`, not as `?key=` in the URL, so proxies, tracing and error reports that record URLs never see it.
 - **Debug logs are masked.** With `debug: true`, request and response bodies are printed with values that look like keys or tokens (`sk-...`, `AIza...`, `Bearer ...`) and fields such as `api_key` or `authorization` replaced by `[REDACTED]`, and base64 files replaced by their size. Prompts and answers are still printed, since that is what debug logging is for: don't turn it on in production for user data.
 - **Provider errors are masked.** An `APIError`'s `message` and `body` mask key-like values the same way, so showing or logging the error doesn't leak a key or its ID. `redactForLog()` is exported for your own logs.
+- **What is masked:** OpenAI, Anthropic, OpenRouter, Google, xAI, Stripe and Slack keys, AWS access key IDs (`AKIA`, `ASIA`) and secret keys written as `aws_secret_access_key = ...`, GitHub tokens (`ghp_`, `github_pat_`), JWTs, `Bearer` and `Basic` credentials, PEM private keys, passwords in URLs (`postgres://user:...@host`, `redis://:...@host`), and fields named like secrets (`apiKey`, `openaiApiKey`, `secretAccessKey`, `token`, `private_key`, ...). The patterns are bounded, so a long hostile string can't slow them down. `logger.error`, always on, prints errors masked the same way.
 
 ---
 

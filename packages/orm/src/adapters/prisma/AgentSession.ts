@@ -19,7 +19,7 @@ import type { ChatStore } from "../../Store.js";
 import { toStore } from "./PrismaStore.js";
 import { storedHistory } from "../../history.js";
 import { StoppedByStoreError } from "../../errors.js";
-import type { StoreRedactor } from "../../redact.js";
+import { redactorFor, type StoreRedactor } from "../../redact.js";
 
 /** What an agent's answers parse to: its schema's type, or unknown without one. */
 export type AgentData<T> = T extends Agent<any, infer S> ? S : unknown;
@@ -481,7 +481,14 @@ export async function createAgentSession<I extends Record<string, any>, T extend
   AgentClass: AgentClass<T>,
   options: CreateAgentSessionOptions<I> = {}
 ): Promise<AgentSession<I, T>> {
-  const store = toStore(prismaOrStore, options.tableNames, options.redact);
+  const store = toStore(
+    prismaOrStore,
+    options.tableNames,
+    redactorFor(options.redact, [
+      ...((AgentClass as { middlewares?: unknown[] }).middlewares ?? []),
+      ...(options.middlewares ?? [])
+    ])
+  );
 
   if (options.debug) {
     console.log(`[@node-llm/orm] createAgentSession: agentClass=${AgentClass.name}`);
@@ -542,7 +549,14 @@ export async function loadAgentSession<I extends Record<string, any>, T extends 
   sessionId: string,
   options: LoadAgentSessionOptions<I> = {}
 ): Promise<AgentSession<I, T> | null> {
-  const store = toStore(prismaOrStore, options.tableNames, options.redact);
+  const store = toStore(
+    prismaOrStore,
+    options.tableNames,
+    redactorFor(options.redact, [
+      ...((AgentClass as { middlewares?: unknown[] }).middlewares ?? []),
+      ...(options.middlewares ?? [])
+    ])
+  );
 
   if (options.debug) {
     console.log(`[@node-llm/orm] loadAgentSession: id=${sessionId}`);

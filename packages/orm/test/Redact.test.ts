@@ -172,6 +172,57 @@ describe("maskSecrets", () => {
       maskSecrets(
         `a ${KEY} b AIzaSyA1234567890abcdefghijklmnopqrstu c Bearer abcdefghijklmnopqrstuvwxyz`
       )
-    ).toBe("a [REDACTED] b [REDACTED] c [REDACTED]");
+    ).toBe("a [REDACTED] b [REDACTED] c Bearer [REDACTED]");
+  });
+});
+
+describe("review follow-ups", () => {
+  it("masks a chat's instructions and metadata, a session's inputs and reasoning", async () => {
+    const store = new MemoryStore();
+    const created: any[] = [];
+    const sessions: any[] = [];
+    const wrapped = redactingStore(
+      Object.assign(Object.create(store), {
+        createChat: async (chat: any) => (created.push(chat), store.createChat(chat)),
+        createAgentSession: async (session: any) => (
+          sessions.push(session),
+          store.createAgentSession(session)
+        )
+      })
+    );
+    await wrapped.createChat({
+      instructions: `Use ${KEY}`,
+      metadata: { db: "postgres://app:hunter2@db/x", count: 3 }
+    });
+    await wrapped.createAgentSession({
+      agentClass: "A",
+      chatId: "c",
+      metadata: { token: `Bearer abcdefghijklmnopqrstuvwxyz` }
+    });
+    const message = await wrapped.createMessage({ chatId: "c", role: "assistant", content: null });
+    await wrapped.updateMessage(message.id, { reasoning: `thinking about ${KEY}` });
+
+    expect(created[0]).toMatchObject({
+      instructions: "Use [REDACTED]",
+      metadata: { db: "postgres://app:[REDACTED]@db/x", count: 3 }
+    });
+    expect(sessions[0].metadata).toEqual({ token: "Bearer [REDACTED]" });
+    expect((store.messages.at(-1) as any).reasoning).toBe("thinking about [REDACTED]");
+  });
+
+  it("masks personal data on save when the agent uses PIIMaskMiddleware", async () => {
+    const { PIIMaskMiddleware } = await import("@node-llm/core");
+    class Masked extends Agent {
+      static model = "test-model";
+      static assumeModelExists = true;
+      static middlewares = [new PIIMaskMiddleware()];
+    }
+    const store = new MemoryStore();
+    const provider = new Scripted([{ content: "Noted.", usage }]);
+    const session = await createAgentSession(store, createLLM({ provider }), Masked);
+
+    await session.ask("My email is jane@example.com");
+
+    expect(store.messages[0]!.content).toBe("My email is [REDACTED]");
   });
 });

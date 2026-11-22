@@ -62,7 +62,8 @@ import {
   executeToolCallOutcomes,
   toolCallLimitResults,
   unrunToolCallResults,
-  runToolCallEnd
+  runToolCallEnd,
+  runToolResult
 } from "./ToolCallOutcome.js";
 import { logger } from "../utils/logger.js";
 import {
@@ -1042,7 +1043,10 @@ export class Chat<S = unknown> {
               }
             }
 
-            const errorResult = `Fatal error executing tool '${toolCall.function.name}': ${toolErrorText(currentError)}`;
+            let errorResult = `Fatal error executing tool '${toolCall.function.name}': ${toolErrorText(currentError)}`;
+            errorResult =
+              (await runToolResult(this.middlewares, context, toolCall, errorResult, true)) ??
+              errorResult;
             this.messages.push(
               this.provider.formatToolResultMessage(toolCall.id, errorResult, { isError: true })
             );
@@ -1193,7 +1197,13 @@ export class Chat<S = unknown> {
             continue;
           }
           if (requestDirective.action === "REPLACE") {
-            return requestDirective.response as ChatResponseString & { data: S };
+            // The history keeps the answer that was returned, so a later ask sends that one.
+            const replaced = requestDirective.response;
+            const last = this.messages[this.messages.length - 1];
+            if (last?.role === "assistant" && replaced instanceof ChatResponseString) {
+              last.content = replaced.toString();
+            }
+            return replaced as ChatResponseString & { data: S };
           }
         }
 

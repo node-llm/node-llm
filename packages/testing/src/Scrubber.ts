@@ -1,6 +1,6 @@
 export const DEFAULT_SECRET_PATTERNS = [
   // API Keys & Auth Tokens
-  /sk-[a-zA-Z0-9_-]{20,}/g, // OpenAI, Anthropic (sk-ant-...), OpenRouter (sk-or-v1-...) keys
+  /(?<![A-Za-z0-9])sk-[a-zA-Z0-9_-]{20,256}/g, // OpenAI, Anthropic (sk-ant-...), OpenRouter (sk-or-v1-...) keys
   /\bxai-[a-zA-Z0-9]{20,}/g, // xAI keys
   /\bAKIA[0-9A-Z]{16}\b/g, // AWS access key IDs
   /\bgh[pousr]_[A-Za-z0-9]{30,}\b/g, // GitHub tokens

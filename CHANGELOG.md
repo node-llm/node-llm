@@ -10,14 +10,14 @@ All notable changes to this project will be documented in this file.
 - **Remote Files Time Out and Stop at 50 MB While Reading**: a remote file now times out after 60 seconds (`fileSecurity.fetchTimeout`). One without a `content-length` was read in full before its size was checked; it is now stopped once it passes 50 MB, in every loader.
 - **More File Rules (`fileSecurity`)**: for apps where a path or URL comes from a user, `root` keeps local files inside a folder (after following links), `blockPrivateNetwork` refuses every private address, `allowedHosts` allows only listed hosts, and `throwOnFetchError` throws instead of passing a failed URL on to the provider. Set on `config`, `createLLM()` or a chat; a chat's rules add to the others instead of replacing them.
 - **Gemini Keys Are Sent in a Header**: the key goes in `x-goog-api-key` instead of `?key=` in the URL, so proxies, tracing and error reports that record URLs don't see it.
-- **Debug Logs Mask Keys and Files**: with `debug: true`, printed request and response bodies mask key- and token-like values and secret fields (`api_key`, `authorization`, ...), and replace base64 files with their size. Prompts and answers are still printed. `redactForLog()` is exported.
+- **Debug Logs Mask Keys and Files**: with `debug: true`, printed request and response bodies mask keys and tokens (OpenAI, Anthropic, OpenRouter, Google, xAI, Stripe, Slack, AWS `AKIA`/`ASIA` and named secret keys, GitHub `ghp_`/`github_pat_`, JWTs, `Bearer` and `Basic` credentials, PEM private keys), passwords in URLs and fields named like secrets (`apiKey`, `openaiApiKey`, `secretAccessKey`, `token`, `private_key`, ...), and replace base64 files in any field with their size. Prompts and answers are still printed. `logger.error`, which is always on, masks the errors it prints. The patterns are bounded, so long hostile input can't slow them. `redactForLog()` is exported.
 - **Provider Errors Mask Keys**: `APIError`'s `message` and `body` mask key-like values (such as an OpenRouter key named in a credit error). Everything else in them is unchanged.
 - **Tool Arguments Are Checked Against JSON Schemas**: a tool defined with a JSON Schema (plain definitions, `Tool` classes with one, MCP tools) no longer runs with arguments its schema rules out: missing required fields, wrong types, values outside an `enum`, or extra fields where `additionalProperties` is `false`. The model is told what to fix. Zod tools are checked by Zod as before.
 - **Tool Errors Sent to the Model Are Masked and Cut Short**: key-like values and passwords in URLs are masked, and the message is cut to 500 characters.
 - **Unknown-Tool Replies Don't List Deferred Tools**: when the model calls a tool that doesn't exist, the reply lists only the tools it can see.
 - **Subagent Spending and Nesting Are Limited**: a subagent's requests now count toward its parent ask's `usage` and `maxCost`, and it stops once an ask above it has reached its limit. Subagents nest at most 8 deep; deeper, `AgentDepthError` is thrown, so an agent handing a task to itself can't loop forever.
-- **PII Masking Covers Tool Results and Answers**: `PIIMaskMiddleware` now masks each tool result before the model sees it (before, only messages present when an ask started were masked, so tool results reached the model unmasked), and `redactOutput: true`, which was accepted but did nothing, now masks the answer `ask()` returns. It also masks international phone numbers and IBANs.
-- **`onToolCallEnd` Can Change a Tool Result**: a middleware may return `{ content }` from `onToolCallEnd` to change what the model is sent. Hooks that return nothing are unchanged. New type `ToolResultChange`.
+- **PII Masking Covers Tool Results, Errors and Answers**: `PIIMaskMiddleware` now masks every tool result before the model sees it, a tool's error included (before, only messages present when an ask started were masked), masking JSON results in their string values only so they stay valid. `redactOutput: true`, which was accepted but did nothing, now masks the answer `ask()` returns and the one the history keeps. It also masks international phone numbers and IBANs, and its email pattern is bounded so long input can't slow it.
+- **Middlewares Can Change Tool Results**: a new `onToolResult(ctx, toolCall, content, { isError })` hook may return `{ content }` to change any tool result the model is sent; `onToolCallEnd` may too, for successful calls. A `REPLACE` from `onResponse` now also replaces the answer in the history, and another middleware's `"CONTINUE"` no longer hides it. New type `ToolResultChange`.
 
 ### Features
 
@@ -39,7 +39,7 @@ All notable changes to this project will be documented in this file.
 
 ### Security
 
-- **Secrets Aren't Saved**: API keys, tokens and passwords in URLs are masked in everything a chat or agent session saves (message text, thinking, tool arguments and results), through the Prisma store or a custom one. Tool arguments stay valid JSON. `redact` on `createChat`, `loadChat`, `createAgentSession` and `loadAgentSession` masks more, such as personal data. `maskSecrets` and `redactingStore` are exported.
+- **Secrets Aren't Saved**: API keys, tokens, private keys and passwords in URLs are masked in everything a chat or agent session saves (message text, reasoning, thinking, tool arguments and results, a chat's instructions and metadata, and a session's inputs), through the Prisma store or a custom one. Tool arguments stay valid JSON. A chat or session that uses `PIIMaskMiddleware` also saves masked text. `redact` on `createChat`, `loadChat`, `createAgentSession` and `loadAgentSession` masks more. `maskSecrets` and `redactingStore` are exported.
 
 ### Features
 
@@ -65,7 +65,7 @@ All notable changes to this project will be documented in this file.
 
 ### Security
 
-- **More Key Formats Are Scrubbed From Cassettes**: keys with hyphens (`sk-ant-...`, `sk-proj-...`, `sk-or-v1-...`, which the old pattern missed), xAI keys, AWS access key IDs, GitHub tokens and Bearer tokens, plus the `x-goog-api-key`, `api-key` and `proxy-authorization` headers.
+- **More Key Formats Are Scrubbed From Cassettes**: keys with hyphens (`sk-ant-...`, `sk-proj-...`, `sk-or-v1-...`, which the old pattern missed), xAI keys, AWS access key IDs, GitHub tokens and Bearer tokens, plus the `x-goog-api-key`, `api-key` and `proxy-authorization` headers. An `sk-` inside a word, as in `ask-user`, is no longer scrubbed.
 
 ## [1.21.0] - 2026-11-21 (@node-llm/core)
 

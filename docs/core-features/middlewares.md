@@ -229,9 +229,9 @@ const chat = NodeLLM.chat("gpt-5", {
 });
 ```
 
-It matches patterns, so it catches common formats, not names, addresses or data in images and files. Treat it as a safety net, not a guarantee.
+It matches patterns, so it catches common formats, not names, addresses or data in images and files. Treat it as a safety net, not a guarantee. JSON tool results are masked in their string values only, so numbers such as timestamps stay intact. With `redactOutput`, the masked answer is also what the chat's history keeps; `onEndMessage` handlers run before middlewares and see the answer as the model gave it. With `@node-llm/orm`, a chat or agent session that uses `PIIMaskMiddleware` also saves masked text.
 
-A middleware's `onToolCallEnd` may return `{ content }` to change the tool result the model is sent, as this one does.
+A middleware's `onToolResult(ctx, toolCall, content, { isError })` may return `{ content }` to change any tool result the model is sent, a tool's error included, as this one does. `onToolCallEnd` may too, for successful calls.
 
 ### 2. CostGuardMiddleware
 Monitors accumulated cost during a session (especially useful for multi-turn tool calling loops) and throws an error if a defined budget is exceeded.

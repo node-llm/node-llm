@@ -30,6 +30,7 @@ describe("Scrubber key formats", () => {
   });
 
   it("leaves ordinary text alone", () => {
+    expect(scrubber.scrub("ask-user-for-confirmation_step")).toBe("ask-user-for-confirmation_step");
     expect(scrubber.scrub("ask-me a question, task-list-item")).toBe(
       "ask-me a question, task-list-item"
     );

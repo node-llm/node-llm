@@ -21,7 +21,9 @@ export interface PIIMaskOptions {
 }
 
 const PII_PATTERNS = {
-  email: /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g,
+  // Bounded, and must start a word, so a long run of letters can't make it slow.
+  email:
+    /(?<![a-zA-Z0-9._%+-])[a-zA-Z0-9._%+-]{1,64}@[a-zA-Z0-9-]{1,63}(?:\.[a-zA-Z0-9-]{1,63}){0,8}\.[a-zA-Z]{2,24}(?![a-zA-Z])/g,
   // Before the number patterns, which would otherwise take an IBAN's digits.
   iban: /\b[A-Z]{2}\d{2}(?:[ ]?[A-Z0-9]{4}){3,7}(?:[ ]?[A-Z0-9]{1,3})?\b/g,
   // International numbers, written with a leading + and country code.
@@ -59,22 +61,52 @@ export class PIIMaskMiddleware implements Middleware {
     }
   }
 
-  /** Masks a tool's result before the model sees it. */
-  async onToolCallEnd(
+  /** Masks every tool result, errors included, before the model sees it. */
+  async onToolResult(
     _ctx: MiddlewareContext,
     _tool: ToolCall,
-    result: unknown
+    content: string,
+    _info: { isError: boolean }
   ): Promise<ToolResultChange | void> {
-    if (typeof result !== "string") return;
-    const masked = this.maskText(result, this.options.mask || "[REDACTED]");
-    return masked === result ? undefined : { content: masked };
+    const masked = this.mask(content);
+    return masked === content ? undefined : { content: masked };
+  }
+
+  /**
+   * Masks personal data in text. JSON is masked in its string values only, so numbers such as
+   * timestamps and ids are left alone and the JSON stays valid.
+   */
+  mask(text: string): string {
+    const mask = this.options.mask || "[REDACTED]";
+    const trimmed = text.trimStart();
+    if (trimmed.startsWith("{") || trimmed.startsWith("[")) {
+      try {
+        const parsed = JSON.parse(text) as unknown;
+        return JSON.stringify(this.maskValue(parsed, mask, 0));
+      } catch {
+        // Not JSON: masked as text.
+      }
+    }
+    return this.maskText(text, mask);
+  }
+
+  private maskValue(value: unknown, mask: string, depth: number): unknown {
+    if (typeof value === "string") return this.maskText(value, mask);
+    if (depth > 30 || value === null || typeof value !== "object") return value;
+    if (Array.isArray(value)) return value.map((item) => this.maskValue(item, mask, depth + 1));
+    return Object.fromEntries(
+      Object.entries(value as Record<string, unknown>).map(([key, item]) => [
+        key,
+        this.maskValue(item, mask, depth + 1)
+      ])
+    );
   }
 
   /** With `redactOutput`, masks the answer `ask()` returns. */
   async onResponse(_ctx: MiddlewareContext, result: NodeLLMResponse): Promise<RequestDirective> {
     if (!this.options.redactOutput || !(result instanceof ChatResponseString)) return;
     const text = result.toString();
-    const masked = this.maskText(text, this.options.mask || "[REDACTED]");
+    const masked = this.mask(text);
     if (masked === text) return;
     return { action: "REPLACE", response: result.withContent(masked) };
   }

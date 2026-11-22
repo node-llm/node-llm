@@ -39,7 +39,8 @@ import {
   executeToolCallOutcomes,
   toolCallLimitResults,
   unrunToolCallResults,
-  runToolCallEnd
+  runToolCallEnd,
+  runToolResult
 } from "./ToolCallOutcome.js";
 import {
   collectHandlers,
@@ -511,7 +512,10 @@ export class ChatStream {
               }
             }
 
-            const errorResult = `Fatal error executing tool '${toolCall.function.name}': ${toolErrorText(currentError)}`;
+            let errorResult = `Fatal error executing tool '${toolCall.function.name}': ${toolErrorText(currentError)}`;
+            errorResult =
+              (await runToolResult(middlewares, context, toolCall, errorResult, true)) ??
+              errorResult;
             messages.push(
               provider.formatToolResultMessage(toolCall.id, errorResult, { isError: true })
             );
