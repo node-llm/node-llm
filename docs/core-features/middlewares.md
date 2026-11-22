@@ -219,15 +219,19 @@ When multiple middlewares are registered, the **first non-void directive wins** 
 NodeLLM includes a set of pre-built, production-ready middlewares that you can use out of the box.
 
 ### 1. PIIMaskMiddleware
-Automatically redacts sensitive information like emails, phone numbers, and credit cards from user messages before they are sent to the LLM.
+Automatically redacts emails, phone numbers (US-style and international with a `+` country code), card numbers, US social security numbers and IBANs: in the conversation before it is sent to the LLM, and in each tool result before the model sees it. With `redactOutput: true`, it also masks the answer `ask()` returns; streamed text is sent as it arrives, so it isn't masked.
 
 ```typescript
 import { NodeLLM, PIIMaskMiddleware } from "@node-llm/core";
 
 const chat = NodeLLM.chat("gpt-5", {
-  middlewares: [new PIIMaskMiddleware({ mask: "[SECRET]" })]
+  middlewares: [new PIIMaskMiddleware({ mask: "[SECRET]", redactOutput: true })]
 });
 ```
+
+It matches patterns, so it catches common formats, not names, addresses or data in images and files. Treat it as a safety net, not a guarantee. JSON tool results are masked in their string values only, so numbers such as timestamps stay intact. With `redactOutput`, the masked answer is also what the chat's history keeps; `onEndMessage` handlers run before middlewares and see the answer as the model gave it. With `@node-llm/orm`, a chat or agent session that uses `PIIMaskMiddleware` also saves masked text.
+
+A middleware's `onToolResult(ctx, toolCall, content, { isError })` may return `{ content }` to change any tool result the model is sent, a tool's error included, as this one does. `onToolCallEnd` may too, for successful calls.
 
 ### 2. CostGuardMiddleware
 Monitors accumulated cost during a session (especially useful for multi-turn tool calling loops) and throws an error if a defined budget is exceeded.

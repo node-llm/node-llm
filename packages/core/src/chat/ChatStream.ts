@@ -1,4 +1,8 @@
+import type { SideUsage } from "./SideUsage.js";
+import { toolErrorText } from "./ToolErrorText.js";
+import { mergeFileSecurity } from "../utils/FileSecurity.js";
 import { windowToolResults } from "./ToolResultWindow.js";
+import { applyRequestBudget, budgetLimits, cutToolResult } from "./ContextBudget.js";
 import { Message } from "./Message.js";
 import {
   ContentPart,
@@ -19,7 +23,9 @@ import { ToolDefinition, ToolCall } from "./Tool.js";
 import { ChatValidator } from "./Validation.js";
 import { ToolHandler } from "./ToolHandler.js";
 import { logger } from "../utils/logger.js";
-import { CostLimitError, ToolCallLimitError } from "../errors/index.js";
+import { CostLimitError, EndToolNotCalledError, ToolCallLimitError } from "../errors/index.js";
+import { calledTool, endWithTool } from "./EndWith.js";
+import { stallWatch } from "./StallGuard.js";
 import { ResponseFormat } from "../providers/Provider.js";
 import { ModelRegistry } from "../models/ModelRegistry.js";
 import { Middleware, MiddlewareContext, ToolErrorDirective } from "../types/Middleware.js";
@@ -29,9 +35,12 @@ import { runMiddleware } from "../utils/middleware-runner.js";
 import { randomUUID } from "node:crypto";
 import {
   shouldRunToolCallsConcurrently,
+  toolWorkerLimit,
   executeToolCallOutcomes,
   toolCallLimitResults,
-  unrunToolCallResults
+  unrunToolCallResults,
+  runToolCallEnd,
+  runToolResult
 } from "./ToolCallOutcome.js";
 import {
   collectHandlers,
@@ -56,7 +65,8 @@ export class ChatStream {
     private readonly model: string,
     private readonly options: ChatOptions = {},
     messages?: Message[],
-    systemMessages?: Message[]
+    systemMessages?: Message[],
+    private readonly sideUsage?: SideUsage
   ) {
     this.messages = messages ?? [];
     this.systemMessages = systemMessages ?? [];
@@ -86,6 +96,10 @@ export class ChatStream {
 
     if (this.options.toolConcurrency === undefined) {
       this.options.toolConcurrency = config.toolConcurrency;
+    }
+
+    if (this.options.contextBudget === undefined) {
+      this.options.contextBudget = config.contextBudget;
     }
   }
 
@@ -165,7 +179,11 @@ export class ChatStream {
       const files = [...(requestOptions.images ?? []), ...(requestOptions.files ?? [])];
 
       if (files.length > 0) {
-        const processedFiles = await Promise.all(files.map((f: string) => FileLoader.load(f)));
+        const processedFiles = await Promise.all(
+          files.map((f: string) =>
+            FileLoader.load(f, mergeFileSecurity(config.fileSecurity, options.fileSecurity))
+          )
+        );
         const hasBinary = processedFiles.some(isBinaryContent);
 
         ChatValidator.validateVision(provider, model, hasBinary, options);
@@ -177,6 +195,9 @@ export class ChatStream {
       }
 
       messages.push({ role: "user", content: messageContent });
+      const askStart = messages.length;
+      const endWith = endWithTool(options.endWith);
+      let endWithReminded = false;
 
       // Prepare Middleware Context
       const context: MiddlewareContext = {
@@ -216,8 +237,10 @@ export class ChatStream {
         let isFirst = true;
         const maxToolCalls = options.maxToolCalls ?? DEFAULT_MAX_TOOL_CALLS;
         let stepCount = 0;
+        const stalls = stallWatch(options.stallGuard);
 
         const totalUsage: Usage = { input_tokens: 0, output_tokens: 0, total_tokens: 0 };
+        if (self.sideUsage) self.sideUsage.current = totalUsage;
         const trackUsage = (u?: Usage) => {
           if (u) {
             // Fallback cost calculation if provider didn't return it
@@ -245,6 +268,7 @@ export class ChatStream {
         };
 
         let assistantResponse: ChatResponseString | undefined;
+        const budget = budgetLimits(options.contextBudget, provider, model);
 
         while (true) {
           let fullContent = "";
@@ -255,7 +279,10 @@ export class ChatStream {
           let currentTurnUsage: Usage | undefined;
 
           context.messages = [...systemMessages, ...messages];
-          let requestMessages = windowToolResults(context.messages, options.keepToolResults);
+          let requestMessages = applyRequestBudget(
+            windowToolResults(context.messages, options.keepToolResults),
+            budget
+          );
           requestMessages = await runChainHandlers(beforeRequestHandlers, requestMessages);
 
           const streamRequest: any = {
@@ -357,6 +384,13 @@ export class ChatStream {
 
           if (!toolCalls || toolCalls.length === 0) {
             await runAllHandlers(endMessageHandlers, assistantResponse);
+            // A turn that should have ended with a tool is reminded once, then fails.
+            if (endWith && !calledTool(messages, askStart, endWith.tool)) {
+              if (endWithReminded) throw new EndToolNotCalledError(endWith.tool, totalUsage);
+              endWithReminded = true;
+              messages.push({ role: "user", content: endWith.reminder });
+              continue;
+            }
             break;
           }
 
@@ -398,7 +432,8 @@ export class ChatStream {
             },
             middlewares,
             context,
-            runConcurrently
+            runConcurrently,
+            toolWorkerLimit(options.toolConcurrency)
           );
 
           for (const outcome of outcomes) {
@@ -414,8 +449,12 @@ export class ChatStream {
             if (outcome.kind === "success") {
               const { toolResult } = outcome;
               messages.push(
-                provider.formatToolResultMessage(toolResult.tool_call_id, toolResult.content)
+                provider.formatToolResultMessage(
+                  toolResult.tool_call_id,
+                  cutToolResult(toolResult.content, budget)
+                )
               );
+              stalls?.record(toolCall, toolResult.content, false);
               continue;
             }
 
@@ -446,16 +485,20 @@ export class ChatStream {
                   combinedToolCallStart,
                   combinedToolCallEnd
                 );
-                await runMiddleware(
+                const changed = await runToolCallEnd(
                   middlewares,
-                  "onToolCallEnd",
                   context,
                   toolCall,
                   toolResult.content
                 );
+                if (changed !== undefined) toolResult.content = changed;
                 messages.push(
-                  provider.formatToolResultMessage(toolResult.tool_call_id, toolResult.content)
+                  provider.formatToolResultMessage(
+                    toolResult.tool_call_id,
+                    cutToolResult(toolResult.content, budget)
+                  )
                 );
+                stalls?.record(toolCall, toolResult.content, false);
                 continue;
               } catch (retryError) {
                 currentError = retryError as Error & { fatal?: boolean; status?: number };
@@ -469,13 +512,14 @@ export class ChatStream {
               }
             }
 
+            let errorResult = `Fatal error executing tool '${toolCall.function.name}': ${toolErrorText(currentError)}`;
+            errorResult =
+              (await runToolResult(middlewares, context, toolCall, errorResult, true)) ??
+              errorResult;
             messages.push(
-              provider.formatToolResultMessage(
-                toolCall.id,
-                `Fatal error executing tool '${toolCall.function.name}': ${currentError.message}`,
-                { isError: true }
-              )
+              provider.formatToolResultMessage(toolCall.id, errorResult, { isError: true })
             );
+            stalls?.record(toolCall, errorResult, true);
 
             if (directive === "CONTINUE") {
               continue;
@@ -494,6 +538,8 @@ export class ChatStream {
               currentError as Error
             );
           }
+          const stalled = stalls?.error(totalUsage);
+          if (stalled) throw stalled;
           // Loop continues -> streaming next chunk
         }
 
@@ -510,6 +556,8 @@ export class ChatStream {
           // But rethrow for sure.
         }
         throw err;
+      } finally {
+        if (self.sideUsage) self.sideUsage.current = undefined;
       }
     };
 

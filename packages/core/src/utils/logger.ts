@@ -1,4 +1,7 @@
 import { config } from "../config.js";
+import { redactForLog, redactSecrets } from "./redact.js";
+
+export { redactForLog };
 
 /**
  * Masks credentials passed as URL query parameters (e.g. Gemini's `?key=...`)
@@ -15,7 +18,7 @@ class Logger {
 
   debug(message: string, data?: unknown): void {
     if (this.isDebugEnabled()) {
-      const formattedData = data ? `\n${JSON.stringify(data, null, 2)}` : "";
+      const formattedData = data ? `\n${JSON.stringify(redactForLog(data), null, 2)}` : "";
       console.log(`[NodeLLM Debug] ${message}${formattedData}`);
     }
   }
@@ -27,7 +30,7 @@ class Logger {
     if (this.isDebugEnabled()) {
       console.log(`[NodeLLM] [${provider}] Request: ${method} ${redactUrl(url)}`);
       if (body) {
-        console.log(JSON.stringify(body, null, 2));
+        console.log(JSON.stringify(redactForLog(body), null, 2));
       }
     }
   }
@@ -39,7 +42,7 @@ class Logger {
     if (this.isDebugEnabled()) {
       console.log(`[NodeLLM] [${provider}] Response: ${status} ${statusText}`);
       if (body) {
-        console.log(JSON.stringify(body, null, 2));
+        console.log(JSON.stringify(redactForLog(body), null, 2));
       }
     }
   }
@@ -49,7 +52,8 @@ class Logger {
   }
 
   error(message: string, error?: Error): void {
-    console.error(`[NodeLLM Error] ${message}`, error || "");
+    // Tool and provider errors can carry keys or connection strings: masked, always printed.
+    console.error(`[NodeLLM Error] ${redactSecrets(message)}`, error ? maskedError(error) : "");
   }
 
   info(message: string): void {
@@ -58,3 +62,10 @@ class Logger {
 }
 
 export const logger = new Logger();
+
+/** An error's name, message and stack with keys and passwords masked, for printing. */
+function maskedError(error: unknown): string {
+  if (!(error instanceof Error)) return redactSecrets(String(error));
+  const text = error.stack ?? `${error.name}: ${error.message}`;
+  return redactSecrets(text);
+}

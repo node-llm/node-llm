@@ -1,6 +1,10 @@
 export const DEFAULT_SECRET_PATTERNS = [
   // API Keys & Auth Tokens
-  /sk-[a-zA-Z0-9]{20,}/g, // OpenAI/Anthropic keys
+  /(?<![A-Za-z0-9])sk-[a-zA-Z0-9_-]{20,256}/g, // OpenAI, Anthropic (sk-ant-...), OpenRouter (sk-or-v1-...) keys
+  /\bxai-[a-zA-Z0-9]{20,}/g, // xAI keys
+  /\bAKIA[0-9A-Z]{16}\b/g, // AWS access key IDs
+  /\bgh[pousr]_[A-Za-z0-9]{30,}\b/g, // GitHub tokens
+  /(?<=\bBearer\s+)[A-Za-z0-9._~+/=-]{16,}/g, // Bearer tokens in any header or body
   /x-[a-zA-Z0-9]{20,}/g, // Generic key patterns
   /ey[a-zA-Z0-9-_=]+\.ey[a-zA-Z0-9-_=]+\.?[a-zA-Z0-9-_.+/=]*/g, // JWT tokens
   /\b(AIza[0-9A-Za-z-_]{35})\b/g, // Google API keys
@@ -38,6 +42,9 @@ export class Scrubber {
       "cookie",
       "set-cookie",
       "x-api-key",
+      "x-goog-api-key",
+      "api-key",
+      "proxy-authorization",
       "x-auth-token",
       "access_key",
       "secret_key",

@@ -1,9 +1,14 @@
 import fs from "fs";
 import path from "path";
 import { logger } from "./logger.js";
-
-/** Max size (bytes) for a remotely-fetched binary, buffered fully into memory. */
-const MAX_REMOTE_BYTES = 50 * 1024 * 1024;
+import { config } from "../config.js";
+import {
+  FileAccessError,
+  FileSecurity,
+  checkLocalFile,
+  headerOf,
+  readRemoteChecked
+} from "./FileSecurity.js";
 
 export interface Base64Data {
   data: string;
@@ -12,9 +17,13 @@ export interface Base64Data {
 
 export class BinaryUtils {
   /**
-   * Converts a URL (data:, http:, or local path) to a base64 string and mime type.
+   * Converts a URL (data:, http:, or local path) to a base64 string and mime type. URLs and
+   * paths are checked like a chat's `files`; a refused one throws FileAccessError.
    */
-  static async toBase64(url: string): Promise<Base64Data | null> {
+  static async toBase64(
+    url: string,
+    rules: FileSecurity | undefined = config.fileSecurity
+  ): Promise<Base64Data | null> {
     if (url.startsWith("data:")) {
       const match = url.match(/^data:([^;]+);base64,(.+)$/);
       if (match && match[1] && match[2]) {
@@ -25,32 +34,23 @@ export class BinaryUtils {
       }
     } else if (url.startsWith("http")) {
       try {
-        const response = await fetch(url);
-        if (!response.ok) return null;
-        const declared = Number(response.headers.get("content-length"));
-        if (Number.isFinite(declared) && declared > MAX_REMOTE_BYTES) {
-          logger.error(`Remote file exceeds ${MAX_REMOTE_BYTES}-byte limit: ${url}`);
-          return null;
-        }
-        const buffer = await response.arrayBuffer();
-        if (buffer.byteLength > MAX_REMOTE_BYTES) {
-          logger.error(`Remote file exceeds ${MAX_REMOTE_BYTES}-byte limit: ${url}`);
-          return null;
-        }
-        const base64 = Buffer.from(buffer).toString("base64");
-        const mimeType = response.headers.get("content-type") || this.guessMimeType(url);
+        const { response, bytes } = await readRemoteChecked(url, rules);
+        if (!bytes) return null;
+        const base64 = Buffer.from(bytes).toString("base64");
+        const mimeType = headerOf(response, "content-type") || this.guessMimeType(url);
         return {
           mimeType,
           data: base64
         };
       } catch (e) {
+        if (e instanceof FileAccessError) throw e;
         logger.error("Error converting URL to base64:", e as Error);
         return null;
       }
     } else {
       // Assume local file path
       try {
-        const buffer = await fs.promises.readFile(url);
+        const buffer = await fs.promises.readFile(await checkLocalFile(url, rules));
         const base64 = buffer.toString("base64");
         const mimeType = this.guessMimeType(url);
         return {
@@ -58,6 +58,7 @@ export class BinaryUtils {
           data: base64
         };
       } catch (e) {
+        if (e instanceof FileAccessError) throw e;
         logger.error("Error reading local file for base64:", e as Error);
         return null;
       }

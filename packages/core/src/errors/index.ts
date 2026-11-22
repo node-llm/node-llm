@@ -14,6 +14,8 @@
  */
 
 import type { Usage } from "../providers/Provider.js";
+import type { ToolCall } from "../chat/Tool.js";
+import { redactForLog, redactSecrets } from "../utils/redact.js";
 
 /**
  * Base class for all NodeLLM errors
@@ -33,14 +35,21 @@ export class LLMError extends Error {
  * Errors occurring during API calls to providers
  */
 export class APIError extends LLMError {
+  /**
+   * The provider's response body. Values that look like keys or tokens are masked, as in the
+   * message, so logging or showing the error doesn't leak them.
+   */
+  public readonly body: unknown;
+
   constructor(
     message: string,
     public readonly status: number,
-    public readonly body: unknown,
+    body: unknown,
     public readonly provider?: string,
     public readonly model?: string
   ) {
-    super(message, "API_ERROR");
+    super(redactSecrets(message), "API_ERROR");
+    this.body = redactForLog(body);
   }
 }
 
@@ -152,6 +161,22 @@ export class ServiceUnavailableError extends ServerError {
   constructor(message: string, status: number, body: unknown, provider?: string, model?: string) {
     super(message, status, body, provider, model);
     this.name = "ServiceUnavailableError";
+  }
+}
+
+/**
+ * The provider could not be reached: the connection failed, was refused or was reset before a
+ * response came back. Retried like a server error. `cause` is the error fetch threw.
+ */
+export class NetworkError extends LLMError {
+  constructor(
+    message: string,
+    /** The host that could not be reached */
+    public readonly host?: string,
+    options?: { cause?: unknown }
+  ) {
+    super(message, "NETWORK_ERROR");
+    if (options && "cause" in options) (this as { cause?: unknown }).cause = options.cause;
   }
 }
 
@@ -271,5 +296,67 @@ export class ToolCallLimitError extends LLMError {
     public readonly usage: Usage
   ) {
     super(`[NodeLLM] Maximum tool execution calls (${limit}) exceeded.`, "TOOL_CALL_LIMIT");
+  }
+}
+
+/**
+ * The model ended its turn without calling the tool set with `endWith`, even after it was
+ * reminded once.
+ */
+export class EndToolNotCalledError extends LLMError {
+  constructor(
+    /** The tool the model had to call */
+    public readonly tool: string,
+    /** Usage of every request in the ask */
+    public readonly usage: Usage
+  ) {
+    super(
+      `[NodeLLM] The model ended its turn without calling the ${tool} tool, even when reminded.`,
+      "END_TOOL_NOT_CALLED"
+    );
+  }
+}
+
+/** Why a tool loop was stopped as stalled; see StallGuard. */
+export type StallReason = "repeated" | "no_progress";
+
+/**
+ * A tool loop stopped by its StallGuard: the model repeated the same call with the same result,
+ * or made a run of calls with no progress. Every call that was run has its result in the history,
+ * so the chat can be asked again.
+ */
+export class StalledError extends LLMError {
+  constructor(
+    public readonly reason: StallReason,
+    /** The repeated call, or the calls in a row that made no progress */
+    public readonly calls: ToolCall[],
+    /** How many times the call was repeated, or how many calls made no progress */
+    public readonly count: number,
+    /** Usage of every request in the ask */
+    public readonly usage: Usage
+  ) {
+    const last = calls[calls.length - 1];
+    super(
+      reason === "repeated"
+        ? `[NodeLLM] Stalled: the model called ${describeCall(last)} ${count} times with the same result.`
+        : `[NodeLLM] Stalled: ${count} tool calls in a row made no progress (last: ${describeCall(last)}).`,
+      "STALLED"
+    );
+  }
+}
+
+function describeCall(call: ToolCall | undefined): string {
+  if (!call) return "a tool";
+  const args = call.function.arguments || "";
+  return `${call.function.name}(${args.length > 60 ? `${args.slice(0, 57)}...` : args})`;
+}
+
+/** Subagents nested deeper than the limit: an agent's tool started an agent, and so on. */
+export class AgentDepthError extends LLMError {
+  constructor(public readonly limit: number) {
+    super(
+      `[NodeLLM] Subagents nested more than ${limit} deep; an agent may be handing tasks to itself.`,
+      "AGENT_DEPTH"
+    );
   }
 }

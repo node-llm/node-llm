@@ -1,3 +1,6 @@
+import { NetworkError } from "../errors/index.js";
+import { redactSecrets } from "./redact.js";
+
 export interface FetchTimeoutOptions {
   /**
    * Whether the timeout also covers reading the response body (the default).
@@ -16,6 +19,7 @@ export interface FetchTimeoutOptions {
  * @param timeoutOptions - Whether the timeout covers the body read
  * @returns Promise<Response>
  * @throws Error if the request times out
+ * @throws NetworkError if the provider can't be reached
  */
 export async function fetchWithTimeout(
   url: string,
@@ -24,7 +28,11 @@ export async function fetchWithTimeout(
   { coverBody = true }: FetchTimeoutOptions = {}
 ): Promise<Response> {
   if (!timeoutMs || timeoutMs <= 0) {
-    return fetch(url, options);
+    try {
+      return await fetch(url, options);
+    } catch (error) {
+      throw networkError(error, url);
+    }
   }
 
   const userSignal = options.signal;
@@ -50,6 +58,29 @@ export async function fetchWithTimeout(
   } catch (error: unknown) {
     clearTimeout(timeoutId);
     if (controller.signal.aborted) throw timeoutError;
-    throw error;
+    throw networkError(error, url);
   }
+}
+
+/**
+ * fetch() rejects with a TypeError ("fetch failed") when it can't reach the server, with the
+ * reason, such as ECONNRESET, in its cause. Anything else, such as a cancellation, is left as is.
+ */
+function networkError(error: unknown, url: string): unknown {
+  if (!(error instanceof TypeError)) return error;
+  let host: string | undefined;
+  try {
+    host = new URL(url).host;
+  } catch {
+    host = undefined;
+  }
+  const cause = (error as { cause?: { code?: string; message?: string } }).cause;
+  const reason = cause?.code ?? cause?.message;
+  return new NetworkError(
+    redactSecrets(
+      `Could not reach ${host ?? "the provider"}: ${error.message}${reason ? ` (${reason})` : ""}`
+    ),
+    host,
+    { cause: error }
+  );
 }

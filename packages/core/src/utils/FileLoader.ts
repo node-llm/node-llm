@@ -1,30 +1,14 @@
 import { promises as fs } from "fs";
 import * as path from "path";
 import { ContentPart } from "../chat/Content.js";
-
-/**
- * Maximum size (bytes) for a remotely-fetched attachment. Caps memory use and
- * limits the blast radius if an untrusted URL is ever passed here (the fetched
- * body is buffered fully into memory as base64). 50 MB comfortably covers
- * images, audio, and PDFs sent to providers.
- */
-const MAX_REMOTE_BYTES = 50 * 1024 * 1024;
-
-async function readCapped(response: Response, source: string): Promise<ArrayBuffer> {
-  const declared = Number(response.headers.get("content-length"));
-  if (Number.isFinite(declared) && declared > MAX_REMOTE_BYTES) {
-    throw new Error(
-      `Remote file ${source} is ${declared} bytes, exceeding the ${MAX_REMOTE_BYTES}-byte limit.`
-    );
-  }
-  const buffer = await response.arrayBuffer();
-  if (buffer.byteLength > MAX_REMOTE_BYTES) {
-    throw new Error(
-      `Remote file ${source} is ${buffer.byteLength} bytes, exceeding the ${MAX_REMOTE_BYTES}-byte limit.`
-    );
-  }
-  return buffer;
-}
+import {
+  checkLocalFile,
+  fetchChecked,
+  FileAccessError,
+  FileSecurity,
+  headerOf,
+  readCapped
+} from "./FileSecurity.js";
 
 const MIME_TYPES: Record<string, string> = {
   ".jpg": "image/jpeg",
@@ -90,14 +74,14 @@ const TEXT_EXTENSIONS = new Set([
 ]);
 
 export class FileLoader {
-  static async load(filePath: string): Promise<ContentPart> {
+  static async load(filePath: string, rules?: FileSecurity): Promise<ContentPart> {
     if (filePath.startsWith("http")) {
       try {
-        const response = await fetch(filePath);
+        const response = await fetchChecked(filePath, rules);
         if (!response.ok) throw new Error(`Failed to fetch file: ${response.statusText}`);
 
         const buffer = await readCapped(response, filePath);
-        const contentTypeFull = response.headers.get("content-type") || "image/jpeg";
+        const contentTypeFull = headerOf(response, "content-type") || "image/jpeg";
         const contentType = (contentTypeFull.split(";")[0] ?? "image/jpeg").trim();
         const base64 = Buffer.from(buffer).toString("base64");
         const dataUri = `data:${contentType};base64,${base64}`;
@@ -123,7 +107,9 @@ export class FileLoader {
 
         // Default to image_url for unknown binary or use as-is
         return { type: "image_url", image_url: { url: dataUri } };
-      } catch {
+      } catch (error) {
+        // A refused URL is never handed on; with throwOnFetchError, neither is one that failed.
+        if (error instanceof FileAccessError || rules?.throwOnFetchError) throw error;
         // Fallback to URL if fetch fails
         return { type: "image_url", image_url: { url: filePath } };
       }
@@ -133,6 +119,7 @@ export class FileLoader {
       return { type: "image_url", image_url: { url: filePath } };
     }
 
+    filePath = await checkLocalFile(filePath, rules);
     const ext = path.extname(filePath).toLowerCase();
     const mime = MIME_TYPES[ext] ?? "application/octet-stream";
 

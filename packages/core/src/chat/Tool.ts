@@ -1,6 +1,7 @@
 import { z } from "zod/v3";
 import { isZodSchema, Zod3Schema, Zod4Schema, ZodSchema } from "../schema/zod.js";
 import { toJsonSchema } from "../schema/to-json-schema.js";
+import { toolErrorText } from "./ToolErrorText.js";
 
 export interface ToolCall {
   id: string;
@@ -24,6 +25,12 @@ export type ToolRescueHandler<E extends Error = Error, T = Record<string, unknow
   error: E,
   args: T
 ) => unknown;
+
+/**
+ * Set on definitions whose handler checks its own arguments, such as a `Tool` with a Zod schema,
+ * so NodeLLM doesn't check them a second time against the JSON Schema made from it.
+ */
+export const CHECKS_OWN_ARGUMENTS = Symbol.for("nodellm.checksOwnArguments");
 
 export interface ToolDefinition {
   type: "function";
@@ -75,7 +82,12 @@ export class ToolHalt {
 /**
  * Anything that can be resolved into a ToolDefinition.
  */
-export type ToolResolvable = Tool | { new (): Tool } | ToolDefinition;
+export type ToolResolvable =
+  | Tool
+  | { new (): Tool }
+  | ToolDefinition
+  /** An agent class: runs as a subagent (see `Agent.toTool`). */
+  | { toTool(): ToolDefinition };
 
 /**
  * Subclass this to create tools with auto-generated schemas and type safety.
@@ -231,7 +243,7 @@ export abstract class Tool<T = Record<string, any>> {
       // A fatal error (ToolError with fatal: true, or a 401/403) must reach the agent loop, which
       // stops and throws it. Turned into text here, it would only be shown to the model.
       if (isFatal(error)) throw error;
-      return `Error executing tool '${this.name}': ${error.message || error}`;
+      return `Error executing tool '${this.name}': ${toolErrorText(error)}`;
     }
   }
 
@@ -252,7 +264,7 @@ export abstract class Tool<T = Record<string, any>> {
             required: (rawSchema as { required?: string[] }).required || []
           };
 
-    return {
+    const definition: ToolDefinition = {
       type: "function",
       function: {
         name: this.name,
@@ -263,6 +275,11 @@ export abstract class Tool<T = Record<string, any>> {
       ...(this.defer ? { defer: true } : {}),
       handler: (args: unknown) => this.handler(args as T)
     };
+    // A Zod schema checks the arguments itself, coercions and defaults included.
+    if (isZodSchema(this.schema)) {
+      Object.defineProperty(definition, CHECKS_OWN_ARGUMENTS, { value: true });
+    }
+    return definition;
   }
 }
 

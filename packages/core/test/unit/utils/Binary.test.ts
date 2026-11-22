@@ -57,7 +57,10 @@ describe("BinaryUtils", () => {
           mimeType: "image/png",
           data: mockBuffer.toString("base64")
         });
-        expect(global.fetch).toHaveBeenCalledWith("https://example.com/image.png");
+        expect(global.fetch).toHaveBeenCalledWith(
+          "https://example.com/image.png",
+          expect.objectContaining({ redirect: "manual" })
+        );
       });
 
       it("should guess mime type when content-type header is missing", async () => {

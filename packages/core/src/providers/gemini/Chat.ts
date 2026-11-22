@@ -15,7 +15,7 @@ export class GeminiChat {
 
   async execute(request: ChatRequest): Promise<ChatResponse> {
     const temperature = Capabilities.normalizeTemperature(request.temperature, request.model);
-    const url = `${this.baseUrl}/models/${request.model}:generateContent?key=${this.apiKey}`;
+    const url = `${this.baseUrl}/models/${request.model}:generateContent`;
 
     const { contents, systemInstructionParts } = await GeminiChatUtils.convertMessages(
       request.messages
@@ -113,6 +113,7 @@ export class GeminiChat {
       {
         method: "POST",
         headers: {
+          "x-goog-api-key": this.apiKey,
           "Content-Type": "application/json"
         },
         body: JSON.stringify(payload),

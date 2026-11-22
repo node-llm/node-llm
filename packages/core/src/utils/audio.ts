@@ -1,5 +1,7 @@
 import fs from "fs";
 import path from "path";
+import { config } from "../config.js";
+import { checkLocalFile, FileSecurity, readRemoteChecked } from "./FileSecurity.js";
 
 export interface AudioFileData {
   data: Uint8Array;
@@ -8,21 +10,24 @@ export interface AudioFileData {
 }
 
 export class AudioUtils {
-  static async load(filePath: string): Promise<AudioFileData> {
+  /** Loads audio from a URL or path, checked like a chat's `files`. */
+  static async load(
+    filePath: string,
+    rules: FileSecurity | undefined = config.fileSecurity
+  ): Promise<AudioFileData> {
     let data: Uint8Array;
     let fileName: string;
 
     if (filePath.startsWith("http")) {
-      const response = await fetch(filePath);
-      if (!response.ok) {
+      const { response, bytes } = await readRemoteChecked(filePath, rules);
+      if (!bytes) {
         throw new Error(`Failed to fetch remote audio file: ${response.statusText}`);
       }
-      const arrayBuffer = await response.arrayBuffer();
-      data = new Uint8Array(arrayBuffer);
+      data = new Uint8Array(bytes);
       const urlPath = new URL(filePath).pathname;
       fileName = path.basename(urlPath) || "audio.mp3";
     } else {
-      const buffer = await fs.promises.readFile(filePath);
+      const buffer = await fs.promises.readFile(await checkLocalFile(filePath, rules));
       data = new Uint8Array(buffer);
       fileName = path.basename(filePath);
     }

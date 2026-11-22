@@ -13,7 +13,7 @@ export class GeminiImage {
 
   async execute(request: ImageRequest): Promise<ImageResponse> {
     const modelId = request.model || "imagen-4.0-generate-001";
-    const url = `${this.baseUrl}/models/${modelId}:predict?key=${this.apiKey}`;
+    const url = `${this.baseUrl}/models/${modelId}:predict`;
 
     if (request.size) {
       logger.warn(
@@ -53,6 +53,7 @@ export class GeminiImage {
       {
         method: "POST",
         headers: {
+          "x-goog-api-key": this.apiKey,
           "Content-Type": "application/json"
         },
         body: JSON.stringify(body)

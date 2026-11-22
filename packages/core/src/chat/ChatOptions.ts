@@ -1,3 +1,7 @@
+import type { ContextBudget } from "./ContextBudget.js";
+import type { EndWith } from "./EndWith.js";
+import type { StallGuard } from "./StallGuard.js";
+import type { FileSecurity } from "../utils/FileSecurity.js";
 import { Middleware } from "../types/Middleware.js";
 import { Message } from "./Message.js";
 import { ToolResolvable, ToolCall } from "./Tool.js";
@@ -60,14 +64,34 @@ export interface ChatOptions {
    * for models without it.
    */
   maxCost?: number;
+  /**
+   * Stops a tool loop that repeats the same call with the same result, or makes a run of calls
+   * with no progress, with StalledError. Off unless set.
+   */
+  stallGuard?: StallGuard | null;
   maxCorrections?: number;
+  /**
+   * A tool the model must call before its turn ends, such as one that reports a result. When the
+   * model ends its turn without calling it, it is reminded once; if it still doesn't, the ask
+   * throws EndToolNotCalledError.
+   */
+  endWith?: EndWith | null;
   requestTimeout?: number;
+  /** Rules for the files and URLs this chat may load; see FileSecurity. */
+  fileSecurity?: FileSecurity;
   toolExecution?: ToolExecutionModeInput;
   /**
    * When true, independent tool calls returned in the same turn are executed
-   * concurrently instead of one at a time. Defaults to `config.toolConcurrency`.
+   * concurrently instead of one at a time. A number caps how many run at once
+   * (every call still runs, that many at a time). Defaults to
+   * `config.toolConcurrency`.
    */
-  toolConcurrency?: boolean;
+  toolConcurrency?: boolean | number;
+  /**
+   * Shares of the model's context window tool results may take. `null` turns
+   * off a budget set in `config`. See `ContextBudget`.
+   */
+  contextBudget?: ContextBudget | null;
   /**
    * Cache the repeated start of each request (instructions, tools and earlier turns) on providers
    * that need asking to, such as Anthropic. Others cache automatically.

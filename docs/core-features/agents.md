@@ -100,6 +100,8 @@ const reply = await agent.ask("What is TypeScript?");
 | `promptCache` | `boolean` | Cache the repeated start of each request (see [Prompt Caching](chat.html#prompt-caching)) |
 | `maxToolCalls` | `number` | Maximum rounds of tool calls per ask; more throws `ToolCallLimitError` |
 | `maxCost` | `number` | The most an ask may spend in US dollars; more throws `CostLimitError` |
+| `endWith` | `string \| { tool, reminder }` | A tool the model must call before its turn ends (see [Ending With a Tool](tools.html#ending-with-a-tool)) |
+| `stallGuard` | `{ repeats, noProgress, progress }` | Stop a tool loop that is going nowhere with `StalledError` (see [Stall Guard](tools.html#stall-guard)) |
 | `keepToolResults` | `number` | Send only the most recent tool results in full (between N and 2N); older ones become a placeholder |
 | `assumeModelExists` | `boolean` | Skip registry validation for custom/unlisted models |
 | `middlewares` | `Middleware[]` | Middlewares for observation or correction <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.6em; font-weight: 600; vertical-align: middle;">v1.15.0+</span> |
@@ -240,6 +242,40 @@ await agent.ask("What's our vacation policy?");
 ```
 
 See the [HR Chatbot Example](https://github.com/node-llm/node-llm/tree/main/examples/applications/hr-chatbot-rag) for a complete RAG implementation.
+
+---
+
+## Subagents <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v1.22.0+</span>
+
+Some tasks take a long search: twenty help center articles read to answer one question. Run that in the support agent and every article stays in its conversation. Hand it to another agent instead. A subagent works in its own conversation, and only its answer comes back.
+
+An agent class goes wherever a tool goes. Give it a `description` so the calling model knows when to use it:
+
+```typescript
+class ResearchAgent extends Agent {
+  static model = "gpt-4.1-mini";
+  static description = "Researches a question across the help center and reports back with links";
+  static instructions = "Read every relevant article before you answer. Cite each one.";
+  static tools = [SearchDocs];
+}
+
+class SupportAgent extends Agent {
+  static model = "gpt-4.1";
+  static tools = [LookupOrder, ResearchAgent];
+}
+```
+
+- **Name:** the model calls it as `research_agent`, the class name in snake_case. Set `static agentName`, or `name` in `defineAgent()`, to choose another. An agent from `defineAgent()` needs one, since its class has no name.
+- **Call:** the model sends a `task`, written to stand on its own, since the subagent can't see the calling conversation. Each call runs a new instance of the agent and returns the content of its last answer.
+- **Inputs:** the model can also fill the agent's declared `inputs`. Fix some yourself with `toTool()`, and the model fills only the rest:
+
+```typescript
+static tools = (inputs) => [BillingAgent.toTool({ customer: inputs.customer })];
+```
+
+- **Instance:** a subagent runs on the calling agent's `llm` instance, so it uses the same keys and settings. Pass `{ llm }` as the second argument to `toTool()` to choose another.
+- **Plain chats:** `chat.withTool(ResearchAgent)` works too, on the default `NodeLLM` instance.
+- **Usage:** the subagent's tokens and cost are its own; they are not added to the calling chat's `totalUsage`.
 
 ---
 
@@ -586,10 +622,12 @@ const session = await createAgentSession(prisma, llm, SupportAgent, {
 await session.ask("Where is my order #789?");
 console.log(session.id); // "abc-123" - save this to resume later
 
-// Resume in a later request
+// Resume in a later request, or after a restart: earlier turns' tool calls come back too
 const resumed = await loadAgentSession(prisma, llm, SupportAgent, "abc-123");
 await resumed?.ask("Can you cancel it?");
 ```
+
+See [Resuming After a Restart](../orm/prisma.html#resuming-after-a-restart) for a run that stopped part way.
 
 ### The "Code Wins" Principle
 

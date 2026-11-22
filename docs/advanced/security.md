@@ -200,6 +200,63 @@ This creates a **defense-in-depth** strategy where multiple layers of protection
 
 ---
 
+## 📂 Loading Files Safely
+
+`images` and `files`, Gemini's and OpenAI's image inputs, and transcription files take local paths and URLs. With no setup, NodeLLM refuses the ones that are only ever an attack:
+
+- **Files that hold secrets:** `.env` files in any form (`.env`, `.env.production`, `.env-local`, `prod.env`, `.envrc`), `.npmrc`, `.netrc`, `.pgpass`, `.my.cnf`, `.git-credentials`, `.vault-token`, SSH keys (`id_rsa`, `id_rsa_work`, ...), cloud credentials (`credentials`, `application_default_credentials.json`, `*service-account*.json`), `secrets.yml`, `database.yml`, `terraform.tfstate`, anything in `.ssh`, `.aws`, `.azure`, `.gnupg`, `.kube`, `.docker` or `.git`, keys and certificates (`.pem`, `.key`, `.p12`, `.pfx`, ...), and `/proc`, `/sys` and `/dev`. A link to one of these is refused too.
+- **Files that aren't files:** devices, pipes and sockets, and files over 100 MB.
+- **Cloud metadata addresses:** `169.254.x.x`, `192.0.0.192` (Oracle), `100.100.100.200` (Alibaba), `fd00:ec2::254` and `metadata.google.internal`, including IPv6 forms that carry them (`[::ffff:169.254.169.254]`, NAT64). The address is checked when the connection is made, on every redirect, so DNS that answers differently the second time (rebinding) can't reach them.
+- **Slow or huge remote files:** a remote file times out after 60 seconds and is stopped at 50 MB while it is read.
+
+Ordinary files, files with no extension such as a `Dockerfile`, and other private hosts (`localhost`, an internal CDN) load as before. A refused file or URL throws `FileAccessError`.
+
+When a path or URL can come from a user, add rules with `fileSecurity`:
+
+```ts
+const llm = createLLM({
+  fileSecurity: {
+    root: "/srv/uploads", // local files must be inside this folder, after following links
+    blockPrivateNetwork: true, // refuse every private, loopback and link-local address
+    allowedHosts: ["cdn.example.com"], // only these hosts may be fetched
+    throwOnFetchError: true, // throw instead of passing a URL that failed on to the provider
+    fetchTimeout: 10_000 // default 60000
+  }
+});
+```
+
+Set it on `config`, in `createLLM()`, or per chat with `llm.chat(model, { fileSecurity })`; a chat's rules are added to the ones from `config` and `createLLM()`, overriding only the ones it sets. Provider-level loaders (Gemini and OpenAI images, transcription) use the rules from `config`. `allowSensitiveFiles: true` loads secret files again, for the rare app that means to send them.
+
+When your app replaces `fetch` (a test mock, a recorder) or sets its own fetch dispatcher (a proxy), remote files go through it as before; addresses are then checked by a lookup before each request, which a host that changes its DNS answer can get past.
+
+---
+
+## 🔑 Keys Stay Out of Logs and Errors
+
+- **Gemini keys go in a header.** The key is sent as `x-goog-api-key`, not as `?key=` in the URL, so proxies, tracing and error reports that record URLs never see it.
+- **Debug logs are masked.** With `debug: true`, request and response bodies are printed with values that look like keys or tokens (`sk-...`, `AIza...`, `Bearer ...`) and fields such as `api_key` or `authorization` replaced by `[REDACTED]`, and base64 files replaced by their size. Prompts and answers are still printed, since that is what debug logging is for: don't turn it on in production for user data.
+- **Provider errors are masked.** An `APIError`'s `message` and `body` mask key-like values the same way, so showing or logging the error doesn't leak a key or its ID. `redactForLog()` is exported for your own logs.
+- **What is masked:** OpenAI, Anthropic, OpenRouter, Google, xAI, Stripe and Slack keys, AWS access key IDs (`AKIA`, `ASIA`) and secret keys written as `aws_secret_access_key = ...`, GitHub tokens (`ghp_`, `github_pat_`), JWTs, `Bearer` and `Basic` credentials, PEM private keys, passwords in URLs (`postgres://user:...@host`, `redis://:...@host`), and fields named like secrets (`apiKey`, `openaiApiKey`, `secretAccessKey`, `token`, `private_key`, ...). The patterns are bounded, so a long hostile string can't slow them down. `logger.error`, always on, prints errors masked the same way.
+
+---
+
+## 🧰 Tool Calls
+
+- **Arguments are checked against the tool's schema.** A tool defined with a JSON Schema, including `Tool` classes with one and MCP tools, no longer receives arguments its schema rules out: a missing required field, a wrong type, a value outside an `enum`, or an extra field where the schema says `additionalProperties: false`. The model gets `Invalid tool arguments: ...` and can try again. Tools with a Zod schema are checked by Zod as before, so coercions and defaults still work. Keywords the check doesn't know, such as `format` or `minimum`, are not enforced: check those in the handler.
+- **Tool errors are masked and cut short.** When a tool throws, the model is told the error's message with key-like values and passwords in URLs masked, cut to 500 characters. Other details, such as file paths or hostnames in your messages, are still sent: throw messages written for the model.
+- **Hidden tools stay hidden.** When the model calls a tool that doesn't exist, the reply lists only the tools it can already see, not deferred ones.
+
+---
+
+## 🪆 Subagents
+
+An agent used as a tool runs inside its parent's ask:
+
+- **Its spending is the parent's.** Every request a subagent makes is added to the parent ask's `usage`, and the subagent stops once an ask above it has reached its `maxCost`, so a limit on the top agent caps the whole tree.
+- **Nesting is limited.** Subagents may nest 8 deep. An agent that keeps handing the task to itself, or two that hand it to each other, gets `AgentDepthError` at the ninth level, which reaches the model as a tool error.
+
+---
+
 ## ⚡ Smart Developer Role
 
 Modern models (like OpenAI's **o1**, **o3**, and **GPT-4o**) have introduced a specialized `developer` role. This role has higher "Instruction Authority" than the standard `system` role.

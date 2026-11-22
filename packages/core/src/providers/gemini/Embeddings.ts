@@ -13,7 +13,7 @@ export class GeminiEmbeddings {
 
   async execute(request: EmbeddingRequest): Promise<EmbeddingResponse> {
     const modelId = request.model || "text-embedding-004";
-    const url = `${this.baseUrl}/models/${modelId}:batchEmbedContents?key=${this.apiKey}`;
+    const url = `${this.baseUrl}/models/${modelId}:batchEmbedContents`;
     const inputs = Array.isArray(request.input) ? request.input : [request.input];
 
     const payload: GeminiBatchEmbedRequest = {
@@ -37,7 +37,7 @@ export class GeminiEmbeddings {
       url,
       {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "x-goog-api-key": this.apiKey, "Content-Type": "application/json" },
         body: JSON.stringify(payload)
       },
       config.requestTimeout

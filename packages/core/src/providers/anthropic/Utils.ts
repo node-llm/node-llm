@@ -256,7 +256,14 @@ export function buildMessageRequest(
   } = request;
 
   let system = formatSystemPrompt(request.messages);
-  if (response_format) {
+  // Models that take a schema natively are held to it; others are asked for it in the prompt.
+  const nativeSchema =
+    response_format?.type === "json_schema" &&
+    response_format.json_schema?.schema &&
+    Capabilities.supportsStructuredOutputs(model)
+      ? structuredOutputSchema(response_format.json_schema.schema)
+      : undefined;
+  if (response_format && !nativeSchema) {
     let schemaText = "";
     if (response_format.type === "json_schema" && response_format.json_schema?.schema) {
       schemaText = "\nSchema:\n" + JSON.stringify(response_format.json_schema.schema, null, 2);
@@ -281,6 +288,13 @@ export function buildMessageRequest(
 
   if (temperature !== undefined) {
     body.temperature = temperature;
+  }
+
+  if (nativeSchema) {
+    body.output_config = {
+      ...body.output_config,
+      format: { type: "json_schema", schema: nativeSchema }
+    };
   }
 
   if (tools && tools.length > 0 && tool_choice !== "none") {
@@ -354,4 +368,62 @@ export function toUsage(usage: {
     cached_tokens: usage.cache_read_input_tokens,
     cache_creation_tokens: usage.cache_creation_input_tokens
   };
+}
+
+// Constraints Anthropic's structured outputs reject. The response is still checked against the
+// full schema afterwards, when it is a Zod schema.
+const UNSUPPORTED_CONSTRAINTS = new Set([
+  "minimum",
+  "maximum",
+  "exclusiveMinimum",
+  "exclusiveMaximum",
+  "multipleOf",
+  "minLength",
+  "maxLength",
+  "minItems",
+  "maxItems",
+  "uniqueItems",
+  "minProperties",
+  "maxProperties"
+]);
+
+/**
+ * The schema to send as `output_config.format`: without the constraints Anthropic rejects, and
+ * with `additionalProperties: false` on every object, which it requires. Undefined for a schema it
+ * can't take, such as one with open-ended objects (a record) or one that refers to itself, which
+ * is then asked for in the prompt as before.
+ */
+export function structuredOutputSchema(
+  schema: Record<string, unknown>
+): Record<string, unknown> | undefined {
+  let supported = true;
+  const visit = (node: unknown): unknown => {
+    if (Array.isArray(node)) return node.map(visit);
+    if (node === null || typeof node !== "object") return node;
+    const result: Record<string, unknown> = {};
+    for (const [key, value] of Object.entries(node)) {
+      if (UNSUPPORTED_CONSTRAINTS.has(key)) continue;
+      // A schema that refers to itself, which structured outputs can't take.
+      if (key === "$ref" && value === "#") supported = false;
+      // Keys under "properties" and "$defs" are names, not keywords.
+      if (key === "properties" || key === "$defs" || key === "definitions") {
+        result[key] = Object.fromEntries(
+          Object.entries(value as Record<string, unknown>).map(([name, child]) => [
+            name,
+            visit(child)
+          ])
+        );
+        continue;
+      }
+      result[key] = visit(value);
+    }
+    if (result.type === "object" || "properties" in result) {
+      if (result.additionalProperties !== undefined && result.additionalProperties !== false)
+        supported = false;
+      result.additionalProperties = false;
+    }
+    return result;
+  };
+  const converted = visit(schema) as Record<string, unknown>;
+  return supported ? converted : undefined;
 }

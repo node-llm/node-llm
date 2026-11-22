@@ -32,6 +32,18 @@ export interface StoredMessage {
   createdAt: Date;
 }
 
+export interface StoredToolCall {
+  messageId: string;
+  toolCallId: string;
+  name: string;
+  arguments: string;
+  thought?: string | null;
+  thoughtSignature?: string | null;
+  /** Null while the call is still running, or when it never finished */
+  result?: string | null;
+  createdAt?: Date;
+}
+
 export interface StoredAgentSession {
   id: string;
   agentClass: string;
@@ -76,6 +88,12 @@ export interface NewRequest {
   cost: number;
 }
 
+/** What a store may answer when it records a request. */
+export interface RequestRecorded {
+  /** Stop before the next request, giving this as the reason */
+  stop?: string;
+}
+
 export interface RequestTotals {
   inputTokens: number;
   outputTokens: number;
@@ -99,13 +117,24 @@ export interface ChatStore {
   listMessages(chatId: string, options?: { excludeIds?: string[] }): Promise<StoredMessage[]>;
 
   createToolCall(toolCall: NewToolCall): Promise<void>;
+  /**
+   * The tool calls recorded for these messages, oldest first. Optional: with it, a loaded agent
+   * session gets back the tool calls and results of earlier turns, including one whose run
+   * stopped part way; without it, only the messages' text (v0.11.0+).
+   */
+  listToolCalls?(messageIds: string[]): Promise<StoredToolCall[]>;
   finishToolCall(
     messageId: string,
     toolCallId: string,
     finished: { result: string; thought?: string | null }
   ): Promise<void>;
 
-  createRequest(request: NewRequest): Promise<void>;
+  /**
+   * Records one API call. A store can stop the chat or session before its next request by
+   * returning `{ stop: reason }`, such as when a spending limit kept outside the app is reached;
+   * it then throws StoppedByStoreError (v0.11.0+).
+   */
+  createRequest(request: NewRequest): Promise<void | RequestRecorded>;
   requestTotals(chatId: string): Promise<RequestTotals>;
 
   createAgentSession(session: {

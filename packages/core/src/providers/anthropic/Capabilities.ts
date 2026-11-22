@@ -28,6 +28,17 @@ export class Capabilities {
     return true;
   }
 
+  /**
+   * Whether the model takes `output_config.format`, which makes its answer match a JSON schema.
+   * Fable and Mythos 5, Opus 5 and 4.8, Sonnet 5, Haiku 5 and 4.5, and the older Opus 4.5 and 4.1.
+   */
+  static supportsStructuredOutputs(modelId: string): boolean {
+    const id = modelId.replace(/^(?:[a-z]{2,4}\.)?anthropic\./, "");
+    return /^claude-(?:(?:fable|mythos|opus|sonnet|haiku)-5|opus-4-[158]|haiku-4-5)(?:\b|-|@|$)/.test(
+      id
+    );
+  }
+
   static supportsVision(modelId: string): boolean {
     return ModelRegistry.supports(modelId, "vision", "anthropic");
   }

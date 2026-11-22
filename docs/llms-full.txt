@@ -777,7 +777,8 @@ const chat = llm.chat("gpt-5", {
 | `requestTimeout`            | Request timeout in milliseconds     | `30000` (30s)                     |
 | `maxTokens`                 | Max output tokens per request       | `4096`                            |
 | `toolExecution`             | Tool execution mode (`auto`/`confirm`/`dry-run`) | `auto`               |
-| `toolConcurrency`           | Run independent tool calls in the same turn concurrently ([see Tools guide](/core-features/tools.html#concurrent-tool-execution)) | `false` |
+| `toolConcurrency`           | Run independent tool calls in the same turn concurrently; a number caps how many run at once ([see Tools guide](/core-features/tools.html#concurrent-tool-execution)) | `false` |
+| `contextBudget`             | Shares of the context window tool results may take: `{ perResult, perRequest }` ([see Tools guide](/core-features/tools.html#context-budgets)) | off |
 | `retry`                     | Retry configuration (legacy)        | `{ attempts: 1, delayMs: 0 }`     |
 
 ---
@@ -1996,7 +1997,7 @@ console.log(response.data); // { greeting: "..." } or whatever keys it chose
 | :------------ | :----------------------------------------- | :-------------------------------------------------------------------------------------------------------------- |
 | **OpenAI**    | `response_format: { type: "json_schema" }` | Fully supported with strict adherence.                                                                          |
 | **Gemini**    | `responseJsonSchema`                       | Supported natively.                                                                                             |
-| **Anthropic** | System Prompt Injection                    | `NodeLLM` embeds the JSON schema in the system prompt with an explicit instruction to respond only with matching JSON. |
+| **Anthropic** | `output_config.format` (structured outputs) | On Claude Fable and Mythos 5, Opus 5 and 4.8, Sonnet 5, Haiku 5 and 4.5 (and Opus 4.5 and 4.1), the answer is held to the schema. Constraints Anthropic doesn't take, such as `min`, `max` and lengths, are left out of what is sent and still checked by Zod. Older models, and schemas with records or self-references, get the schema in the system prompt with an instruction to respond only with matching JSON. |
 
 ---
 
@@ -2022,6 +2023,33 @@ const companySchema = z.object({
 
 const response = await chat.withSchema(companySchema).ask("Generate a small tech startup");
 ```
+
+---
+
+## When a Response Doesn't Match
+
+`response.data` throws Zod's `ZodError` when the response doesn't match the schema. Its message is one line that names each field, the values the schema allows and the value the model sent, so it can go straight into a log or an error screen:
+
+```text
+Response did not match the "verdict" schema: status: Invalid option: expected one of "passed"|"failed" (got "blocked")
+```
+
+The same parts are on `error.problems`, one per field: `path` (such as `steps[2].status`), `message`, `expected` (an enum's or literal's allowed values) and `received` (undefined when the model left the field out). `response.isValid`, `response.validationError` and `response.safeData` check without throwing.
+
+### Lenient Enums
+
+To accept a response with an unknown enum value instead of failing, say so in the schema with Zod's `.catch()`. The model is still sent the allowed values.
+
+```ts
+const verdict = z.object({
+  // An unknown status becomes "unknown"
+  status: z.enum(["passed", "failed", "unknown"]).catch("unknown"),
+  // An unknown priority is left out
+  priority: z.enum(["low", "high"]).optional().catch(undefined)
+});
+```
+
+To have the model fix its answer instead, add the self-correction middleware below: it re-asks with this message.
 
 ---
 
@@ -2378,6 +2406,16 @@ config.toolConcurrency = true;
 
 Confirm mode (`toolExecution: "confirm"`) always runs sequentially regardless of this setting, since approval is interactive.
 
+### Capping Concurrent Calls <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v1.22.0+</span>
+
+With `true`, every call in a turn starts at once. When the tools reach a rate-limited API, or each call is heavy, pass a number instead:
+
+```ts
+const chat = NodeLLM.chat("gpt-4o").withTools([FetchPage]).withToolConcurrency(4);
+```
+
+Every call still runs and returns its result, four at a time. Results reach the conversation in the order the model asked for them. The same number works for `toolConcurrency` in chat options, agents and `config`.
+
 ---
 
 ## Loop Protection (Loop Guard) 🛡️
@@ -2414,6 +2452,77 @@ try {
     await chat.ask("Finish with what you have", { maxToolCalls: 2 });
   }
 }
+```
+
+### Stall Guard
+
+`maxToolCalls` stops a long loop, but a model that is stuck often repeats itself well before the limit: it clicks the same missing button again, or keeps getting the same answer. `stallGuard` stops such a loop early, before its next request, with `StalledError`:
+
+```ts
+const chat = llm.chat("claude-sonnet-5-5", {
+  tools: [LookTool, ClickTool],
+  stallGuard: {
+    repeats: 3, // the same call, with the same arguments, got the same result 3 times
+    noProgress: 8 // 8 calls in a row made no progress
+  }
+});
+
+// Or on an agent
+class Tester extends Agent {
+  static stallGuard = { repeats: 3, noProgress: 8 };
+}
+```
+
+A call made progress when it didn't fail and its result differs from every earlier result of the same tool in the ask. A call failed when its tool threw, including errors a `Tool` returns to the model as text. Pass `progress(call, result, failed)` to decide for yourself, for example when a tool's result says whether the page changed. Each limit is off unless set, and each ask counts on its own.
+
+`StalledError` has the `reason` (`"repeated"` or `"no_progress"`), the `calls` involved, their `count` and the ask's `usage`. Its message says what happened, such as `Stalled: the model called click({"label":"Save"}) 3 times with the same result.` Every call that ran has its result in the history, so you can ask again:
+
+```ts
+import { StalledError } from "@node-llm/core";
+
+try {
+  await tester.ask("Save the form");
+} catch (error) {
+  if (error instanceof StalledError) {
+    console.log(error.reason, error.message);
+    await tester.ask("That isn't working. Try another way, or report what blocks you.");
+  }
+}
+```
+
+---
+
+## Ending With a Tool
+
+An agent that reports its result through a tool, such as `finish` or `submit_verdict`, sometimes ends its turn with plain text instead. `endWith` names the tool the model must call before its turn ends. When the model ends its turn without calling it, NodeLLM reminds it once and carries on; if it still doesn't call it, the ask throws `EndToolNotCalledError`:
+
+```ts
+class Tester extends Agent {
+  static tools = [LookTool, ClickTool, FinishTool];
+  static endWith = "finish";
+}
+
+// Or on a chat, with a reminder of your own
+const chat = llm.chat("claude-sonnet-5-5", {
+  tools: [LookTool, FinishTool],
+  endWith: { tool: "finish", reminder: "Call finish with your verdict." }
+});
+```
+
+Only calls made during the current ask count. A tool that halts the loop counts as called. Pass `endWith: null` to an ask that doesn't need the tool, such as a follow-up question:
+
+```ts
+import { EndToolNotCalledError } from "@node-llm/core";
+
+try {
+  await tester.ask("Test the sign-in page");
+} catch (error) {
+  if (error instanceof EndToolNotCalledError) {
+    console.log(`No ${error.tool} after ${error.usage.total_tokens} tokens`);
+  }
+}
+
+await tester.ask("What did you find on the page?", { endWith: null });
 ```
 
 ---
@@ -2468,6 +2577,38 @@ Older results are left out in blocks: with `keepToolResults: 3`, between three a
 
 Each result keeps its place and tool call id, so the conversation stays valid for every provider, and the model still sees every step it took. The chat's own `history` keeps every result in full.
 
+### Context Budgets <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v1.22.0+</span>
+
+`keepToolResults` counts results. A context budget measures them instead, as shares of the model's context window, so one huge result or many medium ones can't push a request past the window:
+
+```ts
+import { config } from "@node-llm/core";
+
+config.contextBudget = { perResult: 0.25, perRequest: 0.7 };
+```
+
+- **`perResult`:** a tool result longer than this share is cut when it is added, ending with a note that tells the model how much it saw and to ask for a narrower query or the next page. The chat's history keeps the cut result.
+- **`perRequest`:** a request larger than this share leaves out its oldest tool results, each replaced by a one-line note telling the model to call the tool again if it needs it. Only the request changes; `chat.history` keeps every result.
+- **Latest round:** this round's results go out whenever they fit, since the model hasn't seen them yet. When the round alone is over the share, its oldest results are left out too, with a note to ask for less, so the chat can't get stuck failing every request.
+- **Prompt caching:** the cut point moves in steps of about 15% of the budget rather than one result at a time, so the start of the request stays the same for many rounds.
+- **Tool search:** `tool_search` results are never left out.
+
+Shares are of the context window the model registry lists for the model. Sizes are estimated at two characters a token, which is how dense JSON and HTML run, so the budget errs on the side of leaving results out. Raise `perRequest` if your tools return mostly prose.
+
+A chat or agent can set its own, and `null` turns off a budget set in `config`:
+
+```ts
+const chat = llm.chat("gpt-4.1").withContextBudget({ perResult: 0.1, perRequest: 0.5 });
+const plain = llm.chat("gpt-4.1").withContextBudget(null);
+
+class ResearchAgent extends Agent {
+  static model = "my-local-model";
+  static contextBudget = { window: 32_000, perRequest: 0.7 }; // window for a model the registry doesn't know
+}
+```
+
+The budget only cuts and counts the text of messages and tool call arguments. Attachments, tool definitions and a long question can still overflow a request.
+
 ### Capping What a Loop Spends
 
 `maxCost` stops a tool loop once an ask has spent that many US dollars, before its next request, and throws `CostLimitError` with the `limit` and the `usage` so far. It guards against a tool that returns far more than expected, such as a page with thousands of rows:
@@ -2477,6 +2618,27 @@ const chat = llm.chat("gpt-5.5", { maxCost: 0.5 });
 ```
 
 It needs the model's pricing to know the cost, so it does nothing for models without it.
+
+### Counting Calls a Tool Makes
+
+A tool sometimes calls a model itself, such as asking a vision model about a screenshot. Count that call on the chat or agent with `countUsage()`, so it is part of the ask's `usage`, the chat's `totalUsage` and `maxCost`:
+
+```ts
+const describeScreen = defineTool({
+  name: "describe_screen",
+  description: "Describe what is on the screen",
+  schema: z.object({}),
+  execute: async () => {
+    const answer = await llm.chat("claude-haiku-5-5").ask("What is on this screen?", {
+      images: [await screenshot()]
+    });
+    agent.countUsage(answer.usage);
+    return String(answer);
+  }
+});
+```
+
+A call counted while no ask is running goes to `totalUsage` only. With `@node-llm/orm`, use `session.countCall(answer)` instead: it also saves the call as a request row of the session.
 
 ## Tool Execution Policies (Security) <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v1.5.0+</span>
 
@@ -2871,6 +3033,8 @@ const reply = await agent.ask("What is TypeScript?");
 | `promptCache` | `boolean` | Cache the repeated start of each request (see [Prompt Caching](chat.html#prompt-caching)) |
 | `maxToolCalls` | `number` | Maximum rounds of tool calls per ask; more throws `ToolCallLimitError` |
 | `maxCost` | `number` | The most an ask may spend in US dollars; more throws `CostLimitError` |
+| `endWith` | `string \| { tool, reminder }` | A tool the model must call before its turn ends (see [Ending With a Tool](tools.html#ending-with-a-tool)) |
+| `stallGuard` | `{ repeats, noProgress, progress }` | Stop a tool loop that is going nowhere with `StalledError` (see [Stall Guard](tools.html#stall-guard)) |
 | `keepToolResults` | `number` | Send only the most recent tool results in full (between N and 2N); older ones become a placeholder |
 | `assumeModelExists` | `boolean` | Skip registry validation for custom/unlisted models |
 | `middlewares` | `Middleware[]` | Middlewares for observation or correction <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.6em; font-weight: 600; vertical-align: middle;">v1.15.0+</span> |
@@ -3011,6 +3175,40 @@ await agent.ask("What's our vacation policy?");
 ```
 
 See the [HR Chatbot Example](https://github.com/node-llm/node-llm/tree/main/examples/applications/hr-chatbot-rag) for a complete RAG implementation.
+
+---
+
+## Subagents <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v1.22.0+</span>
+
+Some tasks take a long search: twenty help center articles read to answer one question. Run that in the support agent and every article stays in its conversation. Hand it to another agent instead. A subagent works in its own conversation, and only its answer comes back.
+
+An agent class goes wherever a tool goes. Give it a `description` so the calling model knows when to use it:
+
+```typescript
+class ResearchAgent extends Agent {
+  static model = "gpt-4.1-mini";
+  static description = "Researches a question across the help center and reports back with links";
+  static instructions = "Read every relevant article before you answer. Cite each one.";
+  static tools = [SearchDocs];
+}
+
+class SupportAgent extends Agent {
+  static model = "gpt-4.1";
+  static tools = [LookupOrder, ResearchAgent];
+}
+```
+
+- **Name:** the model calls it as `research_agent`, the class name in snake_case. Set `static agentName`, or `name` in `defineAgent()`, to choose another. An agent from `defineAgent()` needs one, since its class has no name.
+- **Call:** the model sends a `task`, written to stand on its own, since the subagent can't see the calling conversation. Each call runs a new instance of the agent and returns the content of its last answer.
+- **Inputs:** the model can also fill the agent's declared `inputs`. Fix some yourself with `toTool()`, and the model fills only the rest:
+
+```typescript
+static tools = (inputs) => [BillingAgent.toTool({ customer: inputs.customer })];
+```
+
+- **Instance:** a subagent runs on the calling agent's `llm` instance, so it uses the same keys and settings. Pass `{ llm }` as the second argument to `toTool()` to choose another.
+- **Plain chats:** `chat.withTool(ResearchAgent)` works too, on the default `NodeLLM` instance.
+- **Usage:** the subagent's tokens and cost are its own; they are not added to the calling chat's `totalUsage`.
 
 ---
 
@@ -3357,10 +3555,12 @@ const session = await createAgentSession(prisma, llm, SupportAgent, {
 await session.ask("Where is my order #789?");
 console.log(session.id); // "abc-123" - save this to resume later
 
-// Resume in a later request
+// Resume in a later request, or after a restart: earlier turns' tool calls come back too
 const resumed = await loadAgentSession(prisma, llm, SupportAgent, "abc-123");
 await resumed?.ask("Can you cancel it?");
 ```
+
+See [Resuming After a Restart](../orm/prisma.html#resuming-after-a-restart) for a run that stopped part way.
 
 ### The "Code Wins" Principle
 
@@ -3994,7 +4194,7 @@ describeVCR("Authentication", () => {
 
 ### Security & Scrubbing 🛡️
 
-The VCR automatically redacts `api_key`, `authorization`, and other sensitive headers. You can add custom redaction:
+The VCR automatically redacts `api_key`, `authorization`, `x-goog-api-key` and other sensitive headers, and key formats wherever they appear: OpenAI, Anthropic (`sk-ant-...`), OpenRouter (`sk-or-v1-...`), xAI, Google, AWS access key IDs, GitHub tokens, Bearer tokens and JWTs. Check a new cassette before you commit it all the same. You can add custom redaction:
 
 ```typescript
 withVCR({
@@ -4957,15 +5157,19 @@ When multiple middlewares are registered, the **first non-void directive wins** 
 NodeLLM includes a set of pre-built, production-ready middlewares that you can use out of the box.
 
 ### 1. PIIMaskMiddleware
-Automatically redacts sensitive information like emails, phone numbers, and credit cards from user messages before they are sent to the LLM.
+Automatically redacts emails, phone numbers (US-style and international with a `+` country code), card numbers, US social security numbers and IBANs: in the conversation before it is sent to the LLM, and in each tool result before the model sees it. With `redactOutput: true`, it also masks the answer `ask()` returns; streamed text is sent as it arrives, so it isn't masked.
 
 ```typescript
 import { NodeLLM, PIIMaskMiddleware } from "@node-llm/core";
 
 const chat = NodeLLM.chat("gpt-5", {
-  middlewares: [new PIIMaskMiddleware({ mask: "[SECRET]" })]
+  middlewares: [new PIIMaskMiddleware({ mask: "[SECRET]", redactOutput: true })]
 });
 ```
+
+It matches patterns, so it catches common formats, not names, addresses or data in images and files. Treat it as a safety net, not a guarantee. JSON tool results are masked in their string values only, so numbers such as timestamps stay intact. With `redactOutput`, the masked answer is also what the chat's history keeps; `onEndMessage` handlers run before middlewares and see the answer as the model gave it. With `@node-llm/orm`, a chat or agent session that uses `PIIMaskMiddleware` also saves masked text.
+
+A middleware's `onToolResult(ctx, toolCall, content, { isError })` may return `{ content }` to change any tool result the model is sent, a tool's error included, as this one does. `onToolCallEnd` may too, for successful calls.
 
 ### 2. CostGuardMiddleware
 Monitors accumulated cost during a session (especially useful for multi-turn tool calling loops) and throws an error if a defined budget is exceeded.
@@ -5245,6 +5449,63 @@ This creates a **defense-in-depth** strategy where multiple layers of protection
 - **`maxRetries`**: Prevents cascading failures and retry storms
 - **`maxToolCalls`**: Prevents infinite loops and runaway costs
 - **`maxTokens`**: Prevents excessive output generation and cost overruns
+
+---
+
+## 📂 Loading Files Safely
+
+`images` and `files`, Gemini's and OpenAI's image inputs, and transcription files take local paths and URLs. With no setup, NodeLLM refuses the ones that are only ever an attack:
+
+- **Files that hold secrets:** `.env` files in any form (`.env`, `.env.production`, `.env-local`, `prod.env`, `.envrc`), `.npmrc`, `.netrc`, `.pgpass`, `.my.cnf`, `.git-credentials`, `.vault-token`, SSH keys (`id_rsa`, `id_rsa_work`, ...), cloud credentials (`credentials`, `application_default_credentials.json`, `*service-account*.json`), `secrets.yml`, `database.yml`, `terraform.tfstate`, anything in `.ssh`, `.aws`, `.azure`, `.gnupg`, `.kube`, `.docker` or `.git`, keys and certificates (`.pem`, `.key`, `.p12`, `.pfx`, ...), and `/proc`, `/sys` and `/dev`. A link to one of these is refused too.
+- **Files that aren't files:** devices, pipes and sockets, and files over 100 MB.
+- **Cloud metadata addresses:** `169.254.x.x`, `192.0.0.192` (Oracle), `100.100.100.200` (Alibaba), `fd00:ec2::254` and `metadata.google.internal`, including IPv6 forms that carry them (`[::ffff:169.254.169.254]`, NAT64). The address is checked when the connection is made, on every redirect, so DNS that answers differently the second time (rebinding) can't reach them.
+- **Slow or huge remote files:** a remote file times out after 60 seconds and is stopped at 50 MB while it is read.
+
+Ordinary files, files with no extension such as a `Dockerfile`, and other private hosts (`localhost`, an internal CDN) load as before. A refused file or URL throws `FileAccessError`.
+
+When a path or URL can come from a user, add rules with `fileSecurity`:
+
+```ts
+const llm = createLLM({
+  fileSecurity: {
+    root: "/srv/uploads", // local files must be inside this folder, after following links
+    blockPrivateNetwork: true, // refuse every private, loopback and link-local address
+    allowedHosts: ["cdn.example.com"], // only these hosts may be fetched
+    throwOnFetchError: true, // throw instead of passing a URL that failed on to the provider
+    fetchTimeout: 10_000 // default 60000
+  }
+});
+```
+
+Set it on `config`, in `createLLM()`, or per chat with `llm.chat(model, { fileSecurity })`; a chat's rules are added to the ones from `config` and `createLLM()`, overriding only the ones it sets. Provider-level loaders (Gemini and OpenAI images, transcription) use the rules from `config`. `allowSensitiveFiles: true` loads secret files again, for the rare app that means to send them.
+
+When your app replaces `fetch` (a test mock, a recorder) or sets its own fetch dispatcher (a proxy), remote files go through it as before; addresses are then checked by a lookup before each request, which a host that changes its DNS answer can get past.
+
+---
+
+## 🔑 Keys Stay Out of Logs and Errors
+
+- **Gemini keys go in a header.** The key is sent as `x-goog-api-key`, not as `?key=` in the URL, so proxies, tracing and error reports that record URLs never see it.
+- **Debug logs are masked.** With `debug: true`, request and response bodies are printed with values that look like keys or tokens (`sk-...`, `AIza...`, `Bearer ...`) and fields such as `api_key` or `authorization` replaced by `[REDACTED]`, and base64 files replaced by their size. Prompts and answers are still printed, since that is what debug logging is for: don't turn it on in production for user data.
+- **Provider errors are masked.** An `APIError`'s `message` and `body` mask key-like values the same way, so showing or logging the error doesn't leak a key or its ID. `redactForLog()` is exported for your own logs.
+- **What is masked:** OpenAI, Anthropic, OpenRouter, Google, xAI, Stripe and Slack keys, AWS access key IDs (`AKIA`, `ASIA`) and secret keys written as `aws_secret_access_key = ...`, GitHub tokens (`ghp_`, `github_pat_`), JWTs, `Bearer` and `Basic` credentials, PEM private keys, passwords in URLs (`postgres://user:...@host`, `redis://:...@host`), and fields named like secrets (`apiKey`, `openaiApiKey`, `secretAccessKey`, `token`, `private_key`, ...). The patterns are bounded, so a long hostile string can't slow them down. `logger.error`, always on, prints errors masked the same way.
+
+---
+
+## 🧰 Tool Calls
+
+- **Arguments are checked against the tool's schema.** A tool defined with a JSON Schema, including `Tool` classes with one and MCP tools, no longer receives arguments its schema rules out: a missing required field, a wrong type, a value outside an `enum`, or an extra field where the schema says `additionalProperties: false`. The model gets `Invalid tool arguments: ...` and can try again. Tools with a Zod schema are checked by Zod as before, so coercions and defaults still work. Keywords the check doesn't know, such as `format` or `minimum`, are not enforced: check those in the handler.
+- **Tool errors are masked and cut short.** When a tool throws, the model is told the error's message with key-like values and passwords in URLs masked, cut to 500 characters. Other details, such as file paths or hostnames in your messages, are still sent: throw messages written for the model.
+- **Hidden tools stay hidden.** When the model calls a tool that doesn't exist, the reply lists only the tools it can already see, not deferred ones.
+
+---
+
+## 🪆 Subagents
+
+An agent used as a tool runs inside its parent's ask:
+
+- **Its spending is the parent's.** Every request a subagent makes is added to the parent ask's `usage`, and the subagent stops once an ask above it has reached its `maxCost`, so a limit on the top agent caps the whole tree.
+- **Nesting is limited.** Subagents may nest 8 deep. An agent that keeps handing the task to itself, or two that hand it to each other, gets `AgentDepthError` at the ninth level, which reaches the model as a tool error.
 
 ---
 
@@ -5824,6 +6085,7 @@ LLMError                        # Base error class
 │   ├── ServerError             # 500+: Provider server error
 │   │   └── ServiceUnavailableError  # 502/503/529: Overloaded
 │   └── AuthenticationError     # 401/403 (deprecated, use specific classes)
+├── NetworkError                # Provider unreachable: connection failed, refused or reset (has `host`, `cause`)
 ├── ConfigurationError          # Missing API key or invalid config
 ├── NotFoundError               # Model or provider not found
 │   └── InvalidModelError       # 404: Requested model ID is unknown
@@ -5994,11 +6256,10 @@ See [Tool Error Handling](../core-features/tools.html#error-handling--flow-contr
 
 NodeLLM automatically retries transient errors:
 
-- **Retried**: `RateLimitError` (429, including its subclass `InsufficientQuotaError`), `ServerError` (500+, including its subclass `ServiceUnavailableError`)
-- **Not retried**: `BadRequestError` (400), `ContextWindowExceededError`, `UnauthorizedError` (401), `ForbiddenError` (403)
+- **Retried**: `RateLimitError` (429), `ServerError` (500+, including its subclass `ServiceUnavailableError`) and `NetworkError` (the provider couldn't be reached, such as `fetch failed` with `ECONNRESET`)
+- **Not retried**: `InsufficientQuotaError` (429 for an account out of credit: waiting won't help), `BadRequestError` (400), `ContextWindowExceededError`, `UnauthorizedError` (401), `ForbiddenError` (403), timeouts and cancellations
 
-> **Note on `InsufficientQuotaError`**
-> Because `InsufficientQuotaError` extends `RateLimitError`, it is currently retried like any other 429. If you're out of credits, retries will simply fail again after each backoff — consider catching `InsufficientQuotaError` specifically to short-circuit and alert instead of waiting for retries to exhaust.
+`NetworkError` names the `host` that couldn't be reached, and its `cause` is the error `fetch()` threw. Its message says why, such as `Could not reach api.anthropic.com: fetch failed (ECONNRESET)`.
 
 > **Why not retry on Context Window Overflows?**
 > A `ContextWindowExceededError` (400) is considered a client-side logic error. Retrying with the same payload would consistently fail. By identifying this specific error, developers can implement smarter recovery logic, such as trimming chat history or summarizing previous turns before retrying manually.
@@ -6756,6 +7017,10 @@ class ApiStore implements ChatStore {
     return post("/llm/messages", message);
   }
   // ...updateMessage, listMessages, createToolCall, finishToolCall, createRequest and the rest
+  async listToolCalls(messageIds) {
+    // Optional: lets loadAgentSession() give back earlier turns' tool calls
+    return post("/llm/tool-calls/search", { messageIds });
+  }
 }
 
 const session = await createAgentSession(new ApiStore(), llm, SupportAgent, {
@@ -6764,6 +7029,42 @@ const session = await createAgentSession(new ApiStore(), llm, SupportAgent, {
 ```
 
 The records are the same as in the Prisma tables (chats, messages, tool calls with their results, and a request row per API call with its duration, tokens and cost), so one schema serves both. `createChat`, `loadChat`, `createAgentSession` and `loadAgentSession` take a store or a Prisma client; `isChatStore()` tells them apart.
+
+#### Stopping a Run From the Store
+
+A store can stop a chat or agent session before its next request, such as when a spending limit kept outside the app is reached. Return `{ stop: reason }` from `createRequest`; the ask then throws `StoppedByStoreError` with that `reason` instead of sending its next request. The tool calls that already ran keep their results in the history, and later asks on the same chat or session stop the same way.
+
+```typescript
+import { StoppedByStoreError } from "@node-llm/orm";
+
+class ApiStore implements ChatStore {
+  async createRequest(request) {
+    const { overLimit } = await post("/llm/requests", request);
+    if (overLimit) return { stop: "The monthly AI limit is reached." };
+  }
+  // ...
+}
+
+try {
+  await session.ask("Explore the checkout");
+} catch (error) {
+  if (error instanceof StoppedByStoreError) console.log(error.reason);
+}
+```
+
+### Secrets Aren't Saved
+
+Everything a chat or agent session saves passes through a mask first: API keys and tokens (`sk-...`, `AIza...`, `Bearer ...` and the like) and passwords in URLs (`postgres://user:...@host`) are replaced by `[REDACTED]` in message text, thinking, tool arguments and tool results. It applies to the Prisma store and to custom stores alike. Tool arguments stay valid JSON.
+
+To mask more, such as personal data your app knows about, pass `redact`:
+
+```typescript
+const session = await createAgentSession(prisma, llm, SupportAgent, {
+  redact: (text) => text.replace(/\bACCT-\d+\b/g, "[ACCOUNT]")
+});
+```
+
+`createChat`, `loadChat` and `loadAgentSession` take it too. It runs after the key masking, on text being saved; what the model sees is unchanged.
 
 ### Using Tools
 
@@ -6906,6 +7207,42 @@ await session.ask("Where is my order #789?");
 console.log(session.id); // "abc-123" - save this!
 ```
 
+The class's settings apply unless a session sets its own. Any agent setting except `schema` can be given for one session, such as a budget for one run:
+
+```typescript
+const session = await createAgentSession(prisma, llm, ResearchAgent, {
+  maxCost: 0.5, // in place of ResearchAgent.maxCost
+  maxToolCalls: 40,
+  tools: [searchDocs] // in place of the class's tools
+});
+```
+
+These settings aren't saved with the session. Pass them to `loadAgentSession()` again when you resume it: `loadAgentSession(prisma, llm, ResearchAgent, id, { maxCost: 0.5 })`.
+
+### Structured Answers
+
+For an agent with a `schema`, the record `session.ask()` returns has the parsed answer as `data`, typed from the schema. It is found inside a code fence or surrounding text and checked against a Zod schema, so you don't parse `content` yourself. Reading `data` throws the schema's error when the answer doesn't match. `data` isn't saved: it isn't a column, and it is left out when the record is serialized.
+
+```typescript
+class Repairer extends Agent<{}, z.infer<typeof proposal>> {
+  static model = "claude-sonnet-5-5";
+  static schema = proposal;
+}
+
+const session = await createAgentSession(prisma, llm, Repairer);
+const answer = await session.ask("The Save button moved.");
+answer.data.action; // typed, checked against the schema
+```
+
+### Calls Made Outside the Agent
+
+When a tool calls a model itself, such as asking a vision model about a screenshot, pass that answer to `session.countCall()`. It is saved as a request row under the answer being written, and counted in the agent's usage, so `stats()`, `totalUsage` and `maxCost` include it:
+
+```typescript
+const answer = await llm.chat("claude-haiku-5-5").ask("What is on this screen?", { images });
+await session.countCall(answer);
+```
+
 ### Resuming Sessions
 
 ```typescript
@@ -6919,6 +7256,20 @@ if (!session) {
 // Continues with full history + current code config
 await session.ask("Can you cancel that order?");
 ```
+
+The history includes the tool calls of earlier turns and their results, placed before the answer they led to, so the model knows what it already looked up. A custom store gives them back through its optional `listToolCalls(messageIds)`; without it, a loaded session gets only the messages' text.
+
+### Resuming After a Restart
+
+A run that stops part way, because its process restarted or crashed, keeps what it recorded: its question, and each tool call with its result as it finished. Load the session and ask it to carry on; it sees the calls that finished, and a call that never finished is left out:
+
+```typescript
+// On start-up, for each run that was still going
+const session = await loadAgentSession(prisma, llm, ResearchAgent, run.sessionId);
+await session?.ask("You were interrupted. Continue where you left off.");
+```
+
+The model's text from the stopped turn isn't kept, since it is recorded when the turn ends; its tool calls are.
 
 ### Class Validation
 
@@ -10815,7 +11166,34 @@ const mcp = await MCP.connect(config, {
 
 **Note**: Multimodal sampling requests (image/audio content blocks) are not yet supported — only text content is extracted from request messages.
 
+A server can send any prompt, with its own instructions, and your account pays for the answer. Pass `{ llm, model }` with guards to limit what it can do:
+
+```ts
+const mcp = await MCP.connect(config, {
+  sampling: {
+    llm,
+    model: "gpt-5-mini",
+    maxTokens: 1000, // the most one answer may be, whatever the server asks for
+    maxCost: 0.5, // the most this server's sampling may spend in total, in US dollars
+    approve: (request) => confirmWithUser(request) // return false to refuse
+  }
+});
+```
+
+A refused request throws `SamplingRefusedError`, which the server receives as an error. `createLLMSamplingHandler(llm, model, guards)` takes the same guards.
+
 ---
+
+## Trusting a Server
+
+An MCP server's tool names, descriptions and results reach your model, so a server can try to steer it (tool poisoning). NodeLLM:
+
+- **removes hidden characters** (zero-width, bidirectional controls and Unicode tag characters) from the names, descriptions and schemas of tools and prompts, where a server could hide instructions a person reviewing the tool can't see;
+- **masks keys** in a server's error messages before the model sees them.
+
+Only connect servers you trust, and pass the tools you expect with `discoverTools({ filter: [...] })` so a tool the server adds later isn't handed to the model. Listen for `tools_changed` notifications to see when a server changes its tools.
+
+A stdio server's `command` and `args` are run as given, so never build them from user input or load them from an untrusted config.
 
 ## Environment & Secrets
 

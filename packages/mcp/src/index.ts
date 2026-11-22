@@ -9,5 +9,7 @@ export {
   type MCPSamplingParams,
   type MCPSamplingOption,
   type MCPSamplingLLMOptions,
-  createLLMSamplingHandler
+  createLLMSamplingHandler,
+  SamplingRefusedError
 } from "./MCPSampling.js";
+export { stripInvisible } from "./Sanitize.js";

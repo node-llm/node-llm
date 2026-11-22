@@ -124,7 +124,34 @@ const mcp = await MCP.connect(config, {
 
 **Note**: Multimodal sampling requests (image/audio content blocks) are not yet supported — only text content is extracted from request messages.
 
+A server can send any prompt, with its own instructions, and your account pays for the answer. Pass `{ llm, model }` with guards to limit what it can do:
+
+```ts
+const mcp = await MCP.connect(config, {
+  sampling: {
+    llm,
+    model: "gpt-5-mini",
+    maxTokens: 1000, // the most one answer may be, whatever the server asks for
+    maxCost: 0.5, // the most this server's sampling may spend in total, in US dollars
+    approve: (request) => confirmWithUser(request) // return false to refuse
+  }
+});
+```
+
+A refused request throws `SamplingRefusedError`, which the server receives as an error. `createLLMSamplingHandler(llm, model, guards)` takes the same guards.
+
 ---
+
+## Trusting a Server
+
+An MCP server's tool names, descriptions and results reach your model, so a server can try to steer it (tool poisoning). NodeLLM:
+
+- **removes hidden characters** (zero-width, bidirectional controls and Unicode tag characters) from the names, descriptions and schemas of tools and prompts, where a server could hide instructions a person reviewing the tool can't see;
+- **masks keys** in a server's error messages before the model sees them.
+
+Only connect servers you trust, and pass the tools you expect with `discoverTools({ filter: [...] })` so a tool the server adds later isn't handed to the model. Listen for `tools_changed` notifications to see when a server changes its tools.
+
+A stdio server's `command` and `args` are run as given, so never build them from user input or load them from an untrusted config.
 
 ## Environment & Secrets
 

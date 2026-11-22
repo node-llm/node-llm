@@ -127,7 +127,7 @@ console.log(response.data); // { greeting: "..." } or whatever keys it chose
 | :------------ | :----------------------------------------- | :-------------------------------------------------------------------------------------------------------------- |
 | **OpenAI**    | `response_format: { type: "json_schema" }` | Fully supported with strict adherence.                                                                          |
 | **Gemini**    | `responseJsonSchema`                       | Supported natively.                                                                                             |
-| **Anthropic** | System Prompt Injection                    | `NodeLLM` embeds the JSON schema in the system prompt with an explicit instruction to respond only with matching JSON. |
+| **Anthropic** | `output_config.format` (structured outputs) | On Claude Fable and Mythos 5, Opus 5 and 4.8, Sonnet 5, Haiku 5 and 4.5 (and Opus 4.5 and 4.1), the answer is held to the schema. Constraints Anthropic doesn't take, such as `min`, `max` and lengths, are left out of what is sent and still checked by Zod. Older models, and schemas with records or self-references, get the schema in the system prompt with an instruction to respond only with matching JSON. |
 
 ---
 
@@ -153,6 +153,33 @@ const companySchema = z.object({
 
 const response = await chat.withSchema(companySchema).ask("Generate a small tech startup");
 ```
+
+---
+
+## When a Response Doesn't Match
+
+`response.data` throws Zod's `ZodError` when the response doesn't match the schema. Its message is one line that names each field, the values the schema allows and the value the model sent, so it can go straight into a log or an error screen:
+
+```text
+Response did not match the "verdict" schema: status: Invalid option: expected one of "passed"|"failed" (got "blocked")
+```
+
+The same parts are on `error.problems`, one per field: `path` (such as `steps[2].status`), `message`, `expected` (an enum's or literal's allowed values) and `received` (undefined when the model left the field out). `response.isValid`, `response.validationError` and `response.safeData` check without throwing.
+
+### Lenient Enums
+
+To accept a response with an unknown enum value instead of failing, say so in the schema with Zod's `.catch()`. The model is still sent the allowed values.
+
+```ts
+const verdict = z.object({
+  // An unknown status becomes "unknown"
+  status: z.enum(["passed", "failed", "unknown"]).catch("unknown"),
+  // An unknown priority is left out
+  priority: z.enum(["low", "high"]).optional().catch(undefined)
+});
+```
+
+To have the model fix its answer instead, add the self-correction middleware below: it re-asks with this message.
 
 ---
 

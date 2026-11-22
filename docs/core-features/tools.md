@@ -218,6 +218,16 @@ config.toolConcurrency = true;
 
 Confirm mode (`toolExecution: "confirm"`) always runs sequentially regardless of this setting, since approval is interactive.
 
+### Capping Concurrent Calls <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v1.22.0+</span>
+
+With `true`, every call in a turn starts at once. When the tools reach a rate-limited API, or each call is heavy, pass a number instead:
+
+```ts
+const chat = NodeLLM.chat("gpt-4o").withTools([FetchPage]).withToolConcurrency(4);
+```
+
+Every call still runs and returns its result, four at a time. Results reach the conversation in the order the model asked for them. The same number works for `toolConcurrency` in chat options, agents and `config`.
+
 ---
 
 ## Loop Protection (Loop Guard) 🛡️
@@ -254,6 +264,77 @@ try {
     await chat.ask("Finish with what you have", { maxToolCalls: 2 });
   }
 }
+```
+
+### Stall Guard
+
+`maxToolCalls` stops a long loop, but a model that is stuck often repeats itself well before the limit: it clicks the same missing button again, or keeps getting the same answer. `stallGuard` stops such a loop early, before its next request, with `StalledError`:
+
+```ts
+const chat = llm.chat("claude-sonnet-5-5", {
+  tools: [LookTool, ClickTool],
+  stallGuard: {
+    repeats: 3, // the same call, with the same arguments, got the same result 3 times
+    noProgress: 8 // 8 calls in a row made no progress
+  }
+});
+
+// Or on an agent
+class Tester extends Agent {
+  static stallGuard = { repeats: 3, noProgress: 8 };
+}
+```
+
+A call made progress when it didn't fail and its result differs from every earlier result of the same tool in the ask. A call failed when its tool threw, including errors a `Tool` returns to the model as text. Pass `progress(call, result, failed)` to decide for yourself, for example when a tool's result says whether the page changed. Each limit is off unless set, and each ask counts on its own.
+
+`StalledError` has the `reason` (`"repeated"` or `"no_progress"`), the `calls` involved, their `count` and the ask's `usage`. Its message says what happened, such as `Stalled: the model called click({"label":"Save"}) 3 times with the same result.` Every call that ran has its result in the history, so you can ask again:
+
+```ts
+import { StalledError } from "@node-llm/core";
+
+try {
+  await tester.ask("Save the form");
+} catch (error) {
+  if (error instanceof StalledError) {
+    console.log(error.reason, error.message);
+    await tester.ask("That isn't working. Try another way, or report what blocks you.");
+  }
+}
+```
+
+---
+
+## Ending With a Tool
+
+An agent that reports its result through a tool, such as `finish` or `submit_verdict`, sometimes ends its turn with plain text instead. `endWith` names the tool the model must call before its turn ends. When the model ends its turn without calling it, NodeLLM reminds it once and carries on; if it still doesn't call it, the ask throws `EndToolNotCalledError`:
+
+```ts
+class Tester extends Agent {
+  static tools = [LookTool, ClickTool, FinishTool];
+  static endWith = "finish";
+}
+
+// Or on a chat, with a reminder of your own
+const chat = llm.chat("claude-sonnet-5-5", {
+  tools: [LookTool, FinishTool],
+  endWith: { tool: "finish", reminder: "Call finish with your verdict." }
+});
+```
+
+Only calls made during the current ask count. A tool that halts the loop counts as called. Pass `endWith: null` to an ask that doesn't need the tool, such as a follow-up question:
+
+```ts
+import { EndToolNotCalledError } from "@node-llm/core";
+
+try {
+  await tester.ask("Test the sign-in page");
+} catch (error) {
+  if (error instanceof EndToolNotCalledError) {
+    console.log(`No ${error.tool} after ${error.usage.total_tokens} tokens`);
+  }
+}
+
+await tester.ask("What did you find on the page?", { endWith: null });
 ```
 
 ---
@@ -308,6 +389,38 @@ Older results are left out in blocks: with `keepToolResults: 3`, between three a
 
 Each result keeps its place and tool call id, so the conversation stays valid for every provider, and the model still sees every step it took. The chat's own `history` keeps every result in full.
 
+### Context Budgets <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v1.22.0+</span>
+
+`keepToolResults` counts results. A context budget measures them instead, as shares of the model's context window, so one huge result or many medium ones can't push a request past the window:
+
+```ts
+import { config } from "@node-llm/core";
+
+config.contextBudget = { perResult: 0.25, perRequest: 0.7 };
+```
+
+- **`perResult`:** a tool result longer than this share is cut when it is added, ending with a note that tells the model how much it saw and to ask for a narrower query or the next page. The chat's history keeps the cut result.
+- **`perRequest`:** a request larger than this share leaves out its oldest tool results, each replaced by a one-line note telling the model to call the tool again if it needs it. Only the request changes; `chat.history` keeps every result.
+- **Latest round:** this round's results go out whenever they fit, since the model hasn't seen them yet. When the round alone is over the share, its oldest results are left out too, with a note to ask for less, so the chat can't get stuck failing every request.
+- **Prompt caching:** the cut point moves in steps of about 15% of the budget rather than one result at a time, so the start of the request stays the same for many rounds.
+- **Tool search:** `tool_search` results are never left out.
+
+Shares are of the context window the model registry lists for the model. Sizes are estimated at two characters a token, which is how dense JSON and HTML run, so the budget errs on the side of leaving results out. Raise `perRequest` if your tools return mostly prose.
+
+A chat or agent can set its own, and `null` turns off a budget set in `config`:
+
+```ts
+const chat = llm.chat("gpt-4.1").withContextBudget({ perResult: 0.1, perRequest: 0.5 });
+const plain = llm.chat("gpt-4.1").withContextBudget(null);
+
+class ResearchAgent extends Agent {
+  static model = "my-local-model";
+  static contextBudget = { window: 32_000, perRequest: 0.7 }; // window for a model the registry doesn't know
+}
+```
+
+The budget only cuts and counts the text of messages and tool call arguments. Attachments, tool definitions and a long question can still overflow a request.
+
 ### Capping What a Loop Spends
 
 `maxCost` stops a tool loop once an ask has spent that many US dollars, before its next request, and throws `CostLimitError` with the `limit` and the `usage` so far. It guards against a tool that returns far more than expected, such as a page with thousands of rows:
@@ -317,6 +430,27 @@ const chat = llm.chat("gpt-5.5", { maxCost: 0.5 });
 ```
 
 It needs the model's pricing to know the cost, so it does nothing for models without it.
+
+### Counting Calls a Tool Makes
+
+A tool sometimes calls a model itself, such as asking a vision model about a screenshot. Count that call on the chat or agent with `countUsage()`, so it is part of the ask's `usage`, the chat's `totalUsage` and `maxCost`:
+
+```ts
+const describeScreen = defineTool({
+  name: "describe_screen",
+  description: "Describe what is on the screen",
+  schema: z.object({}),
+  execute: async () => {
+    const answer = await llm.chat("claude-haiku-5-5").ask("What is on this screen?", {
+      images: [await screenshot()]
+    });
+    agent.countUsage(answer.usage);
+    return String(answer);
+  }
+});
+```
+
+A call counted while no ask is running goes to `totalUsage` only. With `@node-llm/orm`, use `session.countCall(answer)` instead: it also saves the call as a request row of the session.
 
 ## Tool Execution Policies (Security) <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v1.5.0+</span>
 

@@ -2,6 +2,71 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.22.0] - 2026-11-22 (@node-llm/core)
+
+### Security
+
+- **Secret Files and Cloud Metadata Are Refused**: `images`, `files`, Gemini's and OpenAI's image inputs and transcription files no longer load files that hold secrets (`.env` in any form, `.npmrc`, `.netrc`, SSH keys, cloud credential files, `secrets.yml`, `database.yml`, `terraform.tfstate`, anything in `.ssh`, `.aws`, `.kube` or `.git`, `.pem` and `.key` files, `/proc`, `/sys` and `/dev`, and links to them), devices, pipes, or files over 100 MB, and no longer fetch cloud metadata addresses (`169.254.x.x`, `192.0.0.192`, `fd00:ec2::254`, `metadata.google.internal`, and IPv6 forms that carry them). The address is checked when each connection is made, redirects included, so DNS rebinding can't reach them. They throw `FileAccessError`. Ordinary files, files with no extension and other private hosts load as before; `fileSecurity.allowSensitiveFiles` loads secret files again.
+- **Remote Files Time Out and Stop at 50 MB While Reading**: a remote file now times out after 60 seconds (`fileSecurity.fetchTimeout`). One without a `content-length` was read in full before its size was checked; it is now stopped once it passes 50 MB, in every loader.
+- **More File Rules (`fileSecurity`)**: for apps where a path or URL comes from a user, `root` keeps local files inside a folder (after following links), `blockPrivateNetwork` refuses every private address, `allowedHosts` allows only listed hosts, and `throwOnFetchError` throws instead of passing a failed URL on to the provider. Set on `config`, `createLLM()` or a chat; a chat's rules add to the others instead of replacing them.
+- **Gemini Keys Are Sent in a Header**: the key goes in `x-goog-api-key` instead of `?key=` in the URL, so proxies, tracing and error reports that record URLs don't see it.
+- **Debug Logs Mask Keys and Files**: with `debug: true`, printed request and response bodies mask keys and tokens (OpenAI, Anthropic, OpenRouter, Google, xAI, Stripe, Slack, AWS `AKIA`/`ASIA` and named secret keys, GitHub `ghp_`/`github_pat_`, JWTs, `Bearer` and `Basic` credentials, PEM private keys), passwords in URLs and fields named like secrets (`apiKey`, `openaiApiKey`, `secretAccessKey`, `token`, `private_key`, ...), and replace base64 files in any field with their size. Prompts and answers are still printed. `logger.error`, which is always on, masks the errors it prints. The patterns are bounded, so long hostile input can't slow them. `redactForLog()` is exported.
+- **Provider Errors Mask Keys**: `APIError`'s `message` and `body` mask key-like values (such as an OpenRouter key named in a credit error). Everything else in them is unchanged.
+- **Tool Arguments Are Checked Against JSON Schemas**: a tool defined with a JSON Schema (plain definitions, `Tool` classes with one, MCP tools) no longer runs with arguments its schema rules out: missing required fields, wrong types, values outside an `enum`, or extra fields where `additionalProperties` is `false`. The model is told what to fix. Zod tools are checked by Zod as before.
+- **Tool Errors Sent to the Model Are Masked and Cut Short**: key-like values and passwords in URLs are masked, and the message is cut to 500 characters.
+- **Unknown-Tool Replies Don't List Deferred Tools**: when the model calls a tool that doesn't exist, the reply lists only the tools it can see.
+- **Subagent Spending and Nesting Are Limited**: a subagent's requests now count toward its parent ask's `usage` and `maxCost`, and it stops once an ask above it has reached its limit. Subagents nest at most 8 deep; deeper, `AgentDepthError` is thrown, so an agent handing a task to itself can't loop forever.
+- **PII Masking Covers Tool Results, Errors and Answers**: `PIIMaskMiddleware` now masks every tool result before the model sees it, a tool's error included (before, only messages present when an ask started were masked), masking JSON results in their string values only so they stay valid. `redactOutput: true`, which was accepted but did nothing, now masks the answer `ask()` returns and the one the history keeps. It also masks international phone numbers and IBANs, and its email pattern is bounded so long input can't slow it.
+- **Middlewares Can Change Tool Results**: a new `onToolResult(ctx, toolCall, content, { isError })` hook may return `{ content }` to change any tool result the model is sent; `onToolCallEnd` may too, for successful calls. A `REPLACE` from `onResponse` now also replaces the answer in the history, and another middleware's `"CONTINUE"` no longer hides it. New type `ToolResultChange`.
+
+### Features
+
+- **Subagents**: an agent class goes wherever a tool goes. The model hands it a `task`, a fresh instance works on it in its own conversation, and only the content of its last answer comes back, so its searches and reading never fill the calling conversation. `Agent.toTool(inputs, { name, description, llm })` fixes some of the agent's inputs and lets the model fill the rest. Agents gain `description` and `agentName` (`name` and `description` in `defineAgent()`). A subagent inside an agent runs on that agent's `llm` instance.
+- **Cap on Concurrent Tool Calls**: `toolConcurrency` (and `withToolConcurrency`) also takes a number, the most tool calls to run at once. Every call still runs, that many at a time, and results stay in the order the model asked for them. Useful for tools that reach a rate-limited API. Works for chats, streams, agents, `config` and `@node-llm/orm` chats.
+- **Context Budgets**: `config.contextBudget = { perResult, perRequest }` (or `chat.withContextBudget()`, or `static contextBudget` on an agent) keeps tool results within shares of the model's context window. A result longer than `perResult` is cut when it is added, with a note telling the model to ask for less. A request larger than `perRequest` leaves out its oldest tool results, in steps of about 15% of the budget so the prompt cache holds; the latest round goes out whenever it fits. `window` sets the context window for a model the registry doesn't know, and `null` turns a budget off.
+- **Ending With a Tool**: `endWith: "finish"` on a chat, an agent or one ask names a tool the model must call before its turn ends. When the model ends its turn without calling it, it is reminded once; if it still doesn't, the ask throws `EndToolNotCalledError` with the tool and the ask's usage. `{ tool, reminder }` sets the reminder's wording, a tool that halts the loop counts as called, and `endWith: null` turns it off for one ask. Works for `ask()` and `stream()`.
+- **Stall Guard**: `stallGuard: { repeats, noProgress, progress }` on a chat or an agent stops a tool loop that is going nowhere, before its next request, with `StalledError`. `repeats` counts the same call with the same arguments getting the same result; `noProgress` counts calls in a row that failed or got a result the tool already gave in the ask, or that an app's own `progress(call, result, failed)` says made no progress. The error has the `reason`, the `calls`, their `count` and the ask's `usage`, and every call that ran keeps its result in the history. Works for `ask()` and `stream()`; off unless set.
+- **Anthropic Structured Outputs**: on Claude models that support it (Fable and Mythos 5, Opus 5 and 4.8, Sonnet 5, Haiku 5 and 4.5, and Opus 4.5 and 4.1), a schema is now sent as `output_config.format`, so the answer is held to it instead of only being asked for in the prompt. Constraints Anthropic doesn't take, such as minimums and lengths, are left out of what is sent, and every object gets `additionalProperties: false`; a Zod schema still checks the full schema on `response.data`. Older models, and schemas with records or self-references, keep the prompt instruction. For `ask()` and `stream()`.
+- **Counting Calls a Tool Makes**: `chat.countUsage(usage)` and `agent.countUsage(usage)` count a call made outside the chat's own requests, such as a tool asking a vision model about a screenshot. It is added to the ask running now, so its `usage` and `maxCost` include it, and to `totalUsage`. In `@node-llm/orm`, `session.countCall(answer)` also saves it as a request row under the answer being written, so `stats()` includes it. Works for `ask()` and `stream()`.
+
+### Bug Fixes
+
+- **Readable Schema Errors**: when a structured response doesn't match its Zod schema, `response.data` still throws Zod's `ZodError`, now with a one-line message naming each field, the values the schema allows and the value received, such as `status: Invalid option: expected one of "passed"|"failed" (got "blocked")`. Before, a Zod 4 error's message was its issues as indented JSON, so logs that keep an error's first line showed only `[`. The parts are on `error.problems`. `SchemaSelfCorrection` re-asks with the new message. The docs show how to accept unknown enum values with Zod's `.catch()`.
+- **Self-Correction Re-Asks With the Feedback in `ask()`**: a middleware `RETRY`, such as `SchemaSelfCorrection`'s, sent the first request again, without the rejected answer or the feedback, so the model was not told what to fix. It now sends both, as `stream()` already did.
+- **Network Errors Are Retried**: a request that can't reach the provider, such as `fetch failed` with `ECONNRESET`, now throws `NetworkError`, with the `host` and the original error as `cause`, and is retried like a server error. Before, fetch's `TypeError` escaped on the first attempt whatever `retry` was set to. It still moves on to a fallback model. The error-handling docs now also say that `InsufficientQuotaError` isn't retried, as the code already did.
+
+## [0.11.0] - 2026-11-22 (@node-llm/orm)
+
+### Security
+
+- **Secrets Aren't Saved**: API keys, tokens, private keys and passwords in URLs are masked in everything a chat or agent session saves (message text, reasoning, thinking, tool arguments and results, a chat's instructions and metadata, and a session's inputs), through the Prisma store or a custom one. Tool arguments stay valid JSON. A chat or session that uses `PIIMaskMiddleware` also saves masked text. `redact` on `createChat`, `loadChat`, `createAgentSession` and `loadAgentSession` masks more. `maskSecrets` and `redactingStore` are exported.
+
+### Features
+
+- **Loaded Sessions Keep Their Tool Calls**: `loadAgentSession()` gives the agent the tool calls of earlier turns with their results, before the answer they led to. Before, it gave only each message's text, so a resumed agent didn't know what it had already looked up. A run that stopped part way, such as when its service restarted, can be loaded and asked to continue: the calls that finished come back, and a call that never finished is left out. Custom stores add an optional `listToolCalls(messageIds)`; without it, sessions load as before.
+- **Agent Session Answers Have Their Data**: for an agent with a `schema`, the record `session.ask()` returns has the parsed answer as `data`, typed from the schema, found inside a code fence or surrounding text and checked against a Zod schema, as `response.data` is in core. Before, apps parsed `content` themselves. `data` isn't a column: it isn't saved and is left out when the record is serialized. New types `AgentAnswer` and `AgentData`.
+- **Agent Settings per Session**: `createAgentSession()` and `loadAgentSession()` take any agent setting except `schema` for that session, in place of the class's: `maxCost`, `maxTokens`, `temperature`, `thinking`, `keepToolResults`, `promptCache`, `middlewares` and the rest. Before, only `model`, `provider`, `instructions`, `maxToolCalls` and `tools` were passed on, and `loadAgentSession()` took none, so an app had to subclass the agent for each budget. Settings left `undefined` keep the class's. New type `AgentSessionOverrides`.
+- **A Store Can Stop a Run**: a `ChatStore` can return `{ stop: reason }` from `createRequest`, such as when a spending limit kept outside the app is reached. The chat or agent session then throws `StoppedByStoreError` with that `reason` before its next request, and on later asks. The tool calls that already ran keep their results in the history. Stores that return nothing work as before.
+- **Counting Calls Outside the Agent**: `session.countCall(answer)` saves a call a tool makes, such as asking a vision model about a screenshot, as a request row under the answer being written, and counts it in the agent's usage and `maxCost` (see core's `countUsage`).
+
+### Bug Fixes
+
+- **No Empty Assistant Messages on Load**: an assistant message with no text, left by a run that stopped before it finished, is no longer sent in a loaded session's history. Providers such as Anthropic reject an empty message.
+
+## [0.4.0] - 2026-11-22 (@node-llm/mcp)
+
+### Security
+
+- **Hidden Characters Are Removed From Server Tools**: zero-width, bidirectional-control and Unicode tag characters are removed from the names, descriptions and schemas of a server's tools and prompts, where a server could hide instructions for the model that a person can't see. Visible text is unchanged.
+- **Keys in Server Errors Are Masked**: key-like values in an MCP server's error are masked before the model sees it.
+- **Sampling Guards**: `sampling: { llm, model, approve, maxTokens, maxCost }` (and `createLLMSamplingHandler(llm, model, guards)`) can refuse a request, cap an answer's length, and cap what a server's sampling spends in total. A refused request throws `SamplingRefusedError`. Without guards, sampling works as before.
+
+## [0.7.0] - 2026-11-22 (@node-llm/testing)
+
+### Security
+
+- **More Key Formats Are Scrubbed From Cassettes**: keys with hyphens (`sk-ant-...`, `sk-proj-...`, `sk-or-v1-...`, which the old pattern missed), xAI keys, AWS access key IDs, GitHub tokens and Bearer tokens, plus the `x-goog-api-key`, `api-key` and `proxy-authorization` headers. An `sk-` inside a word, as in `ask-user`, is no longer scrubbed.
+
 ## [1.21.0] - 2026-11-21 (@node-llm/core)
 
 ### Features

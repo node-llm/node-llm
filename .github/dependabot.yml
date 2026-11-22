@@ -1,0 +1,10 @@
+# Actions are pinned to commit SHAs; this keeps the pins current with a weekly PR.
+version: 2
+updates:
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    groups:
+      actions:
+        patterns: ["*"]

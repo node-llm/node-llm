@@ -48,9 +48,13 @@ async function executeToolCallOutcome(
       options.onToolCallEnd
     );
 
-    await runMiddleware(middlewares, "onToolCallEnd", context, toolCall, toolResult.content);
+    const changed = await runToolCallEnd(middlewares, context, toolCall, toolResult.content);
 
-    return { kind: "success", toolCall, toolResult };
+    return {
+      kind: "success",
+      toolCall,
+      toolResult: changed === undefined ? toolResult : { ...toolResult, content: changed }
+    };
   } catch (error: unknown) {
     return { kind: "error", toolCall, error };
   }
@@ -61,11 +65,16 @@ async function executeToolCallOutcome(
  * only kicks in for AUTO/DRY_RUN turns with more than one independent call.
  */
 export function shouldRunToolCallsConcurrently(
-  toolConcurrency: boolean | undefined,
+  toolConcurrency: boolean | number | undefined,
   toolExecution: ToolExecutionModeInput | undefined,
   callCount: number
 ): boolean {
   return Boolean(toolConcurrency) && toolExecution !== ToolExecutionMode.CONFIRM && callCount > 1;
+}
+
+/** The worker cap a numeric `toolConcurrency` sets, if any. */
+export function toolWorkerLimit(toolConcurrency: boolean | number | undefined): number | undefined {
+  return typeof toolConcurrency === "number" && toolConcurrency > 0 ? toolConcurrency : undefined;
 }
 
 export async function executeToolCallOutcomes(
@@ -73,12 +82,26 @@ export async function executeToolCallOutcomes(
   options: ToolCallExecutionOptions,
   middlewares: Middleware[],
   context: MiddlewareContext,
-  concurrent: boolean
+  concurrent: boolean,
+  /** With `concurrent`, the most calls to run at once. Every call still runs. */
+  limit?: number
 ): Promise<ToolCallOutcome[]> {
   if (concurrent) {
-    return Promise.all(
-      toolCalls.map((toolCall) => executeToolCallOutcome(toolCall, options, middlewares, context))
-    );
+    const run = (toolCall: ToolCall) =>
+      executeToolCallOutcome(toolCall, options, middlewares, context);
+    if (!limit || limit >= toolCalls.length) return Promise.all(toolCalls.map(run));
+
+    // A fixed number of workers, each taking the next call; results stay in call order.
+    const outcomes: ToolCallOutcome[] = new Array(toolCalls.length);
+    let next = 0;
+    const worker = async () => {
+      while (next < toolCalls.length) {
+        const index = next++;
+        outcomes[index] = await run(toolCalls[index]!);
+      }
+    };
+    await Promise.all(Array.from({ length: Math.max(1, Math.floor(limit)) }, worker));
+    return outcomes;
   }
 
   const outcomes: ToolCallOutcome[] = [];
@@ -112,4 +135,53 @@ export function unrunToolCallResults(
   return toolCalls.map((toolCall) =>
     provider.formatToolResultMessage(toolCall.id, `Not run: ${reason}.`, { isError: true })
   );
+}
+
+/**
+ * Runs the onToolCallEnd hooks, each seeing the result as the ones before it left it, then the
+ * onToolResult hooks, and returns the changed result, or undefined when no hook changed it.
+ */
+export async function runToolCallEnd(
+  middlewares: Middleware[],
+  context: MiddlewareContext,
+  toolCall: ToolCall,
+  content: string
+): Promise<string | undefined> {
+  let current = content;
+  let changed = false;
+  for (const middleware of [...(middlewares ?? [])].reverse()) {
+    if (typeof middleware.onToolCallEnd !== "function") continue;
+    const result = await middleware.onToolCallEnd(context, toolCall, current);
+    if (result && typeof result === "object" && typeof result.content === "string") {
+      current = result.content;
+      changed = true;
+    }
+  }
+  const final = await runToolResult(middlewares, context, toolCall, current, false);
+  if (final !== undefined) return final;
+  return changed ? current : undefined;
+}
+
+/**
+ * Runs the onToolResult hooks on a result the model is about to be sent, and returns the changed
+ * result, or undefined when no hook changed it.
+ */
+export async function runToolResult(
+  middlewares: Middleware[],
+  context: MiddlewareContext,
+  toolCall: ToolCall,
+  content: string,
+  isError: boolean
+): Promise<string | undefined> {
+  let current = content;
+  let changed = false;
+  for (const middleware of [...(middlewares ?? [])].reverse()) {
+    if (typeof middleware.onToolResult !== "function") continue;
+    const result = await middleware.onToolResult(context, toolCall, current, { isError });
+    if (result && typeof result === "object" && typeof result.content === "string") {
+      current = result.content;
+      changed = true;
+    }
+  }
+  return changed ? current : undefined;
 }

@@ -1,6 +1,8 @@
 import fs from "fs/promises";
 import { Readable } from "stream";
 import { ImageResponse } from "../providers/Provider.js";
+import { config } from "../config.js";
+import { readRemoteChecked } from "../utils/FileSecurity.js";
 
 export class GeneratedImage extends String {
   constructor(private readonly response: ImageResponse) {
@@ -36,12 +38,11 @@ export class GeneratedImage extends String {
     }
 
     if (this.url) {
-      const resp = await fetch(this.url);
-      if (!resp.ok) {
-        throw new Error(`Failed to download image from ${this.url}: ${resp.statusText}`);
+      const { response, bytes } = await readRemoteChecked(this.url, config.fileSecurity);
+      if (!bytes) {
+        throw new Error(`Failed to download image from ${this.url}: ${response.statusText}`);
       }
-      const arrayBuffer = await resp.arrayBuffer();
-      return Buffer.from(arrayBuffer);
+      return Buffer.from(bytes);
     }
 
     throw new Error("No image data or URL available");
