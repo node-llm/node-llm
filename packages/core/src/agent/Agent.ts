@@ -503,7 +503,8 @@ export abstract class Agent<
    * a worker of runAgents(); see Chat.beforeSubagentRequest.
    */
   beforeSubagentRequest(handler: () => void | Promise<void>): this {
-    this.chat.beforeSubagentRequest(handler);
+    // Optional: a chat stand-in (a test double) may not have it.
+    this.chat.beforeSubagentRequest?.(handler);
     return this;
   }
 
@@ -512,7 +513,7 @@ export abstract class Agent<
    * usage and model; see Chat.afterSubagentResponse.
    */
   afterSubagentResponse(handler: (response: SubagentResponse) => void | Promise<void>): this {
-    this.chat.afterSubagentResponse(handler);
+    this.chat.afterSubagentResponse?.(handler);
     return this;
   }
 
