@@ -13,6 +13,7 @@ import {
 import { ChatOptions } from "./ChatOptions.js";
 import { Provider, ChatChunk, Usage, ThinkingResult } from "../providers/Provider.js";
 import { ChatResponseString } from "./ChatResponse.js";
+import { routedModel } from "./ModelRoute.js";
 import { Stream } from "../streaming/Stream.js";
 import { config } from "../config.js";
 import { ToolExecutionMode, DEFAULT_MAX_TOOL_CALLS } from "../constants.js";
@@ -241,13 +242,16 @@ export class ChatStream {
 
         const totalUsage: Usage = { input_tokens: 0, output_tokens: 0, total_tokens: 0 };
         if (self.sideUsage) self.sideUsage.current = totalUsage;
+        // The model of the request running now, chosen by options.routeModel.
+        let turnModel = model;
+        let answeredCalls: ToolCall[] = [];
         const trackUsage = (u?: Usage) => {
           if (u) {
             // Fallback cost calculation if provider didn't return it
             if (u.cost === undefined) {
               const withCost = ModelRegistry.calculateCost(
                 u,
-                provider.registryModel?.(model) ?? model,
+                provider.registryModel?.(turnModel) ?? turnModel,
                 provider.id
               );
               u.cost = (withCost as Usage).cost;
@@ -284,12 +288,18 @@ export class ChatStream {
             budget
           );
           requestMessages = await runChainHandlers(beforeRequestHandlers, requestMessages);
+          turnModel = routedModel(options.routeModel, {
+            turn: stepCount,
+            toolCalls: answeredCalls,
+            messages: context.messages,
+            model
+          });
 
           const streamRequest: any = {
-            model,
+            model: turnModel,
             messages: requestMessages,
             tools: requestTools(options.tools as ToolDefinition[], context.messages),
-            temperature: requestTemperature(provider, model, options.temperature),
+            temperature: requestTemperature(provider, turnModel, options.temperature),
             max_tokens: options.maxTokens ?? config.maxTokens,
             response_format: responseFormat,
             headers: options.headers,
@@ -299,12 +309,12 @@ export class ChatStream {
             requestTimeout: options.requestTimeout ?? config.requestTimeout,
             thinking: options.thinking,
             prediction: options.prediction,
-            promptCache: requestPromptCache(provider, model, options.promptCache),
+            promptCache: requestPromptCache(provider, turnModel, options.promptCache),
             signal: abortController.signal,
             ...options.params
           };
 
-          if (streamRequest.prediction && !provider.capabilities?.supportsPrediction?.(model)) {
+          if (streamRequest.prediction && !provider.capabilities?.supportsPrediction?.(turnModel)) {
             delete streamRequest.prediction;
           }
 
@@ -363,7 +373,7 @@ export class ChatStream {
           assistantResponse = new ChatResponseString(
             fullContent || "",
             currentTurnUsage || { input_tokens: 0, output_tokens: 0, total_tokens: 0 },
-            model,
+            turnModel,
             provider.id,
             thinking.text || thinking.signature ? thinking : undefined,
             fullReasoning || undefined,
@@ -399,6 +409,7 @@ export class ChatStream {
           }
 
           stepCount++;
+          answeredCalls = toolCalls;
           if (stepCount > maxToolCalls) {
             messages.push(...toolCallLimitResults(provider, toolCalls, maxToolCalls));
             throw new ToolCallLimitError(maxToolCalls, totalUsage);

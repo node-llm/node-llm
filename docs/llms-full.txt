@@ -3139,6 +3139,30 @@ await router.ask("Write a poem about the ocean");
 
 ---
 
+## Model per Step (`routeModel`) <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v1.23.0+</span>
+
+An agent can send routine steps to an economical model and keep its main model for decisions. `routeModel` runs before every request of an ask and returns the model for it, or nothing for the agent's own model:
+
+```ts
+const ROUTINE = new Set(["click", "fill", "select"]);
+
+class Explorer extends Agent {
+  static model = "claude-opus-5-5";
+  static promptCache = true;
+  static tools = [Click, Fill, Select, Check, Finish];
+  static routeModel = ({ toolCalls }) =>
+    toolCalls.length > 0 && toolCalls.every((call) => ROUTINE.has(call.function.name))
+      ? "claude-haiku-5-5"
+      : undefined;
+}
+```
+
+The function gets `{ turn, toolCalls, messages, model }`: `turn` is 0 for the ask's first request, `toolCalls` are the calls whose results this request sends, and `model` is the agent's own. It works for `ask()` and `stream()`, on chats too (`llm.chat(model, { routeModel })`).
+
+- **Same provider.** Return a model of the agent's provider. Validation of tools, vision and schemas uses the agent's own model, so route only to models that support what the agent uses.
+- **Prompt caching keeps working.** Each request is cached as usual; each model keeps its own cache, so a model's next request reuses the prefix it last sent.
+- **Each request's model is recorded.** `afterResponse` hooks get the model and cost of each request; what `ask()` returns has `usageByModel`, the ask's usage per model; `@node-llm/orm` records each request row with its model.
+
 ## RAG Agent (Retrieval-Augmented Generation)
 
 Combine vector search with LLM generation:
