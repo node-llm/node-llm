@@ -3289,7 +3289,7 @@ console.log(run.cost); // all workers together
 | `signal` | Cancels every worker. |
 | `llm` | The NodeLLM instance workers run on. |
 
-Started from a tool, the workers are that ask's subagents, as with `toTool()`: their spending counts toward its `usage` and `maxCost`, they stop once it reaches its limit, and they are cancelled with it (its `signal`). Their results come back in the order given, with each one's `usage` and `cost`, whether it finished or not.
+Started from a tool, the workers are that ask's subagents, as with `toTool()`: their spending counts toward its `usage`, `usageByModel` and `maxCost`, and the lead's `totalUsage`, they stop once it reaches its limit, and they are cancelled with it (its `signal`). Their results come back in the order given, with each one's `usage` and `cost`, whether it finished or not.
 
 The lead sees every worker's request with two hooks, for example to record or limit spending:
 

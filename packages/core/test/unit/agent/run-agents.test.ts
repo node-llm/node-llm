@@ -232,4 +232,31 @@ describe("agentsTool", () => {
     const response = await new Lead({ llm }).ask("Look");
     expect(String(response)).toMatch(/other|look/);
   });
+
+  it("counts the workers in the lead's totalUsage and usageByModel", async () => {
+    const { llm, make } = setup();
+    const Look = make("Answer");
+    Look.model = "worker-model";
+    const Lead = make(
+      fan([
+        { agent: "look", task: "checkout" },
+        { agent: "look", task: "account" }
+      ])
+    );
+    Lead.tools = [agentsTool({ agents: { look: Look }, llm })];
+    const lead = new Lead({ llm });
+    const response = await lead.ask("Look at the app");
+
+    // Two lead requests and two worker requests, 0.01 each.
+    expect(lead.totalUsage.cost).toBeCloseTo(0.04);
+    expect(lead.totalUsage.total_tokens).toBe(60);
+    expect(response.usageByModel?.["test-model"]?.cost).toBeCloseTo(0.02);
+    expect(response.usageByModel?.["worker-model"]?.cost).toBeCloseTo(0.02);
+    expect(response.usageByModel?.["worker-model"]?.total_tokens).toBe(30);
+
+    // A second ask adds to the total, and its usage is its own.
+    const again = await lead.ask("Look again");
+    expect(again.usage.cost).toBeCloseTo(0.04);
+    expect(lead.totalUsage.cost).toBeCloseTo(0.08);
+  });
 });

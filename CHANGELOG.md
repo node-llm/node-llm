@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.23.1] - 2026-11-22 (@node-llm/core)
+
+### Fixes
+
+- **`totalUsage` Includes Subagents**: a chat's or agent's `totalUsage` now includes what subagents started from its asks used (`toTool()`, `runAgents()`, `agentsTool()`), at any depth, as the ask's own `usage` and `maxCost` already did. What `ask()` returns has the subagents' requests in `usageByModel` too, under the model each one used.
+
 ## [1.23.0] - 2026-11-22 (@node-llm/core)
 
 ### Features
