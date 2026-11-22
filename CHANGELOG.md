@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased] (@node-llm/core)
+
+### Features
+
+- **Lead and Workers (`runAgents`, `agentsTool`)**: a lead agent can send several agents at once, each on its own task in its own conversation, and merge what they found. `runAgents(jobs, { concurrency, maxCost, failFast, signal, llm })` returns one result per job, in order: `status` (`done`, `failed`, `cancelled`), `content`, `data` parsed by the worker's schema, and its `usage` and `cost`. `agentsTool({ agents, concurrency, maxTasks })` lets the model choose the tasks. Started from a tool, workers count toward the lead's `usage` and `maxCost` and stop once it is reached; a job's `maxCost` caps one worker. A failed worker doesn't stop the others unless `failFast` is set.
+- **Subagents Are Cancelled With Their Parent**: a subagent's ask (`toTool()` or a worker) now uses the `signal` of the ask it was started from, and is refused before its first request once an ask above it has reached its `maxCost`.
+- **Subagent Hooks**: `beforeSubagentRequest(handler)` and `afterSubagentResponse(handler)` on chats and agents run for every request of any subagent below them, with its `usage`, `model`, `provider`, `latency` and `depth`. A `beforeSubagentRequest` handler that throws stops that subagent.
+
+## [Unreleased] (@node-llm/orm)
+
+### Features
+
+- **Subagent Requests Are Recorded and Stopped by the Store**: sessions and chats record every request of a subagent (`toTool()`, `runAgents()`) as a request row under the answer being written, so totals include what workers spend, and a store's `createRequest` returning `{ stop }` stops the workers too.
+
 ## [1.22.1] - 2026-11-22 (@node-llm/core)
 
 ### Security

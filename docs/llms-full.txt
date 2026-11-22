@@ -3213,6 +3213,71 @@ static tools = (inputs) => [BillingAgent.toTool({ customer: inputs.customer })];
 
 ---
 
+## Lead and Workers (Fan-Out) <span style="background-color: #0d9488; color: white; padding: 1px 6px; border-radius: 3px; font-size: 0.65em; font-weight: 600; vertical-align: middle;">v1.23.0+</span>
+
+A lead agent can send several workers at once, each on its own task in its own conversation, and merge what they found. Give the lead `agentsTool()` and the model chooses the tasks:
+
+```ts
+import { Agent, agentsTool } from "@node-llm/core";
+import { z } from "zod";
+
+class LookAgent extends Agent {
+  static model = "claude-haiku-5-5";
+  static description = "Looks at one area of the app and lists its pages and forms";
+  static inputs = ["area"];
+  static schema = z.object({ pages: z.array(z.string()), forms: z.array(z.string()) });
+  static tools = [OpenPage, ReadPage];
+}
+
+class LeadAgent extends Agent {
+  static model = "claude-opus-5-5";
+  static maxCost = 2; // covers the lead and every worker
+  static tools = [agentsTool({ agents: { look: LookAgent }, concurrency: 3, maxTasks: 4 })];
+}
+```
+
+The tool returns JSON with one entry per worker: `{ name, agent, status, content, data, cost, error }`, where `status` is `done`, `failed` or `cancelled` and `data` is the worker's answer parsed by its schema.
+
+To send workers from your own code (inside a tool, or anywhere), use `runAgents()`:
+
+```ts
+import { runAgents } from "@node-llm/core";
+
+const run = await runAgents(
+  [
+    { agent: LookAgent, task: "Look at the checkout", inputs: { area: "checkout" }, maxCost: 0.5 },
+    { agent: LookAgent, task: "Look at the account pages", inputs: { area: "account" } }
+  ],
+  { concurrency: 2, maxCost: 1, signal }
+);
+
+for (const result of run.results) {
+  console.log(result.name, result.status, result.data, result.usage, result.cost);
+}
+console.log(run.cost); // all workers together
+```
+
+| Option | What it does |
+| :--- | :--- |
+| `concurrency` | Workers running at once. Default 4. |
+| `maxCost` | The most all workers together may spend. A job's own `maxCost` caps that worker. |
+| `failFast` | Cancel the others when one fails. Off by default: a failure is reported and the rest carry on. |
+| `signal` | Cancels every worker. |
+| `llm` | The NodeLLM instance workers run on. |
+
+Started from a tool, the workers are that ask's subagents, as with `toTool()`: their spending counts toward its `usage` and `maxCost`, they stop once it reaches its limit, and they are cancelled with it (its `signal`). Their results come back in the order given, with each one's `usage` and `cost`, whether it finished or not.
+
+The lead sees every worker's request with two hooks, for example to record or limit spending:
+
+```ts
+lead.afterSubagentResponse(({ usage, model, provider, latency, depth }) => record(usage));
+lead.beforeSubagentRequest(() => {
+  if (overBudget()) throw new Error("Budget reached"); // stops the worker with this error
+});
+```
+
+With `@node-llm/orm`, sessions and chats record each worker's request under the answer being written, and a store's `createRequest` returning `{ stop }` stops the workers too (`StoppedByStoreError`).
+
 ## Multi-Agent Collaboration
 
 Compose specialized agents for complex workflows:

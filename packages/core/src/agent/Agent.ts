@@ -1,5 +1,5 @@
 import { Chat, AskOptions } from "../chat/Chat.js";
-import { askFrames } from "../chat/AskFrame.js";
+import { askFrames, type SubagentResponse } from "../chat/AskFrame.js";
 import { ChatOptions } from "../chat/ChatOptions.js";
 import type { ContextBudget } from "../chat/ContextBudget.js";
 import type { EndWith } from "../chat/EndWith.js";
@@ -495,6 +495,25 @@ export abstract class Agent<
    */
   beforeRequest(handler: (messages: unknown[]) => Promise<unknown[] | void>): this {
     this.chat.beforeRequest(handler as any);
+    return this;
+  }
+
+  /**
+   * Hook called before each request of any subagent started below this agent's asks, such as
+   * a worker of runAgents(); see Chat.beforeSubagentRequest.
+   */
+  beforeSubagentRequest(handler: () => void | Promise<void>): this {
+    // Optional: a chat stand-in (a test double) may not have it.
+    this.chat.beforeSubagentRequest?.(handler);
+    return this;
+  }
+
+  /**
+   * Hook called after each response of any subagent started below this agent's asks, with its
+   * usage and model; see Chat.afterSubagentResponse.
+   */
+  afterSubagentResponse(handler: (response: SubagentResponse) => void | Promise<void>): this {
+    this.chat.afterSubagentResponse?.(handler);
     return this;
   }
 

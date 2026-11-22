@@ -161,3 +161,79 @@ describe("a store that stops a run", () => {
     expect((await session.ask("Explore")).content).toBe("Done.");
   });
 });
+
+describe("a store and subagents", () => {
+  // The lead sends three workers through run_agents, one at a time; workers answer at once.
+  class Fanning implements Provider {
+    id = "scripted";
+    requests: ChatRequest[] = [];
+    defaultModel() {
+      return "test-model";
+    }
+    async chat(request: ChatRequest): Promise<ChatResponse> {
+      this.requests.push(request);
+      const usage = { input_tokens: 10, output_tokens: 5, total_tokens: 15, cost: 0.01 };
+      const system = String(request.messages.find((m) => m.role === "system")?.content ?? "");
+      const last = request.messages[request.messages.length - 1];
+      if (system === "Lead" && last?.role !== "tool") {
+        const tasks = ["a", "b", "c"].map((task) => ({ agent: "look", task }));
+        return {
+          content: null,
+          usage,
+          tool_calls: [
+            {
+              id: "fan",
+              type: "function",
+              function: { name: "run_agents", arguments: JSON.stringify({ tasks }) }
+            }
+          ]
+        };
+      }
+      return { content: last?.role === "tool" ? String(last.content) : "looked", usage };
+    }
+    formatToolResultMessage(toolCallId: string, content: string): Message {
+      return { role: "tool", tool_call_id: toolCallId, content };
+    }
+  }
+
+  async function leadSession(limit: number) {
+    const { agentsTool } = await import("@node-llm/core");
+    const provider = new Fanning();
+    const llm = createLLM({ provider });
+    class Look extends Agent {
+      static model = "test-model";
+      static instructions = "Look";
+      static assumeModelExists = true;
+    }
+    class Lead extends Agent {
+      static model = "test-model";
+      static instructions = "Lead";
+      static assumeModelExists = true;
+      static tools = [agentsTool({ agents: { look: Look }, llm, concurrency: 1 })];
+    }
+    const store = new BudgetStore(limit);
+    const session = await createAgentSession(store, llm, Lead);
+    return { store, session, provider };
+  }
+
+  it("records each worker's request under the lead's answer", async () => {
+    const { store, session } = await leadSession(100);
+    await session.ask("Look at the app");
+    // The lead's two requests and the three workers'.
+    expect(store.requests).toHaveLength(5);
+    expect(store.requests.every((r) => r.cost === 0.01)).toBe(true);
+  });
+
+  it("stops the workers when the store says stop", async () => {
+    const { store, session, provider } = await leadSession(2);
+    const error = await session.ask("Look at the app").catch((caught) => caught);
+    // Lead request 1, worker a's request 2 says stop: b and c are stopped, then the lead.
+    expect(error).toBeInstanceOf(StoppedByStoreError);
+    expect(provider.requests).toHaveLength(2);
+    const result = JSON.parse(
+      String(session.history.find((m) => m.role === "tool")?.content ?? "[]")
+    );
+    expect(result.map((r: { status: string }) => r.status)).toEqual(["done", "failed", "failed"]);
+    expect(store.requests).toHaveLength(2);
+  });
+});

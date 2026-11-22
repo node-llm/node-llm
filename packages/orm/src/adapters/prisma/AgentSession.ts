@@ -226,6 +226,27 @@ export class AgentSession<
       if (this.stopReason !== undefined) throw new StoppedByStoreError(this.stopReason);
     });
 
+    // Subagents started from this agent's tools (Agent.toTool, runAgents): their requests are
+    // recorded under the answer being written, and the store's `{ stop }` stops them too.
+    this.agent.beforeSubagentRequest?.(async () => {
+      if (this.stopReason !== undefined) throw new StoppedByStoreError(this.stopReason);
+    });
+    this.agent.afterSubagentResponse?.(async (sub) => {
+      const recorded = await this.store.createRequest({
+        chatId: this.chatId,
+        messageId: this.currentMessageId,
+        provider: sub.provider || "unknown",
+        model: sub.model || "unknown",
+        statusCode: 200,
+        duration: sub.latency || 0,
+        inputTokens: sub.usage?.input_tokens || 0,
+        outputTokens: sub.usage?.output_tokens || 0,
+        cachedTokens: sub.usage?.cached_tokens,
+        cost: sub.usage?.cost || 0
+      });
+      if (recorded && recorded.stop !== undefined) this.stopReason = recorded.stop;
+    });
+
     this.agent.afterResponse(async (response) => {
       const recorded = await this.store.createRequest({
         chatId: this.chatId,
