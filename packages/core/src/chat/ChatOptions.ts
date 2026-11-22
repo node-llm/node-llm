@@ -1,3 +1,4 @@
+import type { RouteModel } from "./ModelRoute.js";
 import type { SubagentResponse } from "./AskFrame.js";
 import type { ContextBudget } from "./ContextBudget.js";
 import type { EndWith } from "./EndWith.js";
@@ -98,6 +99,13 @@ export interface ChatOptions {
    * that need asking to, such as Anthropic. Others cache automatically.
    */
   promptCache?: boolean;
+  /**
+   * Chooses the model for each request of an ask, such as an economical one after routine tool
+   * calls (click, fill) and the chat's model for decisions. Same provider; return undefined for
+   * the chat's model. Each request's model is on its response, in afterResponse hooks and in
+   * `usageByModel` on what ask() returns.
+   */
+  routeModel?: RouteModel;
   toolChoice?: ToolChoice;
   toolCalls?: "one" | "many" | number;
   onConfirmToolCall?: (toolCall: ToolCall) => Promise<boolean> | boolean;

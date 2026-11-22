@@ -237,3 +237,26 @@ describe("a store and subagents", () => {
     expect(store.requests).toHaveLength(2);
   });
 });
+
+describe("a store and model routing", () => {
+  it("records each request with the model its turn used", async () => {
+    const store = new BudgetStore(100);
+    const provider = new Looking(2);
+    class Routed extends Explorer {
+      static routeModel = (step: { toolCalls: unknown[] }) =>
+        step.toolCalls.length > 0 ? "cheap-model" : undefined;
+    }
+    const session = await createAgentSession(store, createLLM({ provider }), Routed);
+    await session.ask("Explore");
+    expect(provider.requests.map((r) => r.model)).toEqual([
+      "test-model",
+      "cheap-model",
+      "cheap-model"
+    ]);
+    expect(store.requests.map((r) => r.model)).toEqual([
+      "test-model",
+      "cheap-model",
+      "cheap-model"
+    ]);
+  });
+});

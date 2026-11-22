@@ -19,6 +19,9 @@ export class ChatResponseString extends String {
    */
   public latency?: number;
 
+  /** On what ask() returns: what the ask used on each model, when it used more than one or not. */
+  public usageByModel?: Record<string, Usage>;
+
   constructor(
     content: string,
     public readonly usage: Usage,
@@ -130,6 +133,7 @@ export class ChatResponseString extends String {
       this.attachments
     );
     changed.latency = this.latency;
+    changed.usageByModel = this.usageByModel;
     return changed;
   }
 

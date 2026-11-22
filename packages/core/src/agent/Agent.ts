@@ -1,3 +1,4 @@
+import type { RouteModel } from "../chat/ModelRoute.js";
 import { Chat, AskOptions } from "../chat/Chat.js";
 import { askFrames, type SubagentResponse } from "../chat/AskFrame.js";
 import { ChatOptions } from "../chat/ChatOptions.js";
@@ -84,6 +85,9 @@ export interface AgentConfig<I = Record<string, any>> {
   /** Cache the repeated start of each request on providers that need asking to */
   promptCache?: boolean;
 
+  /** Chooses the model for each request; see ChatOptions.routeModel */
+  routeModel?: RouteModel;
+
   /** Assume model exists without validation */
   assumeModelExists?: boolean;
 
@@ -131,6 +135,8 @@ export abstract class Agent<
   /** Stops a tool loop that is going nowhere; see ChatOptions.stallGuard */
   static stallGuard?: StallGuard | null;
   static promptCache?: boolean;
+  /** Chooses the model for each request; see ChatOptions.routeModel */
+  static routeModel?: RouteModel;
   static assumeModelExists?: boolean;
   static middlewares?: Middleware[];
 
@@ -308,6 +314,7 @@ export abstract class Agent<
       contextBudget:
         overrides.contextBudget !== undefined ? overrides.contextBudget : ctor.contextBudget,
       promptCache: overrides.promptCache ?? ctor.promptCache,
+      routeModel: overrides.routeModel ?? ctor.routeModel,
       headers: { ...ctor.headers, ...overrides.headers },
       params: { ...ctor.params, ...overrides.params },
       thinking: overrides.thinking ?? ctor.thinking,
@@ -634,6 +641,7 @@ export function defineAgent<
     static override toolConcurrency = config.toolConcurrency;
     static override contextBudget = config.contextBudget;
     static override promptCache = config.promptCache;
+    static override routeModel = config.routeModel;
     static override assumeModelExists = config.assumeModelExists;
     static override middlewares = config.middlewares;
   };

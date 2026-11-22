@@ -101,6 +101,7 @@ export interface AskOptions {
 }
 
 import { ChatResponseString } from "./ChatResponse.js";
+import { routedModel } from "./ModelRoute.js";
 import { SideUsage, addUsage } from "./SideUsage.js";
 import {
   AskFrame,
@@ -846,6 +847,7 @@ export class Chat<S = unknown> {
       let finalResponse: ChatResponseString & { data: S };
       let correctionAttempt = 0;
       const totalUsage: Usage = { input_tokens: 0, output_tokens: 0, total_tokens: 0 };
+      const usageByModel: Record<string, Usage> = {};
       this.sideUsage.current = totalUsage;
       frame.usage = totalUsage;
 
@@ -855,8 +857,14 @@ export class Chat<S = unknown> {
         if (correctionAttempt > 0) context.messages = [...this.systemMessages, ...this.messages];
         // Prepare execution options
         const messagesToUse = context.messages || [];
+        let turnModel = routedModel(this.options.routeModel, {
+          turn: 0,
+          toolCalls: [],
+          messages: messagesToUse,
+          model: this.model
+        });
         const executeOptions = {
-          model: this.model,
+          model: turnModel,
           messages: applyRequestBudget(
             windowToolResults(messagesToUse, this.options.keepToolResults),
             budget
@@ -864,7 +872,7 @@ export class Chat<S = unknown> {
           tools: requestTools(this.options.tools as ToolDefinition[], messagesToUse),
           temperature: requestTemperature(
             this.provider,
-            this.model,
+            turnModel,
             options?.temperature ?? this.options.temperature
           ),
           max_tokens: options?.maxTokens ?? this.options.maxTokens ?? config.maxTokens,
@@ -877,7 +885,7 @@ export class Chat<S = unknown> {
             options?.requestTimeout ?? this.options.requestTimeout ?? config.requestTimeout,
           thinking: options?.thinking ?? this.options.thinking,
           prediction: options?.prediction ?? this.options.prediction,
-          promptCache: requestPromptCache(this.provider, this.model, this.options.promptCache),
+          promptCache: requestPromptCache(this.provider, turnModel, this.options.promptCache),
           signal: options?.signal,
           ...this.options.params
         };
@@ -889,7 +897,7 @@ export class Chat<S = unknown> {
         );
 
         const servedProvider = () => this.executor.servedBy?.provider ?? this.provider;
-        const servedModel = () => this.executor.servedBy?.model ?? this.model;
+        const servedModel = () => this.executor.servedBy?.model ?? turnModel;
         const trackUsage = (u?: Usage) => {
           if (u) {
             if (u.cost === undefined) {
@@ -918,6 +926,17 @@ export class Chat<S = unknown> {
             if (u.output_cost !== undefined) {
               totalUsage.output_cost = (totalUsage.output_cost ?? 0) + u.output_cost;
             }
+            const byModel = (usageByModel[servedModel()] ??= {
+              input_tokens: 0,
+              output_tokens: 0,
+              total_tokens: 0
+            });
+            byModel.input_tokens += u.input_tokens;
+            byModel.output_tokens += u.output_tokens;
+            byModel.total_tokens += u.total_tokens;
+            if (u.cached_tokens)
+              byModel.cached_tokens = (byModel.cached_tokens ?? 0) + u.cached_tokens;
+            if (u.cost !== undefined) byModel.cost = (byModel.cost ?? 0) + u.cost;
             // A subagent's spending is its parents' too.
             addToParents(frame, u);
           }
@@ -1150,10 +1169,16 @@ export class Chat<S = unknown> {
           );
 
           await this.beforeTreeRequest(frame);
+          turnModel = routedModel(this.options.routeModel, {
+            turn: stepCount,
+            toolCalls: response.tool_calls ?? [],
+            messages: [...this.systemMessages, ...this.messages],
+            model: this.model
+          });
           requestStarted = Date.now();
           response = await this.executor.executeChat(
             {
-              model: this.model,
+              model: turnModel,
               messages: followUpMessages,
               tools: requestTools(this.options.tools as ToolDefinition[], [
                 ...this.systemMessages,
@@ -1161,7 +1186,7 @@ export class Chat<S = unknown> {
               ]),
               temperature: requestTemperature(
                 this.provider,
-                this.model,
+                turnModel,
                 options?.temperature ?? this.options.temperature
               ),
               max_tokens: options?.maxTokens ?? this.options.maxTokens ?? config.maxTokens,
@@ -1175,7 +1200,7 @@ export class Chat<S = unknown> {
               requestTimeout:
                 options?.requestTimeout ?? this.options.requestTimeout ?? config.requestTimeout,
               prediction: options?.prediction ?? this.options.prediction,
-              promptCache: requestPromptCache(this.provider, this.model, this.options.promptCache),
+              promptCache: requestPromptCache(this.provider, turnModel, this.options.promptCache),
               signal: options?.signal,
               ...this.options.params
             },
@@ -1244,6 +1269,7 @@ export class Chat<S = unknown> {
         ) as unknown as ChatResponseString & { data: S };
         // What ask() returns covers every request in it, so its latency is their total.
         finalResponse.latency = totalLatency;
+        finalResponse.usageByModel = usageByModel;
 
         // 5. onResponse Hook
         const requestDirective = await runMiddleware<RequestDirective>(

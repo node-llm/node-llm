@@ -19,6 +19,7 @@ export type {
   RunAgentsOptions
 } from "./agent/runAgents.js";
 export type { SubagentResponse } from "./chat/AskFrame.js";
+export type { RouteModel, RouteStep } from "./chat/ModelRoute.js";
 export { Judge, defineJudge } from "./judge/Judge.js";
 export type { JudgeCallOptions, QuestionsOf } from "./judge/Judge.js";
 export { probability, choice, score } from "./judge/Question.js";
